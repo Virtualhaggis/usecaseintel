@@ -29,11 +29,12 @@ REM entries got invalidated.
 REM Dual-account failover. See run_once.bat for the protocol; same
 REM PRIMARY=A / SECONDARY=B config-dir pair used across every scheduled
 REM batch so a sticky switch persists for the rest of the daily run.
-REM Dual-account env vars deferred until setup_dual_account.ps1 has been run.
-REM Until then, leave both vars unset so the pipeline uses the default
-REM %USERPROFILE%\.claude session. Re-enable by uncommenting both lines.
-REM set USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY=%USERPROFILE%\.claude-acct-a
-REM set USECASEINTEL_CLAUDE_CONFIG_DIR_SECONDARY=%USERPROFILE%\.claude-acct-b
+REM Dual-account failover enabled: setup_dual_account.ps1 has provisioned
+REM both per-account config dirs. Same PRIMARY=A / SECONDARY=B pair used
+REM across every scheduled batch so a sticky switch persists for the run.
+REM To revert to default %USERPROFILE%\.claude, re-comment both lines.
+set USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY=%USERPROFILE%\.claude-acct-a
+set USECASEINTEL_CLAUDE_CONFIG_DIR_SECONDARY=%USERPROFILE%\.claude-acct-b
 set USECASEINTEL_USE_CLAUDE_OAUTH=1
 
 for /f %%a in ('powershell -nop -c "Get-Date -Format yyyy-MM-dd"') do set TS=%%a

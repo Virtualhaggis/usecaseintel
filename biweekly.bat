@@ -15,11 +15,12 @@ set LOG=logs\biweekly.log
 REM Dual-account failover. See run_once.bat. biweekly_review.py delegates
 REM to generate._llm_call_via_oauth → _call_claude_cli, so the same switch
 REM logic applies without any per-script change.
-REM Dual-account env vars deferred until setup_dual_account.ps1 has been run.
-REM Until then, leave both vars unset so the pipeline uses the default
-REM %USERPROFILE%\.claude session. Re-enable by uncommenting both lines.
-REM set USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY=%USERPROFILE%\.claude-acct-a
-REM set USECASEINTEL_CLAUDE_CONFIG_DIR_SECONDARY=%USERPROFILE%\.claude-acct-b
+REM Dual-account failover enabled: setup_dual_account.ps1 has provisioned
+REM both per-account config dirs. biweekly_review.py delegates to
+REM generate._llm_call_via_oauth -> _call_claude_cli so the same switch
+REM logic applies. To revert to default %USERPROFILE%\.claude, re-comment.
+set USECASEINTEL_CLAUDE_CONFIG_DIR_PRIMARY=%USERPROFILE%\.claude-acct-a
+set USECASEINTEL_CLAUDE_CONFIG_DIR_SECONDARY=%USERPROFILE%\.claude-acct-b
 set USECASEINTEL_USE_CLAUDE_OAUTH=1
 py biweekly_review.py --apply 1>>"%LOG%" 2>>&1
 if errorlevel 1 (
