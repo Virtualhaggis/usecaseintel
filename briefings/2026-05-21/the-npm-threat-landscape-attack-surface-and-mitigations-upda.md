@@ -1,6 +1,6 @@
 # [CRIT] The npm Threat Landscape: Attack Surface and Mitigations (Updated May 21)
 
-**Source:** Unit 42 (Palo Alto), Cyber Security News, Aikido
+**Source:** Unit 42 (Palo Alto), StepSecurity
 **Published:** 2026-05-21
 **Article:** https://unit42.paloaltonetworks.com/monitoring-npm-supply-chain-attacks/
 
@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] npm/node lifecycle script fetching Bun runtime from github.com/oven-sh/bun
 
-`UC_9_8` · phase: **install** · confidence: **High**
+`UC_23_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ union ProcHits, NetHits
 
 ### [LLM] C2 beacon to audit.checkmarx[.]cx /v1/telemetry (TeamPCP Shai-Hulud Third Coming)
 
-`UC_9_9` · phase: **c2** · confidence: **High**
+`UC_23_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ DeviceNetworkEvents
 
 ### [LLM] Malicious @bitwarden/cli payload artifacts on disk (bw_setup.js, bw1.js, Shai-Hulud markers)
 
-`UC_9_10` · phase: **install** · confidence: **High**
+`UC_23_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -394,7 +394,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The npm Threat Landscape: Attack Surface and Mitigations (Updated May 21)
 
-`UC_9_7` · phase: **exploit** · confidence: **High**
+`UC_23_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

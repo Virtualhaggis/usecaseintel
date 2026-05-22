@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SonicWall SSL-VPN sess="CLI" tag — scripted/automated MFA-bypass authentication
 
-`UC_38_5` · phase: **exploit** · confidence: **High**
+`UC_42_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ index=netfw OR index=sonicwall sourcetype="sonicwall*" sess="CLI"
 
 ### [LLM] SonicWall SSL-VPN Event ID 238 / 1080 — CVE-2024-12802 exploitation signal
 
-`UC_38_6` · phase: **exploit** · confidence: **High**
+`UC_42_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ index=netfw OR index=sonicwall sourcetype="sonicwall*" (eventid=238 OR eventid=1
 
 ### [LLM] SonicWall SSL-VPN UPN-format authentication (user@domain) succeeding without paired MFA challenge
 
-`UC_38_7` · phase: **exploit** · confidence: **High**
+`UC_42_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ index=netfw OR index=sonicwall sourcetype="sonicwall*" action=success user="*@*"
 
 ### [LLM] Post-VPN RDP to domain-joined server using shared local administrator credentials within 30 minutes of SonicWall logon
 
-`UC_38_8` · phase: **actions** · confidence: **Medium**
+`UC_42_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceLogonEvents
 
 ### [LLM] Cobalt Strike beacon deployment attempt on Windows host within 60 minutes of SonicWall VPN ingress
 
-`UC_38_9` · phase: **install** · confidence: **High**
+`UC_42_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +156,7 @@ DeviceProcessEvents
 
 ### [LLM] BYOVD vulnerable-driver write or load attempt post-VPN intrusion to disable EDR
 
-`UC_38_10` · phase: **install** · confidence: **High**
+`UC_42_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

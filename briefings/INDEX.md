@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1240 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1239 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,33 +9,36 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-22
-- [cisa adds exploited langflow and trend micro apex one vulner](./2026-05-22/cisa-adds-exploited-langflow-and-trend-micro-apex-one-vulner.md)
+- [cloud atlas activity in the second half of 2025 and early 20](./2026-05-22/cloud-atlas-activity-in-the-second-half-of-2025-and-early-20.md)
+- [complying with the cyber resilience act cra using aikido sec](./2026-05-22/complying-with-the-cyber-resilience-act-cra-using-aikido-sec.md)
+- [fbi warns of kali365 attacking microsoft 365 users to steal ](./2026-05-22/fbi-warns-of-kali365-attacking-microsoft-365-users-to-steal-.md)
+- [google publishes exploit code for unfixed chromium bug expos](./2026-05-22/google-publishes-exploit-code-for-unfixed-chromium-bug-expos.md)
+- [hackers can weaponize lenovo driver to terminate edr process](./2026-05-22/hackers-can-weaponize-lenovo-driver-to-terminate-edr-process.md)
+- [hackers use hugging face to host second stage malware for np](./2026-05-22/hackers-use-hugging-face-to-host-second-stage-malware-for-np.md)
+- [kimwolf ddos botnet operator arrested in canada over ddos fo](./2026-05-22/kimwolf-ddos-botnet-operator-arrested-in-canada-over-ddos-fo.md)
 - [megalodon malware compromised 5 500 github repos within 6 ho](./2026-05-22/megalodon-malware-compromised-5-500-github-repos-within-6-ho.md)
 - [nx console vs code extension compromised](./2026-05-22/nx-console-vs-code-extension-compromised.md)
+- [paved with intent roadtools and nation state tactics in the ](./2026-05-22/paved-with-intent-roadtools-and-nation-state-tactics-in-the-.md)
+- [splunk patches multiple vulnerabilities that enable dos atta](./2026-05-22/splunk-patches-multiple-vulnerabilities-that-enable-dos-atta.md)
 
 ## 2026-05-21
 - [5 supply chain attacks in 48 hours why securing one layer is](./2026-05-21/5-supply-chain-attacks-in-48-hours-why-securing-one-layer-is.md)
 - [9 year old linux kernel flaw enables root command execution ](./2026-05-21/9-year-old-linux-kernel-flaw-enables-root-command-execution-.md)
-- [authorities have taken down first vpn used in ransomware att](./2026-05-21/authorities-have-taken-down-first-vpn-used-in-ransomware-att.md)
 - [chinese hackers target telcos with new linux windows malware](./2026-05-21/chinese-hackers-target-telcos-with-new-linux-windows-malware.md)
 - [cisa kev cve 2025 34291 langflow origin validation error vul](./2026-05-21/cisa-kev-cve-2025-34291-langflow-origin-validation-error-vul.md)
 - [cisa kev cve 2026 34926 trend micro apex one on premise dire](./2026-05-21/cisa-kev-cve-2026-34926-trend-micro-apex-one-on-premise-dire.md)
-- [dev machine guard now scans extensions across every modern i](./2026-05-21/dev-machine-guard-now-scans-extensions-across-every-modern-i.md)
-- [fake invitation phishing campaign targets u s organizations ](./2026-05-21/fake-invitation-phishing-campaign-targets-u-s-organizations-.md)
 - [ghsa critical cve 2026 46614 fission router exposes fission ](./2026-05-21/ghsa-critical-cve-2026-46614-fission-router-exposes-fission-.md)
 - [ghsa critical cve 2026 46633 twig php code injection via use](./2026-05-21/ghsa-critical-cve-2026-46633-twig-php-code-injection-via-use.md)
 - [ghsa critical cve 2026 46703 boxlite path traversal vulnerab](./2026-05-21/ghsa-critical-cve-2026-46703-boxlite-path-traversal-vulnerab.md)
 - [ghsa critical ghsa q2f7 m237 v562 hulumi policies github oid](./2026-05-21/ghsa-critical-ghsa-q2f7-m237-v562-hulumi-policies-github-oid.md)
 - [github internal repositories breached via malicious nx conso](./2026-05-21/github-internal-repositories-breached-via-malicious-nx-conso.md)
 - [hackers use fake microsoft teams downloads to deploy valleyr](./2026-05-21/hackers-use-fake-microsoft-teams-downloads-to-deploy-valleyr.md)
-- [indian student data weaponized for phishing social engineeri](./2026-05-21/indian-student-data-weaponized-for-phishing-social-engineeri.md)
 - [inside a crypto drainer how to spot it before it empties you](./2026-05-21/inside-a-crypto-drainer-how-to-spot-it-before-it-empties-you.md)
 - [max severity cisco secure workload flaw gives site admin pri](./2026-05-21/max-severity-cisco-secure-workload-flaw-gives-site-admin-pri.md)
 - [microsoft warns of new defender zero days exploited in attac](./2026-05-21/microsoft-warns-of-new-defender-zero-days-exploited-in-attac.md)
 - [police seize first vpn service used in ransomware data theft](./2026-05-21/police-seize-first-vpn-service-used-in-ransomware-data-theft.md)
 - [securing the ai revolution how snyk and our partners are sca](./2026-05-21/securing-the-ai-revolution-how-snyk-and-our-partners-are-sca.md)
 - [showboat linux malware hits middle east telecom with socks5 ](./2026-05-21/showboat-linux-malware-hits-middle-east-telecom-with-socks5-.md)
-- [tamperedchef malware uses signed productivity apps to delive](./2026-05-21/tamperedchef-malware-uses-signed-productivity-apps-to-delive.md)
 - [the art of being ungovernable](./2026-05-21/the-art-of-being-ungovernable.md)
 - [the npm threat landscape attack surface and mitigations upda](./2026-05-21/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 - [the wild west of vs code extensions and how a poisoned exten](./2026-05-21/the-wild-west-of-vs-code-extensions-and-how-a-poisoned-exten.md)
@@ -144,7 +147,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa wf8q wvv8 p8jf samanhappy mcphub sse endp](./2026-05-14/ghsa-critical-ghsa-wf8q-wvv8-p8jf-samanhappy-mcphub-sse-endp.md)
 - [kazuar anatomy of a nation state botnet](./2026-05-14/kazuar-anatomy-of-a-nation-state-botnet.md)
 - [kimsuky targets organizations with pebbledash based tools](./2026-05-14/kimsuky-targets-organizations-with-pebbledash-based-tools.md)
-- [new fragnesia linux kernel lpe grants root access via page c](./2026-05-14/new-fragnesia-linux-kernel-lpe-grants-root-access-via-page-c.md)
 - [praisonai cve 2026 44338 auth bypass targeted within hours o](./2026-05-14/praisonai-cve-2026-44338-auth-bypass-targeted-within-hours-o.md)
 - [stealer backdoor found in 3 node ipc versions targeting deve](./2026-05-14/stealer-backdoor-found-in-3-node-ipc-versions-targeting-deve.md)
 - [the time of much patching is coming](./2026-05-14/the-time-of-much-patching-is-coming.md)
@@ -244,7 +246,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [bitwarden cli hijacked on npm bun staged credential stealer ](./2026-05-04/bitwarden-cli-hijacked-on-npm-bun-staged-credential-stealer-.md)
 - [canistersprawl pgserve compromised on npm malicious versions](./2026-05-04/canistersprawl-pgserve-compromised-on-npm-malicious-versions.md)
 - [elementary data compromised on pypi and ghcr forged release ](./2026-05-04/elementary-data-compromised-on-pypi-and-ghcr-forged-release-.md)
-- [legitimate phishing how attackers weaponize amazon ses to by](./2026-05-04/legitimate-phishing-how-attackers-weaponize-amazon-ses-to-by.md)
 - [popular pytorch lightning package compromised by mini shai h](./2026-05-04/popular-pytorch-lightning-package-compromised-by-mini-shai-h.md)
 - [shai hulud worm pivots to multi cloud intercom client 7 0 4 ](./2026-05-04/shai-hulud-worm-pivots-to-multi-cloud-intercom-client-7-0-4-.md)
 
@@ -319,7 +320,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [threat brief escalation of cyber risk related to iran update](./2026-04-17/threat-brief-escalation-of-cyber-risk-related-to-iran-update.md)
 
 ## 2026-04-16
-- [a deep dive into attempted exploitation of cve 2023 33538](./2026-04-16/a-deep-dive-into-attempted-exploitation-of-cve-2023-33538.md)
 - [aikido attack finds multiple 0 days in hoppscotch](./2026-04-16/aikido-attack-finds-multiple-0-days-in-hoppscotch.md)
 - [cisa kev cve 2026 34197 apache activemq improper input valid](./2026-04-16/cisa-kev-cve-2026-34197-apache-activemq-improper-input-valid.md)
 
@@ -436,7 +436,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [i read cursor s security agent prompts so you don t have to](./2026-03-17/i-read-cursor-s-security-agent-prompts-so-you-don-t-have-to.md)
 - [npm debug and chalk packages compromised](./2026-03-17/npm-debug-and-chalk-packages-compromised.md)
 - [securing the agent skills registry how snyk and tessl are se](./2026-03-17/securing-the-agent-skills-registry-how-snyk-and-tessl-are-se.md)
-- [shai hulud strikes again the golden path](./2026-03-17/shai-hulud-strikes-again-the-golden-path.md)
 
 ## 2026-03-16
 - [cisa kev cve 2025 47813 wing ftp server information disclosu](./2026-03-16/cisa-kev-cve-2025-47813-wing-ftp-server-information-disclosu.md)

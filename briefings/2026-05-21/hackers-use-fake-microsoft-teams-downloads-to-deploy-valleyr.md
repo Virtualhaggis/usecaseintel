@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Tencent GameBox.exe side-loads utility.dll (ValleyRAT loader)
 
-`UC_10_14` · phase: **install** · confidence: **High**
+`UC_19_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceImageLoadEvents
 
 ### [LLM] _CCGDAT service installed for ValleyRAT persistence
 
-`UC_10_15` · phase: **install** · confidence: **High**
+`UC_19_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ union
 
 ### [LLM] PowerShell adds Defender exclusions for utility.dll / ValleyRAT working folder
 
-`UC_10_16` · phase: **install** · confidence: **High**
+`UC_19_16` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound connection to ValleyRAT C2 103.215.77.17 or fake-Teams domains
 
-`UC_10_17` · phase: **c2** · confidence: **High**
+`UC_19_17` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ union
 
 ### [LLM] Drop or download of fake-Teams ValleyRAT zip / utility.dll / user.dat
 
-`UC_10_18` · phase: **delivery** · confidence: **High**
+`UC_19_18` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -544,7 +544,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use Fake Microsoft Teams Downloads to Deploy ValleyRAT Malware
 
-`UC_10_13` · phase: **exploit** · confidence: **High**
+`UC_19_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
