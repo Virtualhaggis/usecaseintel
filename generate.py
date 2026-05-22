@@ -19986,7 +19986,20 @@ def main():
     # the stub; humans get redirected to the in-app hash URL in <50 ms.
     write_share_stubs(articles_meta, raw_index)
 
-    intel_json = __import__("json").dumps({"generated": generated_iso, "iocs": iocs}, default=str)
+    # Embedding JSON inside an inline <script> tag: the browser still scans the
+    # body for a literal `</script>` and closes the tag early if it finds one,
+    # regardless of JS syntax. Threat-intel articles routinely contain PoC
+    # payloads like `<xmp><script>alert(1)</script></xmp>` in their text, so
+    # raw json.dumps output would break the page (Articles JSON dump leaks
+    # into the Home view, "Uncaught SyntaxError: Invalid or unexpected token").
+    # Also escape U+2028/U+2029 — valid JSON but invalid in JS string literals.
+    def _js_safe(s: str) -> str:
+        return (s.replace("</", "<\\/")
+                 .replace("<!--", "<\\!--")
+                 .replace(" ", "\\u2028")
+                 .replace(" ", "\\u2029"))
+
+    intel_json = _js_safe(__import__("json").dumps({"generated": generated_iso, "iocs": iocs}, default=str))
 
     # Source filter chips (Articles tab)
     src_class_map_chips = {
@@ -20033,7 +20046,7 @@ def main():
         # individually — every T-ID gets /techniques/<TID>.html with UC list,
         # article list, MITRE link, and JSON-LD structured data.
         write_technique_pages(matrix_data)
-    matrix_json = __import__("json").dumps(matrix_data) if matrix_data else "null"
+    matrix_json = _js_safe(__import__("json").dumps(matrix_data)) if matrix_data else "null"
 
     # ===== MITRE-sourced groups =====================================
     # Pull every intrusion-set in the MITRE ATT&CK catalog and merge
@@ -20315,7 +20328,7 @@ def main():
         -e["uc_count"],
         e["name"]
     ))
-    actors_json = __import__("json").dumps(actors_serialisable, separators=(",", ":"))
+    actors_json = _js_safe(__import__("json").dumps(actors_serialisable, separators=(",", ":")))
     print(f"[*] Threat actors detected: {len(actors_serialisable)} unique  ->  page payload")
     # Static per-actor landing pages — same SEO + share pattern as the
     # technique pages: one indexable URL per actor at /actors/<slug>.html
