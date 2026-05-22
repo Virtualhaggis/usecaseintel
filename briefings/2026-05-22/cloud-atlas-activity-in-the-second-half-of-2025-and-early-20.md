@@ -468,7 +468,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Cloud Atlas activity in the second half of 2025 and early 2026: new tools and a
 
-`UC_13_11` · phase: **exploit** · confidence: **High**
+`UC_17_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,6 +1,6 @@
 # [CRIT] GitHub Breached — Employee Device Hack Led to Exfiltration of 3,800+ Internal Repos
 
-**Source:** The Hacker News
+**Source:** The Hacker News, Aikido
 **Published:** 2026-05-20
 **Article:** https://thehackernews.com/2026/05/github-investigating-teampcp-claimed.html
 
@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Browser contact with Trust Wallet impostor analytics domain (metrics-trustwallet.com)
 
-`UC_56_13` · phase: **c2** · confidence: **High**
+`UC_58_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ union isfuzzy=true net, dns
 
 ### [LLM] Shai-Hulud npm worm C2 callback to websocket-api2.publicvm.com
 
-`UC_56_14` · phase: **c2** · confidence: **High**
+`UC_58_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ union isfuzzy=true net, dns
 
 ### [LLM] npm credential phishing typosquat domain visit (npmjs.help)
 
-`UC_56_15` · phase: **delivery** · confidence: **High**
+`UC_58_15` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -523,7 +523,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GitHub Breached — Employee Device Hack Led to Exfiltration of 3,800+ Internal Re
 
-`UC_56_12` · phase: **exploit** · confidence: **High**
+`UC_58_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -11,15 +11,9 @@ By Bill Toulas
 May 22, 2026
 09:14 AM
 0 
-
-
 Drupal is warning that hackers are attempting to exploit a "highly critical" SQL injection vulnerability announced earlier this week.
-
-
 The content management system (CMS) project published a PSA on May 18, urging administrators to reserve time for core updates that addressed an issue that threat actors might start exploiting "within hours or days."
-
-
-The flaw is now tracked as CVE-2026-…
+The flaw is now tracked as CVE-2026-9082 and was…
 
 ## Indicators of Compromise (high-fidelity only)
 

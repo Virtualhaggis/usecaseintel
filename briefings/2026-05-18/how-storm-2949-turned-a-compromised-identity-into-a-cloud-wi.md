@@ -64,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Sign-in from Storm-2949 attacker egress IPs (176.123.4.44 / 91.208.197.87 / 185.241.208.243)
 
-`UC_103_12` · phase: **delivery** · confidence: **High**
+`UC_95_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ AADSignInEventsBeta
 
 ### [LLM] Storm-2949 SSPR + MFA-method swap sequence (password reset followed by attacker MFA registration)
 
-`UC_103_13` · phase: **install** · confidence: **High**
+`UC_95_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ CloudAppEvents
 
 ### [LLM] Storm-2949 Microsoft Graph API tenant enumeration via cURL / Python user-agent
 
-`UC_103_14` · phase: **recon** · confidence: **Medium**
+`UC_95_14` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ AADSignInEventsBeta
 
 ### [LLM] Storm-2949 OneDrive / SharePoint bulk file download (mass-exfil pattern)
 
-`UC_103_15` · phase: **actions** · confidence: **High**
+`UC_95_15` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ CloudAppEvents
 
 ### [LLM] ScreenConnect outbound connection to Storm-2949 C2 (185.241.208.243) from Azure VM
 
-`UC_103_16` · phase: **c2** · confidence: **High**
+`UC_95_16` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +162,7 @@ union isfuzzy=true
 
 ### [LLM] Defender Antivirus tamper attempts from compromised-identity Azure VM session
 
-`UC_103_17` · phase: **install** · confidence: **High**
+`UC_95_17` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -181,7 +181,7 @@ DeviceProcessEvents
 
 ### [LLM] Azure Key Vault secret extraction by user identity (Storm-2949 credential-access pattern)
 
-`UC_103_18` · phase: **actions** · confidence: **High**
+`UC_95_18` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -190,7 +190,7 @@ DeviceProcessEvents
 
 ### [LLM] Service principal credential added by user (Storm-2949 SP persistence attempt)
 
-`UC_103_19` · phase: **install** · confidence: **High**
+`UC_95_19` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -86,7 +86,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — Exploring WebExtension security vulnerabilities in React Developer Tools and Vue
 
-`UC_1304_3` · phase: **exploit** · confidence: **High**
+`UC_1306_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

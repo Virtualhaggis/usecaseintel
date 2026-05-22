@@ -182,7 +182,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — How to implement SSL/TLS pinning in Node.js
 
-`UC_1363_3` · phase: **exploit** · confidence: **High**
+`UC_1365_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

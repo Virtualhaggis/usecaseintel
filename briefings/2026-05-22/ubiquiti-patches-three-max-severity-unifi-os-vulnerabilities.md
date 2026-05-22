@@ -11,12 +11,8 @@ By Sergiu Gatlan
 May 22, 2026
 08:00 AM
 2 
-
-
 Ubiquiti has released security updates to patch three maximum severity vulnerabilities in UniFi OS that can be exploited by remote attackers without privileges.
-
-
-UniFi OS is a unified operating system that powers UniFi Consoles and helps manage IT infrastructure, including networking, security, and other services, as well as UniFi applications such as UniFi Network, UniFi Protect, UniF…
+UniFi OS is a unified operating system that powers UniFi Consoles and helps manage IT infrastructure, including networking, security, and other services, as well as UniFi applications such as UniFi Network, UniFi Protect, UniFi Access…
 
 ## Indicators of Compromise (high-fidelity only)
 

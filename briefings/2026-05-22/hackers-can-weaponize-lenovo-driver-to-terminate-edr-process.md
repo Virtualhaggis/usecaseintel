@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Can Weaponize Lenovo Driver to Terminate EDR Processes
 
-`UC_17_4` · phase: **exploit** · confidence: **High**
+`UC_20_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

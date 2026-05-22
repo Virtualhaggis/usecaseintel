@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SHA1-Hulud worm payload execution via npm preinstall (setup_bun.js / bun_environment.js)
 
-`UC_627_5` · phase: **install** · confidence: **High**
+`UC_630_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### [LLM] TruffleHog secret-scanner execution on developer / CI host (SHA1-Hulud credential harvest)
 
-`UC_627_6` · phase: **actions** · confidence: **High**
+`UC_630_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound exfiltration to webhook.site from npm / node / bun process tree
 
-`UC_627_7` · phase: **c2** · confidence: **High**
+`UC_630_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceNetworkEvents
 
 ### [LLM] Cloud metadata service (IMDS) access from npm / node child process
 
-`UC_627_8` · phase: **actions** · confidence: **High**
+`UC_630_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceNetworkEvents
 
 ### [LLM] Malicious '.github/workflows/discussion.yaml' workflow file created by npm/node
 
-`UC_627_9` · phase: **install** · confidence: **High**
+`UC_630_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -175,7 +175,7 @@ DeviceFileEvents
 
 ### [LLM] SHA1-Hulud wiper: mass deletion of user home directory by npm/node descendant
 
-`UC_627_10` · phase: **actions** · confidence: **High**
+`UC_630_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

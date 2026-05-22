@@ -1,6 +1,6 @@
 # [CRIT] Megalodon GitHub Attack Targets 5,561 Repos with Malicious CI/CD Workflows
 
-**Source:** The Hacker News, Aikido
+**Source:** The Hacker News
 **Published:** 2026-05-22
 **Article:** https://thehackernews.com/2026/05/megalodon-github-attack-targets-5561.html
 
