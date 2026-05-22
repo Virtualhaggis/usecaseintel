@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Inbound email with HTML attachment linking to unpkg.com Beamglea package
 
-`UC_697_8` · phase: **delivery** · confidence: **High**
+`UC_698_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ htmlAttachments
 
 ### [LLM] Browser load of Beamglea redirect-* or mad-* package script from unpkg.com
 
-`UC_697_9` · phase: **exploit** · confidence: **High**
+`UC_698_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceNetworkEvents
 
 ### [LLM] Beamglea mad-* dead-drop fetch from raw.githubusercontent.com/Abassdos2992
 
-`UC_697_10` · phase: **c2** · confidence: **High**
+`UC_698_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceNetworkEvents
 
 ### [LLM] Connection to Beamglea phishing credential-harvesting domains
 
-`UC_697_11` · phase: **actions** · confidence: **High**
+`UC_698_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -366,7 +366,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Phishing Campaign Leveraging the NPM Ecosystem
 
-`UC_697_7` · phase: **exploit** · confidence: **High**
+`UC_698_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

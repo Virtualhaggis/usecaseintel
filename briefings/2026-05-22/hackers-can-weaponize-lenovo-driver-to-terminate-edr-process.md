@@ -10,12 +10,8 @@ Home Cyber Security News
 Hackers Can Weaponize Lenovo Driver to Terminate EDR Processes 
 By Abinaya 
 May 22, 2026 
-
-
-
-
 Hackers can weaponize a legitimately signed Lenovo driver to terminate security processes, highlighting a dangerous Bring Your Own Vulnerable Driver (BYOVD) attack vector that can bypass endpoint protection controls.
-Security researcher Jehad Abudagga has analyzed a Lenovo driver, BootRepair.sys, originally associated with the Lenovo PC Manager utility, and discovered that …
+Security researcher Jehad Abudagga has analyzed a Lenovo driver, BootRepair.sys, originally associated with the Lenovo PC Manager utility, and discovered that it can b…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -124,7 +120,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Can Weaponize Lenovo Driver to Terminate EDR Processes
 
-`UC_10_4` · phase: **exploit** · confidence: **High**
+`UC_17_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

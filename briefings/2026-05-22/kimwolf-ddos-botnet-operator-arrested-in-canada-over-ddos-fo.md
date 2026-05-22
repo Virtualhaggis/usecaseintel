@@ -1,6 +1,6 @@
 # [HIGH] Kimwolf DDoS Botnet Operator Arrested in Canada Over DDoS-for-Hire Attacks
 
-**Source:** The Hacker News, Cyber Security News, Aikido
+**Source:** The Hacker News, Cyber Security News
 **Published:** 2026-05-22
 **Article:** https://thehackernews.com/2026/05/kimwolf-ddos-botnet-operator-arrested.html
 
@@ -323,7 +323,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Kimwolf DDoS Botnet Operator Arrested in Canada Over DDoS-for-Hire Attacks
 
-`UC_3_8` · phase: **exploit** · confidence: **High**
+`UC_10_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Mastering Python virtual environments: A complete guide to venv, Docker, and sec
 
-`UC_1272_0` · phase: **exploit** · confidence: **High**
+`UC_1273_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

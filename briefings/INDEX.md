@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1239 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1242 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,15 +11,21 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-22
 - [cloud atlas activity in the second half of 2025 and early 20](./2026-05-22/cloud-atlas-activity-in-the-second-half-of-2025-and-early-20.md)
 - [complying with the cyber resilience act cra using aikido sec](./2026-05-22/complying-with-the-cyber-resilience-act-cra-using-aikido-sec.md)
+- [drupal critical sql injection flaw now targeted in attacks](./2026-05-22/drupal-critical-sql-injection-flaw-now-targeted-in-attacks.md)
 - [fbi warns of kali365 attacking microsoft 365 users to steal ](./2026-05-22/fbi-warns-of-kali365-attacking-microsoft-365-users-to-steal-.md)
 - [google publishes exploit code for unfixed chromium bug expos](./2026-05-22/google-publishes-exploit-code-for-unfixed-chromium-bug-expos.md)
 - [hackers can weaponize lenovo driver to terminate edr process](./2026-05-22/hackers-can-weaponize-lenovo-driver-to-terminate-edr-process.md)
+- [hackers hide malware payloads inside nested macos like folde](./2026-05-22/hackers-hide-malware-payloads-inside-nested-macos-like-folde.md)
 - [hackers use hugging face to host second stage malware for np](./2026-05-22/hackers-use-hugging-face-to-host-second-stage-malware-for-np.md)
 - [kimwolf ddos botnet operator arrested in canada over ddos fo](./2026-05-22/kimwolf-ddos-botnet-operator-arrested-in-canada-over-ddos-fo.md)
+- [making vulnerable drivers exploitable without hardware the b](./2026-05-22/making-vulnerable-drivers-exploitable-without-hardware-the-b.md)
+- [megalodon github attack targets 5 561 repos with malicious c](./2026-05-22/megalodon-github-attack-targets-5-561-repos-with-malicious-c.md)
 - [megalodon malware compromised 5 500 github repos within 6 ho](./2026-05-22/megalodon-malware-compromised-5-500-github-repos-within-6-ho.md)
 - [nx console vs code extension compromised](./2026-05-22/nx-console-vs-code-extension-compromised.md)
 - [paved with intent roadtools and nation state tactics in the ](./2026-05-22/paved-with-intent-roadtools-and-nation-state-tactics-in-the-.md)
 - [splunk patches multiple vulnerabilities that enable dos atta](./2026-05-22/splunk-patches-multiple-vulnerabilities-that-enable-dos-atta.md)
+- [tracking iranian apt screening serpens 2026 espionage campai](./2026-05-22/tracking-iranian-apt-screening-serpens-2026-espionage-campai.md)
+- [ubiquiti patches three max severity unifi os vulnerabilities](./2026-05-22/ubiquiti-patches-three-max-severity-unifi-os-vulnerabilities.md)
 
 ## 2026-05-21
 - [5 supply chain attacks in 48 hours why securing one layer is](./2026-05-21/5-supply-chain-attacks-in-48-hours-why-securing-one-layer-is.md)
@@ -32,7 +38,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46703 boxlite path traversal vulnerab](./2026-05-21/ghsa-critical-cve-2026-46703-boxlite-path-traversal-vulnerab.md)
 - [ghsa critical ghsa q2f7 m237 v562 hulumi policies github oid](./2026-05-21/ghsa-critical-ghsa-q2f7-m237-v562-hulumi-policies-github-oid.md)
 - [github internal repositories breached via malicious nx conso](./2026-05-21/github-internal-repositories-breached-via-malicious-nx-conso.md)
-- [hackers use fake microsoft teams downloads to deploy valleyr](./2026-05-21/hackers-use-fake-microsoft-teams-downloads-to-deploy-valleyr.md)
 - [inside a crypto drainer how to spot it before it empties you](./2026-05-21/inside-a-crypto-drainer-how-to-spot-it-before-it-empties-you.md)
 - [max severity cisco secure workload flaw gives site admin pri](./2026-05-21/max-severity-cisco-secure-workload-flaw-gives-site-admin-pri.md)
 - [microsoft warns of new defender zero days exploited in attac](./2026-05-21/microsoft-warns-of-new-defender-zero-days-exploited-in-attac.md)
@@ -55,10 +60,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 45498 microsoft defender denial of service](./2026-05-20/cisa-kev-cve-2026-45498-microsoft-defender-denial-of-service.md)
 - [ghsa critical cve 2026 46421 supply chain compromise via mal](./2026-05-20/ghsa-critical-cve-2026-46421-supply-chain-compromise-via-mal.md)
 - [github breached employee device hack led to exfiltration of ](./2026-05-20/github-breached-employee-device-hack-led-to-exfiltration-of-.md)
-- [grafana breach caused by missed token rotation after tanstac](./2026-05-20/grafana-breach-caused-by-missed-token-rotation-after-tanstac.md)
 - [grafana github breach exposes source code via tanstack npm a](./2026-05-20/grafana-github-breach-exposes-source-code-via-tanstack-npm-a.md)
 - [hackers bypass sonicwall vpn mfa due to incomplete patching](./2026-05-20/hackers-bypass-sonicwall-vpn-mfa-due-to-incomplete-patching.md)
 - [microsoft takes down malware signing service behind ransomwa](./2026-05-20/microsoft-takes-down-malware-signing-service-behind-ransomwa.md)
+- [mini shai hulud compromised antv npm packages enable ci cd c](./2026-05-20/mini-shai-hulud-compromised-antv-npm-packages-enable-ci-cd-c.md)
 - [securing the gaming culture of cultures](./2026-05-20/securing-the-gaming-culture-of-cultures.md)
 - [tracking tamperedchef clusters via certificate and code reus](./2026-05-20/tracking-tamperedchef-clusters-via-certificate-and-code-reus.md)
 - [ukraine identifies infostealer operator tied to 28 000 stole](./2026-05-20/ukraine-identifies-infostealer-operator-tied-to-28-000-stole.md)
@@ -151,7 +156,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [stealer backdoor found in 3 node ipc versions targeting deve](./2026-05-14/stealer-backdoor-found-in-3-node-ipc-versions-targeting-deve.md)
 - [the time of much patching is coming](./2026-05-14/the-time-of-much-patching-is-coming.md)
 - [when configuration becomes a vulnerability exploitable misco](./2026-05-14/when-configuration-becomes-a-vulnerability-exploitable-misco.md)
-- [windows zero days expose bitlocker bypasses and ctfmon privi](./2026-05-14/windows-zero-days-expose-bitlocker-bypasses-and-ctfmon-privi.md)
 
 ## 2026-05-13
 - [ghsa critical cve 2026 22599 strapi vulnerable to sql inject](./2026-05-13/ghsa-critical-cve-2026-22599-strapi-vulnerable-to-sql-inject.md)
@@ -315,9 +319,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fracturing software security with frontier ai models](./2026-04-20/fracturing-software-security-with-frontier-ai-models.md)
 - [multiple cross site scripting xss vulnerabilities in mailcow](./2026-04-20/multiple-cross-site-scripting-xss-vulnerabilities-in-mailcow.md)
 - [what the ransom note won t say](./2026-04-20/what-the-ransom-note-won-t-say.md)
-
-## 2026-04-17
-- [threat brief escalation of cyber risk related to iran update](./2026-04-17/threat-brief-escalation-of-cyber-risk-related-to-iran-update.md)
 
 ## 2026-04-16
 - [aikido attack finds multiple 0 days in hoppscotch](./2026-04-16/aikido-attack-finds-multiple-0-days-in-hoppscotch.md)

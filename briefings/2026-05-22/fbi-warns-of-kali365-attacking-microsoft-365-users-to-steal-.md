@@ -10,12 +10,8 @@ Home Cyber Security News
 FBI Warns of Kali365 Attacking Microsoft 365 Users to Steal Logins and Bypass MFA 
 By Abinaya 
 May 22, 2026 
-
-
-
-
 The FBI has issued a new cybersecurity warning about a rapidly emerging phishing-as-a-service (PhaaS) platform named Kali365, which is actively targeting Microsoft 365 users to steal access tokens and bypass multi-factor authentication (MFA).
-Kali365 is being distributed primarily through Telegram channels, where threat actors can subscribe to the service…
+Kali365 is being distributed primarily through Telegram channels, where threat actors can subscribe to the service and lau…
 
 ## Indicators of Compromise (high-fidelity only)
 

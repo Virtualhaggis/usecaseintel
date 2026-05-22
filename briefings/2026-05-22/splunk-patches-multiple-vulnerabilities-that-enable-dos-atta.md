@@ -10,12 +10,8 @@ Home Cyber Security News
 Splunk Patches Multiple Vulnerabilities that Enable DOS Attacks and Expose Sensitive Data 
 By Abinaya 
 May 22, 2026 
-
-
-
-
 Splunk has released security updates addressing multiple vulnerabilities across Splunk Enterprise , Splunk Cloud Platform, and the Splunk AI Toolkit that could lead to denial-of-service (DoS) conditions and exposure of sensitive data.
-The issues, disclosed on May 20, 2026, include three tracked vulnerabilities: CVE-2026-20238, CVE-2026-20239, and …
+The issues, disclosed on May 20, 2026, include three tracked vulnerabilities: CVE-2026-20238, CVE-2026-20239, and CVE-2026…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -92,7 +88,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Splunk Patches Multiple Vulnerabilities that Enable DOS Attacks and Expose Sensi
 
-`UC_2_3` · phase: **exploit** · confidence: **High**
+`UC_9_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
