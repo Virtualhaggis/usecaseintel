@@ -10223,6 +10223,17 @@ function openSearch() {
   input.value = '';
   _renderEmpty();
   setTimeout(() => input.focus(), 30);
+  // Palette indexes UCs from MATRIX and articles from DOM cards.
+  // Kick off both fetches in parallel so results populate the first
+  // time the user types after opening. SEARCH_INDEX is auto-invalidated
+  // by loadChunk's .then() handler, so subsequent _buildIndex() calls
+  // pick up the freshly-arrived data.
+  if (!window.MATRIX) loadChunk('matrix').catch(() => {});
+  if (!window._cardsLoaded) {
+    loadChunk('cards').then(() => {
+      if (!window._cardsLoaded) { window._cardsLoaded = true; afterCardsReady(); }
+    }).catch(() => {});
+  }
 }
 function closeSearch() { overlay.classList.remove('open'); }
 trigger.addEventListener('click', openSearch);
@@ -10499,7 +10510,10 @@ function applySourceFilter() {
     activeSources.length === 0 && activeFeats.length === 0 && activePlats.length === 0 && activeTgts.length === 0);
 }
 // Pre-populate the count badges on the feature + platform chips on load.
-(function() {
+// Hoisted to a named function (was an IIFE) so afterCardsReady() can
+// re-invoke it once data/cards.html lands -- at first load the cards
+// aren't in the DOM yet, so the initial call's NodeList is empty.
+function _initChipCounts() {
   const cards = Array.from(document.querySelectorAll('#view-articles article.card'));
   const hasUc = cards.filter(c => parseInt(c.dataset.ucCount||'0',10) > 0).length;
   const hasLlm = cards.filter(c => parseInt(c.dataset.llmUcCount||'0',10) > 0).length;
@@ -10547,7 +10561,10 @@ function applySourceFilter() {
     }).join('');
     wrap.innerHTML = html_;
   }
-})();
+}
+// Note: _initChipCounts is now invoked from afterCardsReady() once
+// data/cards.html lands -- calling it at load time would be a no-op
+// because the card NodeList is empty until the lazy fetch resolves.
 document.querySelectorAll('#srcFilter .src-chip').forEach(chip => {
   chip.addEventListener('click', () => {
     if (chip.classList.contains('all')) {
@@ -11399,7 +11416,7 @@ function _libDetailHtml(p) {
 // =================================================================
 const viewTabs = document.querySelectorAll('.view-tab');
 const views = document.querySelectorAll('.view');
-function showView(name) {
+async function showView(name) {
   const prevActive = document.querySelector('.view-tab.active')?.dataset.view;
   viewTabs.forEach(b => b.classList.toggle('active', b.dataset.view === name));
   views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
@@ -11417,22 +11434,55 @@ function showView(name) {
   document.body.classList.toggle('view-intel-active',    name === 'intel');
   document.body.classList.toggle('view-actors-active',   name === 'actors');
   document.body.classList.toggle('view-library-active',  name === 'library');
+  // Lazy-load each tab's chunk on first activation. Cards and the
+  // three big JSON blobs (MATRIX/INTEL/ACTORS) are all fetched here
+  // instead of being inlined into the HTML. Errors fall through to
+  // the per-tab renderer which already guards on missing data.
+  if (name === 'articles' && !window._cardsLoaded) {
+    try { await loadChunk('cards'); window._cardsLoaded = true; afterCardsReady(); }
+    catch (e) { console.error('cards load failed', e); }
+  }
   if (name === 'matrix' && !window._matrixRendered) {
+    try { await loadChunk('matrix'); } catch (e) { console.error('matrix load failed', e); }
     renderMatrix();
     window._matrixRendered = true;
   }
   if (name === 'intel' && !window._intelRendered) {
+    try { await loadChunk('intel'); } catch (e) { console.error('intel load failed', e); }
     renderIntel();
     window._intelRendered = true;
   }
   if (name === 'actors' && !window._actorsRendered) {
+    try { await loadChunk('actors'); } catch (e) { console.error('actors load failed', e); }
     renderActors();
     window._actorsRendered = true;
   }
   if (name === 'library' && !window._libraryRendered) {
+    // Library reads MATRIX *and* harvests per-UC query bodies from
+    // article-card DOM (see _libPrepare), so both chunks must land
+    // before render.
+    try {
+      await Promise.all([
+        loadChunk('matrix'),
+        loadChunk('cards').then(() => {
+          if (!window._cardsLoaded) { window._cardsLoaded = true; afterCardsReady(); }
+        }),
+      ]);
+    } catch (e) { console.error('library load failed', e); }
     renderLibrary();
     window._libraryRendered = true;
   }
+}
+
+// Re-run card-dependent at-load wirings after data/cards.html lands.
+// The chip-count IIFE and the Ctrl-K palette index both build from
+// `#view-articles article.card` queries that return zero results
+// until the lazy fetch resolves. Invalidating SEARCH_INDEX forces a
+// fresh build on next palette open.
+function afterCardsReady() {
+  document.dispatchEvent(new CustomEvent('cards-ready'));
+  if (typeof _initChipCounts === 'function') _initChipCounts();
+  if (typeof SEARCH_INDEX !== 'undefined') SEARCH_INDEX = null;
 }
 // Apply default state on page load — Home tab is the front door.
 document.body.classList.add('view-home-active');
@@ -11574,9 +11624,30 @@ document.addEventListener('click', e => {
   });
 
   // -------- Live-count under the input --------
+  // Prefer the slim precomputed search index (data/search.json, eager-
+  // loaded into window.__SEARCH on shell boot). It's ~one row per
+  // searchable record with {k: 'art'|'uc'|'act'|'ioc', b: lowercase
+  // blob}, so a single linear scan gives all four counts.
+  // Fall back to scanning whatever heavy chunks happen to be loaded
+  // (MATRIX / ACTORS / INTEL) if the search index hasn't arrived yet --
+  // worst case the user sees zeros until either the search index or
+  // a tab-activation fetch completes.
   function _liveCounts(q){
     const ql = q.toLowerCase();
     let artN = 0, ucN = 0, actorN = 0, iocN = 0;
+    const idx = window.__SEARCH;
+    if (Array.isArray(idx)) {
+      for (const row of idx) {
+        if (!row || !row.b || row.b.indexOf(ql) === -1) continue;
+        if      (row.k === 'art') artN++;
+        else if (row.k === 'uc')  ucN++;
+        else if (row.k === 'act') actorN++;
+        else if (row.k === 'ioc') { if (iocN < 9999) iocN++; }
+      }
+      return {arts: artN, ucs: ucN, actors: actorN, iocs: iocN};
+    }
+    // Fallback path: data/search.json not yet loaded. Use whichever
+    // heavy chunks are already in memory.
     if (window.MATRIX){
       if (Array.isArray(MATRIX.arts)){
         for (const a of MATRIX.arts){
@@ -12019,9 +12090,57 @@ document.addEventListener('keydown', e => {
 })();
 
 // =================================================================
+// Lazy chunk loader -- the big MATRIX / INTEL / ACTORS payloads and
+// the article-cards HTML are now fetched on demand from data/*.{json,
+// html} instead of being inlined into this HTML. Used to make
+// index.html ~49 MB; the new shell is ~1 MB. showView() awaits the
+// relevant chunk before invoking the per-tab renderer; existing
+// consumers already guard with `if (window.MATRIX)` so transient
+// nulls are safe.  __MANIFEST_DATA__ is replaced at build time with
+// {chunk-name -> hashed URL} JSON.
+// =================================================================
+const __MANIFEST__ = __MANIFEST_DATA__;
+const __chunkP = {};
+function loadChunk(name) {
+  if (__chunkP[name]) return __chunkP[name];
+  const url = __MANIFEST__ && __MANIFEST__[name];
+  if (!url) return Promise.resolve(null);
+  const isHtml = name === 'cards';
+  __chunkP[name] = fetch(url)
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return isHtml ? r.text() : r.json(); })
+    .then(data => {
+      if      (name === 'matrix')  MATRIX  = data;
+      else if (name === 'actors')  ACTORS  = data;
+      else if (name === 'intel')   INTEL   = data;
+      else if (name === 'search')  window.__SEARCH = data;
+      else if (name === 'cards')   {
+        const host = document.getElementById('cardsHost');
+        if (host) { host.innerHTML = data; host.dataset.loaded = '1'; }
+      }
+      // Invalidate the lazy Ctrl-K palette index so the next palette
+      // open rebuilds it including the just-arrived data. Wrapped in
+      // try/catch because SEARCH_INDEX is a `let` in a different
+      // lexical block earlier in this script.
+      try { SEARCH_INDEX = null; } catch (_) {}
+      document.dispatchEvent(new CustomEvent('chunk-ready:' + name, {detail: data}));
+      return data;
+    })
+    .catch(e => {
+      console.error('[loadChunk]', name, e);
+      __chunkP[name] = null; // allow retry on next access
+      throw e;
+    });
+  return __chunkP[name];
+}
+// Eager-fetch the slim search index so live-counts under the global
+// search input work from first paint without forcing the heavy
+// MATRIX / ACTORS / INTEL chunks to load.
+loadChunk('search').catch(() => {});
+
+// =================================================================
 // ATT&CK Matrix
 // =================================================================
-const MATRIX = __MATRIX_DATA__;
+let MATRIX = __MATRIX_DATA__;
 let matrixMode = 'coverage';
 
 function covClassFor(n) {
@@ -12470,7 +12589,7 @@ document.querySelectorAll('.ind.tech').forEach(pill => {
 // Search filters across name + alias + country/region; country chips
 // (RU / CN / KP / IR / etc.) further narrow the grid.
 // =================================================================
-const ACTORS = __ACTORS_DATA__;
+let ACTORS = __ACTORS_DATA__; // null until loadChunk('actors') resolves
 let actorsCountryFilter = '';
 let actorsMotivationFilter = '';
 let actorsSortMode = 'active';
@@ -13093,7 +13212,7 @@ document.addEventListener('keydown', e => {
 // =================================================================
 // Threat Intel tab
 // =================================================================
-const INTEL = __INTEL_DATA__;
+let INTEL = __INTEL_DATA__; // null until loadChunk('intel') resolves
 let intelTypeFilter = '';
 let intelSearchQ = '';
 
@@ -20012,7 +20131,16 @@ def main():
                  .replace(" ", "\\u2028")
                  .replace(" ", "\\u2029"))
 
-    intel_json = _js_safe(__import__("json").dumps({"generated": generated_iso, "iocs": iocs}, default=str))
+    # Raw JSON for external chunk files. Served as application/json, so
+    # the `</script>` injection vector doesn't apply -- no _js_safe call
+    # needed here. The slim inline manifest (URLs only) is still
+    # _js_safe'd later because it lives inside an inline <script>.
+    _json_mod = __import__("json")
+    intel_raw_json = _json_mod.dumps({"generated": generated_iso, "iocs": iocs}, default=str)
+    # Keep the legacy inline form as a `null` literal so the
+    # `__INTEL_DATA__` replacement still emits valid JS; the real
+    # data is fetched lazily from data/intel.json on tab activate.
+    intel_json = "null"
 
     # Source filter chips (Articles tab)
     src_class_map_chips = {
@@ -20059,7 +20187,12 @@ def main():
         # individually — every T-ID gets /techniques/<TID>.html with UC list,
         # article list, MITRE link, and JSON-LD structured data.
         write_technique_pages(matrix_data)
-    matrix_json = _js_safe(__import__("json").dumps(matrix_data)) if matrix_data else "null"
+    # Raw JSON for external data/matrix.json (lazy-fetched by the SPA on
+    # Matrix / Library tab activation). matrix_json is kept as the inline
+    # placeholder fallback so `const MATRIX = __MATRIX_DATA__;` still
+    # parses; consumers check `if (window.MATRIX)` already.
+    matrix_raw_json = _json_mod.dumps(matrix_data) if matrix_data else "null"
+    matrix_json = "null"
 
     # ===== MITRE-sourced groups =====================================
     # Pull every intrusion-set in the MITRE ATT&CK catalog and merge
@@ -20341,7 +20474,11 @@ def main():
         -e["uc_count"],
         e["name"]
     ))
-    actors_json = _js_safe(__import__("json").dumps(actors_serialisable, separators=(",", ":")))
+    # Raw JSON for external data/actors.json (lazy-fetched on Actors
+    # tab activation). actors_json kept as `null` inline; the SPA's
+    # `if (window.ACTORS)` guards make this safe.
+    actors_raw_json = _json_mod.dumps(actors_serialisable, separators=(",", ":"))
+    actors_json = "null"
     print(f"[*] Threat actors detected: {len(actors_serialisable)} unique  ->  page payload")
     # Static per-actor landing pages — same SEO + share pattern as the
     # technique pages: one indexable URL per actor at /actors/<slug>.html
@@ -20363,6 +20500,57 @@ def main():
         generated_human=generated_human,
     )
 
+    # ----- Externalise heavy payloads to data/*.{json,html} ------------
+    # Initial index.html used to ship ~49 MB because MATRIX / INTEL /
+    # ACTORS JSON and the 1,200+ article cards were all inlined. We
+    # split them into per-chunk files served from data/ and let the SPA
+    # fetch each one lazily on tab activation (see HTML_HEAD loader).
+    # A slim search.json keeps live-counts under the global search box
+    # responsive without forcing the heavy chunks to load.
+    # Each chunk URL is content-hashed so the 2-hour rebuild cadence
+    # auto-busts the GitHub Pages CDN entry whenever content changes.
+    cards_html_blob = "\n".join(cards)
+    search_rows = []
+    if matrix_data:
+        for a in (matrix_data.get("arts") or []):
+            blob = ((a.get("t") or "") + " " + (a.get("s") or "") + " " +
+                    " ".join(a.get("tt") or []) + " " +
+                    " ".join(a.get("act") or [])).lower()
+            search_rows.append({"k": "art", "b": blob})
+        for uc in (matrix_data.get("ucs") or []):
+            blob = ((uc.get("t") or "") + " " + (uc.get("n") or "") + " " +
+                    " ".join(uc.get("techs") or []) + " " +
+                    (uc.get("ph") or "") + " " + (uc.get("src") or "")).lower()
+            search_rows.append({"k": "uc", "b": blob})
+    for ac in actors_serialisable:
+        blob = ((ac.get("name") or "") + " " +
+                " ".join(ac.get("aliases") or []) + " " +
+                (ac.get("country") or "") + " " +
+                (ac.get("mitre_id") or "")).lower()
+        search_rows.append({"k": "act", "b": blob})
+    for io in (iocs or []):
+        blob = ((io.get("value") or "") + " " +
+                (io.get("type") or "")).lower()
+        search_rows.append({"k": "ioc", "b": blob})
+    search_raw_json = _json_mod.dumps(search_rows, separators=(",", ":"))
+
+    data_dir = OUT_HTML.parent / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    def _write_chunk(name: str, payload: str) -> str:
+        raw = payload.encode("utf-8")
+        (data_dir / name).write_bytes(raw)
+        return f"data/{name}?v={hashlib.sha256(raw).hexdigest()[:10]}"
+    manifest = {
+        "matrix": _write_chunk("matrix.json", matrix_raw_json),
+        "intel":  _write_chunk("intel.json",  intel_raw_json),
+        "actors": _write_chunk("actors.json", actors_raw_json),
+        "search": _write_chunk("search.json", search_raw_json),
+        "cards":  _write_chunk("cards.html",  cards_html_blob),
+    }
+    manifest_inline = _js_safe(_json_mod.dumps(manifest, separators=(",", ":")))
+    chunk_sizes = {k: (data_dir / (k + (".html" if k == "cards" else ".json"))).stat().st_size for k in manifest}
+    print("[*] Externalised chunks: " + ", ".join(f"{k}={v//1024}KB" for k, v in chunk_sizes.items()))
+
     page = (
         HTML_HEAD
         .replace("__HOME__", home_html)
@@ -20373,11 +20561,18 @@ def main():
         .replace("__CVE_COUNT__", str(len(total_cves)))
         .replace("__CRIT_COUNT__", str(sev_counts["crit"] + sev_counts["high"]))
         .replace("__NAV__", nav)
-        .replace("__CARDS__", "\n".join(cards))
+        # Cards are now fetched lazily from data/cards.html on Articles
+        # tab activation; the host div is where the SPA injects them.
+        .replace("__CARDS__", '<div id="cardsHost" data-loaded="0"></div>')
         .replace("__SOURCE_CHIPS__", source_chips_html)
         .replace("__MATRIX_DATA__", matrix_json)
         .replace("__INTEL_DATA__", intel_json)
         .replace("__ACTORS_DATA__", actors_json)
+        # Distinct placeholder name avoids self-referential substitution:
+        # the JS source has `const __MANIFEST__ = __MANIFEST_DATA__;` and
+        # Python's str.replace would otherwise rewrite both sides of the
+        # assignment to the JSON literal and break the binding.
+        .replace("__MANIFEST_DATA__", manifest_inline)
     )
     OUT_HTML.write_text(page, encoding="utf-8")
     print(f"[*] Wrote {OUT_HTML} ({OUT_HTML.stat().st_size//1024} KB)")

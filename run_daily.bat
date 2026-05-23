@@ -58,7 +58,7 @@ REM ---- Auto-commit refreshed exports to the repo ---------------------
 git diff --quiet -- intel/ catalog/ briefings/ daily_digest.md index.html 1>>"%LOG%" 2>>&1
 if errorlevel 1 (
   >>"%LOG%" echo [git] changes detected, committing and pushing
-  git add intel/ catalog/ briefings/ daily_digest.md index.html 1>>"%LOG%" 2>>&1
+  git add intel/ catalog/ briefings/ daily_digest.md data/ index.html 1>>"%LOG%" 2>>&1
   git commit -m "auto: refresh IOCs, catalog, and briefings (%TS%)" 1>>"%LOG%" 2>>&1
   git push 1>>"%LOG%" 2>>&1
   if errorlevel 1 (
