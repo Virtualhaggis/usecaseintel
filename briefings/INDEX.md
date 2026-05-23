@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1257 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1256 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -61,7 +61,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [github internal repositories breached via malicious nx conso](./2026-05-21/github-internal-repositories-breached-via-malicious-nx-conso.md)
 - [inside a crypto drainer how to spot it before it empties you](./2026-05-21/inside-a-crypto-drainer-how-to-spot-it-before-it-empties-you.md)
 - [max severity cisco secure workload flaw gives site admin pri](./2026-05-21/max-severity-cisco-secure-workload-flaw-gives-site-admin-pri.md)
-- [microsoft warns of new defender zero days exploited in attac](./2026-05-21/microsoft-warns-of-new-defender-zero-days-exploited-in-attac.md)
 - [police seize first vpn service used in ransomware data theft](./2026-05-21/police-seize-first-vpn-service-used-in-ransomware-data-theft.md)
 - [securing the ai revolution how snyk and our partners are sca](./2026-05-21/securing-the-ai-revolution-how-snyk-and-our-partners-are-sca.md)
 - [showboat linux malware hits middle east telecom with socks5 ](./2026-05-21/showboat-linux-malware-hits-middle-east-telecom-with-socks5-.md)
