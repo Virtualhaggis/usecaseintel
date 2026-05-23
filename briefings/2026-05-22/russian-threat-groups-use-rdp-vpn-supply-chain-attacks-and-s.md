@@ -18,14 +18,14 @@ From exploiting remote desktop tools and virtual private networks to manipulatin
 - **CVE:** `CVE-2025-20333`
 - **CVE:** `CVE-2025-20362`
 - **CVE:** `CVE-2024-42009`
+- **CVE:** `CVE-2024-37383`
 - **CVE:** `CVE-2025-49113`
+- **CVE:** `CVE-2025-48700`
 - **CVE:** `CVE-2024-55591`
 - **CVE:** `CVE-2024-21762`
+- **CVE:** `CVE-2025-24472`
 - **CVE:** `CVE-2017-11882`
 - **CVE:** `CVE-2017-0199`
-- **CVE:** `CVE-2024-37383`
-- **CVE:** `CVE-2025-48700`
-- **CVE:** `CVE-2025-24472`
 - **CVE:** `CVE-2025-6218`
 - **CVE:** `CVE-2025-8088`
 - **CVE:** `CVE-2025-0411`
@@ -81,7 +81,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] WinRAR CVE-2025-8088 / 7-Zip CVE-2025-0411 - archive tool spawning script interpreters or LOLBins
 
-`UC_5_15` · phase: **exploit** · confidence: **High**
+`UC_6_15` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceProcessEvents
 
 ### [LLM] ClickFix lure: explorer.exe-spawned mshta/powershell with paste-from-clipboard hidden-window markers
 
-`UC_5_16` · phase: **delivery** · confidence: **Medium**
+`UC_6_16` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceProcessEvents
 
 ### [LLM] Device Code phishing - successful Azure AD sign-in via deviceCode grant against Teams/Office/Azure CLI
 
-`UC_5_17` · phase: **install** · confidence: **Medium**
+`UC_6_17` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ AADSignInEventsBeta
 
 ### [LLM] Cloudflare Tunnel C2 - non-browser process resolving or connecting to *.trycloudflare.com
 
-`UC_5_18` · phase: **c2** · confidence: **Medium**
+`UC_6_18` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,7 +163,7 @@ DeviceNetworkEvents
 
 ### [LLM] Inbound RDP logon followed by X2anylock/Warlock/LockBit3 ransom-note or shadow-copy deletion within 12h
 
-`UC_5_19` · phase: **actions** · confidence: **High**
+`UC_6_19` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -659,7 +659,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2025-20333`, `CVE-2025-20362`, `CVE-2024-42009`, `CVE-2025-49113`, `CVE-2024-55591`, `CVE-2024-21762`, `CVE-2017-11882`, `CVE-2017-0199` _(+11 more)_
+  - CVE(s): `CVE-2025-20333`, `CVE-2025-20362`, `CVE-2024-42009`, `CVE-2024-37383`, `CVE-2025-49113`, `CVE-2025-48700`, `CVE-2024-55591`, `CVE-2024-21762` _(+11 more)_
 
 
 ## Why this matters

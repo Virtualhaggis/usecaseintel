@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vulnerable UniFi OS / Network Application present on managed host (UniFi SA-056 CVEs)
 
-`UC_9_5` · phase: **recon** · confidence: **High**
+`UC_10_5` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ VulnHosts
 
 ### [LLM] Internet-facing UniFi management interface exposed (TCP 443/8443/8843/22)
 
-`UC_9_6` · phase: **recon** · confidence: **Medium**
+`UC_10_6` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceNetworkEvents
 
 ### [LLM] Lateral movement originating from UniFi gateway/controller IP into internal admin assets
 
-`UC_9_7` · phase: **actions** · confidence: **Medium**
+`UC_10_7` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

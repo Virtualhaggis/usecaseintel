@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-23
+- [anthropic s claude mythos preview uncovers 10 000 0 days in ](./2026-05-23/anthropic-s-claude-mythos-preview-uncovers-10-000-0-days-in-.md)
 - [ghsa critical cve 2026 46716 nezha monitoring rolemember can](./2026-05-23/ghsa-critical-cve-2026-46716-nezha-monitoring-rolemember-can.md)
 - [laravel lang supply chain attack every tag across multiple c](./2026-05-23/laravel-lang-supply-chain-attack-every-tag-across-multiple-c.md)
 - [supply chain attack targets laravel lang packages with crede](./2026-05-23/supply-chain-attack-targets-laravel-lang-packages-with-crede.md)
@@ -17,7 +18,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa adds langflow origin validation flaw to known exploited](./2026-05-22/cisa-adds-langflow-origin-validation-flaw-to-known-exploited.md)
 - [cisa kev cve 2026 9082 drupal core sql injection vulnerabili](./2026-05-22/cisa-kev-cve-2026-9082-drupal-core-sql-injection-vulnerabili.md)
 - [cloud atlas activity in the second half of 2025 and early 20](./2026-05-22/cloud-atlas-activity-in-the-second-half-of-2025-and-early-20.md)
-- [deleted google api keys continue accessing gemini bigquery a](./2026-05-22/deleted-google-api-keys-continue-accessing-gemini-bigquery-a.md)
 - [drupal critical sql injection flaw now targeted in attacks](./2026-05-22/drupal-critical-sql-injection-flaw-now-targeted-in-attacks.md)
 - [first vpn dismantled in global takedown over use by 25 ranso](./2026-05-22/first-vpn-dismantled-in-global-takedown-over-use-by-25-ranso.md)
 - [from edge appliance to enterprise compromise multi stage lin](./2026-05-22/from-edge-appliance-to-enterprise-compromise-multi-stage-lin.md)

@@ -25,12 +25,134 @@ Back to Blog Threat Intel Megalodon: Mass GitHub Actions Secret Exfiltration Acr
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
+- **T1041** — Exfiltration Over C2 Channel
+- **T1567** — Exfiltration Over Web Service
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1567.002** — Exfiltration to Cloud Storage
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1083** — File and Directory Discovery
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1554** — Compromise Host Software Binary
+- **T1552.004** — Unsecured Credentials: Private Keys
+- **T1555** — Credentials from Password Stores
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Megalodon CI/CD exfil: outbound HTTPS to C2 216.126.225.129:8443
+
+`UC_17_6` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where (All_Traffic.dest_ip="216.126.225.129" OR All_Traffic.dest="216.126.225.129") by All_Traffic.src All_Traffic.src_ip All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteIP == "216.126.225.129"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, Protocol
+| order by Timestamp desc
+```
+
+### [LLM] Megalodon harvester: curl POST to C2 /collect endpoint on Linux runner
+
+`UC_17_7` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=curl OR Processes.process_name=curl.exe) Processes.process="*216.126.225.129*" Processes.process="*/collect*" by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "curl" or FileName =~ "curl.exe" or FolderPath endswith "/curl"
+| where ProcessCommandLine has "216.126.225.129" and ProcessCommandLine has "/collect"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] Megalodon harvester: bash secret-grep across workspace (API_KEY|SECRET|TOKEN|PRIVATE_KEY|BEGIN RSA)
+
+`UC_17_8` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=grep Processes.process="*API_KEY*" Processes.process="*SECRET*" Processes.process="*TOKEN*" Processes.process="*PASSWORD*" Processes.process="*PRIVATE_KEY*" Processes.process="*BEGIN RSA*" by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "grep" or FolderPath endswith "/grep"
+| where ProcessCommandLine has_all ("API_KEY", "SECRET", "TOKEN", "PASSWORD", "PRIVATE_KEY", "BEGIN RSA")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] Megalodon backdoor workflow file (SysDiag.yml / Optimize-Build.yml) written to .github/workflows/
+
+`UC_17_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*.github/workflows/*" OR Filesystem.file_path="*.github\\workflows\\*") (Filesystem.file_name="SysDiag.yml" OR Filesystem.file_name="Optimize-Build.yml") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FolderPath has ".github\\workflows" or FolderPath has ".github/workflows"
+| where FileName in~ ("SysDiag.yml","Optimize-Build.yml")
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] Megalodon harvester: clustered read of ~/.ssh/id_*, ~/.kube/config, ~/.npmrc, ~/.docker/config.json in one session
+
+`UC_17_10` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmds from datamodel=Endpoint.Processes where Processes.process_name=cat (Processes.process="*/proc/1/environ*" OR Processes.process="*/.ssh/id_*" OR Processes.process="*/.kube/config*" OR Processes.process="*/.npmrc*" OR Processes.process="*/.docker/config.json*") by Processes.dest Processes.user Processes.parent_process_id Processes.parent_process_name _time span=1m | `drop_dm_object_name(Processes)` | eval is_ssh=if(match(mvjoin(cmds,"|"),"/.ssh/id_"),1,0), is_kube=if(match(mvjoin(cmds,"|"),"/.kube/config"),1,0), is_npm=if(match(mvjoin(cmds,"|"),"/.npmrc"),1,0), is_proc=if(match(mvjoin(cmds,"|"),"/proc/1/environ"),1,0), is_docker=if(match(mvjoin(cmds,"|"),"/.docker/config.json"),1,0) | eval distinct_targets=is_ssh+is_kube+is_npm+is_proc+is_docker | where distinct_targets>=3 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let WindowMin = 1m;
+DeviceProcessEvents
+| where Timestamp > ago(LookbackDays)
+| where FileName =~ "cat" or FolderPath endswith "/cat"
+| where ProcessCommandLine has_any ("/proc/1/environ","/.ssh/id_","/.kube/config","/.npmrc","/.docker/config.json")
+| extend Target = case(
+    ProcessCommandLine has "/proc/1/environ","pid1_env",
+    ProcessCommandLine has "/.ssh/id_","ssh_key",
+    ProcessCommandLine has "/.kube/config","kube",
+    ProcessCommandLine has "/.npmrc","npm",
+    ProcessCommandLine has "/.docker/config.json","docker",
+    "")
+| summarize
+    DistinctTargets = dcount(Target),
+    Targets = make_set(Target, 10),
+    SampleCmds = make_set(ProcessCommandLine, 10),
+    FirstSeen = min(Timestamp),
+    LastSeen = max(Timestamp)
+    by DeviceName, AccountName, InitiatingProcessId, InitiatingProcessFileName, InitiatingProcessCommandLine, bin(Timestamp, WindowMin)
+| where DistinctTargets >= 3
+| order by LastSeen desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -120,7 +242,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Megalodon: Mass GitHub Actions Secret Exfiltration Across 5,500+ Public Reposito
 
-`UC_16_5` · phase: **install** · confidence: **High**
+`UC_17_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,4 +286,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

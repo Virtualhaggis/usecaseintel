@@ -17,12 +17,33 @@ The attack…
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2024-23222`
+- **IPv4 (defanged):** `180.178.50.158`
+- **IPv4 (defanged):** `172.67.141.14`
+- **IPv4 (defanged):** `104.21.40.254`
 - **Domain (defanged):** `v3.jiathis.com`
 - **Domain (defanged):** `utaq.cfww.shop`
+- **Domain (defanged):** `cfww.shop`
 - **Domain (defanged):** `l1ewsu3yjkqeroy.xyz`
 - **Domain (defanged):** `git.youzzjizz.com`
-- **Domain (defanged):** `ipv4.icanhazip.com`
 - **SHA256:** `f31bdd069fe7966ae11be1f78ee5dd44445938856dd1df12379e0e84a6851f5c`
+- **SHA256:** `273206e2973df6ba7474aa66693797c98dcf26b794da4c3e863ab8d8c694868d`
+- **SHA256:** `5b5fe5d92808a732d0d44246cd706295cc739ed7f4dcae19112df666bc5d4f7d`
+- **SHA256:** `101afde88ff8b5c02fd341eda55022a39203088c2ff11dcb73214911cf5afb77`
+- **SHA256:** `d8e3973a0b3c5359d1f53a22491b56bdd31dee13a51c01c7126bc6694584512f`
+- **SHA256:** `080da430f7e3a38d7cad59887df30d9ac40e70d203c7aa5f5afaf0cafcb73e5f`
+- **SHA256:** `b0b29b6148c4b0dbd77d33f821ca01e2d7a711988b854285a2606dcc53894abe`
+- **SHA256:** `593548d714f6d48acb886d42bf576d8fd6b1ddae6f888dda0719671a53463663`
+- **SHA256:** `2c4a5a49a84f55db0dd5554f7a9e055dbb0eae3782986726c6dcfab84ecd6dc5`
+- **SHA256:** `eaab0874332777ad8a03a292bcd608a3358547f9f16ab551d34eef35d5cd539e`
+- **SHA256:** `feb9442c39619d7bb3ff29de8e1d4bebceb1b24f8c0a63da2f2b30a1023dc94f`
+- **SHA256:** `473f182b8cbbdb5b4b29b7ad875014d66f1691ed2e770c633b559d97243895a7`
+- **SHA256:** `329ae1401819da4f87e3726b7e2707afcaf62d1219c4256c828df36af0a8784a`
+- **SHA256:** `7b8436669563e7d317c219b26432bdaab70e39061ea2c1c70fcc201f2c19c470`
+- **SHA256:** `de1a07d8978725eaa6da5658e373e88264ac90515750201bfbe17947d5a9e788`
+- **SHA256:** `675a40df5f517f8f0cd99f74c5468f56d1d8f05003e997477a2af3bc7b0105a9`
+- **SHA256:** `2cfa14b2cd1f3fd51406cf1ac49c761a5c26ce3994e97de7f1ca469d85248a52`
+- **SHA256:** `ebcc76dcd5ef596e732321a8d16eb2dee525c5d9a68c700b7885648c13c65a57`
+- **SHA256:** `5c0ebd86d2e8ae2087c0a4def4e0364a0cfb85c7e0a753fc96dca55b6c303432`
 - **SHA1:** `8064d4e0322f069b3dba13e7957ff0ca7dab7984`
 - **MD5:** `6e79ae622b7ef30f31fdbcc2dc65339e`
 
@@ -56,7 +77,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] art-template Backdoored Version Installed via Package Manager
 
-`UC_6_9` · phase: **delivery** · confidence: **High**
+`UC_7_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +98,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound Traffic to art-template / Coruna Campaign Infrastructure
 
-`UC_6_10` · phase: **c2** · confidence: **High**
+`UC_7_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +119,7 @@ DeviceNetworkEvents
 
 ### [LLM] Coruna iOS Exploit Implant File Hash Sighting (49554fde7424c31c.js)
 
-`UC_6_11` · phase: **install** · confidence: **High**
+`UC_7_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +140,7 @@ DeviceFileEvents
 
 ### [LLM] Coruna C2 Beacon POST to /api/ip-sync/sync
 
-`UC_6_12` · phase: **c2** · confidence: **High**
+`UC_7_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +158,7 @@ DeviceNetworkEvents
 
 ### [LLM] loadScript() Injection in Web Bundle Pointing to jiathis/cfww/youzzjizz
 
-`UC_6_13` · phase: **delivery** · confidence: **Medium**
+`UC_7_13` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -368,7 +389,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Backdoor Popular art-template npm Package to Launch Watering-Hole Attack
 
-`UC_6_8` · phase: **exploit** · confidence: **High**
+`UC_7_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -420,13 +441,13 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `v3.jiathis.com`, `utaq.cfww.shop`, `l1ewsu3yjkqeroy.xyz`, `git.youzzjizz.com`, `ipv4.icanhazip.com`
+  - IP / domain IOC(s): `180.178.50.158`, `172.67.141.14`, `104.21.40.254`, `v3.jiathis.com`, `utaq.cfww.shop`, `cfww.shop`, `l1ewsu3yjkqeroy.xyz`, `git.youzzjizz.com`
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2024-23222`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `f31bdd069fe7966ae11be1f78ee5dd44445938856dd1df12379e0e84a6851f5c`, `8064d4e0322f069b3dba13e7957ff0ca7dab7984`, `6e79ae622b7ef30f31fdbcc2dc65339e`
+  - file hash IOC(s): `f31bdd069fe7966ae11be1f78ee5dd44445938856dd1df12379e0e84a6851f5c`, `273206e2973df6ba7474aa66693797c98dcf26b794da4c3e863ab8d8c694868d`, `5b5fe5d92808a732d0d44246cd706295cc739ed7f4dcae19112df666bc5d4f7d`, `101afde88ff8b5c02fd341eda55022a39203088c2ff11dcb73214911cf5afb77`, `d8e3973a0b3c5359d1f53a22491b56bdd31dee13a51c01c7126bc6694584512f`, `080da430f7e3a38d7cad59887df30d9ac40e70d203c7aa5f5afaf0cafcb73e5f`, `b0b29b6148c4b0dbd77d33f821ca01e2d7a711988b854285a2606dcc53894abe`, `593548d714f6d48acb886d42bf576d8fd6b1ddae6f888dda0719671a53463663` _(+13 more)_
 
 
 ## Why this matters
