@@ -2172,6 +2172,16 @@ def _call_claude_cli(
         prompt, model=model, allowed_tools=allowed_tools,
         system_prompt=system_prompt, timeout=timeout, kind=kind,
     )
+    # Quota messages arrive as a *successful* response body, not a stderr
+    # or stream-error: the CLI exits 0 with the literal "You've hit your
+    # weekly limit..." text as out. Without this branch the early-return
+    # below ships that text downstream as a real reply, the JSON parser
+    # rejects it, and the failover never fires. Treat such bodies as a
+    # failure so the credit-error path below picks them up.
+    body_quota_reason = ""
+    if out and _looks_like_credit_error(out):
+        body_quota_reason = (out.strip().splitlines() or ["quota-in-body"])[0][:160]
+        out = None
     if out:
         return out
     # Failover path. Only meaningful when:
@@ -2179,13 +2189,16 @@ def _call_claude_cli(
     #   2. We haven't already switched (one-way per run).
     #   3. The failure looks like credit/quota exhaustion (vs. timeout,
     #      network blip, transient model error). We pattern-match against
-    #      both the stderr tail and the stream-json is_error payload.
+    #      the stderr tail, stream-json is_error payload, AND the response
+    #      body itself (Pro-plan weekly-limit hits land in the body).
     if (_CLAUDE_ACTIVE_ACCOUNT == "primary"
             and not _CLAUDE_SWITCHED
             and _CLAUDE_CONFIG_DIR_SECONDARY
-            and _looks_like_credit_error(_LAST_CLAUDE_STDERR_TAIL,
-                                         _LAST_CLAUDE_STREAM_ERROR)):
-        reason = (_LAST_CLAUDE_STREAM_ERROR
+            and (body_quota_reason
+                 or _looks_like_credit_error(_LAST_CLAUDE_STDERR_TAIL,
+                                             _LAST_CLAUDE_STREAM_ERROR))):
+        reason = (body_quota_reason
+                  or _LAST_CLAUDE_STREAM_ERROR
                   or _LAST_CLAUDE_STDERR_TAIL
                   or "credit/quota error")[:160]
         if _maybe_switch_account(reason=reason):
