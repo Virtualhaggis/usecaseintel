@@ -11837,7 +11837,9 @@ document.addEventListener('click', e => {
     }
     // Snappier on small targets (Query languages = 5), slower on big
     // ones (Detections > 3000) so the tick feels weighty either way.
-    const duration = Math.max(700, Math.min(1600, 600 + Math.log10(target + 1) * 220));
+    // ~1.4-2.5s range -- slow enough that you can watch each digit
+    // settle without feeling sluggish.
+    const duration = Math.max(1400, Math.min(2600, 1200 + Math.log10(target + 1) * 350));
     const start = performance.now();
     function tick(now){
       const p = Math.min((now - start) / duration, 1);
