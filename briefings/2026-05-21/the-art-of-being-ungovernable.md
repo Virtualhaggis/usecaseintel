@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] BadIIS rogue native module drop in IIS folders (demo.pdb / Chinese path heuristic)
 
-`UC_48_2` · phase: **install** · confidence: **Medium**
+`UC_50_2` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ union FileDrops, ModuleLoads
 
 ### [LLM] Talos weekly prevalent-malware hash hit (Coinminer worm / TunMirror / SECOH-QAD / KMS-Loader)
 
-`UC_48_3` · phase: **install** · confidence: **High**
+`UC_50_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ union ExecHits, FileHits, ImageHits
 
 ### [LLM] BadIIS traffic-hijacking: IIS 503 surge + anomalous external redirect ratio per site/hour
 
-`UC_48_4` · phase: **actions** · confidence: **Medium**
+`UC_50_4` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ union ExecHits, FileHits, ImageHits
 
 ### Article-specific behavioural hunt — The art of being ungovernable
 
-`UC_48_1` · phase: **exploit** · confidence: **High**
+`UC_50_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

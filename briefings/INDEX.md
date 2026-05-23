@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1256 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -14,9 +14,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hackers compromised 233 versions of laravel lang packages by](./2026-05-23/hackers-compromised-233-versions-of-laravel-lang-packages-by.md)
 - [hackers exploit f5 big ip appliance to gain ssh access and p](./2026-05-23/hackers-exploit-f5-big-ip-appliance-to-gain-ssh-access-and-p.md)
 - [laravel lang php packages compromised to deliver cross platf](./2026-05-23/laravel-lang-php-packages-compromised-to-deliver-cross-platf.md)
+- [laravel lang supply chain advisory](./2026-05-23/laravel-lang-supply-chain-advisory.md)
 - [laravel lang supply chain attack every tag across multiple c](./2026-05-23/laravel-lang-supply-chain-attack-every-tag-across-multiple-c.md)
 - [litespeed cpanel plugin cve 2026 48172 exploited to run scri](./2026-05-23/litespeed-cpanel-plugin-cve-2026-48172-exploited-to-run-scri.md)
 - [nginx poolslip vulnerability enables dos and code execution ](./2026-05-23/nginx-poolslip-vulnerability-enables-dos-and-code-execution-.md)
+- [npm adds 2fa gated publishing and package install controls a](./2026-05-23/npm-adds-2fa-gated-publishing-and-package-install-controls-a.md)
 - [supply chain attack targets laravel lang packages with crede](./2026-05-23/supply-chain-attack-targets-laravel-lang-packages-with-crede.md)
 
 ## 2026-05-22
@@ -137,8 +139,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [four openclaw flaws enable data theft privilege escalation a](./2026-05-15/four-openclaw-flaws-enable-data-theft-privilege-escalation-a.md)
 - [gremlin stealer s evolved tactics hiding in plain sight with](./2026-05-15/gremlin-stealer-s-evolved-tactics-hiding-in-plain-sight-with.md)
 - [malicious node ipc versions published to npm in suspected ma](./2026-05-15/malicious-node-ipc-versions-published-to-npm-in-suspected-ma.md)
-- [on prem microsoft exchange server cve 2026 42897 exploited v](./2026-05-15/on-prem-microsoft-exchange-server-cve-2026-42897-exploited-v.md)
-- [tanstack supply chain attack hits two openai employee device](./2026-05-15/tanstack-supply-chain-attack-hits-two-openai-employee-device.md)
 - [turla turns kazuar backdoor into modular p2p botnet for pers](./2026-05-15/turla-turns-kazuar-backdoor-into-modular-p2p-botnet-for-pers.md)
 
 ## 2026-05-14
@@ -2326,6 +2326,3 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2023-05-25
 - [amplifying aapi voices to honor asian american pacific islan](./2023-05-25/amplifying-aapi-voices-to-honor-asian-american-pacific-islan.md)
 - [top 8 penetration testing tools](./2023-05-25/top-8-penetration-testing-tools.md)
-
-## 2023-05-24
-- [data loss prevention for developers](./2023-05-24/data-loss-prevention-for-developers.md)
