@@ -8410,6 +8410,163 @@ body.view-home-active .stats-articles{display:none !important;}
 }
 .home-cred-links a:hover{text-decoration:underline;}
 
+/* ----- Pipeline workflow row (Credibility section) ----------------- */
+/* High-level diagram: Intel sources -> AI analyses -> Use cases /
+   IOCs / Threat actors. Reuses the .home-cred-card visual language
+   (panel bg, 1px border, rounded, hover lift) so the row reads as
+   native to the surrounding cards. The AI node is the visual focal
+   point with a perpetual purple-tinted pulse. */
+.home-workflow-row{
+  display:grid;
+  grid-template-columns: 1fr 60px 1fr 60px 1.15fr;
+  align-items:stretch;
+  gap:0;
+  margin:0 0 28px;
+  padding:22px;
+  background:linear-gradient(180deg, rgba(155,138,251,0.04), rgba(76,183,130,0.02));
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+}
+.home-workflow-step{
+  display:flex; flex-direction:column;
+  padding:18px 16px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  position:relative;
+  transition:transform 0.18s cubic-bezier(.2,.8,.2,1),
+             border-color 0.18s cubic-bezier(.2,.8,.2,1),
+             box-shadow 0.18s cubic-bezier(.2,.8,.2,1);
+}
+.home-workflow-step:hover{
+  transform:translateY(-2px);
+  border-color:var(--border-2);
+  box-shadow:0 6px 18px rgba(0,0,0,0.18);
+}
+.home-workflow-step .hw-icon{
+  width:22px; height:22px;
+  margin-bottom:10px;
+  color:var(--accent-3);
+}
+.home-workflow-step.is-ai .hw-icon{ color:var(--accent-2); }
+.home-workflow-step .hw-label{
+  margin:0 0 6px;
+  font-family:var(--mono);
+  font-size:10px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--muted-2);
+}
+.home-workflow-step .hw-title{
+  margin:0 0 4px;
+  font-size:14px; font-weight:600; letter-spacing:-0.005em;
+  color:var(--text);
+}
+.home-workflow-step .hw-meta{
+  margin:0;
+  font-size:12px;
+  line-height:1.5;
+  color:var(--muted);
+}
+/* AI node — perpetual purple pulse to indicate "always working" */
+.home-workflow-step.is-ai{
+  border-color:rgba(155,138,251,0.32);
+  background:linear-gradient(180deg, rgba(155,138,251,0.06), var(--panel) 70%);
+}
+.home-workflow-step.is-ai::after{
+  content:'';
+  position:absolute; inset:-1px;
+  border-radius:inherit;
+  pointer-events:none;
+  animation:hwAiPulse 2.6s ease-in-out infinite;
+}
+@keyframes hwAiPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(155,138,251,0.22);}
+  50%{box-shadow:0 0 0 7px rgba(155,138,251,0);}
+}
+/* Connector arrows between steps */
+.home-workflow-arrow{
+  align-self:center;
+  width:100%;
+  height:24px;
+  color:var(--border-2);
+  overflow:visible;
+}
+.home-workflow-arrow .hw-line{
+  stroke:currentColor;
+  stroke-width:1.5;
+  fill:none;
+  stroke-linecap:round;
+  stroke-dasharray:4 5;
+  animation:hwFlowDash 1.4s linear infinite;
+}
+.home-workflow-arrow .hw-head{
+  stroke:var(--accent-2);
+  stroke-width:1.5;
+  fill:none;
+  stroke-linecap:round; stroke-linejoin:round;
+}
+@keyframes hwFlowDash{ to{stroke-dashoffset:-18;} }
+/* Fan-out output chips */
+.home-workflow-outputs{
+  display:flex; flex-direction:column;
+  gap:8px;
+  align-self:stretch;
+  justify-content:center;
+}
+.home-workflow-chip{
+  display:flex; align-items:center; gap:10px;
+  padding:11px 14px;
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--r-md);
+  transition:transform 0.18s cubic-bezier(.2,.8,.2,1),
+             border-color 0.18s cubic-bezier(.2,.8,.2,1);
+}
+.home-workflow-chip:hover{
+  transform:translateY(-1px);
+  border-color:var(--border-2);
+}
+.home-workflow-chip svg{
+  width:16px; height:16px;
+  stroke:var(--good);
+  stroke-width:1.8;
+  fill:none;
+  stroke-linecap:round; stroke-linejoin:round;
+  flex:none;
+}
+.home-workflow-chip .hw-chip-label{
+  flex:1; min-width:0;
+  color:var(--muted);
+  font-size:12.5px;
+}
+.home-workflow-chip strong{
+  font-family:var(--mono);
+  font-size:13.5px;
+  font-weight:500;
+  color:var(--text);
+}
+/* Mobile — stack vertically with downward arrows */
+@media (max-width: 920px){
+  .home-workflow-row{
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+    gap:10px;
+    padding:18px;
+  }
+  .home-workflow-arrow{
+    width:24px; height:24px;
+    justify-self:center;
+    transform:rotate(90deg);
+  }
+}
+@media (prefers-reduced-motion: reduce){
+  .home-workflow-step.is-ai::after,
+  .home-workflow-arrow .hw-line{
+    animation:none !important;
+  }
+}
+
 /* ----- Footer strip ------------------------------------------------- */
 .home-footer-strip{
   margin-top:48px; padding:18px 0 0;
@@ -19864,12 +20021,87 @@ def render_home_browse(platform_counts: dict) -> str:
     )
 
 
-def render_home_credibility(generated_human: str, article_count: int) -> str:
+def render_home_workflow(usecase_count: int, ioc_count: int, actor_count: int) -> str:
+    """High-level visualization of the detection pipeline: threat-intel
+    feeds get analysed by Claude, producing three concrete outputs
+    (detection use cases, IOCs, actor profiles). Sits above the 3
+    credibility cards inside the same reveal-wrapped section so it
+    fades up alongside them. Pure inline HTML/CSS/SVG -- no
+    dependencies. Counts are wired live to the same numbers shown in
+    the hero trust strip and the home tiles."""
+    return (
+        '      <div class="home-workflow-row" role="img" '
+        'aria-label="Detection pipeline: threat-intel sources analysed by AI into use cases, IOCs, and threat actor profiles">\n'
+        # ----- Step 1: Threat intel ---------------------------------
+        '        <div class="home-workflow-step is-intel">\n'
+        '          <svg class="hw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+        'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+        '<path d="M4 6 a14 14 0 0 1 14 14"/>'
+        '<path d="M4 12 a8 8 0 0 1 8 8"/>'
+        '<circle cx="5" cy="19" r="1.4"/>'
+        '</svg>\n'
+        '          <p class="hw-label">Step 1</p>\n'
+        '          <p class="hw-title">Threat intel</p>\n'
+        '          <p class="hw-meta">11+ RSS feeds &middot; CISA KEV &middot; GHSA &middot; vendor research blogs.</p>\n'
+        '        </div>\n'
+        # ----- Connector arrow -------------------------------------
+        '        <svg class="home-workflow-arrow" viewBox="0 0 60 24" aria-hidden="true">'
+        '<path class="hw-line" d="M2 12 H50"/>'
+        '<path class="hw-head" d="M50 6 L58 12 L50 18"/>'
+        '</svg>\n'
+        # ----- Step 2: AI analysis (focal point) -------------------
+        '        <div class="home-workflow-step is-ai">\n'
+        '          <svg class="hw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+        'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+        '<path d="M12 3 L13.6 8.4 L19 10 L13.6 11.6 L12 17 L10.4 11.6 L5 10 L10.4 8.4 Z"/>'
+        '<path d="M19 4 L19.5 5.5 L21 6 L19.5 6.5 L19 8 L18.5 6.5 L17 6 L18.5 5.5 Z"/>'
+        '</svg>\n'
+        '          <p class="hw-label">Step 2</p>\n'
+        '          <p class="hw-title">AI analysis</p>\n'
+        '          <p class="hw-meta">Claude reads every article, extracts IOCs, maps MITRE ATT&amp;CK techniques, drafts detections.</p>\n'
+        '        </div>\n'
+        # ----- Connector arrow -------------------------------------
+        '        <svg class="home-workflow-arrow" viewBox="0 0 60 24" aria-hidden="true">'
+        '<path class="hw-line" d="M2 12 H50"/>'
+        '<path class="hw-head" d="M50 6 L58 12 L50 18"/>'
+        '</svg>\n'
+        # ----- Step 3: Fan-out outputs -----------------------------
+        '        <div class="home-workflow-outputs">\n'
+        '          <div class="home-workflow-chip">'
+        '<svg viewBox="0 0 24 24" aria-hidden="true">'
+        '<path d="M5 7 L19 7"/><path d="M5 12 L19 12"/><path d="M5 17 L13 17"/>'
+        '</svg>'
+        '<span class="hw-chip-label">Use cases generated</span>'
+        f'<strong>{usecase_count:,}</strong>'
+        '</div>\n'
+        '          <div class="home-workflow-chip">'
+        '<svg viewBox="0 0 24 24" aria-hidden="true">'
+        '<circle cx="12" cy="12" r="7"/><path d="M12 5 L12 12 L17 14.5"/>'
+        '</svg>'
+        '<span class="hw-chip-label">IOCs extracted</span>'
+        f'<strong>{ioc_count:,}</strong>'
+        '</div>\n'
+        '          <div class="home-workflow-chip">'
+        '<svg viewBox="0 0 24 24" aria-hidden="true">'
+        '<circle cx="12" cy="8.5" r="3.5"/><path d="M5 20 c0-4 3.5-6 7-6 s7 2 7 6"/>'
+        '</svg>'
+        '<span class="hw-chip-label">Threat actors tracked</span>'
+        f'<strong>{actor_count:,}</strong>'
+        '</div>\n'
+        '        </div>\n'
+        '      </div>'
+    )
+
+
+def render_home_credibility(generated_human: str, article_count: int,
+                            usecase_count: int, ioc_count: int,
+                            actor_count: int) -> str:
     fresh = _home_format_freshness(generated_human)
     # ISO-8601 for the client-side freshness JS (see render_home_trust_strip
     # for why the Python value is always ~"Updated just now").
     gen_iso = (generated_human.replace(" UTC", ":00Z").replace(" ", "T")
                if " UTC" in generated_human else generated_human)
+    workflow_html = render_home_workflow(usecase_count, ioc_count, actor_count)
     sources = [
         "The Hacker News", "BleepingComputer", "Microsoft Security Blog",
         "CISA KEV", "Cisco Talos", "Securelist (Kaspersky)", "SentinelLabs",
@@ -19884,6 +20116,7 @@ def render_home_credibility(generated_human: str, article_count: int) -> str:
         '      <h2>Why this is a serious detection platform</h2>\n'
         '      <p class="home-section-sub">Three signals that separate an operational detection library from a marketing page.</p>\n'
         '    </header>\n'
+        f'{workflow_html}\n'
         '    <div class="home-cred-grid">\n'
         f'      <article class="home-cred-card">'
         f'<h3><span class="pulse" aria-hidden="true"></span>Continuously updated</h3>'
@@ -19911,7 +20144,8 @@ def render_home_credibility(generated_human: str, article_count: int) -> str:
 
 
 def render_home(articles_meta: list, usecase_count: int, tech_count: int,
-                article_count: int, generated_human: str) -> str:
+                article_count: int, generated_human: str,
+                ioc_count: int = 0, actor_count: int = 0) -> str:
     """Compose the full Home tab — hero, value, audience, featured,
     browse, credibility, and a thin footer-strip of secondary links.
     Wrapped in a `home-inner` so the section padding scales with the
@@ -19932,7 +20166,8 @@ def render_home(articles_meta: list, usecase_count: int, tech_count: int,
         _reveal(render_home_audience()),
         _reveal(render_home_featured(featured)),
         _reveal(render_home_browse(platform_counts)),
-        _reveal(render_home_credibility(generated_human, article_count)),
+        _reveal(render_home_credibility(generated_human, article_count,
+                                        usecase_count, ioc_count, actor_count)),
         (
             '  <nav class="home-footer-strip" aria-label="Site shortcuts">\n'
             '    <a href="#" data-home-action="tour">Take the tour</a>\n'
@@ -20690,6 +20925,8 @@ def main():
         tech_count=len(total_techs),
         article_count=len(articles),
         generated_human=generated_human,
+        ioc_count=len(iocs or []),
+        actor_count=len(actors_serialisable),
     )
 
     # ----- Externalise heavy payloads to data/*.{json,html} ------------
