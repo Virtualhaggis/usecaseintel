@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Outbound traffic to sanctioned Stark Industries / WorkTitans / PQ-Hosting bulletproof infrastructure
 
-`UC_17_1` · phase: **c2** · confidence: **High**
+`UC_18_1` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceNetworkEvents
 
 ### [LLM] NoName057(16) DDoSia client beaconing to Stark / PQ-Hosting C2 ranges
 
-`UC_17_2` · phase: **c2** · confidence: **Medium**
+`UC_18_2` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

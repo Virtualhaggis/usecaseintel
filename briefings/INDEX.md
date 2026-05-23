@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1257 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -16,6 +16,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [laravel lang php packages compromised to deliver cross platf](./2026-05-23/laravel-lang-php-packages-compromised-to-deliver-cross-platf.md)
 - [laravel lang supply chain attack every tag across multiple c](./2026-05-23/laravel-lang-supply-chain-attack-every-tag-across-multiple-c.md)
 - [litespeed cpanel plugin cve 2026 48172 exploited to run scri](./2026-05-23/litespeed-cpanel-plugin-cve-2026-48172-exploited-to-run-scri.md)
+- [nginx poolslip vulnerability enables dos and code execution ](./2026-05-23/nginx-poolslip-vulnerability-enables-dos-and-code-execution-.md)
 - [supply chain attack targets laravel lang packages with crede](./2026-05-23/supply-chain-attack-targets-laravel-lang-packages-with-crede.md)
 
 ## 2026-05-22
@@ -43,7 +44,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [russian threat groups use rdp vpn supply chain attacks and s](./2026-05-22/russian-threat-groups-use-rdp-vpn-supply-chain-attacks-and-s.md)
 - [tracking iranian apt screening serpens 2026 espionage campai](./2026-05-22/tracking-iranian-apt-screening-serpens-2026-espionage-campai.md)
 - [trend micro warns of apex one zero day exploited in the wild](./2026-05-22/trend-micro-warns-of-apex-one-zero-day-exploited-in-the-wild.md)
-- [ubiquiti patches critical unifi os vulnerabilities allowing ](./2026-05-22/ubiquiti-patches-critical-unifi-os-vulnerabilities-allowing-.md)
 - [ubiquiti patches three max severity unifi os vulnerabilities](./2026-05-22/ubiquiti-patches-three-max-severity-unifi-os-vulnerabilities.md)
 - [us and canada arrest and charge suspected kimwolf botnet adm](./2026-05-22/us-and-canada-arrest-and-charge-suspected-kimwolf-botnet-adm.md)
 - [world cup phishing campaign nearly triples with 203 unique i](./2026-05-22/world-cup-phishing-campaign-nearly-triples-with-203-unique-i.md)
@@ -134,7 +134,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [funnel builder flaw under active exploitation enables woocom](./2026-05-16/funnel-builder-flaw-under-active-exploitation-enables-woocom.md)
 
 ## 2026-05-15
-- [cisa adds cisco sd wan cve 2026 20182 to kev after admin acc](./2026-05-15/cisa-adds-cisco-sd-wan-cve-2026-20182-to-kev-after-admin-acc.md)
 - [cisa kev cve 2026 42897 microsoft exchange server cross site](./2026-05-15/cisa-kev-cve-2026-42897-microsoft-exchange-server-cross-site.md)
 - [four openclaw flaws enable data theft privilege escalation a](./2026-05-15/four-openclaw-flaws-enable-data-theft-privilege-escalation-a.md)
 - [gremlin stealer s evolved tactics hiding in plain sight with](./2026-05-15/gremlin-stealer-s-evolved-tactics-hiding-in-plain-sight-with.md)
