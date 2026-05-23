@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1257 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -13,6 +13,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46716 nezha monitoring rolemember can](./2026-05-23/ghsa-critical-cve-2026-46716-nezha-monitoring-rolemember-can.md)
 - [hackers compromised 233 versions of laravel lang packages by](./2026-05-23/hackers-compromised-233-versions-of-laravel-lang-packages-by.md)
 - [hackers exploit f5 big ip appliance to gain ssh access and p](./2026-05-23/hackers-exploit-f5-big-ip-appliance-to-gain-ssh-access-and-p.md)
+- [laravel lang php packages compromised to deliver cross platf](./2026-05-23/laravel-lang-php-packages-compromised-to-deliver-cross-platf.md)
 - [laravel lang supply chain attack every tag across multiple c](./2026-05-23/laravel-lang-supply-chain-attack-every-tag-across-multiple-c.md)
 - [litespeed cpanel plugin cve 2026 48172 exploited to run scri](./2026-05-23/litespeed-cpanel-plugin-cve-2026-48172-exploited-to-run-scri.md)
 - [supply chain attack targets laravel lang packages with crede](./2026-05-23/supply-chain-attack-targets-laravel-lang-packages-with-crede.md)
@@ -144,7 +145,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-14
 - [cisa kev cve 2026 20182 cisco catalyst sd wan controller aut](./2026-05-14/cisa-kev-cve-2026-20182-cisco-catalyst-sd-wan-controller-aut.md)
-- [cisco catalyst sd wan controller auth bypass actively exploi](./2026-05-14/cisco-catalyst-sd-wan-controller-auth-bypass-actively-exploi.md)
 - [frostyneighbor fresh mischief and digital shenanigans](./2026-05-14/frostyneighbor-fresh-mischief-and-digital-shenanigans.md)
 - [ghsa critical cve 2026 27886 strapi may leak sensitive data ](./2026-05-14/ghsa-critical-cve-2026-27886-strapi-may-leak-sensitive-data-.md)
 - [ghsa critical cve 2026 44789 n8n http request node paginatio](./2026-05-14/ghsa-critical-cve-2026-44789-n8n-http-request-node-paginatio.md)
@@ -161,6 +161,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 8178 amazon redshift vulnerable to re](./2026-05-14/ghsa-critical-cve-2026-8178-amazon-redshift-vulnerable-to-re.md)
 - [ghsa critical ghsa wf8q wvv8 p8jf samanhappy mcphub sse endp](./2026-05-14/ghsa-critical-ghsa-wf8q-wvv8-p8jf-samanhappy-mcphub-sse-endp.md)
 - [kimsuky targets organizations with pebbledash based tools](./2026-05-14/kimsuky-targets-organizations-with-pebbledash-based-tools.md)
+- [ongoing exploitation of cisco catalyst sd wan vulnerabilitie](./2026-05-14/ongoing-exploitation-of-cisco-catalyst-sd-wan-vulnerabilitie.md)
 - [the time of much patching is coming](./2026-05-14/the-time-of-much-patching-is-coming.md)
 
 ## 2026-05-13

@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vulnerable wolfSSL versions in inventory exposing CVE-2026-5194 cert-forgery flaw
 
-`UC_3_5` · phase: **weapon** · confidence: **High**
+`UC_4_5` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] Banking/webmail TLS connections from corporate hosts to never-before-seen destination IPs (forged-cert AitM proxy)
 
-`UC_3_6` · phase: **c2** · confidence: **Medium**
+`UC_4_6` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceNetworkEvents
 
 ### [LLM] Successful M365/banking sign-in from ASN never previously seen for the user
 
-`UC_3_7` · phase: **actions** · confidence: **Medium**
+`UC_4_7` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ AADSignInEventsBeta
 
 ### [LLM] Mailbox forwarding/inbox rule created within 30 min of an anomalous Entra sign-in
 
-`UC_3_8` · phase: **actions** · confidence: **High**
+`UC_4_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Unauthenticated SQLi probe against Drupal endpoints (CVE-2026-9082)
 
-`UC_25_1` · phase: **exploit** · confidence: **Medium**
+`UC_26_1` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Drupal/PHP/web server process spawning shell or LOLBin (post-CVE-2026-9082 RCE)
 
-`UC_25_2` · phase: **exploit** · confidence: **High**
+`UC_26_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceProcessEvents
 
 ### [LLM] Web server writes PHP/PHAR file outside Drupal's compiled-twig path (webshell drop)
 
-`UC_25_3` · phase: **install** · confidence: **High**
+`UC_26_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
