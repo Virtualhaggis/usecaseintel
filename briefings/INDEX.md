@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1256 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,11 +9,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-22
-- [android malware silently subscribes victims to premium servi](./2026-05-22/android-malware-silently-subscribes-victims-to-premium-servi.md)
-- [canadian man arrested for operating kimwolf ddos botnet hack](./2026-05-22/canadian-man-arrested-for-operating-kimwolf-ddos-botnet-hack.md)
 - [cisa adds langflow origin validation flaw to known exploited](./2026-05-22/cisa-adds-langflow-origin-validation-flaw-to-known-exploited.md)
 - [cisa kev cve 2026 9082 drupal core sql injection vulnerabili](./2026-05-22/cisa-kev-cve-2026-9082-drupal-core-sql-injection-vulnerabili.md)
-- [cisa warns of microsoft defender 0 day vulnerabilities explo](./2026-05-22/cisa-warns-of-microsoft-defender-0-day-vulnerabilities-explo.md)
 - [cloud atlas activity in the second half of 2025 and early 20](./2026-05-22/cloud-atlas-activity-in-the-second-half-of-2025-and-early-20.md)
 - [deleted google api keys continue accessing gemini bigquery a](./2026-05-22/deleted-google-api-keys-continue-accessing-gemini-bigquery-a.md)
 - [drupal critical sql injection flaw now targeted in attacks](./2026-05-22/drupal-critical-sql-injection-flaw-now-targeted-in-attacks.md)
@@ -22,21 +19,26 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghostwriter targets ukraine government entities with prometh](./2026-05-22/ghostwriter-targets-ukraine-government-entities-with-prometh.md)
 - [ghsa critical cve 2026 46670 yeswiki unauthenticated sql inj](./2026-05-22/ghsa-critical-cve-2026-46670-yeswiki-unauthenticated-sql-inj.md)
 - [ghsa critical ghsa qqqm 5547 774x filebrowser quantum path t](./2026-05-22/ghsa-critical-ghsa-qqqm-5547-774x-filebrowser-quantum-path-t.md)
+- [hackers abuse middle east telecom networks for large scale c](./2026-05-22/hackers-abuse-middle-east-telecom-networks-for-large-scale-c.md)
+- [hackers backdoor popular art template npm package to launch ](./2026-05-22/hackers-backdoor-popular-art-template-npm-package-to-launch-.md)
 - [hackers use nf e invoice lures to deliver banana rat through](./2026-05-22/hackers-use-nf-e-invoice-lures-to-deliver-banana-rat-through.md)
 - [hackers use six layer persistence to maintain access on comp](./2026-05-22/hackers-use-six-layer-persistence-to-maintain-access-on-comp.md)
 - [kimwolf ddos botnet operator arrested in canada over ddos fo](./2026-05-22/kimwolf-ddos-botnet-operator-arrested-in-canada-over-ddos-fo.md)
+- [litespeed cpanel plugin 0 day exploited in the wild to gain ](./2026-05-22/litespeed-cpanel-plugin-0-day-exploited-in-the-wild-to-gain-.md)
 - [making vulnerable drivers exploitable without hardware the b](./2026-05-22/making-vulnerable-drivers-exploitable-without-hardware-the-b.md)
 - [megalodon github attack targets 5 561 repos with malicious c](./2026-05-22/megalodon-github-attack-targets-5-561-repos-with-malicious-c.md)
 - [megalodon mass github actions secret exfiltration across 5 5](./2026-05-22/megalodon-mass-github-actions-secret-exfiltration-across-5-5.md)
-- [microsoft recognized as a leader in the forrester wave for w](./2026-05-22/microsoft-recognized-as-a-leader-in-the-forrester-wave-for-w.md)
 - [microsoft security success stories how st luke s and manpowe](./2026-05-22/microsoft-security-success-stories-how-st-luke-s-and-manpowe.md)
+- [netherlands seizes 800 servers of hosting firm enabling cybe](./2026-05-22/netherlands-seizes-800-servers-of-hosting-firm-enabling-cybe.md)
 - [nx console vs code extension compromised](./2026-05-22/nx-console-vs-code-extension-compromised.md)
-- [operation dragon whistle uses malicious lnk files to target ](./2026-05-22/operation-dragon-whistle-uses-malicious-lnk-files-to-target-.md)
 - [paved with intent roadtools and nation state tactics in the ](./2026-05-22/paved-with-intent-roadtools-and-nation-state-tactics-in-the-.md)
+- [russian threat groups use rdp vpn supply chain attacks and s](./2026-05-22/russian-threat-groups-use-rdp-vpn-supply-chain-attacks-and-s.md)
 - [tracking iranian apt screening serpens 2026 espionage campai](./2026-05-22/tracking-iranian-apt-screening-serpens-2026-espionage-campai.md)
 - [trend micro warns of apex one zero day exploited in the wild](./2026-05-22/trend-micro-warns-of-apex-one-zero-day-exploited-in-the-wild.md)
 - [ubiquiti patches critical unifi os vulnerabilities allowing ](./2026-05-22/ubiquiti-patches-critical-unifi-os-vulnerabilities-allowing-.md)
 - [ubiquiti patches three max severity unifi os vulnerabilities](./2026-05-22/ubiquiti-patches-three-max-severity-unifi-os-vulnerabilities.md)
+- [us and canada arrest and charge suspected kimwolf botnet adm](./2026-05-22/us-and-canada-arrest-and-charge-suspected-kimwolf-botnet-adm.md)
+- [world cup phishing campaign nearly triples with 203 unique i](./2026-05-22/world-cup-phishing-campaign-nearly-triples-with-203-unique-i.md)
 
 ## 2026-05-21
 - [5 supply chain attacks in 48 hours why securing one layer is](./2026-05-21/5-supply-chain-attacks-in-48-hours-why-securing-one-layer-is.md)

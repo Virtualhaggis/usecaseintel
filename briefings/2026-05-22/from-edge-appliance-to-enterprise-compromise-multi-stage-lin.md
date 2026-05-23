@@ -22,10 +22,6 @@ Because these devi…
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2025-33073`
-- **CVE:** `CVE-2025-53521`
-- **CVE:** `cve-2025-20333`
-- **CVE:** `cve-2025-20362`
-- **CVE:** `cve-2024-2012`
 - **IPv4 (defanged):** `206.189.27.39`
 - **SHA256:** `4a927d031919fd6bd88d3c8a917214b54bca00f8ddc80ecfe4d230663dda7465`
 - **SHA256:** `b4592cea69699b2c0737d4e19cff7dca17b5baf5a238cd6da950a37e9986f216`
@@ -47,12 +43,140 @@ Because these devi…
 - **T1219** — Remote Access Software
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
+- **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1564.001** — Hide Artifacts: Hidden Files and Directories
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1005** — Data from Local System
+- **T1187** — Forced Authentication
+- **T1557.001** — Adversary-in-the-Middle: LLMNR/NBT-NS Poisoning and SMB Relay
+- **T1558.003** — Steal or Forge Kerberos Tickets: Kerberoasting
+- **T1136.001** — Create Account: Local Account
+- **T1595.002** — Active Scanning: Vulnerability Scanning
+- **T1046** — Network Service Discovery
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Linux wget/curl fetching HackTool:Linux/MalPack.B from 206.189.27.39:8888
+
+`UC_12_9` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("wget","curl") OR Processes.process IN ("*wget*","*curl*")) (Processes.process="*206.189.27.39*" OR Processes.process="*206.189.27[.]39*") by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("wget","curl") or InitiatingProcessFileName in~ ("wget","curl")
+| where ProcessCommandLine has "206.189.27.39" or InitiatingProcessCommandLine has "206.189.27.39"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Linux curl FTP fetch writing payload into /dev/shm (tmpfs staging)
+
+`UC_12_10` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="curl" Processes.process="*ftp://*" Processes.process="*/dev/shm/*" by Processes.dest Processes.user Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "curl" or InitiatingProcessFileName =~ "curl"
+| where ProcessCommandLine has "ftp://" and ProcessCommandLine has "/dev/shm/"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] Confluence credential file access (server.xml / confluence.cfg.xml) by non-Confluence process
+
+`UC_12_11` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*/opt/atlassian/confluence/conf/server.xml*" OR Processes.process="*/var/atlassian/application-data/confluence/confluence.cfg.xml*") NOT Processes.parent_process_name IN ("java","tomcat","start-confluence.sh","systemd") by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has_any ("/opt/atlassian/confluence/conf/server.xml","/var/atlassian/application-data/confluence/confluence.cfg.xml")
+| where not (InitiatingProcessFileName in~ ("java","tomcat","start-confluence.sh","systemd","logrotate"))
+| where not (FileName in~ ("java","tomcat"))
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] NetExec/nxc PetitPotam coerce_plus with marshalled-target SMB payload
+
+`UC_12_12` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*coerce_plus*" OR Processes.process="*M=PetitPotam*" OR Processes.process="*localhost1UWhRC*" OR Processes.process_name IN ("nxc","netexec")) by Processes.dest Processes.user Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has_any ("coerce_plus","M=PetitPotam","localhost1UWhRC")
+   or (FileName in~ ("nxc","netexec") and ProcessCommandLine has "-M ")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### [LLM] CVE-2025-33073 Reflective Kerberos Relay exploit script + dnstool DNS record injection
+
+`UC_12_13` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*CVE-2025-33073*" OR (Processes.process="*dnstool.py*" AND Processes.process="*-a add*") OR (Processes.process="*dnstool.py*" AND Processes.process="*localhost1UWhRC*") OR Processes.process="*krbrelayx*") by Processes.dest Processes.user Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "CVE-2025-33073"
+   or (ProcessCommandLine has "dnstool.py" and ProcessCommandLine has_any ("-a add","localhost1UWhRC"))
+   or ProcessCommandLine has "krbrelayx"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### [LLM] gowitness HTTP/HTTPS recon scan with Chrome SOCKS5 proxy on internal subnet
+
+`UC_12_14` · phase: **recon** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="gowitness" OR Processes.process="*gowitness*") (Processes.process="*--write-screenshots*" OR Processes.process="*--screenshot-fullpage*" OR Processes.process="*--chrome-proxy socks5://*" OR Processes.process_hash="57b3188e24782c27fdf72493ce599537efd3187d03b80f8afe733c72d68c5517") by Processes.dest Processes.user Processes.process Processes.process_hash Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName =~ "gowitness" or InitiatingProcessFileName =~ "gowitness" or ProcessCommandLine has "gowitness scan nmap")
+   or (ProcessCommandLine has_all ("--write-screenshots","--chrome-proxy","socks5://"))
+   or SHA256 == "57b3188e24782c27fdf72493ce599537efd3187d03b80f8afe733c72d68c5517"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -202,7 +326,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — From edge appliance to enterprise compromise: Multi-stage Linux intrusion via F5
 
-`UC_8_8` · phase: **exploit** · confidence: **High**
+`UC_12_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -257,7 +381,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
   - IP / domain IOC(s): `206.189.27.39`
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2025-33073`, `CVE-2025-53521`, `cve-2025-20333`, `cve-2025-20362`, `cve-2024-2012`
+  - CVE(s): `CVE-2025-33073`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `4a927d031919fd6bd88d3c8a917214b54bca00f8ddc80ecfe4d230663dda7465`, `b4592cea69699b2c0737d4e19cff7dca17b5baf5a238cd6da950a37e9986f216`, `710a9d2653c8bd3689e451778dab9daec0de4c4c75f900788ccf23ef254b122a`, `57b3188e24782c27fdf72493ce599537efd3187d03b80f8afe733c72d68c5517`, `bdd5da81ac34d9faa2a5118d4ed8f492239734be02146cd24a0e34270a48a455`
@@ -265,4 +389,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

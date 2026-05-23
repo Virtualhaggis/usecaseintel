@@ -19,12 +19,32 @@ FileBrowser Quantum: Path traversal in public share PATCH allows file ops outsid
 ## MITRE ATT&CK Techniques
 
 - **T1190** — Exploit Public-Facing Application
+- **T1083** — File and Directory Discovery
+- **T1595.002** — Active Scanning: Vulnerability Scanning
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] FileBrowser Quantum public share PATCH path traversal in fromPath/toPath (GHSA-qqqm-5547-774x)
+
+`UC_8_1` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count, min(_time) as firstTime, max(_time) as lastTime, values(Web.uri_query) as uri_query, values(Web.http_user_agent) as user_agent, values(Web.status) as status from datamodel=Web where Web.http_method="PATCH" AND Web.url="*/public/api/resources*" AND Web.uri_query="*hash=*" by Web.src, Web.dest, Web.url | `drop_dm_object_name("Web")` | join type=inner src dest [ search index=* sourcetype IN (nginx:plus:kv, nginx:access, caddy, apache:access, aws:waf, azure:waf) http_method=PATCH uri_path="*/public/api/resources*" (request_body="*\"fromPath\":\"..*" OR request_body="*\"toPath\":\"..*" OR request_body="*\"fromPath\": \"..*" OR request_body="*\"toPath\": \"..*" OR _raw="*\"fromPath\":\"..*" OR _raw="*\"toPath\":\"..*") | stats values(request_body) as request_body by src dest ] | table firstTime, lastTime, src, dest, url, uri_query, user_agent, status, request_body, count
+```
+
+### [LLM] Volumetric PATCH probing against FileBrowser Quantum public share endpoint
+
+`UC_8_2` · phase: **recon** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count as patch_count, dc(Web.uri_query) as unique_hashes, dc(Web.url) as unique_urls, values(Web.http_user_agent) as user_agents, values(Web.status) as status_codes, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web where Web.http_method="PATCH" AND Web.url="*/public/api/resources*" by Web.src, Web.dest, span=5m | `drop_dm_object_name("Web")` | where patch_count >= 10 OR unique_hashes >= 3 | eval probe_signal=if(unique_hashes>=3 AND patch_count>=10, "hash_enumeration", if(patch_count>=20, "single_hash_fuzzing", "elevated")) | table firstTime, lastTime, src, dest, patch_count, unique_hashes, unique_urls, user_agents, status_codes, probe_signal | sort - patch_count
+```
 
 ### IOC-driven hunts (use shared templates)
 
@@ -36,4 +56,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

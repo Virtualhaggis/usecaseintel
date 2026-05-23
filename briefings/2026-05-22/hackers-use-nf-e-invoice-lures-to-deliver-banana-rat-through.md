@@ -10,12 +10,8 @@ Home Cyber Security News
 Hackers Use NF-e Invoice Lures to Deliver Banana RAT Through Malicious Batch Files 
 By Tushar Subhra Dutta 
 May 22, 2026 
-
-
-
-
 A newly discovered banking trojan is targeting Brazilians by disguising itself as a legitimate electronic invoice. The malware, known as Banana RAT, uses fake NF-e (Nota Fiscal Eletronica) documents to trick victims into running malicious batch files that quietly install a powerful remote access tool on their Windows systems. 
-The campaign ha…
+The campaign has been a…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -23,8 +19,6 @@ The campaign ha…
 - **IPv4 (defanged):** `24.199.90.58`
 - **Domain (defanged):** `convitemundial2026.com`
 - **Domain (defanged):** `windowsk-cdn.com`
-- **Domain (defanged):** `payload.php`
-- **Domain (defanged):** `st.txt`
 
 ## MITRE ATT&CK Techniques
 
@@ -48,12 +42,128 @@ The campaign ha…
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
 - **T1053.005** — Persistence (article-specific)
+- **T1059.003** — Windows Command Shell
+- **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1547** — Boot or Logon Autostart Execution
+- **T1573.002** — Encrypted Channel: Asymmetric Cryptography
+- **T1568** — Dynamic Resolution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Consultar_NF-e.bat NF-e invoice lure spawns hidden PowerShell (Banana RAT)
+
+`UC_5_13` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process="*Consultar_NF-e.bat*" OR Processes.process="*Consultar_NF-e.bat*" OR Processes.process_name="Consultar_NF-e.bat") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessCommandLine has "Consultar_NF-e.bat"
+    or ProcessCommandLine has "Consultar_NF-e.bat"
+    or InitiatingProcessFileName =~ "Consultar_NF-e.bat"
+    or FileName =~ "Consultar_NF-e.bat"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine,
+          SHA256, InitiatingProcessSHA256
+| order by Timestamp desc
+```
+
+### [LLM] PowerShell stager fetches st.txt / payload.php from Banana RAT staging IP 24.199.90.58
+
+`UC_5_14` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="24.199.90.58" OR All_Traffic.url IN ("*st.txt*","*st.php*","*payload.php*","*Disease_vector*")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.url All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let StagingIP = "24.199.90.58";
+let StagingPaths = dynamic(["/st.txt","/st.php","/payload.php","/Disease_vector"]);
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemoteIP == StagingIP
+    or RemoteUrl has_any (StagingPaths)
+| where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","bitsadmin.exe","certutil.exe","msbuild.exe","regsvr32.exe","mshta.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName,
+          RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc
+```
+
+### [LLM] Scheduled task persistence: PowerShell every minute for 9999 days (Banana RAT)
+
+`UC_5_15` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="schtasks.exe" OR Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe") (Processes.process="*9999*" AND (Processes.process="*minute*" OR Processes.process="*PT1M*" OR Processes.process="*Register-ScheduledTask*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where (FileName =~ "schtasks.exe" and ProcessCommandLine has "/create"
+          and ProcessCommandLine has_any ("/sc minute","/SC MINUTE")
+          and ProcessCommandLine has "9999")
+     or (FileName in~ ("powershell.exe","pwsh.exe")
+          and ProcessCommandLine has_any ("Register-ScheduledTask","New-ScheduledTaskTrigger")
+          and ProcessCommandLine has "9999")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Banana RAT C2 beacon to windowsk-cdn[.]com or fallback 162.141.111.227:443
+
+`UC_5_16` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="162.141.111.227" OR All_Traffic.dest_host="windowsk-cdn.com" OR All_Traffic.url="*windowsk-cdn*") AND All_Traffic.dest_port=443 by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | append [| tstats summariesonly=t count from datamodel=Network_Resolution.DNS where DNS.query="*windowsk-cdn.com" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)`]
+```
+
+**Defender KQL:**
+```kql
+let C2Domain = "windowsk-cdn.com";
+let C2FallbackIP = "162.141.111.227";
+union isfuzzy=true
+(DeviceNetworkEvents
+  | where Timestamp > ago(30d)
+  | where (RemoteUrl has C2Domain or RemoteIP == C2FallbackIP)
+  | project Timestamp, DeviceName, InitiatingProcessAccountName,
+            InitiatingProcessFileName, InitiatingProcessCommandLine,
+            RemoteIP, RemotePort, RemoteUrl, EvtType = "Network"),
+(DeviceEvents
+  | where Timestamp > ago(30d)
+  | where ActionType == "DnsQueryResponse"
+  | where AdditionalFields has C2Domain or RemoteUrl has C2Domain
+  | project Timestamp, DeviceName, InitiatingProcessAccountName,
+            InitiatingProcessFileName, InitiatingProcessCommandLine,
+            RemoteIP, RemotePort, RemoteUrl, EvtType = "DNS")
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -436,7 +546,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use NF-e Invoice Lures to Deliver Banana RAT Through Malicious Batch Fil
 
-`UC_1_12` · phase: **exploit** · confidence: **High**
+`UC_5_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -488,9 +598,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `162.141.111.227`, `24.199.90.58`, `convitemundial2026.com`, `windowsk-cdn.com`, `payload.php`, `st.txt`
+  - IP / domain IOC(s): `162.141.111.227`, `24.199.90.58`, `convitemundial2026.com`, `windowsk-cdn.com`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 17 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

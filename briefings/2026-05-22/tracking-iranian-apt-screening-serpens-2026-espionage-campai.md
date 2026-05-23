@@ -26,14 +26,10 @@ MiniUpda…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `2117.filemail.com`
+- **Domain (defanged):** `business-startup.org`
+- **Domain (defanged):** `buisness-centeral-transportation.com`
 - **Domain (defanged):** `premierhealthadvisory.com`
 - **Domain (defanged):** `ramiltonsfinance.com`
-- **Domain (defanged):** `buisness-centeral-transportation.com`
-- **Domain (defanged):** `docspace-y4cumb.onlyoffice.com`
-- **Domain (defanged):** `business-startup.org`
-- **Domain (defanged):** `docspace-twpf0e.onlyoffice.com`
-- **Domain (defanged):** `ramiltonsfinance.azurewebsites.neti`
 - **SHA256:** `44f4f7aca7f1d9bfdaf7b3736934cbe19f851a707662f8f0b0c49b383e054250`
 - **SHA256:** `332ba2f0297dfb1599adecc3e9067893e7cf243aa23aedce4906a4c480574c17`
 - **SHA256:** `0db36a04d304ad96f9e6f97b531934594cd95a5cea9ff2c9af249201089dc864`
@@ -42,11 +38,10 @@ MiniUpda…
 - **SHA256:** `bc3b44154518c5794ce639108e7b9c5fecb0c189607a26de1aaed518d890c7ad`
 - **SHA256:** `74882085db2088356ed7f72f01e0404a0a98cda88ef56fb15ce74c1f36b26d27`
 - **SHA256:** `9cf029daca89523d917dafed0568d11d00e45ec96b5b90b4a1f7fd4018c7da84`
-- **SHA256:** `B19e06da580cf91691eda066ac9ee4b09c6e5dc26c367af12660fe1f9306eec4`
+- **SHA256:** `b19e06da580cf91691eda066ac9ee4b09c6e5dc26c367af12660fe1f9306eec4`
 - **SHA256:** `8808c794c24367438f183e4be941876f1d3ecd0c8d2eb43b10d2380841d2283b`
 - **SHA256:** `43dc62cef52ebdd69e79f10015b3e13890f26c058325c0ff139c70f8d8eadcfa`
 - **SHA256:** `9e4a658e6d831c9e9bdfe11884a75b7c64812ed0a80e8495ddf6b316505acac1`
-- **MD5:** `edcdba624ddb43c2a1dcf334aa493068`
 
 ## MITRE ATT&CK Techniques
 
@@ -68,12 +63,120 @@ MiniUpda…
 - **T1027** — Obfuscated Files or Information
 - **T1053.005** — Persistence (article-specific)
 - **T1543.003** — Persistence (article-specific)
+- **T1574.002** — DLL Side-Loading
+- **T1574.014** — AppDomainManager Injection
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1583.001** — Acquire Infrastructure: Domains
+- **T1566.001** — Phishing: Spearphishing Attachment
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] MiniUpdate UpdateChecker.dll sideload via legitimate signed .NET host
+
+`UC_23_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.file_path) as file_path values(Filesystem.file_hash) as file_hash from datamodel=Endpoint.Filesystem where Filesystem.file_name="UpdateChecker.dll" OR Filesystem.file_hash IN ("44f4f7aca7f1d9bfdaf7b3736934cbe19f851a707662f8f0b0c49b383e054250","332ba2f0297dfb1599adecc3e9067893e7cf243aa23aedce4906a4c480574c17","0db36a04d304ad96f9e6f97b531934594cd95a5cea9ff2c9af249201089dc864","38bd137c672bd58d08c4f0502f993a6561e2c3411773d1ae57ee0151a0a9d11d","d4a7e9f107fe40c1a5d0139c6c6e25bf6bf57f61feff090bee28f476bb3cc3c2","bc3b44154518c5794ce639108e7b9c5fecb0c189607a26de1aaed518d890c7ad","74882085db2088356ed7f72f01e0404a0a98cda88ef56fb15ce74c1f36b26d27","9cf029daca89523d917dafed0568d11d00e45ec96b5b90b4a1f7fd4018c7da84") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | where match(file_path,"(?i)\\\\(Users|AppData|Temp|Downloads|ProgramData)\\\\")
+```
+
+**Defender KQL:**
+```kql
+let knownHashes = dynamic(["44f4f7aca7f1d9bfdaf7b3736934cbe19f851a707662f8f0b0c49b383e054250","332ba2f0297dfb1599adecc3e9067893e7cf243aa23aedce4906a4c480574c17","0db36a04d304ad96f9e6f97b531934594cd95a5cea9ff2c9af249201089dc864","38bd137c672bd58d08c4f0502f993a6561e2c3411773d1ae57ee0151a0a9d11d","d4a7e9f107fe40c1a5d0139c6c6e25bf6bf57f61feff090bee28f476bb3cc3c2","bc3b44154518c5794ce639108e7b9c5fecb0c189607a26de1aaed518d890c7ad","74882085db2088356ed7f72f01e0404a0a98cda88ef56fb15ce74c1f36b26d27","9cf029daca89523d917dafed0568d11d00e45ec96b5b90b4a1f7fd4018c7da84"]);
+let imgLoads = DeviceImageLoadEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "UpdateChecker.dll" or SHA256 in (knownHashes)
+| where FolderPath has_any (@"\Users\", @"\AppData\", @"\Temp\", @"\Downloads\", @"\ProgramData\")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, LoadedDll=FileName, LoadedDllPath=FolderPath, SHA256;
+let fileWrites = DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "UpdateChecker.dll" or SHA256 in (knownHashes)
+| where FolderPath has_any (@"\Users\", @"\AppData\", @"\Temp\", @"\Downloads\", @"\ProgramData\")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, WrittenDll=FileName, WrittenPath=FolderPath, SHA256;
+union imgLoads, fileWrites
+| where InitiatingProcessFileName !endswith "$"
+| order by Timestamp desc
+```
+
+### [LLM] Screening Serpens AppDomainManager hijack via .NET app .config tampering
+
+`UC_23_13` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_name="*.exe.config" by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | where match(file_path,"(?i)\\\\(Users|AppData|Temp|Downloads|ProgramData)\\\\") AND NOT match(process_name,"(?i)(msiexec|trustedinstaller|wusa|setup|installer|update)\.exe$")
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName endswith ".exe.config"
+| where FolderPath has_any (@"\Users\", @"\AppData\", @"\Temp\", @"\Downloads\", @"\ProgramData\")
+| where InitiatingProcessFileName !in~ ("msiexec.exe","TrustedInstaller.exe","wusa.exe","setup.exe","installer.exe","OfficeClickToRun.exe","GoogleUpdate.exe")
+| where InitiatingProcessFolderPath !startswith @"C:\Program Files"
+| where InitiatingProcessFolderPath !startswith @"C:\Program Files (x86)"
+| join kind=inner (
+    DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FileName endswith ".dll"
+    | where FolderPath has_any (@"\Users\", @"\AppData\", @"\Temp\", @"\Downloads\", @"\ProgramData\")
+    | project DllTime=Timestamp, DeviceId, DllFolder=FolderPath, DllName=FileName, DllSHA256=SHA256, DllWriter=InitiatingProcessFileName
+) on DeviceId
+| where abs(datetime_diff('second', Timestamp, DllTime)) < 300 and tolower(FolderPath) == tolower(DllFolder)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, ConfigPath=FolderPath, ConfigName=FileName, DllName, DllSHA256, DllWriter, InitiatingProcessCommandLine
+```
+
+### [LLM] Screening Serpens C2 — DNS/network to UNC1549 infrastructure (Feb-Apr 2026)
+
+`UC_23_14` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.answer) as answer from datamodel=Network_Resolution.DNS where DNS.query IN ("business-startup.org","buisness-centeral-transportation.com","premierhealthadvisory.com","ramiltonsfinance.com","*.business-startup.org","*.buisness-centeral-transportation.com","*.premierhealthadvisory.com","*.ramiltonsfinance.com") by DNS.query DNS.src | `drop_dm_object_name(DNS)` | append [| tstats `summariesonly` count from datamodel=Web.Web where Web.url IN ("*business-startup.org*","*buisness-centeral-transportation.com*","*premierhealthadvisory.com*","*ramiltonsfinance.com*") by Web.src Web.url Web.dest | `drop_dm_object_name(Web)`]
+```
+
+**Defender KQL:**
+```kql
+let c2Domains = dynamic(["business-startup.org","buisness-centeral-transportation.com","premierhealthadvisory.com","ramiltonsfinance.com"]);
+DeviceNetworkEvents
+| where Timestamp > ago(90d)
+| where RemoteUrl has_any (c2Domains) or RemoteUrl endswith ".business-startup.org" or RemoteUrl endswith ".buisness-centeral-transportation.com" or RemoteUrl endswith ".premierhealthadvisory.com" or RemoteUrl endswith ".ramiltonsfinance.com"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort, Protocol
+| order by Timestamp desc
+```
+
+### [LLM] Screening Serpens recruitment lure — Hiring Portal.zip + job requisition PDFs
+
+`UC_23_15` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Email.src_user) as sender values(All_Email.recipient) as recipient values(All_Email.subject) as subject from datamodel=Email.All_Email where All_Email.file_name="Hiring Portal.zip" OR All_Email.file_name="Hiring_Portal.zip" OR All_Email.subject IN ("*Hiring Portal*","*Job Requisition*","*JR2058*") by All_Email.message_id All_Email.file_name | `drop_dm_object_name(All_Email)` | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("Hiring Portal.zip","Hiring_Portal.zip") OR (Filesystem.file_name="*Job ID JR*.pdf" AND Filesystem.file_path="*\\Downloads\\*") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)`]
+```
+
+**Defender KQL:**
+```kql
+let lureFileNames = dynamic(["Hiring Portal.zip","Hiring_Portal.zip","HiringPortal.zip"]);
+let email = EmailAttachmentInfo
+| where Timestamp > ago(60d)
+| where FileName in~ (lureFileNames) or FileName matches regex @"(?i)^.*Software Engineer.*Job ID JR\d{6}.*\.pdf$" or FileName matches regex @"(?i)^.*Senior.*Engineer.*Job ID JR\d{6}.*\.pdf$"
+| join kind=leftouter (EmailEvents | project NetworkMessageId, SenderFromAddress, SenderFromDomain, RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation) on NetworkMessageId
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderFromDomain, RecipientEmailAddress, Subject, FileName, FileType, SHA256, DeliveryAction, DeliveryLocation;
+let host = DeviceFileEvents
+| where Timestamp > ago(60d)
+| where (FileName in~ (lureFileNames)) or (FileName matches regex @"(?i)^.*(Software|Senior|Principal).*Engineer.*Job ID JR\d{6}.*\.pdf$")
+| where FolderPath has_any (@"\Downloads\", @"\Desktop\", @"\Temp\", @"\AppData\Local\Temp\")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, FolderPath, SHA256, FileOriginUrl;
+union email, host
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -451,12 +554,12 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `2117.filemail.com`, `premierhealthadvisory.com`, `ramiltonsfinance.com`, `buisness-centeral-transportation.com`, `docspace-y4cumb.onlyoffice.com`, `business-startup.org`, `docspace-twpf0e.onlyoffice.com`, `ramiltonsfinance.azurewebsites.neti`
+  - IP / domain IOC(s): `business-startup.org`, `buisness-centeral-transportation.com`, `premierhealthadvisory.com`, `ramiltonsfinance.com`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `44f4f7aca7f1d9bfdaf7b3736934cbe19f851a707662f8f0b0c49b383e054250`, `332ba2f0297dfb1599adecc3e9067893e7cf243aa23aedce4906a4c480574c17`, `0db36a04d304ad96f9e6f97b531934594cd95a5cea9ff2c9af249201089dc864`, `38bd137c672bd58d08c4f0502f993a6561e2c3411773d1ae57ee0151a0a9d11d`, `d4a7e9f107fe40c1a5d0139c6c6e25bf6bf57f61feff090bee28f476bb3cc3c2`, `bc3b44154518c5794ce639108e7b9c5fecb0c189607a26de1aaed518d890c7ad`, `74882085db2088356ed7f72f01e0404a0a98cda88ef56fb15ce74c1f36b26d27`, `9cf029daca89523d917dafed0568d11d00e45ec96b5b90b4a1f7fd4018c7da84` _(+5 more)_
+  - file hash IOC(s): `44f4f7aca7f1d9bfdaf7b3736934cbe19f851a707662f8f0b0c49b383e054250`, `332ba2f0297dfb1599adecc3e9067893e7cf243aa23aedce4906a4c480574c17`, `0db36a04d304ad96f9e6f97b531934594cd95a5cea9ff2c9af249201089dc864`, `38bd137c672bd58d08c4f0502f993a6561e2c3411773d1ae57ee0151a0a9d11d`, `d4a7e9f107fe40c1a5d0139c6c6e25bf6bf57f61feff090bee28f476bb3cc3c2`, `bc3b44154518c5794ce639108e7b9c5fecb0c189607a26de1aaed518d890c7ad`, `74882085db2088356ed7f72f01e0404a0a98cda88ef56fb15ce74c1f36b26d27`, `9cf029daca89523d917dafed0568d11d00e45ec96b5b90b4a1f7fd4018c7da84` _(+4 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

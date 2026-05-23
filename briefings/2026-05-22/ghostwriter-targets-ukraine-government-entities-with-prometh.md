@@ -13,14 +13,12 @@ The activity, per the Computer Emergency Response Team of Ukraine (CERT-UA), in�
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-42897`
-- **CVE:** `CVE-2026-41940`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -36,12 +34,85 @@ The activity, per the Computer Emergency Response Team of Ukraine (CERT-UA), in�
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1112** — Modify Registry
+- **T1027.011** — Obfuscated Files or Information: Fileless Storage
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
+- **T1082** — System Information Discovery
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Ghostwriter OYSTERFRESH: wscript.exe executing .js from user Downloads/Temp/Roaming
+
+`UC_16_10` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=wscript.exe AND (Processes.process="*\\Downloads\\*.js*" OR Processes.process="*\\Temp\\*.js*" OR Processes.process="*\\Roaming\\*.js*") AND Processes.parent_process_name IN ("explorer.exe","7zg.exe","7zFM.exe","WinRAR.exe","Rar.exe","msedge.exe","chrome.exe","firefox.exe","Acrobat.exe","AcroRd32.exe","outlook.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "wscript.exe"
+| where ProcessCommandLine has_any (@"\Downloads\", @"\AppData\Local\Temp\", @"\AppData\Roaming\")
+| where ProcessCommandLine matches regex @"(?i)\.js[e]?(\s|$|""|')"
+| where InitiatingProcessFileName in~ ("explorer.exe","7zg.exe","7zfm.exe","winrar.exe","rar.exe","msedge.exe","chrome.exe","firefox.exe","acrobat.exe","acrord32.exe","outlook.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Ghostwriter OYSTERBLUES: wscript.exe writing large encrypted blob to HKCU registry
+
+`UC_16_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Endpoint.Registry where Registry.process_name=wscript.exe AND Registry.registry_path="*\\HKEY_CURRENT_USER\\Software\\*" AND Registry.action=modified by Registry.dest Registry.user Registry.process_name Registry.registry_path Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)` | eval ValueLen = len(registry_value_data) | where ValueLen > 4096
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "wscript.exe"
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has @"HKEY_CURRENT_USER\Software"
+| extend ValueLen = strlen(tostring(RegistryValueData))
+| where ValueLen > 4096
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine, RegistryKey, RegistryValueName, RegistryValueType, ValueLen
+| order by Timestamp desc
+```
+
+### [LLM] Ghostwriter OYSTERBLUES C2: wscript.exe HTTP POST exfiltrating host recon to external IP
+
+`UC_16_12` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.app=wscript.exe AND All_Traffic.dest_port IN (80,443,8080,8443) AND NOT (All_Traffic.dest_ip="10.0.0.0/8" OR All_Traffic.dest_ip="192.168.0.0/16" OR All_Traffic.dest_ip="172.16.0.0/12" OR All_Traffic.dest_ip="127.0.0.0/8") by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.bytes_out | `drop_dm_object_name(All_Traffic)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "wscript.exe"
+| where RemoteIPType == "Public"
+| where RemotePort in (80, 443, 8080, 8443)
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl, Protocol
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -391,14 +462,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-42897`, `CVE-2026-41940`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 13 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

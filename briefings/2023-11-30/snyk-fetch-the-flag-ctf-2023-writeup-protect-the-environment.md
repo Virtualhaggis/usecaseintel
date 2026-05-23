@@ -20,12 +20,37 @@ Silent Cartographer is a point-and-pwn web app exploitation challenge. The web a
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1083** — File and Directory Discovery
+- **T1611** — Escape to Host
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Container PID 1 environment harvest via /proc/1/environ read
+
+`UC_1301_1` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process="*/proc/1/environ*" OR Processes.process="*/proc/self/environ*" by Processes.dest Processes.process_name Processes.process_path | `drop_dm_object_name(Processes)` | where process_name IN ("cat","head","less","more","strings","xxd","od","tr","grep","awk","sed","hexdump","dd","bash","sh","python","python3","perl","ruby","curl","nc") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where ProcessCommandLine has_any ("/proc/1/environ", "/proc/self/environ")
+| where FileName in~ ("cat","head","less","more","strings","xxd","od","tr","grep","awk","sed","hexdump","dd","python","python3","perl","ruby","curl","nc","bash","sh")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, FolderPath, SHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -65,4 +90,4 @@ DeviceNetworkEvents
 
 ## Why this matters
 
-Severity classified as **MED** based on: 1 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: 2 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

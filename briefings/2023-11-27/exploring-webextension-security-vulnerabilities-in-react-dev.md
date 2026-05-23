@@ -30,6 +30,26 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### [LLM] Browser extension folder write at vulnerable React DevTools 4.27.8 / Vue.js devtools 6.5.0
+
+`UC_1308_4` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\fmkadmapgofadopljbjfkapdkoienihi\\*" OR Filesystem.file_path="*\\nhdogjmejiglipccpnnnanhbledajbpd\\*" OR Filesystem.file_path="*\\react_devtools\\*" OR Filesystem.file_path="*\\vue-js-devtools\\*") AND (Filesystem.file_name="manifest.json" OR Filesystem.file_name="*.js") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstSeen) ctime(lastSeen) | sort - lastSeen
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where FolderPath has_any (@"\fmkadmapgofadopljbjfkapdkoienihi\", @"\nhdogjmejiglipccpnnnanhbledajbpd\", @"\react_devtools\", @"\vue-js-devtools\")
+| where FileName =~ "manifest.json" or FileName endswith ".js"
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Writes=count(), SampleFile=any(FileName) by DeviceName, InitiatingProcessAccountName, FolderPath, InitiatingProcessFileName
+| order by LastSeen desc
+```
+
 ### Suspicious browser extension installation
 
 `UC_BROWSER_EXT` · phase: **install** · confidence: **Medium**
@@ -143,4 +163,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

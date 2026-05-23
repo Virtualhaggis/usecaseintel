@@ -10,12 +10,16 @@ Back to Blog Threat Intel Megalodon: Mass GitHub Actions Secret Exfiltration Acr
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **IPv4 (defanged):** `216.126.225.129`
+- **Domain (defanged):** `github-ci.com`
+- **Domain (defanged):** `actions-bot.com`
 - **SHA1:** `acac5a9854650c4ae2883c4740bf87d34120c038`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
@@ -116,7 +120,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Megalodon: Mass GitHub Actions Secret Exfiltration Across 5,500+ Public Reposito
 
-`UC_9_4` · phase: **install** · confidence: **High**
+`UC_13_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,10 +155,13 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `216.126.225.129`, `github-ci.com`, `actions-bot.com`
+
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `acac5a9854650c4ae2883c4740bf87d34120c038`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

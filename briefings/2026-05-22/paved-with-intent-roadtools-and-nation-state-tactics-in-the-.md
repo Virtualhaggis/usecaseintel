@@ -44,12 +44,59 @@ Midnight…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1098.005** — Account Manipulation: Device Registration
+- **T1550** — Use Alternate Authentication Material
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
+- **T1606.002** — Forge Web Credentials: SAML Tokens
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Curious Serpens / APT29 ROADtools-pattern: device registration immediately following non-interactive token acquisition
+
+`UC_27_8` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.action=created All_Changes.object_category=device All_Changes.change_type=AAD All_Changes.src_user_type=user by All_Changes.user All_Changes.object All_Changes.src All_Changes.user_agent | `drop_dm_object_name("All_Changes")` | join type=inner user [| tstats `summariesonly` count from datamodel=Authentication where Authentication.signature="UserLoggedIn" Authentication.authentication_method!="interactiveLogin" by Authentication.user Authentication.src _time span=15m | `drop_dm_object_name("Authentication")` | rename _time as auth_time] | where lastTime - auth_time < 900 AND lastTime - auth_time >= 0 | table firstTime user object src user_agent auth_time
+```
+
+**Defender KQL:**
+```kql
+let DeviceReg = AuditLogs | where TimeGenerated > ago(7d) | where OperationName has_any ("Add registered owner to device", "Add registered users to device", "Add device") | extend TargetUpn = tostring(TargetResources[0].userPrincipalName) | extend ActorUpn = tostring(InitiatedBy.user.userPrincipalName) | extend ActorIp = tostring(InitiatedBy.user.ipAddress) | project RegTime = TimeGenerated, ActorUpn, ActorIp, OperationName, TargetResources; let TokenAuth = AADSignInEventsBeta | where Timestamp > ago(7d) | where IsInteractive == false | where ResourceDisplayName in ("Microsoft Graph", "Azure Active Directory Graph", "Windows Azure Active Directory") | where ApplicationId in ("1b730954-1685-4b74-9bfd-dac224a7b894", "d3590ed6-52b3-4102-aeff-aad2292ab01c", "04b07795-8ddb-461a-bbee-02f9e1bf7b46") | project AuthTime = Timestamp, AccountUpn, IPAddress, UserAgent, ApplicationId, ClientAppUsed; DeviceReg | join kind=inner TokenAuth on $left.ActorUpn == $right.AccountUpn | where datetime_diff('minute', RegTime, AuthTime) between (0 .. 30) | where ActorIp != IPAddress | project RegTime, AuthTime, MinutesBetween = datetime_diff('minute', RegTime, AuthTime), ActorUpn, RegIp = ActorIp, TokenIp = IPAddress, UserAgent, ApplicationId, ClientAppUsed
+```
+
+### [LLM] UTA0355 device-code phishing: deviceCode auth flow with cross-IP token redemption
+
+`UC_27_9` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.signature_id="DeviceCodeAuthentication" OR Authentication.app="Microsoft Authentication Broker" by Authentication.user Authentication.src Authentication.user_agent Authentication.app | `drop_dm_object_name("Authentication")` | stats values(src) as src_list dc(src) as src_count values(user_agent) as ua_list dc(user_agent) as ua_count min(firstTime) as code_issued max(lastTime) as token_redeemed by user | where src_count >= 2 | eval delta_sec = token_redeemed - code_issued | where delta_sec < 900
+```
+
+**Defender KQL:**
+```kql
+AADSignInEventsBeta | where Timestamp > ago(7d) | where AuthenticationProcessingDetails has "deviceCode" or AuthenticationDetails has "device code" or ClientAppUsed == "Authenticated SMTP" and Application has "device" | extend IsDeviceCode = AuthenticationProcessingDetails has "deviceCode" or AuthenticationDetails has_cs "Device Code" | where IsDeviceCode == true | summarize CodeIssued = min(Timestamp), TokenRedeemed = max(Timestamp), SrcIPs = make_set(IPAddress, 10), SrcCountries = make_set(Country, 10), UAs = make_set(UserAgent, 10), IPCount = dcount(IPAddress), CountryCount = dcount(Country), Apps = make_set(ResourceDisplayName, 10), ReqIds = make_set(RequestId, 10) by AccountUpn, bin(Timestamp, 15m) | where IPCount >= 2 or CountryCount >= 2 | project CodeIssued, TokenRedeemed, DeltaSec = datetime_diff('second', TokenRedeemed, CodeIssued), AccountUpn, SrcIPs, SrcCountries, UAs, Apps
+```
+
+### [LLM] ROADtools roadtx FOCI client-ID swap: refresh-token resource hop across MS Office FOCI app IDs
+
+`UC_27_10` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` values(Authentication.app) as apps dc(Authentication.app) as app_count values(Authentication.dest) as resources dc(Authentication.dest) as resource_count values(Authentication.src) as src_ips values(Authentication.user_agent) as user_agents min(_time) as first max(_time) as last from datamodel=Authentication where Authentication.signature_id="UserLoggedIn" Authentication.authentication_method="refreshToken" by Authentication.user Authentication.session_id | `drop_dm_object_name("Authentication")` | where app_count >= 3 AND (last - first) < 600 | search apps IN ("Microsoft Azure CLI","Microsoft Azure PowerShell","Microsoft Office","Microsoft Teams","Microsoft Edge","OneDrive","Microsoft Authentication Broker","Microsoft Intune Company Portal","Microsoft Authenticator App")
+```
+
+**Defender KQL:**
+```kql
+let FociApps = dynamic(["1b730954-1685-4b74-9bfd-dac224a7b894", "d3590ed6-52b3-4102-aeff-aad2292ab01c", "04b07795-8ddb-461a-bbee-02f9e1bf7b46", "1fec8e78-bce4-4aaf-ab1b-5451cc387264", "26a7ee05-5602-4d76-a7ba-eae8b7b67941", "27922004-5251-4030-b22d-91ecd9a37ea4", "4813382a-8fa7-425e-ab75-3b753aab3abb", "ab9b8c07-8f02-4f72-87fa-80105867a763", "844cca35-0656-46ce-b636-13f48b0eecbd", "872cd9fa-d31f-45e0-9eab-6e460a02d1f1", "af124e86-4e96-495a-b70a-90f90ab96707"]); AADSignInEventsBeta | where Timestamp > ago(7d) | where IsInteractive == false | where ApplicationId in (FociApps) | where AuthenticationProcessingDetails has "refreshToken" or AuthenticationDetails has "Previously satisfied" | summarize Apps = make_set(Application, 20), AppIds = make_set(ApplicationId, 20), AppCount = dcount(ApplicationId), Resources = make_set(ResourceDisplayName, 20), ResourceCount = dcount(ResourceDisplayName), SrcIPs = make_set(IPAddress, 10), UAs = make_set(UserAgent, 10), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by AccountUpn, bin(Timestamp, 10m) | where AppCount >= 3 | where datetime_diff('minute', LastSeen, FirstSeen) <= 10 | project FirstSeen, LastSeen, AccountUpn, AppCount, Apps, AppIds, Resources, SrcIPs, UAs
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -333,4 +380,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

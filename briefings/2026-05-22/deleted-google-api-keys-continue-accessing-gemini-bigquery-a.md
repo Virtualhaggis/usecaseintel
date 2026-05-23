@@ -25,12 +25,47 @@ The finding raises concerns about delayed credential invalidation across Google�
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1110.004** — Brute Force: Credential Stuffing
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Google Cloud API key successfully authenticates within 30 min after DeleteKey on same project
+
+`UC_15_4` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` min(_time) as deleteTime, values(Change.user) as deletedBy, values(Change.src) as deleteSrcIp from datamodel=Change where Change.action=deleted AND Change.vendor_product="Google Cloud" AND (Change.object_category="api_key" OR Change.object="apikeys.googleapis.com") by Change.object_id, Change.dest
+| `drop_dm_object_name(Change)`
+| eval windowEnd = deleteTime + 1800
+| join type=inner object_id [
+  | tstats `summariesonly` min(_time) as firstUse, max(_time) as lastUse, count, values(Authentication.app) as services, values(Authentication.src) as callerIps, values(Authentication.user_agent) as ua from datamodel=Authentication where Authentication.vendor_product="Google Cloud" AND Authentication.action=success AND Authentication.authentication_method="api_key" AND Authentication.app IN ("bigquery.googleapis.com","aiplatform.googleapis.com","generativelanguage.googleapis.com","maps-backend.googleapis.com","maps.googleapis.com") by Authentication.user, Authentication.dest
+  | `drop_dm_object_name(Authentication)`
+  | rename user as object_id
+]
+| where firstUse >= deleteTime AND firstUse <= windowEnd
+| eval secondsAfterDelete = firstUse - deleteTime
+| table deleteTime, secondsAfterDelete, object_id, deletedBy, deleteSrcIp, firstUse, lastUse, count, services, callerIps, ua
+| sort - secondsAfterDelete
+```
+
+### [LLM] Spike in 'apikey:UNKNOWN' failed authentications to Gemini, BigQuery, or Maps APIs
+
+`UC_15_5` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, values(Authentication.src) as callerIps, values(Authentication.user_agent) as userAgents, dc(Authentication.src) as srcIpCount from datamodel=Authentication where Authentication.vendor_product="Google Cloud" AND Authentication.action=failure AND Authentication.user="apikey:UNKNOWN" AND Authentication.app IN ("bigquery.googleapis.com","aiplatform.googleapis.com","generativelanguage.googleapis.com","maps-backend.googleapis.com","maps.googleapis.com") by Authentication.dest, _time span=10m
+| `drop_dm_object_name(Authentication)`
+| where count >= 25
+| sort - count
+```
 
 ### Ransomware-style mass file rename / extension change
 
@@ -143,4 +178,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

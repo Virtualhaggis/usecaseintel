@@ -31,12 +31,99 @@ In total, the hardware vendor patched fi…
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1219** — Remote Access Software
+- **T1133** — External Remote Services
+- **T1021.001** — Remote Desktop Protocol
+- **T1021.006** — Windows Remote Management
+- **T1078** — Valid Accounts
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Vulnerable UniFi OS / Network Application present on managed host (UniFi SA-056 CVEs)
+
+`UC_6_5` · phase: **recon** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-34908","CVE-2026-34909","CVE-2026-34910","CVE-2026-33000","CVE-2026-34911") by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.cvss | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime) | sort 0 - cvss
+```
+
+**Defender KQL:**
+```kql
+let UniFiCves = dynamic(["CVE-2026-34908","CVE-2026-34909","CVE-2026-34910","CVE-2026-33000","CVE-2026-34911"]);
+let VulnHosts = DeviceTvmSoftwareVulnerabilities
+    | where Timestamp > ago(7d)
+    | where CveId in (UniFiCves)
+    | summarize arg_max(Timestamp, *) by DeviceId, CveId;
+let UniFiInventory = DeviceTvmSoftwareInventory
+    | where Timestamp > ago(7d)
+    | where SoftwareVendor =~ "ubiquiti" or SoftwareName has_any ("unifi","unifi-os","unifi network","unifi controller")
+    | summarize arg_max(Timestamp, *) by DeviceId, SoftwareName;
+VulnHosts
+| join kind=leftouter UniFiInventory on DeviceId
+| project Timestamp, DeviceName, DeviceId, CveId, VulnerabilitySeverityLevel, SoftwareVendor, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate, OSPlatform
+| order by VulnerabilitySeverityLevel asc, Timestamp desc
+```
+
+### [LLM] Internet-facing UniFi management interface exposed (TCP 443/8443/8843/22)
+
+`UC_6_6` · phase: **recon** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count dc(All_Traffic.src) as src_count values(All_Traffic.src) as sources min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest_port IN (443,8443,8843,22) AND All_Traffic.dest_category="unifi" AND NOT (All_Traffic.src IN ("10.0.0.0/8","172.16.0.0/12","192.168.0.0/16","100.64.0.0/10")) by All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | where src_count > 0 | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let UniFiDevices = DeviceTvmSoftwareInventory
+    | where Timestamp > ago(7d)
+    | where SoftwareVendor =~ "ubiquiti" or SoftwareName has_any ("unifi","unifi-os")
+    | distinct DeviceId, DeviceName;
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("InboundConnectionAccepted","ConnectionInbound")
+| where LocalPort in (443, 8443, 8843, 22)
+| where RemoteIPType == "Public"
+| join kind=inner UniFiDevices on DeviceId
+| summarize Hits = count(), DistinctSources = dcount(RemoteIP), Sources = make_set(RemoteIP, 25), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, LocalPort
+| order by DistinctSources desc
+```
+
+### [LLM] Lateral movement originating from UniFi gateway/controller IP into internal admin assets
+
+`UC_6_7` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count dc(Authentication.dest) as targetCount values(Authentication.dest) as targets values(Authentication.user) as users min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.src_category="unifi_gateway" OR Authentication.src_category="unifi_controller" by Authentication.src Authentication.action | `drop_dm_object_name(Authentication)` | where targetCount >= 1 | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let UniFiGatewayIps = dynamic(["<UCG_IP1>","<UDM_IP1>","<UNVR_IP1>"]);
+let WindowH = 24h;
+let AdminPorts = dynamic([445, 3389, 5985, 5986, 22, 389, 636]);
+DeviceLogonEvents
+| where Timestamp > ago(WindowH)
+| where RemoteIP in (UniFiGatewayIps)
+| where LogonType in (3, 10, 7)
+| where AccountName !endswith "$"
+| summarize Logons = count(), DistinctTargets = dcount(DeviceName), Targets = make_set(DeviceName, 25), Accounts = make_set(AccountName, 10), LogonTypes = make_set(LogonType), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by RemoteIP
+| union (
+  DeviceNetworkEvents
+  | where Timestamp > ago(WindowH)
+  | where ActionType in ("InboundConnectionAccepted","ConnectionInbound")
+  | where RemoteIP in (UniFiGatewayIps)
+  | where LocalPort in (AdminPorts)
+  | summarize Logons = count(), DistinctTargets = dcount(DeviceName), Targets = make_set(DeviceName, 25), Accounts = make_set("network-only"), LogonTypes = make_set(LocalPort), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by RemoteIP
+)
+| where DistinctTargets >= 2 or Logons >= 5
+| order by DistinctTargets desc
+```
 
 ### Remote service execution — PsExec / SMB lateral movement
 
@@ -159,4 +246,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

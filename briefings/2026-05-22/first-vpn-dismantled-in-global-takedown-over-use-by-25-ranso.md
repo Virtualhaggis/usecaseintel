@@ -13,32 +13,92 @@ The disruption of First VPN Service was led by France and the Netherlands, with 
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-42897`
-- **CVE:** `CVE-2026-41940`
 - **IPv4 (defanged):** `2.223.66.103`
 - **IPv4 (defanged):** `5.181.234.59`
 - **IPv4 (defanged):** `92.38.148.58`
-- **Domain (defanged):** `exploit.in`
-- **Domain (defanged):** `xss.is`
 - **Domain (defanged):** `1vpns.com`
 - **Domain (defanged):** `1vpns.net`
 - **Domain (defanged):** `1vpns.org`
+- **Domain (defanged):** `exploit.in`
+- **Domain (defanged):** `xss.is`
 
 ## MITRE ATT&CK Techniques
 
-- **T1190** — Exploit Public-Facing Application
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1071** — Application Layer Protocol
+- **T1090.003** — Proxy: Multi-hop Proxy
+- **T1572** — Protocol Tunneling
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1593.002** — Search Open Websites/Domains: Search Engines
+- **T1588.002** — Obtain Capabilities: Tool
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Outbound connections to seized First VPN exit node IPs
+
+`UC_7_4` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest in ("2.223.66.103","5.181.234.59","92.38.148.58") by All_Traffic.src, All_Traffic.user, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app, All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - count
+```
+
+**Defender KQL:**
+```kql
+let exitNodes = dynamic(["2.223.66.103","5.181.234.59","92.38.148.58"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (exitNodes)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, Protocol, RemoteUrl
+| order by Timestamp desc
+```
+
+### [LLM] Endpoint resolution or web traffic to seized 1vpns[.]com/net/org domains
+
+`UC_7_5` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("1vpns.com","1vpns.net","1vpns.org","*.1vpns.com","*.1vpns.net","*.1vpns.org") by DNS.src, DNS.query, DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime) | sort - count
+```
+
+**Defender KQL:**
+```kql
+let domains = dynamic(["1vpns.com","1vpns.net","1vpns.org"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (domains)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, Protocol
+| order by Timestamp desc
+```
+
+### [LLM] Endpoint visits to Russian-speaking cybercrime forums Exploit.in / XSS.is
+
+`UC_7_6` · phase: **recon** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url IN ("*exploit.in*","*xss.is*") OR Web.dest IN ("exploit.in","xss.is","*.exploit.in","*.xss.is") by Web.src, Web.user, Web.url, Web.dest, Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - count
+| append [| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("exploit.in","xss.is","*.exploit.in","*.xss.is") by DNS.src, DNS.query | `drop_dm_object_name(DNS)`]
+```
+
+**Defender KQL:**
+```kql
+let forums = dynamic(["exploit.in","xss.is"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any (forums)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
 
 ### Ransomware-style mass file rename / extension change
 
@@ -128,13 +188,10 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-42897`, `CVE-2026-41940`
-
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `2.223.66.103`, `5.181.234.59`, `92.38.148.58`, `exploit.in`, `xss.is`, `1vpns.com`, `1vpns.net`, `1vpns.org`
+  - IP / domain IOC(s): `2.223.66.103`, `5.181.234.59`, `92.38.148.58`, `1vpns.com`, `1vpns.net`, `1vpns.org`, `exploit.in`, `xss.is`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

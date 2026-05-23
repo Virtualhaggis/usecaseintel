@@ -21,12 +21,52 @@ All that said, the following attack sc…
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
 - **T1204.002** — User Execution: Malicious File
+- **T1555** — Credentials from Password Stores
+- **T1546.016** — Event Triggered Execution: Installer Packages
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] macOS Text Replacements exfiltration via `defaults read NSUserDictionaryReplacementItems`
+
+`UC_1405_2` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.os="macOS"
+      AND Processes.process_name="defaults"
+      AND Processes.process="*NSUserDictionaryReplacementItems*"
+    by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_id
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| where parent_process_name!="cfprefsd" AND parent_process_name!="SystemUIServer"
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where DeviceName !endswith "$"
+| where ProcessCommandLine has "NSUserDictionaryReplacementItems"
+| where FileName =~ "defaults" or ProcessCommandLine has "defaults read"
+// Surface the supply-chain parent chain (node/npm/yarn/pnpm) when present
+| extend NpmContext = iff(InitiatingProcessFileName in~ ("node","npm","npm-cli.js","yarn","pnpm","npx")
+                          or InitiatingProcessParentFileName in~ ("node","npm","yarn","pnpm","npx")
+                          or InitiatingProcessCommandLine has_any ("postinstall","preinstall","install.js","node_modules"),
+                          "npm-lifecycle", "other")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath,
+          InitiatingProcessParentFileName, NpmContext
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -115,4 +155,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

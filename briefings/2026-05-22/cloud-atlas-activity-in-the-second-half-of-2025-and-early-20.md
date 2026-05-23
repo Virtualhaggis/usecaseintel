@@ -77,75 +77,35 @@ In 2025, we observed pervasive SSH tunnel activity, which has remained active in
 - **Domain (defanged):** `istochnik.org`
 - **Domain (defanged):** `znews.net`
 - **Domain (defanged):** `investika-club.com`
-- **MD5:** `1A11B26DD0261EF27A112CE8B361C247`
-- **MD5:** `5329F7BFF9D0D5DB28821B86C26D628F`
-- **MD5:** `7A95360B7E0EB5B107A3D231ABBC541A`
-- **MD5:** `C0D1EAA15A2CEFBAB9735787575C8D8E`
-- **MD5:** `D5B38B252CF212A4A32763DE36732D40`
-- **MD5:** `3C75CEDB1196DF5EAB91F31411ED4B33`
-- **MD5:** `42AC350BFBC5B4EB0FEDBA16C81919C7`
-- **MD5:** `493B901D1B33EB577DB64AADD948F9CE`
-- **MD5:** `2CABB721681455DAE1B6A26709DEF453`
-- **MD5:** `1B39E86EB772A0E40060B672B7F574F1`
-- **MD5:** `1D401D6E6FC0B00AAA2C65A0AC0CFD6B`
-- **MD5:** `40A562B8600F843B717BC5951B2E3C29`
-- **MD5:** `F721A76DEB28FD0B80D27FCE6B8F5016`
-- **MD5:** `D3C8AFD22BAA306FF659DB1FAC28574A`
-- **MD5:** `6D7B2D1172BBDB7340972D844F6F0717`
-- **MD5:** `9769F43B9DE8D19E803263267FA6D62E`
-- **MD5:** `63B6BE9AE8D8024A40B200CCCB438F1D`
-- **MD5:** `6AA586BCC45CA2E92A4F0EF47E086FA1`
-- **MD5:** `EBA3BCDB19A7E256BF8E2CC5B9C1CCA9`
-- **MD5:** `B4E183627B7399006C1BC47B3711E419`
-- **MD5:** `F56B31A4B47AD3365B18A7E922FBA1A8`
-- **MD5:** `F6F62456FB0FCC396FB654CBED339BC3`
-- **MD5:** `25C8ED0511375DCA57EF136AC3FA0CCA`
-- **MD5:** `2B4BA4FACF8C299749771A3A4369782E`
-- **MD5:** `BA9CE06641067742F2AFC9691FAFF1DC`
-- **MD5:** `FB0F8027ACF1B1E47E07A63D8812ED50`
-- **MD5:** `BBF1FA694122E07635DEEAC11AD712F8`
-- **MD5:** `F301AA3D62B5095EEC4D8E34201A4769`
-- **MD5:** `F9C3BBE108566D1A6B070F9C5FB03160`
-- **MD5:** `369B75BDCDED16469EDE7AB8BEDCFAE1`
-- **MD5:** `9EAAE9491F6A50D6DF0BE393734A44CB`
-- **MD5:** `3E6E9DF00A764B348EC611EE8504ACA0`
-- **MD5:** `9BD788F285E32A05E6591D1EB36EBFFC`
-- **MD5:** `F42085522EC2EBB16EDCF814E7C330AD`
-- **MD5:** `2042EB5D52F0B535A1CE6B6F954C8C2B`
-- **MD5:** `2AA1E9765EF6B00B94A9B6BE0041436A`
-- **MD5:** `36120F5E9411BCBAC7104EF3FA964ED2`
-- **MD5:** `5000A353399500BC78381DC95B6ED2DC`
-- **MD5:** `579A9952D31CAD801A3988DBE7914CE7`
-- **MD5:** `867B634588C0FD6B26684D502C15AB03`
-- **MD5:** `38FA4306FA4406BA31CF171AF4D36E34`
-- **MD5:** `83EDDE9F7EEEFAC0363413972F35572B`
-- **MD5:** `CC751619BFEC0DC4607C17112B9E3B2C`
-- **MD5:** `A632858F14B36F03D0F213F5F5D6BFF2`
-- **MD5:** `097CA205AD9E3B72018750280904718C`
-- **MD5:** `69121C36EB8BF77962DCA825FCFFD873`
-- **MD5:** `C5702EB250F855C8C872FFFB9BB656ED`
-- **MD5:** `ED34F5A136FBA4FDEA976570FAA33ED7`
-- **MD5:** `0577DB70844E88B32B954906E2F20798`
-- **MD5:** `28ECF8FB6719E14231B94B4D37629B0E`
-- **MD5:** `0857C84B62289A1A9F29E19244E9A499`
-- **MD5:** `0C514E137860F489E3801213460EF938`
-- **MD5:** `50568B1F9335A7E3BA4E5DF035A8FB86`
-- **MD5:** `7F776AD200287D6DE14A29158C457179`
-- **MD5:** `51F7F794ED43FB90D0F8EBBB5EFFE628`
-- **MD5:** `B8C753DD254509FBA5077FFD5067EAB0`
-- **MD5:** `BC3739DEC8CD8F54F3F60A85F3ED600E`
-- **MD5:** `EC076CD21C483A40156F4E40D08DADED`
-- **MD5:** `216CB7F31D383C0DD892B284DF05A495`
-- **MD5:** `116F59E70A9DF97F4ADAEA71EECB1E9A`
-- **MD5:** `7242AC065B50BCDE9308756B49DBADCB`
-- **MD5:** `8158552950D2E13B075001CE0C52AA97`
-- **MD5:** `A75DBED984963B9AB21309C5B2F8FD9B`
-- **MD5:** `0320DD389FDBAB25D46792BD2817675E`
-- **MD5:** `5339D1A666F3E40FE756505CF1D87D4B`
-- **MD5:** `67D7E3AEEB673BF60C59361C12A4ED81`
-- **MD5:** `89572F0ED20791A5AC9FC4267D67CCB0`
-- **MD5:** `B6AAE073E7BFEBF4D643C2BBEB5C02E1`
-- **MD5:** `344CA9EA07CD4AC90EF27F8890D4EC05`
+- **MD5:** `1a11b26dd0261ef27a112ce8b361c247`
+- **MD5:** `5329f7bff9d0d5db28821b86c26d628f`
+- **MD5:** `7a95360b7e0eb5b107a3d231abbc541a`
+- **MD5:** `c0d1eaa15a2cefbab9735787575c8d8e`
+- **MD5:** `d5b38b252cf212a4a32763de36732d40`
+- **MD5:** `3c75cedb1196df5eab91f31411ed4b33`
+- **MD5:** `42ac350bfbc5b4eb0fedba16c81919c7`
+- **MD5:** `493b901d1b33eb577db64aadd948f9ce`
+- **MD5:** `2cabb721681455dae1b6a26709def453`
+- **MD5:** `1b39e86eb772a0e40060b672b7f574f1`
+- **MD5:** `1d401d6e6fc0b00aaa2c65a0ac0cfd6b`
+- **MD5:** `40a562b8600f843b717bc5951b2e3c29`
+- **MD5:** `f721a76deb28fd0b80d27fce6b8f5016`
+- **MD5:** `d3c8afd22baa306ff659db1fac28574a`
+- **MD5:** `6d7b2d1172bbdb7340972d844f6f0717`
+- **MD5:** `9769f43b9de8d19e803263267fa6d62e`
+- **MD5:** `63b6be9ae8d8024a40b200cccb438f1d`
+- **MD5:** `6aa586bcc45ca2e92a4f0ef47e086fa1`
+- **MD5:** `eba3bcdb19a7e256bf8e2cc5b9c1cca9`
+- **MD5:** `b4e183627b7399006c1bc47b3711e419`
+- **MD5:** `f56b31a4b47ad3365b18a7e922fba1a8`
+- **MD5:** `f6f62456fb0fcc396fb654cbed339bc3`
+- **MD5:** `25c8ed0511375dca57ef136ac3fa0cca`
+- **MD5:** `2b4ba4facf8c299749771a3a4369782e`
+- **MD5:** `ba9ce06641067742f2afc9691faff1dc`
+- **MD5:** `fb0f8027acf1b1e47e07a63d8812ed50`
+- **MD5:** `bbf1fa694122e07635deeac11ad712f8`
+- **MD5:** `f301aa3d62b5095eec4d8e34201a4769`
+- **MD5:** `f9c3bbe108566d1a6b070f9c5fb03160`
 
 ## MITRE ATT&CK Techniques
 
@@ -167,12 +127,151 @@ In 2025, we observed pervasive SSH tunnel activity, which has remained active in
 - **T1219** — Remote Access Software
 - **T1053.005** — Persistence (article-specific)
 - **T1547.001** — Persistence (article-specific)
+- **T1070.004** — Indicator Removal: File Deletion
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys
+- **T1564.001** — Hide Artifacts: Hidden Files and Directories
+- **T1003.002** — OS Credential Dumping: Security Account Manager
+- **T1003.004** — OS Credential Dumping: LSA Secrets
+- **T1006** — Direct Volume Access
+- **T1036.008** — Masquerading: Masquerade File Type
+- **T1112** — Modify Registry
+- **T1021.001** — Remote Services: Remote Desktop Protocol
+- **T1547.014** — Boot or Logon Autostart Execution: Active Setup
+- **T1572** — Protocol Tunneling
+- **T1090.001** — Proxy: Internal Proxy
+- **T1569.002** — System Services: Service Execution
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] PowerShell-parented taskkill of winrar.exe (Cloud Atlas LNK anti-forensic cleanup)
+
+`UC_28_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=taskkill.exe Processes.process="*winrar.exe*" Processes.parent_process_name=powershell.exe by Processes.dest Processes.user Processes.process Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where match(process, "(?i)/F") OR match(process, "(?i)/IM") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "taskkill.exe"
+| where ProcessCommandLine has "winrar.exe"
+| where ProcessCommandLine has_any ("/F", "/IM")
+| where InitiatingProcessFileName =~ "powershell.exe"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] PowerShower dropped to user Pictures folder as googleearth.ps1
+
+`UC_28_13` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*Pictures*googleearth.ps1*" by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+union
+(DeviceProcessEvents
+  | where Timestamp > ago(14d)
+  | where ProcessCommandLine has "googleearth.ps1"
+  | where ProcessCommandLine has @"\Pictures\" or InitiatingProcessCommandLine has @"\Pictures\"
+  | project Timestamp, DeviceName, AccountName, EventKind="Process", FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine),
+(DeviceFileEvents
+  | where Timestamp > ago(14d)
+  | where FileName =~ "googleearth.ps1"
+  | where FolderPath has @"\Pictures\"
+  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, EventKind="FileDrop", FileName, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine)
+| order by Timestamp desc
+```
+
+### [LLM] SAM/SECURITY registry hives copied from VSS shadow to Public\Documents as .pdf
+
+`UC_28_14` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*Public\\Documents*" Processes.process="*.pdf*" (Processes.process="*SAM*" OR Processes.process="*SECURITY*" OR Processes.process="*HarddiskVolumeShadowCopy*") by Processes.dest Processes.user Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where ProcessCommandLine has @"\Users\Public\Documents\" or InitiatingProcessCommandLine has @"\Users\Public\Documents\"
+| where ProcessCommandLine has ".pdf" or InitiatingProcessCommandLine has ".pdf"
+| where ProcessCommandLine has_any ("SAM", "SECURITY", "HarddiskVolumeShadowCopy", "Win32_ShadowCopy", "vssadmin")
+   or InitiatingProcessCommandLine has_any ("SAM", "SECURITY", "HarddiskVolumeShadowCopy", "Win32_ShadowCopy", "vssadmin")
+| where InitiatingProcessFileName in~ ("powershell.exe", "pwsh.exe", "cmd.exe", "wmic.exe", "fodhelper.exe")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] termsrv.dll patched (multi-RDP enabling) - takeown + binary write + TermService restart
+
+`UC_28_15` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*termsrv.dll*" (Processes.process="*takeown*" OR Processes.process="*icacls*" OR Processes.process="*TermService*" OR Processes.process="*Restart-Service*" OR Processes.parent_process_name=powershell.exe) by Processes.dest Processes.user Processes.process Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+let TermsrvProc = DeviceProcessEvents
+    | where Timestamp > ago(14d)
+    | where ProcessCommandLine has "termsrv.dll"
+    | where ProcessCommandLine has_any ("takeown", "icacls", "TermService", "Restart-Service", "Stop-Service", "net stop termservice", "sc ")
+        or FileName in~ ("takeown.exe", "icacls.exe")
+    | project Timestamp, DeviceName, AccountName, EventKind="Proc", FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine;
+let TermsrvFileWrite = DeviceFileEvents
+    | where Timestamp > ago(14d)
+    | where FolderPath endswith @"\System32" and FileName =~ "termsrv.dll"
+    | where ActionType in ("FileModified", "FileCreated", "FileRenamed")
+    | where InitiatingProcessFileName !in~ ("TrustedInstaller.exe", "msiexec.exe", "TiWorker.exe")
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, EventKind="FileWrite", FileName, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine;
+union TermsrvProc, TermsrvFileWrite
+| order by Timestamp desc
+```
+
+### [LLM] OpenSSH reverse port-forward (-R) launched on a workstation - Cloud Atlas backup C2
+
+`UC_28_16` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=ssh.exe Processes.process="* -R *" by Processes.dest Processes.user Processes.process Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where match(parent_process_name, "(?i)^(wscript|cscript|cmd|powershell|psexec|paexec|services)\.exe$") | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName =~ "ssh.exe"
+| where ProcessCommandLine matches regex @"(?i)\s-R\s+\S+"
+| where InitiatingProcessFileName in~ ("wscript.exe", "cscript.exe", "cmd.exe", "powershell.exe", "pwsh.exe", "psexec.exe", "psexec64.exe", "paexec.exe", "services.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| join kind=leftouter (
+    DeviceNetworkEvents
+    | where Timestamp > ago(14d)
+    | where InitiatingProcessFileName =~ "ssh.exe"
+    | where RemotePort == 22 or RemotePort == 443
+    | project NetTime=Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl
+  ) on DeviceName
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -526,9 +625,9 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
   - CVE(s): `CVE-2018-0802`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `1A11B26DD0261EF27A112CE8B361C247`, `5329F7BFF9D0D5DB28821B86C26D628F`, `7A95360B7E0EB5B107A3D231ABBC541A`, `C0D1EAA15A2CEFBAB9735787575C8D8E`, `D5B38B252CF212A4A32763DE36732D40`, `3C75CEDB1196DF5EAB91F31411ED4B33`, `42AC350BFBC5B4EB0FEDBA16C81919C7`, `493B901D1B33EB577DB64AADD948F9CE` _(+61 more)_
+  - file hash IOC(s): `1a11b26dd0261ef27a112ce8b361c247`, `5329f7bff9d0d5db28821b86c26d628f`, `7a95360b7e0eb5b107a3d231abbc541a`, `c0d1eaa15a2cefbab9735787575c8d8e`, `d5b38b252cf212a4a32763de36732d40`, `3c75cedb1196df5eab91f31411ed4b33`, `42ac350bfbc5b4eb0fedba16c81919c7`, `493b901d1b33eb577db64aadd948f9ce` _(+21 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 17 use case(s) fired, 33 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

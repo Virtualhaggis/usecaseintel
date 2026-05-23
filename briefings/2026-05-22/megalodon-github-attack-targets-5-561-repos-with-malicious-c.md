@@ -1,4 +1,4 @@
-# [CRIT] Megalodon GitHub Attack Targets 5,561 Repos with Malicious CI/CD Workflows
+# [HIGH] Megalodon GitHub Attack Targets 5,561 Repos with Malicious CI/CD Workflows
 
 **Source:** The Hacker News
 **Published:** 2026-05-22
@@ -13,10 +13,10 @@ Cybersecurity researchers have disclosed details of a new automated campaign cal
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-42897`
-- **CVE:** `CVE-2026-41940`
 - **IPv4 (defanged):** `216.126.225.129`
 - **Domain (defanged):** `polymarketbot.polymarketdev.workers.dev`
+- **SHA256:** `e01b85c1437085a519217338fe4ee5ed7858c28a10f8c1477b2f1857c3386edb`
+- **SHA1:** `acac5a9854650c4ae2883c4740bf87d34120c038`
 
 ## MITRE ATT&CK Techniques
 
@@ -27,19 +27,112 @@ Cybersecurity researchers have disclosed details of a new automated campaign cal
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
 - **T1005** — Data from Local System
-- **T1190** — Exploit Public-Facing Application
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1027** — Obfuscated Files or Information
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
+- **T1567** — Exfiltration Over Web Service
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1547** — Boot or Logon Autostart Execution
+- **T1546.016** — Event Triggered Execution: Installer Packages
+- **T1083** — File and Directory Discovery
+- **T1057** — Process Discovery
+- **T1212** — Exploitation for Credential Access
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Megalodon CI/CD C2 beacon to 216.126.225.129:8443
+
+`UC_25_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="216.126.225.129" All_Traffic.dest_port=8443 by All_Traffic.src All_Traffic.src_host All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP == "216.126.225.129"
+| where RemotePort == 8443
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, FolderPath = InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl, LocalIP
+| order by Timestamp desc
+```
+
+### [LLM] Polymarket npm wallet drainer egress to polymarketbot.polymarketdev.workers.dev
+
+`UC_25_11` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*polymarketbot.polymarketdev.workers.dev*" by DNS.src DNS.query DNS.answer host | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let badHost = "polymarketbot.polymarketdev.workers.dev";
+union isfuzzy=true
+  (DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has badHost
+    | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteUrl, RemoteIP, RemotePort),
+  (DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType in ("DnsQueryResponse", "ConnectionSuccess", "ConnectionFailed")
+    | where RemoteUrl has badHost or AdditionalFields has badHost
+    | project Timestamp, DeviceName, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, AdditionalFields)
+| order by Timestamp desc
+```
+
+### [LLM] Polymarket npm persistence: ~/.polybot/ directory written by node/npm
+
+`UC_25_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/.polybot/*" OR Filesystem.file_path="*\\.polybot\\*") (Filesystem.process_name=node OR Filesystem.process_name=node.exe OR Filesystem.process_name=npm OR Filesystem.process_name=npm.exe OR Filesystem.process_name=npx OR Filesystem.process_name=npx.exe) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.process_path Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated", "FileRenamed", "FileModified")
+| where FolderPath has "/.polybot/" or FolderPath has @"\.polybot\"
+| where InitiatingProcessFileName in~ ("node", "node.exe", "npm", "npm.exe", "npx", "npx.exe", "yarn", "yarn.exe", "pnpm", "pnpm.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, FolderPath, FileName, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Megalodon CI runner: shell scraping /proc/*/environ for in-memory secrets
+
+`UC_25_13` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*/proc/*" Processes.process="*/environ*" (Processes.process_name=bash OR Processes.process_name=sh OR Processes.process_name=dash OR Processes.process_name=zsh OR Processes.process_name=cat OR Processes.process_name=grep OR Processes.process_name=awk OR Processes.process_name=find OR Processes.process_name=xargs OR Processes.process_name=tr OR Processes.process_name=strings) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where ProcessCommandLine has "/proc/" and ProcessCommandLine has "/environ"
+| where FileName in~ ("bash", "sh", "dash", "zsh", "cat", "grep", "awk", "find", "xargs", "tr", "strings", "head", "tail")
+    or InitiatingProcessFileName in~ ("bash", "sh", "dash", "zsh")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -275,10 +368,10 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
   - IP / domain IOC(s): `216.126.225.129`, `polymarketbot.polymarketdev.workers.dev`
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-42897`, `CVE-2026-41940`
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `e01b85c1437085a519217338fe4ee5ed7858c28a10f8c1477b2f1857c3386edb`, `acac5a9854650c4ae2883c4740bf87d34120c038`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

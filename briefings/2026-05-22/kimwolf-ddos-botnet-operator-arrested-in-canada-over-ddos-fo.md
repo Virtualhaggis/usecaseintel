@@ -1,4 +1,4 @@
-# [CRIT] Kimwolf DDoS Botnet Operator Arrested in Canada Over DDoS-for-Hire Attacks
+# [HIGH] Kimwolf DDoS Botnet Operator Arrested in Canada Over DDoS-for-Hire Attacks
 
 **Source:** The Hacker News
 **Published:** 2026-05-22
@@ -13,8 +13,6 @@ In tandem, Jacob Butler (aka Dort), 23, Ottawa, Canada, has been charged with of
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-42897`
-- **CVE:** `CVE-2026-41940`
 - **Domain (defanged):** `resi.to`
 
 ## MITRE ATT&CK Techniques
@@ -22,7 +20,6 @@ In tandem, Jacob Butler (aka Dort), 23, Ottawa, Canada, has been charged with of
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
 - **T1071** — Application Layer Protocol
-- **T1190** — Exploit Public-Facing Application
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
@@ -161,10 +158,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
   - IP / domain IOC(s): `resi.to`
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-42897`, `CVE-2026-41940`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 6 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

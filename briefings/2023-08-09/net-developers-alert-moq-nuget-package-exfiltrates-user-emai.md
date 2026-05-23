@@ -20,12 +20,83 @@ Snyk has already published a security advisory and will alert developers …
 ## MITRE ATT&CK Techniques
 
 - **T1195.002** — Compromise Software Supply Chain
+- **T1552.004** — Unsecured Credentials: Private Keys / Files
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1041** — Exfiltration Over C2 Channel
+- **T1567.002** — Exfiltration to Cloud Storage
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] .NET build (dotnet/MSBuild) spawns git config to harvest user.email
+
+`UC_1379_1` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("dotnet.exe","MSBuild.exe","msbuild.exe","VBCSCompiler.exe") AND Processes.process_name="git.exe" AND Processes.process="*config*user.email*" by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_path _time | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("dotnet.exe","MSBuild.exe","VBCSCompiler.exe")
+| where FileName =~ "git.exe"
+| where ProcessCommandLine has "config" and ProcessCommandLine has "user.email"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, ParentImage=InitiatingProcessFolderPath, ParentCmd=InitiatingProcessCommandLine, ChildImage=FolderPath, ChildCmd=ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] Moq SponsorLink email exfil egress to cdn.devlooped.com / SponsorLink blob
+
+`UC_1379_2` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest LIKE "%devlooped.com" OR All_Traffic.dest LIKE "%sponsorlink%" OR All_Traffic.dest LIKE "%.blob.core.windows.net") AND All_Traffic.src_process_name IN ("dotnet.exe","MSBuild.exe","VBCSCompiler.exe") by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.src_process_name _time | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("dotnet.exe","MSBuild.exe","VBCSCompiler.exe")
+| where RemoteUrl has_any ("devlooped.com","sponsorlink") or RemoteUrl endswith ".blob.core.windows.net"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### [LLM] Vulnerable Moq 4.20.0 or Devlooped.SponsorLink NuGet package landed on endpoint
+
+`UC_1379_3` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_name values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\packages\\moq\\4.20.0\\*" OR Filesystem.file_path="*\\.nuget\\packages\\moq\\4.20.0\\*" OR Filesystem.file_path="*\\.nuget\\packages\\devlooped.sponsorlink\\*" OR Filesystem.file_path="*\\packages\\devlooped.sponsorlink*\\*" OR Filesystem.file_name="moq.4.20.0.nupkg" OR Filesystem.file_name="Moq.4.20.0.nupkg") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name _time | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(90d)
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| where (FolderPath has @"\.nuget\packages\moq\4.20.0\")
+    or (FolderPath has @"\packages\moq.4.20.0\")
+    or (FolderPath has @"\.nuget\packages\devlooped.sponsorlink\")
+    or (FolderPath has @"\packages\devlooped.sponsorlink")
+    or (FileName in~ ("moq.4.20.0.nupkg","Moq.4.20.0.nupkg"))
+    or (FileName startswith_cs "Devlooped.SponsorLink" and FileName endswith ".nupkg")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
+| order by Timestamp desc
+```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -54,4 +125,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 4 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
