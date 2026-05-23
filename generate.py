@@ -8032,6 +8032,7 @@ body.view-home-active .stats-articles{display:none !important;}
 }
 .home-eyebrow{
   margin:0 0 18px;
+  padding-left:14px;
   font-family:var(--mono);
   font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase;
   color:var(--accent-2);
