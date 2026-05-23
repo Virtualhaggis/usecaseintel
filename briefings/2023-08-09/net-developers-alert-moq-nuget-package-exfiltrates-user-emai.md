@@ -15,11 +15,12 @@ Snyk has already published a security advisory and will alert developers …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `cdn.devlooped.com`
 
 ## MITRE ATT&CK Techniques
 
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
 - **T1552.004** — Unsecured Credentials: Private Keys / Files
 - **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 - **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
@@ -36,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] .NET build (dotnet/MSBuild) spawns git config to harvest user.email
 
-`UC_1380_1` · phase: **actions** · confidence: **High**
+`UC_1380_2` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +58,7 @@ DeviceProcessEvents
 
 ### [LLM] Moq SponsorLink email exfil egress to cdn.devlooped.com / SponsorLink blob
 
-`UC_1380_2` · phase: **c2** · confidence: **High**
+`UC_1380_3` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +77,7 @@ DeviceNetworkEvents
 
 ### [LLM] Vulnerable Moq 4.20.0 or Devlooped.SponsorLink NuGet package landed on endpoint
 
-`UC_1380_3` · phase: **delivery** · confidence: **High**
+`UC_1380_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +123,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `cdn.devlooped.com`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 4 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

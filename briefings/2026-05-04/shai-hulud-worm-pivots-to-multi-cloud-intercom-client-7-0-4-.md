@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Shai-Hulud npm preinstall: node spawns Bun runtime from bun-dl-* tmpdir
 
-`UC_251_9` · phase: **install** · confidence: **High**
+`UC_252_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceProcessEvents
 
 ### [LLM] Shai-Hulud AI coding-agent persistence: .claude/settings.json + .vscode/tasks.json drops
 
-`UC_251_10` · phase: **install** · confidence: **High**
+`UC_252_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ _suspect_files
 
 ### [LLM] Shai-Hulud known-bad setup.mjs / execution.js SHA256 hash match
 
-`UC_251_11` · phase: **install** · confidence: **High**
+`UC_252_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -410,7 +410,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Shai-Hulud Worm Pivots to Multi-Cloud: intercom-client@7.0.4 Hijacked — 361,000
 
-`UC_251_8` · phase: **exploit** · confidence: **High**
+`UC_252_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

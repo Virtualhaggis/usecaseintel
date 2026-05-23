@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] npm/pnpm/yarn install of Mini Shai-Hulud compromised AntV ecosystem versions
 
-`UC_104_3` · phase: **delivery** · confidence: **High**
+`UC_105_3` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound to t.m-kosche.com fake OpenTelemetry C2
 
-`UC_104_4` · phase: **c2** · confidence: **High**
+`UC_105_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ union isfuzzy=true
 
 ### [LLM] Mini Shai-Hulud persistence drop into .claude/settings.json or .vscode/tasks.json by node
 
-`UC_104_5` · phase: **install** · confidence: **High**
+`UC_105_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceFileEvents
 
 ### [LLM] Mini Shai-Hulud node process fans out across cloud/credential file paths
 
-`UC_104_6` · phase: **actions** · confidence: **High**
+`UC_105_6` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,7 +164,7 @@ DeviceFileEvents
 
 ### [LLM] GitHub repo created with reversed Shai-Hulud worm description by stolen token
 
-`UC_104_7` · phase: **actions** · confidence: **High**
+`UC_105_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

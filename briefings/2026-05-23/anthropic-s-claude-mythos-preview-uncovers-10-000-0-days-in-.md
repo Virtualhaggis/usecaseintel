@@ -10,12 +10,8 @@ Home Cyber Security News
 Anthropic’s Claude Mythos Preview Uncovers 10,000+ 0-Days in Project Glasswing 
 By Guru Baran 
 May 23, 2026 
-
-
-
-
 Anthropic has revealed the staggering initial results of Project Glasswing, a collaborative cybersecurity initiative designed to secure critical infrastructure using advanced AI before malicious actors can exploit it.
-In its first month, the project leveraged the unreleased Claude Mythos Preview model to autonomously discover over 10,000 high- and critica…
+In its first month, the project leveraged the unreleased Claude Mythos Preview model to autonomously discover over 10,000 high- and critical-severi…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -51,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vulnerable wolfSSL versions in inventory exposing CVE-2026-5194 cert-forgery flaw
 
-`UC_0_5` · phase: **weapon** · confidence: **High**
+`UC_1_5` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +69,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] Banking/webmail TLS connections from corporate hosts to never-before-seen destination IPs (forged-cert AitM proxy)
 
-`UC_0_6` · phase: **c2** · confidence: **Medium**
+`UC_1_6` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +101,7 @@ DeviceNetworkEvents
 
 ### [LLM] Successful M365/banking sign-in from ASN never previously seen for the user
 
-`UC_0_7` · phase: **actions** · confidence: **Medium**
+`UC_1_7` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +134,7 @@ AADSignInEventsBeta
 
 ### [LLM] Mailbox forwarding/inbox rule created within 30 min of an anomalous Entra sign-in
 
-`UC_0_8` · phase: **actions** · confidence: **High**
+`UC_1_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

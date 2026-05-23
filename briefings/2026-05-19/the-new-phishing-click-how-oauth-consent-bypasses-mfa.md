@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Microsoft Entra device code authentication flow used for sign-in (EvilTokens consent-phish entry vector)
 
-`UC_98_10` · phase: **delivery** · confidence: **High**
+`UC_99_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ AADSignInEventsBeta
 
 ### [LLM] New OAuth consent grant for Mail/Files/Calendar/Contacts scopes (consent phishin
 
-`UC_98_11` · phase: **install** · confidence: **High**
+`UC_99_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ CloudAppEvents
 
 ### [LLM] Non-interactive OAuth refresh token sign-in from previously unseen IP / country
 
-`UC_98_12` · phase: **c2** · confidence: **Medium**
+`UC_99_12` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ AADSignInEventsBeta
 
 ### [LLM] User granting consent to 3+ new OAuth applications within a short window (toxic combination)
 
-`UC_98_13` · phase: **actions** · confidence: **Medium**
+`UC_99_13` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

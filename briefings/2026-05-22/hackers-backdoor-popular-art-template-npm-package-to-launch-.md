@@ -77,7 +77,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] art-template Backdoored Version Installed via Package Manager
 
-`UC_7_9` · phase: **delivery** · confidence: **High**
+`UC_8_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound Traffic to art-template / Coruna Campaign Infrastructure
 
-`UC_7_10` · phase: **c2** · confidence: **High**
+`UC_8_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### [LLM] Coruna iOS Exploit Implant File Hash Sighting (49554fde7424c31c.js)
 
-`UC_7_11` · phase: **install** · confidence: **High**
+`UC_8_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ DeviceFileEvents
 
 ### [LLM] Coruna C2 Beacon POST to /api/ip-sync/sync
 
-`UC_7_12` · phase: **c2** · confidence: **High**
+`UC_8_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,7 +158,7 @@ DeviceNetworkEvents
 
 ### [LLM] loadScript() Injection in Web Bundle Pointing to jiathis/cfww/youzzjizz
 
-`UC_7_13` · phase: **delivery** · confidence: **Medium**
+`UC_8_13` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -389,7 +389,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Backdoor Popular art-template npm Package to Launch Watering-Hole Attack
 
-`UC_7_8` · phase: **exploit** · confidence: **High**
+`UC_8_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

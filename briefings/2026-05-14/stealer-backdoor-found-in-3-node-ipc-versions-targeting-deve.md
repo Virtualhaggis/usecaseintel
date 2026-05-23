@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Network resolution or connection to node-ipc backdoor C2 sh.azurestaticprovider.net
 
-`UC_146_9` · phase: **c2** · confidence: **High**
+`UC_147_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ union isfuzzy=true
 
 ### [LLM] node.exe initiating outbound to node-ipc backdoor C2 sh.azurestaticprovider.net
 
-`UC_146_10` · phase: **actions** · confidence: **High**
+`UC_147_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceNetworkEvents
 
 ### [LLM] node.exe sending UDP/53 directly to public DNS resolvers (resolver-override bypass)
 
-`UC_146_11` · phase: **c2** · confidence: **Medium**
+`UC_147_11` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ DeviceNetworkEvents
 
 ### [LLM] Installation or package-lock entry for compromised node-ipc 9.1.6 / 9.2.3 / 12.0.1
 
-`UC_146_12` · phase: **delivery** · confidence: **High**
+`UC_147_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -170,7 +170,7 @@ union isfuzzy=true
 
 ### [LLM] node.exe fan-out across developer credential file paths
 
-`UC_146_13` · phase: **actions** · confidence: **Medium**
+`UC_147_13` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -473,7 +473,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Stealer Backdoor Found in 3 Node-IPC Versions Targeting Developer Secrets
 
-`UC_146_8` · phase: **exploit** · confidence: **High**
+`UC_147_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

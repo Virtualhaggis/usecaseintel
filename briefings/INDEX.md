@@ -11,15 +11,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-23
 - [anthropic s claude mythos preview uncovers 10 000 0 days in ](./2026-05-23/anthropic-s-claude-mythos-preview-uncovers-10-000-0-days-in-.md)
 - [ghsa critical cve 2026 46716 nezha monitoring rolemember can](./2026-05-23/ghsa-critical-cve-2026-46716-nezha-monitoring-rolemember-can.md)
+- [hackers compromised 233 versions of laravel lang packages by](./2026-05-23/hackers-compromised-233-versions-of-laravel-lang-packages-by.md)
 - [laravel lang supply chain attack every tag across multiple c](./2026-05-23/laravel-lang-supply-chain-attack-every-tag-across-multiple-c.md)
 - [supply chain attack targets laravel lang packages with crede](./2026-05-23/supply-chain-attack-targets-laravel-lang-packages-with-crede.md)
 
 ## 2026-05-22
-- [cisa adds langflow origin validation flaw to known exploited](./2026-05-22/cisa-adds-langflow-origin-validation-flaw-to-known-exploited.md)
 - [cisa kev cve 2026 9082 drupal core sql injection vulnerabili](./2026-05-22/cisa-kev-cve-2026-9082-drupal-core-sql-injection-vulnerabili.md)
 - [cloud atlas activity in the second half of 2025 and early 20](./2026-05-22/cloud-atlas-activity-in-the-second-half-of-2025-and-early-20.md)
 - [drupal critical sql injection flaw now targeted in attacks](./2026-05-22/drupal-critical-sql-injection-flaw-now-targeted-in-attacks.md)
 - [first vpn dismantled in global takedown over use by 25 ranso](./2026-05-22/first-vpn-dismantled-in-global-takedown-over-use-by-25-ranso.md)
+- [foul play fake fifa websites target soccer fans looking for ](./2026-05-22/foul-play-fake-fifa-websites-target-soccer-fans-looking-for-.md)
 - [from edge appliance to enterprise compromise multi stage lin](./2026-05-22/from-edge-appliance-to-enterprise-compromise-multi-stage-lin.md)
 - [ghostwriter targets ukraine government entities with prometh](./2026-05-22/ghostwriter-targets-ukraine-government-entities-with-prometh.md)
 - [ghsa critical cve 2026 46670 yeswiki unauthenticated sql inj](./2026-05-22/ghsa-critical-cve-2026-46670-yeswiki-unauthenticated-sql-inj.md)
@@ -861,7 +862,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2017 1000353 jenkins remote code execution vuln](./2025-10-02/cisa-kev-cve-2017-1000353-jenkins-remote-code-execution-vuln.md)
 - [cisa kev cve 2025 21043 samsung mobile devices out of bounds](./2025-10-02/cisa-kev-cve-2025-21043-samsung-mobile-devices-out-of-bounds.md)
 - [cisa kev cve 2025 4008 smartbedded meteobridge command injec](./2025-10-02/cisa-kev-cve-2025-4008-smartbedded-meteobridge-command-injec.md)
-- [new spyware campaigns target privacy conscious android users](./2025-10-02/new-spyware-campaigns-target-privacy-conscious-android-users.md)
 
 ## 2025-09-29
 - [cisa kev cve 2021 21311 adminer server side request forgery ](./2025-09-29/cisa-kev-cve-2021-21311-adminer-server-side-request-forgery-.md)

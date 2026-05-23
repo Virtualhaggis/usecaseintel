@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Consultar_NF-e.bat NF-e invoice lure spawns hidden PowerShell (Banana RAT)
 
-`UC_9_13` · phase: **delivery** · confidence: **High**
+`UC_10_13` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceProcessEvents
 
 ### [LLM] PowerShell stager fetches st.txt / payload.php from Banana RAT staging IP 24.199.90.58
 
-`UC_9_14` · phase: **install** · confidence: **High**
+`UC_10_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceNetworkEvents
 
 ### [LLM] Scheduled task persistence: PowerShell every minute for 9999 days (Banana RAT)
 
-`UC_9_15` · phase: **install** · confidence: **High**
+`UC_10_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceProcessEvents
 
 ### [LLM] Banana RAT C2 beacon to windowsk-cdn[.]com or fallback 162.141.111.227:443
 
-`UC_9_16` · phase: **c2** · confidence: **High**
+`UC_10_16` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -546,7 +546,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use NF-e Invoice Lures to Deliver Banana RAT Through Malicious Batch Fil
 
-`UC_9_12` · phase: **exploit** · confidence: **High**
+`UC_10_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
