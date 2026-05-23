@@ -8683,17 +8683,70 @@ body.view-home-active .stats-articles{display:none !important;}
   }
   .home-section-reveal{
     opacity:0;
-    transform:translateY(12px);
-    transition:opacity 0.5s cubic-bezier(.2,.8,.2,1),
-               transform 0.5s cubic-bezier(.2,.8,.2,1);
+    transform:translateY(28px);
+    filter:blur(6px);
+    transition:opacity .8s cubic-bezier(.16,1,.3,1),
+               transform .8s cubic-bezier(.16,1,.3,1),
+               filter   .8s cubic-bezier(.16,1,.3,1);
+    will-change:opacity, transform, filter;
   }
   .home-section-reveal.in-view{
     opacity:1;
     transform:translateY(0);
+    filter:blur(0);
+  }
+  /* Per-card stagger inside grid sections. The homeSectionReveal IIFE
+     assigns `--stagger-i` to each direct staggerable child so the
+     transition-delay cascades. ~60ms between siblings keeps the
+     cascade snappy on long grids (6 value cards, 6 platform tiles,
+     11 source chips). The +80ms head-start lets the section wrapper
+     start fading first so the cascade reads as "section appears, then
+     cards land". */
+  .home-section-reveal .home-value-card,
+  .home-section-reveal .home-audience-tile,
+  .home-section-reveal .home-feat-card,
+  .home-section-reveal .home-platform-tile,
+  .home-section-reveal .home-env-tile,
+  .home-section-reveal .home-tactic-chip,
+  .home-section-reveal .home-credibility-card,
+  .home-section-reveal .home-source-chip{
+    opacity:0;
+    transform:translateY(18px) scale(.97);
+    filter:blur(4px);
+    transition:opacity .65s cubic-bezier(.16,1,.3,1),
+               transform .65s cubic-bezier(.16,1,.3,1),
+               filter   .65s cubic-bezier(.16,1,.3,1);
+    transition-delay:calc(var(--stagger-i, 0) * 60ms + 80ms);
+  }
+  .home-section-reveal.in-view .home-value-card,
+  .home-section-reveal.in-view .home-audience-tile,
+  .home-section-reveal.in-view .home-feat-card,
+  .home-section-reveal.in-view .home-platform-tile,
+  .home-section-reveal.in-view .home-env-tile,
+  .home-section-reveal.in-view .home-tactic-chip,
+  .home-section-reveal.in-view .home-credibility-card,
+  .home-section-reveal.in-view .home-source-chip{
+    opacity:1;
+    transform:translateY(0) scale(1);
+    filter:blur(0);
   }
 }
 @media (prefers-reduced-motion: reduce){
-  .home-rise, .home-section-reveal{opacity:1; transform:none;}
+  .home-rise,
+  .home-section-reveal,
+  .home-section-reveal .home-value-card,
+  .home-section-reveal .home-audience-tile,
+  .home-section-reveal .home-feat-card,
+  .home-section-reveal .home-platform-tile,
+  .home-section-reveal .home-env-tile,
+  .home-section-reveal .home-tactic-chip,
+  .home-section-reveal .home-credibility-card,
+  .home-section-reveal .home-source-chip{
+    opacity:1 !important;
+    transform:none !important;
+    filter:none !important;
+    transition:none !important;
+  }
 }
 
 /* ----- Round-2 responsive ------------------------------------------- */
@@ -11720,9 +11773,28 @@ document.addEventListener('click', e => {
 // fade up the first time it enters the viewport.
 // =================================================================
 (function homeSectionReveal(){
-  if (!('IntersectionObserver' in window)) return;
   const reveal = document.querySelectorAll('.home-section-reveal');
   if (!reveal.length) return;
+  // No-IO fallback: ancient browser without IntersectionObserver. Show
+  // everything immediately rather than leave sections stuck at opacity:0
+  // -- broken visibility is worse than missing the animation.
+  if (!('IntersectionObserver' in window)){
+    reveal.forEach(el => el.classList.add('in-view'));
+    return;
+  }
+  // Tag each section's direct staggerable children with --stagger-i so
+  // the CSS transition-delay cascades them in. Done once at load
+  // (cheap forEach) rather than per intersect, since the indices are
+  // stable. Non-tile children (e.g. <header class="home-section-head">)
+  // simply lack the selector match and reveal alongside the wrapper.
+  const STAGGER_SEL = '.home-value-card, .home-audience-tile, .home-feat-card, ' +
+                      '.home-platform-tile, .home-env-tile, .home-tactic-chip, ' +
+                      '.home-credibility-card, .home-source-chip';
+  reveal.forEach(section => {
+    Array.from(section.querySelectorAll(STAGGER_SEL)).forEach((el, i) => {
+      el.style.setProperty('--stagger-i', String(i));
+    });
+  });
   const io = new IntersectionObserver((entries) => {
     entries.forEach(en => {
       if (en.isIntersecting){
@@ -11732,6 +11804,66 @@ document.addEventListener('click', e => {
     });
   }, {threshold: 0.12, rootMargin: '0px 0px -40px 0px'});
   reveal.forEach(el => io.observe(el));
+})();
+
+// =================================================================
+// Home -- count-up animation for the hero stat tiles. Each .num
+// carries data-count-to (integer target) and data-count-final (the
+// final locale-formatted text we want to land on). On first scroll
+// into view, tick from 0 to target over ~1.2s with an ease-out curve.
+// Respect prefers-reduced-motion -- skip the animation entirely.
+// =================================================================
+(function countUpStats(){
+  const nodes = document.querySelectorAll('.home-trust-tile .num[data-count-to]');
+  if (!nodes.length) return;
+  const reduce = window.matchMedia
+    && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce){
+    nodes.forEach(n => { n.textContent = n.dataset.countFinal || n.textContent; });
+    return;
+  }
+  // Reset all tiles to '0' synchronously before the browser paints.
+  // The initial DOM ships the final number (good for no-JS, SEO,
+  // accessibility / screen readers via aria-live) but JS users should
+  // see the rise from 0. This rewrite happens during the same
+  // microtask as initial parse, so no flicker.
+  nodes.forEach(n => { n.textContent = '0'; });
+  function easeOutCubic(t){ return 1 - Math.pow(1 - t, 3); }
+  function animate(node){
+    const target = parseInt(node.dataset.countTo, 10);
+    if (!isFinite(target) || target <= 0){
+      node.textContent = node.dataset.countFinal || node.textContent;
+      return;
+    }
+    // Snappier on small targets (Query languages = 5), slower on big
+    // ones (Detections > 3000) so the tick feels weighty either way.
+    const duration = Math.max(700, Math.min(1600, 600 + Math.log10(target + 1) * 220));
+    const start = performance.now();
+    function tick(now){
+      const p = Math.min((now - start) / duration, 1);
+      const val = Math.floor(target * easeOutCubic(p));
+      node.textContent = val.toLocaleString();
+      if (p < 1){
+        requestAnimationFrame(tick);
+      } else {
+        node.textContent = node.dataset.countFinal || target.toLocaleString();
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+  if (!('IntersectionObserver' in window)){
+    nodes.forEach(animate);
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if (en.isIntersecting){
+        animate(en.target);
+        io.unobserve(en.target);
+      }
+    });
+  }, {threshold: 0.5});
+  nodes.forEach(n => io.observe(n));
 })();
 
 // =================================================================
@@ -19397,18 +19529,27 @@ def render_home_trust_strip(usecase_count: int, tech_count: int,
     plus a freshness pill below. Replaces the original .home-freshness
     list — same data, more confident treatment."""
     fresh = _home_format_freshness(generated_human)
+    # data-count-to drives the count-up animation (countUpStats IIFE in
+    # the inline shell): each tile starts at 0 and ticks up to its
+    # target the first time it scrolls into view (or immediately, since
+    # the trust strip is above the fold). The :, formatted spelling is
+    # baked into the initial DOM for non-JS / reduced-motion fallback
+    # via the data-count-final attribute; JS uses that as the final
+    # rendered text so we don't lose comma grouping mid-animation.
     tiles = [
-        (f"{usecase_count:,}", "Detections"),
-        (f"{tech_count:,}",    "ATT&CK techniques"),
-        ("5",                  "Query languages"),
-        (f"{article_count:,}", "Threat-intel articles"),
+        (usecase_count, f"{usecase_count:,}", "Detections"),
+        (tech_count,    f"{tech_count:,}",    "ATT&CK techniques"),
+        (5,             "5",                  "Query languages"),
+        (article_count, f"{article_count:,}", "Threat-intel articles"),
     ]
     tile_html = "".join(
         f'<div class="home-trust-tile">'
-        f'<div class="num">{n}</div>'
+        f'<div class="num" data-count-to="{n}" data-count-final="{html.escape(formatted)}">'
+        f'{html.escape(formatted)}'
+        f'</div>'
         f'<div class="lbl">{html.escape(l)}</div>'
         f'</div>'
-        for n, l in tiles
+        for n, formatted, l in tiles
     )
     chips = [
         "Continuously updated",
