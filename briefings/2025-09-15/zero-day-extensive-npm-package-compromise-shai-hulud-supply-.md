@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Shai-Hulud bundle.js postinstall payload by known SHA256 hash
 
-`UC_745_10` · phase: **install** · confidence: **High**
+`UC_746_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ union isfuzzy=true
 
 ### [LLM] Shai-Hulud worm C2 exfiltration to webhook.site UUID bb8ca5f6
 
-`UC_745_11` · phase: **c2** · confidence: **High**
+`UC_746_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceNetworkEvents
 
 ### [LLM] TruffleHog secret-scanner executed by node/npm postinstall context
 
-`UC_745_12` · phase: **actions** · confidence: **High**
+`UC_746_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceProcessEvents
 
 ### [LLM] Shai-Hulud persistence artifact: shai-hulud-workflow.yml file dropped on disk
 
-`UC_745_13` · phase: **install** · confidence: **High**
+`UC_746_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceFileEvents
 
 ### [LLM] Postinstall node child enumerating multiple developer credential stores
 
-`UC_745_14` · phase: **actions** · confidence: **Medium**
+`UC_746_14` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -413,7 +413,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Zero-day Extensive NPM Package Compromise - Shai Hulud Supply Chain Attack
 
-`UC_745_9` · phase: **exploit** · confidence: **High**
+`UC_746_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

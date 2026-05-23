@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] EchoCreep persistence via 'MicrosoftSSHUpdate' scheduled task
 
-`UC_66_7` · phase: **install** · confidence: **High**
+`UC_69_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### [LLM] GraphWorm OneDrive Microsoft Graph API C2 from non-Office process
 
-`UC_66_8` · phase: **c2** · confidence: **Medium**
+`UC_69_8` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceNetworkEvents
 
 ### [LLM] EchoCreep Discord API C2 channel from non-browser, non-Discord process
 
-`UC_66_9` · phase: **c2** · confidence: **Medium**
+`UC_69_9` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceNetworkEvents
 
 ### [LLM] Webworm GitHub staging repo access (anjsdgasdf/WordPress)
 
-`UC_66_10` · phase: **delivery** · confidence: **High**
+`UC_69_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceNetworkEvents
 
 ### [LLM] GraphWorm beacon_shell_output.txt artifact on disk
 
-`UC_66_11` · phase: **actions** · confidence: **High**
+`UC_69_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -165,7 +165,7 @@ DeviceFileEvents
 
 ### [LLM] Webworm C2 IP connection on Vultr/IT7 infrastructure
 
-`UC_66_12` · phase: **c2** · confidence: **High**
+`UC_69_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -198,7 +198,7 @@ union isfuzzy=true
 
 ### [LLM] WormFrp configuration retrieval from compromised Amazon S3 bucket
 
-`UC_66_13` · phase: **c2** · confidence: **High**
+`UC_69_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

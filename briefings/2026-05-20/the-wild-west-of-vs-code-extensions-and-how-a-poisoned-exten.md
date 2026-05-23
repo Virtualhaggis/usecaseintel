@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Nx Console v18.95.0 compromised extension installed (May 2026 supply-chain attack)
 
-`UC_64_9` · phase: **delivery** · confidence: **High**
+`UC_67_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceFileEvents
 
 ### [LLM] VS Code/Cursor extension host fetches dropper from nrwl/nx orphan commit on GitHub
 
-`UC_64_10` · phase: **install** · confidence: **Medium**
+`UC_67_10` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceNetworkEvents
 
 ### [LLM] macOS Python backdoor persistence via kitty-monitor LaunchAgent and cat.py drop
 
-`UC_64_11` · phase: **install** · confidence: **High**
+`UC_67_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceFileEvents
 
 ### [LLM] Python backdoor self-daemonisation via __DAEMONIZED=1 spawned by VS Code helper or node
 
-`UC_64_12` · phase: **install** · confidence: **Medium**
+`UC_67_12` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceProcessEvents
 
 ### [LLM] VS Code extension host fan-out reads of developer secrets (.ssh, .aws, .npmrc, ~/.claude/settings.json)
 
-`UC_64_13` · phase: **actions** · confidence: **Medium**
+`UC_67_13` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -393,7 +393,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The Wild West of VS Code extensions and how a poisoned extension breached GitHub
 
-`UC_64_8` · phase: **exploit** · confidence: **High**
+`UC_67_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

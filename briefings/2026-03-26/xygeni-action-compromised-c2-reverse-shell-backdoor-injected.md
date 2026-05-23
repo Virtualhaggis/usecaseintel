@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Outbound C2 callback to xygeni-action backdoor IP 91.214.78.178 from CI runner
 
-`UC_361_5` · phase: **c2** · confidence: **High**
+`UC_363_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceNetworkEvents
 
 ### [LLM] GitHub Actions workflow file referencing compromised xygeni/xygeni-action@v5 or backdoored commit 4bf1d4e
 
-`UC_361_6` · phase: **delivery** · confidence: **High**
+`UC_363_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceFileEvents
 
 ### [LLM] Bash-spawned curl to xygeni-action C2 nip.io endpoint with /b/in /b/q /b/r path on CI runner
 
-`UC_361_7` · phase: **c2** · confidence: **High**
+`UC_363_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -189,7 +189,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — xygeni-action Compromised: C2 Reverse Shell Backdoor Injected via Tag Poisoning
 
-`UC_361_4` · phase: **install** · confidence: **High**
+`UC_363_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

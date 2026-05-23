@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Google Cloud API key successfully authenticates within 30 min after DeleteKey on same project
 
-`UC_15_4` · phase: **c2** · confidence: **Medium**
+`UC_18_4` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Spike in 'apikey:UNKNOWN' failed authentications to Gemini, BigQuery, or Maps APIs
 
-`UC_15_5` · phase: **actions** · confidence: **Medium**
+`UC_18_5` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

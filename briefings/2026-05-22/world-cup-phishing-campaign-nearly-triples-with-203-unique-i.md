@@ -10,12 +10,8 @@ Home Cyber Security News
 World Cup Phishing Campaign Nearly Triples With 203 Unique IP Addresses 
 By Tushar Subhra Dutta 
 May 22, 2026 
-
-
-
-
 A large-scale phishing campaign targeting the 2026 FIFA World Cup has grown far beyond what security researchers originally thought. What began as a documented set of 79 fraudulent domains has ballooned into a network of at least 222 domains spread across 203 unique IP addresses, making it nearly three times larger than first reported. 
-The campaign is …
+The campaign is built to…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -27,13 +23,13 @@ The campaign is …
 - **Domain (defanged):** `fifa-com.store`
 - **Domain (defanged):** `fifa-com.site`
 - **Domain (defanged):** `fifa-com.shop`
+- **Domain (defanged):** `fifa-com.one`
 - **Domain (defanged):** `dustdigitalsw.shop`
 - **Domain (defanged):** `https-fifa.cn`
 - **Domain (defanged):** `ww-fifaweb.cn`
 - **Domain (defanged):** `fifawebsite.cn`
 - **Domain (defanged):** `www-fifaworldcup.one`
 - **Domain (defanged):** `www-fifaworldcup.vip`
-- **Domain (defanged):** `fifa-com.one`
 - **SHA1:** `1b02595c66a13a4a5a523a76de25803bdb950623`
 - **SHA1:** `fc1db8def38bb08010bb8f8ac14d5e498ff8ff43`
 - **SHA1:** `3b8bb7631b39f455d31544b55ba97b49ab1888c1`
@@ -67,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Connection or DNS lookup to 2026 FIFA World Cup phishing infrastructure (Flare cluster)
 
-`UC_1_8` · phase: **delivery** · confidence: **High**
+`UC_4_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +85,7 @@ DeviceNetworkEvents
 
 ### [LLM] FIFA World Cup typosquat domain hit in Defender SafeLinks / email URL telemetry
 
-`UC_1_9` · phase: **delivery** · confidence: **High**
+`UC_4_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +109,7 @@ UrlMatches
 
 ### [LLM] TLS certificate fingerprint reuse across FIFA World Cup phishing infrastructure
 
-`UC_1_10` · phase: **c2** · confidence: **High**
+`UC_4_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +133,7 @@ DeviceNetworkEvents
 
 ### [LLM] Newly registered FIFA-themed typosquat lookups by enterprise hosts
 
-`UC_1_11` · phase: **recon** · confidence: **Medium**
+`UC_4_11` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

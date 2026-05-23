@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Code injection in Python: examples and prevention
 
-`UC_1294_0` · phase: **install** · confidence: **High**
+`UC_1295_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

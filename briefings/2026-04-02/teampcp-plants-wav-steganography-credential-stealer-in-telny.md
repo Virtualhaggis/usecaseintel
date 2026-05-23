@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TeamPCP telnyx FetchAudio() — python subprocess running inline base64 exec
 
-`UC_339_7` · phase: **install** · confidence: **High**
+`UC_341_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound connection to TeamPCP C2 83.142.209.203 / ringtone.wav stego payload fetch
 
-`UC_339_8` · phase: **c2** · confidence: **High**
+`UC_341_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceNetworkEvents
 
 ### [LLM] msbuild.exe dropped to Startup folder (TeamPCP telnyx Windows persistence)
 
-`UC_339_9` · phase: **install** · confidence: **High**
+`UC_341_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceFileEvents
 
 ### [LLM] TeamPCP exfiltration archive tpcp.tar.gz created on disk
 
-`UC_339_10` · phase: **actions** · confidence: **High**
+`UC_341_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceFileEvents
 
 ### [LLM] pip install of malicious telnyx versions 4.87.1 / 4.87.2
 
-`UC_339_11` · phase: **delivery** · confidence: **High**
+`UC_341_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -362,7 +362,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TeamPCP Plants WAV Steganography Credential Stealer in telnyx PyPI Package
 
-`UC_339_6` · phase: **exploit** · confidence: **High**
+`UC_341_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

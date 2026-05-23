@@ -10,12 +10,8 @@ Home Cyber Security News
 Hackers Abuse Middle East Telecom Networks for Large-Scale Command-and-Control Operations 
 By Tushar Subhra Dutta 
 May 22, 2026 
-
-
-
-
 Hackers are using telecom networks and hosting providers across the Middle East as a foundation for massive command-and-control operations, turning trusted infrastructure into a launchpad for cyberattacks. 
-A newly released threat intelligence report reveals that more than 1,350 active command-and-control (C2) servers were identified a…
+A newly released threat intelligence report reveals that more than 1,350 active command-and-control (C2) servers were identified across 98…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -65,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Metro4Shell CVE-2025-11953 — node.exe spawning shells with /open-url payload
 
-`UC_0_12` · phase: **exploit** · confidence: **High**
+`UC_3_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +83,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound beaconing to Hunt.io-named Middle East ISP C2 IPs
 
-`UC_0_13` · phase: **c2** · confidence: **High**
+`UC_3_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +104,7 @@ DeviceNetworkEvents
 
 ### [LLM] Tactical RMM agent execution on hosts where it is not the sanctioned RMM
 
-`UC_0_14` · phase: **c2** · confidence: **Medium**
+`UC_3_14` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +124,7 @@ DeviceProcessEvents
 
 ### [LLM] LLMjacking AWS Bedrock/SageMaker enumeration from TE Data Egypt IP
 
-`UC_0_15` · phase: **actions** · confidence: **High**
+`UC_3_15` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

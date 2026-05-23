@@ -1,12 +1,17 @@
 # Briefings — full archive
 
-_1256 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1257 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-05-23
+- [ghsa critical cve 2026 46716 nezha monitoring rolemember can](./2026-05-23/ghsa-critical-cve-2026-46716-nezha-monitoring-rolemember-can.md)
+- [laravel lang supply chain attack every tag across multiple c](./2026-05-23/laravel-lang-supply-chain-attack-every-tag-across-multiple-c.md)
+- [supply chain attack targets laravel lang packages with crede](./2026-05-23/supply-chain-attack-targets-laravel-lang-packages-with-crede.md)
 
 ## 2026-05-22
 - [cisa adds langflow origin validation flaw to known exploited](./2026-05-22/cisa-adds-langflow-origin-validation-flaw-to-known-exploited.md)
@@ -212,7 +217,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fake call logs real payments how callphantom tricks android ](./2026-05-07/fake-call-logs-real-payments-how-callphantom-tricks-android-.md)
 - [ghsa critical cve 2025 63706 next npm version is vulnerable ](./2026-05-07/ghsa-critical-cve-2025-63706-next-npm-version-is-vulnerable-.md)
 - [ghsa critical cve 2026 41050 fleet helm impersonation bypass](./2026-05-07/ghsa-critical-cve-2026-41050-fleet-helm-impersonation-bypass.md)
-- [ghsa critical cve 2026 42589 gotenberg has unauthenticated r](./2026-05-07/ghsa-critical-cve-2026-42589-gotenberg-has-unauthenticated-r.md)
 - [ghsa critical cve 2026 42596 gotenberg vulnerable to unauthe](./2026-05-07/ghsa-critical-cve-2026-42596-gotenberg-vulnerable-to-unauthe.md)
 - [ghsa critical cve 2026 42880 argocd serversidediff is vulner](./2026-05-07/ghsa-critical-cve-2026-42880-argocd-serversidediff-is-vulner.md)
 - [ghsa critical cve 2026 43997 vm2 access to host object enabl](./2026-05-07/ghsa-critical-cve-2026-43997-vm2-access-to-host-object-enabl.md)
@@ -686,7 +690,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2025-12-12
 - [cisa kev cve 2018 4063 sierra wireless airlink aleos unrestr](./2025-12-12/cisa-kev-cve-2018-4063-sierra-wireless-airlink-aleos-unrestr.md)
 - [cisa kev cve 2025 14174 google chromium out of bounds memory](./2025-12-12/cisa-kev-cve-2025-14174-google-chromium-out-of-bounds-memory.md)
-- [react next js dos vulnerability cve 2025 55184 what you need](./2025-12-12/react-next-js-dos-vulnerability-cve-2025-55184-what-you-need.md)
 
 ## 2025-12-11
 - [black hat europe 2025 reputation matters even in the ransomw](./2025-12-11/black-hat-europe-2025-reputation-matters-even-in-the-ransomw.md)
