@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Curious Serpens / APT29 ROADtools-pattern: device registration immediately following non-interactive token acquisition
 
-`UC_36_8` · phase: **install** · confidence: **Medium**
+`UC_37_8` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ let DeviceReg = AuditLogs | where TimeGenerated > ago(7d) | where OperationName 
 
 ### [LLM] UTA0355 device-code phishing: deviceCode auth flow with cross-IP token redemption
 
-`UC_36_9` · phase: **delivery** · confidence: **High**
+`UC_37_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ AADSignInEventsBeta | where Timestamp > ago(7d) | where AuthenticationProcessing
 
 ### [LLM] ROADtools roadtx FOCI client-ID swap: refresh-token resource hop across MS Office FOCI app IDs
 
-`UC_36_10` · phase: **c2** · confidence: **Medium**
+`UC_37_10` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
