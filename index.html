@@ -2798,7 +2798,12 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .tech-cell .uc-count{color:var(--accent-3); font-weight:700;}
 /* Platform-coverage badges on each technique cell. Tiny pill per
    platform that has at least one UC for that technique. */
-.tech-cell .pl-badges{display:inline-flex; gap:2px; margin-left:4px;}
+/* In matrix cells: right-align badges with a small wrap-safe gap, so
+   long technique names don't collide with the badge cluster. */
+.tech-cell .pl-badges{display:inline-flex; gap:3px; margin-left:auto; flex-wrap:wrap; justify-content:flex-end;}
+/* Default badge: letter chip used by .matrix-legend at the top of
+   the Matrix tab. Each platform has a one/two-character label so
+   the legend reads cleanly. */
 .pl-badge{
   display:inline-flex; align-items:center; justify-content:center;
   width:14px; height:14px; border-radius:3px;
@@ -2812,6 +2817,24 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .pl-badge.pl-spl  { background:rgba(76,183,130,0.16);  color:#6dd29c; border-color:rgba(76,183,130,0.40); }
 .pl-badge.pl-ddog { background:rgba(120,90,200,0.18);  color:#c5b0ff; border-color:rgba(120,90,200,0.42); font-size:9.5px; }
 .pl-badge.pl-falcon{ background:rgba(225,90,90,0.18);   color:#ff9a9a; border-color:rgba(225,90,90,0.42); font-size:9.5px; }
+/* Compact variant on matrix-grid technique cells: tiny solid-colour
+   square with no letter. Six platforms x 14px letter-badges was
+   overflowing the 150px-wide cells and pushing layout around -- 8x8
+   colour-only chips fit cleanly, and the title="..." tooltip still
+   tells you which platform on hover. */
+.tech-cell .pl-badge{
+  width:8px; height:8px;
+  border-radius:2px;
+  font-size:0; line-height:0;
+  text-indent:-9999px;
+  overflow:hidden;
+}
+.tech-cell .pl-badge.pl-def   { background:#7170ff; border-color:rgba(113,112,255,0.55); }
+.tech-cell .pl-badge.pl-sent  { background:#40a0ff; border-color:rgba(64,160,255,0.55); }
+.tech-cell .pl-badge.pl-sigma { background:#9b8afb; border-color:rgba(155,138,251,0.55); }
+.tech-cell .pl-badge.pl-spl   { background:#4cb782; border-color:rgba(76,183,130,0.55); }
+.tech-cell .pl-badge.pl-ddog  { background:#785ac8; border-color:rgba(120,90,200,0.55); }
+.tech-cell .pl-badge.pl-falcon{ background:#e15a5a; border-color:rgba(225,90,90,0.55); }
 /* Matrix platform-filter dim — applied to cells lacking the active filter. */
 .tech-cell.pl-filter-dim{opacity:0.18; filter:saturate(0.5);}
 .tech-cell.has-uc{background:linear-gradient(180deg, rgba(54,224,192,0.07), rgba(54,224,192,0.02));}
@@ -4289,7 +4312,7 @@ body.view-home-active .stats-articles{display:none !important;}
       <div class="home-trust-strip" aria-label="Platform scale and signals">
         <div class="home-trust-tiles"><div class="home-trust-tile"><div class="num" data-count-to="3848" data-count-final="3,848">3,848</div><div class="lbl">Detections</div></div><div class="home-trust-tile"><div class="num" data-count-to="181" data-count-final="181">181</div><div class="lbl">ATT&amp;CK techniques</div></div><div class="home-trust-tile"><div class="num" data-count-to="5" data-count-final="5">5</div><div class="lbl">Query languages</div></div><div class="home-trust-tile"><div class="num" data-count-to="1435" data-count-final="1,435">1,435</div><div class="lbl">Threat-intel articles</div></div></div>
         <div class="home-trust-chips"><span class="home-trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 l4 4 l10-10"/></svg>Continuously updated</span><span class="home-trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 l4 4 l10-10"/></svg>Mapped to MITRE ATT&amp;CK</span><span class="home-trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 l4 4 l10-10"/></svg>Multi-platform queries</span><span class="home-trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 l4 4 l10-10"/></svg>Automated detection pipeline</span></div>
-        <div class="home-trust-pill" aria-live="polite"><span class="pulse" aria-hidden="true"></span><span data-generated-utc="2026-05-23T22:55:00Z">Updated just now</span></div>
+        <div class="home-trust-pill" aria-live="polite"><span class="pulse" aria-hidden="true"></span><span data-generated-utc="2026-05-23T23:01:00Z">Updated just now</span></div>
       </div>
       </div>
     </div>
@@ -4411,7 +4434,7 @@ body.view-home-active .stats-articles{display:none !important;}
         </div>
       </div>
     <div class="home-cred-grid">
-      <article class="home-cred-card"><h3><span class="pulse" aria-hidden="true"></span>Continuously updated</h3><p><span data-generated-utc="2026-05-23T22:55:00Z">Updated just now</span> — the detection pipeline runs every two hours, pulls fresh threat intelligence from 11+ feeds, and regenerates the library end-to-end.</p><p>This run analysed <strong>1,435</strong> articles, mapped each to MITRE ATT&amp;CK, and produced queries across six platforms.</p></article>
+      <article class="home-cred-card"><h3><span class="pulse" aria-hidden="true"></span>Continuously updated</h3><p><span data-generated-utc="2026-05-23T23:01:00Z">Updated just now</span> — the detection pipeline runs every two hours, pulls fresh threat intelligence from 11+ feeds, and regenerates the library end-to-end.</p><p>This run analysed <strong>1,435</strong> articles, mapped each to MITRE ATT&amp;CK, and produced queries across six platforms.</p></article>
       <article class="home-cred-card"><h3>Threat-intelligence-driven</h3><p>Every detection traces back to a public, citable source. No anonymous vendor templates, no generic compliance rules.</p><div class="home-cred-sources"><span class="home-cred-source">The Hacker News</span><span class="home-cred-source">BleepingComputer</span><span class="home-cred-source">Microsoft Security Blog</span><span class="home-cred-source">CISA KEV</span><span class="home-cred-source">Cisco Talos</span><span class="home-cred-source">Securelist (Kaspersky)</span><span class="home-cred-source">SentinelLabs</span><span class="home-cred-source">Unit 42</span><span class="home-cred-source">ESET WeLiveSecurity</span><span class="home-cred-source">Lab52</span><span class="home-cred-source">Cyber Security News</span></div></article>
       <article class="home-cred-card"><h3>Built for operational use</h3><p>Each detection ships with its source article, MITRE technique mapping, kill-chain phase, and IOC pivot — so an analyst can take the query, the context, and the rationale together.</p><div class="home-cred-links"><a href="pipeline.html">Pipeline run history →</a><a href="#" data-home-action="matrix">MITRE ATT&amp;CK coverage map →</a><a href="#" data-home-action="intel">Live IOC feeds →</a></div></article>
     </div>
@@ -5891,6 +5914,7 @@ body.view-home-active .stats-articles{display:none !important;}
         <span class="lg-chip"><span class="pl-badge pl-sigma">Σ</span> Sigma rule</span>
         <span class="lg-chip"><span class="pl-badge pl-spl">P</span> Splunk SPL</span>
         <span class="lg-chip"><span class="pl-badge pl-ddog">DD</span> Datadog Cloud SIEM</span>
+        <span class="lg-chip"><span class="pl-badge pl-falcon">CS</span> CrowdStrike Falcon LogScale</span>
         <span class="lg-note">use the toolbar's platform pills to filter the matrix</span>
       </div>
     </div>
@@ -9049,10 +9073,10 @@ document.addEventListener('keydown', e => {
 // index.html ~49 MB; the new shell is ~1 MB. showView() awaits the
 // relevant chunk before invoking the per-tab renderer; existing
 // consumers already guard with `if (window.MATRIX)` so transient
-// nulls are safe.  {"matrix":"data/matrix.json?v=917af56d11","intel":"data/intel.json?v=0776236681","actors":"data/actors.json?v=768d6511e5","search":"data/search.json?v=de02d59f18","cards":"data/cards.html?v=6a6aa75a0d"} is replaced at build time with
+// nulls are safe.  {"matrix":"data/matrix.json?v=917af56d11","intel":"data/intel.json?v=49bce88f9b","actors":"data/actors.json?v=768d6511e5","search":"data/search.json?v=de02d59f18","cards":"data/cards.html?v=6a6aa75a0d"} is replaced at build time with
 // {chunk-name -> hashed URL} JSON.
 // =================================================================
-const __MANIFEST__ = {"matrix":"data/matrix.json?v=917af56d11","intel":"data/intel.json?v=0776236681","actors":"data/actors.json?v=768d6511e5","search":"data/search.json?v=de02d59f18","cards":"data/cards.html?v=6a6aa75a0d"};
+const __MANIFEST__ = {"matrix":"data/matrix.json?v=917af56d11","intel":"data/intel.json?v=49bce88f9b","actors":"data/actors.json?v=768d6511e5","search":"data/search.json?v=de02d59f18","cards":"data/cards.html?v=6a6aa75a0d"};
 const __chunkP = {};
 function loadChunk(name) {
   if (__chunkP[name]) return __chunkP[name];

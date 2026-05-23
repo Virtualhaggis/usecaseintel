@@ -7613,7 +7613,12 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .tech-cell .uc-count{color:var(--accent-3); font-weight:700;}
 /* Platform-coverage badges on each technique cell. Tiny pill per
    platform that has at least one UC for that technique. */
-.tech-cell .pl-badges{display:inline-flex; gap:2px; margin-left:4px;}
+/* In matrix cells: right-align badges with a small wrap-safe gap, so
+   long technique names don't collide with the badge cluster. */
+.tech-cell .pl-badges{display:inline-flex; gap:3px; margin-left:auto; flex-wrap:wrap; justify-content:flex-end;}
+/* Default badge: letter chip used by .matrix-legend at the top of
+   the Matrix tab. Each platform has a one/two-character label so
+   the legend reads cleanly. */
 .pl-badge{
   display:inline-flex; align-items:center; justify-content:center;
   width:14px; height:14px; border-radius:3px;
@@ -7627,6 +7632,24 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .pl-badge.pl-spl  { background:rgba(76,183,130,0.16);  color:#6dd29c; border-color:rgba(76,183,130,0.40); }
 .pl-badge.pl-ddog { background:rgba(120,90,200,0.18);  color:#c5b0ff; border-color:rgba(120,90,200,0.42); font-size:9.5px; }
 .pl-badge.pl-falcon{ background:rgba(225,90,90,0.18);   color:#ff9a9a; border-color:rgba(225,90,90,0.42); font-size:9.5px; }
+/* Compact variant on matrix-grid technique cells: tiny solid-colour
+   square with no letter. Six platforms x 14px letter-badges was
+   overflowing the 150px-wide cells and pushing layout around -- 8x8
+   colour-only chips fit cleanly, and the title="..." tooltip still
+   tells you which platform on hover. */
+.tech-cell .pl-badge{
+  width:8px; height:8px;
+  border-radius:2px;
+  font-size:0; line-height:0;
+  text-indent:-9999px;
+  overflow:hidden;
+}
+.tech-cell .pl-badge.pl-def   { background:#7170ff; border-color:rgba(113,112,255,0.55); }
+.tech-cell .pl-badge.pl-sent  { background:#40a0ff; border-color:rgba(64,160,255,0.55); }
+.tech-cell .pl-badge.pl-sigma { background:#9b8afb; border-color:rgba(155,138,251,0.55); }
+.tech-cell .pl-badge.pl-spl   { background:#4cb782; border-color:rgba(76,183,130,0.55); }
+.tech-cell .pl-badge.pl-ddog  { background:#785ac8; border-color:rgba(120,90,200,0.55); }
+.tech-cell .pl-badge.pl-falcon{ background:#e15a5a; border-color:rgba(225,90,90,0.55); }
 /* Matrix platform-filter dim — applied to cells lacking the active filter. */
 .tech-cell.pl-filter-dim{opacity:0.18; filter:saturate(0.5);}
 .tech-cell.has-uc{background:linear-gradient(180deg, rgba(54,224,192,0.07), rgba(54,224,192,0.02));}
@@ -9268,6 +9291,7 @@ __HOME__
         <span class="lg-chip"><span class="pl-badge pl-sigma">Σ</span> Sigma rule</span>
         <span class="lg-chip"><span class="pl-badge pl-spl">P</span> Splunk SPL</span>
         <span class="lg-chip"><span class="pl-badge pl-ddog">DD</span> Datadog Cloud SIEM</span>
+        <span class="lg-chip"><span class="pl-badge pl-falcon">CS</span> CrowdStrike Falcon LogScale</span>
         <span class="lg-note">use the toolbar's platform pills to filter the matrix</span>
       </div>
     </div>
