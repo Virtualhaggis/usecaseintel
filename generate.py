@@ -3600,6 +3600,18 @@ class UseCase:
                                       # Empty when the detection isn't
                                       # expressible on Falcon FDR telemetry
                                       # (e.g. depends on Azure SignInLogs only).
+    splunk_category: str = ""         # Splunk-research-style category for this
+                                      # UC's SPL query: one of "application",
+                                      # "cloud", "endpoint", "network", "web"
+                                      # (mirrors the folder taxonomy at
+                                      # github.com/splunk/security_content/
+                                      # tree/develop/detections/). Drives the
+                                      # Articles-tab category chip filter +
+                                      # the per-UC pill on the SPL tab pane.
+                                      # Set explicitly on generic templates;
+                                      # derived heuristically for LLM-bespoke
+                                      # UCs by _classify_splunk_uc(). Empty
+                                      # when splunk_spl is empty.
     confidence: str = "Medium"
     # Tier classification:
     #   "alerting" — high-fidelity. Specific IOCs, named binaries, threshold
@@ -3640,6 +3652,85 @@ class UseCase:
     # as a copyable "FP-suppressing where-clause" alongside the main
     # query. Empty when no clean refinement is possible.
     false_positive_filters: str = ""
+
+    def __post_init__(self):
+        # Auto-derive splunk_category for any UC that has SPL content
+        # but didn't set the category explicitly. Hand-classified
+        # templates (or future YAML files that set the field directly)
+        # bypass this. _classify_splunk_uc is defined just below in
+        # this module -- forward reference is safe because __post_init__
+        # runs at instantiation time, not class-definition time.
+        if (self.splunk_spl or "").strip() and not self.splunk_category:
+            self.splunk_category = _classify_splunk_uc(self)
+
+
+def _classify_splunk_uc(uc) -> str:
+    """Map a UseCase to one of Splunk-research's 5 detection categories
+    (application / cloud / endpoint / network / web), mirroring the
+    folder taxonomy at github.com/splunk/security_content/tree/develop/
+    detections/. Returns empty string when the UC has no splunk_spl
+    (no chip relevance) -- callers should skip emission in that case.
+
+    Decision order matters: cloud wins over endpoint because cloud
+    detections often inspect IAM/CloudTrail events that pattern-match
+    Windows-auth telemetry. Network wins over endpoint for the same
+    reason (DNS/Suricata/Zeek queries don't carry process telemetry).
+    Web wins over endpoint because web-server log queries can mention
+    'process' names that confuse the endpoint heuristic. Application
+    is the catch-all for vendor/appliance logs (Cisco, ESXi, Okta) --
+    Okta gets bumped to cloud via the targets check above first."""
+    if not (getattr(uc, "splunk_spl", "") or "").strip():
+        return ""
+    spl = (uc.splunk_spl or "").lower()
+    tgts = set(getattr(uc, "data_models", []) or [])
+    # Targets list lives on a parallel attribute on some UC paths;
+    # fall back to scanning the description and required_telemetry.
+    extra_blob = " ".join([
+        (getattr(uc, "description", "") or ""),
+        " ".join(getattr(uc, "required_telemetry", []) or []),
+    ]).lower()
+    haystack = spl + " " + extra_blob
+    # Cloud — IAM / cloud-platform telemetry
+    cloud_hits = ("cloudtrail", "cloud_audit", "aws_", "awscloudtrail",
+                  "azure", "signinlogs", "auditlogs", "gcp ", "gke ",
+                  "kubernetes", "okta", "m365", " o365", "office 365",
+                  "github audit")
+    if any(k in haystack for k in cloud_hits):
+        return "cloud"
+    # Network — wire data, DNS, proxy hits
+    network_hits = ("suricata", "zeek ", "bro ", "ja3", "tls.", "ssl.",
+                    "network_traffic", "dns ", "dns.", "dns_request",
+                    "stream:dns", "stream:tcp", " ip_address",
+                    "port scan", "sourcetype=cisco:asa",
+                    "sourcetype=pan:", "palo alto")
+    if any(k in haystack for k in network_hits):
+        return "network"
+    # Web — web-server logs, HTTP exploit attempts
+    web_hits = ("web.url", "web_proxy", "sourcetype=nginx",
+                "sourcetype=apache", "sourcetype=iis", "user_agent",
+                "log4shell", "ognl", "/etc/passwd",
+                "sourcetype=stream:http", " uri_path", "http.status")
+    if any(k in haystack for k in web_hits):
+        return "web"
+    # Application — appliance / business-app logs (catch-all for
+    # vendor-specific sources that aren't cloud or wire data)
+    app_hits = ("esxi", "vmware", "cisco_secure", "cisco_ise",
+                "aaa policy", "duo ", "rsa ", "tanium")
+    if any(k in haystack for k in app_hits):
+        return "application"
+    # Endpoint — Windows/Linux/macOS host telemetry (default for the
+    # remaining SPL-bearing UCs since most detection content lives here)
+    endpoint_hits = ("process_name", "processrollup2", "wineventlog",
+                     "sysmon", "registry_value", "filesystem.file",
+                     "device_name", "endpoint.processes",
+                     "endpoint.filesystem", "endpoint.registry",
+                     "powershell", "cmd.exe", "rundll32",
+                     "schtasks", "wmic")
+    if any(k in haystack for k in endpoint_hits):
+        return "endpoint"
+    # No clear signal — bucket as application (the "I don't know,
+    # probably a niche source" Splunk default).
+    return "application"
 
 
 def _infer_tier_from_query(spl: str, kql: str, confidence: str) -> str:
@@ -6844,6 +6935,28 @@ details.uc[open] summary::before{transform:rotate(90deg);}
 .tab-content.active{display:block;animation:fadeIn 0.2s ease;}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
+/* Splunk-research category pill -- rendered at the top of every SPL
+   tab pane. Mirrors the folder taxonomy at research.splunk.com/
+   detections/ so analysts can see "this query targets endpoint
+   telemetry" vs "this targets CloudTrail" at a glance. Five colour
+   variants, one per category. */
+.splunk-cat-pill{
+  display:inline-block;
+  margin:0 0 8px;
+  padding:2px 8px;
+  font-family:var(--mono);
+  font-size:9.5px; font-weight:700;
+  letter-spacing:0.08em;
+  border-radius:3px;
+  border:1px solid var(--border-2);
+  vertical-align:middle;
+}
+.splunk-cat-pill.splunk-cat-endpoint   { background:rgba(54,224,192,0.15);  color:#7ce8d0; border-color:rgba(54,224,192,0.35); }
+.splunk-cat-pill.splunk-cat-cloud      { background:rgba(255,153,0,0.16);   color:#ffb45e; border-color:rgba(255,153,0,0.40); }
+.splunk-cat-pill.splunk-cat-network    { background:rgba(113,112,255,0.18); color:#a39bff; border-color:rgba(113,112,255,0.40); }
+.splunk-cat-pill.splunk-cat-web        { background:rgba(76,183,130,0.16);  color:#6dd29c; border-color:rgba(76,183,130,0.40); }
+.splunk-cat-pill.splunk-cat-application{ background:rgba(155,138,251,0.16); color:#cbb6ff; border-color:rgba(155,138,251,0.40); }
+
 pre{
   background:var(--code-bg); border:1px solid var(--border);
   border-radius:var(--r-md); padding:14px 16px; overflow:auto;
@@ -9191,6 +9304,31 @@ __HOME__
         <span class="ft-label">Target</span>
         <div class="ft-chips" id="ftTargetChips"><!-- target chips populated by JS once MATRIX is in scope --></div>
       </div>
+      <div class="ft-group ft-splunk-cat">
+        <span class="ft-label">Splunk category</span>
+        <div class="ft-chips">
+          <button class="src-chip cat-chip" data-splunk-cat="application"
+                  title="Show only articles with at least one application-tier Splunk detection (Okta, Cisco ASA, ESXi, M365, vendor appliances)">
+            Application <span class="cnt" id="catCntApplication"></span>
+          </button>
+          <button class="src-chip cat-chip" data-splunk-cat="cloud"
+                  title="Show only articles with at least one cloud-tier Splunk detection (AWS, Azure, GCP, Kubernetes)">
+            Cloud <span class="cnt" id="catCntCloud"></span>
+          </button>
+          <button class="src-chip cat-chip" data-splunk-cat="endpoint"
+                  title="Show only articles with at least one endpoint-tier Splunk detection (Windows/Linux/macOS host telemetry, Sysmon, EDR)">
+            Endpoint <span class="cnt" id="catCntEndpoint"></span>
+          </button>
+          <button class="src-chip cat-chip" data-splunk-cat="network"
+                  title="Show only articles with at least one network-tier Splunk detection (DNS, Suricata, Zeek, wire data)">
+            Network <span class="cnt" id="catCntNetwork"></span>
+          </button>
+          <button class="src-chip cat-chip" data-splunk-cat="web"
+                  title="Show only articles with at least one web-tier Splunk detection (Nginx / Apache / IIS / web-app exploits)">
+            Web <span class="cnt" id="catCntWeb"></span>
+          </button>
+        </div>
+      </div>
       <div class="ft-group ft-view">
         <span class="ft-label">Layout</span>
         <div class="width-toggle" id="widthToggle" title="Article column width">
@@ -10673,16 +10811,19 @@ input.addEventListener('input', () => _renderResults(input.value));
 // every active feature filter ("Has UCs" / "LLM UCs only").
 // "All" deselects every other source chip; feature chips are independent.
 function applySourceFilter() {
-  const activeSourceChips = document.querySelectorAll('#srcFilter .src-chip.active:not(.all):not(.feat-chip):not(.plat-chip):not(.tgt-chip)');
+  const activeSourceChips = document.querySelectorAll('#srcFilter .src-chip.active:not(.all):not(.feat-chip):not(.plat-chip):not(.tgt-chip):not(.cat-chip)');
   const activeSources = Array.from(activeSourceChips).map(c => c.dataset.source).filter(Boolean);
   const activeFeats = Array.from(document.querySelectorAll('#srcFilter .feat-chip.active')).map(c => c.dataset.feat);
   const activePlats = Array.from(document.querySelectorAll('#srcFilter .plat-chip.active')).map(c => c.dataset.platform);
   const activeTgts = Array.from(document.querySelectorAll('#srcFilter .tgt-chip.active')).map(c => c.dataset.target);
+  // New: Splunk-research category chips (application/cloud/endpoint/network/web)
+  const activeCats = Array.from(document.querySelectorAll('#srcFilter .cat-chip.active')).map(c => c.dataset.splunkCat);
   const cards = document.querySelectorAll('#view-articles article.card');
   cards.forEach(card => {
     const sources = (card.dataset.sources || '').split('|');
     const platforms = (card.dataset.platforms || '').split(',').filter(Boolean);
     const targets = (card.dataset.targets || '').split(',').filter(Boolean);
+    const splunkCats = (card.dataset.splunkCats || '').split(',').filter(Boolean);
     const matchSource = activeSources.length === 0
                         || activeSources.some(s => sources.includes(s));
     const ucCount = parseInt(card.dataset.ucCount || '0', 10);
@@ -10699,7 +10840,10 @@ function applySourceFilter() {
     // Target-surface filter — same OR-within / AND-between semantics.
     const matchTgt = activeTgts.length === 0
                      || activeTgts.some(t => targets.includes(t));
-    card.classList.toggle('src-hidden', !(matchSource && matchFeat && matchPlat && matchTgt));
+    // Splunk-category filter — same pattern again.
+    const matchCat = activeCats.length === 0
+                     || activeCats.some(c => splunkCats.includes(c));
+    card.classList.toggle('src-hidden', !(matchSource && matchFeat && matchPlat && matchTgt && matchCat));
 
     // Drill in: when a Platform filter is active, also hide UCs on this
     // card that don't have the selected platform — otherwise users land
@@ -10748,7 +10892,7 @@ function applySourceFilter() {
   // AND no platform filter chosen.
   const allChip = document.querySelector('#srcFilter .src-chip.all');
   if (allChip) allChip.classList.toggle('active',
-    activeSources.length === 0 && activeFeats.length === 0 && activePlats.length === 0 && activeTgts.length === 0);
+    activeSources.length === 0 && activeFeats.length === 0 && activePlats.length === 0 && activeTgts.length === 0 && activeCats.length === 0);
 }
 // Pre-populate the count badges on the feature + platform chips on load.
 // Hoisted to a named function (was an IIFE) so afterCardsReady() can
@@ -10773,6 +10917,20 @@ function _initChipCounts() {
   for (const k of Object.keys(idMap)) {
     const el = document.getElementById(idMap[k]);
     if (el) el.textContent = platCounts[k];
+  }
+  // Splunk-research category counts — how many articles have at least
+  // one SPL UC classified into each of the 5 Splunk-research buckets.
+  const catCounts = {application:0, cloud:0, endpoint:0, network:0, web:0};
+  for (const c of cards) {
+    const cats = (c.dataset.splunkCats || '').split(',').filter(Boolean);
+    for (const k of cats) if (k in catCounts) catCounts[k]++;
+  }
+  const catIdMap = {application:'catCntApplication', cloud:'catCntCloud',
+                    endpoint:'catCntEndpoint', network:'catCntNetwork',
+                    web:'catCntWeb'};
+  for (const k of Object.keys(catIdMap)) {
+    const el = document.getElementById(catIdMap[k]);
+    if (el) el.textContent = catCounts[k];
   }
   // Target-surface chips — built dynamically so we only show targets the
   // current corpus actually has at least one article for. Mirrors the
@@ -14081,12 +14239,26 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
         # downstream consumer (rule_packs export, drawer scrape) still picks
         # up the same SPL it always did.
         def _pane_body(suffix: str, body: str) -> str:
+            # Splunk-research category pill — only shown on the SPL pane.
+            # Mirrors the folder taxonomy at research.splunk.com/detections/
+            # so analysts can tell at a glance whether the query targets
+            # endpoint host telemetry vs CloudTrail vs DNS, etc.
+            cat_pill = ""
+            if suffix == "spl":
+                cat = (getattr(uc, "splunk_category", "") or "").strip()
+                if cat:
+                    cat_pill = (
+                        f'<span class="splunk-cat-pill splunk-cat-{cat}" '
+                        f'title="Splunk-research detection category">'
+                        f'{cat.upper()}</span>'
+                    )
             if suffix == "spl" and _spl_has_dual_form(body):
                 alt = _spl_make_unsummarised(body)
                 # Wrapped in .spl-toggle-group so the global click handler
                 # can scope the toggle to this pair of buttons + bodies even
                 # when the surface (article card vs Library drawer) differs.
                 return (
+                    f'{cat_pill}'
                     f'<div class="spl-toggle-group">'
                     f'<div class="spl-mode-toggle">'
                     f'  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="{uid}-spl-acc">Summarised</button>'
@@ -14100,6 +14272,7 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
                     f'</div>'
                 )
             return (
+                f'{cat_pill}'
                 f'<pre><button class="copy-btn">COPY</button>'
                 f'<code>{html.escape(body)}</code></pre>'
             )
@@ -14213,6 +14386,7 @@ def render_card(idx: int, article: dict, ind: dict,
     # chip group on the toolbar so analysts can find e.g. "every article that
     # has a Datadog query".
     plats = set()
+    splunk_cats = set()
     for uc in use_cases:
         if uc.defender_kql: plats.add("def")
         if uc.sentinel_kql: plats.add("sent")
@@ -14220,7 +14394,15 @@ def render_card(idx: int, article: dict, ind: dict,
         if uc.splunk_spl: plats.add("spl")
         if getattr(uc, "datadog_query", ""): plats.add("datadog")
         if getattr(uc, "falcon_logscale_query", ""): plats.add("falcon")
+        # Splunk-research category (application / cloud / endpoint /
+        # network / web). One per UC; the card gets the union so the
+        # Articles chip filter can find cards with at least one UC in
+        # a given category.
+        sc = (getattr(uc, "splunk_category", "") or "").strip()
+        if sc:
+            splunk_cats.add(sc)
     plats_attr = ",".join(sorted(plats))
+    splunk_cats_attr = ",".join(sorted(splunk_cats))
     # Card-level target-surface attribute — union of every UC's targets on
     # the card. Drives the Articles-tab Target chip group.
     targets_set: set = set()
@@ -14234,6 +14416,7 @@ def render_card(idx: int, article: dict, ind: dict,
   data-techs="{html.escape(techs_attr)}"
   data-sources="{html.escape(sources_attr)}"
   data-platforms="{plats_attr}"
+  data-splunk-cats="{splunk_cats_attr}"
   data-targets="{targets_attr}"
   data-uc-count="{uc_total}" data-llm-uc-count="{uc_llm}"
   data-search="{html.escape(search_blob)}">

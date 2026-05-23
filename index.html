@@ -2029,6 +2029,28 @@ details.uc[open] summary::before{transform:rotate(90deg);}
 .tab-content.active{display:block;animation:fadeIn 0.2s ease;}
 @keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
 
+/* Splunk-research category pill -- rendered at the top of every SPL
+   tab pane. Mirrors the folder taxonomy at research.splunk.com/
+   detections/ so analysts can see "this query targets endpoint
+   telemetry" vs "this targets CloudTrail" at a glance. Five colour
+   variants, one per category. */
+.splunk-cat-pill{
+  display:inline-block;
+  margin:0 0 8px;
+  padding:2px 8px;
+  font-family:var(--mono);
+  font-size:9.5px; font-weight:700;
+  letter-spacing:0.08em;
+  border-radius:3px;
+  border:1px solid var(--border-2);
+  vertical-align:middle;
+}
+.splunk-cat-pill.splunk-cat-endpoint   { background:rgba(54,224,192,0.15);  color:#7ce8d0; border-color:rgba(54,224,192,0.35); }
+.splunk-cat-pill.splunk-cat-cloud      { background:rgba(255,153,0,0.16);   color:#ffb45e; border-color:rgba(255,153,0,0.40); }
+.splunk-cat-pill.splunk-cat-network    { background:rgba(113,112,255,0.18); color:#a39bff; border-color:rgba(113,112,255,0.40); }
+.splunk-cat-pill.splunk-cat-web        { background:rgba(76,183,130,0.16);  color:#6dd29c; border-color:rgba(76,183,130,0.40); }
+.splunk-cat-pill.splunk-cat-application{ background:rgba(155,138,251,0.16); color:#cbb6ff; border-color:rgba(155,138,251,0.40); }
+
 pre{
   background:var(--code-bg); border:1px solid var(--border);
   border-radius:var(--r-md); padding:14px 16px; overflow:auto;
@@ -4312,7 +4334,7 @@ body.view-home-active .stats-articles{display:none !important;}
       <div class="home-trust-strip" aria-label="Platform scale and signals">
         <div class="home-trust-tiles"><div class="home-trust-tile"><div class="num" data-count-to="3848" data-count-final="3,848">3,848</div><div class="lbl">Detections</div></div><div class="home-trust-tile"><div class="num" data-count-to="181" data-count-final="181">181</div><div class="lbl">ATT&amp;CK techniques</div></div><div class="home-trust-tile"><div class="num" data-count-to="5" data-count-final="5">5</div><div class="lbl">Query languages</div></div><div class="home-trust-tile"><div class="num" data-count-to="1435" data-count-final="1,435">1,435</div><div class="lbl">Threat-intel articles</div></div></div>
         <div class="home-trust-chips"><span class="home-trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 l4 4 l10-10"/></svg>Continuously updated</span><span class="home-trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 l4 4 l10-10"/></svg>Mapped to MITRE ATT&amp;CK</span><span class="home-trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 l4 4 l10-10"/></svg>Multi-platform queries</span><span class="home-trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 l4 4 l10-10"/></svg>Automated detection pipeline</span></div>
-        <div class="home-trust-pill" aria-live="polite"><span class="pulse" aria-hidden="true"></span><span data-generated-utc="2026-05-23T23:33:00Z">Updated just now</span></div>
+        <div class="home-trust-pill" aria-live="polite"><span class="pulse" aria-hidden="true"></span><span data-generated-utc="2026-05-23T23:49:00Z">Updated just now</span></div>
       </div>
       </div>
     </div>
@@ -4434,7 +4456,7 @@ body.view-home-active .stats-articles{display:none !important;}
         </div>
       </div>
     <div class="home-cred-grid">
-      <article class="home-cred-card"><h3><span class="pulse" aria-hidden="true"></span>Continuously updated</h3><p><span data-generated-utc="2026-05-23T23:33:00Z">Updated just now</span> — the detection pipeline runs every two hours, pulls fresh threat intelligence from 11+ feeds, and regenerates the library end-to-end.</p><p>This run analysed <strong>1,435</strong> articles, mapped each to MITRE ATT&amp;CK, and produced queries across six platforms.</p></article>
+      <article class="home-cred-card"><h3><span class="pulse" aria-hidden="true"></span>Continuously updated</h3><p><span data-generated-utc="2026-05-23T23:49:00Z">Updated just now</span> — the detection pipeline runs every two hours, pulls fresh threat intelligence from 11+ feeds, and regenerates the library end-to-end.</p><p>This run analysed <strong>1,435</strong> articles, mapped each to MITRE ATT&amp;CK, and produced queries across six platforms.</p></article>
       <article class="home-cred-card"><h3>Threat-intelligence-driven</h3><p>Every detection traces back to a public, citable source. No anonymous vendor templates, no generic compliance rules.</p><div class="home-cred-sources"><span class="home-cred-source">The Hacker News</span><span class="home-cred-source">BleepingComputer</span><span class="home-cred-source">Microsoft Security Blog</span><span class="home-cred-source">CISA KEV</span><span class="home-cred-source">Cisco Talos</span><span class="home-cred-source">Securelist (Kaspersky)</span><span class="home-cred-source">SentinelLabs</span><span class="home-cred-source">Unit 42</span><span class="home-cred-source">ESET WeLiveSecurity</span><span class="home-cred-source">Lab52</span><span class="home-cred-source">Cyber Security News</span></div></article>
       <article class="home-cred-card"><h3>Built for operational use</h3><p>Each detection ships with its source article, MITRE technique mapping, kill-chain phase, and IOC pivot — so an analyst can take the query, the context, and the rationale together.</p><div class="home-cred-links"><a href="pipeline.html">Pipeline run history →</a><a href="#" data-home-action="matrix">MITRE ATT&amp;CK coverage map →</a><a href="#" data-home-action="intel">Live IOC feeds →</a></div></article>
     </div>
@@ -5813,6 +5835,31 @@ body.view-home-active .stats-articles{display:none !important;}
       <div class="ft-group ft-target">
         <span class="ft-label">Target</span>
         <div class="ft-chips" id="ftTargetChips"><!-- target chips populated by JS once MATRIX is in scope --></div>
+      </div>
+      <div class="ft-group ft-splunk-cat">
+        <span class="ft-label">Splunk category</span>
+        <div class="ft-chips">
+          <button class="src-chip cat-chip" data-splunk-cat="application"
+                  title="Show only articles with at least one application-tier Splunk detection (Okta, Cisco ASA, ESXi, M365, vendor appliances)">
+            Application <span class="cnt" id="catCntApplication"></span>
+          </button>
+          <button class="src-chip cat-chip" data-splunk-cat="cloud"
+                  title="Show only articles with at least one cloud-tier Splunk detection (AWS, Azure, GCP, Kubernetes)">
+            Cloud <span class="cnt" id="catCntCloud"></span>
+          </button>
+          <button class="src-chip cat-chip" data-splunk-cat="endpoint"
+                  title="Show only articles with at least one endpoint-tier Splunk detection (Windows/Linux/macOS host telemetry, Sysmon, EDR)">
+            Endpoint <span class="cnt" id="catCntEndpoint"></span>
+          </button>
+          <button class="src-chip cat-chip" data-splunk-cat="network"
+                  title="Show only articles with at least one network-tier Splunk detection (DNS, Suricata, Zeek, wire data)">
+            Network <span class="cnt" id="catCntNetwork"></span>
+          </button>
+          <button class="src-chip cat-chip" data-splunk-cat="web"
+                  title="Show only articles with at least one web-tier Splunk detection (Nginx / Apache / IIS / web-app exploits)">
+            Web <span class="cnt" id="catCntWeb"></span>
+          </button>
+        </div>
       </div>
       <div class="ft-group ft-view">
         <span class="ft-label">Layout</span>
@@ -7296,16 +7343,19 @@ input.addEventListener('input', () => _renderResults(input.value));
 // every active feature filter ("Has UCs" / "LLM UCs only").
 // "All" deselects every other source chip; feature chips are independent.
 function applySourceFilter() {
-  const activeSourceChips = document.querySelectorAll('#srcFilter .src-chip.active:not(.all):not(.feat-chip):not(.plat-chip):not(.tgt-chip)');
+  const activeSourceChips = document.querySelectorAll('#srcFilter .src-chip.active:not(.all):not(.feat-chip):not(.plat-chip):not(.tgt-chip):not(.cat-chip)');
   const activeSources = Array.from(activeSourceChips).map(c => c.dataset.source).filter(Boolean);
   const activeFeats = Array.from(document.querySelectorAll('#srcFilter .feat-chip.active')).map(c => c.dataset.feat);
   const activePlats = Array.from(document.querySelectorAll('#srcFilter .plat-chip.active')).map(c => c.dataset.platform);
   const activeTgts = Array.from(document.querySelectorAll('#srcFilter .tgt-chip.active')).map(c => c.dataset.target);
+  // New: Splunk-research category chips (application/cloud/endpoint/network/web)
+  const activeCats = Array.from(document.querySelectorAll('#srcFilter .cat-chip.active')).map(c => c.dataset.splunkCat);
   const cards = document.querySelectorAll('#view-articles article.card');
   cards.forEach(card => {
     const sources = (card.dataset.sources || '').split('|');
     const platforms = (card.dataset.platforms || '').split(',').filter(Boolean);
     const targets = (card.dataset.targets || '').split(',').filter(Boolean);
+    const splunkCats = (card.dataset.splunkCats || '').split(',').filter(Boolean);
     const matchSource = activeSources.length === 0
                         || activeSources.some(s => sources.includes(s));
     const ucCount = parseInt(card.dataset.ucCount || '0', 10);
@@ -7322,7 +7372,10 @@ function applySourceFilter() {
     // Target-surface filter — same OR-within / AND-between semantics.
     const matchTgt = activeTgts.length === 0
                      || activeTgts.some(t => targets.includes(t));
-    card.classList.toggle('src-hidden', !(matchSource && matchFeat && matchPlat && matchTgt));
+    // Splunk-category filter — same pattern again.
+    const matchCat = activeCats.length === 0
+                     || activeCats.some(c => splunkCats.includes(c));
+    card.classList.toggle('src-hidden', !(matchSource && matchFeat && matchPlat && matchTgt && matchCat));
 
     // Drill in: when a Platform filter is active, also hide UCs on this
     // card that don't have the selected platform — otherwise users land
@@ -7371,7 +7424,7 @@ function applySourceFilter() {
   // AND no platform filter chosen.
   const allChip = document.querySelector('#srcFilter .src-chip.all');
   if (allChip) allChip.classList.toggle('active',
-    activeSources.length === 0 && activeFeats.length === 0 && activePlats.length === 0 && activeTgts.length === 0);
+    activeSources.length === 0 && activeFeats.length === 0 && activePlats.length === 0 && activeTgts.length === 0 && activeCats.length === 0);
 }
 // Pre-populate the count badges on the feature + platform chips on load.
 // Hoisted to a named function (was an IIFE) so afterCardsReady() can
@@ -7396,6 +7449,20 @@ function _initChipCounts() {
   for (const k of Object.keys(idMap)) {
     const el = document.getElementById(idMap[k]);
     if (el) el.textContent = platCounts[k];
+  }
+  // Splunk-research category counts — how many articles have at least
+  // one SPL UC classified into each of the 5 Splunk-research buckets.
+  const catCounts = {application:0, cloud:0, endpoint:0, network:0, web:0};
+  for (const c of cards) {
+    const cats = (c.dataset.splunkCats || '').split(',').filter(Boolean);
+    for (const k of cats) if (k in catCounts) catCounts[k]++;
+  }
+  const catIdMap = {application:'catCntApplication', cloud:'catCntCloud',
+                    endpoint:'catCntEndpoint', network:'catCntNetwork',
+                    web:'catCntWeb'};
+  for (const k of Object.keys(catIdMap)) {
+    const el = document.getElementById(catIdMap[k]);
+    if (el) el.textContent = catCounts[k];
   }
   // Target-surface chips — built dynamically so we only show targets the
   // current corpus actually has at least one article for. Mirrors the
@@ -9073,10 +9140,10 @@ document.addEventListener('keydown', e => {
 // index.html ~49 MB; the new shell is ~1 MB. showView() awaits the
 // relevant chunk before invoking the per-tab renderer; existing
 // consumers already guard with `if (window.MATRIX)` so transient
-// nulls are safe.  {"matrix":"data/matrix.json?v=917af56d11","intel":"data/intel.json?v=5944170c6e","actors":"data/actors.json?v=768d6511e5","search":"data/search.json?v=de02d59f18","cards":"data/cards.html?v=6a6aa75a0d"} is replaced at build time with
+// nulls are safe.  {"matrix":"data/matrix.json?v=917af56d11","intel":"data/intel.json?v=c56f3d8251","actors":"data/actors.json?v=768d6511e5","search":"data/search.json?v=de02d59f18","cards":"data/cards.html?v=81c4ec66e1"} is replaced at build time with
 // {chunk-name -> hashed URL} JSON.
 // =================================================================
-const __MANIFEST__ = {"matrix":"data/matrix.json?v=917af56d11","intel":"data/intel.json?v=5944170c6e","actors":"data/actors.json?v=768d6511e5","search":"data/search.json?v=de02d59f18","cards":"data/cards.html?v=6a6aa75a0d"};
+const __MANIFEST__ = {"matrix":"data/matrix.json?v=917af56d11","intel":"data/intel.json?v=c56f3d8251","actors":"data/actors.json?v=768d6511e5","search":"data/search.json?v=de02d59f18","cards":"data/cards.html?v=81c4ec66e1"};
 const __chunkP = {};
 function loadChunk(name) {
   if (__chunkP[name]) return __chunkP[name];
