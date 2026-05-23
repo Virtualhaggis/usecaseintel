@@ -6591,6 +6591,12 @@ article.card.src-hidden{display:none;}
    highlight — that's the look that makes the matrix and articles feel
    refined rather than vibe-coded. */
 section#articles{display:flex; flex-direction:column; gap:18px;}
+/* Lazy-load refactor moved cards into #cardsHost (was injected via
+   __CARDS__ directly under section#articles). The outer flex `gap`
+   no longer reaches the cards because they're one DOM level deeper,
+   so the host has to be its own flex column to restore the 18px
+   inter-card spacing. */
+#cardsHost{display:flex; flex-direction:column; gap:18px;}
 article.card{
   background:var(--panel);
   border:1px solid var(--border);
