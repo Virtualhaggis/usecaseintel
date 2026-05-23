@@ -13999,6 +13999,7 @@ def render_card(idx: int, article: dict, ind: dict,
         if getattr(uc, "sigma_yaml", ""): plats.add("sigma")
         if uc.splunk_spl: plats.add("spl")
         if getattr(uc, "datadog_query", ""): plats.add("datadog")
+        if getattr(uc, "falcon_logscale_query", ""): plats.add("falcon")
     plats_attr = ",".join(sorted(plats))
     # Card-level target-surface attribute — union of every UC's targets on
     # the card. Drives the Articles-tab Target chip group.
