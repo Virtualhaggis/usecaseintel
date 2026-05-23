@@ -11869,6 +11869,38 @@ document.addEventListener('click', e => {
 })();
 
 // =================================================================
+// Home -- live freshness label. The Python-rendered text on the trust
+// pill and credibility card is computed at build time, when "now"
+// equals the generated timestamp, so it always says "Updated just
+// now". Each freshness-bearing element carries `data-generated-utc`
+// (ISO-8601); this IIFE rewrites the visible text against the user's
+// current clock on load and re-ticks every 30s so an open tab stays
+// honest without a page refresh.
+// =================================================================
+(function liveFreshness(){
+  const els = document.querySelectorAll('[data-generated-utc]');
+  if (!els.length) return;
+  function fmt(diffSec){
+    if (diffSec < 60)    return 'Updated just now';
+    if (diffSec < 3600)  { const m = Math.floor(diffSec/60);  return 'Updated ' + m + ' min ago'; }
+    if (diffSec < 86400) { const h = Math.floor(diffSec/3600); return 'Updated ' + h + ' h ago'; }
+    const d = Math.floor(diffSec/86400);
+    return 'Updated ' + d + ' d ago';
+  }
+  function tick(){
+    const now = Date.now();
+    els.forEach(el => {
+      const ts = Date.parse(el.dataset.generatedUtc);
+      if (isNaN(ts)) return;
+      const diff = Math.max(0, Math.floor((now - ts) / 1000));
+      el.textContent = fmt(diff);
+    });
+  }
+  tick();
+  setInterval(tick, 30000);
+})();
+
+// =================================================================
 // Welcome banner — permanent strapline. Only thing JS does here is
 // wire the "Take the 30-second tour" CTA to startTour(); no dismiss
 // logic, no localStorage flag.
@@ -19569,12 +19601,23 @@ def render_home_trust_strip(usecase_count: int, tech_count: int,
         f'</span>'
         for c in chips
     )
+    # ISO-8601 form of generated_human ("2026-05-23 22:33 UTC" ->
+    # "2026-05-23T22:33:00Z") so the liveFreshness JS IIFE can parse
+    # it with Date.parse() and recompute the relative-time label
+    # client-side. Without this, the pill is forever stuck at the
+    # Python-computed string (always "Updated just now" because Python
+    # `now - gen` is ~0s at build time, and the HTML is static after
+    # that). The Python text remains as a fallback for no-JS visitors.
+    gen_iso = (generated_human.replace(" UTC", ":00Z").replace(" ", "T")
+               if " UTC" in generated_human else generated_human)
     return (
         f'      <div class="home-trust-strip" aria-label="Platform scale and signals">\n'
         f'        <div class="home-trust-tiles">{tile_html}</div>\n'
         f'        <div class="home-trust-chips">{chip_html}</div>\n'
         f'        <div class="home-trust-pill" aria-live="polite">'
-        f'<span class="pulse" aria-hidden="true"></span>{html.escape(fresh)}</div>\n'
+        f'<span class="pulse" aria-hidden="true"></span>'
+        f'<span data-generated-utc="{html.escape(gen_iso)}">{html.escape(fresh)}</span>'
+        f'</div>\n'
         f'      </div>'
     )
 
@@ -19822,6 +19865,10 @@ def render_home_browse(platform_counts: dict) -> str:
 
 def render_home_credibility(generated_human: str, article_count: int) -> str:
     fresh = _home_format_freshness(generated_human)
+    # ISO-8601 for the client-side freshness JS (see render_home_trust_strip
+    # for why the Python value is always ~"Updated just now").
+    gen_iso = (generated_human.replace(" UTC", ":00Z").replace(" ", "T")
+               if " UTC" in generated_human else generated_human)
     sources = [
         "The Hacker News", "BleepingComputer", "Microsoft Security Blog",
         "CISA KEV", "Cisco Talos", "Securelist (Kaspersky)", "SentinelLabs",
@@ -19839,7 +19886,7 @@ def render_home_credibility(generated_human: str, article_count: int) -> str:
         '    <div class="home-cred-grid">\n'
         f'      <article class="home-cred-card">'
         f'<h3><span class="pulse" aria-hidden="true"></span>Continuously updated</h3>'
-        f'<p>{html.escape(fresh)} — the detection pipeline runs every two hours, '
+        f'<p><span data-generated-utc="{html.escape(gen_iso)}">{html.escape(fresh)}</span> — the detection pipeline runs every two hours, '
         f'pulls fresh threat intelligence from 11+ feeds, and regenerates the library end-to-end.</p>'
         f'<p>This run analysed <strong>{article_count:,}</strong> articles, mapped each to MITRE ATT&amp;CK, and produced queries across six platforms.</p>'
         f'</article>\n'
