@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] @profullstack/mcp-server tldx OS command injection — shell metachars in tldx process tree
 
-`UC_197_3` · phase: **exploit** · confidence: **High**
+`UC_196_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### [LLM] Unauthenticated POST to @profullstack/mcp-server domain-lookup endpoints from non-loopback source
 
-`UC_197_4` · phase: **delivery** · confidence: **Medium**
+`UC_196_4` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +133,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-v6wj-c83f-v46x: @profullstack/mcp-server vulnerable to OS
 
-`UC_197_2` · phase: **exploit** · confidence: **High**
+`UC_196_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

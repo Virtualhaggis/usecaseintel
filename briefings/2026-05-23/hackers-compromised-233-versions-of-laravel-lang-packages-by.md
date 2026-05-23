@@ -10,12 +10,8 @@ Home Cyber Security
 Hackers Compromised 233 Versions of Laravel-Lang Packages by Hacking 700 GitHub Repos 
 By Guru Baran 
 May 23, 2026 
-
-
-
-
 A highly sophisticated supply chain attack has compromised the Laravel-Lang ecosystem, injecting credential-stealing remote code execution backdoors into 233 package versions across 700 GitHub repositories.
-Discovered in May 2026 by Socket and Aikido, threat actors manipulated GitHub tags to distribute malware through Composer’s autoloader, granting com…
+Discovered in May 2026 by Socket and Aikido, threat actors manipulated GitHub tags to distribute malware through Composer’s autoloader, granting complete re…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -54,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Laravel-Lang stealer C2 callback to flipboxstudio.info from PHP/web runtime
 
-`UC_0_8` · phase: **c2** · confidence: **High**
+`UC_2_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +76,7 @@ DeviceNetworkEvents
 
 ### [LLM] Composer autoload triggers PHP child process dropping stealer to /tmp/.laravel_locale
 
-`UC_0_9` · phase: **install** · confidence: **High**
+`UC_2_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +103,7 @@ DeviceProcessEvents
 
 ### [LLM] cscript.exe launches .vbs from .laravel_locale temp directory (Windows dropper stage)
 
-`UC_0_10` · phase: **install** · confidence: **High**
+`UC_2_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +127,7 @@ DeviceProcessEvents
 
 ### [LLM] Sensitive credential file enumeration by PHP/web user (cloud, SSH, k8s, vault)
 
-`UC_0_11` · phase: **actions** · confidence: **High**
+`UC_2_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -153,7 +149,7 @@ DeviceFileEvents
 
 ### [LLM] Web-runtime process queries cloud instance metadata service (169.254.169.254)
 
-`UC_0_12` · phase: **actions** · confidence: **High**
+`UC_2_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -175,7 +171,7 @@ DeviceNetworkEvents
 
 ### [LLM] composer.lock or composer.json change adding laravel-lang package on developer/CI host
 
-`UC_0_13` · phase: **delivery** · confidence: **Medium**
+`UC_2_13` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -438,7 +434,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Compromised 233 Versions of Laravel-Lang Packages by Hacking 700 GitHub
 
-`UC_0_7` · phase: **exploit** · confidence: **High**
+`UC_2_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

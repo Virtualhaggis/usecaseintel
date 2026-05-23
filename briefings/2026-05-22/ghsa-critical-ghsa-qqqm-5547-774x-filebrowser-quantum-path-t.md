@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] FileBrowser Quantum public share PATCH path traversal in fromPath/toPath (GHSA-qqqm-5547-774x)
 
-`UC_13_1` · phase: **exploit** · confidence: **High**
+`UC_15_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Volumetric PATCH probing against FileBrowser Quantum public share endpoint
 
-`UC_13_2` · phase: **recon** · confidence: **Medium**
+`UC_15_2` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

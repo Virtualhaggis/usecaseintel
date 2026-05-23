@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] NPM preinstall hook fetching Bun installer from bun.sh (Sha1-Hulud dropper)
 
-`UC_599_6` · phase: **delivery** · confidence: **High**
+`UC_598_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### [LLM] Bun/Node executing the Sha1-Hulud worm payload (setup_bun.js / bun_environment.js)
 
-`UC_599_7` · phase: **install** · confidence: **High**
+`UC_598_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceProcessEvents
 
 ### [LLM] Sha1-Hulud self-hosted GitHub Actions runner deployed under ~/.dev-env (SHA1HULUD)
 
-`UC_599_8` · phase: **install** · confidence: **High**
+`UC_598_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,7 +148,7 @@ union RunnerArchiveWrite, RunnerProcess
 
 ### [LLM] Bun/Node initiating multi-cloud secret-manager enumeration burst (Sha1-Hulud aL0 harvest)
 
-`UC_599_9` · phase: **actions** · confidence: **Medium**
+`UC_598_9` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -187,7 +187,7 @@ DeviceNetworkEvents
 
 ### [LLM] Bun/Node bursty PUT to api.github.com /contents from infected host (Sha1-Hulud exfil)
 
-`UC_599_10` · phase: **actions** · confidence: **High**
+`UC_598_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -365,7 +365,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Sha1-Hulud: The Second Coming - Zapier, ENS Domains, and Other Prominent NPM Pac
 
-`UC_599_5` · phase: **exploit** · confidence: **High**
+`UC_598_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

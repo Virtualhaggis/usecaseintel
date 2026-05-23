@@ -12,7 +12,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [anthropic s claude mythos preview uncovers 10 000 0 days in ](./2026-05-23/anthropic-s-claude-mythos-preview-uncovers-10-000-0-days-in-.md)
 - [ghsa critical cve 2026 46716 nezha monitoring rolemember can](./2026-05-23/ghsa-critical-cve-2026-46716-nezha-monitoring-rolemember-can.md)
 - [hackers compromised 233 versions of laravel lang packages by](./2026-05-23/hackers-compromised-233-versions-of-laravel-lang-packages-by.md)
+- [hackers exploit f5 big ip appliance to gain ssh access and p](./2026-05-23/hackers-exploit-f5-big-ip-appliance-to-gain-ssh-access-and-p.md)
 - [laravel lang supply chain attack every tag across multiple c](./2026-05-23/laravel-lang-supply-chain-attack-every-tag-across-multiple-c.md)
+- [litespeed cpanel plugin cve 2026 48172 exploited to run scri](./2026-05-23/litespeed-cpanel-plugin-cve-2026-48172-exploited-to-run-scri.md)
 - [supply chain attack targets laravel lang packages with crede](./2026-05-23/supply-chain-attack-targets-laravel-lang-packages-with-crede.md)
 
 ## 2026-05-22
@@ -30,7 +32,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hackers use nf e invoice lures to deliver banana rat through](./2026-05-22/hackers-use-nf-e-invoice-lures-to-deliver-banana-rat-through.md)
 - [hackers use six layer persistence to maintain access on comp](./2026-05-22/hackers-use-six-layer-persistence-to-maintain-access-on-comp.md)
 - [kimwolf ddos botnet operator arrested in canada over ddos fo](./2026-05-22/kimwolf-ddos-botnet-operator-arrested-in-canada-over-ddos-fo.md)
-- [litespeed cpanel plugin 0 day exploited in the wild to gain ](./2026-05-22/litespeed-cpanel-plugin-0-day-exploited-in-the-wild-to-gain-.md)
 - [making vulnerable drivers exploitable without hardware the b](./2026-05-22/making-vulnerable-drivers-exploitable-without-hardware-the-b.md)
 - [megalodon github attack targets 5 561 repos with malicious c](./2026-05-22/megalodon-github-attack-targets-5-561-repos-with-malicious-c.md)
 - [megalodon mass github actions secret exfiltration across 5 5](./2026-05-22/megalodon-mass-github-actions-secret-exfiltration-across-5-5.md)
@@ -160,7 +161,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 8178 amazon redshift vulnerable to re](./2026-05-14/ghsa-critical-cve-2026-8178-amazon-redshift-vulnerable-to-re.md)
 - [ghsa critical ghsa wf8q wvv8 p8jf samanhappy mcphub sse endp](./2026-05-14/ghsa-critical-ghsa-wf8q-wvv8-p8jf-samanhappy-mcphub-sse-endp.md)
 - [kimsuky targets organizations with pebbledash based tools](./2026-05-14/kimsuky-targets-organizations-with-pebbledash-based-tools.md)
-- [stealer backdoor found in 3 node ipc versions targeting deve](./2026-05-14/stealer-backdoor-found-in-3-node-ipc-versions-targeting-deve.md)
 - [the time of much patching is coming](./2026-05-14/the-time-of-much-patching-is-coming.md)
 
 ## 2026-05-13
