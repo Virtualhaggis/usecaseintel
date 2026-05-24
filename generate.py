@@ -5595,6 +5595,45 @@ body:not(.view-library-active)  .stats-library{
      horizontally instead of wrapping — that way 11 source chips +
      2 feature chips don't take 4 rows of vertical space. Snap to
      centre so a swipe lands cleanly. */
+  /* Mobile: show the collapsible <summary> as a tappable Filters bar,
+     hide the inner toolbar until the user opens it. Default-collapsed
+     (the `open` HTML attribute we ship is overridden here so the page
+     loads compact). Trade-off: user opens the toolbar one extra tap
+     per session, but the first article card now lands above the fold
+     instead of ~500px below it. */
+  .filter-toolbar-collapse > summary.filter-toolbar-toggle{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:11px 14px; margin-bottom:12px;
+    background:var(--panel); border:1px solid var(--border);
+    border-radius:var(--r-md);
+    font-size:13px; color:var(--muted);
+    list-style:none;
+    cursor:pointer;
+    user-select:none;
+  }
+  .filter-toolbar-collapse > summary::-webkit-details-marker{display:none;}
+  .filter-toolbar-collapse > summary .ft-toggle-label{
+    font-family:var(--mono);
+    font-size:11.5px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--text);
+  }
+  .filter-toolbar-collapse > summary .ft-toggle-chev{
+    font-size:14px; color:var(--muted-2);
+    transition:transform 0.2s cubic-bezier(.2,.8,.2,1);
+  }
+  .filter-toolbar-collapse[open] > summary .ft-toggle-chev{
+    transform:rotate(180deg);
+  }
+  /* Override the `open` HTML attribute we ship -- collapsed by default
+     on mobile. Tapping the summary still toggles via the native details
+     behaviour because the attribute is what JS reads, not what CSS
+     observes. We use `:not([open])` to hide the inner toolbar. */
+  .filter-toolbar-collapse:not([open]) > .filter-toolbar{display:none;}
+  .filter-toolbar-collapse[open] > .filter-toolbar{margin-top:0;}
   .filter-toolbar, .actors-filters{
     padding:12px;
     border-radius:var(--r-md);
@@ -6723,6 +6762,13 @@ nav.toc h3{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-s
    labelled groups (Source / Content / Layout). Each group is a
    row of chips with its own muted-uppercase label. Groups wrap
    onto multiple lines on narrow viewports. */
+/* Collapsible <details> wrapper around the toolbar. Desktop: hide
+   the <summary> entirely and let the inner .filter-toolbar render
+   always-open (visually identical to before). Mobile overrides
+   further down show the summary and hide the toolbar until the
+   user taps it open. */
+.filter-toolbar-collapse{display:block;}
+.filter-toolbar-collapse > summary.filter-toolbar-toggle{display:none;}
 .filter-toolbar{
   display:flex; flex-direction:column; gap:8px;
   padding:14px 16px; margin-bottom:12px;
@@ -9422,7 +9468,17 @@ __HOME__
     <!-- Article toolbar — labelled groups so the filter surface is
          legible even as we add more groups over time. Each <div class="ft-group">
          is one logical group: a small uppercase label + its controls.
-         Groups wrap on narrow viewports. -->
+         Groups wrap on narrow viewports.
+         Wrapped in <details> so that on mobile (where the 6 chip groups
+         stack to ~300px of toolbar) the whole thing collapses behind a
+         single "Filters ▾" toggle, putting the first article card above
+         the fold. CSS hides the <summary> on desktop so the toolbar is
+         always-visible there. -->
+    <details class="filter-toolbar-collapse" id="srcFilterCollapse">
+      <summary class="filter-toolbar-toggle" aria-label="Toggle article filters">
+        <span class="ft-toggle-label">Filters</span>
+        <span class="ft-toggle-chev" aria-hidden="true">▾</span>
+      </summary>
     <div class="filter-toolbar" id="srcFilter">
       <div class="ft-group ft-source">
         <span class="ft-label">Source</span>
@@ -9512,6 +9568,7 @@ __HOME__
         </div>
       </div>
     </div>
+    </details>
     __CARDS__
   </section>
 </main>
