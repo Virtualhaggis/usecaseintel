@@ -10954,25 +10954,63 @@ function _renderResults(q) {
 // Navigate to the right surface for each kind.
 function _navigate(item) {
   if (item.kind === 'art') {
-    const el = document.getElementById(item.id);
-    if (el) {
-      _switchToTab('articles');
-      // Defer one frame so the tab-switch repaints before measuring.
-      requestAnimationFrame(() => scrollToArticleAccurate(el, 'start'));
-      el.classList.add('deeplink-target');
-      setTimeout(() => el.classList.remove('deeplink-target'), 1700);
-    }
+    // Cards are paginated -- the target article may not be in DOM yet.
+    // Ensure it (and all preceding pages, so scroll-position is real)
+    // is loaded, then switch tab + scroll. Switches the tab eagerly so
+    // the user sees the Articles surface instead of the previous view
+    // while the paged fetches resolve.
+    _switchToTab('articles');
+    (typeof ensureCardLoaded === 'function' ? ensureCardLoaded(item.id) : Promise.resolve())
+      .then(() => {
+        const el = document.getElementById(item.id);
+        if (!el) return;
+        requestAnimationFrame(() => scrollToArticleAccurate(el, 'start'));
+        el.classList.add('deeplink-target');
+        setTimeout(() => el.classList.remove('deeplink-target'), 1700);
+      })
+      .catch(e => console.error('[_navigate art]', e));
   } else if (item.kind === 'uc') {
     // Use case — try the article-card surface first (fastest), else point
     // the deeplink at the technique landing if we know one.
+    // If cards aren't fully loaded yet, the UC's parent article may not
+    // be in DOM. Load everything as a fallback (slow but correct);
+    // future enhancement: index UC titles -> article ids so we can
+    // be surgical.
     const title = item.title || '';
-    const allUcs = document.querySelectorAll('#view-articles article.card details.uc');
+    let allUcs = document.querySelectorAll('#view-articles article.card details.uc');
+    if (!allUcs.length && typeof loadAllRemainingCardPages === 'function') {
+      loadAllRemainingCardPages().then(() => _navigate(item));
+      return;
+    }
     let found = null;
     allUcs.forEach(d => {
       if (found) return;
       const t = d.querySelector('summary .uc-title')?.textContent?.trim() || '';
       if (t === title) found = d;
     });
+    if (!found && typeof loadAllRemainingCardPages === 'function'
+        && !__cardsAllLoaded) {
+      // Title didn't match anything in the loaded subset; finish loading
+      // and try again. One retry only.
+      loadAllRemainingCardPages().then(() => {
+        const more = document.querySelectorAll('#view-articles article.card details.uc');
+        let m = null;
+        more.forEach(d => {
+          if (m) return;
+          const t = d.querySelector('summary .uc-title')?.textContent?.trim() || '';
+          if (t === title) m = d;
+        });
+        if (m) {
+          _switchToTab('articles');
+          m.open = true;
+          const ownerCard = m.closest('article.card') || m;
+          requestAnimationFrame(() => scrollToArticleAccurate(ownerCard, 'center'));
+          m.classList.add('deeplink-target');
+          setTimeout(() => m.classList.remove('deeplink-target'), 1700);
+        }
+      });
+      return;
+    }
     if (found) {
       _switchToTab('articles');
       found.open = true;
@@ -12849,20 +12887,30 @@ const __MANIFEST__ = __MANIFEST_DATA__;
 const __chunkP = {};
 function loadChunk(name) {
   if (__chunkP[name]) return __chunkP[name];
+  // Cards are paginated -- the 'cards' key triggers loading page 1
+  // and installing an IntersectionObserver on the last card that
+  // streams subsequent pages in as the user scrolls.
+  if (name === 'cards') {
+    __chunkP[name] = loadCardsPage(0).then(() => {
+      _installCardsScrollObserver();
+      try { SEARCH_INDEX = null; } catch (_) {}
+      document.dispatchEvent(new CustomEvent('chunk-ready:cards'));
+    }).catch(e => {
+      console.error('[loadChunk] cards', e);
+      __chunkP[name] = null;
+      throw e;
+    });
+    return __chunkP[name];
+  }
   const url = __MANIFEST__ && __MANIFEST__[name];
   if (!url) return Promise.resolve(null);
-  const isHtml = name === 'cards';
   __chunkP[name] = fetch(url)
-    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return isHtml ? r.text() : r.json(); })
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(data => {
       if      (name === 'matrix')  MATRIX  = data;
       else if (name === 'actors')  ACTORS  = data;
       else if (name === 'intel')   INTEL   = data;
       else if (name === 'search')  window.__SEARCH = data;
-      else if (name === 'cards')   {
-        const host = document.getElementById('cardsHost');
-        if (host) { host.innerHTML = data; host.dataset.loaded = '1'; }
-      }
       // Invalidate the lazy Ctrl-K palette index so the next palette
       // open rebuilds it including the just-arrived data. Wrapped in
       // try/catch because SEARCH_INDEX is a `let` in a different
@@ -12878,6 +12926,128 @@ function loadChunk(name) {
     });
   return __chunkP[name];
 }
+
+// =================================================================
+// Cards pagination -- the single 33 MB cards.html chunk was making
+// the Articles tab on mobile take 5-20 s to populate. Split into 25-
+// card pages: load page 1 (~0.5 MB) instantly on tab activation;
+// stream pages 2..N as the user scrolls via IntersectionObserver on
+// the last card; load all remaining pages in parallel when a deep
+// link / search jump targets a card not yet in DOM.
+// =================================================================
+const __cardsPageP = {};   // promise per page index (de-duplicated)
+let __cardsAllLoaded = false;
+let __cardsObserver = null;
+
+function loadCardsPage(idx) {
+  if (__cardsPageP[idx]) return __cardsPageP[idx];
+  const pages = (__MANIFEST__ && __MANIFEST__.cardPages) || [];
+  if (idx < 0 || idx >= pages.length) return Promise.resolve(null);
+  const url = pages[idx];
+  __cardsPageP[idx] = fetch(url)
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+    .then(html => {
+      const host = document.getElementById('cardsHost');
+      if (!host) return;
+      // Page 1 replaces the host content; subsequent pages append.
+      if (idx === 0) {
+        host.innerHTML = html;
+        host.dataset.loaded = '1';
+      } else {
+        // Use a doc fragment so the parsed nodes go in atomically.
+        const tmpl = document.createElement('template');
+        tmpl.innerHTML = html;
+        host.appendChild(tmpl.content);
+      }
+      if (idx === pages.length - 1) {
+        __cardsAllLoaded = true;
+        if (__cardsObserver) { __cardsObserver.disconnect(); __cardsObserver = null; }
+      }
+      // Re-tally chip counts so the toolbar reflects the loaded subset.
+      // Search-palette index needs invalidation too -- the new cards
+      // bring fresh DOM data the palette indexer reads from.
+      if (typeof _initChipCounts === 'function') _initChipCounts();
+      try { SEARCH_INDEX = null; } catch (_) {}
+      document.dispatchEvent(new CustomEvent('cards-page-ready', {detail: {page: idx}}));
+    })
+    .catch(e => {
+      console.error('[loadCardsPage]', idx, e);
+      __cardsPageP[idx] = null;
+      throw e;
+    });
+  return __cardsPageP[idx];
+}
+
+function _installCardsScrollObserver() {
+  if (!('IntersectionObserver' in window)) {
+    // No IO support -- load everything in parallel as a fallback.
+    loadAllRemainingCardPages();
+    return;
+  }
+  function observeLast() {
+    if (__cardsAllLoaded) return;
+    const host = document.getElementById('cardsHost');
+    if (!host) return;
+    const cards = host.querySelectorAll('article.card');
+    if (!cards.length) return;
+    const last = cards[cards.length - 1];
+    if (!__cardsObserver) {
+      __cardsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(en => {
+          if (!en.isIntersecting) return;
+          // Find which page this card belongs to; load the next one.
+          const loadedPages = Object.keys(__cardsPageP).map(k => parseInt(k, 10)).filter(n => !isNaN(n));
+          const next = (loadedPages.length ? Math.max(...loadedPages) : 0) + 1;
+          loadCardsPage(next).then(() => {
+            __cardsObserver.unobserve(en.target);
+            observeLast();  // Re-observe the new last card.
+          });
+        });
+      }, {rootMargin: '600px 0px 600px 0px'});
+    }
+    __cardsObserver.observe(last);
+  }
+  observeLast();
+  document.addEventListener('cards-page-ready', observeLast);
+}
+
+function loadAllRemainingCardPages() {
+  const pages = (__MANIFEST__ && __MANIFEST__.cardPages) || [];
+  // Kick off every not-yet-loaded page in parallel. Awaiting Promise.all
+  // gives callers a way to scroll-to-target once everything is in DOM.
+  const promises = [];
+  for (let i = 0; i < pages.length; i++) {
+    if (!__cardsPageP[i]) promises.push(loadCardsPage(i));
+  }
+  return Promise.all(promises);
+}
+
+// Resolve a card id (#art-XX style) to the page that contains it.
+// Returns -1 if not in the manifest map.
+function _cardsPageForId(id) {
+  const m = (__MANIFEST__ && __MANIFEST__.cardPageById) || {};
+  const v = m[id];
+  return (typeof v === 'number') ? v : -1;
+}
+
+// Ensure the card with the given id is in DOM. Returns a Promise that
+// resolves once the page containing it (and all earlier pages, so
+// scroll-position is meaningful) is loaded. Used by deep-link router
+// and search-palette navigation.
+function ensureCardLoaded(id) {
+  if (document.getElementById(id)) return Promise.resolve();
+  const targetPage = _cardsPageForId(id);
+  if (targetPage < 0) {
+    // Unknown id (maybe an older link). Load everything as a fallback.
+    return loadAllRemainingCardPages();
+  }
+  const tasks = [];
+  for (let i = 0; i <= targetPage; i++) {
+    if (!__cardsPageP[i]) tasks.push(loadCardsPage(i));
+  }
+  return Promise.all(tasks);
+}
+
 // Eager-fetch the slim search index so live-counts under the global
 // search input work from first paint without forcing the heavy
 // MATRIX / ACTORS / INTEL chunks to load.
@@ -14200,9 +14370,38 @@ document.querySelectorAll('button[data-export]').forEach(btn => {
     el.classList.add('deeplink-target');
     setTimeout(function(){ el.classList.remove('deeplink-target'); }, 1700);
   }
+  // Helper: cards are paginated. When a deep-link slug isn't in the
+  // loaded subset, kick off the full-page load (once) and retry.
+  // We don't have a slug -> page-index map, only id -> page, so the
+  // safest path here is to load every remaining page in parallel.
+  var __deepLinkRetried = false;
+  function ensureAllCardsForDeepLink(){
+    if (typeof loadAllRemainingCardPages !== 'function') return Promise.resolve();
+    if (__deepLinkRetried) return Promise.resolve();
+    __deepLinkRetried = true;
+    return loadAllRemainingCardPages();
+  }
   function openUc(slug){
     var el = document.querySelector('[data-uc-slug="' + slug.replace(/"/g, '\\"') + '"]');
-    if (!el) return false;
+    if (!el) {
+      // Try fetching the remaining card pages and retry once.
+      ensureAllCardsForDeepLink().then(function(){
+        var e2 = document.querySelector('[data-uc-slug="' + slug.replace(/"/g, '\\"') + '"]');
+        if (e2) {
+          if (typeof showView === 'function') showView('articles');
+          var p = e2;
+          while (p) {
+            if (p.tagName === 'DETAILS' && !p.open) p.open = true;
+            p = p.parentElement;
+          }
+          e2.scrollIntoView({behavior:'smooth', block:'center'});
+          highlight(e2);
+          var t = e2.querySelector('.uc-title');
+          if (t) document.title = t.textContent.trim() + ' · Clankerusecase';
+        }
+      });
+      return false;
+    }
     if (typeof showView === 'function') showView('articles');
     var p = el;
     while (p) {
@@ -14217,7 +14416,19 @@ document.querySelectorAll('button[data-export]').forEach(btn => {
   }
   function openArticle(slug){
     var el = document.querySelector('[data-art-slug="' + slug.replace(/"/g, '\\"') + '"]');
-    if (!el) return false;
+    if (!el) {
+      ensureAllCardsForDeepLink().then(function(){
+        var e2 = document.querySelector('[data-art-slug="' + slug.replace(/"/g, '\\"') + '"]');
+        if (e2) {
+          if (typeof showView === 'function') showView('articles');
+          e2.scrollIntoView({behavior:'smooth', block:'start'});
+          highlight(e2);
+          var t = e2.querySelector('h2 a, h2');
+          if (t) document.title = t.textContent.trim() + ' · Clankerusecase';
+        }
+      });
+      return false;
+    }
     if (typeof showView === 'function') showView('articles');
     el.scrollIntoView({behavior:'smooth', block:'start'});
     highlight(el);
@@ -21398,7 +21609,27 @@ def main():
     # responsive without forcing the heavy chunks to load.
     # Each chunk URL is content-hashed so the 2-hour rebuild cadence
     # auto-busts the GitHub Pages CDN entry whenever content changes.
-    cards_html_blob = "\n".join(cards)
+    # Paginate cards instead of shipping a single 33 MB blob. On mobile
+    # (4G/LTE) the monolithic chunk took ~5-20 s to download; users saw
+    # an empty Articles tab and assumed nothing loaded. With pages of 25
+    # the first chunk lands in ~1-2 s and the rest stream in via an
+    # IntersectionObserver on the last card. data/cards-001.html …
+    # cards-NNN.html (3-digit padding, sorted lexicographically).
+    _CARDS_PAGE_SIZE = 25
+    card_pages_html = [
+        "\n".join(cards[i:i + _CARDS_PAGE_SIZE])
+        for i in range(0, len(cards), _CARDS_PAGE_SIZE)
+    ]
+    # Build an article-id -> page-index map so the search palette and
+    # deep-link router (#art-XX, #uc-YY) can fetch the right page when
+    # the user jumps to a card that isn't loaded yet. The card opening
+    # tag is `<article class="card" id="<aid>" data-art-slug="…"` (see
+    # render_card at ~14333) so we match on id="…".
+    _card_id_re = re.compile(r'<article class="card[^"]*"\s+id="([^"]+)"')
+    card_page_by_id = {}
+    for page_idx, page_html in enumerate(card_pages_html):
+        for m in _card_id_re.finditer(page_html):
+            card_page_by_id[m.group(1)] = page_idx
     search_rows = []
     if matrix_data:
         for a in (matrix_data.get("arts") or []):
@@ -21429,16 +21660,29 @@ def main():
         raw = payload.encode("utf-8")
         (data_dir / name).write_bytes(raw)
         return f"data/{name}?v={hashlib.sha256(raw).hexdigest()[:10]}"
+    # Write each cards page; collect hashed URLs for the manifest.
+    card_page_urls = [
+        _write_chunk(f"cards-{idx+1:03d}.html", page_html)
+        for idx, page_html in enumerate(card_pages_html)
+    ]
     manifest = {
         "matrix": _write_chunk("matrix.json", matrix_raw_json),
         "intel":  _write_chunk("intel.json",  intel_raw_json),
         "actors": _write_chunk("actors.json", actors_raw_json),
         "search": _write_chunk("search.json", search_raw_json),
-        "cards":  _write_chunk("cards.html",  cards_html_blob),
+        # cardPages: ordered list of page URLs. cardPageById: lookup so a
+        # deep-link / search jump knows which page contains card #N.
+        "cardPages":    card_page_urls,
+        "cardPageById": card_page_by_id,
     }
     manifest_inline = _js_safe(_json_mod.dumps(manifest, separators=(",", ":")))
-    chunk_sizes = {k: (data_dir / (k + (".html" if k == "cards" else ".json"))).stat().st_size for k in manifest}
-    print("[*] Externalised chunks: " + ", ".join(f"{k}={v//1024}KB" for k, v in chunk_sizes.items()))
+    _total_cards_bytes = sum((data_dir / f"cards-{i+1:03d}.html").stat().st_size for i in range(len(card_page_urls)))
+    print(f"[*] Externalised chunks: matrix={(data_dir/'matrix.json').stat().st_size//1024}KB, "
+          f"intel={(data_dir/'intel.json').stat().st_size//1024}KB, "
+          f"actors={(data_dir/'actors.json').stat().st_size//1024}KB, "
+          f"search={(data_dir/'search.json').stat().st_size//1024}KB, "
+          f"cards={_total_cards_bytes//1024}KB across {len(card_page_urls)} pages "
+          f"(~{_total_cards_bytes//1024//max(1,len(card_page_urls))}KB each)")
 
     page = (
         HTML_HEAD
