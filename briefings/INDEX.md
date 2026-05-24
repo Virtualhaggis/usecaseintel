@@ -8,6 +8,9 @@ _1254 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-24
+- [ghost cms sql injection flaw exploited in large scale clickf](./2026-05-24/ghost-cms-sql-injection-flaw-exploited-in-large-scale-clickf.md)
+
 ## 2026-05-23
 - [anthropic s claude mythos preview uncovers 10 000 0 days in ](./2026-05-23/anthropic-s-claude-mythos-preview-uncovers-10-000-0-days-in-.md)
 - [ghsa critical cve 2026 46716 nezha monitoring rolemember can](./2026-05-23/ghsa-critical-cve-2026-46716-nezha-monitoring-rolemember-can.md)
@@ -62,7 +65,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [github internal repositories breached via malicious nx conso](./2026-05-21/github-internal-repositories-breached-via-malicious-nx-conso.md)
 - [inside a crypto drainer how to spot it before it empties you](./2026-05-21/inside-a-crypto-drainer-how-to-spot-it-before-it-empties-you.md)
 - [max severity cisco secure workload flaw gives site admin pri](./2026-05-21/max-severity-cisco-secure-workload-flaw-gives-site-admin-pri.md)
-- [police seize first vpn service used in ransomware data theft](./2026-05-21/police-seize-first-vpn-service-used-in-ransomware-data-theft.md)
 - [securing the ai revolution how snyk and our partners are sca](./2026-05-21/securing-the-ai-revolution-how-snyk-and-our-partners-are-sca.md)
 - [showboat linux malware hits middle east telecom with socks5 ](./2026-05-21/showboat-linux-malware-hits-middle-east-telecom-with-socks5-.md)
 - [the art of being ungovernable](./2026-05-21/the-art-of-being-ungovernable.md)

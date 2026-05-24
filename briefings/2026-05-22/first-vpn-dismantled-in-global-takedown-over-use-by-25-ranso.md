@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Outbound connections to seized First VPN exit node IPs
 
-`UC_20_4` · phase: **c2** · confidence: **High**
+`UC_21_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceNetworkEvents
 
 ### [LLM] Endpoint resolution or web traffic to seized 1vpns[.]com/net/org domains
 
-`UC_20_5` · phase: **c2** · confidence: **High**
+`UC_21_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceNetworkEvents
 
 ### [LLM] Endpoint visits to Russian-speaking cybercrime forums Exploit.in / XSS.is
 
-`UC_20_6` · phase: **recon** · confidence: **Medium**
+`UC_21_6` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

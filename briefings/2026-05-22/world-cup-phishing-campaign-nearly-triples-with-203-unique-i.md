@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Connection or DNS lookup to 2026 FIFA World Cup phishing infrastructure (Flare cluster)
 
-`UC_17_8` · phase: **delivery** · confidence: **High**
+`UC_18_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceNetworkEvents
 
 ### [LLM] FIFA World Cup typosquat domain hit in Defender SafeLinks / email URL telemetry
 
-`UC_17_9` · phase: **delivery** · confidence: **High**
+`UC_18_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ UrlMatches
 
 ### [LLM] TLS certificate fingerprint reuse across FIFA World Cup phishing infrastructure
 
-`UC_17_10` · phase: **c2** · confidence: **High**
+`UC_18_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +133,7 @@ DeviceNetworkEvents
 
 ### [LLM] Newly registered FIFA-themed typosquat lookups by enterprise hosts
 
-`UC_17_11` · phase: **recon** · confidence: **Medium**
+`UC_18_11` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
