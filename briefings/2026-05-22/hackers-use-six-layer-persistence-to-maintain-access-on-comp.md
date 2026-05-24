@@ -64,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] INJ3CTOR3 JOMANGY C2 beacon to 45.95.147.178 / k.php / wr.php
 
-`UC_18_9` · phase: **c2** · confidence: **High**
+`UC_19_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceNetworkEvents
 
 ### [LLM] Immutable crontab persistence — chattr +i on cron paths (JOMANGY layer 3)
 
-`UC_18_10` · phase: **install** · confidence: **High**
+`UC_19_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceProcessEvents
 
 ### [LLM] FreePBX backdoor account creation — INJ3CTOR3 UID-0 names blended with legit accounts
 
-`UC_18_11` · phase: **install** · confidence: **High**
+`UC_19_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ DeviceProcessEvents
 
 ### [LLM] JOMANGY persistence layer 6 — license.php / ajax.php drop in FreePBX module dirs
 
-`UC_18_12` · phase: **install** · confidence: **High**
+`UC_19_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +160,7 @@ DeviceFileEvents
 
 ### [LLM] JOMANGY shell profile re-infection injection (persistence layer 2)
 
-`UC_18_13` · phase: **install** · confidence: **Medium**
+`UC_19_13` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +184,7 @@ DeviceFileEvents
 
 ### [LLM] JOMANGY webshell watermark / marker string in web tree or hosted files
 
-`UC_18_14` · phase: **install** · confidence: **High**
+`UC_19_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -355,7 +355,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use Six-Layer Persistence to Maintain Access on Compromised FreePBX Syst
 
-`UC_18_8` · phase: **exploit** · confidence: **High**
+`UC_19_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

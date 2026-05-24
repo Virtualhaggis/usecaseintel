@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1256 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -34,7 +34,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa qqqm 5547 774x filebrowser quantum path t](./2026-05-22/ghsa-critical-ghsa-qqqm-5547-774x-filebrowser-quantum-path-t.md)
 - [hackers abuse middle east telecom networks for large scale c](./2026-05-22/hackers-abuse-middle-east-telecom-networks-for-large-scale-c.md)
 - [hackers backdoor popular art template npm package to launch ](./2026-05-22/hackers-backdoor-popular-art-template-npm-package-to-launch-.md)
-- [hackers use nf e invoice lures to deliver banana rat through](./2026-05-22/hackers-use-nf-e-invoice-lures-to-deliver-banana-rat-through.md)
 - [hackers use six layer persistence to maintain access on comp](./2026-05-22/hackers-use-six-layer-persistence-to-maintain-access-on-comp.md)
 - [kimwolf ddos botnet operator arrested in canada over ddos fo](./2026-05-22/kimwolf-ddos-botnet-operator-arrested-in-canada-over-ddos-fo.md)
 - [making vulnerable drivers exploitable without hardware the b](./2026-05-22/making-vulnerable-drivers-exploitable-without-hardware-the-b.md)
