@@ -8776,7 +8776,10 @@ body.view-home-active .stats-articles{display:none !important;}
    point with a perpetual purple-tinted pulse. */
 .home-workflow-row{
   display:grid;
-  grid-template-columns: 1fr 60px 1fr 60px 1.15fr;
+  /* 4 stages (intel / AI / outputs cluster / roadmap) separated by 3 arrows.
+     Arrows compressed from 60px -> 50px so the row fits inside ~1100px
+     of horizontal canvas without breaking on 1280-wide desktops. */
+  grid-template-columns: 1fr 50px 1fr 50px 1.1fr 50px 0.95fr;
   align-items:stretch;
   gap:0;
   margin:0 0 28px;
@@ -8841,6 +8844,32 @@ body.view-home-active .stats-articles{display:none !important;}
 @keyframes hwAiPulse{
   0%,100%{box-shadow:0 0 0 0 rgba(155,138,251,0.22);}
   50%{box-shadow:0 0 0 7px rgba(155,138,251,0);}
+}
+/* Roadmap teaser (Step 4) -- dashed border + muted treatment so
+   it visually reads as "future capability" rather than something
+   we ship today. SOON pill in the top-right corner mirrors the
+   purple accent of the AI node. No pulse / no flow animation. */
+.home-workflow-step.is-roadmap{
+  border-color:var(--hairline);
+  border-style:dashed;
+  background:transparent;
+  opacity:0.78;
+}
+.home-workflow-step.is-roadmap .hw-icon{ color:var(--muted-2); }
+.home-workflow-step.is-roadmap .hw-title{ color:var(--muted); }
+.home-workflow-step.is-roadmap::after{ content:none; }  /* no pulse */
+.hw-soon-badge{
+  position:absolute; top:10px; right:10px;
+  font-family:var(--mono);
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  padding:2px 7px;
+  border-radius:3px;
+  background:rgba(155,138,251,0.16);
+  color:var(--accent-2);
+  border:1px solid rgba(155,138,251,0.32);
 }
 /* Connector arrows between steps */
 .home-workflow-arrow{
@@ -20759,6 +20788,26 @@ def render_home_workflow(usecase_count: int, ioc_count: int, actor_count: int) -
         '<span class="hw-chip-label">Threat actors tracked</span>'
         f'<strong>{actor_count:,}</strong>'
         '</div>\n'
+        '        </div>\n'
+        # ----- Connector arrow into the roadmap stage --------------
+        '        <svg class="home-workflow-arrow" viewBox="0 0 50 24" aria-hidden="true">'
+        '<path class="hw-line" d="M2 12 H40"/>'
+        '<path class="hw-head" d="M40 6 L48 12 L40 18"/>'
+        '</svg>\n'
+        # ----- Step 4: Ingest & run (roadmap teaser) ---------------
+        '        <div class="home-workflow-step is-roadmap">\n'
+        '          <span class="hw-soon-badge" aria-label="Coming soon">Soon</span>\n'
+        '          <svg class="hw-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+        'stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+        # Inbox-with-arrow glyph: tray at the bottom + downward arrow into it
+        '<path d="M3 13 L7 13 L9 16 L15 16 L17 13 L21 13"/>'
+        '<path d="M3 13 L3 19 a2 2 0 0 0 2 2 L19 21 a2 2 0 0 0 2 -2 L21 13"/>'
+        '<path d="M12 3 L12 11"/>'
+        '<path d="M9 8 L12 11 L15 8"/>'
+        '</svg>\n'
+        '          <p class="hw-label">Step 4</p>\n'
+        '          <p class="hw-title">Ingest &amp; run</p>\n'
+        '          <p class="hw-meta">Detections + IOCs ready for your SIEM and EDR.</p>\n'
         '        </div>\n'
         '      </div>'
     )
