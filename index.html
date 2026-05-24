@@ -2839,6 +2839,7 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .pl-badge.pl-spl  { background:rgba(76,183,130,0.16);  color:#6dd29c; border-color:rgba(76,183,130,0.40); }
 .pl-badge.pl-ddog { background:rgba(120,90,200,0.18);  color:#c5b0ff; border-color:rgba(120,90,200,0.42); font-size:9.5px; }
 .pl-badge.pl-falcon{ background:rgba(225,90,90,0.18);   color:#ff9a9a; border-color:rgba(225,90,90,0.42); font-size:9.5px; }
+.pl-badge.pl-cw   { background:rgba(255,153,0,0.18);    color:#ffb45e; border-color:rgba(255,153,0,0.42); font-size:9.5px; }
 /* Compact variant on matrix-grid technique cells: tiny solid-colour
    square with no letter. Six platforms x 14px letter-badges was
    overflowing the 150px-wide cells and pushing layout around -- 8x8
@@ -2857,6 +2858,7 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .tech-cell .pl-badge.pl-spl   { background:#4cb782; border-color:rgba(76,183,130,0.55); }
 .tech-cell .pl-badge.pl-ddog  { background:#785ac8; border-color:rgba(120,90,200,0.55); }
 .tech-cell .pl-badge.pl-falcon{ background:#e15a5a; border-color:rgba(225,90,90,0.55); }
+.tech-cell .pl-badge.pl-cw    { background:#ff9900; border-color:rgba(255,153,0,0.55); }
 /* Matrix platform-filter dim — applied to cells lacking the active filter. */
 .tech-cell.pl-filter-dim{opacity:0.18; filter:saturate(0.5);}
 .tech-cell.has-uc{background:linear-gradient(180deg, rgba(54,224,192,0.07), rgba(54,224,192,0.02));}
@@ -4332,9 +4334,9 @@ body.view-home-active .stats-articles{display:none !important;}
       </div>
       <div class="home-rise" style="--rise-delay:360ms">
       <div class="home-trust-strip" aria-label="Platform scale and signals">
-        <div class="home-trust-tiles"><div class="home-trust-tile"><div class="num" data-count-to="3848" data-count-final="3,848">3,848</div><div class="lbl">Detections</div></div><div class="home-trust-tile"><div class="num" data-count-to="181" data-count-final="181">181</div><div class="lbl">ATT&amp;CK techniques</div></div><div class="home-trust-tile"><div class="num" data-count-to="5" data-count-final="5">5</div><div class="lbl">Query languages</div></div><div class="home-trust-tile"><div class="num" data-count-to="1435" data-count-final="1,435">1,435</div><div class="lbl">Threat-intel articles</div></div></div>
+        <div class="home-trust-tiles"><div class="home-trust-tile"><div class="num" data-count-to="3848" data-count-final="3,848">3,848</div><div class="lbl">Detections</div></div><div class="home-trust-tile"><div class="num" data-count-to="181" data-count-final="181">181</div><div class="lbl">ATT&amp;CK techniques</div></div><div class="home-trust-tile"><div class="num" data-count-to="7" data-count-final="7">7</div><div class="lbl">Query languages</div></div><div class="home-trust-tile"><div class="num" data-count-to="1435" data-count-final="1,435">1,435</div><div class="lbl">Threat-intel articles</div></div></div>
         <div class="home-trust-chips"><span class="home-trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 l4 4 l10-10"/></svg>Continuously updated</span><span class="home-trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 l4 4 l10-10"/></svg>Mapped to MITRE ATT&amp;CK</span><span class="home-trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 l4 4 l10-10"/></svg>Multi-platform queries</span><span class="home-trust-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12 l4 4 l10-10"/></svg>Automated detection pipeline</span></div>
-        <div class="home-trust-pill" aria-live="polite"><span class="pulse" aria-hidden="true"></span><span data-generated-utc="2026-05-23T23:49:00Z">Updated just now</span></div>
+        <div class="home-trust-pill" aria-live="polite"><span class="pulse" aria-hidden="true"></span><span data-generated-utc="2026-05-24T01:33:00Z">Updated just now</span></div>
       </div>
       </div>
     </div>
@@ -4397,6 +4399,7 @@ body.view-home-active .stats-articles{display:none !important;}
         <button type="button" class="home-platform-tile" data-home-action="platform-filter" data-platform="spl"><span class="label">Splunk SPL (CIM)</span><span class="count">1,225 detections</span></button>
         <button type="button" class="home-platform-tile" data-home-action="platform-filter" data-platform="datadog"><span class="label">Datadog Cloud SIEM</span><span class="count">861 detections</span></button>
         <button type="button" class="home-platform-tile" data-home-action="platform-filter" data-platform="falcon"><span class="label">CrowdStrike Falcon LogScale</span><span class="count">624 detections</span></button>
+        <button type="button" class="home-platform-tile" data-home-action="platform-filter" data-platform="cw"><span class="label">AWS CloudWatch Logs Insights</span><span class="count">0 detections</span></button>
       </div>
     </div>
     <div class="home-browse-group">
@@ -4456,7 +4459,7 @@ body.view-home-active .stats-articles{display:none !important;}
         </div>
       </div>
     <div class="home-cred-grid">
-      <article class="home-cred-card"><h3><span class="pulse" aria-hidden="true"></span>Continuously updated</h3><p><span data-generated-utc="2026-05-23T23:49:00Z">Updated just now</span> — the detection pipeline runs every two hours, pulls fresh threat intelligence from 11+ feeds, and regenerates the library end-to-end.</p><p>This run analysed <strong>1,435</strong> articles, mapped each to MITRE ATT&amp;CK, and produced queries across six platforms.</p></article>
+      <article class="home-cred-card"><h3><span class="pulse" aria-hidden="true"></span>Continuously updated</h3><p><span data-generated-utc="2026-05-24T01:33:00Z">Updated just now</span> — the detection pipeline runs every two hours, pulls fresh threat intelligence from 11+ feeds, and regenerates the library end-to-end.</p><p>This run analysed <strong>1,435</strong> articles, mapped each to MITRE ATT&amp;CK, and produced queries across six platforms.</p></article>
       <article class="home-cred-card"><h3>Threat-intelligence-driven</h3><p>Every detection traces back to a public, citable source. No anonymous vendor templates, no generic compliance rules.</p><div class="home-cred-sources"><span class="home-cred-source">The Hacker News</span><span class="home-cred-source">BleepingComputer</span><span class="home-cred-source">Microsoft Security Blog</span><span class="home-cred-source">CISA KEV</span><span class="home-cred-source">Cisco Talos</span><span class="home-cred-source">Securelist (Kaspersky)</span><span class="home-cred-source">SentinelLabs</span><span class="home-cred-source">Unit 42</span><span class="home-cred-source">ESET WeLiveSecurity</span><span class="home-cred-source">Lab52</span><span class="home-cred-source">Cyber Security News</span></div></article>
       <article class="home-cred-card"><h3>Built for operational use</h3><p>Each detection ships with its source article, MITRE technique mapping, kill-chain phase, and IOC pivot — so an analyst can take the query, the context, and the rationale together.</p><div class="home-cred-links"><a href="pipeline.html">Pipeline run history →</a><a href="#" data-home-action="matrix">MITRE ATT&amp;CK coverage map →</a><a href="#" data-home-action="intel">Live IOC feeds →</a></div></article>
     </div>
@@ -5830,6 +5833,10 @@ body.view-home-active .stats-articles{display:none !important;}
                   title="Show only articles whose UCs have a CrowdStrike Falcon LogScale query">
             Falcon <span class="cnt" id="platCntFalcon"></span>
           </button>
+          <button class="src-chip plat-chip" data-platform="cloudwatch"
+                  title="Show only articles whose UCs have an AWS CloudWatch Logs Insights query">
+            CloudWatch <span class="cnt" id="platCntCloudwatch"></span>
+          </button>
         </div>
       </div>
       <div class="ft-group ft-target">
@@ -5962,6 +5969,7 @@ body.view-home-active .stats-articles{display:none !important;}
         <span class="lg-chip"><span class="pl-badge pl-spl">P</span> Splunk SPL</span>
         <span class="lg-chip"><span class="pl-badge pl-ddog">DD</span> Datadog Cloud SIEM</span>
         <span class="lg-chip"><span class="pl-badge pl-falcon">CS</span> CrowdStrike Falcon LogScale</span>
+        <span class="lg-chip"><span class="pl-badge pl-cw">CW</span> CloudWatch Logs Insights</span>
         <span class="lg-note">use the toolbar's platform pills to filter the matrix</span>
       </div>
     </div>
@@ -7439,13 +7447,14 @@ function _initChipCounts() {
   if (a) a.textContent = hasUc;
   if (b) b.textContent = hasLlm;
   // Platform counts — how many articles have at least one UC for each platform
-  const platCounts = {def:0, sent:0, sigma:0, spl:0, datadog:0, falcon:0};
+  const platCounts = {def:0, sent:0, sigma:0, spl:0, datadog:0, falcon:0, cloudwatch:0};
   for (const c of cards) {
     const p = (c.dataset.platforms || '').split(',').filter(Boolean);
     for (const k of p) if (k in platCounts) platCounts[k]++;
   }
   const idMap = {def:'platCntDef', sent:'platCntSent', sigma:'platCntSigma',
-                 spl:'platCntSpl', datadog:'platCntDatadog', falcon:'platCntFalcon'};
+                 spl:'platCntSpl', datadog:'platCntDatadog', falcon:'platCntFalcon',
+                 cloudwatch:'platCntCloudwatch'};
   for (const k of Object.keys(idMap)) {
     const el = document.getElementById(idMap[k]);
     if (el) el.textContent = platCounts[k];
@@ -9140,10 +9149,10 @@ document.addEventListener('keydown', e => {
 // index.html ~49 MB; the new shell is ~1 MB. showView() awaits the
 // relevant chunk before invoking the per-tab renderer; existing
 // consumers already guard with `if (window.MATRIX)` so transient
-// nulls are safe.  {"matrix":"data/matrix.json?v=917af56d11","intel":"data/intel.json?v=c56f3d8251","actors":"data/actors.json?v=768d6511e5","search":"data/search.json?v=de02d59f18","cards":"data/cards.html?v=81c4ec66e1"} is replaced at build time with
+// nulls are safe.  {"matrix":"data/matrix.json?v=cb1a172346","intel":"data/intel.json?v=c3dba3e955","actors":"data/actors.json?v=768d6511e5","search":"data/search.json?v=de02d59f18","cards":"data/cards.html?v=81c4ec66e1"} is replaced at build time with
 // {chunk-name -> hashed URL} JSON.
 // =================================================================
-const __MANIFEST__ = {"matrix":"data/matrix.json?v=917af56d11","intel":"data/intel.json?v=c56f3d8251","actors":"data/actors.json?v=768d6511e5","search":"data/search.json?v=de02d59f18","cards":"data/cards.html?v=81c4ec66e1"};
+const __MANIFEST__ = {"matrix":"data/matrix.json?v=cb1a172346","intel":"data/intel.json?v=c3dba3e955","actors":"data/actors.json?v=768d6511e5","search":"data/search.json?v=de02d59f18","cards":"data/cards.html?v=81c4ec66e1"};
 const __chunkP = {};
 function loadChunk(name) {
   if (__chunkP[name]) return __chunkP[name];
@@ -9212,12 +9221,13 @@ function tidCellHtml(tid, isSub) {
   if (matrixMode === 'coverage') cls += ' ' + covClassFor(ucs.length);
   else if (matrixMode === 'heat') cls += ' ' + heatClassFor(arts.length);
   // Platform-coverage flags — aggregate the `pl` field across every UC
-  // attached to this technique. `pl` is now a 5-char string "dsgpD"
+  // attached to this technique. `pl` is now a 7-char string "dsgpDFc"
   // where each position is the platform letter or '-': d=Defender,
-  // s=Sentinel, g=Sigma, p=SPL, D=Datadog. A position is `-` if that
-  // UC lacks that platform body. The matrix shows a small badge for
-  // each platform that at least one UC on this technique covers.
-  let plDef=false, plSent=false, plSigma=false, plSpl=false, plDdog=false, plFalcon=false;
+  // s=Sentinel, g=Sigma, p=SPL, D=Datadog, F=Falcon, c=CloudWatch.
+  // A position is `-` if that UC lacks that platform body. The matrix
+  // shows a small badge for each platform that at least one UC on
+  // this technique covers.
+  let plDef=false, plSent=false, plSigma=false, plSpl=false, plDdog=false, plFalcon=false, plCw=false;
   for (let u of ucs) {
     const rec = MATRIX.ucs[u];
     if (!rec || !rec.pl) continue;
@@ -9227,6 +9237,7 @@ function tidCellHtml(tid, isSub) {
     if (rec.pl[3] === 'p') plSpl = true;
     if (rec.pl[4] === 'D') plDdog = true;
     if (rec.pl[5] === 'F') plFalcon = true;
+    if (rec.pl[6] === 'c') plCw = true;
   }
   const platforms = [];
   if (plDef)    platforms.push('<span class="pl-badge pl-def" title="Defender KQL">D</span>');
@@ -9235,7 +9246,8 @@ function tidCellHtml(tid, isSub) {
   if (plSpl)    platforms.push('<span class="pl-badge pl-spl" title="Splunk SPL">P</span>');
   if (plDdog)   platforms.push('<span class="pl-badge pl-ddog" title="Datadog Cloud SIEM">DD</span>');
   if (plFalcon) platforms.push('<span class="pl-badge pl-falcon" title="CrowdStrike Falcon LogScale">CS</span>');
-  return `<div class="${cls}" data-tid="${tid}" data-pl-def="${plDef?1:0}" data-pl-sent="${plSent?1:0}" data-pl-sigma="${plSigma?1:0}" data-pl-spl="${plSpl?1:0}" data-pl-datadog="${plDdog?1:0}" data-pl-falcon="${plFalcon?1:0}" tabindex="0">
+  if (plCw)     platforms.push('<span class="pl-badge pl-cw" title="CloudWatch Logs Insights">CW</span>');
+  return `<div class="${cls}" data-tid="${tid}" data-pl-def="${plDef?1:0}" data-pl-sent="${plSent?1:0}" data-pl-sigma="${plSigma?1:0}" data-pl-spl="${plSpl?1:0}" data-pl-datadog="${plDdog?1:0}" data-pl-falcon="${plFalcon?1:0}" data-pl-cloudwatch="${plCw?1:0}" tabindex="0">
     <div class="tech-name" title="${tid}: ${escapeHtml(tinfo.name)}">${escapeHtml(tinfo.name)}</div>
     <div class="tech-meta">
       <span style="color:var(--muted)">${tid}</span>
