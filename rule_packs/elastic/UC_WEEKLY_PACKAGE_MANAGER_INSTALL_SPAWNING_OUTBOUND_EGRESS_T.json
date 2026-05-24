@@ -1,0 +1,57 @@
+{
+  "name": "[WEEKLY] Package Manager Install Spawning Outbound Egress to Non-Registry Infrastructure Within 5 Minutes",
+  "description": "Detects the joint pattern across this fortnight's wave of dev-toolchain supply-chain compromises: a package-install command (npm/yarn/pnpm/bun/pip/uv/poetry/cargo or a node/python interpreter invoked by them) is followed within 5 minutes by an outbound public network connection from the same host that does NOT land on a known package registry CDN (npmjs.org, pypi.org / pythonhosted.org, crates.io, github.com/raw.githubusercontent.com, jsdelivr/unpkg/ghcr). This is the post-install detonation step shared by node-ipc 9.1.6/9.2.3/12.0.1 (azurestaticprovider[.]net), Mini Shai-Hulud / TeamPCP across the @antv ecosystem (t.m-kosche[.]com), mistralai 2.4.6 (83.142.209[.]194 / transformers.pyz), guardrails-ai 0.10.1 (git-tanstack[.]com, CVE-2026-45758), @cap-js/sqlite|postgres|db-service (zero.masscan.cloud / 94.154.172[.]43, CVE-2026-46421), the Nx Console VS Code extension breach of GitHub internal repos, Megalodon's 5,561-repo malicious GitHub Actions push (polymarketbot.polymarketdev.workers.dev), and DeepSeek TUI's auto-approved `run_tests` \u2192 cargo test RCE (CVE-2026-45311). Kill-chain coverage: install (the package-manager invocation) into c2/actions (the unsanctioned beacon). FIRES when an npm/pip/yarn-style install (incl. postinstall/preinstall hooks and `cargo test`) is followed by an HTTP/HTTPS/DNS-resolved beacon to a public destination outside the registry allowlist within the temporal window; does NOT fire on installs that only fetch from registry CDNs, on offline `npm ci` against a local mirror, or on installs occurring on a build agent whose registry mirror is allowlisted at the egress proxy.\n\nRationale: Every campaign in scope \u2014 node-ipc, Mini Shai-Hulud/AntV, mistralai, guardrails-ai, @cap-js/*, Nx Console, Megalodon, DeepSeek TUI run_tests \u2014 shares the same observable: a developer-tool install/build/test invocation immediately precedes an outbound connection to attacker infrastructure that is NOT a package registry. Filtering descendants of npm/pip/yarn/cargo/uv/poetry against a registry-CDN allowlist within a 5-minute window catches the chain regardless of which specific IOC, hash, or domain the next compromised package uses.",
+  "risk_score": 73,
+  "severity": "high",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "1h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "install",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1195.002",
+          "name": "Compromise Software Supply Chain",
+          "reference": "https://attack.mitre.org/techniques/T1195.002/"
+        },
+        {
+          "id": "T1059.007",
+          "name": "Command and Scripting Interpreter: JavaScript",
+          "reference": "https://attack.mitre.org/techniques/T1059.007/"
+        },
+        {
+          "id": "T1059.006",
+          "name": "Command and Scripting Interpreter: Python",
+          "reference": "https://attack.mitre.org/techniques/T1059.006/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:alerting",
+    "install"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nlet Lookback = 7d;\nlet WindowSec = 300;\nlet PkgMgrs = dynamic([\"npm.exe\",\"npm\",\"npx.exe\",\"npx\",\"yarn.exe\",\"yarn\",\"pnpm.exe\",\"pnpm\",\"bun.exe\",\"bun\",\"pip.exe\",\"pip\",\"pip3.exe\",\"pip3\",\"uv.exe\",\"uv\",\"poetry.exe\",\"poetry\",\"cargo.exe\",\"cargo\"]);\nlet RegistryHosts = dynamic([\"registry.npmjs.org\",\"registry.yarnpkg.com\",\"npmjs.com\",\"yarnpkg.com\",\"pypi.org\",\"files.pythonhosted.org\",\"pypi.python.org\",\"crates.io\",\"static.crates.io\",\"github.com\",\"raw.githubusercontent.com\",\"objects.githubusercontent.com\",\"codeload.github.com\",\"jsdelivr.net\",\"unpkg.com\",\"ghcr.io\"]);\nlet Installs = DeviceProcessEvents\n    | where Timestamp > ago(Lookback)\n    | where FileName in~ (PkgMgrs)\n    | where ProcessCommandLine has_any (\"install\",\"add \",\" test\",\" ci \",\"preinstall\",\"postinstall\")\n    | where AccountName !endswith \"$\"\n    | where AccountName !in~ (\"system\",\"local service\",\"network service\")\n    | project InstallTime = Timestamp, DeviceId, DeviceName, AccountName,\n              InstallProc = FileName, InstallCmd = ProcessCommandLine,\n              InstallPGuid = ProcessUniqueId;\nlet Egress = DeviceNetworkEvents\n    | where Timestamp > ago(Lookback)\n    | where RemoteIPType == \"Public\"\n    | where isnotempty(RemoteUrl) or isnotempty(RemoteIP)\n    | extend RemoteHost = tolower(coalesce(RemoteUrl, RemoteIP))\n    | where not (RemoteHost has_any (RegistryHosts))\n    | where not (RemoteHost endswith \".github.io\")\n    | project EgressTime = Timestamp, DeviceId,\n              EgressInitiator = InitiatingProcessFileName,\n              EgressCmd = InitiatingProcessCommandLine,\n              RemoteIP, RemotePort, RemoteUrl, RemoteHost;\nInstalls\n| join kind=inner Egress on DeviceId\n| where EgressTime between (InstallTime .. InstallTime + WindowSec * 1s)\n| extend DelaySec = datetime_diff('second', EgressTime, InstallTime)\n| summarize FirstInstall = min(InstallTime), LastEgress = max(EgressTime),\n            MinDelay = min(DelaySec), DistinctDests = dcount(RemoteHost),\n            Dests = make_set(RemoteHost, 20),\n            EgressInitiators = make_set(EgressInitiator, 10),\n            SampleInstallCmd = any(InstallCmd), SampleEgressCmd = any(EgressCmd)\n            by DeviceName, AccountName, InstallProc\n| where DistinctDests >= 1\n| order by FirstInstall desc\n```",
+  "references": [
+    "https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_MANAGER_INSTALL_SPAWNING_OUTBOUND_EGRESS_T.yml"
+  ],
+  "meta": {
+    "tier": "alerting",
+    "fp_rate_estimate": "medium"
+  }
+}

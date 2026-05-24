@@ -1,0 +1,44 @@
+title: [WEEKLY] Service-process parent spawns subprocess containing CLI-argument-injection tokens
+id: UC_WEEKLY_SERVICE_PROCESS_PARENT_SPAWNS_SUBPROCESS_CONTAININ
+status: experimental
+description: Detects a unifying tradecraft across this fortnight's web-app and CLI-tool CVEs: a long-running service or non-interactive tool (web server, language runtime, backup CLI, AI/dev TUI) spawns a child process (ssh, git, curl, wget, bash/sh, powershell, python, perl) whose command line carries high-risk argv-injection tokens (`-oProxyCommand=`, `--upload-pack=`, `--receive-pack=`, `-c core.sshCommand=`, `--exec=`, `-EncodedCommand`, curl `--config`/`-K`/`-T`, shell-metachar substitution `$(...)`, backticks, `|sh`, `&&curl`, `/dev/tcp/`, `bash -i`, `base64 -d`). This pattern is the joint signature of CVE-2026-45695 (Kopia SSH ProxyCommand), CVE-2026-44790 (n8n Git node `--upload-pack`/`-c core.sshCommand`), CVE-2026-45369 (utcp-cli `$(...)` substitution), CVE-2026-45374 (DeepSeek TUI shell sub-agent), and the post-exploit RCE chains following CVE-2026-9082 (Drupal SQLi), CVE-2026-26980 (Ghost CMS SQLi→ClickFix), CVE-2026-46670 (YesWiki SQLi), CVE-2026-46633 (Twig PHP code injection), CVE-2026-45697 (Formie SSTI), CVE-2026-45288 (Marten regConfig SQLi), and CVE-2026-22599 (Strapi SQLi). It spans the exploit → install / execution kill-chain pivot — where the vulnerable parent has accepted untrusted input and now hands it down a process tree. It fires when a service-tier parent (php-fpm, w3wp, node, n8n, kopia, deepseek-tui, etc.) launches an interpreter/tool child carrying one of the injection-token families. It does NOT fire on user-shell-rooted activity (bash launched from sshd/login), nor on service parents launching child processes whose argv is clean of metachars/injection flags, suppressing routine maintenance and admin scripts.
+references:
+  - https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_SERVICE_PROCESS_PARENT_SPAWNS_SUBPROCESS_CONTAININ.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.exploit
+  - attack.t1190
+  - attack.t1059
+  - attack.t1059_001
+  - attack.t1059_003
+  - attack.t1059_004
+  - attack.t1059_006
+  - attack.t1203
+  - attack.t1505_003
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'w3wp.exe'
+      - 'php-fpm'
+      - 'php-cgi'
+      - 'php-cgi.exe'
+      - 'php.exe'
+      - 'php'
+      - 'httpd'
+      - 'httpd.exe'
+      - 'apache2'
+      - 'nginx'
+      - 'nginx.exe'
+      - 'node'
+      - 'node.exe'
+      - 'n8n'
+      - 'n8n.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

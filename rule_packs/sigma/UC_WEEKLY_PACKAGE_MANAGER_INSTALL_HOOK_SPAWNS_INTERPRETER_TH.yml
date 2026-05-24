@@ -1,0 +1,42 @@
+title: [WEEKLY] Package-Manager Install Hook Spawns Interpreter then Beacons Out (Supply-Chain Worm Install-Time Execution)
+id: UC_WEEKLY_PACKAGE_MANAGER_INSTALL_HOOK_SPAWNS_INTERPRETER_TH
+status: experimental
+description: Detects the install-time execution primitive shared by every supply-chain worm wave observed this fortnight: a package-manager process (npm / npx / yarn / pnpm / bun / composer / php) runs a tampered dependency whose lifecycle hook (preinstall, postinstall, Composer autoloader, or `vendor/autoload.php`) spawns a scripting interpreter (powershell, pwsh, cmd, sh / bash, node, bun, python, php, curl, wget) which then makes outbound public-internet egress within a short window. This catches all five waves reported between 11-23 May 2026: 'TanStack Npm Packages Compromised Inside The Mini Shai Hulud Supply Chain Attack' (Snyk), 'Mini Shai-Hulud Is Back: npm Worm Hits over 160 Packages, including Mistral and Tanstack' (Aikido), 'TeamPCP's Mini Shai-Hulud Is Back: A Self-Spreading Supply Chain Attack' (StepSecurity), 'Mini Shai-Hulud Hits AntV: 300+ Malicious npm Packages' (Snyk) + 'Mini Shai Hulud: Compromised @antv npm packages enable CI/CD credential theft' (Microsoft / StepSecurity), and the Laravel-Lang Composer tag-rewrite hijack (Cyber Security News, BleepingComputer, The Hacker News, StepSecurity, Aikido). Kill-chain stages: install (lifecycle-hook execution under a trusted pkg-manager parent) -> c2/actions (interpreter beacons to attacker infra or exfiltrates CI secrets). Fires when an install command on a developer workstation or CI runner is followed within ~10 min by an interpreter on the same host reaching a public destination; does NOT fire on routine pkg-manager use whose only egress is to known registries (registry.npmjs.org, packagist.org, github.com, codeload, ghcr, *.actions.githubusercontent.com) — those should be excluded via an allow-list rather than the detection schema, so new attacker domains (git-tanstack.com, *.getsession.org, t.m-kosche.com, git-service.com, flipboxstudio.info today; whatever next week) light up automatically.
+references:
+  - https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_MANAGER_INSTALL_HOOK_SPAWNS_INTERPRETER_TH.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.install
+  - attack.t1195_002
+  - attack.t1059_007
+  - attack.t1059_001
+  - attack.t1059_004
+  - attack.t1041
+  - attack.t1552_001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'npm.exe'
+      - 'npm'
+      - 'npx.exe'
+      - 'npx'
+      - 'yarn.exe'
+      - 'yarn'
+      - 'pnpm.exe'
+      - 'pnpm'
+      - 'bun.exe'
+      - 'bun'
+      - 'node.exe'
+      - 'node'
+      - 'composer'
+      - 'composer.phar'
+      - 'php.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

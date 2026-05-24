@@ -1,0 +1,57 @@
+{
+  "name": "[WEEKLY] Package-Manager Install Hook Spawns Interpreter then Beacons Out (Supply-Chain Worm Install-Time Execution)",
+  "description": "Detects the install-time execution primitive shared by every supply-chain worm wave observed this fortnight: a package-manager process (npm / npx / yarn / pnpm / bun / composer / php) runs a tampered dependency whose lifecycle hook (preinstall, postinstall, Composer autoloader, or `vendor/autoload.php`) spawns a scripting interpreter (powershell, pwsh, cmd, sh / bash, node, bun, python, php, curl, wget) which then makes outbound public-internet egress within a short window. This catches all five waves reported between 11-23 May 2026: 'TanStack Npm Packages Compromised Inside The Mini Shai Hulud Supply Chain Attack' (Snyk), 'Mini Shai-Hulud Is Back: npm Worm Hits over 160 Packages, including Mistral and Tanstack' (Aikido), 'TeamPCP's Mini Shai-Hulud Is Back: A Self-Spreading Supply Chain Attack' (StepSecurity), 'Mini Shai-Hulud Hits AntV: 300+ Malicious npm Packages' (Snyk) + 'Mini Shai Hulud: Compromised @antv npm packages enable CI/CD credential theft' (Microsoft / StepSecurity), and the Laravel-Lang Composer tag-rewrite hijack (Cyber Security News, BleepingComputer, The Hacker News, StepSecurity, Aikido). Kill-chain stages: install (lifecycle-hook execution under a trusted pkg-manager parent) -> c2/actions (interpreter beacons to attacker infra or exfiltrates CI secrets). Fires when an install command on a developer workstation or CI runner is followed within ~10 min by an interpreter on the same host reaching a public destination; does NOT fire on routine pkg-manager use whose only egress is to known registries (registry.npmjs.org, packagist.org, github.com, codeload, ghcr, *.actions.githubusercontent.com) \u2014 those should be excluded via an allow-list rather than the detection schema, so new attacker domains (git-tanstack.com, *.getsession.org, t.m-kosche.com, git-service.com, flipboxstudio.info today; whatever next week) light up automatically.\n\nRationale: Every article in scope \u2014 npm Mini Shai-Hulud waves against TanStack, Mistral and @antv plus the Laravel-Lang Composer tag-rewrite \u2014 relies on the same install-time primitive: a tampered package's lifecycle hook executes under a trusted pkg-manager parent, spawns an interpreter, and beacons out within minutes. IOCs (git-tanstack.com, *.getsession.org, t.m-kosche.com, git-service.com, flipboxstudio.info, the SHA256 set) all rotate per wave, but the parent->interpreter->egress correlation is invariant across npm + Composer ecosystems and across Windows + Linux developer/CI hosts, which is why the existing IOC-bound hunts in the catalogue (UC_3_5 / UC_9_8 / UC_12_8 / UC_15_7 / UC_69_8 / UC_113_8 / UC_184_9 / UC_195_10) all miss the next domain rotation while this one survives it.",
+  "risk_score": 73,
+  "severity": "high",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "1h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "install",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1195.002",
+          "name": "Compromise Software Supply Chain",
+          "reference": "https://attack.mitre.org/techniques/T1195.002/"
+        },
+        {
+          "id": "T1059.007",
+          "name": "Command and Scripting Interpreter: JavaScript",
+          "reference": "https://attack.mitre.org/techniques/T1059.007/"
+        },
+        {
+          "id": "T1059.001",
+          "name": "Command and Scripting Interpreter: PowerShell",
+          "reference": "https://attack.mitre.org/techniques/T1059.001/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:alerting",
+    "install"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nlet LookbackDays = 7d;\nlet WindowMin = 10m;\nlet PkgManagers = dynamic([\"npm.exe\",\"npm\",\"npx.exe\",\"npx\",\"yarn.exe\",\"yarn\",\"pnpm.exe\",\"pnpm\",\"bun.exe\",\"bun\",\"node.exe\",\"node\",\"composer\",\"composer.phar\",\"php.exe\",\"php\"]);\nlet InstallCmdTokens = dynamic([\"npm install\",\"npm ci\",\"yarn install\",\"yarn add\",\"pnpm install\",\"pnpm i \",\"composer install\",\"composer update\",\"composer require\",\"bun install\",\"npx \"]);\nlet Interpreters = dynamic([\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"sh\",\"bash\",\"zsh\",\"dash\",\"node.exe\",\"node\",\"bun.exe\",\"bun\",\"python.exe\",\"python\",\"python3\",\"php.exe\",\"php\",\"curl.exe\",\"curl\",\"wget.exe\",\"wget\"]);\nlet KnownRegistries = dynamic([\"registry.npmjs.org\",\"npmjs.org\",\"packagist.org\",\"repo.packagist.org\",\"github.com\",\"codeload.github.com\",\"objects.githubusercontent.com\",\"actions.githubusercontent.com\",\"ghcr.io\",\"pypi.org\",\"files.pythonhosted.org\"]);\nlet InstallChain = DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where AccountName !endswith \"$\"\n    | where InitiatingProcessFileName in~ (PkgManagers)\n         or InitiatingProcessCommandLine has_any (InstallCmdTokens)\n    | where FileName in~ (Interpreters)\n    | where not(ProcessCommandLine has_any (\"node-gyp rebuild\",\"--version\",\"-v \",\"-V \"))   // strip benign build-step probes\n    | project InstallTime = Timestamp, DeviceId, DeviceName, AccountName,\n              ParentImage = InitiatingProcessFileName,\n              ParentCmd   = InitiatingProcessCommandLine,\n              ChildImage  = FileName,\n              ChildCmd    = ProcessCommandLine,\n              ChildPid    = ProcessId;\nlet Egress = DeviceNetworkEvents\n    | where Timestamp > ago(LookbackDays)\n    | where RemoteIPType == \"Public\"\n    | where isnotempty(RemoteUrl) or isnotempty(RemoteIP)\n    | extend RemoteHost = tolower(coalesce(RemoteUrl, RemoteIP))\n    | where not(RemoteHost has_any (KnownRegistries))\n    | project NetTime = Timestamp, DeviceId, RemoteUrl, RemoteIP, RemotePort,\n              NetInitiator = InitiatingProcessFileName,\n              NetInitiatorPid = InitiatingProcessId;\nInstallChain\n| join kind=inner Egress on DeviceId\n| where NetTime between (InstallTime .. InstallTime + WindowMin)\n| extend DelaySec = datetime_diff('second', NetTime, InstallTime)\n| summarize InstallTime = min(InstallTime), NetTime = min(NetTime),\n            DelaySec = min(DelaySec),\n            ParentCmd = any(ParentCmd), ChildCmd = any(ChildCmd),\n            Egresses = make_set(strcat(coalesce(RemoteUrl, RemoteIP), \":\", tostring(RemotePort)), 25)\n            by DeviceName, AccountName, ParentImage, ChildImage\n| order by InstallTime desc\n```",
+  "references": [
+    "https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_MANAGER_INSTALL_HOOK_SPAWNS_INTERPRETER_TH.yml"
+  ],
+  "meta": {
+    "tier": "alerting",
+    "fp_rate_estimate": "medium"
+  }
+}

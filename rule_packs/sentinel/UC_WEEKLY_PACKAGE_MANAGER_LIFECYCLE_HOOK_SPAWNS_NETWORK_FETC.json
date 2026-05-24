@@ -1,0 +1,46 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_PACKAGE_MANAGER_LIFECYCLE_HOOK_SPAWNS_NETWORK_FETC')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Package manager lifecycle hook spawns network-fetching shell or runtime",
+        "description": "Detects the joint TTP behind every npm/PyPI/Composer supply-chain compromise of the last fortnight: a package manager process (npm/npx/yarn/pnpm/node/pip/python/composer) \u2014 invoked through an install or lifecycle hook (preinstall/postinstall) \u2014 spawns a script interpreter or downloader (powershell/pwsh/bash/sh/cmd/curl/wget/bun/bitsadmin/certutil) which then reaches a non-registry public destination within a 5-minute window. This fortnight the pattern drove the Mini Shai-Hulud Wave 4 worm in @tanstack and @antv packages (Snyk, Aikido, StepSecurity, Microsoft), the node-ipc maintainer compromise (Snyk, StepSecurity), the art-template watering-hole backdoor (Cyber Security News), the durabletask PyPI compromise (Microsoft), and the Packagist composer worm (The Hacker News) \u2014 all of which used lifecycle scripts to pull a secondary payload (typically the Bun runtime or a Linux ELF from GitHub Releases) before exfil'ing CI/CD secrets to git-tanstack.com, azurestaticprovider.net, m-kosche.com, git-service.com, or getsession.org. Kill-chain spans install (T1195.002, T1546.016, T1204.002) into c2 (T1071.001, T1105). Fires when a package install's lifecycle script spawns a fetcher AND that host beacons to a public non-registry host within 5 minutes; does NOT fire on interactive developer shells started outside an install context, nor on CI pipelines whose only egress is registry.npmjs.org / pypi.org / files.pythonhosted.org / repo.packagist.org / github.com/oven-sh release URLs that the org has explicitly whitelisted.\n\nRationale: Every article describes the same install-time chain: a compromised package's lifecycle script spawns an interpreter / downloader from inside an npm-pip-composer install context, then beacons to an attacker-controlled (non-registry) host within minutes. Joining the spawn event to a 5-minute non-registry egress window catches Mini Shai-Hulud (Bun fetched from GitHub Releases \u2192 m-kosche / git-tanstack / getsession C2), node-ipc (azurestaticprovider), durabletask (git-service.com), art-template (cfww.shop), and Packagist (parikhpreyash4 release) without depending on specific IOC values that rotate weekly.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let LookbackDays = 14d;\nlet WindowMinutes = 5m;\nlet PkgMgrParents = dynamic([\"npm.exe\",\"npm-cli.js\",\"node.exe\",\"npx.exe\",\"yarn.exe\",\"pnpm.exe\",\"python.exe\",\"python3\",\"pip.exe\",\"pip3\",\"composer\",\"composer.phar\"]);\nlet PkgMgrCmdHints = dynamic([\"npm install\",\"npm ci\",\"npx \",\"yarn install\",\"pnpm install\",\"pip install\",\"composer install\",\"composer require\",\"preinstall\",\"postinstall\",\"lifecycle\"]);\nlet SuspChildren = dynamic([\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"bash\",\"bash.exe\",\"sh\",\"sh.exe\",\"curl.exe\",\"wget.exe\",\"bun.exe\",\"bun\",\"bitsadmin.exe\",\"certutil.exe\"]);\nlet RegistryHostsRe = @\"(registry\\.npmjs\\.org|registry\\.yarnpkg\\.com|pypi\\.org|pythonhosted\\.org|packagist\\.org)$\";\nlet InstallSpawn = SecurityEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventID == 4688\n    | extend ParentName = tostring(split(ParentProcessName,\"\\\\\")[-1])\n    | extend ChildName  = tostring(split(NewProcessName,\"\\\\\")[-1])\n    | where (ParentName in~ (PkgMgrParents)) or (CommandLine has_any (PkgMgrCmdHints))\n    | where (ChildName in~ (SuspChildren))\n         or (CommandLine has_any (\"oven-sh/bun\",\"releases/download\",\"raw.githubusercontent.com\",\"Invoke-WebRequest\",\"DownloadString\",\"curl -s\",\"wget -q\"))\n    | where SubjectUserName !endswith \"$\"\n    | project SpawnTime=TimeGenerated, Computer, SubjectUserName, ParentName, ParentProcessName, ChildName, NewProcessName, CommandLine;\nlet Egress = CommonSecurityLog\n    | where TimeGenerated > ago(LookbackDays)\n    | where DeviceAction !in~ (\"deny\",\"drop\",\"block\")\n    | where isnotempty(DestinationHostName) or isnotempty(RequestURL)\n    | extend DestHost = coalesce(DestinationHostName, tostring(parse_url(RequestURL).Host))\n    | where isnotempty(DestHost)\n    | where not(DestHost matches regex RegistryHostsRe)\n    | project EgressTime=TimeGenerated, SourceHostName, DestHost, DestinationIP, DestinationPort;\nInstallSpawn\n| join kind=inner (Egress | project-rename Computer=SourceHostName) on Computer\n| where EgressTime between (SpawnTime .. SpawnTime + WindowMinutes)\n| summarize FirstSpawn=min(SpawnTime),\n            FirstEgress=min(EgressTime),\n            UniqueDestHosts=dcount(DestHost),\n            DestHosts=make_set(DestHost, 25),\n            DestIPs=make_set(DestinationIP, 25)\n        by Computer, SubjectUserName, ParentName, ChildName, CommandLine\n| where UniqueDestHosts >= 1\n| extend DelaySec = datetime_diff('second', FirstEgress, FirstSpawn)\n| order by FirstSpawn desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1195.002",
+          "T1546.016",
+          "T1204.002",
+          "T1059.007",
+          "T1059.001",
+          "T1059.004",
+          "T1105",
+          "T1071.001",
+          "T1552.001"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_PACKAGE_MANAGER_LIFECYCLE_HOOK_SPAWNS_NETWORK_FETC",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "medium",
+          "source_url": "https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_MANAGER_LIFECYCLE_HOOK_SPAWNS_NETWORK_FETC.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

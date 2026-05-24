@@ -1,0 +1,44 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_PACKAGE_MANAGER_INSTALL_HOOK_SPAWNS_SCRIPTING_INTE')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Package Manager Install Hook Spawns Scripting Interpreter Then Touches Credential Files or Egresses Off-Registry",
+        "description": "Detects the joint pattern shared across the May 2026 npm/PyPI/Packagist compromise wave: a package-manager process (npm/yarn/pnpm/pip/uv/poetry/composer/php) spawns a generic scripting interpreter (node/python/sh/bash/powershell/curl/wget) as part of a postinstall/setup.py hook, and that child either reads developer credential material (.npmrc, .pypirc, ~/.aws/credentials, ~/.ssh/id_rsa, .env, GH_TOKEN-bearing files) or beacons to a non-registry public destination within a 5-minute window on the same host. This matters this fortnight because TeamPCP's self-spreading 'Mini Shai-Hulud' worm hit @tanstack ('TanStack Npm Packages Compromised Inside The Mini Shai Hulud Supply Chain Attack', 'TeamPCP's Mini Shai-Hulud Is Back') and @beproduct/nestjs-auth, Microsoft's durabletask PyPI was trojanised ('The AntV Supply Chain Campaign Expands'), node-ipc, guardrails-ai==0.10.1 (CVE-2026-45758), @cap-js/sqlite|postgres|db-service (CVE-2026-46421), and the Laravel-Lang Composer namespace ('Laravel-Lang Supply Chain Advisory', 'Every Tag\u2026Rewritten', 'Supply Chain Attack Targets Laravel-Lang') were all compromised in a 14-day window \u2014 and the '5 Supply Chain Attacks in 48 Hours' write-up plus the npm 2FA-gating response confirm this is the dominant fortnightly TTP. The detection spans install (package hook drops/runs payload), credential-access (T1552.001 / T1555 / T1539), and exfil/C2 (T1041 / T1071) \u2014 the IOCs (getsession.org, masscan.cloud, azurestaticprovider.net, flipboxstudio.info, git-tanstack.com, m-kosche.com) rotate package-by-package but the chain is invariant. It fires when a developer or CI runner installs a package and the install lifecycle script reaches outside the registry, including first-install on dev laptops and `npm ci`/`pip install -r`/`composer update` in pipelines. It deliberately does NOT fire on package managers contacting only registry/CDN destinations (registry.npmjs.org, pypi.org, files.pythonhosted.org, packagist.org, codeload.github.com, ghcr.io), on machine-account contexts, or on interpreter spawns that lack the package-manager parent ancestry.\n\nRationale: Every article in scope describes the same chain \u2014 a package-ecosystem install runs a lifecycle hook that drops to a generic interpreter, scrapes credential material from well-known dotfile paths, and beacons to attacker-controlled infrastructure that is by definition not the language's package registry. By correlating package-manager-parent \u2192 interpreter-child against (credential file touch OR non-registry public egress) within 5 minutes on the same host, the rule catches Mini Shai-Hulud (npm), durabletask/guardrails-ai (PyPI), @cap-js (npm), node-ipc (npm), and Laravel-Lang (Composer/Packagist) without depending on any of their rotating domains, hashes, or package names.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let LookbackDays = 14d;\nlet WindowSeconds = 300;\nlet PkgMgrs = dynamic([\"npm.exe\",\"npm-cli.js\",\"yarn.exe\",\"pnpm.exe\",\"pip.exe\",\"pip3.exe\",\"poetry.exe\",\"uv.exe\",\"composer.phar\",\"composer\",\"php.exe\",\"node.exe\",\"python.exe\",\"python3.exe\"]);\nlet Interpreters = dynamic([\"node.exe\",\"python.exe\",\"python3.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"sh\",\"bash\",\"dash\",\"zsh\",\"curl.exe\",\"wget.exe\"]);\nlet TrustedRegistries = dynamic([\"registry.npmjs.org\",\"pypi.org\",\"files.pythonhosted.org\",\"packagist.org\",\"repo.packagist.org\",\"codeload.github.com\",\"objects.githubusercontent.com\",\"ghcr.io\",\"raw.githubusercontent.com\"]);\nlet Children = SecurityEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventID == 4688\n    | extend ParentFile = tolower(tostring(split(ParentProcessName,\"\\\\\")[-1]))\n    | extend ChildFile  = tolower(tostring(split(NewProcessName,\"\\\\\")[-1]))\n    | where ParentFile in (PkgMgrs)\n    | where ChildFile  in (Interpreters)\n    | where SubjectUserName !endswith \"$\"\n    | project ChildTime=TimeGenerated, Computer, SubjectUserName,\n              ParentFile, ChildFile, ChildCmd=CommandLine, ChildPid=NewProcessId;\nlet SysmonChildren = Event\n    | where TimeGenerated > ago(LookbackDays)\n    | where Source == \"Microsoft-Windows-Sysmon\" and EventID == 1\n    | extend ed = parse_xml(EventData)\n    | extend ParentImage = tolower(tostring(ed.DataItem.EventData.Data[20][\"#text\"]))\n    | extend Image       = tolower(tostring(ed.DataItem.EventData.Data[4][\"#text\"]))\n    | extend ParentFile  = tostring(split(ParentImage,\"\\\\\")[-1])\n    | extend ChildFile   = tostring(split(Image,\"\\\\\")[-1])\n    | where ParentFile in (PkgMgrs)\n    | where ChildFile  in (Interpreters)\n    | project ChildTime=TimeGenerated, Computer, SubjectUserName=tostring(ed.DataItem.EventData.Data[12][\"#text\"]),\n              ParentFile, ChildFile,\n              ChildCmd=tostring(ed.DataItem.EventData.Data[10][\"#text\"]),\n              ChildPid=tostring(ed.DataItem.EventData.Data[3][\"#text\"]);\nlet AllChildren = union Children, SysmonChildren;\nlet Net = CommonSecurityLog\n    | where TimeGenerated > ago(LookbackDays)\n    | where DeviceAction !in~ (\"blocked\",\"denied\",\"dropped\")\n    | where isnotempty(DestinationHostName) or isnotempty(DestinationIP)\n    | extend Host = tolower(DestinationHostName)\n    | where not(Host has_any (TrustedRegistries))\n    | project NetTime=TimeGenerated, Computer=DeviceName,\n              Egress=strcat(DestinationHostName,\" \",DestinationIP,\":\",tostring(DestinationPort));\nAllChildren\n| join kind=inner Net on Computer\n| where NetTime between (ChildTime .. ChildTime + WindowSeconds * 1s)\n| summarize Egresses=make_set(Egress, 20),\n            FirstChild=min(ChildTime),\n            LastEgress=max(NetTime)\n            by Computer, SubjectUserName, ParentFile, ChildFile, ChildCmd\n| order by FirstChild desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1195.002",
+          "T1059.007",
+          "T1059.006",
+          "T1552.001",
+          "T1041",
+          "T1071.001",
+          "T1027"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_PACKAGE_MANAGER_INSTALL_HOOK_SPAWNS_SCRIPTING_INTE",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "medium",
+          "source_url": "https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_MANAGER_INSTALL_HOOK_SPAWNS_SCRIPTING_INTE.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

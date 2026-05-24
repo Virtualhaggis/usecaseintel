@@ -1,0 +1,45 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_SERVICE_PROCESS_PARENT_SPAWNS_SUBPROCESS_CONTAININ')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Service-process parent spawns subprocess containing CLI-argument-injection tokens",
+        "description": "Detects a unifying tradecraft across this fortnight's web-app and CLI-tool CVEs: a long-running service or non-interactive tool (web server, language runtime, backup CLI, AI/dev TUI) spawns a child process (ssh, git, curl, wget, bash/sh, powershell, python, perl) whose command line carries high-risk argv-injection tokens (`-oProxyCommand=`, `--upload-pack=`, `--receive-pack=`, `-c core.sshCommand=`, `--exec=`, `-EncodedCommand`, curl `--config`/`-K`/`-T`, shell-metachar substitution `$(...)`, backticks, `|sh`, `&&curl`, `/dev/tcp/`, `bash -i`, `base64 -d`). This pattern is the joint signature of CVE-2026-45695 (Kopia SSH ProxyCommand), CVE-2026-44790 (n8n Git node `--upload-pack`/`-c core.sshCommand`), CVE-2026-45369 (utcp-cli `$(...)` substitution), CVE-2026-45374 (DeepSeek TUI shell sub-agent), and the post-exploit RCE chains following CVE-2026-9082 (Drupal SQLi), CVE-2026-26980 (Ghost CMS SQLi\u2192ClickFix), CVE-2026-46670 (YesWiki SQLi), CVE-2026-46633 (Twig PHP code injection), CVE-2026-45697 (Formie SSTI), CVE-2026-45288 (Marten regConfig SQLi), and CVE-2026-22599 (Strapi SQLi). It spans the exploit \u2192 install / execution kill-chain pivot \u2014 where the vulnerable parent has accepted untrusted input and now hands it down a process tree. It fires when a service-tier parent (php-fpm, w3wp, node, n8n, kopia, deepseek-tui, etc.) launches an interpreter/tool child carrying one of the injection-token families. It does NOT fire on user-shell-rooted activity (bash launched from sshd/login), nor on service parents launching child processes whose argv is clean of metachars/injection flags, suppressing routine maintenance and admin scripts.\n\nRationale: Every article in scope ends in the same physical artefact: a trusted service / CLI parent emits a child process whose argv carries either argument-injection switches (ssh -oProxyCommand, git --upload-pack/-c core.sshCommand, curl --config) or interpreter-injection metachars ($(...), backticks, |sh, &&curl, /dev/tcp/, -EncodedCommand, base64 -d). Pinning on the parent-class + child-class + token-class triad turns 12 different CVEs into one stable behavioural detection that survives IOC rotation.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let ServiceParents = dynamic([\"w3wp.exe\",\"php-fpm\",\"php-cgi\",\"php-cgi.exe\",\"php.exe\",\"php\",\"httpd\",\"httpd.exe\",\"apache2\",\"nginx\",\"nginx.exe\",\"node\",\"node.exe\",\"n8n\",\"n8n.exe\",\"python\",\"python3\",\"python.exe\",\"ruby\",\"ruby.exe\",\"java\",\"java.exe\",\"kopia\",\"kopia.exe\",\"kopia-ui\",\"kopia-ui.exe\",\"deepseek-tui\",\"deepseek-tui.exe\",\"utcp\",\"utcp.exe\"]);\nlet InterpreterChildren = dynamic([\"ssh\",\"ssh.exe\",\"git\",\"git.exe\",\"bash\",\"sh\",\"dash\",\"zsh\",\"ksh\",\"powershell.exe\",\"pwsh.exe\",\"pwsh\",\"cmd.exe\",\"curl\",\"curl.exe\",\"wget\",\"wget.exe\",\"nc\",\"ncat\",\"socat\",\"python\",\"python3\",\"perl\",\"ruby\"]);\nDeviceProcessEvents\n| where TimeGenerated > ago(7d)\n| where InitiatingProcessFileName in~ (ServiceParents)\n| where FileName in~ (InterpreterChildren)\n| where AccountName !endswith \"$\"\n| where AccountName !in~ (\"system\",\"local service\",\"network service\",\"root\")\n| extend SshArg   = ProcessCommandLine matches regex @\"(?i)(-oProxyCommand|-o\\s+ProxyCommand|-oIdentityFile=|ProxyJump=)\"\n| extend GitArg   = ProcessCommandLine matches regex @\"(?i)(--upload-pack=|--receive-pack=|-c\\s+core\\.sshCommand|--exec=)\"\n| extend PsEnc    = ProcessCommandLine matches regex @\"(?i)(-EncodedCommand|\\s-enc\\s|\\s-ec\\s)\"\n| extend ShellMet = ProcessCommandLine matches regex @\"(?i)(\\$\\(|`[^`]{2,}`|;\\s*(curl|wget|nc|bash|sh|python|powershell|base64|chmod)|\\|\\s*(sh|bash|nc|base64|tee)|&&\\s*(curl|wget|nc|bash|sh|python|powershell))\"\n| extend RevSh    = ProcessCommandLine matches regex @\"(?i)(/dev/tcp/|bash\\s+-i|nc\\s+-e|base64\\s+-d|python\\S*\\s+-c\\s+['\"\"]\\s*(import|exec|os\\.system))\"\n| extend CurlArg  = ProcessCommandLine matches regex @\"(?i)(--config\\s|\\s-K\\s|--upload-file|\\s-T\\s+[A-Za-z/])\"\n| where SshArg or GitArg or PsEnc or ShellMet or RevSh or CurlArg\n| extend InjectionClass = case(SshArg,\"ssh-argv-injection\", GitArg,\"git-argv-injection\", PsEnc,\"powershell-encoded\", ShellMet,\"shell-metachars\", RevSh,\"reverse-shell-pattern\", CurlArg,\"curl-argv-injection\", \"unknown\")\n| project TimeGenerated, DeviceName, AccountName,\n          ParentImage = InitiatingProcessFolderPath,\n          ParentCmd   = InitiatingProcessCommandLine,\n          ChildImage  = FolderPath,\n          ChildCmd    = ProcessCommandLine,\n          InjectionClass, SHA256\n| order by TimeGenerated desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1190",
+          "T1059",
+          "T1059.001",
+          "T1059.003",
+          "T1059.004",
+          "T1059.006",
+          "T1203",
+          "T1505.003"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_SERVICE_PROCESS_PARENT_SPAWNS_SUBPROCESS_CONTAININ",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_SERVICE_PROCESS_PARENT_SPAWNS_SUBPROCESS_CONTAININ.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

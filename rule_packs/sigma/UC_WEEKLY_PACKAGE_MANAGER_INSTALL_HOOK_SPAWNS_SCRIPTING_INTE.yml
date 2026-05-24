@@ -1,0 +1,43 @@
+title: [WEEKLY] Package Manager Install Hook Spawns Scripting Interpreter Then Touches Credential Files or Egresses Off-Registry
+id: UC_WEEKLY_PACKAGE_MANAGER_INSTALL_HOOK_SPAWNS_SCRIPTING_INTE
+status: experimental
+description: Detects the joint pattern shared across the May 2026 npm/PyPI/Packagist compromise wave: a package-manager process (npm/yarn/pnpm/pip/uv/poetry/composer/php) spawns a generic scripting interpreter (node/python/sh/bash/powershell/curl/wget) as part of a postinstall/setup.py hook, and that child either reads developer credential material (.npmrc, .pypirc, ~/.aws/credentials, ~/.ssh/id_rsa, .env, GH_TOKEN-bearing files) or beacons to a non-registry public destination within a 5-minute window on the same host. This matters this fortnight because TeamPCP's self-spreading 'Mini Shai-Hulud' worm hit @tanstack ('TanStack Npm Packages Compromised Inside The Mini Shai Hulud Supply Chain Attack', 'TeamPCP's Mini Shai-Hulud Is Back') and @beproduct/nestjs-auth, Microsoft's durabletask PyPI was trojanised ('The AntV Supply Chain Campaign Expands'), node-ipc, guardrails-ai==0.10.1 (CVE-2026-45758), @cap-js/sqlite|postgres|db-service (CVE-2026-46421), and the Laravel-Lang Composer namespace ('Laravel-Lang Supply Chain Advisory', 'Every Tag…Rewritten', 'Supply Chain Attack Targets Laravel-Lang') were all compromised in a 14-day window — and the '5 Supply Chain Attacks in 48 Hours' write-up plus the npm 2FA-gating response confirm this is the dominant fortnightly TTP. The detection spans install (package hook drops/runs payload), credential-access (T1552.001 / T1555 / T1539), and exfil/C2 (T1041 / T1071) — the IOCs (getsession.org, masscan.cloud, azurestaticprovider.net, flipboxstudio.info, git-tanstack.com, m-kosche.com) rotate package-by-package but the chain is invariant. It fires when a developer or CI runner installs a package and the install lifecycle script reaches outside the registry, including first-install on dev laptops and `npm ci`/`pip install -r`/`composer update` in pipelines. It deliberately does NOT fire on package managers contacting only registry/CDN destinations (registry.npmjs.org, pypi.org, files.pythonhosted.org, packagist.org, codeload.github.com, ghcr.io), on machine-account contexts, or on interpreter spawns that lack the package-manager parent ancestry.
+references:
+  - https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_MANAGER_INSTALL_HOOK_SPAWNS_SCRIPTING_INTE.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.install
+  - attack.t1195_002
+  - attack.t1059_007
+  - attack.t1059_006
+  - attack.t1552_001
+  - attack.t1041
+  - attack.t1071_001
+  - attack.t1027
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'npm'
+      - 'npm.exe'
+      - 'npm-cli.js'
+      - 'yarn'
+      - 'yarn.exe'
+      - 'pnpm'
+      - 'pnpm.exe'
+      - 'pip'
+      - 'pip.exe'
+      - 'pip3'
+      - 'pip3.exe'
+      - 'poetry'
+      - 'poetry.exe'
+      - 'uv.exe'
+      - 'composer'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

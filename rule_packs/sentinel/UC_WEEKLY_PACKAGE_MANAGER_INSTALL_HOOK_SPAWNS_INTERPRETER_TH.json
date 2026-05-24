@@ -1,0 +1,43 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_PACKAGE_MANAGER_INSTALL_HOOK_SPAWNS_INTERPRETER_TH')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Package-Manager Install Hook Spawns Interpreter then Beacons Out (Supply-Chain Worm Install-Time Execution)",
+        "description": "Detects the install-time execution primitive shared by every supply-chain worm wave observed this fortnight: a package-manager process (npm / npx / yarn / pnpm / bun / composer / php) runs a tampered dependency whose lifecycle hook (preinstall, postinstall, Composer autoloader, or `vendor/autoload.php`) spawns a scripting interpreter (powershell, pwsh, cmd, sh / bash, node, bun, python, php, curl, wget) which then makes outbound public-internet egress within a short window. This catches all five waves reported between 11-23 May 2026: 'TanStack Npm Packages Compromised Inside The Mini Shai Hulud Supply Chain Attack' (Snyk), 'Mini Shai-Hulud Is Back: npm Worm Hits over 160 Packages, including Mistral and Tanstack' (Aikido), 'TeamPCP's Mini Shai-Hulud Is Back: A Self-Spreading Supply Chain Attack' (StepSecurity), 'Mini Shai-Hulud Hits AntV: 300+ Malicious npm Packages' (Snyk) + 'Mini Shai Hulud: Compromised @antv npm packages enable CI/CD credential theft' (Microsoft / StepSecurity), and the Laravel-Lang Composer tag-rewrite hijack (Cyber Security News, BleepingComputer, The Hacker News, StepSecurity, Aikido). Kill-chain stages: install (lifecycle-hook execution under a trusted pkg-manager parent) -> c2/actions (interpreter beacons to attacker infra or exfiltrates CI secrets). Fires when an install command on a developer workstation or CI runner is followed within ~10 min by an interpreter on the same host reaching a public destination; does NOT fire on routine pkg-manager use whose only egress is to known registries (registry.npmjs.org, packagist.org, github.com, codeload, ghcr, *.actions.githubusercontent.com) \u2014 those should be excluded via an allow-list rather than the detection schema, so new attacker domains (git-tanstack.com, *.getsession.org, t.m-kosche.com, git-service.com, flipboxstudio.info today; whatever next week) light up automatically.\n\nRationale: Every article in scope \u2014 npm Mini Shai-Hulud waves against TanStack, Mistral and @antv plus the Laravel-Lang Composer tag-rewrite \u2014 relies on the same install-time primitive: a tampered package's lifecycle hook executes under a trusted pkg-manager parent, spawns an interpreter, and beacons out within minutes. IOCs (git-tanstack.com, *.getsession.org, t.m-kosche.com, git-service.com, flipboxstudio.info, the SHA256 set) all rotate per wave, but the parent->interpreter->egress correlation is invariant across npm + Composer ecosystems and across Windows + Linux developer/CI hosts, which is why the existing IOC-bound hunts in the catalogue (UC_3_5 / UC_9_8 / UC_12_8 / UC_15_7 / UC_69_8 / UC_113_8 / UC_184_9 / UC_195_10) all miss the next domain rotation while this one survives it.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let LookbackDays = 7d;\nlet WindowMin = 10m;\nlet PkgManagers = dynamic([\"npm.exe\",\"npx.exe\",\"yarn.exe\",\"pnpm.exe\",\"bun.exe\",\"node.exe\",\"composer\",\"composer.phar\",\"php.exe\"]);\nlet InstallCmdTokens = dynamic([\"npm install\",\"npm ci\",\"yarn install\",\"yarn add\",\"pnpm install\",\"composer install\",\"composer update\",\"composer require\",\"bun install\",\"npx \"]);\nlet Interpreters = dynamic([\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"sh\",\"bash\",\"zsh\",\"node.exe\",\"bun.exe\",\"python.exe\",\"python3\",\"php.exe\",\"curl.exe\",\"wget.exe\"]);\nlet KnownRegistries = dynamic([\"registry.npmjs.org\",\"npmjs.org\",\"packagist.org\",\"repo.packagist.org\",\"github.com\",\"codeload.github.com\",\"objects.githubusercontent.com\",\"actions.githubusercontent.com\",\"ghcr.io\",\"pypi.org\",\"files.pythonhosted.org\"]);\nlet InstallChain = SecurityEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventID == 4688\n    | extend ParentName = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1])),\n             ChildName  = tolower(tostring(split(NewProcessName,  \"\\\\\")[-1]))\n    | where SubjectUserName !endswith \"$\"\n    | where ParentName in~ (PkgManagers)\n         or ParentCommandLine has_any (InstallCmdTokens)\n    | where ChildName in~ (Interpreters)\n    | project InstallTime = TimeGenerated, Computer, Account = SubjectUserName,\n              ParentName, ParentCmd = ParentCommandLine,\n              ChildName, ChildCmd = CommandLine, ChildPid = NewProcessId;\nlet Egress = union isfuzzy=true\n    (CommonSecurityLog\n        | where TimeGenerated > ago(LookbackDays)\n        | where isnotempty(DestinationHostName) or isnotempty(DestinationIP)\n        | extend RemoteHost = tolower(coalesce(DestinationHostName, DestinationIP))\n        | where not(RemoteHost has_any (KnownRegistries))\n        | project NetTime = TimeGenerated, Computer = DeviceName, RemoteHost, DestinationPort),\n    (DnsEvents\n        | where TimeGenerated > ago(LookbackDays)\n        | where SubType == \"LookupQuery\"\n        | extend RemoteHost = tolower(Name)\n        | where not(RemoteHost has_any (KnownRegistries))\n        | project NetTime = TimeGenerated, Computer, RemoteHost, DestinationPort = int(null));\nInstallChain\n| join kind=inner Egress on Computer\n| where NetTime between (InstallTime .. InstallTime + WindowMin)\n| extend DelaySec = datetime_diff('second', NetTime, InstallTime)\n| summarize InstallTime = min(InstallTime), NetTime = min(NetTime), DelaySec = min(DelaySec),\n            ParentCmd = any(ParentCmd), ChildCmd = any(ChildCmd),\n            Egresses = make_set(strcat(RemoteHost, \":\", tostring(DestinationPort)), 25)\n            by Computer, Account, ParentName, ChildName\n| order by InstallTime desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1195.002",
+          "T1059.007",
+          "T1059.001",
+          "T1059.004",
+          "T1041",
+          "T1552.001"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_PACKAGE_MANAGER_INSTALL_HOOK_SPAWNS_INTERPRETER_TH",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "medium",
+          "source_url": "https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_MANAGER_INSTALL_HOOK_SPAWNS_INTERPRETER_TH.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

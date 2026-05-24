@@ -1,0 +1,43 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_SELF_HOSTED_APPLICATION_SERVICE_SPAWNS_SHELL_OR_SS')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Self-hosted application service spawns shell or SSH within seconds of inbound unauthenticated API write",
+        "description": "Detects the recurring pattern across this fortnight's GHSA-Critical drop where a self-hosted Go/Node/Python/PHP service receives an unauthenticated (or low-privileged) POST/PATCH/PUT to an internal API path and within ~120s the same service process spawns a shell, ssh, or scripting interpreter child \u2014 the universal smoking-gun of in-process RCE primitives. This catches the chain in Nezha cron-RCE (CVE-2026-46716), Kopia SSH ProxyCommand injection (CVE-2026-45695), Algernon handler.lua escape (CVE-2026-45721), Fission router unauthenticated function invoke (CVE-2026-46614), Twig {% use %} PHP injection (CVE-2026-46633), FileBrowser Quantum path-traversal PATCH (GHSA-qqqm-5547-774x), Boxlite OCI symlink escape (CVE-2026-46703), YesWiki Bazar SQLi follow-on (CVE-2026-46670), zrok ProxyShare SSRF (CVE-2026-45568), and the @cap-js / guardrails-ai supply-chain stage-2 payloads (CVE-2026-46421, CVE-2026-45758). It spans Delivery (the HTTP request) into Exploit / Execute (the unexpected interpreter child). It fires when one of the listed service binaries is the immediate parent of /bin/sh, ssh, powershell, python, etc., correlated to an inbound listener connection in the prior 120s \u2014 it does NOT fire on the service's normal supervisor/health-check child processes, on container-runtime forks (containerd-shim, runc), or when the parent is a CI/dev image (`*-dev`, `*-test`).\n\nRationale: Every CVE in this fortnight's drop ultimately turns an unauthenticated/low-priv HTTP write into either a process spawn under the service or a shell-fork primitive \u2014 joining inbound listener traffic to an unexpected interpreter child under the same parent service binary, within a tight window, fires on the joint behaviour and stays useful as IOCs rotate.",
+        "severity": "High",
+        "enabled": false,
+        "query": "// Multi-source: W3CIIS / Syslog (web layer) + Sysmon EID 1 / DeviceProcessEvents (process layer)\nlet Lookback = 7d;\nlet WindowSec = 120;\nlet VulnerableServiceParents = dynamic([\n  \"nezha\",\"nezha-dashboard\",\"kopia\",\"kopia.exe\",\"kopia-ui\",\"kopia-ui.exe\",\n  \"algernon\",\"filebrowser\",\"fission-router\",\"fission-bundle\",\"boxlite\",\n  \"zrok\",\"yeswiki\",\"php-fpm\",\"php-fpm8.1\",\"php-fpm8.2\",\"php-fpm8.3\",\n  \"httpd\",\"apache2\",\"node\",\"node.exe\",\"python\",\"python3\",\"python.exe\"]);\nlet SuspiciousChildren = dynamic([\n  \"sh\",\"bash\",\"dash\",\"zsh\",\"ash\",\"ssh\",\"ssh.exe\",\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\n  \"perl\",\"ruby\",\"curl\",\"wget\",\"nc\",\"ncat\",\"socat\"]);\nlet VulnApiPaths = dynamic([\n  \"/api/v1/cron\",\"/api/v1/repo/exists\",\"/fission-function/\",\n  \"/public/api/resources\",\"BazaR\",\"vue=formulaire\",\"handler.lua\"]);\nlet ChildSpawns = SecurityEvent\n  | where TimeGenerated > ago(Lookback)\n  | where EventID == 4688\n  | extend ParentBase = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1])),\n           ChildBase  = tolower(tostring(split(NewProcessName,    \"\\\\\")[-1]))\n  | where ParentBase in (VulnerableServiceParents)\n  | where ChildBase  in (SuspiciousChildren)\n  | where SubjectUserName !endswith \"$\"\n  | extend ChildTime = TimeGenerated,\n           VulnService = ParentBase,\n           ChildBin = ChildBase,\n           ChildCmd = CommandLine\n  | project Computer, SubjectUserName, ChildTime, VulnService, ChildBin, ChildCmd, NewProcessId;\nlet WebHits = union isfuzzy=true\n  (W3CIISLog\n    | where TimeGenerated > ago(Lookback)\n    | where csMethod in (\"POST\",\"PATCH\",\"PUT\")\n    | where csUriStem has_any (VulnApiPaths)\n    | extend Computer = sComputerName, InboundTime = TimeGenerated, RemoteSrc = cIP, ApiPath = csUriStem),\n  (Syslog\n    | where TimeGenerated > ago(Lookback)\n    | where SyslogMessage has_any (VulnApiPaths)\n    | where SyslogMessage has_any (\"POST \",\"PATCH \",\"PUT \")\n    | extend Computer = HostName, InboundTime = TimeGenerated,\n             RemoteSrc = extract(@\"(\\d+\\.\\d+\\.\\d+\\.\\d+)\", 1, SyslogMessage),\n             ApiPath  = extract(@\"\\\"(?:POST|PATCH|PUT)\\s+(\\S+)\", 1, SyslogMessage))\n  | project Computer, InboundTime, RemoteSrc, ApiPath;\nChildSpawns\n| join kind=inner WebHits on Computer\n| where InboundTime between (ChildTime - WindowSec * 1s .. ChildTime + 5s)\n| extend DelaySec = datetime_diff('second', ChildTime, InboundTime)\n| summarize FirstInbound = min(InboundTime),\n            DistinctSrcIps = dcount(RemoteSrc),\n            SrcIps = make_set(RemoteSrc, 25),\n            ApiPaths = make_set(ApiPath, 25)\n          by Computer, SubjectUserName, VulnService, ChildBin, ChildCmd, ChildTime, NewProcessId\n| extend DelaySec = datetime_diff('second', ChildTime, FirstInbound)\n| where DelaySec between (0 .. WindowSec)\n| project ChildTime, Computer, SubjectUserName, VulnService, ChildBin, ChildCmd,\n          DelaySec, ApiPaths, SrcIps, DistinctSrcIps, NewProcessId\n| order by ChildTime desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1190",
+          "T1059.004",
+          "T1059.001",
+          "T1505.003",
+          "T1133",
+          "T1071.001"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_SELF_HOSTED_APPLICATION_SERVICE_SPAWNS_SHELL_OR_SS",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_SELF_HOSTED_APPLICATION_SERVICE_SPAWNS_SHELL_OR_SS.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

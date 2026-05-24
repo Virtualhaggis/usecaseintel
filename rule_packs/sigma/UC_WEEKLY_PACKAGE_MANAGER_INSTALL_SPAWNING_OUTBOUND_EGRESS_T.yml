@@ -1,0 +1,42 @@
+title: [WEEKLY] Package Manager Install Spawning Outbound Egress to Non-Registry Infrastructure Within 5 Minutes
+id: UC_WEEKLY_PACKAGE_MANAGER_INSTALL_SPAWNING_OUTBOUND_EGRESS_T
+status: experimental
+description: Detects the joint pattern across this fortnight's wave of dev-toolchain supply-chain compromises: a package-install command (npm/yarn/pnpm/bun/pip/uv/poetry/cargo or a node/python interpreter invoked by them) is followed within 5 minutes by an outbound public network connection from the same host that does NOT land on a known package registry CDN (npmjs.org, pypi.org / pythonhosted.org, crates.io, github.com/raw.githubusercontent.com, jsdelivr/unpkg/ghcr). This is the post-install detonation step shared by node-ipc 9.1.6/9.2.3/12.0.1 (azurestaticprovider[.]net), Mini Shai-Hulud / TeamPCP across the @antv ecosystem (t.m-kosche[.]com), mistralai 2.4.6 (83.142.209[.]194 / transformers.pyz), guardrails-ai 0.10.1 (git-tanstack[.]com, CVE-2026-45758), @cap-js/sqlite|postgres|db-service (zero.masscan.cloud / 94.154.172[.]43, CVE-2026-46421), the Nx Console VS Code extension breach of GitHub internal repos, Megalodon's 5,561-repo malicious GitHub Actions push (polymarketbot.polymarketdev.workers.dev), and DeepSeek TUI's auto-approved `run_tests` → cargo test RCE (CVE-2026-45311). Kill-chain coverage: install (the package-manager invocation) into c2/actions (the unsanctioned beacon). FIRES when an npm/pip/yarn-style install (incl. postinstall/preinstall hooks and `cargo test`) is followed by an HTTP/HTTPS/DNS-resolved beacon to a public destination outside the registry allowlist within the temporal window; does NOT fire on installs that only fetch from registry CDNs, on offline `npm ci` against a local mirror, or on installs occurring on a build agent whose registry mirror is allowlisted at the egress proxy.
+references:
+  - https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_MANAGER_INSTALL_SPAWNING_OUTBOUND_EGRESS_T.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.install
+  - attack.t1195_002
+  - attack.t1059_007
+  - attack.t1059_006
+  - attack.t1071_001
+  - attack.t1105
+  - attack.t1204_002
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'npm.exe'
+      - 'npm'
+      - 'npx.exe'
+      - 'npx'
+      - 'yarn.exe'
+      - 'yarn'
+      - 'pnpm.exe'
+      - 'pnpm'
+      - 'bun.exe'
+      - 'bun'
+      - 'pip.exe'
+      - 'pip'
+      - 'pip3.exe'
+      - 'pip3'
+      - 'uv.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high
