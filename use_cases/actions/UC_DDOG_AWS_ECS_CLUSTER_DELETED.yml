@@ -6,6 +6,7 @@ tier: alerting
 fp_rate_estimate: low
 implementations:
 - datadog
+- cloudwatch
 mitre_attack:
 - id: T1485
   name: Data Destruction
@@ -13,3 +14,11 @@ description: |-
   ECS cluster removed — workload impact. Datadog default 'AWS ECS cluster deleted'.
 datadog_query: |-
   source:cloudtrail @evt.outcome:success @evt.name:DeleteCluster
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail (operators substitute their actual trail name)
+  fields @timestamp, eventName, userIdentity.arn, requestParameters.cluster,
+         eventSource, awsRegion
+  | filter eventName = "DeleteCluster"
+        and eventSource = "ecs.amazonaws.com"
+        and not isPresent(errorCode)
+  | sort @timestamp desc

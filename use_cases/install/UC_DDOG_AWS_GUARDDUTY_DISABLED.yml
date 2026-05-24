@@ -6,6 +6,7 @@ tier: alerting
 fp_rate_estimate: low
 implementations:
 - datadog
+- cloudwatch
 mitre_attack:
 - id: T1562.001
   name: Disable or Modify Tools
@@ -15,3 +16,10 @@ datadog_query: |-
   source:cloudtrail @evt.outcome:success
   @evt.name:(DeleteDetector OR DisableOrganizationAdminAccount OR UpdateDetector)
   @requestParameters.enable:false
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail (operators substitute their actual trail name)
+  fields @timestamp, eventName, userIdentity.arn, requestParameters.detectorId, requestParameters.enable
+  | filter eventName in ["DeleteDetector", "DisableOrganizationAdminAccount", "UpdateDetector"]
+        and not isPresent(errorCode)
+  | filter eventName != "UpdateDetector" or requestParameters.enable = "false"
+  | sort @timestamp desc

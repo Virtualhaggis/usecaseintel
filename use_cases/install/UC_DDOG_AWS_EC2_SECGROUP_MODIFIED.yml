@@ -6,6 +6,7 @@ tier: alerting
 fp_rate_estimate: low
 implementations:
 - datadog
+- cloudwatch
 mitre_attack:
 - id: T1098
   name: Account Manipulation
@@ -14,3 +15,11 @@ description: |-
 datadog_query: |-
   source:cloudtrail @evt.outcome:success
   @evt.name:(AuthorizeSecurityGroupIngress OR AuthorizeSecurityGroupEgress OR ModifySecurityGroupRules OR RevokeSecurityGroupIngress)
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail (operators substitute their actual trail name)
+  fields @timestamp, eventName, userIdentity.arn, requestParameters.groupId,
+         requestParameters.ipPermissions
+  | filter eventName in ["AuthorizeSecurityGroupIngress", "AuthorizeSecurityGroupEgress",
+                          "ModifySecurityGroupRules", "RevokeSecurityGroupIngress"]
+        and not isPresent(errorCode)
+  | sort @timestamp desc

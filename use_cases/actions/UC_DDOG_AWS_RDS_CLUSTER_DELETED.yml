@@ -6,6 +6,7 @@ tier: alerting
 fp_rate_estimate: low
 implementations:
 - datadog
+- cloudwatch
 mitre_attack:
 - id: T1485
   name: Data Destruction
@@ -15,3 +16,12 @@ datadog_query: |-
   source:cloudtrail @evt.outcome:success
   @evt.name:(DeleteDBCluster OR DeleteDBInstance)
   -@requestParameters.skipFinalSnapshot:false
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail (operators substitute their actual trail name)
+  fields @timestamp, eventName, userIdentity.arn,
+         requestParameters.dBClusterIdentifier, requestParameters.dBInstanceIdentifier,
+         requestParameters.skipFinalSnapshot
+  | filter eventName in ["DeleteDBCluster", "DeleteDBInstance"]
+        and not isPresent(errorCode)
+        and requestParameters.skipFinalSnapshot = "true"
+  | sort @timestamp desc

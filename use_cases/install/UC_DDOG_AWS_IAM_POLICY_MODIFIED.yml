@@ -6,6 +6,7 @@ tier: alerting
 fp_rate_estimate: low
 implementations:
 - datadog
+- cloudwatch
 mitre_attack:
 - id: T1098.003
   name: Additional Cloud Roles
@@ -14,3 +15,11 @@ description: |-
 datadog_query: |-
   source:cloudtrail @evt.outcome:success
   @evt.name:(CreatePolicy OR CreatePolicyVersion OR SetDefaultPolicyVersion OR PutUserPolicy OR PutRolePolicy OR PutGroupPolicy)
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail (operators substitute their actual trail name)
+  fields @timestamp, eventName, userIdentity.arn, requestParameters.policyName,
+         requestParameters.policyArn
+  | filter eventName in ["CreatePolicy", "CreatePolicyVersion", "SetDefaultPolicyVersion",
+                          "PutUserPolicy", "PutRolePolicy", "PutGroupPolicy"]
+        and not isPresent(errorCode)
+  | sort @timestamp desc

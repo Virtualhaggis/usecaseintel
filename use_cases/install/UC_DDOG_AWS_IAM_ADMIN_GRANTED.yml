@@ -6,6 +6,7 @@ tier: alerting
 fp_rate_estimate: low
 implementations:
 - datadog
+- cloudwatch
 mitre_attack:
 - id: T1098
   name: Account Manipulation
@@ -17,3 +18,11 @@ datadog_query: |-
   source:cloudtrail @evt.outcome:success
   @evt.name:(AttachUserPolicy OR AttachGroupPolicy OR AttachRolePolicy)
   @requestParameters.policyArn:*Administrator*
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail (operators substitute their actual trail name)
+  fields @timestamp, eventName, userIdentity.arn, requestParameters.policyArn,
+         requestParameters.userName, requestParameters.groupName, requestParameters.roleName
+  | filter eventName in ["AttachUserPolicy", "AttachGroupPolicy", "AttachRolePolicy"]
+        and not isPresent(errorCode)
+        and requestParameters.policyArn like /Administrator/
+  | sort @timestamp desc

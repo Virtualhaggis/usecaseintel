@@ -6,6 +6,7 @@ tier: alerting
 fp_rate_estimate: low
 implementations:
 - datadog
+- cloudwatch
 mitre_attack:
 - id: T1078
   name: Valid Accounts
@@ -17,3 +18,12 @@ datadog_query: |-
   source:cloudtrail @evt.name:ConsoleLogin @evt.outcome:success
   @additionalEventData.MFAUsed:No
   -@userIdentity.userName:(*break-glass* OR *root)
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail (operators substitute their actual trail name)
+  fields @timestamp, sourceIPAddress, userIdentity.userName, awsRegion, additionalEventData.MFAUsed
+  | filter eventName = "ConsoleLogin"
+        and responseElements.ConsoleLogin = "Success"
+        and additionalEventData.MFAUsed = "No"
+        and userIdentity.userName not like /break-glass/
+        and userIdentity.userName not like /root$/
+  | sort @timestamp desc

@@ -6,6 +6,7 @@ tier: alerting
 fp_rate_estimate: low
 implementations:
 - datadog
+- cloudwatch
 mitre_attack:
 - id: T1078.004
   name: Cloud Accounts
@@ -14,3 +15,15 @@ description: |-
 datadog_query: |-
   source:cloudtrail @userIdentity.type:IAMUser @evt.outcome:success
   @network.client.geoip.country.iso_code:*
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail (operators substitute their actual trail name)
+  # CWLI has no native geo-IP enrichment -- pipe the sourceIPAddress
+  # column through your own geo-lookup (Athena+MaxMind, Lambda enrich,
+  # etc.). Below surfaces the per-user IP set ordered by activity so an
+  # operator can spot impossible-travel pairs manually.
+  fields @timestamp, userIdentity.userName, sourceIPAddress, awsRegion
+  | filter userIdentity.type = "IAMUser" and not isPresent(errorCode)
+  | stats count(*) as events, earliest(@timestamp) as first_seen,
+          latest(@timestamp) as last_seen
+       by userIdentity.userName, sourceIPAddress
+  | sort userIdentity.userName, first_seen asc

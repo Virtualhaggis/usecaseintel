@@ -6,6 +6,7 @@ tier: alerting
 fp_rate_estimate: low
 implementations:
 - datadog
+- cloudwatch
 mitre_attack:
 - id: T1562.001
   name: Disable or Modify Tools
@@ -13,3 +14,8 @@ description: |-
   SecurityHub turned off — aggregated AWS findings silenced. Datadog default 'AWS SecurityHub disabled'.
 datadog_query: |-
   source:cloudtrail @evt.outcome:success @evt.name:DisableSecurityHub
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail (operators substitute their actual trail name)
+  fields @timestamp, eventName, userIdentity.arn, awsRegion, sourceIPAddress
+  | filter eventName = "DisableSecurityHub" and not isPresent(errorCode)
+  | sort @timestamp desc

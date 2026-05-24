@@ -6,6 +6,7 @@ tier: alerting
 fp_rate_estimate: low
 implementations:
 - datadog
+- cloudwatch
 mitre_attack:
 - id: T1537
   name: Transfer Data to Cloud Account
@@ -17,3 +18,14 @@ datadog_query: |-
   source:cloudtrail @evt.outcome:success
   @evt.name:(PutBucketAcl OR PutBucketPolicy OR DeletePublicAccessBlock OR DeleteBucketPolicy)
   (@requestParameters.AccessControlPolicy.AccessControlList.Grant.Grantee.URI:*AllUsers* OR @requestParameters.AccessControlPolicy.AccessControlList.Grant.Grantee.URI:*AllAuthenticatedUsers*)
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail (operators substitute their actual trail name)
+  # Public-grant indicator lives anywhere inside requestParameters --
+  # use a coarse @message contains check (CWLI doesn't index nested
+  # ACL grantee paths individually).
+  fields @timestamp, eventName, userIdentity.arn, requestParameters.bucketName, @message
+  | filter eventName in ["PutBucketAcl", "PutBucketPolicy",
+                          "DeletePublicAccessBlock", "DeleteBucketPolicy"]
+        and not isPresent(errorCode)
+        and (@message like /AllUsers/ or @message like /AllAuthenticatedUsers/)
+  | sort @timestamp desc

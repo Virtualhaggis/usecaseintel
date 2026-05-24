@@ -6,6 +6,7 @@ tier: alerting
 fp_rate_estimate: low
 implementations:
 - datadog
+- cloudwatch
 mitre_attack:
 - id: T1078.004
   name: Cloud Accounts
@@ -16,3 +17,10 @@ description: |-
 datadog_query: |-
   source:cloudtrail @userIdentity.type:Root @evt.outcome:success
   -@evt.name:(GetCallerIdentity OR DescribeAccountAttributes)
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail (operators substitute their actual trail name)
+  fields @timestamp, eventName, sourceIPAddress, awsRegion, userAgent, userIdentity.arn
+  | filter userIdentity.type = "Root"
+        and not isPresent(errorCode)
+        and eventName not in ["GetCallerIdentity", "DescribeAccountAttributes"]
+  | sort @timestamp desc

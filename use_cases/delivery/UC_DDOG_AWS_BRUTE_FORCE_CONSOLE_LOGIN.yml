@@ -6,6 +6,7 @@ tier: alerting
 fp_rate_estimate: low
 implementations:
 - datadog
+- cloudwatch
 mitre_attack:
 - id: T1110
   name: Brute Force
@@ -15,3 +16,17 @@ description: |-
   Failed ConsoleLogin attempts against the same identity correlated with a successful AssumeRole call shortly after — credential-spray landing on a privileged role. Datadog default 'Brute forced ConsoleLogin event correlates with assumed role'.
 datadog_query: |-
   source:cloudtrail (@evt.name:ConsoleLogin @evt.outcome:failure) OR (@evt.name:AssumeRole @evt.outcome:success)
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail (operators substitute their actual trail name)
+  # Stage 1: count failed ConsoleLogin attempts per principal+IP, then
+  # join in your own follow-up query against AssumeRole within a tight
+  # window (CWLI joins are limited -- use stats over short ranges).
+  fields @timestamp, eventName, userIdentity.userName, sourceIPAddress, errorMessage
+  | filter (eventName = "ConsoleLogin" and errorMessage = "Failed authentication")
+        or (eventName = "AssumeRole" and not isPresent(errorCode))
+  | stats count(*) as events,
+          sum(if(eventName = "ConsoleLogin", 1, 0)) as failed_logins,
+          sum(if(eventName = "AssumeRole",   1, 0)) as assume_role_hits
+       by userIdentity.userName, sourceIPAddress
+  | filter failed_logins > 5 and assume_role_hits > 0
+  | sort events desc

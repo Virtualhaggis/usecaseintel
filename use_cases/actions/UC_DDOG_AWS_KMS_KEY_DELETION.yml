@@ -6,6 +6,7 @@ tier: alerting
 fp_rate_estimate: low
 implementations:
 - datadog
+- cloudwatch
 mitre_attack:
 - id: T1485
   name: Data Destruction
@@ -16,3 +17,10 @@ description: |-
 datadog_query: |-
   source:cloudtrail @evt.outcome:success
   @evt.name:(ScheduleKeyDeletion OR DisableKey OR DeleteAlias)
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail (operators substitute their actual trail name)
+  fields @timestamp, eventName, userIdentity.arn, requestParameters.keyId,
+         requestParameters.aliasName, requestParameters.pendingWindowInDays
+  | filter eventName in ["ScheduleKeyDeletion", "DisableKey", "DeleteAlias"]
+        and not isPresent(errorCode)
+  | sort @timestamp desc

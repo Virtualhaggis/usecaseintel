@@ -6,6 +6,7 @@ tier: alerting
 fp_rate_estimate: low
 implementations:
 - datadog
+- cloudwatch
 mitre_attack:
 - id: T1648
   name: Serverless Execution
@@ -16,3 +17,10 @@ description: |-
 datadog_query: |-
   source:cloudtrail @evt.outcome:success
   @evt.name:(UpdateFunctionCode OR UpdateFunctionConfiguration OR PutFunctionConcurrency OR AddPermission)
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail (operators substitute their actual trail name)
+  fields @timestamp, eventName, userIdentity.arn, requestParameters.functionName
+  | filter eventName in ["UpdateFunctionCode", "UpdateFunctionConfiguration",
+                          "PutFunctionConcurrency", "AddPermission"]
+        and not isPresent(errorCode)
+  | sort @timestamp desc

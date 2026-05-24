@@ -6,6 +6,7 @@ tier: alerting
 fp_rate_estimate: low
 implementations:
 - datadog
+- cloudwatch
 mitre_attack:
 - id: T1136.003
   name: Cloud Account
@@ -16,3 +17,12 @@ description: |-
 datadog_query: |-
   source:cloudtrail @evt.outcome:success @evt.name:CreateAccessKey
   -@userIdentity.userName:(*ci-* OR *terraform-* OR *automation*)
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail (operators substitute their actual trail name)
+  fields @timestamp, userIdentity.userName, responseElements.accessKey.userName,
+         sourceIPAddress, awsRegion
+  | filter eventName = "CreateAccessKey" and not isPresent(errorCode)
+        and userIdentity.userName not like /ci-/
+        and userIdentity.userName not like /terraform-/
+        and userIdentity.userName not like /automation/
+  | sort @timestamp desc

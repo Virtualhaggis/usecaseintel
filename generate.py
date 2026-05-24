@@ -1208,6 +1208,7 @@ def _format_validation_errors_for_retry(ucs: list[dict]) -> str:
             ("_sentinel_field_issues",  "sentinel_kql (schema)", "sentinel_kql"),
             ("_syntax_issues",          "defender_kql (syntax)", "defender_kql"),
             ("_sentinel_syntax_issues", "sentinel_kql (syntax)", "sentinel_kql"),
+            ("_cwli_issues",            "cloudwatch_query (CWLI field/syntax)", "cloudwatch_query"),
         ):
             issues = uc.get(issues_key) or []
             for i in issues[:4]:  # cap per platform per uc
@@ -1248,6 +1249,99 @@ def _attach_sigma_issues(uc_dict: dict, sigma_key: str = "sigma_yaml") -> int:
         return 1
     if issues:
         uc_dict["_sigma_issues"] = list(issues)
+    return len(issues)
+
+
+# CloudTrail field whitelist used by _attach_cwli_issues -- conservative
+# set of stable top-level + nested paths from the AWS CloudTrail event
+# reference. Hierarchical paths like userIdentity.userName are matched
+# either by exact membership here or by the first-segment-is-known
+# fallback in the validator. Operators with custom logging may extend
+# this list in a follow-up; for now this catches LLM-invented field
+# names (e.g. `eventNameValue`) without flagging legitimate nested
+# CloudTrail paths.
+_CWLI_KNOWN_FIELDS = {
+    "@timestamp", "@message", "@logStream", "@log", "@ingestionTime",
+    "eventName", "eventSource", "eventTime", "eventType", "eventVersion", "eventID",
+    "awsRegion", "sourceIPAddress", "userAgent", "recipientAccountId",
+    "errorCode", "errorMessage", "readOnly", "managementEvent",
+    "userIdentity.type", "userIdentity.userName", "userIdentity.arn",
+    "userIdentity.principalId", "userIdentity.accountId",
+    "userIdentity.invokedBy", "userIdentity.accessKeyId",
+    "userIdentity.sessionContext.sessionIssuer.userName",
+    "userIdentity.sessionContext.sessionIssuer.type",
+    "userIdentity.sessionContext.sessionIssuer.arn",
+    "userIdentity.sessionContext.attributes.mfaAuthenticated",
+    "userIdentity.sessionContext.attributes.creationDate",
+    "responseElements", "requestParameters", "additionalEventData",
+    "additionalEventData.MFAUsed", "additionalEventData.LoginTo",
+    "resources",
+}
+
+# Field-path segments that begin a known nested CloudTrail structure --
+# anything starting with one of these is considered valid (the inner
+# leaves vary per eventName and aren't worth enumerating).
+_CWLI_NESTED_ROOTS = {
+    "userIdentity", "responseElements", "requestParameters",
+    "additionalEventData", "resources",
+}
+
+# Tokens that show up inside `fields` / `filter` clauses but aren't
+# field references -- CWLI keywords, comparison operators, common SQL
+# words, and a few specific functions we use in our generated queries.
+_CWLI_NON_FIELD_TOKENS = {
+    "and", "or", "not", "in", "like", "as", "by", "desc", "asc",
+    "true", "false", "null", "isPresent", "isnotpresent", "ispresent",
+    "earliest", "latest", "count", "sum", "stats", "sort", "filter",
+    "fields", "parse", "display", "if", "case", "when", "then", "else",
+    "end", "between",
+}
+
+def _attach_cwli_issues(uc_dict: dict, key: str = "cloudwatch_query") -> int:
+    """Lightweight CloudWatch Logs Insights validator. Catches:
+      * malformed bodies (no leading CWLI keyword, no pipe)
+      * obvious LLM hallucinations of CloudTrail field names
+
+    Doesn't parse CWLI grammar end-to-end (no public parser exists);
+    relies on a CloudTrail field whitelist + the per-segment nested-
+    root list above. Attach findings to `_cwli_issues`. Empty body is
+    fine -- CW is optional. Returns the issue count.
+    Pattern mirrors _attach_sigma_issues / _attach_field_issues for
+    consistency with the existing per-platform validator framework."""
+    body = (uc_dict.get(key) or "").strip()
+    if not body:
+        return 0
+    issues = []
+    # Sanity 1: query starts with a CWLI command keyword.
+    if not re.match(r"^\s*(#|//|fields|filter|stats|parse|sort|display)\b",
+                    body, re.IGNORECASE):
+        issues.append("CWLI: query should start with fields/filter/stats/parse/sort/display "
+                      "(or a leading `#` comment)")
+    # Sanity 2: at least one pipe (genuine single-stage queries are rare
+    # enough that we'd rather flag them than miss a malformed body).
+    if "|" not in body:
+        issues.append("CWLI: query lacks any `|` pipe (single-stage query is unusual)")
+    # Sanity 3: scan field references in `fields` / `filter` clauses.
+    # Heuristic only -- flags tokens that look like field paths but
+    # don't match the whitelist or known nested roots.
+    for clause_match in re.finditer(r"(?:^|\|)\s*(?:fields|filter)\s+([^|]+)",
+                                    body, re.IGNORECASE | re.MULTILINE):
+        clause = clause_match.group(1)
+        for tok in re.findall(r"\b([a-zA-Z_][a-zA-Z0-9_.]+)\b", clause):
+            tl = tok.lower()
+            if tl in _CWLI_NON_FIELD_TOKENS:
+                continue
+            if tok in _CWLI_KNOWN_FIELDS:
+                continue
+            if tok.split(".", 1)[0] in _CWLI_NESTED_ROOTS:
+                continue
+            # Skip pure numerics / single-letter aliases
+            if re.match(r"^[0-9_]+$", tok) or len(tok) <= 2:
+                continue
+            issues.append(f"CWLI: field '{tok}' not in CloudTrail whitelist -- "
+                          "possible typo or unsupported field")
+    if issues:
+        uc_dict["_cwli_issues"] = issues[:8]
     return len(issues)
 
 
@@ -1300,6 +1394,7 @@ Output STRICT JSON matching this schema (no markdown fences, no prose, just one 
       "sigma_yaml": "<OPTIONAL platform-neutral Sigma rule (https://sigmahq.io). Emit ONLY when the detection is single-event-shape (one selection block + condition). Skip Sigma — leave empty string — for: counts/thresholds, time-window correlation, cross-table joins, statistical anomaly, multi-stage chains. Required fields: title, id (UUID), description, references, author, date (YYYY/MM/DD), tags (`attack.t####`), logsource (category + product), detection (selection blocks + condition), level. Use logsource categories: process_creation, file_event, file_access, network_connection, registry_event, dns, image_load, process_access; or product+service for cloud (azure auditlogs / signinlogs / etc.).>",
       "datadog_query": "<Datadog Cloud SIEM logs query string (the bare query, not the full rule wrapper — we wrap it at export time). Use Datadog syntax: `source:<source>` to scope (cloudtrail, windows.security, windows.sysmon, windows.defender, azure.activity_logs, azure.activeDirectory, gcp.audit, kubernetes.audit, okta, linux.auditd, linux.syslog), `@field.path:value` for structured-log attributes, AND/OR/NOT and parentheses, wildcards `*`, CIDR for IPs (`@network.client.ip:81.171.16.0/24`), numeric ranges (`@status:>=400`). Reference the Datadog schema below — only use field paths that actually exist on Datadog's standard log format for the source you're querying. Leave empty string if the detection cannot be expressed on Datadog telemetry (e.g. detection that depends on Defender XDR signals not shipped to Datadog).>",
       "falcon_logscale_query": "<CrowdStrike Falcon LogScale (NG-SIEM / Humio-style) query targeting the same detection on Falcon Data Replicator (FDR) telemetry. Lead with `#event_simpleName=X` (tagged-field lookup is the fast path; X is one of ProcessRollup2, SyntheticProcessRollup2, DnsRequest, NetworkConnectIP4, NetworkConnectIP6, FileWritten, FileOpenInfo, AsepValueUpdate, ScriptControlScanInfo, UserLogon, DllInjection — see Falcon LogScale schema reference at end of prompt). Pipe filters chain via `|`. Use regex `/pattern/i` for case-insensitive matches (e.g. `ImageFileName=/winrar\\.exe$/i`). Use `groupBy([fields], function=count())` for aggregations. Always reference SPECIFIC binaries/paths/cmdline strings from the article. Leave empty string if the detection genuinely cannot be expressed on Falcon EDR telemetry (e.g. depends solely on Azure SignInLogs or Office 365 EmailEvents the FDR doesn't ship).>",
+      "cloudwatch_query": "<AWS CloudWatch Logs Insights query targeting CloudTrail / VPC Flow / IAM / GuardDuty telemetry living in CloudWatch log groups. Lead with a `# log group: /aws/cloudtrail` (or `/aws/vpc/flowlogs`, `/aws/guardduty/findings`, etc.) comment so operators know which trail to point this at. Use `fields ... | filter ... | stats ... | sort ...` syntax. Standard CloudTrail fields: eventName, eventSource, userIdentity.type (Root/IAMUser/AssumedRole/Federated/SAMLUser), userIdentity.userName, userIdentity.arn, sourceIPAddress, awsRegion, errorCode, responseElements.*, requestParameters.*, additionalEventData.MFAUsed. Prefer `not isPresent(errorCode)` over `errorCode = null`. Use `like /regex/` for partial matches and `in [...]` for set membership. **Emit ONLY when the detection telemetry naturally lives in CloudWatch Logs** — AWS-tagged articles, CloudTrail-driven IAM/S3/Lambda/KMS/GuardDuty actions, VPC flow analysis. Empty string for Windows-endpoint, Defender-only, generic Sysmon, or other non-AWS detections.>",
       "rationale": "<1-2 sentences: which strings/IOCs/behaviours from the article you used and why they're high-fidelity>",
       "corroborated_sources": ["<URLs of any external sources you cross-checked (vendor advisories, other articles, MITRE, abuse.ch). Empty list if you didn't search.>"],
       "kill_chain_phase": "<MITRE-style phase name from the kill-chain block below this article body — one of: initial_access, execution, persistence, privilege_escalation, defense_evasion, credential_access, discovery, lateral_movement, collection, command_and_control, exfiltration, impact. Pick the phase this UC's primary detection logic targets. Distinct from the existing legacy `kill_chain` field which uses Lockheed-Martin terminology — both fields MUST be present; this new one maps to MITRE phases for grounding.>",
@@ -2850,12 +2945,14 @@ def _llm_generate_ucs(article: dict, ind: dict):
                           "_sentinel_field_issues", "_sentinel_field_issues_autofix",
                           "_syntax_issues", "_sentinel_syntax_issues"):
                     uc.pop(k, None)
+        cwli_issues = 0
         for uc in ucs_list:
             if isinstance(uc, dict):
                 field_issues += _attach_field_issues(uc, "defender_kql")
                 field_issues += _attach_field_issues(uc, "sentinel_kql",
                                                       issues_key="_sentinel_field_issues")
                 sigma_issues += _attach_sigma_issues(uc, "sigma_yaml")
+                cwli_issues += _attach_cwli_issues(uc, "cloudwatch_query")
         syntax_issues = _attach_syntax_issues_batch(ucs_list)
         total_validation_errors = field_issues + syntax_issues
         if total_validation_errors == 0:
@@ -3044,6 +3141,7 @@ Reply with JSON only, no commentary, this exact shape:
       "sigma_yaml": "<OPTIONAL platform-neutral Sigma rule. Emit only for single-event-shape detections; empty string otherwise. See article-prompt guidance for the field schema.>",
       "datadog_query": "<Datadog Cloud SIEM logs query string targeting the same detection. Use `source:<source>` + `@field.path:value` syntax — see Datadog schema reference at the end of this prompt. Empty string if not expressible on Datadog telemetry.>",
       "falcon_logscale_query": "<CrowdStrike Falcon LogScale query targeting the same detection on Falcon Data Replicator telemetry. Lead with `#event_simpleName=X` (ProcessRollup2 / DnsRequest / NetworkConnectIP4 / FileWritten / AsepValueUpdate / etc.). Pipe filters via `|`. Use regex `/pattern/i` for case-insensitive matches. See Falcon LogScale schema reference at the end of this prompt. Empty string if the detection isn't expressible on Falcon FDR telemetry.>",
+      "cloudwatch_query": "<AWS CloudWatch Logs Insights query targeting CloudTrail / VPC Flow / IAM telemetry living in CloudWatch log groups. Use `fields ... | filter ... | stats ... | sort ...` syntax. Standard CloudTrail field names: eventName, eventSource, userIdentity.type / userIdentity.userName / userIdentity.arn, sourceIPAddress, awsRegion, errorCode, responseElements.*, requestParameters.*, additionalEventData.*. Prefer `not isPresent(errorCode)` over `errorCode = null`. Lead with a comment `# log group: /aws/cloudtrail` so operators know which trail to point this at. **Only emit when the detection telemetry naturally lives in CloudWatch Logs** (CloudTrail-driven IAM / S3 / Lambda / GuardDuty / VPC actions, or anything tagged with `aws` target). Empty string for Windows-endpoint, Defender-only, or non-AWS detections.>",
       "confidence": "high | medium | low",
       "tier": "alerting | hunting",
       "fp_rate_estimate": "low | medium | high",
@@ -3256,6 +3354,7 @@ def _llm_generate_actor_ucs(actor: dict):
             "sigma_yaml": d.get("sigma_yaml") or "",
             "datadog_query": d.get("datadog_query") or "",
             "falcon_logscale_query": d.get("falcon_logscale_query") or "",
+            "cloudwatch_query": d.get("cloudwatch_query") or "",
             "rationale": (d.get("rationale") or "")[:400],
         })
     # Schema-field + Sigma validation per platform. Actor cache stores
@@ -3267,6 +3366,7 @@ def _llm_generate_actor_ucs(actor: dict):
         total_issues += _attach_field_issues(uc, "sentinel_kql",
                                               issues_key="_sentinel_field_issues")
         total_sigma_issues += _attach_sigma_issues(uc, "sigma_yaml")
+        total_issues += _attach_cwli_issues(uc, "cloudwatch_query")
     if total_issues:
         print(f"    [!] {total_issues} field-schema issue(s) flagged across {len(out_ucs)} actor UC(s)")
     if total_sigma_issues:
@@ -3342,6 +3442,7 @@ def _uc_from_llm_dict(d: dict):
         sigma_yaml=(d.get("sigma_yaml") or ""),
         datadog_query=(d.get("datadog_query") or ""),
         falcon_logscale_query=(d.get("falcon_logscale_query") or ""),
+        cloudwatch_query=(d.get("cloudwatch_query") or ""),
         confidence=(d.get("confidence") or "Medium"),
         tier=tier,
         fp_rate_estimate=fp_rate,
@@ -3600,6 +3701,16 @@ class UseCase:
                                       # Empty when the detection isn't
                                       # expressible on Falcon FDR telemetry
                                       # (e.g. depends on Azure SignInLogs only).
+    cloudwatch_query: str = ""        # AWS CloudWatch Logs Insights query
+                                      # targeting CloudTrail / VPC Flow / IAM
+                                      # telemetry living in CloudWatch log
+                                      # groups. Standard log group reference is
+                                      # `/aws/cloudtrail`; operators substitute
+                                      # their actual trail name. Uses the
+                                      # `fields | filter | stats | sort` syntax.
+                                      # Empty when the detection isn't
+                                      # expressible on CloudWatch telemetry
+                                      # (e.g. Windows endpoint-only signals).
     splunk_category: str = ""         # Splunk-research-style category for this
                                       # UC's SPL query: one of "application",
                                       # "cloud", "endpoint", "network", "web"
@@ -3824,6 +3935,10 @@ def _load_uc_from_yaml(path):
     falcon_logscale_query = (doc.get("falcon_logscale_query") or "")
     if falcon_logscale_query and "falcon" not in impls:
         impls.add("falcon")
+    # AWS CloudWatch Logs Insights — same back-compat shape.
+    cloudwatch_query = (doc.get("cloudwatch_query") or "")
+    if cloudwatch_query and "cloudwatch" not in impls:
+        impls.add("cloudwatch")
     confidence = doc.get("confidence", "Medium")
     # Tier: explicit field wins; otherwise infer from query shape.
     tier = (doc.get("tier") or "").strip().lower() or _infer_tier_from_query(spl, kql, confidence)
@@ -3847,6 +3962,7 @@ def _load_uc_from_yaml(path):
         sigma_yaml=sigma_yaml,
         datadog_query=datadog_query,
         falcon_logscale_query=falcon_logscale_query,
+        cloudwatch_query=cloudwatch_query,
         confidence=confidence,
         tier=tier,
         fp_rate_estimate=fp_rate,
@@ -7745,6 +7861,7 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .pl-badge.pl-spl  { background:rgba(76,183,130,0.16);  color:#6dd29c; border-color:rgba(76,183,130,0.40); }
 .pl-badge.pl-ddog { background:rgba(120,90,200,0.18);  color:#c5b0ff; border-color:rgba(120,90,200,0.42); font-size:9.5px; }
 .pl-badge.pl-falcon{ background:rgba(225,90,90,0.18);   color:#ff9a9a; border-color:rgba(225,90,90,0.42); font-size:9.5px; }
+.pl-badge.pl-cw   { background:rgba(255,153,0,0.18);    color:#ffb45e; border-color:rgba(255,153,0,0.42); font-size:9.5px; }
 /* Compact variant on matrix-grid technique cells: tiny solid-colour
    square with no letter. Six platforms x 14px letter-badges was
    overflowing the 150px-wide cells and pushing layout around -- 8x8
@@ -7763,6 +7880,7 @@ footer code{background:var(--panel2);padding:2px 6px;border-radius:4px;font-size
 .tech-cell .pl-badge.pl-spl   { background:#4cb782; border-color:rgba(76,183,130,0.55); }
 .tech-cell .pl-badge.pl-ddog  { background:#785ac8; border-color:rgba(120,90,200,0.55); }
 .tech-cell .pl-badge.pl-falcon{ background:#e15a5a; border-color:rgba(225,90,90,0.55); }
+.tech-cell .pl-badge.pl-cw    { background:#ff9900; border-color:rgba(255,153,0,0.55); }
 /* Matrix platform-filter dim — applied to cells lacking the active filter. */
 .tech-cell.pl-filter-dim{opacity:0.18; filter:saturate(0.5);}
 .tech-cell.has-uc{background:linear-gradient(180deg, rgba(54,224,192,0.07), rgba(54,224,192,0.02));}
@@ -9298,6 +9416,10 @@ __HOME__
                   title="Show only articles whose UCs have a CrowdStrike Falcon LogScale query">
             Falcon <span class="cnt" id="platCntFalcon"></span>
           </button>
+          <button class="src-chip plat-chip" data-platform="cloudwatch"
+                  title="Show only articles whose UCs have an AWS CloudWatch Logs Insights query">
+            CloudWatch <span class="cnt" id="platCntCloudwatch"></span>
+          </button>
         </div>
       </div>
       <div class="ft-group ft-target">
@@ -9430,6 +9552,7 @@ __HOME__
         <span class="lg-chip"><span class="pl-badge pl-spl">P</span> Splunk SPL</span>
         <span class="lg-chip"><span class="pl-badge pl-ddog">DD</span> Datadog Cloud SIEM</span>
         <span class="lg-chip"><span class="pl-badge pl-falcon">CS</span> CrowdStrike Falcon LogScale</span>
+        <span class="lg-chip"><span class="pl-badge pl-cw">CW</span> CloudWatch Logs Insights</span>
         <span class="lg-note">use the toolbar's platform pills to filter the matrix</span>
       </div>
     </div>
@@ -10907,13 +11030,14 @@ function _initChipCounts() {
   if (a) a.textContent = hasUc;
   if (b) b.textContent = hasLlm;
   // Platform counts — how many articles have at least one UC for each platform
-  const platCounts = {def:0, sent:0, sigma:0, spl:0, datadog:0, falcon:0};
+  const platCounts = {def:0, sent:0, sigma:0, spl:0, datadog:0, falcon:0, cloudwatch:0};
   for (const c of cards) {
     const p = (c.dataset.platforms || '').split(',').filter(Boolean);
     for (const k of p) if (k in platCounts) platCounts[k]++;
   }
   const idMap = {def:'platCntDef', sent:'platCntSent', sigma:'platCntSigma',
-                 spl:'platCntSpl', datadog:'platCntDatadog', falcon:'platCntFalcon'};
+                 spl:'platCntSpl', datadog:'platCntDatadog', falcon:'platCntFalcon',
+                 cloudwatch:'platCntCloudwatch'};
   for (const k of Object.keys(idMap)) {
     const el = document.getElementById(idMap[k]);
     if (el) el.textContent = platCounts[k];
@@ -12680,12 +12804,13 @@ function tidCellHtml(tid, isSub) {
   if (matrixMode === 'coverage') cls += ' ' + covClassFor(ucs.length);
   else if (matrixMode === 'heat') cls += ' ' + heatClassFor(arts.length);
   // Platform-coverage flags — aggregate the `pl` field across every UC
-  // attached to this technique. `pl` is now a 5-char string "dsgpD"
+  // attached to this technique. `pl` is now a 7-char string "dsgpDFc"
   // where each position is the platform letter or '-': d=Defender,
-  // s=Sentinel, g=Sigma, p=SPL, D=Datadog. A position is `-` if that
-  // UC lacks that platform body. The matrix shows a small badge for
-  // each platform that at least one UC on this technique covers.
-  let plDef=false, plSent=false, plSigma=false, plSpl=false, plDdog=false, plFalcon=false;
+  // s=Sentinel, g=Sigma, p=SPL, D=Datadog, F=Falcon, c=CloudWatch.
+  // A position is `-` if that UC lacks that platform body. The matrix
+  // shows a small badge for each platform that at least one UC on
+  // this technique covers.
+  let plDef=false, plSent=false, plSigma=false, plSpl=false, plDdog=false, plFalcon=false, plCw=false;
   for (let u of ucs) {
     const rec = MATRIX.ucs[u];
     if (!rec || !rec.pl) continue;
@@ -12695,6 +12820,7 @@ function tidCellHtml(tid, isSub) {
     if (rec.pl[3] === 'p') plSpl = true;
     if (rec.pl[4] === 'D') plDdog = true;
     if (rec.pl[5] === 'F') plFalcon = true;
+    if (rec.pl[6] === 'c') plCw = true;
   }
   const platforms = [];
   if (plDef)    platforms.push('<span class="pl-badge pl-def" title="Defender KQL">D</span>');
@@ -12703,7 +12829,8 @@ function tidCellHtml(tid, isSub) {
   if (plSpl)    platforms.push('<span class="pl-badge pl-spl" title="Splunk SPL">P</span>');
   if (plDdog)   platforms.push('<span class="pl-badge pl-ddog" title="Datadog Cloud SIEM">DD</span>');
   if (plFalcon) platforms.push('<span class="pl-badge pl-falcon" title="CrowdStrike Falcon LogScale">CS</span>');
-  return `<div class="${cls}" data-tid="${tid}" data-pl-def="${plDef?1:0}" data-pl-sent="${plSent?1:0}" data-pl-sigma="${plSigma?1:0}" data-pl-spl="${plSpl?1:0}" data-pl-datadog="${plDdog?1:0}" data-pl-falcon="${plFalcon?1:0}" tabindex="0">
+  if (plCw)     platforms.push('<span class="pl-badge pl-cw" title="CloudWatch Logs Insights">CW</span>');
+  return `<div class="${cls}" data-tid="${tid}" data-pl-def="${plDef?1:0}" data-pl-sent="${plSent?1:0}" data-pl-sigma="${plSigma?1:0}" data-pl-spl="${plSpl?1:0}" data-pl-datadog="${plDdog?1:0}" data-pl-falcon="${plFalcon?1:0}" data-pl-cloudwatch="${plCw?1:0}" tabindex="0">
     <div class="tech-name" title="${tid}: ${escapeHtml(tinfo.name)}">${escapeHtml(tinfo.name)}</div>
     <div class="tech-meta">
       <span style="color:var(--muted)">${tid}</span>
@@ -14197,6 +14324,7 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
     sigma = uc.sigma_yaml or ""        # Sigma rules don't take parameter substitution
     ddog = parameterize(uc.datadog_query, ind) if uc.datadog_query else ""
     falcon = parameterize(getattr(uc, "falcon_logscale_query", "") or "", ind) if getattr(uc, "falcon_logscale_query", "") else ""
+    cw = parameterize(getattr(uc, "cloudwatch_query", "") or "", ind) if getattr(uc, "cloudwatch_query", "") else ""
     techs = " ".join(
         f'<span class="ind tech" title="{html.escape(name)}">{html.escape(tid)}</span>'
         for tid, name in uc.techniques
@@ -14214,12 +14342,13 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
     # First non-empty platform becomes the active one; tabs render in canonical
     # order: Defender → Sentinel → Sigma → Datadog → Splunk.
     platforms = [
-        ("kql",      "Defender KQL",     kql),
-        ("sentinel", "Sentinel KQL",     skql),
-        ("sigma",    "Sigma",            sigma),
-        ("datadog",  "Datadog",          ddog),
-        ("falcon",   "Falcon LogScale",  falcon),
-        ("spl",      "Splunk SPL (CIM)", spl),
+        ("kql",        "Defender KQL",            kql),
+        ("sentinel",   "Sentinel KQL",            skql),
+        ("sigma",      "Sigma",                   sigma),
+        ("datadog",    "Datadog",                 ddog),
+        ("falcon",     "Falcon LogScale",         falcon),
+        ("cloudwatch", "CloudWatch Logs Insights", cw),
+        ("spl",        "Splunk SPL (CIM)",        spl),
     ]
     populated = [(suffix, label, body) for suffix, label, body in platforms if body]
     if not populated:
@@ -14295,6 +14424,7 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
             ("spl" if uc.splunk_spl else None),
             ("datadog" if getattr(uc, "datadog_query", "") else None),
             ("falcon" if getattr(uc, "falcon_logscale_query", "") else None),
+            ("cloudwatch" if getattr(uc, "cloudwatch_query", "") else None),
         ] if p
     }))
     # Target-surface tags (windows/linux/aws/...) — drives the Articles-tab
@@ -14394,6 +14524,7 @@ def render_card(idx: int, article: dict, ind: dict,
         if uc.splunk_spl: plats.add("spl")
         if getattr(uc, "datadog_query", ""): plats.add("datadog")
         if getattr(uc, "falcon_logscale_query", ""): plats.add("falcon")
+        if getattr(uc, "cloudwatch_query", ""): plats.add("cloudwatch")
         # Splunk-research category (application / cloud / endpoint /
         # network / web). One per UC; the card gets the union so the
         # Articles chip filter can find cards with at least one UC in
@@ -14748,6 +14879,7 @@ def build_matrix_data(articles_meta):
             "p" if uc.splunk_spl else "-",
             "D" if getattr(uc, "datadog_query", "") else "-",
             "F" if getattr(uc, "falcon_logscale_query", "") else "-",
+            "c" if getattr(uc, "cloudwatch_query", "") else "-",
         ])
         uc_records.append({
             "i": idx,
@@ -14757,7 +14889,7 @@ def build_matrix_data(articles_meta):
             "ph": uc.kill_chain,
             "src": "internal",
             "tier": getattr(uc, "tier", "hunting"),
-            "pl": pl,                    # platform coverage d/s/g/p/D/F
+            "pl": pl,                    # platform coverage d/s/g/p/D/F/c (c=cloudwatch)
             "tg": _infer_uc_targets(uc), # target surfaces (windows/linux/aws/...)
             "techs": uc_techs,
             "arts": [],  # populated when articles cite this UC below
@@ -14814,7 +14946,7 @@ def build_matrix_data(articles_meta):
             "ph": ph_short,
             "src": "escu",
             "tier": tier,
-            "pl": "---p--",              # ESCU = Splunk SPL-only (6 positions, F=falcon)
+            "pl": "---p---",             # ESCU = Splunk SPL-only (7 positions: d/s/g/p/D/F/c — c=cloudwatch)
             "tg": escu_tg,
             "techs": tech_ids,
             "arts": [],
@@ -19748,7 +19880,7 @@ def _home_platform_counts(articles_meta: list) -> dict:
     for am in articles_meta:
         for _vname, uc in am.get("ucs") or []:
             seen[id(uc)] = uc
-    counts = {"splunk": 0, "defender": 0, "sentinel": 0, "sigma": 0, "datadog": 0, "falcon": 0}
+    counts = {"splunk": 0, "defender": 0, "sentinel": 0, "sigma": 0, "datadog": 0, "falcon": 0, "cloudwatch": 0}
     for uc in seen.values():
         if (getattr(uc, "splunk_spl", "") or "").strip():
             counts["splunk"] += 1
@@ -19762,6 +19894,8 @@ def _home_platform_counts(articles_meta: list) -> dict:
             counts["datadog"] += 1
         if (getattr(uc, "falcon_logscale_query", "") or "").strip():
             counts["falcon"] += 1
+        if (getattr(uc, "cloudwatch_query", "") or "").strip():
+            counts["cloudwatch"] += 1
     return counts
 
 
@@ -19945,7 +20079,7 @@ def render_home_trust_strip(usecase_count: int, tech_count: int,
     tiles = [
         (usecase_count, f"{usecase_count:,}", "Detections"),
         (tech_count,    f"{tech_count:,}",    "ATT&CK techniques"),
-        (5,             "5",                  "Query languages"),
+        (7,             "7",                  "Query languages"),
         (article_count, f"{article_count:,}", "Threat-intel articles"),
     ]
     tile_html = "".join(
@@ -20172,6 +20306,7 @@ def render_home_browse(platform_counts: dict) -> str:
         ("spl",     "Splunk SPL (CIM)",       platform_counts.get("splunk", 0)),
         ("datadog", "Datadog Cloud SIEM",     platform_counts.get("datadog", 0)),
         ("falcon",  "CrowdStrike Falcon LogScale", platform_counts.get("falcon", 0)),
+        ("cw",      "AWS CloudWatch Logs Insights", platform_counts.get("cloudwatch", 0)),
     ]
     plat_tiles = []
     for code, label, count in plats:
@@ -21220,6 +21355,20 @@ def main():
     print(f"[*] Wrote {OUT_HTML} ({OUT_HTML.stat().st_size//1024} KB)")
     print(f"    Severity: crit={sev_counts['crit']} high={sev_counts['high']} med={sev_counts['med']} low={sev_counts['low']}")
     print(f"    Bespoke article-specific UCs built: {bespoke_built}")
+    # CWLI audit: count UCs across all loaded sources that ship a
+    # CloudWatch Logs Insights body (7th platform, ships from the 19
+    # AWS YAML templates and from LLM-bespoke generation on AWS-tagged
+    # articles). Cheap inline count; for issue-level audit run the
+    # follow-up cwli_check.py (planned).
+    try:
+        _cw_total = 0
+        for am in articles_meta:
+            for _vname, _uc in am.get("ucs") or []:
+                if (getattr(_uc, "cloudwatch_query", "") or "").strip():
+                    _cw_total += 1
+        print(f"    CloudWatch Logs Insights bodies: {_cw_total} UC(s) carry a cloudwatch_query")
+    except Exception:
+        pass
 
     # SEO sitemap.xml — refresh every pipeline run so Google's crawler
     # knows about freshly-published per-article briefings. Includes the
