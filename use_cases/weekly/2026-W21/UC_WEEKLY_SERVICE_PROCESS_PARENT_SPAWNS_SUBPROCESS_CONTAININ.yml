@@ -1,0 +1,203 @@
+id: UC_WEEKLY_SERVICE_PROCESS_PARENT_SPAWNS_SUBPROCESS_CONTAININ
+title: "[WEEKLY] Service-process parent spawns subprocess containing CLI-argument-injection tokens"
+kill_chain: exploit
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- sigma
+- datadog
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1059
+  name: Command and Scripting Interpreter
+- id: T1059.001
+  name: "Command and Scripting Interpreter: PowerShell"
+- id: T1059.003
+  name: "Command and Scripting Interpreter: Windows Command Shell"
+- id: T1059.004
+  name: "Command and Scripting Interpreter: Unix Shell"
+- id: T1059.006
+  name: "Command and Scripting Interpreter: Python"
+- id: T1203
+  name: Exploitation for Client Execution
+- id: T1505.003
+  name: "Server Software Component: Web Shell"
+data_models:
+  defender:
+  - Endpoint.Processes
+description: |-
+  Detects a unifying tradecraft across this fortnight's web-app and CLI-tool CVEs: a long-running service or non-interactive tool (web server, language runtime, backup CLI, AI/dev TUI) spawns a child process (ssh, git, curl, wget, bash/sh, powershell, python, perl) whose command line carries high-risk argv-injection tokens (`-oProxyCommand=`, `--upload-pack=`, `--receive-pack=`, `-c core.sshCommand=`, `--exec=`, `-EncodedCommand`, curl `--config`/`-K`/`-T`, shell-metachar substitution `$(...)`, backticks, `|sh`, `&&curl`, `/dev/tcp/`, `bash -i`, `base64 -d`). This pattern is the joint signature of CVE-2026-45695 (Kopia SSH ProxyCommand), CVE-2026-44790 (n8n Git node `--upload-pack`/`-c core.sshCommand`), CVE-2026-45369 (utcp-cli `$(...)` substitution), CVE-2026-45374 (DeepSeek TUI shell sub-agent), and the post-exploit RCE chains following CVE-2026-9082 (Drupal SQLi), CVE-2026-26980 (Ghost CMS SQLi→ClickFix), CVE-2026-46670 (YesWiki SQLi), CVE-2026-46633 (Twig PHP code injection), CVE-2026-45697 (Formie SSTI), CVE-2026-45288 (Marten regConfig SQLi), and CVE-2026-22599 (Strapi SQLi). It spans the exploit → install / execution kill-chain pivot — where the vulnerable parent has accepted untrusted input and now hands it down a process tree. It fires when a service-tier parent (php-fpm, w3wp, node, n8n, kopia, deepseek-tui, etc.) launches an interpreter/tool child carrying one of the injection-token families. It does NOT fire on user-shell-rooted activity (bash launched from sshd/login), nor on service parents launching child processes whose argv is clean of metachars/injection flags, suppressing routine maintenance and admin scripts.
+  
+  Rationale: Every article in scope ends in the same physical artefact: a trusted service / CLI parent emits a child process whose argv carries either argument-injection switches (ssh -oProxyCommand, git --upload-pack/-c core.sshCommand, curl --config) or interpreter-injection metachars ($(...), backticks, |sh, &&curl, /dev/tcp/, -EncodedCommand, base64 -d). Pinning on the parent-class + child-class + token-class triad turns 12 different CVEs into one stable behavioural detection that survives IOC rotation.
+defender_kql: |-
+  let ServiceParents = dynamic(["w3wp.exe","php-fpm","php-cgi","php-cgi.exe","php.exe","php","httpd","httpd.exe","apache2","nginx","nginx.exe","node","node.exe","n8n","n8n.exe","python","python3","python.exe","ruby","ruby.exe","java","java.exe","kopia","kopia.exe","kopia-ui","kopia-ui.exe","deepseek-tui","deepseek-tui.exe","utcp","utcp.exe","strapi","ghost","drupal","yeswiki"]);
+  let InterpreterChildren = dynamic(["ssh","ssh.exe","git","git.exe","bash","sh","dash","zsh","ksh","powershell.exe","pwsh.exe","pwsh","cmd.exe","curl","curl.exe","wget","wget.exe","nc","ncat","socat","python","python3","perl","ruby"]);
+  DeviceProcessEvents
+  | where Timestamp > ago(7d)
+  | where InitiatingProcessFileName in~ (ServiceParents)
+  | where FileName in~ (InterpreterChildren)
+  | where AccountName !endswith "$"
+  | where AccountName !in~ ("system","local service","network service","root")
+  | extend SshArg   = ProcessCommandLine matches regex @"(?i)(-oProxyCommand|-o\s+ProxyCommand|-oIdentityFile=|ProxyJump=)"
+  | extend GitArg   = ProcessCommandLine matches regex @"(?i)(--upload-pack=|--receive-pack=|-c\s+core\.sshCommand|--exec=)"
+  | extend PsEnc    = ProcessCommandLine matches regex @"(?i)(-EncodedCommand|\s-enc\s|\s-ec\s)"
+  | extend ShellMet = ProcessCommandLine matches regex @"(?i)(\$\(|`[^`]{2,}`|;\s*(curl|wget|nc|bash|sh|python|powershell|base64|chmod)|\|\s*(sh|bash|nc|base64|tee)|&&\s*(curl|wget|nc|bash|sh|python|powershell))"
+  | extend RevSh    = ProcessCommandLine matches regex @"(?i)(/dev/tcp/|bash\s+-i|nc\s+-e|base64\s+-d|python\S*\s+-c\s+['""]\s*(import|exec|os\.system))"
+  | extend CurlArg  = ProcessCommandLine matches regex @"(?i)(--config\s|\s-K\s|--upload-file|\s-T\s+[A-Za-z/])"
+  | where SshArg or GitArg or PsEnc or ShellMet or RevSh or CurlArg
+  | extend InjectionClass = case(SshArg,"ssh-argv-injection", GitArg,"git-argv-injection", PsEnc,"powershell-encoded", ShellMet,"shell-metachars", RevSh,"reverse-shell-pattern", CurlArg,"curl-argv-injection", "unknown")
+  | project Timestamp, DeviceName, AccountName,
+            ParentImage = InitiatingProcessFolderPath,
+            ParentCmd   = InitiatingProcessCommandLine,
+            ChildImage  = FolderPath,
+            ChildCmd    = ProcessCommandLine,
+            InjectionClass, SHA256
+  | order by Timestamp desc
+sentinel_kql: |-
+  let ServiceParents = dynamic(["w3wp.exe","php-fpm","php-cgi","php-cgi.exe","php.exe","php","httpd","httpd.exe","apache2","nginx","nginx.exe","node","node.exe","n8n","n8n.exe","python","python3","python.exe","ruby","ruby.exe","java","java.exe","kopia","kopia.exe","kopia-ui","kopia-ui.exe","deepseek-tui","deepseek-tui.exe","utcp","utcp.exe"]);
+  let InterpreterChildren = dynamic(["ssh","ssh.exe","git","git.exe","bash","sh","dash","zsh","ksh","powershell.exe","pwsh.exe","pwsh","cmd.exe","curl","curl.exe","wget","wget.exe","nc","ncat","socat","python","python3","perl","ruby"]);
+  DeviceProcessEvents
+  | where TimeGenerated > ago(7d)
+  | where InitiatingProcessFileName in~ (ServiceParents)
+  | where FileName in~ (InterpreterChildren)
+  | where AccountName !endswith "$"
+  | where AccountName !in~ ("system","local service","network service","root")
+  | extend SshArg   = ProcessCommandLine matches regex @"(?i)(-oProxyCommand|-o\s+ProxyCommand|-oIdentityFile=|ProxyJump=)"
+  | extend GitArg   = ProcessCommandLine matches regex @"(?i)(--upload-pack=|--receive-pack=|-c\s+core\.sshCommand|--exec=)"
+  | extend PsEnc    = ProcessCommandLine matches regex @"(?i)(-EncodedCommand|\s-enc\s|\s-ec\s)"
+  | extend ShellMet = ProcessCommandLine matches regex @"(?i)(\$\(|`[^`]{2,}`|;\s*(curl|wget|nc|bash|sh|python|powershell|base64|chmod)|\|\s*(sh|bash|nc|base64|tee)|&&\s*(curl|wget|nc|bash|sh|python|powershell))"
+  | extend RevSh    = ProcessCommandLine matches regex @"(?i)(/dev/tcp/|bash\s+-i|nc\s+-e|base64\s+-d|python\S*\s+-c\s+['""]\s*(import|exec|os\.system))"
+  | extend CurlArg  = ProcessCommandLine matches regex @"(?i)(--config\s|\s-K\s|--upload-file|\s-T\s+[A-Za-z/])"
+  | where SshArg or GitArg or PsEnc or ShellMet or RevSh or CurlArg
+  | extend InjectionClass = case(SshArg,"ssh-argv-injection", GitArg,"git-argv-injection", PsEnc,"powershell-encoded", ShellMet,"shell-metachars", RevSh,"reverse-shell-pattern", CurlArg,"curl-argv-injection", "unknown")
+  | project TimeGenerated, DeviceName, AccountName,
+            ParentImage = InitiatingProcessFolderPath,
+            ParentCmd   = InitiatingProcessCommandLine,
+            ChildImage  = FolderPath,
+            ChildCmd    = ProcessCommandLine,
+            InjectionClass, SHA256
+  | order by TimeGenerated desc
+sigma_yaml: |-
+  title: Service-Tier Parent Spawns Subprocess With Argv-Injection Or Interpreter-Flag Tokens
+  id: 7c3a9e1b-4d52-46f0-9a3d-2026w21-argvinj
+  status: experimental
+  description: Detects a long-running service / non-interactive tool spawning ssh, git, curl, wget, a shell, powershell, python or perl with command-line tokens characteristic of CLI argument injection or interpreter-driven RCE following web-app or local-tool exploitation (joint pattern across CVE-2026-9082, CVE-2026-26980, CVE-2026-46670, CVE-2026-46633, CVE-2026-45697, CVE-2026-45288, CVE-2026-22599, CVE-2026-45695, CVE-2026-44790, CVE-2026-45369, CVE-2026-45374).
+  references:
+    - https://github.com/advisories/GHSA-2q4c-3mrw-63c3
+    - https://github.com/advisories/GHSA-33p6-5jxp-p3x4
+    - https://github.com/advisories/GHSA-72w5-pf8h-xfp4
+    - https://www.bleepingcomputer.com/news/security/ghost-cms-sql-injection-flaw-exploited-in-large-scale-clickfix-campaign/
+    - https://www.bleepingcomputer.com/news/security/drupal-critical-sql-injection-flaw-now-targeted-in-attacks/
+  author: weekly-uc-pipeline
+  date: 2026/05/24
+  tags:
+    - attack.execution
+    - attack.t1059
+    - attack.t1190
+  logsource:
+    category: process_creation
+  detection:
+    parent_service:
+      ParentImage|endswith:
+        - '\w3wp.exe'
+        - '\php-fpm.exe'
+        - '\php-cgi.exe'
+        - '\php.exe'
+        - '\httpd.exe'
+        - '\nginx.exe'
+        - '\node.exe'
+        - '\n8n.exe'
+        - '\python.exe'
+        - '\python3.exe'
+        - '\ruby.exe'
+        - '\java.exe'
+        - '\kopia.exe'
+        - '\kopia-ui.exe'
+        - '\deepseek-tui.exe'
+        - '\utcp.exe'
+        - '/php-fpm'
+        - '/php-cgi'
+        - '/php'
+        - '/httpd'
+        - '/apache2'
+        - '/nginx'
+        - '/node'
+        - '/n8n'
+        - '/python'
+        - '/python3'
+        - '/ruby'
+        - '/java'
+        - '/kopia'
+        - '/deepseek-tui'
+        - '/utcp'
+    child_interpreter:
+      Image|endswith:
+        - '\ssh.exe'
+        - '\git.exe'
+        - '\bash.exe'
+        - '\powershell.exe'
+        - '\pwsh.exe'
+        - '\cmd.exe'
+        - '\curl.exe'
+        - '\wget.exe'
+        - '\python.exe'
+        - '\python3.exe'
+        - '\perl.exe'
+        - '/ssh'
+        - '/git'
+        - '/bash'
+        - '/sh'
+        - '/dash'
+        - '/zsh'
+        - '/curl'
+        - '/wget'
+        - '/nc'
+        - '/ncat'
+        - '/socat'
+        - '/python'
+        - '/python3'
+        - '/perl'
+        - '/ruby'
+    injection_token:
+      CommandLine|contains:
+        - 'ProxyCommand'
+        - '--upload-pack='
+        - '--receive-pack='
+        - 'core.sshCommand'
+        - '--exec='
+        - '-EncodedCommand'
+        - ' -enc '
+        - ' -ec '
+        - '$('
+        - '/dev/tcp/'
+        - 'bash -i'
+        - 'nc -e'
+        - 'base64 -d'
+        - '--config '
+        - ' -K '
+        - '|sh'
+        - '|bash'
+        - '&&curl'
+        - '&&wget'
+    filter_machine_acct:
+      User|endswith: '$'
+    filter_system:
+      User|contains:
+        - 'SYSTEM'
+        - 'LOCAL SERVICE'
+        - 'NETWORK SERVICE'
+    condition: parent_service and child_interpreter and injection_token and not 1 of filter_*
+  falsepositives:
+    - Legitimate CI/CD jobs running git/curl with custom flags under a service account (tune by parent path)
+    - Backup tooling intentionally configured with custom ssh proxy commands
+  level: high
+  
+splunk_spl: |-
+  | tstats summariesonly=true count, min(_time) as firstTime, max(_time) as lastTime, values(Processes.process_path) as child_paths, values(Processes.parent_process) as parent_cmds from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("w3wp.exe","php-fpm","php-cgi","php-cgi.exe","php.exe","php","httpd","httpd.exe","apache2","nginx","nginx.exe","node","node.exe","n8n","n8n.exe","python","python3","python.exe","ruby","ruby.exe","java","java.exe","kopia","kopia.exe","kopia-ui","kopia-ui.exe","deepseek-tui","deepseek-tui.exe","utcp","utcp.exe","strapi","ghost","drupal","yeswiki") AND Processes.process_name IN ("ssh","ssh.exe","git","git.exe","bash","sh","dash","zsh","ksh","powershell.exe","pwsh.exe","pwsh","cmd.exe","curl","curl.exe","wget","wget.exe","nc","ncat","socat","python","python3","perl","ruby") by host, Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | eval injection_class = case(match(process,"(?i)(-oProxyCommand|-o\s+ProxyCommand|-oIdentityFile=|ProxyJump=)"),"ssh-argv-injection", match(process,"(?i)(--upload-pack=|--receive-pack=|-c\s+core\.sshCommand|--exec=)"),"git-argv-injection", match(process,"(?i)(-EncodedCommand|\s-enc\s|\s-ec\s)"),"powershell-encoded", match(process,"(?i)(\$\(|`[^`]{2,}`|;\s*(curl|wget|nc|bash|sh|python|powershell|base64|chmod)|\|\s*(sh|bash|nc|base64|tee)|&&\s*(curl|wget|nc|bash|sh|python|powershell))"),"shell-metachars", match(process,"(?i)(/dev/tcp/|bash\s+-i|nc\s+-e|base64\s+-d|python\S*\s+-c\s+['\"]\s*(import|exec|os\.system))"),"reverse-shell-pattern", match(process,"(?i)(--config\s|\s-K\s|--upload-file|\s-T\s+[A-Za-z/])"),"curl-argv-injection", "") | where injection_class!="" | search NOT user IN ("SYSTEM","LOCAL SERVICE","NETWORK SERVICE","root") AND NOT match(user,"\\$$") | sort 0 - lastTime
+datadog_query: |-
+  (source:windows.sysmon OR source:linux.auditd) (@EventID:1 OR @auditd.type:EXECVE) (@ParentImage:(*\\w3wp.exe OR *\\php-fpm.exe OR *\\php-cgi.exe OR *\\php.exe OR *\\httpd.exe OR *\\nginx.exe OR *\\node.exe OR *\\n8n.exe OR *\\python.exe OR *\\python3.exe OR *\\java.exe OR *\\ruby.exe OR *\\kopia.exe OR *\\kopia-ui.exe OR *\\deepseek-tui.exe OR *\\utcp.exe) OR @process.parent.name:(php-fpm OR php-cgi OR php OR httpd OR apache2 OR nginx OR node OR n8n OR python OR python3 OR ruby OR java OR kopia OR deepseek-tui OR utcp)) (@Image:(*\\ssh.exe OR *\\git.exe OR *\\bash.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\cmd.exe OR *\\curl.exe OR *\\wget.exe OR *\\python.exe OR *\\python3.exe OR *\\perl.exe) OR @process.name:(ssh OR git OR bash OR sh OR dash OR zsh OR ksh OR pwsh OR powershell OR curl OR wget OR nc OR ncat OR socat OR python OR python3 OR perl OR ruby)) (@CommandLine:(*ProxyCommand* OR *upload-pack=* OR *receive-pack=* OR *core.sshCommand* OR *EncodedCommand* OR *\/dev\/tcp\/* OR *base64* OR *bash\ -i* OR *nc\ -e*) OR @process.command_line:(*ProxyCommand* OR *upload-pack=* OR *receive-pack=* OR *core.sshCommand* OR *EncodedCommand* OR *\/dev\/tcp\/* OR *base64* OR *bash\ -i* OR *nc\ -e*)) -@User:SYSTEM -@user.name:root

@@ -1,0 +1,128 @@
+id: UC_WEEKLY_PACKAGE_MANAGER_INSTALL_HOOK_SPAWNS_INTERPRETER_TH
+title: "[WEEKLY] Package-Manager Install Hook Spawns Interpreter then Beacons Out (Supply-Chain Worm Install-Time Execution)"
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: medium
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1195.002
+  name: Compromise Software Supply Chain
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1059.001
+  name: "Command and Scripting Interpreter: PowerShell"
+- id: T1059.004
+  name: "Command and Scripting Interpreter: Unix Shell"
+- id: T1041
+  name: Exfiltration Over C2 Channel
+- id: T1552.001
+  name: "Unsecured Credentials: Credentials In Files"
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Network_Traffic.All_Traffic
+description: |-
+  Detects the install-time execution primitive shared by every supply-chain worm wave observed this fortnight: a package-manager process (npm / npx / yarn / pnpm / bun / composer / php) runs a tampered dependency whose lifecycle hook (preinstall, postinstall, Composer autoloader, or `vendor/autoload.php`) spawns a scripting interpreter (powershell, pwsh, cmd, sh / bash, node, bun, python, php, curl, wget) which then makes outbound public-internet egress within a short window. This catches all five waves reported between 11-23 May 2026: 'TanStack Npm Packages Compromised Inside The Mini Shai Hulud Supply Chain Attack' (Snyk), 'Mini Shai-Hulud Is Back: npm Worm Hits over 160 Packages, including Mistral and Tanstack' (Aikido), 'TeamPCP's Mini Shai-Hulud Is Back: A Self-Spreading Supply Chain Attack' (StepSecurity), 'Mini Shai-Hulud Hits AntV: 300+ Malicious npm Packages' (Snyk) + 'Mini Shai Hulud: Compromised @antv npm packages enable CI/CD credential theft' (Microsoft / StepSecurity), and the Laravel-Lang Composer tag-rewrite hijack (Cyber Security News, BleepingComputer, The Hacker News, StepSecurity, Aikido). Kill-chain stages: install (lifecycle-hook execution under a trusted pkg-manager parent) -> c2/actions (interpreter beacons to attacker infra or exfiltrates CI secrets). Fires when an install command on a developer workstation or CI runner is followed within ~10 min by an interpreter on the same host reaching a public destination; does NOT fire on routine pkg-manager use whose only egress is to known registries (registry.npmjs.org, packagist.org, github.com, codeload, ghcr, *.actions.githubusercontent.com) — those should be excluded via an allow-list rather than the detection schema, so new attacker domains (git-tanstack.com, *.getsession.org, t.m-kosche.com, git-service.com, flipboxstudio.info today; whatever next week) light up automatically.
+  
+  Rationale: Every article in scope — npm Mini Shai-Hulud waves against TanStack, Mistral and @antv plus the Laravel-Lang Composer tag-rewrite — relies on the same install-time primitive: a tampered package's lifecycle hook executes under a trusted pkg-manager parent, spawns an interpreter, and beacons out within minutes. IOCs (git-tanstack.com, *.getsession.org, t.m-kosche.com, git-service.com, flipboxstudio.info, the SHA256 set) all rotate per wave, but the parent->interpreter->egress correlation is invariant across npm + Composer ecosystems and across Windows + Linux developer/CI hosts, which is why the existing IOC-bound hunts in the catalogue (UC_3_5 / UC_9_8 / UC_12_8 / UC_15_7 / UC_69_8 / UC_113_8 / UC_184_9 / UC_195_10) all miss the next domain rotation while this one survives it.
+defender_kql: |-
+  let LookbackDays = 7d;
+  let WindowMin = 10m;
+  let PkgManagers = dynamic(["npm.exe","npm","npx.exe","npx","yarn.exe","yarn","pnpm.exe","pnpm","bun.exe","bun","node.exe","node","composer","composer.phar","php.exe","php"]);
+  let InstallCmdTokens = dynamic(["npm install","npm ci","yarn install","yarn add","pnpm install","pnpm i ","composer install","composer update","composer require","bun install","npx "]);
+  let Interpreters = dynamic(["powershell.exe","pwsh.exe","cmd.exe","sh","bash","zsh","dash","node.exe","node","bun.exe","bun","python.exe","python","python3","php.exe","php","curl.exe","curl","wget.exe","wget"]);
+  let KnownRegistries = dynamic(["registry.npmjs.org","npmjs.org","packagist.org","repo.packagist.org","github.com","codeload.github.com","objects.githubusercontent.com","actions.githubusercontent.com","ghcr.io","pypi.org","files.pythonhosted.org"]);
+  let InstallChain = DeviceProcessEvents
+      | where Timestamp > ago(LookbackDays)
+      | where AccountName !endswith "$"
+      | where InitiatingProcessFileName in~ (PkgManagers)
+           or InitiatingProcessCommandLine has_any (InstallCmdTokens)
+      | where FileName in~ (Interpreters)
+      | where not(ProcessCommandLine has_any ("node-gyp rebuild","--version","-v ","-V "))   // strip benign build-step probes
+      | project InstallTime = Timestamp, DeviceId, DeviceName, AccountName,
+                ParentImage = InitiatingProcessFileName,
+                ParentCmd   = InitiatingProcessCommandLine,
+                ChildImage  = FileName,
+                ChildCmd    = ProcessCommandLine,
+                ChildPid    = ProcessId;
+  let Egress = DeviceNetworkEvents
+      | where Timestamp > ago(LookbackDays)
+      | where RemoteIPType == "Public"
+      | where isnotempty(RemoteUrl) or isnotempty(RemoteIP)
+      | extend RemoteHost = tolower(coalesce(RemoteUrl, RemoteIP))
+      | where not(RemoteHost has_any (KnownRegistries))
+      | project NetTime = Timestamp, DeviceId, RemoteUrl, RemoteIP, RemotePort,
+                NetInitiator = InitiatingProcessFileName,
+                NetInitiatorPid = InitiatingProcessId;
+  InstallChain
+  | join kind=inner Egress on DeviceId
+  | where NetTime between (InstallTime .. InstallTime + WindowMin)
+  | extend DelaySec = datetime_diff('second', NetTime, InstallTime)
+  | summarize InstallTime = min(InstallTime), NetTime = min(NetTime),
+              DelaySec = min(DelaySec),
+              ParentCmd = any(ParentCmd), ChildCmd = any(ChildCmd),
+              Egresses = make_set(strcat(coalesce(RemoteUrl, RemoteIP), ":", tostring(RemotePort)), 25)
+              by DeviceName, AccountName, ParentImage, ChildImage
+  | order by InstallTime desc
+sentinel_kql: |-
+  let LookbackDays = 7d;
+  let WindowMin = 10m;
+  let PkgManagers = dynamic(["npm.exe","npx.exe","yarn.exe","pnpm.exe","bun.exe","node.exe","composer","composer.phar","php.exe"]);
+  let InstallCmdTokens = dynamic(["npm install","npm ci","yarn install","yarn add","pnpm install","composer install","composer update","composer require","bun install","npx "]);
+  let Interpreters = dynamic(["powershell.exe","pwsh.exe","cmd.exe","sh","bash","zsh","node.exe","bun.exe","python.exe","python3","php.exe","curl.exe","wget.exe"]);
+  let KnownRegistries = dynamic(["registry.npmjs.org","npmjs.org","packagist.org","repo.packagist.org","github.com","codeload.github.com","objects.githubusercontent.com","actions.githubusercontent.com","ghcr.io","pypi.org","files.pythonhosted.org"]);
+  let InstallChain = SecurityEvent
+      | where TimeGenerated > ago(LookbackDays)
+      | where EventID == 4688
+      | extend ParentName = tolower(tostring(split(ParentProcessName, "\\")[-1])),
+               ChildName  = tolower(tostring(split(NewProcessName,  "\\")[-1]))
+      | where SubjectUserName !endswith "$"
+      | where ParentName in~ (PkgManagers)
+           or ParentCommandLine has_any (InstallCmdTokens)
+      | where ChildName in~ (Interpreters)
+      | project InstallTime = TimeGenerated, Computer, Account = SubjectUserName,
+                ParentName, ParentCmd = ParentCommandLine,
+                ChildName, ChildCmd = CommandLine, ChildPid = NewProcessId;
+  let Egress = union isfuzzy=true
+      (CommonSecurityLog
+          | where TimeGenerated > ago(LookbackDays)
+          | where isnotempty(DestinationHostName) or isnotempty(DestinationIP)
+          | extend RemoteHost = tolower(coalesce(DestinationHostName, DestinationIP))
+          | where not(RemoteHost has_any (KnownRegistries))
+          | project NetTime = TimeGenerated, Computer = DeviceName, RemoteHost, DestinationPort),
+      (DnsEvents
+          | where TimeGenerated > ago(LookbackDays)
+          | where SubType == "LookupQuery"
+          | extend RemoteHost = tolower(Name)
+          | where not(RemoteHost has_any (KnownRegistries))
+          | project NetTime = TimeGenerated, Computer, RemoteHost, DestinationPort = int(null));
+  InstallChain
+  | join kind=inner Egress on Computer
+  | where NetTime between (InstallTime .. InstallTime + WindowMin)
+  | extend DelaySec = datetime_diff('second', NetTime, InstallTime)
+  | summarize InstallTime = min(InstallTime), NetTime = min(NetTime), DelaySec = min(DelaySec),
+              ParentCmd = any(ParentCmd), ChildCmd = any(ChildCmd),
+              Egresses = make_set(strcat(RemoteHost, ":", tostring(DestinationPort)), 25)
+              by Computer, Account, ParentName, ChildName
+  | order by InstallTime desc
+splunk_spl: |-
+  | tstats summariesonly=t count min(_time) as install_time values(Processes.process) as child_cmdline values(Processes.process_name) as child_proc values(Processes.parent_process) as parent_cmdline values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("npm.exe","npm","npx.exe","npx","yarn.exe","yarn","pnpm.exe","pnpm","bun.exe","bun","node.exe","node","composer","composer.phar","php.exe","php") OR Processes.parent_process IN ("*npm install*","*npm ci*","*yarn install*","*pnpm install*","*pnpm i *","*composer install*","*composer update*","*composer require*","*bun install*","*npx *")) AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","sh","bash","zsh","dash","node.exe","node","bun.exe","bun","python.exe","python","python3","php.exe","php","curl.exe","curl","wget.exe","wget") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name _time
+  | `drop_dm_object_name(Processes)`
+  | rename _time as install_time
+  | join type=inner dest [
+      | tstats summariesonly=t min(_time) as net_time values(All_Traffic.dest) as c2_dest values(All_Traffic.dest_ip) as c2_ip values(All_Traffic.dest_port) as c2_port values(All_Traffic.app) as net_app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_category!="internal" AND All_Traffic.dest_ip!="127.0.0.1" AND NOT (All_Traffic.dest IN ("registry.npmjs.org","*.npmjs.org","packagist.org","*.packagist.org","github.com","codeload.github.com","objects.githubusercontent.com","*.actions.githubusercontent.com","ghcr.io")) by All_Traffic.src
+      | rename All_Traffic.src as dest
+    ]
+  | eval delay_sec = net_time - install_time
+  | where delay_sec >= 0 AND delay_sec <= 600
+  | `security_content_ctime(install_time)`
+  | `security_content_ctime(net_time)`
+  | table install_time, net_time, delay_sec, dest, user, parent_process_name, parent_cmdline, child_proc, child_cmdline, c2_dest, c2_ip, c2_port, net_app
+  | sort - install_time
+datadog_query: |-
+  (source:windows.sysmon @EventID:1 (@ParentImage:(*\\npm.exe OR *\\npx.exe OR *\\yarn.exe OR *\\pnpm.exe OR *\\bun.exe OR *\\node.exe OR *\\composer* OR *\\php.exe) OR @ParentCommandLine:(*"npm install"* OR *"npm ci"* OR *"yarn install"* OR *"pnpm install"* OR *"composer install"* OR *"composer update"* OR *"composer require"* OR *"bun install"* OR *"npx "*)) @Image:(*\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\cmd.exe OR *\\node.exe OR *\\bun.exe OR *\\python.exe OR *\\php.exe OR *\\curl.exe OR *\\wget.exe)) OR (source:linux.auditd @auditd.type:EXECVE (@process.parent.executable.path:(*/npm OR */npx OR */yarn OR */pnpm OR */bun OR */node OR */composer OR */php) OR @process.parent.command_line:(*"npm install"* OR *"yarn install"* OR *"pnpm install"* OR *"composer install"* OR *"composer update"* OR *"bun install"*)) @process.executable.path:(*/sh OR */bash OR */zsh OR */dash OR */node OR */bun OR */python* OR */curl OR */wget OR */php))

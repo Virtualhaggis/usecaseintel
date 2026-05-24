@@ -1,0 +1,156 @@
+id: UC_WEEKLY_SELF_HOSTED_APPLICATION_SERVICE_SPAWNS_SHELL_OR_SS
+title: "[WEEKLY] Self-hosted application service spawns shell or SSH within seconds of inbound unauthenticated API write"
+kill_chain: exploit
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1059.004
+  name: "Command and Scripting Interpreter: Unix Shell"
+- id: T1059.001
+  name: "Command and Scripting Interpreter: PowerShell"
+- id: T1505.003
+  name: "Server Software Component: Web Shell"
+- id: T1133
+  name: External Remote Services
+- id: T1071.001
+  name: "Application Layer Protocol: Web Protocols"
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Network_Traffic.All_Traffic
+  - Web
+description: |-
+  Detects the recurring pattern across this fortnight's GHSA-Critical drop where a self-hosted Go/Node/Python/PHP service receives an unauthenticated (or low-privileged) POST/PATCH/PUT to an internal API path and within ~120s the same service process spawns a shell, ssh, or scripting interpreter child — the universal smoking-gun of in-process RCE primitives. This catches the chain in Nezha cron-RCE (CVE-2026-46716), Kopia SSH ProxyCommand injection (CVE-2026-45695), Algernon handler.lua escape (CVE-2026-45721), Fission router unauthenticated function invoke (CVE-2026-46614), Twig {% use %} PHP injection (CVE-2026-46633), FileBrowser Quantum path-traversal PATCH (GHSA-qqqm-5547-774x), Boxlite OCI symlink escape (CVE-2026-46703), YesWiki Bazar SQLi follow-on (CVE-2026-46670), zrok ProxyShare SSRF (CVE-2026-45568), and the @cap-js / guardrails-ai supply-chain stage-2 payloads (CVE-2026-46421, CVE-2026-45758). It spans Delivery (the HTTP request) into Exploit / Execute (the unexpected interpreter child). It fires when one of the listed service binaries is the immediate parent of /bin/sh, ssh, powershell, python, etc., correlated to an inbound listener connection in the prior 120s — it does NOT fire on the service's normal supervisor/health-check child processes, on container-runtime forks (containerd-shim, runc), or when the parent is a CI/dev image (`*-dev`, `*-test`).
+  
+  Rationale: Every CVE in this fortnight's drop ultimately turns an unauthenticated/low-priv HTTP write into either a process spawn under the service or a shell-fork primitive — joining inbound listener traffic to an unexpected interpreter child under the same parent service binary, within a tight window, fires on the joint behaviour and stays useful as IOCs rotate.
+defender_kql: |-
+  // Self-hosted niche service spawns shell/ssh/interpreter within 120s of inbound API listener hit
+  let Lookback = 7d;
+  let WindowSec = 120;
+  let VulnerableServiceParents = dynamic([
+    "nezha","nezha-dashboard","kopia","kopia.exe","kopia-ui","kopia-ui.exe",
+    "algernon","filebrowser","fission-router","fission-bundle","boxlite",
+    "zrok","yeswiki","php-fpm","php-fpm8.1","php-fpm8.2","php-fpm8.3",
+    "httpd","apache2","node","node.exe","python","python3","python.exe"
+  ]);
+  let SuspiciousChildren = dynamic([
+    "sh","bash","dash","zsh","ash","ssh","ssh.exe",
+    "cmd.exe","powershell.exe","pwsh.exe",
+    "perl","ruby","curl","wget","nc","ncat","socat"
+  ]);
+  let ListenerPorts = dynamic([80,443,2222,3000,4242,5000,8000,8080,8081,8443,8888,9000,9090]);
+  let WebShellChildren = DeviceProcessEvents
+    | where Timestamp > ago(Lookback)
+    | where tolower(InitiatingProcessFileName) in (VulnerableServiceParents)
+    | where tolower(FileName) in (SuspiciousChildren)
+    | where InitiatingProcessFileName !endswith "-dev" and InitiatingProcessFileName !endswith "-test"
+    | where AccountName !endswith "$"
+    | where not(InitiatingProcessCommandLine has_any ("healthcheck","--version","/healthz"))
+    | extend ChildTime = Timestamp,
+             VulnService = InitiatingProcessFileName,
+             ChildBin    = FileName,
+             ChildCmd    = ProcessCommandLine,
+             ParentPid   = InitiatingProcessId
+    | project DeviceId, DeviceName, AccountName, ChildTime, VulnService, ChildBin, ChildCmd, ParentPid,
+             InitiatingProcessFolderPath, FolderPath, SHA256;
+  let InboundHits = DeviceNetworkEvents
+    | where Timestamp > ago(Lookback)
+    | where ActionType in ("InboundConnectionAccepted","ConnectionInbound","ListeningConnectionCreated")
+    | where LocalPort in (ListenerPorts) or RemotePort in (ListenerPorts)
+    | extend InboundTime = Timestamp,
+             RemoteSrc   = tostring(RemoteIP),
+             ListenerPort = coalesce(LocalPort, RemotePort)
+    | project DeviceId, InboundTime, RemoteSrc, ListenerPort, InitiatingProcessFileName;
+  WebShellChildren
+  | join kind=inner InboundHits on DeviceId
+  | where InboundTime between (ChildTime - WindowSec * 1s .. ChildTime + 5s)
+  | extend DelaySec = datetime_diff('second', ChildTime, InboundTime)
+  | summarize FirstInbound = min(InboundTime),
+              DistinctSrcIps = dcount(RemoteSrc),
+              SrcIps = make_set(RemoteSrc, 25),
+              ListenerPorts = make_set(ListenerPort, 25)
+            by DeviceName, AccountName, VulnService, ChildBin, ChildCmd, ChildTime, ParentPid, SHA256
+  | extend DelaySec = datetime_diff('second', ChildTime, FirstInbound)
+  | where DelaySec between (0 .. WindowSec)
+  | project ChildTime, DeviceName, AccountName, VulnService, ChildBin, ChildCmd,
+            DelaySec, ListenerPorts, SrcIps, DistinctSrcIps, ParentPid, SHA256
+  | order by ChildTime desc
+sentinel_kql: |-
+  // Multi-source: W3CIIS / Syslog (web layer) + Sysmon EID 1 / DeviceProcessEvents (process layer)
+  let Lookback = 7d;
+  let WindowSec = 120;
+  let VulnerableServiceParents = dynamic([
+    "nezha","nezha-dashboard","kopia","kopia.exe","kopia-ui","kopia-ui.exe",
+    "algernon","filebrowser","fission-router","fission-bundle","boxlite",
+    "zrok","yeswiki","php-fpm","php-fpm8.1","php-fpm8.2","php-fpm8.3",
+    "httpd","apache2","node","node.exe","python","python3","python.exe"]);
+  let SuspiciousChildren = dynamic([
+    "sh","bash","dash","zsh","ash","ssh","ssh.exe","cmd.exe","powershell.exe","pwsh.exe",
+    "perl","ruby","curl","wget","nc","ncat","socat"]);
+  let VulnApiPaths = dynamic([
+    "/api/v1/cron","/api/v1/repo/exists","/fission-function/",
+    "/public/api/resources","BazaR","vue=formulaire","handler.lua"]);
+  let ChildSpawns = SecurityEvent
+    | where TimeGenerated > ago(Lookback)
+    | where EventID == 4688
+    | extend ParentBase = tolower(tostring(split(ParentProcessName, "\\")[-1])),
+             ChildBase  = tolower(tostring(split(NewProcessName,    "\\")[-1]))
+    | where ParentBase in (VulnerableServiceParents)
+    | where ChildBase  in (SuspiciousChildren)
+    | where SubjectUserName !endswith "$"
+    | extend ChildTime = TimeGenerated,
+             VulnService = ParentBase,
+             ChildBin = ChildBase,
+             ChildCmd = CommandLine
+    | project Computer, SubjectUserName, ChildTime, VulnService, ChildBin, ChildCmd, NewProcessId;
+  let WebHits = union isfuzzy=true
+    (W3CIISLog
+      | where TimeGenerated > ago(Lookback)
+      | where csMethod in ("POST","PATCH","PUT")
+      | where csUriStem has_any (VulnApiPaths)
+      | extend Computer = sComputerName, InboundTime = TimeGenerated, RemoteSrc = cIP, ApiPath = csUriStem),
+    (Syslog
+      | where TimeGenerated > ago(Lookback)
+      | where SyslogMessage has_any (VulnApiPaths)
+      | where SyslogMessage has_any ("POST ","PATCH ","PUT ")
+      | extend Computer = HostName, InboundTime = TimeGenerated,
+               RemoteSrc = extract(@"(\d+\.\d+\.\d+\.\d+)", 1, SyslogMessage),
+               ApiPath  = extract(@"\"(?:POST|PATCH|PUT)\s+(\S+)", 1, SyslogMessage))
+    | project Computer, InboundTime, RemoteSrc, ApiPath;
+  ChildSpawns
+  | join kind=inner WebHits on Computer
+  | where InboundTime between (ChildTime - WindowSec * 1s .. ChildTime + 5s)
+  | extend DelaySec = datetime_diff('second', ChildTime, InboundTime)
+  | summarize FirstInbound = min(InboundTime),
+              DistinctSrcIps = dcount(RemoteSrc),
+              SrcIps = make_set(RemoteSrc, 25),
+              ApiPaths = make_set(ApiPath, 25)
+            by Computer, SubjectUserName, VulnService, ChildBin, ChildCmd, ChildTime, NewProcessId
+  | extend DelaySec = datetime_diff('second', ChildTime, FirstInbound)
+  | where DelaySec between (0 .. WindowSec)
+  | project ChildTime, Computer, SubjectUserName, VulnService, ChildBin, ChildCmd,
+            DelaySec, ApiPaths, SrcIps, DistinctSrcIps, NewProcessId
+  | order by ChildTime desc
+splunk_spl: |-
+  | tstats summariesonly=t count min(_time) as proc_time values(Processes.process) as child_cmd values(Processes.process_path) as child_path values(Processes.user) as proc_user from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("nezha","nezha-dashboard","kopia","kopia.exe","kopia-ui","kopia-ui.exe","algernon","filebrowser","fission-router","fission-bundle","boxlite","zrok","yeswiki","php-fpm","php-fpm8.1","php-fpm8.2","php-fpm8.3","httpd","apache2","node","node.exe","python","python3","python.exe") AND Processes.process_name IN ("sh","bash","dash","zsh","ash","ssh","ssh.exe","cmd.exe","powershell.exe","pwsh.exe","perl","python","python3","ruby","node","curl","wget","nc","ncat","socat") AND Processes.parent_process_name!="*-dev" AND Processes.parent_process_name!="*-test" by host, Processes.parent_process_name, Processes.process_name, Processes.process, Processes.user, Processes.process_id, Processes.parent_process_id
+  | `drop_dm_object_name(Processes)`
+  | eval window_start = proc_time - 120, window_end = proc_time + 5
+  | join type=inner host [ | tstats summariesonly=t count as inbound_hits values(All_Traffic.src) as src_ip values(All_Traffic.dest_port) as listener_port values(All_Traffic.transport) as transport from datamodel=Network_Traffic.All_Traffic where All_Traffic.direction="inbound" AND All_Traffic.dest_port IN (80,443,2222,3000,4242,5000,8000,8080,8081,8443,8888,9000,9090) by All_Traffic.dest, All_Traffic.dest_port, All_Traffic.src, _time | `drop_dm_object_name(All_Traffic)` | rename dest as host, _time as inbound_time ]
+  | where inbound_time >= window_start AND inbound_time <= window_end
+  | eval delta_seconds = proc_time - inbound_time
+  | stats min(inbound_time) as first_inbound, max(proc_time) as child_spawn_time, values(src_ip) as remote_src_ips, values(listener_port) as listener_ports, values(parent_process_name) as vulnerable_service, values(process_name) as child_binary, values(process) as child_cmdline, values(user) as run_as, dc(src_ip) as distinct_src_ips, count as event_count by host, parent_process_id, process_id
+  | eval delay_sec = round(child_spawn_time - first_inbound, 1)
+  | where delay_sec <= 120
+  | convert ctime(first_inbound) ctime(child_spawn_time)
+  | sort 0 - child_spawn_time
+  | table child_spawn_time, host, vulnerable_service, child_binary, child_cmdline, run_as, listener_ports, remote_src_ips, distinct_src_ips, delay_sec
+datadog_query: |-
+  source:(windows.sysmon OR linux.auditd) ((@EventID:1 AND (@ParentImage:(*\\nezha* OR *\\kopia* OR *\\kopia-ui* OR *\\algernon* OR *\\filebrowser* OR *\\fission-router* OR *\\fission-bundle* OR *\\boxlite* OR *\\zrok* OR *\\php-fpm* OR *\\httpd* OR *\\apache2* OR *\\node.exe OR *\\python.exe OR *\\python3) AND @Image:(*\\sh OR *\\bash OR *\\dash OR *\\zsh OR *\\ash OR *\\ssh OR *\\ssh.exe OR *\\cmd.exe OR *\\powershell.exe OR *\\pwsh.exe OR *\\perl OR *\\curl OR *\\wget OR *\\nc OR *\\ncat OR *\\socat))) OR (@auditd.type:EXECVE AND @process.executable.path:(*/nezha* OR */kopia* OR */algernon* OR */filebrowser* OR */fission-router* OR */fission-bundle* OR */boxlite* OR */zrok* OR */php-fpm* OR */httpd* OR */apache2* OR */node OR */python OR */python3) AND @process.parent.name:(nezha OR kopia OR algernon OR filebrowser OR fission-router OR fission-bundle OR boxlite OR zrok OR php-fpm OR httpd OR apache2 OR node OR python OR python3) AND @process.name:(sh OR bash OR dash OR zsh OR ash OR ssh OR perl OR curl OR wget OR nc OR ncat OR socat))) -@ParentImage:(*-dev* OR *-test*) -@process.parent.command_line:(*healthcheck* OR *--version*)

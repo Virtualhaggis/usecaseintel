@@ -1,0 +1,161 @@
+id: UC_WEEKLY_OAUTH_DEVICE_CODE_CONSENT_PHISH_TO_CROSS_IP_CLOUD_
+title: "[WEEKLY] OAuth Device-Code Consent Phish to Cross-IP Cloud Token Replay"
+kill_chain: c2
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1528
+  name: Steal Application Access Token
+- id: T1550.001
+  name: "Use Alternate Authentication Material: Application Access Token"
+- id: T1078.004
+  name: "Valid Accounts: Cloud Accounts"
+- id: T1098.001
+  name: "Account Manipulation: Additional Cloud Credentials"
+- id: T1098.005
+  name: "Account Manipulation: Device Registration"
+- id: T1539
+  name: Steal Web Session Cookie
+- id: T1566.002
+  name: "Phishing: Spearphishing Link"
+- id: T1530
+  name: Data from Cloud Storage
+data_models:
+  defender:
+  - Authentication
+  - Change
+  - Web
+  - Email.All_Email
+description: |-
+  Detects the EvilTokens / Storm-2949 consent-phishing chain: a successful Entra ID device-code authentication (or an OAuth consent grant to a non-Microsoft first-party app) is followed within 60 minutes by privileged cloud activity from a DIFFERENT source IP / ASN than the one that initiated the device-code request, where 'privileged activity' means mass mailbox/SharePoint reads, inbox-rule creation, app-credential or device-registration manipulation, or token use against Graph from a new ASN. This fortnight the pattern is driven by 'The New Phishing Click: How OAuth Consent Bypasses MFA' (EvilTokens PhaaS, 340+ M365 tenants in 5 weeks), 'How Storm-2949 turned a compromised identity into a cloud-wide breach' (token-theft-led cloud exfil to T1530/T1567.002), and the phishing-exposure pieces from THN and BleepingComputer. The chain spans delivery (phish link / pasted device code), exploit/persistence (T1528 token theft, T1098.001 credential add), and actions (T1550.001 token replay, cloud data theft). It fires when both stages match across IPs; it does NOT fire on legitimate device-code logons from kiosks / Teams Rooms / headless devices where the subsequent token use occurs from the same egress IP, nor on conditional-access-blocked attempts (those never produce a downstream success).
+  
+  Rationale: Every article in scope converges on stolen-token cloud abuse — EvilTokens (device-code consent PhaaS), Storm-2949 (identity-to-cloud breach), and the THN/Bleeping pieces on phishing-driven session theft all rely on the SAME post-auth tell: a legitimate-looking Entra sign-in (device code / OAuth consent) is replayed from attacker infrastructure to take privileged actions within minutes. Joining the auth event to the downstream privileged action AND requiring a source-IP mismatch within 60 minutes catches the campaign pattern even when IOCs (apps, IPs, code-paste lures) rotate.
+defender_kql: |-
+  // Stage 1 — EvilTokens-style: successful device-code or OAuth consent sign-in
+  let WindowMin = 60m;
+  let Lookback = 7d;
+  let ConsentAuth =
+      AADSignInEventsBeta
+      | where Timestamp > ago(Lookback)
+      | where ErrorCode == 0
+      | where AuthenticationProtocol =~ "deviceCode"
+           or AuthenticationRequirement =~ "deviceCode"
+           or ApplicationId !in~ ("00000003-0000-0000-c000-000000000000","1fec8e78-bce4-4aaf-ab1b-5451cc387264")
+              and isnotempty(ResourceDisplayName)
+      | project AuthTime = Timestamp, AccountUpn, AccountObjectId, AuthIp = IPAddress,
+                AuthCountry = Country, AuthApp = ApplicationDisplayName, SessionId,
+                AuthAsn = tostring(NetworkLocationDetails);
+  // Stage 2 — privileged cloud action from a different IP, ≤60 min later
+  let PrivAct =
+      CloudAppEvents
+      | where Timestamp > ago(Lookback)
+      | where ActionType in~ (
+          "Add service principal credentials.",
+          "Add owner to application.",
+          "Add app role assignment to service principal.",
+          "Consent to application.",
+          "New-InboxRule","Set-InboxRule",
+          "Add-MailboxPermission",
+          "FileDownloaded","FileSyncDownloadedFull",
+          "MailItemsAccessed",
+          "Update user.","Add member to role.",
+          "Register device.")
+      | project ActTime = Timestamp, AccountUpn = AccountDisplayName, ActIp = IPAddress,
+                ActCountry = CountryCode, ActionType, ObjectName = ObjectId, RawEventData;
+  ConsentAuth
+  | join kind=inner (PrivAct) on AccountUpn
+  | where ActTime between (AuthTime .. AuthTime + WindowMin)
+  | where tostring(AuthIp) != tostring(ActIp)
+  | extend DelayMin = datetime_diff('minute', ActTime, AuthTime)
+  | summarize ActionCount = count(),
+              Actions = make_set(ActionType, 25),
+              FirstAct = min(ActTime),
+              LastAct = max(ActTime),
+              DistinctActIps = dcount(ActIp),
+              ActIps = make_set(ActIp, 10),
+              ActCountries = make_set(ActCountry, 10)
+              by AuthTime, AccountUpn, AuthIp, AuthCountry, AuthApp, SessionId
+  | where ActionCount >= 1   // any single sensitive action from a new IP within 60m is alert-worthy
+  | order by FirstAct desc
+sentinel_kql: |-
+  // Sentinel — SigninLogs (device-code / OAuth consent) joined to AuditLogs + OfficeActivity
+  let WindowMin = 60m;
+  let Lookback = 7d;
+  let ConsentAuth =
+      SigninLogs
+      | where TimeGenerated > ago(Lookback)
+      | where ResultType == 0
+      | where AuthenticationProtocol =~ "deviceCode"
+           or tostring(AuthenticationDetails) has "deviceCode"
+      | project AuthTime = TimeGenerated, UserPrincipalName, UserId,
+                AuthIp = IPAddress, AuthCountry = LocationDetails.countryOrRegion,
+                AuthApp = AppDisplayName, SessionId = CorrelationId;
+  let PrivAuditAct =
+      AuditLogs
+      | where TimeGenerated > ago(Lookback)
+      | where OperationName in~ (
+          "Add service principal credentials",
+          "Consent to application",
+          "Add owner to application",
+          "Add app role assignment grant to user",
+          "Update application – Certificates and secrets management",
+          "Add member to role",
+          "Register device")
+      | extend Upn = tostring(InitiatedBy.user.userPrincipalName),
+               ActIp = tostring(InitiatedBy.user.ipAddress)
+      | project ActTime = TimeGenerated, UserPrincipalName = Upn, ActIp,
+                ActionType = OperationName, Target = tostring(TargetResources);
+  let PrivOfficeAct =
+      OfficeActivity
+      | where TimeGenerated > ago(Lookback)
+      | where Operation in~ ("New-InboxRule","Set-InboxRule","Add-MailboxPermission",
+                             "FileDownloaded","FileSyncDownloadedFull","MailItemsAccessed")
+      | project ActTime = TimeGenerated, UserPrincipalName = UserId,
+                ActIp = ClientIP, ActionType = Operation, Target = OfficeObjectId;
+  let PrivAct = union PrivAuditAct, PrivOfficeAct;
+  ConsentAuth
+  | join kind=inner (PrivAct) on UserPrincipalName
+  | where ActTime between (AuthTime .. AuthTime + WindowMin)
+  | where tostring(AuthIp) != tostring(ActIp)
+  | extend DelayMin = datetime_diff('minute', ActTime, AuthTime)
+  | summarize ActionCount = count(),
+              Actions = make_set(ActionType, 25),
+              FirstAct = min(ActTime),
+              LastAct = max(ActTime),
+              ActIps = make_set(ActIp, 10)
+              by AuthTime, UserPrincipalName, AuthIp, tostring(AuthCountry), AuthApp, SessionId
+  | order by FirstAct desc
+splunk_spl: |-
+  ``` Stage 1: device-code or non-Microsoft OAuth consent sign-in success ```
+  | tstats `summariesonly` earliest(_time) AS auth_time, values(Authentication.src) AS auth_src_ip, values(Authentication.app) AS auth_app
+      from datamodel=Authentication
+      where Authentication.action="success" AND (Authentication.signature_id="deviceCode" OR Authentication.authentication_method="deviceCode" OR Authentication.signature="Consent to application")
+      by Authentication.user, Authentication.dest
+  | `drop_dm_object_name(Authentication)`
+  | rename user AS upn, dest AS tenant
+  ``` Stage 2: privileged cloud action from a DIFFERENT src IP within 60 min ```
+  | join type=inner upn
+      [| tstats `summariesonly` earliest(_time) AS act_time, values(All_Changes.src) AS act_src_ip, values(All_Changes.action) AS act_name, values(All_Changes.object) AS act_obj
+          from datamodel=Change
+          where All_Changes.object_category IN ("user","mailbox","application","role","device")
+            AND All_Changes.action IN ("created","modified","granted","added")
+            AND All_Changes.result="success"
+          by All_Changes.user
+       | `drop_dm_object_name(All_Changes)`
+       | rename user AS upn]
+  | where act_time >= auth_time AND act_time <= auth_time + 3600
+  | where auth_src_ip != act_src_ip
+  | iplocation auth_src_ip prefix=auth_
+  | iplocation act_src_ip prefix=act_
+  | where auth_Country != act_Country OR isnull(act_Country)
+  | eval delay_min = round((act_time - auth_time)/60, 1)
+  | table auth_time, act_time, delay_min, upn, tenant, auth_src_ip, auth_Country, act_src_ip, act_Country, act_name, act_obj, auth_app
+  | sort 0 - act_time
+datadog_query: |-
+  (source:azure.activeDirectory @evt.name:"Sign-in activity" @properties.authenticationProtocol:deviceCode @properties.status.errorCode:0) OR (source:azure.activeDirectory @evt.name:("Consent to application" OR "Add service principal credentials" OR "Add owner to application" OR "Register device" OR "Add app role assignment grant to user")) OR (source:o365 @evt.name:(New-InboxRule OR Set-InboxRule OR Add-MailboxPermission OR FileDownloaded OR FileSyncDownloadedFull OR MailItemsAccessed))

@@ -1,0 +1,160 @@
+id: UC_WEEKLY_PACKAGE_MANAGER_INSTALL_HOOK_SPAWNS_SCRIPTING_INTE
+title: "[WEEKLY] Package Manager Install Hook Spawns Scripting Interpreter Then Touches Credential Files or Egresses Off-Registry"
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: medium
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1195.002
+  name: Compromise Software Supply Chain
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1059.006
+  name: "Command and Scripting Interpreter: Python"
+- id: T1552.001
+  name: "Unsecured Credentials: Credentials In Files"
+- id: T1041
+  name: Exfiltration Over C2 Channel
+- id: T1071.001
+  name: "Application Layer Protocol: Web Protocols"
+- id: T1027
+  name: Obfuscated Files or Information
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Endpoint.Filesystem
+  - Network_Traffic.All_Traffic
+  - Network_Resolution.DNS
+description: |-
+  Detects the joint pattern shared across the May 2026 npm/PyPI/Packagist compromise wave: a package-manager process (npm/yarn/pnpm/pip/uv/poetry/composer/php) spawns a generic scripting interpreter (node/python/sh/bash/powershell/curl/wget) as part of a postinstall/setup.py hook, and that child either reads developer credential material (.npmrc, .pypirc, ~/.aws/credentials, ~/.ssh/id_rsa, .env, GH_TOKEN-bearing files) or beacons to a non-registry public destination within a 5-minute window on the same host. This matters this fortnight because TeamPCP's self-spreading 'Mini Shai-Hulud' worm hit @tanstack ('TanStack Npm Packages Compromised Inside The Mini Shai Hulud Supply Chain Attack', 'TeamPCP's Mini Shai-Hulud Is Back') and @beproduct/nestjs-auth, Microsoft's durabletask PyPI was trojanised ('The AntV Supply Chain Campaign Expands'), node-ipc, guardrails-ai==0.10.1 (CVE-2026-45758), @cap-js/sqlite|postgres|db-service (CVE-2026-46421), and the Laravel-Lang Composer namespace ('Laravel-Lang Supply Chain Advisory', 'Every Tag…Rewritten', 'Supply Chain Attack Targets Laravel-Lang') were all compromised in a 14-day window — and the '5 Supply Chain Attacks in 48 Hours' write-up plus the npm 2FA-gating response confirm this is the dominant fortnightly TTP. The detection spans install (package hook drops/runs payload), credential-access (T1552.001 / T1555 / T1539), and exfil/C2 (T1041 / T1071) — the IOCs (getsession.org, masscan.cloud, azurestaticprovider.net, flipboxstudio.info, git-tanstack.com, m-kosche.com) rotate package-by-package but the chain is invariant. It fires when a developer or CI runner installs a package and the install lifecycle script reaches outside the registry, including first-install on dev laptops and `npm ci`/`pip install -r`/`composer update` in pipelines. It deliberately does NOT fire on package managers contacting only registry/CDN destinations (registry.npmjs.org, pypi.org, files.pythonhosted.org, packagist.org, codeload.github.com, ghcr.io), on machine-account contexts, or on interpreter spawns that lack the package-manager parent ancestry.
+  
+  Rationale: Every article in scope describes the same chain — a package-ecosystem install runs a lifecycle hook that drops to a generic interpreter, scrapes credential material from well-known dotfile paths, and beacons to attacker-controlled infrastructure that is by definition not the language's package registry. By correlating package-manager-parent → interpreter-child against (credential file touch OR non-registry public egress) within 5 minutes on the same host, the rule catches Mini Shai-Hulud (npm), durabletask/guardrails-ai (PyPI), @cap-js (npm), node-ipc (npm), and Laravel-Lang (Composer/Packagist) without depending on any of their rotating domains, hashes, or package names.
+defender_kql: |-
+  let LookbackDays = 14d;
+  let WindowSeconds = 300;
+  let PkgMgrs = dynamic(["npm.exe","npm-cli.js","yarn.exe","pnpm.exe","pip.exe","pip3.exe","poetry.exe","uv.exe","composer.phar","composer","php.exe","node.exe","python.exe","python3.exe"]);
+  let Interpreters = dynamic(["node.exe","python.exe","python3.exe","powershell.exe","pwsh.exe","cmd.exe","sh","bash","dash","zsh","curl.exe","wget.exe"]);
+  let TrustedRegistries = dynamic(["registry.npmjs.org","pypi.org","files.pythonhosted.org","packagist.org","repo.packagist.org","codeload.github.com","objects.githubusercontent.com","ghcr.io","raw.githubusercontent.com","api.github.com","npmjs.com"]);
+  let CredFileNames = dynamic([".npmrc",".pypirc",".netrc",".env","credentials","credentials.json","id_rsa","id_ed25519",".gitconfig","config.json"]);
+  let CredPathFragments = dynamic([@"\.aws\credentials","/.aws/credentials",@"\.ssh\","/.ssh/",@"\.docker\config.json","/.docker/config.json",@"\.config\gh\","/.config/gh/"]);
+  let PkgInstallChildren = DeviceProcessEvents
+      | where Timestamp > ago(LookbackDays)
+      | where AccountName !endswith "$"
+      | where AccountName !in~ ("system","local service","network service")
+      | where InitiatingProcessFileName in~ (PkgMgrs)
+      | where FileName in~ (Interpreters)
+      | project ChildTime=Timestamp, DeviceId, DeviceName, AccountName,
+                ParentName=InitiatingProcessFileName,
+                ParentCmd=InitiatingProcessCommandLine,
+                ChildName=FileName,
+                ChildCmd=ProcessCommandLine,
+                ChildPid=ProcessId,
+                ChildSha256=SHA256;
+  let CredAccess = DeviceFileEvents
+      | where Timestamp > ago(LookbackDays)
+      | where ActionType in ("FileCreated","FileModified","FileRenamed")
+           or ActionType startswith "FileAccessed"
+      | where FileName in~ (CredFileNames)
+           or FolderPath has_any (CredPathFragments)
+      | project EventTime=Timestamp, DeviceId, Pid=InitiatingProcessId,
+                Kind="cred",
+                Detail=strcat(FolderPath, "\\", FileName);
+  let OffRegistryEgress = DeviceNetworkEvents
+      | where Timestamp > ago(LookbackDays)
+      | where RemoteIPType == "Public"
+      | where isnotempty(RemoteUrl) or isnotempty(RemoteIP)
+      | extend Host = tolower(RemoteUrl)
+      | where not(Host has_any (TrustedRegistries))
+      | project EventTime=Timestamp, DeviceId, Pid=InitiatingProcessId,
+                Kind="net",
+                Detail=strcat(RemoteUrl, " ", RemoteIP, ":", tostring(RemotePort));
+  let FollowUps = union CredAccess, OffRegistryEgress;
+  PkgInstallChildren
+  | join kind=inner FollowUps on DeviceId
+  | where EventTime between (ChildTime .. ChildTime + WindowSeconds * 1s)
+  | where Pid == ChildPid or Kind == "net"  // file events are pid-tight; net broadens to host-window
+  | summarize FollowUpEvents=make_set(strcat(Kind,":",Detail), 25),
+              Kinds=make_set(Kind),
+              FirstChild=min(ChildTime),
+              LastFollowUp=max(EventTime)
+              by DeviceId, DeviceName, AccountName, ParentName, ParentCmd, ChildName, ChildCmd, ChildSha256
+  | where array_length(Kinds) >= 1
+  | extend HasCred = Kinds has "cred", HasNet = Kinds has "net"
+  | order by FirstChild desc
+sentinel_kql: |-
+  let LookbackDays = 14d;
+  let WindowSeconds = 300;
+  let PkgMgrs = dynamic(["npm.exe","npm-cli.js","yarn.exe","pnpm.exe","pip.exe","pip3.exe","poetry.exe","uv.exe","composer.phar","composer","php.exe","node.exe","python.exe","python3.exe"]);
+  let Interpreters = dynamic(["node.exe","python.exe","python3.exe","powershell.exe","pwsh.exe","cmd.exe","sh","bash","dash","zsh","curl.exe","wget.exe"]);
+  let TrustedRegistries = dynamic(["registry.npmjs.org","pypi.org","files.pythonhosted.org","packagist.org","repo.packagist.org","codeload.github.com","objects.githubusercontent.com","ghcr.io","raw.githubusercontent.com"]);
+  let Children = SecurityEvent
+      | where TimeGenerated > ago(LookbackDays)
+      | where EventID == 4688
+      | extend ParentFile = tolower(tostring(split(ParentProcessName,"\\")[-1]))
+      | extend ChildFile  = tolower(tostring(split(NewProcessName,"\\")[-1]))
+      | where ParentFile in (PkgMgrs)
+      | where ChildFile  in (Interpreters)
+      | where SubjectUserName !endswith "$"
+      | project ChildTime=TimeGenerated, Computer, SubjectUserName,
+                ParentFile, ChildFile, ChildCmd=CommandLine, ChildPid=NewProcessId;
+  let SysmonChildren = Event
+      | where TimeGenerated > ago(LookbackDays)
+      | where Source == "Microsoft-Windows-Sysmon" and EventID == 1
+      | extend ed = parse_xml(EventData)
+      | extend ParentImage = tolower(tostring(ed.DataItem.EventData.Data[20]["#text"]))
+      | extend Image       = tolower(tostring(ed.DataItem.EventData.Data[4]["#text"]))
+      | extend ParentFile  = tostring(split(ParentImage,"\\")[-1])
+      | extend ChildFile   = tostring(split(Image,"\\")[-1])
+      | where ParentFile in (PkgMgrs)
+      | where ChildFile  in (Interpreters)
+      | project ChildTime=TimeGenerated, Computer, SubjectUserName=tostring(ed.DataItem.EventData.Data[12]["#text"]),
+                ParentFile, ChildFile,
+                ChildCmd=tostring(ed.DataItem.EventData.Data[10]["#text"]),
+                ChildPid=tostring(ed.DataItem.EventData.Data[3]["#text"]);
+  let AllChildren = union Children, SysmonChildren;
+  let Net = CommonSecurityLog
+      | where TimeGenerated > ago(LookbackDays)
+      | where DeviceAction !in~ ("blocked","denied","dropped")
+      | where isnotempty(DestinationHostName) or isnotempty(DestinationIP)
+      | extend Host = tolower(DestinationHostName)
+      | where not(Host has_any (TrustedRegistries))
+      | project NetTime=TimeGenerated, Computer=DeviceName,
+                Egress=strcat(DestinationHostName," ",DestinationIP,":",tostring(DestinationPort));
+  AllChildren
+  | join kind=inner Net on Computer
+  | where NetTime between (ChildTime .. ChildTime + WindowSeconds * 1s)
+  | summarize Egresses=make_set(Egress, 20),
+              FirstChild=min(ChildTime),
+              LastEgress=max(NetTime)
+              by Computer, SubjectUserName, ParentFile, ChildFile, ChildCmd
+  | order by FirstChild desc
+splunk_spl: |-
+  | tstats summariesonly=t count min(_time) as install_time from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("npm","npm.exe","npm-cli.js","yarn","yarn.exe","pnpm","pnpm.exe","pip","pip.exe","pip3","pip3.exe","poetry","poetry.exe","uv","uv.exe","composer","composer.phar","php","php.exe","node","node.exe","python","python.exe","python3","python3.exe")) AND (Processes.process_name IN ("node","node.exe","python","python.exe","python3","python3.exe","powershell.exe","pwsh.exe","cmd.exe","sh","bash","dash","zsh","curl","curl.exe","wget","wget.exe")) AND NOT (Processes.user IN ("SYSTEM","LOCAL SERVICE","NETWORK SERVICE")) by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id
+  | `drop_dm_object_name(Processes)`
+  | rename process_id as child_pid, process_name as child_name, process as child_cmd, parent_process_name as pkg_mgr
+  | join type=inner host [
+      | tstats summariesonly=t count min(_time) as net_time values(All_Traffic.dest) as dest values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic where All_Traffic.dest_port IN (53,80,443,8080,8443) AND NOT (All_Traffic.dest IN ("registry.npmjs.org","pypi.org","files.pythonhosted.org","packagist.org","repo.packagist.org","codeload.github.com","objects.githubusercontent.com","ghcr.io","raw.githubusercontent.com")) AND NOT (All_Traffic.dest="*.npmjs.org" OR All_Traffic.dest="*.pythonhosted.org" OR All_Traffic.dest="*.packagist.org") by host
+      | `drop_dm_object_name(All_Traffic)`
+    ]
+  | eval delta = net_time - install_time
+  | where delta >= 0 AND delta <= 300
+  | append [
+      | tstats summariesonly=t count min(_time) as install_time from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("npm","npm.exe","pip","pip3","poetry","uv","composer","composer.phar","php","node","python","python3","yarn","pnpm")) AND (Processes.process_name IN ("node","python","python3","sh","bash","powershell.exe","pwsh.exe","cmd.exe","curl","wget")) by host Processes.user Processes.parent_process_name Processes.process_name Processes.process_id
+      | `drop_dm_object_name(Processes)`
+      | join type=inner host [
+          | tstats summariesonly=t count min(_time) as file_time values(Filesystem.file_path) as cred_paths from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN (".npmrc",".pypirc",".netrc",".env","credentials","credentials.json","id_rsa","id_ed25519",".gitconfig","gh_token","config.json") OR Filesystem.file_path="*\\.aws\\credentials" OR Filesystem.file_path="*/.aws/credentials" OR Filesystem.file_path="*\\.ssh\\*" OR Filesystem.file_path="*/.ssh/*" OR Filesystem.file_path="*\\.docker\\config.json" OR Filesystem.file_path="*/.docker/config.json") by host
+          | `drop_dm_object_name(Filesystem)`
+        ]
+      | eval delta = file_time - install_time
+      | where delta >= 0 AND delta <= 300
+    ]
+  | stats min(install_time) as first_install max(coalesce(net_time,file_time)) as last_followup values(pkg_mgr) as pkg_mgr values(child_name) as child values(child_cmd) as child_cmds values(dest) as off_registry_dest values(dest_ip) as off_registry_ip values(cred_paths) as cred_paths by host user
+  | eval first_install=strftime(first_install,"%Y-%m-%d %H:%M:%S"), last_followup=strftime(last_followup,"%Y-%m-%d %H:%M:%S")
+  | where isnotnull(off_registry_dest) OR isnotnull(cred_paths)
+datadog_query: |-
+  (source:windows.sysmon @EventID:1 @ParentImage:(*\\npm.exe OR *\\npm-cli.js OR *\\NPM.EXE OR *\\yarn.exe OR *\\YARN.EXE OR *\\pnpm.exe OR *\\PNPM.EXE OR *\\pip.exe OR *\\PIP.EXE OR *\\pip3.exe OR *\\poetry.exe OR *\\POETRY.EXE OR *\\uv.exe OR *\\UV.EXE OR *\\composer OR *\\composer.phar OR *\\php.exe OR *\\PHP.EXE OR *\\node.exe OR *\\NODE.EXE OR *\\python.exe OR *\\PYTHON.EXE OR *\\python3.exe) @Image:(*\\node.exe OR *\\NODE.EXE OR *\\python.exe OR *\\PYTHON.EXE OR *\\python3.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\cmd.exe OR *\\CMD.EXE OR *\\curl.exe OR *\\wget.exe)) OR (source:linux.auditd @auditd.type:EXECVE @process.executable.path:(*/npm OR */yarn OR */pnpm OR */pip OR */pip3 OR */poetry OR */uv OR */composer OR */composer.phar OR */php OR */node OR */python OR */python3) @process.command_line:(*/node* OR */python* OR */sh* OR */bash* OR */dash* OR */curl* OR */wget* OR *postinstall* OR *setup.py*)) -@network.destination.ip:("registry.npmjs.org" OR "pypi.org" OR "files.pythonhosted.org" OR "packagist.org" OR "codeload.github.com")

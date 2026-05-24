@@ -1,0 +1,108 @@
+id: UC_WEEKLY_PACKAGE_MANAGER_INSTALL_SPAWNING_OUTBOUND_EGRESS_T
+title: "[WEEKLY] Package Manager Install Spawning Outbound Egress to Non-Registry Infrastructure Within 5 Minutes"
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: medium
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1195.002
+  name: Compromise Software Supply Chain
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1059.006
+  name: "Command and Scripting Interpreter: Python"
+- id: T1071.001
+  name: "Application Layer Protocol: Web Protocols"
+- id: T1105
+  name: Ingress Tool Transfer
+- id: T1204.002
+  name: "User Execution: Malicious File"
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Network_Traffic.All_Traffic
+description: |-
+  Detects the joint pattern across this fortnight's wave of dev-toolchain supply-chain compromises: a package-install command (npm/yarn/pnpm/bun/pip/uv/poetry/cargo or a node/python interpreter invoked by them) is followed within 5 minutes by an outbound public network connection from the same host that does NOT land on a known package registry CDN (npmjs.org, pypi.org / pythonhosted.org, crates.io, github.com/raw.githubusercontent.com, jsdelivr/unpkg/ghcr). This is the post-install detonation step shared by node-ipc 9.1.6/9.2.3/12.0.1 (azurestaticprovider[.]net), Mini Shai-Hulud / TeamPCP across the @antv ecosystem (t.m-kosche[.]com), mistralai 2.4.6 (83.142.209[.]194 / transformers.pyz), guardrails-ai 0.10.1 (git-tanstack[.]com, CVE-2026-45758), @cap-js/sqlite|postgres|db-service (zero.masscan.cloud / 94.154.172[.]43, CVE-2026-46421), the Nx Console VS Code extension breach of GitHub internal repos, Megalodon's 5,561-repo malicious GitHub Actions push (polymarketbot.polymarketdev.workers.dev), and DeepSeek TUI's auto-approved `run_tests` → cargo test RCE (CVE-2026-45311). Kill-chain coverage: install (the package-manager invocation) into c2/actions (the unsanctioned beacon). FIRES when an npm/pip/yarn-style install (incl. postinstall/preinstall hooks and `cargo test`) is followed by an HTTP/HTTPS/DNS-resolved beacon to a public destination outside the registry allowlist within the temporal window; does NOT fire on installs that only fetch from registry CDNs, on offline `npm ci` against a local mirror, or on installs occurring on a build agent whose registry mirror is allowlisted at the egress proxy.
+  
+  Rationale: Every campaign in scope — node-ipc, Mini Shai-Hulud/AntV, mistralai, guardrails-ai, @cap-js/*, Nx Console, Megalodon, DeepSeek TUI run_tests — shares the same observable: a developer-tool install/build/test invocation immediately precedes an outbound connection to attacker infrastructure that is NOT a package registry. Filtering descendants of npm/pip/yarn/cargo/uv/poetry against a registry-CDN allowlist within a 5-minute window catches the chain regardless of which specific IOC, hash, or domain the next compromised package uses.
+defender_kql: |-
+  let Lookback = 7d;
+  let WindowSec = 300;
+  let PkgMgrs = dynamic(["npm.exe","npm","npx.exe","npx","yarn.exe","yarn","pnpm.exe","pnpm","bun.exe","bun","pip.exe","pip","pip3.exe","pip3","uv.exe","uv","poetry.exe","poetry","cargo.exe","cargo"]);
+  let RegistryHosts = dynamic(["registry.npmjs.org","registry.yarnpkg.com","npmjs.com","yarnpkg.com","pypi.org","files.pythonhosted.org","pypi.python.org","crates.io","static.crates.io","github.com","raw.githubusercontent.com","objects.githubusercontent.com","codeload.github.com","jsdelivr.net","unpkg.com","ghcr.io"]);
+  let Installs = DeviceProcessEvents
+      | where Timestamp > ago(Lookback)
+      | where FileName in~ (PkgMgrs)
+      | where ProcessCommandLine has_any ("install","add "," test"," ci ","preinstall","postinstall")
+      | where AccountName !endswith "$"
+      | where AccountName !in~ ("system","local service","network service")
+      | project InstallTime = Timestamp, DeviceId, DeviceName, AccountName,
+                InstallProc = FileName, InstallCmd = ProcessCommandLine,
+                InstallPGuid = ProcessUniqueId;
+  let Egress = DeviceNetworkEvents
+      | where Timestamp > ago(Lookback)
+      | where RemoteIPType == "Public"
+      | where isnotempty(RemoteUrl) or isnotempty(RemoteIP)
+      | extend RemoteHost = tolower(coalesce(RemoteUrl, RemoteIP))
+      | where not (RemoteHost has_any (RegistryHosts))
+      | where not (RemoteHost endswith ".github.io")
+      | project EgressTime = Timestamp, DeviceId,
+                EgressInitiator = InitiatingProcessFileName,
+                EgressCmd = InitiatingProcessCommandLine,
+                RemoteIP, RemotePort, RemoteUrl, RemoteHost;
+  Installs
+  | join kind=inner Egress on DeviceId
+  | where EgressTime between (InstallTime .. InstallTime + WindowSec * 1s)
+  | extend DelaySec = datetime_diff('second', EgressTime, InstallTime)
+  | summarize FirstInstall = min(InstallTime), LastEgress = max(EgressTime),
+              MinDelay = min(DelaySec), DistinctDests = dcount(RemoteHost),
+              Dests = make_set(RemoteHost, 20),
+              EgressInitiators = make_set(EgressInitiator, 10),
+              SampleInstallCmd = any(InstallCmd), SampleEgressCmd = any(EgressCmd)
+              by DeviceName, AccountName, InstallProc
+  | where DistinctDests >= 1
+  | order by FirstInstall desc
+sentinel_kql: |-
+  let Lookback = 7d;
+  let WindowSec = 300;
+  let PkgMgrs = dynamic(["npm.exe","npm","npx.exe","npx","yarn.exe","yarn","pnpm.exe","pnpm","bun.exe","bun","pip.exe","pip","pip3.exe","pip3","uv.exe","uv","poetry.exe","poetry","cargo.exe","cargo"]);
+  let RegistryHosts = dynamic(["registry.npmjs.org","registry.yarnpkg.com","npmjs.com","yarnpkg.com","pypi.org","files.pythonhosted.org","pypi.python.org","crates.io","static.crates.io","github.com","raw.githubusercontent.com","objects.githubusercontent.com","codeload.github.com","jsdelivr.net","unpkg.com","ghcr.io"]);
+  let Installs = DeviceProcessEvents
+      | where TimeGenerated > ago(Lookback)
+      | where FileName in~ (PkgMgrs)
+      | where ProcessCommandLine has_any ("install","add "," test"," ci ","preinstall","postinstall")
+      | where AccountName !endswith "$"
+      | project InstallTime = TimeGenerated, DeviceId, DeviceName, AccountName,
+                InstallProc = FileName, InstallCmd = ProcessCommandLine;
+  let Egress = DeviceNetworkEvents
+      | where TimeGenerated > ago(Lookback)
+      | where RemoteIPType == "Public"
+      | extend RemoteHost = tolower(coalesce(RemoteUrl, RemoteIP))
+      | where isnotempty(RemoteHost)
+      | where not (RemoteHost has_any (RegistryHosts))
+      | where not (RemoteHost endswith ".github.io")
+      | project EgressTime = TimeGenerated, DeviceId,
+                EgressInitiator = InitiatingProcessFileName,
+                EgressCmd = InitiatingProcessCommandLine,
+                RemoteIP, RemotePort, RemoteUrl, RemoteHost;
+  Installs
+  | join kind=inner Egress on DeviceId
+  | where EgressTime between (InstallTime .. InstallTime + WindowSec * 1s)
+  | extend DelaySec = datetime_diff('second', EgressTime, InstallTime)
+  | summarize FirstInstall = min(InstallTime), LastEgress = max(EgressTime),
+              MinDelay = min(DelaySec), DistinctDests = dcount(RemoteHost),
+              Dests = make_set(RemoteHost, 20),
+              EgressInitiators = make_set(EgressInitiator, 10),
+              SampleInstallCmd = any(InstallCmd), SampleEgressCmd = any(EgressCmd)
+              by DeviceName, AccountName, InstallProc
+  | where DistinctDests >= 1
+  | order by FirstInstall desc
+splunk_spl: |-
+  | tstats summariesonly=true min(_time) as install_time values(Processes.process) as install_cmd values(Processes.user) as install_user values(Processes.process_name) as install_proc from datamodel=Endpoint.Processes where Processes.process_name IN ("npm.exe","npm","npx.exe","npx","yarn.exe","yarn","pnpm.exe","pnpm","bun.exe","bun","pip.exe","pip","pip3.exe","pip3","uv.exe","uv","poetry.exe","poetry","cargo.exe","cargo") AND (Processes.process="*install*" OR Processes.process="*add *" OR Processes.process="* test*" OR Processes.process="*preinstall*" OR Processes.process="*postinstall*" OR Processes.process="*ci *") by Processes.dest Processes.process_guid | `drop_dm_object_name(Processes)` | rename dest as src | join type=inner src [ | tstats summariesonly=true min(_time) as egress_time values(All_Traffic.dest) as c2_dest values(All_Traffic.dest_ip) as c2_ip values(All_Traffic.dest_port) as c2_port values(All_Traffic.app) as egress_app from datamodel=Network_Traffic where All_Traffic.dest_category="external" AND NOT (All_Traffic.dest IN ("registry.npmjs.org","registry.yarnpkg.com","npmjs.com","pypi.org","files.pythonhosted.org","pypi.python.org","crates.io","static.crates.io","github.com","raw.githubusercontent.com","objects.githubusercontent.com","codeload.github.com","jsdelivr.net","unpkg.com","ghcr.io","yarnpkg.com") OR All_Traffic.dest IN ("<registry_allowlist>")) by All_Traffic.src ] | where egress_time >= install_time AND egress_time <= install_time + 300 | eval delay_sec=egress_time-install_time | stats min(install_time) as firstInstall max(egress_time) as lastEgress dc(c2_dest) as distinct_dests values(c2_dest) as c2_dests values(c2_ip) as c2_ips values(c2_port) as c2_ports values(egress_app) as egress_apps values(install_cmd) as install_cmds values(install_user) as users values(install_proc) as install_procs min(delay_sec) as min_delay by src | where distinct_dests >= 1 | convert ctime(firstInstall) ctime(lastEgress) | sort 0 -firstInstall
+datadog_query: |-
+  source:windows.sysmon @EventID:3 (@Image:(*\\node.exe OR *\\Node.exe OR *\\npm.exe OR *\\npx.exe OR *\\yarn.exe OR *\\pnpm.exe OR *\\bun.exe OR *\\python.exe OR *\\Python.exe OR *\\python3.exe OR *\\pip.exe OR *\\pip3.exe OR *\\uv.exe OR *\\poetry.exe OR *\\cargo.exe OR *\\curl.exe OR *\\wget.exe OR *\\powershell.exe) OR @ParentImage:(*\\npm.exe OR *\\npx.exe OR *\\node.exe OR *\\yarn.exe OR *\\pnpm.exe OR *\\bun.exe OR *\\python.exe OR *\\python3.exe OR *\\pip.exe OR *\\pip3.exe OR *\\uv.exe OR *\\poetry.exe OR *\\cargo.exe)) -@DestinationHostname:(*.npmjs.org OR *.npmjs.com OR *.yarnpkg.com OR *.pypi.org OR *.pythonhosted.org OR *.crates.io OR *.github.com OR *.githubusercontent.com OR *.jsdelivr.net OR *.unpkg.com OR *.ghcr.io OR *.local OR localhost) -CIDR(@DestinationIp, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8, 169.254.0.0/16)
