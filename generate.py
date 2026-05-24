@@ -1003,6 +1003,23 @@ def _load_falcon_knowledge() -> str:
 _FALCON_KNOWLEDGE_BLOCK = _load_falcon_knowledge()
 
 
+def _load_cloudwatch_knowledge() -> str:
+    """Load knowledge/cloudwatch_logs_insights_fundamentals.md — AWS
+    CloudWatch Logs Insights query syntax + CloudTrail field reference.
+    Same pattern as the Datadog / Falcon loaders; degrades gracefully
+    when the file is missing."""
+    p = KNOWLEDGE_DIR / "cloudwatch_logs_insights_fundamentals.md"
+    if p.exists():
+        try:
+            return p.read_text(encoding="utf-8")
+        except Exception:
+            return ""
+    return ""
+
+
+_CLOUDWATCH_KNOWLEDGE_BLOCK = _load_cloudwatch_knowledge()
+
+
 def _load_schema_block(filename: str) -> str:
     """Render a data_sources/*.json schema into a compact text block —
     one line per table, columns comma-separated. Injected into the LLM
@@ -1036,7 +1053,7 @@ _SENTINEL_SCHEMA_BLOCK = _load_schema_block("sentinel_spec_tables.json")
 # placeholder substitutes to empty string so the prompt skips that
 # platform's knowledge entirely — saves the per-call cache_create cost
 # for unused platforms.
-_UC_PLATFORMS_DEFAULT = frozenset({"sentinel", "defender", "datadog", "falcon"})
+_UC_PLATFORMS_DEFAULT = frozenset({"sentinel", "defender", "datadog", "falcon", "cloudwatch"})
 _UC_PLATFORMS_ENV = os.environ.get("USECASEINTEL_UC_PLATFORMS", "").strip().lower()
 if _UC_PLATFORMS_ENV:
     _UC_PLATFORMS = frozenset(
@@ -1523,6 +1540,24 @@ schema. When you write `falcon_logscale_query`:
     for aggregations — never bare `groupBy` without a function.
 
 <<FALCON_SCHEMA>>
+================================================================
+
+CLOUDWATCH LOGS INSIGHTS — reference for the `cloudwatch_query` field
+schema. When you write `cloudwatch_query`:
+  • Lead with a `# log group: /aws/cloudtrail` comment (or the
+    appropriate log group) so operators know which trail to point this
+    at.
+  • Use the canonical `fields | filter | stats | sort` pipeline. Each
+    stage after the first starts with `|`.
+  • CloudTrail fields are documented below. Prefer
+    `not isPresent(errorCode)` over `errorCode = null`.
+  • Use `in [...]` for event-name sets, `like /regex/i` for partial
+    matches. Lowercase `and`/`or`/`not` (unlike Datadog).
+  • Emit ONLY when telemetry naturally lives in CloudWatch Logs
+    (CloudTrail-driven IAM/S3/Lambda/KMS/GuardDuty, VPC Flow). Leave
+    empty for Windows-endpoint, Defender-only, or non-AWS detections.
+
+<<CLOUDWATCH_SCHEMA>>
 ================================================================
 """
 
@@ -2851,7 +2886,8 @@ def _llm_generate_ucs(article: dict, ind: dict):
               .replace("<<KQL_KNOWLEDGE>>",
                        _KQL_KNOWLEDGE_BLOCK if ({"sentinel","defender"} & _UC_PLATFORMS) else "")
               .replace("<<DATADOG_SCHEMA>>", _platform_block("datadog", _DATADOG_KNOWLEDGE_BLOCK))
-              .replace("<<FALCON_SCHEMA>>", _platform_block("falcon", _FALCON_KNOWLEDGE_BLOCK)))
+              .replace("<<FALCON_SCHEMA>>", _platform_block("falcon", _FALCON_KNOWLEDGE_BLOCK))
+              .replace("<<CLOUDWATCH_SCHEMA>>", _platform_block("cloudwatch", _CLOUDWATCH_KNOWLEDGE_BLOCK)))
     # Phase 3b: skip the WebSearch/WebFetch tool definitions when the article
     # already carries hard IOC signals — CVEs, IPs, domains, or file hashes.
     # In that case the body has enough grounding to generate UCs without a
@@ -3251,6 +3287,21 @@ schema. When you write `falcon_logscale_query`:
 
 <<FALCON_SCHEMA>>
 ================================================================
+
+CLOUDWATCH LOGS INSIGHTS — reference for the `cloudwatch_query` field
+on actor-bespoke UCs. When you write `cloudwatch_query`:
+  • Lead with a `# log group: /aws/cloudtrail` comment so operators
+    know which trail to point this at.
+  • Use the `fields | filter | stats | sort` pipeline form.
+  • Prefer `not isPresent(errorCode)` over `errorCode = null`.
+  • Use `in [...]` for event-name sets, `like /regex/i` for partial
+    matches.
+  • Emit ONLY when the actor's TTPs naturally land in CloudWatch Logs
+    (CloudTrail-driven cloud-actor activity). Leave empty for
+    endpoint / Windows-only actor profiles.
+
+<<CLOUDWATCH_SCHEMA>>
+================================================================
 """
 
 
@@ -3298,7 +3349,8 @@ def _llm_generate_actor_ucs(actor: dict):
               .replace("<<KQL_KNOWLEDGE>>",
                        _KQL_KNOWLEDGE_BLOCK if ({"sentinel","defender"} & _UC_PLATFORMS) else "")
               .replace("<<DATADOG_SCHEMA>>", _platform_block("datadog", _DATADOG_KNOWLEDGE_BLOCK))
-              .replace("<<FALCON_SCHEMA>>", _platform_block("falcon", _FALCON_KNOWLEDGE_BLOCK)))
+              .replace("<<FALCON_SCHEMA>>", _platform_block("falcon", _FALCON_KNOWLEDGE_BLOCK))
+              .replace("<<CLOUDWATCH_SCHEMA>>", _platform_block("cloudwatch", _CLOUDWATCH_KNOWLEDGE_BLOCK)))
     raw = None
     try:
         if use_oauth:
@@ -11296,7 +11348,7 @@ function _libPrepare() {
   // canonical `pl` field below; this map is used only by the drawer
   // to display the actual query body when a UC is opened.
   const ucDom = new Map();
-  const KIND_BY_SUFFIX = {kql:'def', sentinel:'sent', sigma:'sigma', datadog:'datadog', falcon:'falcon', spl:'spl'};
+  const KIND_BY_SUFFIX = {kql:'def', sentinel:'sent', sigma:'sigma', datadog:'datadog', falcon:'falcon', cloudwatch:'cloudwatch', spl:'spl'};
   document.querySelectorAll('#view-articles article.card details.uc').forEach(d => {
     const title = (d.querySelector('summary .uc-title')?.textContent || d.querySelector('summary')?.textContent || '').trim();
     if (!title) return;
@@ -11425,6 +11477,7 @@ function _libBuildFilters(prepared) {
     <button class="lib-pill platform-p" data-pl="spl">P · Splunk</button>
     <button class="lib-pill platform-dd" data-pl="datadog">DD · Datadog</button>
     <button class="lib-pill platform-cs" data-pl="falcon">CS · Falcon</button>
+    <button class="lib-pill platform-cw" data-pl="cloudwatch">CW · CloudWatch</button>
   </div>`;
   // Kind pills — Normal / LLM / WKC. Counts come from the prepared set so
   // the analyst sees how many UCs are in each bucket. Hover-title explains
@@ -16349,6 +16402,8 @@ _PL_BADGE_LABELS = {
     "g": ("pl-g", "Σ", "Sigma"),
     "p": ("pl-p", "P", "Splunk SPL"),
     "D": ("pl-D", "DD", "Datadog Cloud SIEM"),
+    "F": ("pl-F", "CS", "CrowdStrike Falcon LogScale"),
+    "c": ("pl-c", "CW", "CloudWatch Logs Insights"),
 }
 
 
