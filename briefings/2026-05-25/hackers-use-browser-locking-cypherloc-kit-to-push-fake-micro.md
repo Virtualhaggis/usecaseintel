@@ -10,13 +10,9 @@ Home Cyber Security News
 Hackers Use Browser-Locking CypherLoc Kit to Push Fake Microsoft Support Calls 
 By Tushar Subhra Dutta 
 May 25, 2026 
-
-
-
-
 A newly identified scareware kit called CypherLoc is locking victims’ browsers and tricking them into calling fake Microsoft support lines. 
 The kit has been linked to roughly 2.8 million attacks since the start of 2026, making it one of the more aggressive browser-based threats observed this year. 
-Unlike traditional malware that requires a file…
+Unlike traditional malware that requires a file to be d…
 
 ## Indicators of Compromise (high-fidelity only)
 

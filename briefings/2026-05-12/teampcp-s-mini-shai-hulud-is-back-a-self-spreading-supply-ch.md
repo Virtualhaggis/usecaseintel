@@ -12,17 +12,19 @@ Table of Contents L…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `seed1.getsession.org`
-- **Domain (defanged):** `filev2.getsession.org`
+- **CVE:** `CVE-2026-45321`
+- **IPv4 (defanged):** `83.142.209.194`
+- **Domain (defanged):** `git-tanstack.com`
 - **Domain (defanged):** `api.masscan.cloud`
-- **Domain (defanged):** `gh-token-monitor.sh`
+- **Domain (defanged):** `litter.catbox.moe`
+- **Domain (defanged):** `filev2.getsession.org`
 - **SHA256:** `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`
-- **SHA256:** `0c0e873033875f1bc471eda37e3b9d0f9b89bd41a4bbb4f86746caa2176c40aa`
 - **SHA256:** `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`
-- **SHA256:** `7c12d8614c624c70d6dd6fc2ee289332474abaa38f70ebe2cdef064923ca3a9b`
-- **SHA1:** `79ac49eedf774dd4b0cfa308722bc463cfe5885c`
-- **SHA1:** `de0fac2e4500dabe0009e67214ff5f5447ce83dd`
-- **SHA1:** `bbbca2ddaa5d8feaa63e36b76fdaad77386f024f`
+- **SHA256:** `2258284d65f63829bd67eaba01ef6f1ada2f593f9bbe41678b2df360bd90d3df`
+- **SHA256:** `1e8538c6e0563d50da0f2e097e979ebd5294ce1defe01d0b9fe361ba3bed1898`
+- **SHA1:** `e7d582b98ca80690883175470e96f703ef6dc497`
+- **SHA1:** `12f35b1081b17d21815b35feb57ab03d02482116`
+- **SHA1:** `820fa07a7328b6cf2b417078e103721d4d8f2e79`
 
 ## MITRE ATT&CK Techniques
 
@@ -32,6 +34,7 @@ Table of Contents L…
 - **T1005** — Data from Local System
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
+- **T1190** — Exploit Public-Facing Application
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
@@ -56,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud npm Worm C2 callback to Session Protocol CDN and masscan.cloud
 
-`UC_179_8` · phase: **c2** · confidence: **High**
+`UC_179_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +85,7 @@ NetHits
 
 ### [LLM] TeamPCP Mini Shai-Hulud stealer payload hash match (SHA256/SHA1)
 
-`UC_179_9` · phase: **install** · confidence: **High**
+`UC_179_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +114,7 @@ ProcHits | union FileHits, ImgHits
 
 ### [LLM] Mini Shai-Hulud router_init.js dropped at npm package root in node_modules
 
-`UC_179_10` · phase: **install** · confidence: **High**
+`UC_179_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +139,7 @@ DeviceFileEvents
 
 ### [LLM] Mini Shai-Hulud dead-drop git commit authored as claude@users.noreply.github.com
 
-`UC_179_11` · phase: **actions** · confidence: **High**
+`UC_179_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +163,7 @@ DeviceProcessEvents
 
 ### [LLM] Node/npm/Bun process enumerating cloud, wallet, AI, and messaging credential file paths
 
-`UC_179_12` · phase: **actions** · confidence: **Medium**
+`UC_179_13` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -339,7 +342,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TeamPCP's Mini Shai-Hulud Is Back: A Self-Spreading Supply Chain Attack Compromi
 
-`UC_179_7` · phase: **exploit** · confidence: **High**
+`UC_179_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -391,12 +394,15 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `seed1.getsession.org`, `filev2.getsession.org`, `api.masscan.cloud`, `gh-token-monitor.sh`
+  - IP / domain IOC(s): `83.142.209.194`, `git-tanstack.com`, `api.masscan.cloud`, `litter.catbox.moe`, `filev2.getsession.org`
+
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-45321`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`, `0c0e873033875f1bc471eda37e3b9d0f9b89bd41a4bbb4f86746caa2176c40aa`, `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`, `7c12d8614c624c70d6dd6fc2ee289332474abaa38f70ebe2cdef064923ca3a9b`, `79ac49eedf774dd4b0cfa308722bc463cfe5885c`, `de0fac2e4500dabe0009e67214ff5f5447ce83dd`, `bbbca2ddaa5d8feaa63e36b76fdaad77386f024f`
+  - file hash IOC(s): `ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c`, `2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96`, `2258284d65f63829bd67eaba01ef6f1ada2f593f9bbe41678b2df360bd90d3df`, `1e8538c6e0563d50da0f2e097e979ebd5294ce1defe01d0b9fe361ba3bed1898`, `e7d582b98ca80690883175470e96f703ef6dc497`, `12f35b1081b17d21815b35feb57ab03d02482116`, `820fa07a7328b6cf2b417078e103721d4d8f2e79`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

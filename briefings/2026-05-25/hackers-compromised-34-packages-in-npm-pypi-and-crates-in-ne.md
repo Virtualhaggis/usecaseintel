@@ -64,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] npm/pip/cargo build-time subprocess spawning `node -e` or curl/wget (TrapDoor execution primitive)
 
-`UC_6_15` · phase: **install** · confidence: **High**
+`UC_8_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound connection or DNS to TrapDoor C2 ddjidd564.github.io
 
-`UC_6_16` · phase: **c2** · confidence: **High**
+`UC_8_16` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ union
 
 ### [LLM] AI assistant rules files (.cursorrules / CLAUDE.md) written by non-editor process
 
-`UC_6_17` · phase: **weapon** · confidence: **Medium**
+`UC_8_17` · phase: **weapon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceFileEvents
 
 ### [LLM] TrapDoor malicious package name in npm/pip/cargo install command or lockfile write
 
-`UC_6_18` · phase: **delivery** · confidence: **High**
+`UC_8_18` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -168,7 +168,7 @@ union
 
 ### [LLM] Build-tool subprocess reading developer secrets (SSH keys, AWS creds, Solana/Sui/Aptos wallets, browser logins)
 
-`UC_6_19` · phase: **actions** · confidence: **High**
+`UC_8_19` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -192,7 +192,7 @@ DeviceFileEvents
 
 ### [LLM] Build-tool subprocess installing shell/systemd/git-hook persistence (trap-core.js footholds)
 
-`UC_6_20` · phase: **install** · confidence: **High**
+`UC_8_20` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -651,7 +651,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Compromised 34 Packages in npm, PyPI, and Crates in New Supply Chain Att
 
-`UC_6_14` · phase: **exploit** · confidence: **High**
+`UC_8_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

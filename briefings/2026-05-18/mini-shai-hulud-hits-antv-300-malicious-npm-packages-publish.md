@@ -13,10 +13,14 @@ May 18, 2026
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **IPv4 (defanged):** `185.95.159.32`
+- **Domain (defanged):** `m-kosche.com`
 - **Domain (defanged):** `t.m-kosche.com`
-- **Domain (defanged):** `gh-token-monitor.sh`
+- **Domain (defanged):** `filev2.getsession.org`
 - **SHA256:** `a68dd1e6a6e35ec3771e1f94fe796f55dfe65a2b94560516ff4ac189390dfa1c`
-- **SHA1:** `1916faa365f2788b6e193514872d51a242876569`
+- **SHA256:** `fb5c97557230a27460fdab01fafcfabeaa49590bafd5b6ef30501aa9e0a51142`
+- **SHA1:** `783b4019fc5b942a29846132d28441c8fc31bed8`
+- **MD5:** `b06b126b9e26af03a7ef2f8b8e90d446`
 
 ## MITRE ATT&CK Techniques
 
@@ -457,10 +461,10 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `t.m-kosche.com`, `gh-token-monitor.sh`
+  - IP / domain IOC(s): `185.95.159.32`, `m-kosche.com`, `t.m-kosche.com`, `filev2.getsession.org`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `a68dd1e6a6e35ec3771e1f94fe796f55dfe65a2b94560516ff4ac189390dfa1c`, `1916faa365f2788b6e193514872d51a242876569`
+  - file hash IOC(s): `a68dd1e6a6e35ec3771e1f94fe796f55dfe65a2b94560516ff4ac189390dfa1c`, `fb5c97557230a27460fdab01fafcfabeaa49590bafd5b6ef30501aa9e0a51142`, `783b4019fc5b942a29846132d28441c8fc31bed8`, `b06b126b9e26af03a7ef2f8b8e90d446`
 
 
 ## Why this matters
