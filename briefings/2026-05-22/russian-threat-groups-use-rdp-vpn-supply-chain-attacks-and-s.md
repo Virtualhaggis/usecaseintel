@@ -81,7 +81,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] WinRAR CVE-2025-8088 / 7-Zip CVE-2025-0411 - archive tool spawning script interpreters or LOLBins
 
-`UC_19_15` · phase: **exploit** · confidence: **High**
+`UC_20_15` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceProcessEvents
 
 ### [LLM] ClickFix lure: explorer.exe-spawned mshta/powershell with paste-from-clipboard hidden-window markers
 
-`UC_19_16` · phase: **delivery** · confidence: **Medium**
+`UC_20_16` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceProcessEvents
 
 ### [LLM] Device Code phishing - successful Azure AD sign-in via deviceCode grant against Teams/Office/Azure CLI
 
-`UC_19_17` · phase: **install** · confidence: **Medium**
+`UC_20_17` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ AADSignInEventsBeta
 
 ### [LLM] Cloudflare Tunnel C2 - non-browser process resolving or connecting to *.trycloudflare.com
 
-`UC_19_18` · phase: **c2** · confidence: **Medium**
+`UC_20_18` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,7 +163,7 @@ DeviceNetworkEvents
 
 ### [LLM] Inbound RDP logon followed by X2anylock/Warlock/LockBit3 ransom-note or shadow-copy deletion within 12h
 
-`UC_19_19` · phase: **actions** · confidence: **High**
+`UC_20_19` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

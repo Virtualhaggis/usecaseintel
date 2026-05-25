@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Metro4Shell CVE-2025-11953 — node.exe spawning shells with /open-url payload
 
-`UC_17_12` · phase: **exploit** · confidence: **High**
+`UC_18_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound beaconing to Hunt.io-named Middle East ISP C2 IPs
 
-`UC_17_13` · phase: **c2** · confidence: **High**
+`UC_18_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceNetworkEvents
 
 ### [LLM] Tactical RMM agent execution on hosts where it is not the sanctioned RMM
 
-`UC_17_14` · phase: **c2** · confidence: **Medium**
+`UC_18_14` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceProcessEvents
 
 ### [LLM] LLMjacking AWS Bedrock/SageMaker enumeration from TE Data Egypt IP
 
-`UC_17_15` · phase: **actions** · confidence: **High**
+`UC_18_15` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

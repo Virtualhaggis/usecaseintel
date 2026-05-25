@@ -8,6 +8,9 @@ _1254 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-25
+- [hackers compromised 34 packages in npm pypi and crates in ne](./2026-05-25/hackers-compromised-34-packages-in-npm-pypi-and-crates-in-ne.md)
+
 ## 2026-05-24
 - [ghost cms sql injection flaw exploited in large scale clickf](./2026-05-24/ghost-cms-sql-injection-flaw-exploited-in-large-scale-clickf.md)
 
@@ -36,7 +39,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46670 yeswiki unauthenticated sql inj](./2026-05-22/ghsa-critical-cve-2026-46670-yeswiki-unauthenticated-sql-inj.md)
 - [ghsa critical ghsa qqqm 5547 774x filebrowser quantum path t](./2026-05-22/ghsa-critical-ghsa-qqqm-5547-774x-filebrowser-quantum-path-t.md)
 - [hackers abuse middle east telecom networks for large scale c](./2026-05-22/hackers-abuse-middle-east-telecom-networks-for-large-scale-c.md)
-- [hackers backdoor popular art template npm package to launch ](./2026-05-22/hackers-backdoor-popular-art-template-npm-package-to-launch-.md)
 - [kimwolf ddos botnet operator arrested in canada over ddos fo](./2026-05-22/kimwolf-ddos-botnet-operator-arrested-in-canada-over-ddos-fo.md)
 - [making vulnerable drivers exploitable without hardware the b](./2026-05-22/making-vulnerable-drivers-exploitable-without-hardware-the-b.md)
 - [megalodon github attack targets 5 561 repos with malicious c](./2026-05-22/megalodon-github-attack-targets-5-561-repos-with-malicious-c.md)
