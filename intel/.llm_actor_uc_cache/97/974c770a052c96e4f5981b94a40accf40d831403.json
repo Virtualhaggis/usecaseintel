@@ -1,0 +1,59 @@
+{
+  "name": "Turla",
+  "ucs": [
+    {
+      "title": "[LLM] Turla ComRAT v4 C2 over Gmail web interface (non-browser process)",
+      "description": "Hunts a non-browser binary establishing connections to Google's webmail endpoints \u2014 the signature C2 channel of Turla's ComRAT v4 (Agent.BTZ lineage), which reads tasking from and exfiltrates to a hardcoded Gmail inbox via the web UI using stolen cookies rather than the IMAP/SMTP protocol. Tied to Turla / Snake / Secret Blizzard (FSB Center 16) tradecraft of abusing trusted cloud services for bidirectional C2.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1102.002",
+        "T1071.001",
+        "T1102"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where (All_Traffic.dest_host IN (\"mail.google.com\",\"www.gmail.com\",\"gmail.com\")) AND NOT (All_Traffic.process_name IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\"googleupdate.exe\",\"googledrivesync.exe\",\"thunderbird.exe\",\"outlook.exe\")) by All_Traffic.src All_Traffic.user All_Traffic.process_name All_Traffic.dest_host All_Traffic.dest_port\n| `drop_dm_object_name(All_Traffic)`\n| where isnotnull(process_name) AND process_name!=\"unknown\"\n| convert ctime(firstTime) ctime(lastTime)\n| sort - lastTime",
+      "kql": "DeviceNetworkEvents\n| where Timestamp > ago(14d)\n| where RemoteUrl has_any (\"mail.google.com\",\"www.gmail.com\",\"gmail.com\") or (RemoteIPType == \"Public\" and RemoteUrl has \"googleusercontent.com\")\n| where InitiatingProcessFileName !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\"googleupdate.exe\",\"googledrivesync.exe\",\"thunderbird.exe\",\"outlook.exe\",\"msedgewebview2.exe\")\n| where InitiatingProcessAccountName !endswith \"$\"\n| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Conns=count(), Urls=make_set(RemoteUrl, 10) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessAccountName, InitiatingProcessSHA256\n| order by FirstSeen desc",
+      "sentinel_kql": "",
+      "sigma_yaml": "title: Turla ComRAT Non-Browser Process Resolving Gmail Web Interface\nstatus: experimental\ndescription: Detects a non-browser process resolving Google webmail domains, consistent with Turla ComRAT v4 C2 over the Gmail web UI.\nlogsource:\n  category: dns_query\n  product: windows\ndetection:\n  selection:\n    QueryName|endswith:\n      - 'mail.google.com'\n      - 'gmail.com'\n  filter_browsers:\n    Image|endswith:\n      - '\\chrome.exe'\n      - '\\msedge.exe'\n      - '\\firefox.exe'\n      - '\\brave.exe'\n      - '\\opera.exe'\n      - '\\iexplore.exe'\n      - '\\googleupdate.exe'\n      - '\\thunderbird.exe'\n      - '\\outlook.exe'\n  condition: selection and not filter_browsers\nfalsepositives:\n  - Custom Gmail API integrations or scripts using a service account\nlevel: high\ntags:\n  - attack.command_and_control\n  - attack.t1102.002\n  - attack.t1071.001",
+      "datadog_query": "source:windows.sysmon @EventID:3 @DestinationHostname:(*mail.google.com* OR *gmail.com*) -@Image:(*\\chrome.exe OR *\\Chrome.exe OR *\\msedge.exe OR *\\MSEdge.exe OR *\\firefox.exe OR *\\iexplore.exe OR *\\googleupdate.exe OR *\\GoogleUpdate.exe OR *\\outlook.exe OR *\\OUTLOOK.EXE OR *\\thunderbird.exe)",
+      "falcon_logscale_query": "#event_simpleName=DnsRequest DomainName=/(mail\\.google\\.com|gmail\\.com)$/i\n| NOT (ContextImageFileName=/\\\\(chrome|msedge|firefox|brave|opera|iexplore|thunderbird|outlook|googleupdate|googledrivesync)\\.exe$/i)\n| groupBy([aid, ComputerName, ContextImageFileName, DomainName], function=count())\n| count > 0",
+      "cloudwatch_query": "",
+      "rationale": "Generic 'process talks to Gmail' is noise; the discriminator here is the non-browser initiating process, which is exactly what makes ComRAT v4 unique among APTs \u2014 it impersonates a logged-in Gmail web session from a planted C++ DLL (loaded into services/explorer context) rather than using a mail client or browser. Excluding browsers and Google updaters leaves a very high-signal residue specific to",
+      "_sigma_issues": [
+        "missing required field: id"
+      ]
+    },
+    {
+      "title": "[LLM] Turla PowerStallion / PowerShell C2 over OneDrive WebDAV",
+      "description": "Hunts PowerShell, net.exe, or rundll32 referencing OneDrive WebDAV endpoints (d.docs.live.net / onedrive.live.com / DavWWWRoot), the C2 mechanism of Turla's PowerStallion lightweight PowerShell backdoor, which mounts an attacker OneDrive folder via the WebDAV mini-redirector to fetch tasking and stage tools. Distinctive to Turla / Venomous Bear / Waterbug cloud-storage C2.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1059.001",
+        "T1102",
+        "T1071.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"net.exe\",\"net1.exe\",\"rundll32.exe\")) AND (Processes.process IN (\"*d.docs.live.net*\",\"*onedrive.live.com*\",\"*docs.live.net*\",\"*DavWWWRoot*\",\"*@SSL*\")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name\n| `drop_dm_object_name(Processes)`\n| where NOT match(user, \"\\$$\")\n| convert ctime(firstTime) ctime(lastTime)\n| sort - lastTime",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"net.exe\",\"net1.exe\",\"rundll32.exe\")\n| where ProcessCommandLine has_any (\"d.docs.live.net\",\"onedrive.live.com\",\"docs.live.net\",\"DavWWWRoot\",\"@SSL\")\n| where ProcessCommandLine has_any (\"use\",\"New-PSDrive\",\"WebClient\",\"DownloadString\",\"DownloadFile\",\"Invoke-WebRequest\",\"iwr\",\"Copy-Item\")\n| where AccountName !endswith \"$\"\n| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "SecurityEvent\n| where TimeGenerated > ago(14d)\n| where EventID == 4688\n| where NewProcessName has_any (\"powershell.exe\",\"pwsh.exe\",\"net.exe\",\"net1.exe\",\"rundll32.exe\")\n| where CommandLine has_any (\"d.docs.live.net\",\"onedrive.live.com\",\"docs.live.net\",\"DavWWWRoot\",\"@SSL\")\n| where CommandLine has_any (\"use\",\"New-PSDrive\",\"WebClient\",\"DownloadString\",\"DownloadFile\",\"Invoke-WebRequest\",\"iwr\",\"Copy-Item\")\n| where AccountName !endswith \"$\"\n| project TimeGenerated, Computer, AccountName, NewProcessName, CommandLine, ParentProcessName\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Turla PowerStallion PowerShell C2 over OneDrive WebDAV\nstatus: experimental\ndescription: Detects PowerShell/net.exe/rundll32 referencing OneDrive WebDAV endpoints, consistent with Turla PowerStallion cloud-storage C2.\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_img:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\net.exe'\n      - '\\net1.exe'\n      - '\\rundll32.exe'\n  selection_cmd:\n    CommandLine|contains:\n      - 'd.docs.live.net'\n      - 'onedrive.live.com'\n      - 'docs.live.net'\n      - 'DavWWWRoot'\n  condition: selection_img and selection_cmd\nfalsepositives:\n  - Legitimate scripts syncing personal OneDrive via WebDAV (rare in enterprise)\nlevel: high\ntags:\n  - attack.command_and_control\n  - attack.t1102\n  - attack.t1059.001\n  - attack.t1071.001",
+      "datadog_query": "source:windows.sysmon @EventID:1 @Image:(*\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\net.exe OR *\\net1.exe OR *\\rundll32.exe OR *\\RunDLL32.exe) @CommandLine:(*d.docs.live.net* OR *onedrive.live.com* OR *docs.live.net* OR *DavWWWRoot*)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ImageFileName=/\\\\(powershell|pwsh|net1?|rundll32)\\.exe$/i\n| regex(\"(d\\\\.docs\\\\.live\\\\.net|onedrive\\\\.live\\\\.com|docs\\\\.live\\\\.net|DavWWWRoot)\", field=CommandLine)\n| groupBy([aid, ComputerName, ImageFileName, CommandLine, ParentBaseFileName], function=count())\n| count > 0",
+      "cloudwatch_query": "",
+      "rationale": "Turla deliberately chose OneDrive WebDAV as a covert C2 for PowerStallion because the traffic blends with legitimate Microsoft cloud usage. Pairing the interpreter set (PowerShell/net/rundll32) with the specific WebDAV host strings (d.docs.live.net / @SSL\\DavWWWRoot) targets the exact mount-and-fetch behavior PowerStallion uses, rather than generic OneDrive sync \u2014 which runs as OneDrive.exe and wo",
+      "_sigma_issues": [
+        "missing required field: id"
+      ]
+    }
+  ]
+}

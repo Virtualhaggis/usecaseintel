@@ -10,12 +10,8 @@ Home Cyber Attack News
 Russian Hacker Used Jailbroken Gemini to Steal Admin Credentials and Drain Crypto Wallets 
 By Guru Baran 
 May 25, 2026 
-
-
-
-
 A solo Russian-speaking threat actor leveraged a jailbroken instance of Google Gemini to run a five-year MAGA-themed influence operation, crack WordPress administrator credentials, and empty at least one victim’s cryptocurrency wallet, all at near-zero cost using stolen API keys.
-In May 2026, TrendAI™ Research uncovered the full operational infra…
+In May 2026, TrendAI™ Research uncovered the full operational infrastructur…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -57,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Trojanized 'StellarMonster' wallet installer (GoToResolve RAT) execution
 
-`UC_0_9` · phase: **delivery** · confidence: **High**
+`UC_2_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +75,7 @@ DeviceProcessEvents
 
 ### [LLM] GoToResolve RMM beacon to Patriot Bait C2 nodes
 
-`UC_0_10` · phase: **c2** · confidence: **High**
+`UC_2_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +95,7 @@ DeviceNetworkEvents
 
 ### [LLM] WordPress admin credential stuffing with AI-mutated passwords then success
 
-`UC_0_11` · phase: **exploit** · confidence: **Medium**
+`UC_2_11` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +108,7 @@ DeviceNetworkEvents
 
 ### [LLM] Persistent jailbreak memory file GEMINI.md on Gemini CLI hosts
 
-`UC_0_12` · phase: **weapon** · confidence: **Low**
+`UC_2_12` · phase: **weapon** · confidence: **Low**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -335,7 +331,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Russian Hacker Used Jailbroken Gemini to Steal Admin Credentials and Drain Crypt
 
-`UC_0_8` · phase: **exploit** · confidence: **High**
+`UC_2_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -70,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Screening Serpens MiniUpdate/MiniJunk V2 known file hashes on disk or executed
 
-`UC_12_11` · phase: **delivery** · confidence: **High**
+`UC_14_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ union
 
 ### [LLM] MiniUpdate/MiniJunk V2 DLL side-loading - trusted binary loads UpdateChecker/Connection/uevmonitor/unbcl DLL
 
-`UC_12_12` · phase: **install** · confidence: **High**
+`UC_14_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceImageLoadEvents
 
 ### [LLM] AppDomainManager hijack - .NET .config dropped to disable ETW / bypass signature checks
 
-`UC_12_13` · phase: **install** · confidence: **Medium**
+`UC_14_13` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceFileEvents
 
 ### [LLM] MiniUpdate persistence - daily 09:30 scheduled task creation
 
-`UC_12_14` · phase: **install** · confidence: **Medium**
+`UC_14_14` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ DeviceProcessEvents
 
 ### [LLM] Screening Serpens C2 beacon to per-target Azure (azurewebsites.net) and apex domains
 
-`UC_12_15` · phase: **c2** · confidence: **High**
+`UC_14_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -169,7 +169,7 @@ DeviceNetworkEvents
 
 ### [LLM] MiniJunk V2 payload pull from ONLYOFFICE DocSpace and Filemail delivery URLs
 
-`UC_12_16` · phase: **delivery** · confidence: **Medium**
+`UC_14_16` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -480,7 +480,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — MiniUpdate RAT Uses Azure-Hosted C2 Domains for Targeted Espionage Campaigns
 
-`UC_12_10` · phase: **exploit** · confidence: **High**
+`UC_14_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -10,12 +10,8 @@ Home Cyber Security News
 Hackers Abuse Shared CDN Infrastructure to Bypass Domain Reputation Security Controls 
 By Tushar Subhra Dutta 
 May 25, 2026 
-
-
-
-
 Hackers are actively abusing a flaw in shared Content Delivery Network (CDN) infrastructure to hide malicious traffic behind trusted, high-reputation domains, effectively slipping past the security tools that organizations rely on every day. 
-The technique, now tracked under the name “Underminr,” is not a software bug but a deliberate abus…
+The technique, now tracked under the name “Underminr,” is not a software bug but a deliberate abuse of how…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -49,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Underminr: non-browser process beaconing to shared-CDN edge over HTTPS
 
-`UC_1_7` · phase: **c2** · confidence: **Medium**
+`UC_3_7` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +69,7 @@ DeviceNetworkEvents
 
 ### [LLM] Underminr: LOLBin / script-host HTTPS egress to shared-CDN edge (payload pull)
 
-`UC_1_8` · phase: **delivery** · confidence: **Medium**
+`UC_3_8` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
