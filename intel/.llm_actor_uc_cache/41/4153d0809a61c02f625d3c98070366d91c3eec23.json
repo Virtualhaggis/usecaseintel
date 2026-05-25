@@ -1,0 +1,58 @@
+{
+  "name": "Rhysida",
+  "ucs": [
+    {
+      "title": "[LLM] Rhysida ransomware detonation \u2014 '.rhysida' mass-rename + 'CriticalBreachDetected.pdf' ransom-note drop",
+      "description": "Hunts the impact phase of the Rhysida RaaS encryptor (deployed by Microsoft-tracked Vanilla Tempest / DEV-0832, Vice Society overlap): a single process fanning out write/rename events with the hard-coded '.rhysida' extension while dropping the group's signature PDF ransom note 'CriticalBreachDetected.pdf'. Both IOCs are unique to this crew, making this near-zero-FP.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1486",
+        "T1490"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `security_content_summariesonly` count dc(Filesystem.file_path) as distinct_paths values(Filesystem.file_name) as file_names min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=\"*.rhysida\" OR Filesystem.file_name=\"CriticalBreachDetected.pdf\") by Filesystem.dest Filesystem.process_id Filesystem.process_name _time span=1m\n| `drop_dm_object_name(Filesystem)`\n| eval note_drop=if(match(file_names,\"(?i)CriticalBreachDetected\\.pdf\"),1,0)\n| stats sum(count) as file_writes sum(distinct_paths) as encrypted_files max(note_drop) as ransom_note values(process_name) as process_name min(firstTime) as firstTime by dest process_id\n| where encrypted_files > 50 OR ransom_note=1\n| `ctime(firstTime)`\n| sort - encrypted_files",
+      "kql": "DeviceFileEvents\n| where Timestamp > ago(1h)\n| where InitiatingProcessAccountName !endswith \"$\"\n| where ActionType in (\"FileCreated\",\"FileRenamed\",\"FileModified\")\n| where FileName endswith \".rhysida\" or FileName =~ \"CriticalBreachDetected.pdf\"\n| summarize EncryptedFiles = dcountif(FolderPath, FileName endswith \".rhysida\"),\n            NoteDrops    = countif(FileName =~ \"CriticalBreachDetected.pdf\"),\n            SampleFolders = make_set(FolderPath, 15),\n            FirstSeen    = min(Timestamp), LastSeen = max(Timestamp)\n          by DeviceName, InitiatingProcessFileName, InitiatingProcessSHA256, InitiatingProcessCommandLine\n| where EncryptedFiles > 50    // 50 = fan-out floor; benign apps don't rename 50+ files to .rhysida\n      or NoteDrops > 0          // ransom-note PDF alone is alert-worthy\n| order by EncryptedFiles desc",
+      "sentinel_kql": "ImFileEvent\n| where TimeGenerated > ago(1h)\n| where EventType in (\"FileCreated\",\"FileRenamed\",\"FileModified\",\"FileCreate\")\n| where ActorUsername !endswith \"$\"\n| where TargetFileName endswith \".rhysida\" or TargetFileName =~ \"CriticalBreachDetected.pdf\"\n| summarize EncryptedFiles = dcountif(TargetFilePath, TargetFileName endswith \".rhysida\"),\n            NoteDrops    = countif(TargetFileName =~ \"CriticalBreachDetected.pdf\"),\n            SamplePaths  = make_set(TargetFilePath, 15),\n            FirstSeen    = min(TimeGenerated), LastSeen = max(TimeGenerated)\n          by DvcHostname, ActingProcessName, ActingProcessCommandLine\n| where EncryptedFiles > 50 or NoteDrops > 0\n| order by EncryptedFiles desc",
+      "sigma_yaml": "title: Rhysida Ransomware Encryption Artifacts (.rhysida extension / ransom note)\nid: 8d1c4f2a-7b3e-4c6a-9f1d-rhysida0impact\nstatus: experimental\ndescription: Detects file writes carrying the Rhysida hard-coded extension or the signature CriticalBreachDetected.pdf ransom note.\nlogsource:\n  category: file_event\n  product: windows\ndetection:\n  enc_ext:\n    TargetFilename|endswith: '.rhysida'\n  ransom_note:\n    TargetFilename|endswith: '\\CriticalBreachDetected.pdf'\n  condition: enc_ext or ransom_note\nfalsepositives:\n  - None expected; both artifacts are unique to Rhysida\nlevel: critical\ntags:\n  - attack.impact\n  - attack.t1486\n  - attack.t1490",
+      "datadog_query": "source:windows.sysmon @EventID:11 (@TargetFilename:(*.rhysida OR *.RHYSIDA OR *.Rhysida) OR @TargetFilename:(*\\\\CriticalBreachDetected.pdf OR *\\\\criticalbreachdetected.pdf OR *\\\\CRITICALBREACHDETECTED.PDF))",
+      "falcon_logscale_query": "#event_simpleName=FileWritten\n| TargetFileName=/(\\.rhysida$|CriticalBreachDetected\\.pdf$)/i\n| groupBy([aid, ComputerName, ContextImageFileName], function=count(as=file_writes))\n| file_writes > 50 OR ContextImageFileName=/.*/",
+      "cloudwatch_query": "",
+      "rationale": "The '.rhysida' extension and the 'CriticalBreachDetected.pdf' ransom note are bespoke, hard-coded strings in the Rhysida encryptor (per CISA AA23-319A). No other actor or legitimate software produces these artifacts, so this is a definitive, actor-attributable detection rather than a generic 'mass file rename' heuristic.",
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] Rhysida pre-encryption recovery inhibition + event-log wipe chain",
+      "description": "Catches Rhysida's documented kill-chain step immediately before detonation: a single host running two or more of vssadmin/wmic shadow-copy deletion, bcdedit recovery disabling, and wevtutil log clearing \u2014 the exact sequence in Rhysida's PowerShell cleanup script (CISA AA23-319A / Vanilla Tempest deployments). Requiring 2+ distinct recovery-inhibition binaries on one host filters lone admin maintenance.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1490",
+        "T1059.001",
+        "T1070.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `security_content_summariesonly` count values(Processes.process) as cmds min(_time) as firstTime from datamodel=Endpoint.Processes where (Processes.process_name=vssadmin.exe OR Processes.process_name=wmic.exe OR Processes.process_name=bcdedit.exe OR Processes.process_name=wevtutil.exe) AND (Processes.process=\"*delete*shadows*\" OR Processes.process=\"*shadowcopy*delete*\" OR Processes.process=\"*recoveryenabled*no*\" OR Processes.process=\"*bootstatuspolicy*ignoreallfailures*\" OR Processes.process=\"*cl */*\" OR Processes.process=\"*clear-log*\") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name _time span=10m\n| `drop_dm_object_name(Processes)`\n| where user!=\"*$\"\n| stats dc(process_name) as distinct_binaries values(process_name) as binaries values(cmds) as cmds min(firstTime) as firstTime by dest user parent_process_name\n| where distinct_binaries >= 2\n| `ctime(firstTime)`\n| sort - distinct_binaries",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where AccountName !endswith \"$\"\n| where (FileName =~ \"vssadmin.exe\" and ProcessCommandLine has \"delete\" and ProcessCommandLine has \"shadows\")\n      or (FileName =~ \"wmic.exe\" and ProcessCommandLine has \"shadowcopy\" and ProcessCommandLine has \"delete\")\n      or (FileName =~ \"bcdedit.exe\" and ProcessCommandLine has_any (\"recoveryenabled no\",\"bootstatuspolicy ignoreallfailures\"))\n      or (FileName =~ \"wevtutil.exe\" and ProcessCommandLine has \"cl \")\n      or (FileName in~ (\"powershell.exe\",\"pwsh.exe\") and ProcessCommandLine has_any (\"Win32_Shadowcopy\",\"Clear-EventLog\",\"wevtutil cl\"))\n| summarize DistinctBins = dcount(FileName),\n            Binaries = make_set(FileName, 8),\n            Cmds     = make_set(ProcessCommandLine, 20),\n            FirstSeen = min(Timestamp), LastSeen = max(Timestamp)\n          by DeviceName, AccountName, InitiatingProcessFileName\n| where DistinctBins >= 2     // 2+ distinct recovery-inhibition binaries on one host = scripted, not ad-hoc admin\n| order by FirstSeen desc",
+      "sentinel_kql": "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where SubjectUserName !endswith \"$\"\n| where (NewProcessName has \"vssadmin.exe\" and CommandLine has \"delete\" and CommandLine has \"shadows\")\n      or (NewProcessName has \"wmic.exe\" and CommandLine has \"shadowcopy\" and CommandLine has \"delete\")\n      or (NewProcessName has \"bcdedit.exe\" and (CommandLine has \"recoveryenabled no\" or CommandLine has \"bootstatuspolicy ignoreallfailures\"))\n      or (NewProcessName has \"wevtutil.exe\" and CommandLine has \"cl \")\n      or (NewProcessName has_any (\"powershell.exe\",\"pwsh.exe\") and (CommandLine has \"Win32_Shadowcopy\" or CommandLine has \"Clear-EventLog\"))\n| summarize DistinctBins = dcount(NewProcessName),\n            Binaries = make_set(NewProcessName, 8),\n            Cmds     = make_set(CommandLine, 20),\n            FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated)\n          by Computer, SubjectUserName, ParentProcessName\n| where DistinctBins >= 2\n| order by FirstSeen desc",
+      "sigma_yaml": "title: Rhysida Recovery Inhibition / Event Log Clearing\nid: 3f7a9c1b-2d4e-4a8f-bc11-rhysida0recov\nstatus: experimental\ndescription: Detects shadow-copy deletion, boot-recovery disabling, or event-log clearing consistent with Rhysida's pre-encryption cleanup script.\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  vss:\n    Image|endswith: '\\vssadmin.exe'\n    CommandLine|contains|all: ['delete','shadows']\n  wmic_vss:\n    Image|endswith: '\\wmic.exe'\n    CommandLine|contains|all: ['shadowcopy','delete']\n  bcdedit:\n    Image|endswith: '\\bcdedit.exe'\n    CommandLine|contains:\n      - 'recoveryenabled no'\n      - 'bootstatuspolicy ignoreallfailures'\n  wevtutil:\n    Image|endswith: '\\wevtutil.exe'\n    CommandLine|contains: 'cl '\n  condition: vss or wmic_vss or bcdedit or wevtutil\nfalsepositives:\n  - Backup software or admin maintenance scripts (rare; tune by parent process)\nlevel: high\ntags:\n  - attack.impact\n  - attack.t1490\n  - attack.t1070.001",
+      "datadog_query": "source:windows.sysmon @EventID:1 @Image:(*\\\\vssadmin.exe OR *\\\\VSSADMIN.EXE OR *\\\\wmic.exe OR *\\\\WMIC.exe OR *\\\\bcdedit.exe OR *\\\\BCDEDIT.EXE OR *\\\\wevtutil.exe OR *\\\\WEVTUTIL.EXE) (@CommandLine:(*delete*shadows* OR *DELETE*SHADOWS* OR *shadowcopy*delete* OR *recoveryenabled*no* OR *bootstatuspolicy*ignoreallfailures* OR *\\ cl\\ *))",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ImageFileName=/(vssadmin|wmic|bcdedit|wevtutil)\\.exe$/i\n| regex(\"(?i)(delete\\\\s+shadows|shadowcopy.*delete|recoveryenabled\\\\s+no|bootstatuspolicy\\\\s+ignoreallfailures|\\\\bcl\\\\b)\", field=CommandLine)\n| NOT UserName=/\\$$/\n| groupBy([aid, ComputerName], function=count(field=ImageFileName, distinct=true, as=distinct_bins))\n| distinct_bins >= 2",
+      "cloudwatch_query": "",
+      "rationale": "Rhysida's CISA-documented tradecraft bundles vssadmin/wmic shadow deletion, bcdedit recovery disabling, and wevtutil log clearing into a single PowerShell cleanup routine run on each host just before encryption. Requiring 2+ distinct recovery-inhibition binaries within one host/window models that scripted bundle \u2014 distinguishing Rhysida's automated cleanup from a lone admin running one vssadmin co",
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    }
+  ]
+}

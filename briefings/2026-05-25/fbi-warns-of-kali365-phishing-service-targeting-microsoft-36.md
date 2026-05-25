@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Microsoft 365 OAuth device code authentication flow (Kali365 token theft)
 
-`UC_3_8` · phase: **exploit** · confidence: **Medium**
+`UC_7_8` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ AADSignInEventsBeta
 
 ### [LLM] Kali365 post-compromise mailbox hiding rule (spam/phish/click/link/SharePoint keywords)
 
-`UC_3_9` · phase: **actions** · confidence: **High**
+`UC_7_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ CloudAppEvents
 
 ### [LLM] Attacker device registration in victim Entra tenant after device-code compromise
 
-`UC_3_10` · phase: **install** · confidence: **Medium**
+`UC_7_10` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ CloudAppEvents
 
 ### [LLM] Microsoft 365 sign-in from Kali365 phishing infrastructure IPs
 
-`UC_3_11` · phase: **c2** · confidence: **High**
+`UC_7_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ AADSignInEventsBeta
 
 ### [LLM] Endpoint connection or DNS lookup to Kali365 Cookie Link AitM domains
 
-`UC_3_12` · phase: **c2** · confidence: **High**
+`UC_7_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

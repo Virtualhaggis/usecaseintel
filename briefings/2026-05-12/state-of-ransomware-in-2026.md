@@ -1,15 +1,26 @@
-# [CRIT] Grafana GitHub Token Breach Led to Codebase Download and Extortion Attempt
+# [CRIT] State of ransomware in 2026
 
-**Source:** The Hacker News
-**Published:** 2026-05-17
-**Article:** https://thehackernews.com/2026/05/grafana-github-token-breach-led-to.html
+**Source:** Securelist (Kaspersky)
+**Published:** 2026-05-12
+**Article:** https://securelist.com/state-of-ransomware-in-2026/119761/
 
 ## Threat Profile
 
-Grafana GitHub Token Breach Led to Codebase Download and Extortion Attempt 
- Ravie Lakshmanan  May 17, 2026 Data Breach / Cybercrime 
-Grafana has disclosed that an "unauthorized party" obtained a token that granted them the ability to access the company's GitHub environment and download its codebase.
-"Our investigation has determined that no customer data or personal information was accessed during this incident, and we have found no evidence of impact to customer systems or operations," Grafa…
+Table of Contents
+Ransomware attacks decline but remain a major threat 
+The continued rise of EDR killers and defense evasion tooling 
+The appearance of new families adopting post-quantum cryptography 
+The shift to encryptionless extortion 
+Industrialization of initial access (Access-as-a-Service) 
+Ransomware developments on the dark web 
+Law enforcement actions 
+Top ransomware groups in 2025 
+New actors in 2026 
+Conclusion and protection recommendations 
+Authors
+Fabio Assolini 
+Marc Rivero 
+Mah…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -17,6 +28,8 @@ Grafana has disclosed that an "unauthorized party" obtained a token that granted
 
 ## MITRE ATT&CK Techniques
 
+- **T1539** — Steal Web Session Cookie
+- **T1555.003** — Credentials from Web Browsers
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -24,18 +37,118 @@ Grafana has disclosed that an "unauthorized party" obtained a token that granted
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
+- **T1021.002** — SMB/Windows Admin Shares
+- **T1569.002** — Service Execution
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
-- **T1021.002** — SMB/Windows Admin Shares
-- **T1569.002** — Service Execution
+- **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1110.003** — Password Spraying
+- **T1110.001** — Password Guessing
+- **T1133** — External Remote Services
+- **T1078** — Valid Accounts
+- **T1190** — Exploit Public-Facing Application
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] RDWeb portal brute-force / password-spray success against IIS (ransomware IAB precursor)
+
+`UC_182_9` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Web where (Web.uri_path="*RDWeb*" OR Web.url="*RDWeb*") (Web.status=401 OR Web.status=403 OR Web.status=200 OR Web.status=302) by Web.src Web.dest Web.status _time span=10m
+| `drop_dm_object_name(Web)`
+| eval class=case(status=401 OR status=403,"fail",status=200 OR status=302,"success",1=1,"other")
+| stats sum(eval(if(class="fail",count,0))) as failures sum(eval(if(class="success",count,0))) as successes by src dest _time
+| where failures>=20 AND (successes>=1 OR failures>=100)
+| eval signal="RDWeb /RDWeb/Pages/login.aspx brute-force burst with subsequent 200/302 success"
+| sort 0 -failures
+```
+
+**Defender KQL:**
+```kql
+// RDWeb uses IIS Windows-auth by default; auth failures surface in DeviceLogonEvents under w3wp.exe initiator with LogonType Network.
+DeviceLogonEvents
+| where Timestamp > ago(2h)
+| where ActionType == "LogonFailed"
+| where LogonType in ("Network","RemoteInteractive")
+| where InitiatingProcessFileName in~ ("w3wp.exe","inetinfo.exe")
+| where RemoteIPType == "Public"
+| where AccountName !endswith "$"
+| summarize Failures=count(),
+            DistinctAccounts=dcount(AccountName),
+            AccountsTried=make_set(AccountName, 30),
+            FailureReasons=make_set(FailureReason, 5),
+            FirstSeen=min(Timestamp),
+            LastSeen=max(Timestamp)
+            by RemoteIP, DeviceName, bin(Timestamp, 10m)
+| where Failures >= 20 and DistinctAccounts >= 5   // spray shape: many users from one src
+| join kind=leftouter (
+    DeviceLogonEvents
+    | where Timestamp > ago(2h)
+    | where ActionType == "LogonSuccess"
+    | where InitiatingProcessFileName in~ ("w3wp.exe","inetinfo.exe")
+    | where RemoteIPType == "Public"
+    | summarize SuccessCount=count(),
+                SuccessAccounts=make_set(AccountName, 10),
+                SuccessTime=min(Timestamp)
+                by RemoteIP, DeviceName
+  ) on RemoteIP, DeviceName
+| extend BruteForceToSuccess = iif(isnotempty(SuccessCount), "yes", "no")
+| order by Failures desc
+```
+
+### [LLM] The Gentlemen RaaS — Fortinet/SonicWall/Cisco ASA SSL-VPN brute-force success from public source
+
+`UC_182_10` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Authentication where (Authentication.app IN ("fortigate","fortios","fortinet*","fortiproxy","sonicwall*","cisco_asa","cisco-asa","asa","anyconnect") OR Authentication.signature IN ("ssl-login*","ssl-new-con*","sslvpn*","webvpn*","SVC*","%ASA-6-113004","%ASA-6-113005","%ASA-6-605004","%ASA-6-605005")) by Authentication.src Authentication.dest Authentication.user Authentication.action _time span=30m
+| `drop_dm_object_name(Authentication)`
+| stats sum(eval(if(action="failure",count,0))) as failures sum(eval(if(action="success",count,0))) as successes values(eval(if(action="success",user,null()))) as success_users dc(user) as users_tried by src dest _time
+| where failures>=10 AND successes>=1
+| `cim_corporate_web_domain_search(src)` 
+| iplocation src
+| eval signal="The Gentlemen RaaS: Fortinet/SonicWall/Cisco ASA SSL-VPN brute-force then success — CVE-2024-55591 plausible"
+| table _time signal src dest Country failures successes users_tried success_users
+| sort 0 -_time
+```
+
+### Infostealer — non-browser process accessing browser cookie/login DBs
+
+`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
+        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
+      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
+| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -185,6 +298,31 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### Remote service execution — PsExec / SMB lateral movement
+
+`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
+```
+
 ### Ransomware-style mass file rename / extension change
 
 `UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
@@ -244,16 +382,17 @@ DeviceEvents
 | order by Timestamp desc
 ```
 
-### Remote service execution — PsExec / SMB lateral movement
+### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
 
-`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
+`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
+    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
+        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
+        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
 | `drop_dm_object_name(Processes)`
 ```
@@ -263,10 +402,11 @@ DeviceEvents
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where AccountName !endswith "$"
-| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc
+| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
+        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
+        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
+   or FileName matches regex @"(?i)kaseya.*\.exe"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
 ```
 
 ### Trusted vendor binary / installer launching unusual children
@@ -296,4 +436,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 11 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

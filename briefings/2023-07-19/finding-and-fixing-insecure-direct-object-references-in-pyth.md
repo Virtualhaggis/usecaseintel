@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Finding and fixing insecure direct object references in Python
 
-`UC_1388_0` · phase: **exploit** · confidence: **High**
+`UC_1397_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

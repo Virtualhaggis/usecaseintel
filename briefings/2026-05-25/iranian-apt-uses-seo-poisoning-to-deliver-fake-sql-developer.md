@@ -10,12 +10,8 @@ Home Cyber Security News
 Iranian APT Uses SEO Poisoning to Deliver Fake SQL Developer Malware Installer 
 By Tushar Subhra Dutta 
 May 25, 2026 
-
-
-
-
 A well-known Iranian threat group has found a new way to push malware onto people’s machines. Instead of sending phishing emails, the group built a fake website that impersonated a real database software download page and used search engine tricks to rank it near the top of results. 
-Anyone who searched for the tool online and clicked the wrong l…
+Anyone who searched for the tool online and clicked the wrong link walk…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -82,7 +78,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Nimbus Manticore AppDomain hijacking — .config dropped beside signed .NET binary
 
-`UC_1_9` · phase: **install** · confidence: **Medium**
+`UC_4_9` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +103,7 @@ DeviceFileEvents
 
 ### [LLM] Fake Oracle SQL Developer installer execution by MiniFast SHA256
 
-`UC_1_10` · phase: **delivery** · confidence: **High**
+`UC_4_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +124,7 @@ DeviceProcessEvents
 
 ### [LLM] SEO-poisoned download origin from getsqldeveloper[.]com fake SQL Developer page
 
-`UC_1_11` · phase: **delivery** · confidence: **High**
+`UC_4_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +146,7 @@ DeviceFileEvents
 
 ### [LLM] MiniFast C2 beacon to Nimbus Manticore Azure Web Apps infrastructure
 
-`UC_1_12` · phase: **c2** · confidence: **High**
+`UC_4_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
