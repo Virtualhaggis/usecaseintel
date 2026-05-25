@@ -10,12 +10,8 @@ Home Cyber Security News
 Cloud Atlas APT Group Modifies termsrv.dll to Enable Multiple RDP Sessions on Victim Hosts 
 By Tushar Subhra Dutta 
 May 25, 2026 
-
-
-
-
 A well-known advanced persistent threat group called Cloud Atlas has been caught using a dangerous technique to hijack Windows systems without alerting anyone on the network. 
-The group modifies a core Windows file called termsrv.dll to unlock multiple simultaneous Remote Desktop Protocol (RDP) sessions on a victim’s computer. This le…
+The group modifies a core Windows file called termsrv.dll to unlock multiple simultaneous Remote Desktop Protocol (RDP) sessions on a victim’s computer. This lets attac…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -48,7 +44,6 @@ The group modifies a core Windows file called termsrv.dll to unlock multiple sim
 - **Domain (defanged):** `onedrivesupport.net`
 - **Domain (defanged):** `amerikastaj.com`
 - **Domain (defanged):** `bigbang.me`
-- **Domain (defanged):** `paleturquoise-dragonfly-364512.hostingersite.com`
 - **Domain (defanged):** `wizzifi.com`
 - **Domain (defanged):** `totallegacy.org`
 - **Domain (defanged):** `mamurjor.com`
@@ -65,36 +60,37 @@ The group modifies a core Windows file called termsrv.dll to unlock multiple sim
 - **Domain (defanged):** `istochnik.org`
 - **Domain (defanged):** `znews.net`
 - **Domain (defanged):** `investika-club.com`
-- **MD5:** `1A11B26DD0261EF27A112CE8B361C247`
-- **MD5:** `5329F7BFF9D0D5DB28821B86C26D628F`
-- **MD5:** `7A95360B7E0EB5B107A3D231ABBC541A`
-- **MD5:** `C0D1EAA15A2CEFBAB9735787575C8D8E`
-- **MD5:** `D5B38B252CF212A4A32763DE36732D40`
-- **MD5:** `3C75CEDB1196DF5EAB91F31411ED4B33`
-- **MD5:** `42AC350BFBC5B4EB0FEDBA16C81919C7`
-- **MD5:** `493B901D1B33EB577DB64AADD948F9CE`
-- **MD5:** `2CABB721681455DAE1B6A26709DEF453`
-- **MD5:** `1B39E86EB772A0E40060B672B7F574F1`
-- **MD5:** `1D401D6E6FC0B00AAA2C65A0AC0CFD6B`
-- **MD5:** `40A562B8600F843B717BC5951B2E3C29`
-- **MD5:** `F721A76DEB28FD0B80D27FCE6B8F5016`
-- **MD5:** `D3C8AFD22BAA306FF659DB1FAC28574A`
-- **MD5:** `6D7B2D1172BBDB7340972D844F6F0717`
-- **MD5:** `9769F43B9DE8D19E803263267FA6D62E`
-- **MD5:** `63B6BE9AE8D8024A40B200CCCB438F1D`
-- **MD5:** `6AA586BCC45CA2E92A4F0EF47E086FA1`
-- **MD5:** `EBA3BCDB19A7E256BF8E2CC5B9C1CCA9`
-- **MD5:** `B4E183627B7399006C1BC47B3711E419`
-- **MD5:** `F56B31A4B47AD3365B18A7E922FBA1A8`
-- **MD5:** `F6F62456FB0FCC396FB654CBED339BC3`
-- **MD5:** `25C8ED0511375DCA57EF136AC3FA0CCA`
-- **MD5:** `2B4BA4FACF8C299749771A3A4369782E`
-- **MD5:** `BA9CE06641067742F2AFC9691FAFF1DC`
-- **MD5:** `FB0F8027ACF1B1E47E07A63D8812ED50`
-- **MD5:** `BBF1FA694122E07635DEEAC11AD712F8`
-- **MD5:** `F301AA3D62B5095EEC4D8E34201A4769`
-- **MD5:** `F9C3BBE108566D1A6B070F9C5FB03160`
-- **MD5:** `369B75BDCDED16469EDE7AB8BEDCFAE1`
+- **Domain (defanged):** `paleturquoise-dragonfly-364512.hostingersite.com`
+- **MD5:** `1a11b26dd0261ef27a112ce8b361c247`
+- **MD5:** `5329f7bff9d0d5db28821b86c26d628f`
+- **MD5:** `7a95360b7e0eb5b107a3d231abbc541a`
+- **MD5:** `c0d1eaa15a2cefbab9735787575c8d8e`
+- **MD5:** `d5b38b252cf212a4a32763de36732d40`
+- **MD5:** `3c75cedb1196df5eab91f31411ed4b33`
+- **MD5:** `42ac350bfbc5b4eb0fedba16c81919c7`
+- **MD5:** `493b901d1b33eb577db64aadd948f9ce`
+- **MD5:** `2cabb721681455dae1b6a26709def453`
+- **MD5:** `1b39e86eb772a0e40060b672b7f574f1`
+- **MD5:** `1d401d6e6fc0b00aaa2c65a0ac0cfd6b`
+- **MD5:** `40a562b8600f843b717bc5951b2e3c29`
+- **MD5:** `2b4ba4facf8c299749771a3a4369782e`
+- **MD5:** `ba9ce06641067742f2afc9691faff1dc`
+- **MD5:** `fb0f8027acf1b1e47e07a63d8812ed50`
+- **MD5:** `bbf1fa694122e07635deeac11ad712f8`
+- **MD5:** `f301aa3d62b5095eec4d8e34201a4769`
+- **MD5:** `f9c3bbe108566d1a6b070f9c5fb03160`
+- **MD5:** `369b75bdcded16469ede7ab8bedcfae1`
+- **MD5:** `9eaae9491f6a50d6df0be393734a44cb`
+- **MD5:** `3e6e9df00a764b348ec611ee8504aca0`
+- **MD5:** `9bd788f285e32a05e6591d1eb36ebffc`
+- **MD5:** `f42085522ec2ebb16edcf814e7c330ad`
+- **MD5:** `2042eb5d52f0b535a1ce6b6f954c8c2b`
+- **MD5:** `2aa1e9765ef6b00b94a9b6be0041436a`
+- **MD5:** `36120f5e9411bcbac7104ef3fa964ed2`
+- **MD5:** `5000a353399500bc78381dc95b6ed2dc`
+- **MD5:** `579a9952d31cad801a3988dbe7914ce7`
+- **MD5:** `867b634588c0fd6b26684d502c15ab03`
+- **MD5:** `38fa4306fa4406ba31cf171af4d36e34`
 
 ## MITRE ATT&CK Techniques
 
@@ -723,7 +719,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
   - CVE(s): `CVE-2018-0802`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `1A11B26DD0261EF27A112CE8B361C247`, `5329F7BFF9D0D5DB28821B86C26D628F`, `7A95360B7E0EB5B107A3D231ABBC541A`, `C0D1EAA15A2CEFBAB9735787575C8D8E`, `D5B38B252CF212A4A32763DE36732D40`, `3C75CEDB1196DF5EAB91F31411ED4B33`, `42AC350BFBC5B4EB0FEDBA16C81919C7`, `493B901D1B33EB577DB64AADD948F9CE` _(+22 more)_
+  - file hash IOC(s): `1a11b26dd0261ef27a112ce8b361c247`, `5329f7bff9d0d5db28821b86c26d628f`, `7a95360b7e0eb5b107a3d231abbc541a`, `c0d1eaa15a2cefbab9735787575c8d8e`, `d5b38b252cf212a4a32763de36732d40`, `3c75cedb1196df5eab91f31411ed4b33`, `42ac350bfbc5b4eb0fedba16c81919c7`, `493b901d1b33eb577db64aadd948f9ce` _(+22 more)_
 
 
 ## Why this matters
