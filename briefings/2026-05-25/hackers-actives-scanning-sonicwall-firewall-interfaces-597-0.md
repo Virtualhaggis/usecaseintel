@@ -10,12 +10,9 @@ Home Cyber Security News
 Hackers Actives Scanning SonicWall Firewall Interfaces – 597,000 Sessions Observed 
 By Abinaya 
 May 25, 2026 
-
-
-
-
 A sharp rise in internet-wide scanning activity targeting SonicWall firewall management interfaces has been detected, raising concerns about a potential pre-disclosure reconnaissance phase tied to new vulnerabilities.
-Threat intelligence firm GreyNoise reported a significant surge in scanning of SonicWall SonicOS management APIs between May 9 and May 18,…
+Threat intelligence firm GreyNoise reported a significant surge in scanning of SonicWall SonicOS management APIs between May 9 and May 18, 2026.
+T…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -39,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SonicWall SonicOS mgmt-interface scanning via uniform Chrome 119 / Linux x86_64 user-agent
 
-`UC_0_3` · phase: **recon** · confidence: **High**
+`UC_4_3` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -53,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Anomalous volume spike of inbound HTTP sessions to SonicWall management ports (46x baseline)
 
-`UC_0_4` · phase: **recon** · confidence: **Medium**
+`UC_4_4` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

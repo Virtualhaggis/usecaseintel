@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vulnerable UniFi OS devices exposed to CVE-2026-34908/34909/34910/33000/34911
 
-`UC_37_1` · phase: **weapon** · confidence: **High**
+`UC_40_1` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

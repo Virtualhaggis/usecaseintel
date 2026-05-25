@@ -10,13 +10,9 @@ Home Cyber Security News
 MiniUpdate RAT Uses Azure-Hosted C2 Domains for Targeted Espionage Campaigns 
 By Tushar Subhra Dutta 
 May 25, 2026 
-
-
-
-
 A new wave of targeted espionage attacks has put technology professionals across the United States, Israel, and the United Arab Emirates on high alert. 
 The threat comes from an Iran-linked hacking group deploying two families of remote access trojans through cleverly disguised recruitment lures and fake software installers. 
-The campaign began as …
+The campaign began as early as…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -74,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Screening Serpens MiniUpdate/MiniJunk V2 known file hashes on disk or executed
 
-`UC_2_11` · phase: **delivery** · confidence: **High**
+`UC_6_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +88,7 @@ union
 
 ### [LLM] MiniUpdate/MiniJunk V2 DLL side-loading - trusted binary loads UpdateChecker/Connection/uevmonitor/unbcl DLL
 
-`UC_2_12` · phase: **install** · confidence: **High**
+`UC_6_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +108,7 @@ DeviceImageLoadEvents
 
 ### [LLM] AppDomainManager hijack - .NET .config dropped to disable ETW / bypass signature checks
 
-`UC_2_13` · phase: **install** · confidence: **Medium**
+`UC_6_13` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +129,7 @@ DeviceFileEvents
 
 ### [LLM] MiniUpdate persistence - daily 09:30 scheduled task creation
 
-`UC_2_14` · phase: **install** · confidence: **Medium**
+`UC_6_14` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +150,7 @@ DeviceProcessEvents
 
 ### [LLM] Screening Serpens C2 beacon to per-target Azure (azurewebsites.net) and apex domains
 
-`UC_2_15` · phase: **c2** · confidence: **High**
+`UC_6_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -173,7 +169,7 @@ DeviceNetworkEvents
 
 ### [LLM] MiniJunk V2 payload pull from ONLYOFFICE DocSpace and Filemail delivery URLs
 
-`UC_2_16` · phase: **delivery** · confidence: **Medium**
+`UC_6_16` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -484,7 +480,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — MiniUpdate RAT Uses Azure-Hosted C2 Domains for Targeted Espionage Campaigns
 
-`UC_2_10` · phase: **exploit** · confidence: **High**
+`UC_6_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
