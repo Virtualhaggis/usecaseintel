@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vulnerable Cisco Secure Workload version present in asset fleet (CVE-2026-20223)
 
-`UC_59_5` · phase: **recon** · confidence: **High**
+`UC_60_5` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] Cisco Secure Workload Site Admin action crossing tenant boundary in a single session
 
-`UC_59_6` · phase: **exploit** · confidence: **Medium**
+`UC_60_6` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### [LLM] Anomalous unauthenticated REST access to Cisco Secure Workload appliance from non-management subnet
 
-`UC_59_7` · phase: **delivery** · confidence: **Medium**
+`UC_60_7` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

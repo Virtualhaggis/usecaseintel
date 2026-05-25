@@ -9,15 +9,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-25
+- [cisa warns of drupal core sql injection vulnerability exploi](./2026-05-25/cisa-warns-of-drupal-core-sql-injection-vulnerability-exploi.md)
 - [hackers compromised 34 packages in npm pypi and crates in ne](./2026-05-25/hackers-compromised-34-packages-in-npm-pypi-and-crates-in-ne.md)
+- [hackers use browser locking cypherloc kit to push fake micro](./2026-05-25/hackers-use-browser-locking-cypherloc-kit-to-push-fake-micro.md)
+- [trapdoor supply chain attack spreads credential stealing mal](./2026-05-25/trapdoor-supply-chain-attack-spreads-credential-stealing-mal.md)
 
 ## 2026-05-24
 - [ghost cms sql injection flaw exploited in large scale clickf](./2026-05-24/ghost-cms-sql-injection-flaw-exploited-in-large-scale-clickf.md)
 
 ## 2026-05-23
-- [anthropic s claude mythos preview uncovers 10 000 0 days in ](./2026-05-23/anthropic-s-claude-mythos-preview-uncovers-10-000-0-days-in-.md)
 - [ghsa critical cve 2026 46716 nezha monitoring rolemember can](./2026-05-23/ghsa-critical-cve-2026-46716-nezha-monitoring-rolemember-can.md)
-- [hackers compromised 233 versions of laravel lang packages by](./2026-05-23/hackers-compromised-233-versions-of-laravel-lang-packages-by.md)
 - [hackers exploit f5 big ip appliance to gain ssh access and p](./2026-05-23/hackers-exploit-f5-big-ip-appliance-to-gain-ssh-access-and-p.md)
 - [laravel lang packages hijacked to deploy credential stealing](./2026-05-23/laravel-lang-packages-hijacked-to-deploy-credential-stealing.md)
 - [laravel lang php packages compromised to deliver cross platf](./2026-05-23/laravel-lang-php-packages-compromised-to-deliver-cross-platf.md)
@@ -38,7 +39,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghostwriter targets ukraine government entities with prometh](./2026-05-22/ghostwriter-targets-ukraine-government-entities-with-prometh.md)
 - [ghsa critical cve 2026 46670 yeswiki unauthenticated sql inj](./2026-05-22/ghsa-critical-cve-2026-46670-yeswiki-unauthenticated-sql-inj.md)
 - [ghsa critical ghsa qqqm 5547 774x filebrowser quantum path t](./2026-05-22/ghsa-critical-ghsa-qqqm-5547-774x-filebrowser-quantum-path-t.md)
-- [hackers abuse middle east telecom networks for large scale c](./2026-05-22/hackers-abuse-middle-east-telecom-networks-for-large-scale-c.md)
 - [kimwolf ddos botnet operator arrested in canada over ddos fo](./2026-05-22/kimwolf-ddos-botnet-operator-arrested-in-canada-over-ddos-fo.md)
 - [making vulnerable drivers exploitable without hardware the b](./2026-05-22/making-vulnerable-drivers-exploitable-without-hardware-the-b.md)
 - [megalodon github attack targets 5 561 repos with malicious c](./2026-05-22/megalodon-github-attack-targets-5-561-repos-with-malicious-c.md)

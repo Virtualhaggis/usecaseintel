@@ -1,0 +1,86 @@
+{
+  "name": "Berserk Bear",
+  "ucs": [
+    {
+      "title": "[LLM] Berserk Bear / Dragonfly forced SMB authentication via template injection (Office/Explorer \u2192 public SMB)",
+      "description": "Hunts the signature DragonFly / DYMALLOY tradecraft of stealing NetNTLMv2 hashes by luring users into opening Office docs with remote template references (T1221) or .lnk/.url files whose icon path forces SMB auth (T1187) to attacker-controlled infrastructure. The leak shows up as winword/excel/explorer/outlook initiating outbound TCP/445 or TCP/139 to a public IP \u2014 behaviour CISA AA20-296A and Symantec's Dragonfly 2.0 reporting tied directly to this cluster's energy-sector intrusions.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1221",
+        "T1187",
+        "T1189",
+        "T1204.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src_ip) as src_ip values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as process from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (445,139) AND All_Traffic.dest_category!=\"internal\" AND (All_Traffic.app=\"winword.exe\" OR All_Traffic.app=\"excel.exe\" OR All_Traffic.app=\"powerpnt.exe\" OR All_Traffic.app=\"outlook.exe\" OR All_Traffic.app=\"explorer.exe\" OR All_Traffic.app=\"mshta.exe\") by host All_Traffic.app | `drop_dm_object_name(\"All_Traffic\")` | where NOT cidrmatch(\"10.0.0.0/8\",dest_ip) AND NOT cidrmatch(\"172.16.0.0/12\",dest_ip) AND NOT cidrmatch(\"192.168.0.0/16\",dest_ip) | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "// Berserk Bear / Dragonfly \u2014 template injection + forced SMB auth to attacker share\nlet OfficeAndShell = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"explorer.exe\",\"mshta.exe\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemotePort in (445, 139)\n| where RemoteIPType == \"Public\"   // SMB to the internet \u2014 never legit\n| where InitiatingProcessFileName in~ (OfficeAndShell)\n| where InitiatingProcessAccountName !endswith \"$\"\n| project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,\n          InitiatingProcessFileName, ParentImage = InitiatingProcessParentFileName,\n          InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ReportId\n| join kind=leftouter (\n    DeviceFileEvents\n    | where Timestamp > ago(7d)\n    | where FileName endswith \".docx\" or FileName endswith \".doc\"\n         or FileName endswith \".dotm\" or FileName endswith \".lnk\"\n         or FileName endswith \".url\" or FileName endswith \".rtf\"\n    | project FileName, FolderPath, FileOriginUrl, FileOriginReferrerUrl, DeviceId, Timestamp\n) on DeviceId\n| where isnull(Timestamp1) or Timestamp1 between (Timestamp - 10m .. Timestamp + 1m)\n| order by Timestamp desc",
+      "sentinel_kql": "// Berserk Bear / Dragonfly \u2014 Office/Shell process initiating outbound SMB\nlet OfficeAndShell = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"explorer.exe\",\"mshta.exe\"]);\nImNetworkSession\n| where TimeGenerated > ago(7d)\n| where DstPortNumber in (445, 139)\n| where isnotempty(DstIpAddr)\n| where not(ipv4_is_private(DstIpAddr))   // SMB to public IP \u2014 high-fidelity Dragonfly signal\n| extend ProcName = tolower(tostring(split(ActingProcessName, \"\\\\\")[-1]))\n| where ProcName in (OfficeAndShell)\n| where SrcUsername !endswith \"$\"\n| project TimeGenerated, DvcHostname, SrcUsername, ActingProcessName,\n          ActingProcessCommandLine, DstIpAddr, DstPortNumber, NetworkProtocol\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Office or Shell Process Initiating Outbound SMB (Dragonfly Forced Authentication)\nid: 6d3f1a52-7e0c-4d2b-9b7e-2c8d5a1b9e4f\nstatus: experimental\ndescription: Detects winword/excel/explorer/outlook/mshta initiating TCP/445 or TCP/139 to a public IP, consistent with Berserk Bear / Dragonfly template-injection and .lnk icon-path forced-authentication tradecraft.\nreferences:\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-296a\n  - https://attack.mitre.org/groups/G0035/\nauthor: SOC Detection Engineering\ndate: 2026/05/25\ntags:\n  - attack.credential-access\n  - attack.t1187\n  - attack.t1221\n  - attack.g0035\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection:\n    Image|endswith:\n      - '\\winword.exe'\n      - '\\excel.exe'\n      - '\\powerpnt.exe'\n      - '\\outlook.exe'\n      - '\\explorer.exe'\n      - '\\mshta.exe'\n    DestinationPort:\n      - 445\n      - 139\n  filter_private:\n    DestinationIp|cidr:\n      - '10.0.0.0/8'\n      - '172.16.0.0/12'\n      - '192.168.0.0/16'\n      - '169.254.0.0/16'\n      - '127.0.0.0/8'\n  condition: selection and not filter_private\nfalsepositives:\n  - Outbound SMB to public infrastructure is essentially never legitimate from these binaries; pen-tester Responder/Inveigh harnesses can fire this\nlevel: high",
+      "datadog_query": "source:windows.sysmon @EventID:3 @DestinationPort:(445 OR 139) @Image:(*\\\\winword.exe OR *\\\\WINWORD.EXE OR *\\\\excel.exe OR *\\\\EXCEL.EXE OR *\\\\powerpnt.exe OR *\\\\POWERPNT.EXE OR *\\\\outlook.exe OR *\\\\OUTLOOK.EXE OR *\\\\explorer.exe OR *\\\\EXPLORER.EXE OR *\\\\mshta.exe OR *\\\\MSHTA.EXE) -CIDR(@DestinationIp, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.0.0/16, 127.0.0.0/8)",
+      "falcon_logscale_query": "#event_simpleName=NetworkConnectIP4 RemotePort=/^(445|139)$/ | ContextImageFileName=/\\\\(winword|excel|powerpnt|outlook|explorer|mshta)\\.exe$/i | NOT cidr(\"10.0.0.0/8\", field=RemoteAddressIP4) | NOT cidr(\"172.16.0.0/12\", field=RemoteAddressIP4) | NOT cidr(\"192.168.0.0/16\", field=RemoteAddressIP4) | groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=[count(), min(@timestamp), max(@timestamp)])",
+      "cloudwatch_query": "",
+      "rationale": "Outbound SMB from an Office binary or Explorer to a *public* IP has no legitimate use case \u2014 it is the exact wire signature of Dragonfly's two best-documented credential-collection plays: (1) Word docs with remote `wd:attachedTemplate` references hosted on attacker SMB shares (CISA AA20-296A), and (2) .lnk / .url files whose icon path forces NetNTLMv2 leakage when the folder is browsed. Almost no ",
+      "_sentinel_field_issues_autofix": [
+        "ActorUsername -> SrcUsername"
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessCommandLine",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessCommandLine` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] Berserk Bear / DragonFly registry-hive credential dumping (reg save SAM/SECURITY/SYSTEM)",
+      "description": "Hunts the post-exploitation playbook used by Berserk Bear operators against US energy-sector targets (CISA AA20-296A / TA18-074A): once they land valid creds on a workstation, they `reg save HKLM\\SAM ...`, `reg save HKLM\\SECURITY ...`, `reg save HKLM\\SYSTEM ...` to extract the SAM database and LSA secrets offline. Pairs the registry-hive dump with same-host outbound transfer or scheduled task creation seen in DragonFly intrusions.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1003.002",
+        "T1003.004",
+        "T1012",
+        "T1059.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name=\"reg.exe\" OR Processes.process_name=\"reg\") AND Processes.process IN (\"*save*HKLM\\\\SAM*\",\"*save*HKLM\\\\SECURITY*\",\"*save*HKLM\\\\SYSTEM*\",\"*save*hklm\\\\sam*\",\"*save*hklm\\\\security*\",\"*save*hklm\\\\system*\") by host Processes.process_name Processes.parent_process_name | `drop_dm_object_name(\"Processes\")` | where user!=\"SYSTEM\" AND NOT match(user,\"\\\\$$\") | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "// Berserk Bear / DragonFly \u2014 SAM/SECURITY/SYSTEM hive dump via reg save\nDeviceProcessEvents\n| where Timestamp > ago(14d)\n| where FileName =~ \"reg.exe\"\n| where ProcessCommandLine has \"save\"\n| where ProcessCommandLine has_any (@\"HKLM\\SAM\", @\"HKLM\\SECURITY\", @\"HKLM\\SYSTEM\", \"hklm\\\\sam\", \"hklm\\\\security\", \"hklm\\\\system\", @\"HKEY_LOCAL_MACHINE\\SAM\", @\"HKEY_LOCAL_MACHINE\\SECURITY\", @\"HKEY_LOCAL_MACHINE\\SYSTEM\")\n| where AccountName !endswith \"$\"\n| where AccountName !in~ (\"system\",\"local service\",\"network service\")\n| extend HiveTarget = case(\n    ProcessCommandLine has_cs \"SAM\" or ProcessCommandLine has \"sam\", \"SAM\",\n    ProcessCommandLine has_cs \"SECURITY\" or ProcessCommandLine has \"security\", \"SECURITY\",\n    ProcessCommandLine has_cs \"SYSTEM\" or ProcessCommandLine has \"system\", \"SYSTEM\",\n    \"unknown\")\n| summarize HivesDumped = make_set(HiveTarget),\n            HiveCount = dcount(HiveTarget),\n            CmdLines = make_set(ProcessCommandLine, 5),\n            FirstSeen = min(Timestamp), LastSeen = max(Timestamp),\n            Parents = make_set(InitiatingProcessFileName, 5)\n            by DeviceId, DeviceName, AccountName\n| where HiveCount >= 2     // 2+ of {SAM,SECURITY,SYSTEM} within window = unambiguous offline-crack prep\n| order by LastSeen desc",
+      "sentinel_kql": "// Berserk Bear / DragonFly \u2014 reg.exe save of SAM/SECURITY/SYSTEM hives\nSecurityEvent\n| where TimeGenerated > ago(14d)\n| where EventID == 4688\n| where NewProcessName endswith_cs \"\\\\reg.exe\" or NewProcessName endswith \"\\\\reg.exe\"\n| where CommandLine has \"save\"\n| where CommandLine has_any (@\"HKLM\\SAM\", @\"HKLM\\SECURITY\", @\"HKLM\\SYSTEM\", \"hklm\\\\sam\", \"hklm\\\\security\", \"hklm\\\\system\", @\"HKEY_LOCAL_MACHINE\\SAM\", @\"HKEY_LOCAL_MACHINE\\SECURITY\", @\"HKEY_LOCAL_MACHINE\\SYSTEM\")\n| where SubjectUserName !endswith \"$\"\n| where SubjectUserName !in~ (\"SYSTEM\",\"LOCAL SERVICE\",\"NETWORK SERVICE\")\n| extend HiveTarget = case(\n    CommandLine has \"SAM\" or CommandLine has \"sam\", \"SAM\",\n    CommandLine has \"SECURITY\" or CommandLine has \"security\", \"SECURITY\",\n    CommandLine has \"SYSTEM\" or CommandLine has \"system\", \"SYSTEM\",\n    \"unknown\")\n| summarize HivesDumped = make_set(HiveTarget),\n            HiveCount = dcount(HiveTarget),\n            CmdLines = make_set(CommandLine, 5),\n            FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated),\n            Parents = make_set(ParentProcessName, 5)\n            by Computer, SubjectUserName\n| where HiveCount >= 2\n| order by LastSeen desc",
+      "sigma_yaml": "title: Registry Hive Credential Dump via reg.exe save (Dragonfly TTP)\nid: 9c4b2d1f-3a8e-4f6c-b1d2-7e9a5c3b8f02\nstatus: experimental\ndescription: Detects reg.exe save targeting HKLM\\SAM, HKLM\\SECURITY, or HKLM\\SYSTEM \u2014 the exact registry-hive extraction sequence used by Berserk Bear / DragonFly / DYMALLOY for offline NT-hash and LSA-secret cracking against energy-sector victims.\nreferences:\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-296a\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/ta18-074a\n  - https://attack.mitre.org/groups/G0035/\nauthor: SOC Detection Engineering\ndate: 2026/05/25\ntags:\n  - attack.credential-access\n  - attack.t1003.002\n  - attack.t1003.004\n  - attack.g0035\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_proc:\n    Image|endswith: '\\reg.exe'\n    CommandLine|contains: ' save '\n  selection_target:\n    CommandLine|contains:\n      - 'HKLM\\SAM'\n      - 'HKLM\\SECURITY'\n      - 'HKLM\\SYSTEM'\n      - 'HKEY_LOCAL_MACHINE\\SAM'\n      - 'HKEY_LOCAL_MACHINE\\SECURITY'\n      - 'HKEY_LOCAL_MACHINE\\SYSTEM'\n  filter_machine_acct:\n    User|endswith: '$'\n  condition: selection_proc and selection_target and not filter_machine_acct\nfalsepositives:\n  - Backup software invoking reg save (rare and usually scheduled at known times)\n  - Authorized IR / forensic acquisition\nlevel: high",
+      "datadog_query": "source:windows.security @EventID:4688 @Image:(*\\\\reg.exe OR *\\\\REG.EXE) @CommandLine:(*save* AND (*HKLM\\\\SAM* OR *HKLM\\\\SECURITY* OR *HKLM\\\\SYSTEM* OR *hklm\\\\sam* OR *hklm\\\\security* OR *hklm\\\\system* OR *HKEY_LOCAL_MACHINE\\\\SAM* OR *HKEY_LOCAL_MACHINE\\\\SECURITY* OR *HKEY_LOCAL_MACHINE\\\\SYSTEM*)) -@SubjectUserName:*$",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ImageFileName=/\\\\reg\\.exe$/i CommandLine=/save/i | regex(\"(?i)(HKLM|HKEY_LOCAL_MACHINE)\\\\\\\\(SAM|SECURITY|SYSTEM)\", field=CommandLine) | UserName!=/\\$$/ | groupBy([aid, ComputerName, UserName], function=[count(), collect([CommandLine, ParentBaseFileName]), min(@timestamp), max(@timestamp)]) | _count >= 2",
+      "cloudwatch_query": "",
+      "rationale": "Dragonfly's documented post-exploitation flow against US energy targets dumps SAM (local hashes), SECURITY (LSA secrets / cached domain creds) and SYSTEM (bootkey for offline SAM decryption) \u2014 they specifically use built-in `reg save` rather than Mimikatz to evade AV on hardened ICS jump-hosts. The triple `HKLM\\SAM` + `HKLM\\SECURITY` + `HKLM\\SYSTEM` hive sequence on the same host within a short wi"
+    }
+  ]
+}
