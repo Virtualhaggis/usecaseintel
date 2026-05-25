@@ -10,12 +10,8 @@ Home Cyber Security
 Hackers Compromised 34 Packages in npm, PyPI, and Crates in New Supply Chain Attack 
 By Guru Baran 
 May 25, 2026 
-
-
-
-
 New TrapDoor supply chain campaign , an active attack deploying 34 malicious packages and over 384 related versions across npm, PyPI, and Crates.io to steal developer credentials and cryptocurrency wallets.
-The operation explicitly targets developers in the crypto, DeFi, Solana, and AI communities by disguising malware as generic developer tools and secur…
+The operation explicitly targets developers in the crypto, DeFi, Solana, and AI communities by disguising malware as generic developer tools and security scan…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -68,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] npm/pip/cargo build-time subprocess spawning `node -e` or curl/wget (TrapDoor execution primitive)
 
-`UC_0_15` · phase: **install** · confidence: **High**
+`UC_2_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +90,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound connection or DNS to TrapDoor C2 ddjidd564.github.io
 
-`UC_0_16` · phase: **c2** · confidence: **High**
+`UC_2_16` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +114,7 @@ union
 
 ### [LLM] AI assistant rules files (.cursorrules / CLAUDE.md) written by non-editor process
 
-`UC_0_17` · phase: **weapon** · confidence: **Medium**
+`UC_2_17` · phase: **weapon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +138,7 @@ DeviceFileEvents
 
 ### [LLM] TrapDoor malicious package name in npm/pip/cargo install command or lockfile write
 
-`UC_0_18` · phase: **delivery** · confidence: **High**
+`UC_2_18` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -172,7 +168,7 @@ union
 
 ### [LLM] Build-tool subprocess reading developer secrets (SSH keys, AWS creds, Solana/Sui/Aptos wallets, browser logins)
 
-`UC_0_19` · phase: **actions** · confidence: **High**
+`UC_2_19` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -196,7 +192,7 @@ DeviceFileEvents
 
 ### [LLM] Build-tool subprocess installing shell/systemd/git-hook persistence (trap-core.js footholds)
 
-`UC_0_20` · phase: **install** · confidence: **High**
+`UC_2_20` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -655,7 +651,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Compromised 34 Packages in npm, PyPI, and Crates in New Supply Chain Att
 
-`UC_0_14` · phase: **exploit** · confidence: **High**
+`UC_2_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1252 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -47,12 +47,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [netherlands seizes 800 servers of hosting firm enabling cybe](./2026-05-22/netherlands-seizes-800-servers-of-hosting-firm-enabling-cybe.md)
 - [nx console vs code extension compromised](./2026-05-22/nx-console-vs-code-extension-compromised.md)
 - [paved with intent roadtools and nation state tactics in the ](./2026-05-22/paved-with-intent-roadtools-and-nation-state-tactics-in-the-.md)
-- [russian threat groups use rdp vpn supply chain attacks and s](./2026-05-22/russian-threat-groups-use-rdp-vpn-supply-chain-attacks-and-s.md)
 - [tracking iranian apt screening serpens 2026 espionage campai](./2026-05-22/tracking-iranian-apt-screening-serpens-2026-espionage-campai.md)
 - [trend micro warns of apex one zero day exploited in the wild](./2026-05-22/trend-micro-warns-of-apex-one-zero-day-exploited-in-the-wild.md)
 - [ubiquiti patches three max severity unifi os vulnerabilities](./2026-05-22/ubiquiti-patches-three-max-severity-unifi-os-vulnerabilities.md)
 - [us and canada arrest and charge suspected kimwolf botnet adm](./2026-05-22/us-and-canada-arrest-and-charge-suspected-kimwolf-botnet-adm.md)
-- [world cup phishing campaign nearly triples with 203 unique i](./2026-05-22/world-cup-phishing-campaign-nearly-triples-with-203-unique-i.md)
 
 ## 2026-05-21
 - [5 supply chain attacks in 48 hours why securing one layer is](./2026-05-21/5-supply-chain-attacks-in-48-hours-why-securing-one-layer-is.md)
