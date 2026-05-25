@@ -1,3 +1,306 @@
+<article class="card" id="art-156" data-art-slug="2026-05-14-ghsa-critical-cve-2026-27886-strapi-may-leak-sensitive-data-"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,sent,sigma,spl"
+  data-splunk-cats="application,web"
+  data-targets="vcs"
+  data-uc-count="4" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-27886: Strapi may leak sensitive data via relational filtering due to lack of query sanitization Strapi may leak sensitive data via relational filtering due to lack of query sanitization CVE-2026-27886  [LLM] Strapi CVE-2026-27886 exploit — `where[admin-relation][private-field]` query parameter against public Content API [LLM] Strapi boolean-oracle hex-alphabet brute force from single source [LLM] Strapi CVE-2026-27886 admin takeover — exploit burst followed by `/admin/reset-password` POST Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-05-14-ghsa-critical-cve-2026-27886-strapi-may-leak-sensitive-data-" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-rjg2-95x7-8qmx" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-27886: Strapi may leak sensitive data via relational filtering due to lack of query sanitization</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-05-14</span>
+    <span>4 use cases</span>
+    <span>0 techniques</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Strapi may leak sensitive data via relational filtering due to lack of query sanitization</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-27886</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-156-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-156"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-156-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Strapi CVE-2026-27886 exploit — `where[admin-relation][private-field]` query parameter against public Content API · [LLM] Strapi boolean-oracle hex-alphabet brute force from single source</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Strapi CVE-2026-27886 admin takeover — exploit burst followed by `/admin/reset-password` POST</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="70de8c6834" data-platforms="datadog,sent,sigma,spl" data-targets="vcs" open>
+  <summary>
+    <span class="uc-title">[LLM] Strapi CVE-2026-27886 exploit — `where[admin-relation][private-field]` query parameter against public Content API</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="70de8c6834" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects HTTP requests that abuse Strapi&#x27;s relational filtering bug (CVE-2026-27886) by traversing `updatedBy`/`createdBy`/`publishedBy` joins into the `admin_users` table to read private fields such as `resetPasswordToken`, `email`, or `password`. The query parameter shape is unique to this vulnerability and rarely produced by legitimate clients.
+
+Rationale: Uses the exact malicious query-parameter regex published in the GHSA advisory (`where[updatedBy|createdBy|publishedBy][resetPasswordToken|password|email|...][$startsWith|...]=`). This shape is unique to the CVE-2026-27886 exploit chain — legitimate Strapi clients filter by content-type fields, never by admin-relation private fields. corroborated_sources field references the GHSA primary source.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-rjg2-95x7-8qmx</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Exploitation for Credential Access">T1212</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-156-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-156-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-156-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-156-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-156-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackHours = 24h;
+let StrapiExploitRegex = @&quot;(?i)where\[(updatedBy|createdBy|publishedBy)\]\[(email|password|resetPasswordToken|confirmationToken|firstname|lastname|preferedLanguage)\]\[\$(startsWith|contains|eq|gt|lt|ge|le|in|notIn|notNull|null)\]=&quot;;
+union isfuzzy=true
+  (ImWebSession
+   | where TimeGenerated &gt; ago(LookbackHours)
+   | where Url matches regex StrapiExploitRegex
+   | project TimeGenerated, SrcIpAddr, HttpHostName, HttpMethod, Url, HttpStatusCode, UA = HttpRequestHeaderUserAgent, Src = &quot;ImWebSession&quot;),
+  (W3CIISLog
+   | where TimeGenerated &gt; ago(LookbackHours)
+   | where csUriQuery matches regex StrapiExploitRegex
+   | project TimeGenerated, SrcIpAddr = cIP, HttpHostName = sSiteName, HttpMethod = csMethod, Url = strcat(csUriStem, &quot;?&quot;, csUriQuery), HttpStatusCode = tostring(scStatus), UA = csUserAgent, Src = &quot;W3CIISLog&quot;),
+  (CommonSecurityLog
+   | where TimeGenerated &gt; ago(LookbackHours)
+   | where RequestURL matches regex StrapiExploitRegex
+   | project TimeGenerated, SrcIpAddr = SourceIP, HttpHostName = DestinationHostName, HttpMethod = RequestMethod, Url = RequestURL, HttpStatusCode = tostring(EventOutcome), UA = RequestClientApplication, Src = &quot;CommonSecurityLog&quot;)
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-156-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Strapi CVE-2026-27886 Relational Filter Boolean-Oracle Exploit
+id: 8a3c8e9d-7b5f-4c2a-9e1d-6f4b2c5a8e1f
+status: experimental
+description: Detects exploitation of CVE-2026-27886 in Strapi &lt;5.37.0 via the `where[admin-relation][private-field][$op]=` query parameter on publicly-accessible Content API endpoints. Used to oracle-extract admin reset tokens from the admin_users table.
+references:
+  - https://github.com/advisories/GHSA-rjg2-95x7-8qmx
+author: SOC Detection Engineering
+date: 2026/05/20
+tags:
+  - attack.t1190
+  - attack.t1212
+  - attack.initial_access
+  - attack.credential_access
+logsource:
+  category: webserver
+detection:
+  selection_relation:
+    cs-uri-query|contains:
+      - &#x27;where[updatedBy][&#x27;
+      - &#x27;where[createdBy][&#x27;
+      - &#x27;where[publishedBy][&#x27;
+  selection_private_field:
+    cs-uri-query|contains:
+      - &#x27;resetPasswordToken&#x27;
+      - &#x27;confirmationToken&#x27;
+      - &#x27;[password][&#x27;
+      - &#x27;[email][&#x27;
+      - &#x27;[firstname][&#x27;
+      - &#x27;[lastname][&#x27;
+      - &#x27;[preferedLanguage][&#x27;
+  condition: selection_relation and selection_private_field
+falsepositives:
+  - Authorised penetration testing or bug-bounty research against a Strapi instance
+  - Internal QA tooling exercising the relational filter API
+level: high</code></pre></div>
+    <div class="tab-content" id="art-156-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:iis OR source:strapi OR source:nodejs) (@http.url_details.queryString:*where\[updatedBy\]* OR @http.url_details.queryString:*where\[createdBy\]* OR @http.url_details.queryString:*where\[publishedBy\]*) (@http.url_details.queryString:*resetPasswordToken* OR @http.url_details.queryString:*confirmationToken* OR @http.url_details.queryString:*\[password\]\[* OR @http.url_details.queryString:*\[email\]\[*)</code></pre></div>
+    <div class="tab-content" id="art-156-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-156-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-156-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-156-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.uri_query) as queries values(Web.url) as urls values(Web.http_user_agent) as user_agents values(Web.status) as statuses from datamodel=Web where (Web.uri_query=&quot;*where[updatedBy]*&quot; OR Web.uri_query=&quot;*where[createdBy]*&quot; OR Web.uri_query=&quot;*where[publishedBy]*&quot;) by Web.src, Web.dest, Web.uri_path, Web.http_method | `drop_dm_object_name(Web)` | eval is_strapi_exploit=if(match(queries, &quot;where\[(updatedBy|createdBy|publishedBy)\]\[(email|password|resetPasswordToken|confirmationToken|firstname|lastname|preferedLanguage)\]\[\$(startsWith|contains|eq|gt|lt|ge|le|in|notIn|notNull|null)\]=&quot;), 1, 0) | where is_strapi_exploit=1 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime, lastTime, src, dest, uri_path, http_method, queries, user_agents, statuses, count</code></pre><pre class="spl-mode-body" id="art-156-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.uri_query) as queries values(Web.url) as urls values(Web.http_user_agent) as user_agents values(Web.status) as statuses from datamodel=Web where (Web.uri_query=&quot;*where[updatedBy]*&quot; OR Web.uri_query=&quot;*where[createdBy]*&quot; OR Web.uri_query=&quot;*where[publishedBy]*&quot;) by Web.src, Web.dest, Web.uri_path, Web.http_method | `drop_dm_object_name(Web)` | eval is_strapi_exploit=if(match(queries, &quot;where\[(updatedBy|createdBy|publishedBy)\]\[(email|password|resetPasswordToken|confirmationToken|firstname|lastname|preferedLanguage)\]\[\$(startsWith|contains|eq|gt|lt|ge|le|in|notIn|notNull|null)\]=&quot;), 1, 0) | where is_strapi_exploit=1 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime, lastTime, src, dest, uri_path, http_method, queries, user_agents, statuses, count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="0d65af6fce" data-platforms="datadog,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">[LLM] Strapi boolean-oracle hex-alphabet brute force from single source</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="0d65af6fce" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the high-volume single-source brute-force pattern characteristic of CVE-2026-27886 oracle extraction: the same Content API endpoint hit dozens-to-hundreds of times from one IP with identical-shape `where[adminRel][field][$op]=&lt;hex&gt;` query strings where only the trailing filter value varies across the hex alphabet (`0`–`f`). Threshold-and-cardinality detection.
+
+Rationale: The article&#x27;s IoC list explicitly calls out: &#x27;High volume of public Content API requests from a single IP iterating through a hex alphabet (0-9, a-f) on the same content-type endpoint with progressively-longer filter values&#x27; and &#x27;Sustained burst of identical-shape requests with only the trailing character of the filter value varying&#x27;. The detection codifies that — high request count + ≥16 distinct hex filter values + tight time window — into a threshold trigger.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-rjg2-95x7-8qmx</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Credential Access">T1212</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Password Guessing">T1110.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-156-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-156-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-156-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-156-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackHours = 6h;
+let MinRequestsPerSource = 50;
+let MinDistinctFilterValues = 16;  // hex alphabet width: 0-9,a-f
+let MaxDurationSec = 1800;          // burst must be tight (~30 min) to count as oracle
+ImWebSession
+| where TimeGenerated &gt; ago(LookbackHours)
+| where Url matches regex @&quot;(?i)where\[(updatedBy|createdBy|publishedBy)\]\[(email|password|resetPasswordToken|confirmationToken|firstname|lastname|preferedLanguage)\]\[\$&quot;
+| extend FilterValue = extract(@&quot;(?i)where\[\w+\]\[\w+\]\[\$\w+\]=([0-9a-fA-F]+)&quot;, 1, Url)
+| extend FilterFieldTuple = extract(@&quot;(?i)(where\[\w+\]\[\w+\]\[\$\w+\])=&quot;, 1, Url)
+| where isnotempty(FilterValue)
+| summarize
+    RequestCount   = count(),
+    DistinctValues = dcount(FilterValue),
+    SampleValues   = make_set(FilterValue, 20),
+    DistinctTuples = dcount(FilterFieldTuple),
+    SampleTuples   = make_set(FilterFieldTuple, 5),
+    UAs            = make_set(HttpRequestHeaderUserAgent, 5),
+    FirstSeen      = min(TimeGenerated),
+    LastSeen       = max(TimeGenerated)
+    by SrcIpAddr, HttpHostName
+| extend DurationSec = datetime_diff(&#x27;second&#x27;, LastSeen, FirstSeen)
+| where RequestCount &gt;= MinRequestsPerSource and DistinctValues &gt;= MinDistinctFilterValues and DurationSec &lt;= MaxDurationSec
+| order by RequestCount desc</code></pre></div>
+    <div class="tab-content" id="art-156-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:iis OR source:strapi OR source:nodejs) (@http.url_details.queryString:*where\[updatedBy\]* OR @http.url_details.queryString:*where\[createdBy\]* OR @http.url_details.queryString:*where\[publishedBy\]*) @http.url_details.queryString:*\$startsWith* OR @http.url_details.queryString:*\$contains* OR @http.url_details.queryString:*\$eq*</code></pre></div>
+    <div class="tab-content" id="art-156-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-156-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-156-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-156-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count values(Web.uri_query) as sample_queries dc(Web.uri_query) as distinct_queries min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agents from datamodel=Web where (Web.uri_query=&quot;*where[updatedBy]*&quot; OR Web.uri_query=&quot;*where[createdBy]*&quot; OR Web.uri_query=&quot;*where[publishedBy]*&quot;) AND Web.uri_query=&quot;*$*&quot; by Web.src, Web.dest, Web.uri_path | `drop_dm_object_name(Web)` | eval duration_sec=lastTime-firstTime | where count &gt;= 50 AND distinct_queries &gt;= 16 AND duration_sec &lt;= 1800 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime, lastTime, src, dest, uri_path, count, distinct_queries, duration_sec, user_agents, sample_queries</code></pre><pre class="spl-mode-body" id="art-156-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count values(Web.uri_query) as sample_queries dc(Web.uri_query) as distinct_queries min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agents from datamodel=Web where (Web.uri_query=&quot;*where[updatedBy]*&quot; OR Web.uri_query=&quot;*where[createdBy]*&quot; OR Web.uri_query=&quot;*where[publishedBy]*&quot;) AND Web.uri_query=&quot;*$*&quot; by Web.src, Web.dest, Web.uri_path | `drop_dm_object_name(Web)` | eval duration_sec=lastTime-firstTime | where count &gt;= 50 AND distinct_queries &gt;= 16 AND duration_sec &lt;= 1800 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime, lastTime, src, dest, uri_path, count, distinct_queries, duration_sec, user_agents, sample_queries</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="a11e1dff0d" data-platforms="datadog,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">[LLM] Strapi CVE-2026-27886 admin takeover — exploit burst followed by `/admin/reset-password` POST</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="a11e1dff0d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Correlates a burst of CVE-2026-27886 oracle-extraction requests against a Strapi host with a subsequent `POST /admin/reset-password` call on the same host within 30 minutes. This is the closing move of the documented account-takeover chain: oracle-extract a reset token, then call the admin reset-password endpoint with it.
+
+Rationale: The article&#x27;s IoC list specifies two final-stage signals: &#x27;Subsequent POST /admin/reset-password calls using a reset token that the legitimate admin did not request&#x27; and &#x27;Successful admin password change immediately following a burst of public Content API requests with where[updatedBy] query parameters&#x27;. The detection chains them at the per-host level with a 30-minute follow-on window — the same shape as the documented end-to-end takeover.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-rjg2-95x7-8qmx</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts">T1078</span> <span class="ind tech" title="Exploitation for Credential Access">T1212</span> <span class="ind tech" title="Account Manipulation">T1098</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-156-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-156-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-156-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-156-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackHours = 24h;
+let ChainWindow   = 30min;
+let MinExploitReqs = 10;
+let StrapiExploitRegex = @&quot;(?i)where\[(updatedBy|createdBy|publishedBy)\]\[(email|password|resetPasswordToken|confirmationToken|firstname|lastname|preferedLanguage)\]\[\$&quot;;
+let ExploitBursts =
+    ImWebSession
+    | where TimeGenerated &gt; ago(LookbackHours)
+    | where Url matches regex StrapiExploitRegex
+    | summarize ExploitCount = count(), FirstExploit = min(TimeGenerated), LastExploit = max(TimeGenerated), ExploitSrcIPs = make_set(SrcIpAddr, 10) by HttpHostName
+    | where ExploitCount &gt;= MinExploitReqs;
+let ResetCalls =
+    ImWebSession
+    | where TimeGenerated &gt; ago(LookbackHours)
+    | where Url has &quot;/admin/reset-password&quot;
+    | where HttpMethod =~ &quot;POST&quot;
+    | project ResetTime = TimeGenerated, ResetHost = HttpHostName, ResetSrcIp = SrcIpAddr, ResetUrl = Url, ResetUA = HttpRequestHeaderUserAgent;
+ExploitBursts
+| join kind=inner ResetCalls on $left.HttpHostName == $right.ResetHost
+| where ResetTime between (FirstExploit .. (LastExploit + ChainWindow))
+| extend ChainLatencySec = datetime_diff(&#x27;second&#x27;, ResetTime, LastExploit)
+| project FirstExploit, LastExploit, ResetTime, ChainLatencySec, HttpHostName, ExploitCount, ExploitSrcIPs, ResetSrcIp, ResetUrl, ResetUA
+| order by ResetTime desc</code></pre></div>
+    <div class="tab-content" id="art-156-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:iis OR source:strapi OR source:nodejs) ((@http.url_details.queryString:*where\[updatedBy\]* OR @http.url_details.queryString:*where\[createdBy\]* OR @http.url_details.queryString:*where\[publishedBy\]*) OR (@http.url_details.path:*/admin/reset-password @http.method:POST))</code></pre></div>
+    <div class="tab-content" id="art-156-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-156-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-156-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-156-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count values(Web.uri_query) as exploit_queries from datamodel=Web where (Web.uri_query=&quot;*where[updatedBy]*&quot; OR Web.uri_query=&quot;*where[createdBy]*&quot; OR Web.uri_query=&quot;*where[publishedBy]*&quot;) by Web.dest, Web.src, _time span=10m | `drop_dm_object_name(Web)` | eval is_exploit=if(match(exploit_queries, &quot;where\[(updatedBy|createdBy|publishedBy)\]\[(email|password|resetPasswordToken|confirmationToken|firstname|lastname|preferedLanguage)\]\[\$&quot;), 1, 0) | where is_exploit=1 | rename count as exploit_count | join type=inner dest [| tstats `summariesonly` count as reset_count values(Web.http_method) as methods values(Web.src) as reset_src from datamodel=Web where Web.uri_path=&quot;*/admin/reset-password*&quot; Web.http_method=POST by Web.dest, _time span=10m | `drop_dm_object_name(Web)`] | where exploit_count &gt;= 10 AND reset_count &gt;= 1 | table _time, dest, src, exploit_count, reset_count, reset_src, methods, exploit_queries</code></pre><pre class="spl-mode-body" id="art-156-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count values(Web.uri_query) as exploit_queries from datamodel=Web where (Web.uri_query=&quot;*where[updatedBy]*&quot; OR Web.uri_query=&quot;*where[createdBy]*&quot; OR Web.uri_query=&quot;*where[publishedBy]*&quot;) by Web.dest, Web.src, _time span=10m | `drop_dm_object_name(Web)` | eval is_exploit=if(match(exploit_queries, &quot;where\[(updatedBy|createdBy|publishedBy)\]\[(email|password|resetPasswordToken|confirmationToken|firstname|lastname|preferedLanguage)\]\[\$&quot;), 1, 0) | where is_exploit=1 | rename count as exploit_count | join type=inner dest [| tstats summariesonly=false count as reset_count values(Web.http_method) as methods values(Web.src) as reset_src from datamodel=Web where Web.uri_path=&quot;*/admin/reset-password*&quot; Web.http_method=POST by Web.dest, _time span=10m | `drop_dm_object_name(Web)`] | where exploit_count &gt;= 10 AND reset_count &gt;= 1 | table _time, dest, src, exploit_count, reset_count, reset_src, methods, exploit_queries</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-156-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-156-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-156-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-156-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-27886&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-156-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-27886&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-156-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-156-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-156-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-156-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-27886&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-156-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-27886&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-157" data-art-slug="2026-05-14-ghsa-critical-cve-2026-8178-amazon-redshift-vulnerable-to-re"
   data-phases="c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -15615,78 +15918,4 @@ DeviceFileEvents
 ]</code></pre></div></div>
   </div>
 </details></div>
-</article>
-<article class="card" id="art-190" data-art-slug="2026-05-11-ghsa-critical-ghsa-h29g-c9cx-c73q-torrentpier-has-php-serial"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms=""
-  data-splunk-cats=""
-  data-targets=""
-  data-uc-count="0" data-llm-uc-count="0"
-  data-search="[GHSA / CRITICAL] GHSA-h29g-c9cx-c73q: torrentpier has PHP Serialize Injections torrentpier has PHP Serialize Injections  T1190 ">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-05-11-ghsa-critical-ghsa-h29g-c9cx-c73q-torrentpier-has-php-serial" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-h29g-c9cx-c73q" target="_blank" rel="noopener">[GHSA / CRITICAL] GHSA-h29g-c9cx-c73q: torrentpier has PHP Serialize Injections</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-05-11</span>
-    <span>0 use cases</span>
-    <span>1 technique</span>
-    <span>4 kill-chain phases detected</span>
-  </div>
-  <p class="summary">torrentpier has PHP Serialize Injections</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-190-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-190"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-190-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"></div>
 </article>

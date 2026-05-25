@@ -65,7 +65,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Outbound connection or DNS to Shai-Hulud copycat C2 (lhr.life subdomains / 80.200.28.28:2222)
 
-`UC_125_9` · phase: **c2** · confidence: **High**
+`UC_126_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceNetworkEvents
 
 ### [LLM] Install of typosquatted Shai-Hulud copycat npm packages (chalk-tempalte / axois-utils / color-style-utils / @deadcode09284814/axios-util)
 
-`UC_125_10` · phase: **delivery** · confidence: **High**
+`UC_126_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceProcessEvents
 
 ### [LLM] node/npm process reading SSH private keys or cloud credential files (Shai-Hulud infostealer behavior)
 
-`UC_125_11` · phase: **actions** · confidence: **Medium**
+`UC_126_11` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceFileEvents
 
 ### [LLM] Phantom Bot persistence registration by node/npm context (axois-utils GoLang implant survives package deletion)
 
-`UC_125_12` · phase: **install** · confidence: **Medium**
+`UC_126_12` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

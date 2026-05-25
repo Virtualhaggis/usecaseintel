@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1251 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,8 +10,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-25
 - [cisa warns of drupal core sql injection vulnerability exploi](./2026-05-25/cisa-warns-of-drupal-core-sql-injection-vulnerability-exploi.md)
-- [hackers compromised 34 packages in npm pypi and crates in ne](./2026-05-25/hackers-compromised-34-packages-in-npm-pypi-and-crates-in-ne.md)
+- [hackers actives scanning sonicwall firewall interfaces 597 0](./2026-05-25/hackers-actives-scanning-sonicwall-firewall-interfaces-597-0.md)
 - [hackers use browser locking cypherloc kit to push fake micro](./2026-05-25/hackers-use-browser-locking-cypherloc-kit-to-push-fake-micro.md)
+- [lazarus deploys remotepe memory only rat against financial a](./2026-05-25/lazarus-deploys-remotepe-memory-only-rat-against-financial-a.md)
+- [miniupdate rat uses azure hosted c2 domains for targeted esp](./2026-05-25/miniupdate-rat-uses-azure-hosted-c2-domains-for-targeted-esp.md)
 - [trapdoor supply chain attack spreads credential stealing mal](./2026-05-25/trapdoor-supply-chain-attack-spreads-credential-stealing-mal.md)
 
 ## 2026-05-24
@@ -135,7 +137,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-15
 - [cisa kev cve 2026 42897 microsoft exchange server cross site](./2026-05-15/cisa-kev-cve-2026-42897-microsoft-exchange-server-cross-site.md)
-- [four openclaw flaws enable data theft privilege escalation a](./2026-05-15/four-openclaw-flaws-enable-data-theft-privilege-escalation-a.md)
 - [gremlin stealer s evolved tactics hiding in plain sight with](./2026-05-15/gremlin-stealer-s-evolved-tactics-hiding-in-plain-sight-with.md)
 - [malicious node ipc versions published to npm in suspected ma](./2026-05-15/malicious-node-ipc-versions-published-to-npm-in-suspected-ma.md)
 - [turla turns kazuar backdoor into modular p2p botnet for pers](./2026-05-15/turla-turns-kazuar-backdoor-into-modular-p2p-botnet-for-pers.md)

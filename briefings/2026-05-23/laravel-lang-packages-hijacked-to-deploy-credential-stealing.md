@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] C2 callback to Laravel Lang stealer infrastructure (flipboxstudio.info)
 
-`UC_12_5` · phase: **c2** · confidence: **High**
+`UC_13_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ union isfuzzy=true
 
 ### [LLM] PHP / Composer spawns executable from %TEMP% (DebugElevator dropper)
 
-`UC_12_6` · phase: **install** · confidence: **High**
+`UC_13_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### [LLM] Malicious helpers.php dropped under vendor/laravel-lang/ during Composer install
 
-`UC_12_7` · phase: **delivery** · confidence: **High**
+`UC_13_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceFileEvents
 
 ### [LLM] Composer command line installing or updating laravel-lang/* packages (scope hunt)
 
-`UC_12_8` · phase: **delivery** · confidence: **Medium**
+`UC_13_8` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,7 +148,7 @@ DeviceProcessEvents
 
 ### [LLM] Chromium Local State / Login Data accessed by non-browser binary from %TEMP% (App-Bound Encryption theft)
 
-`UC_12_9` · phase: **actions** · confidence: **Medium**
+`UC_13_9` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -276,7 +276,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Laravel Lang packages hijacked to deploy credential-stealing malware
 
-`UC_12_4` · phase: **install** · confidence: **High**
+`UC_13_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
