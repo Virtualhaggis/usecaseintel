@@ -1,0 +1,102 @@
+{
+  "name": "Lazarus Group",
+  "ucs": [
+    {
+      "title": "[LLM] Lazarus 'Operation Dream Job' ISO/LNK job-lure spawning regsvr32/rundll32 DLL proxy + C2",
+      "description": "Hunts the Lazarus Group (Hidden Cobra / ZINC / Diamond Sleet) Operation Dream Job delivery chain: a fake recruiter ISO/ZIP containing a decoy 'job description' LNK that, on click via explorer.exe from a mounted-ISO or user-writable path, proxy-executes a payload DLL through regsvr32.exe/rundll32.exe and immediately beacons. Ties the signed-LOLBin execution to first-seen public egress within a tight window \u2014 the hallmark of Lazarus's social-engineering-led intrusions against defense/aerospace and crypto targets.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1204.002",
+        "T1218.010",
+        "T1218.011",
+        "T1027",
+        "T1105",
+        "T1071.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (\"regsvr32.exe\",\"rundll32.exe\")) AND (Processes.parent_process_name IN (\"explorer.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\",\"powershell.exe\")) AND (Processes.process IN (\"*\\\\Users\\\\*\",\"*\\\\AppData\\\\*\",\"*\\\\Temp\\\\*\",\"*:\\\\*.dll*\",\"*-i*\") OR Processes.process=\"*.dll,*\") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id _time | `drop_dm_object_name(Processes)` | rename process_id as ppid | join type=inner dest [| tstats `security_content_summariesonly` count from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN (\"regsvr32.exe\",\"rundll32.exe\") AND All_Traffic.dest_category!=\"internal\" by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | rename src as dest] | where lastTime - firstTime < 300 | table firstTime dest user parent_process_name process_name process dest_ip dest_port",
+      "kql": "let Lookback = 14d;\nlet Window = 300;\nlet Proxy = DeviceProcessEvents\n    | where Timestamp > ago(Lookback)\n    | where FileName in~ (\"regsvr32.exe\",\"rundll32.exe\")\n    | where InitiatingProcessFileName in~ (\"explorer.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\",\"powershell.exe\",\"pwsh.exe\")\n    | where ProcessCommandLine has_any (@\"\\Users\\\", @\"\\AppData\\\", @\"\\Temp\\\", \".dll\")\n    | where AccountName !endswith \"$\"\n    | project ProcTime = Timestamp, DeviceId, DeviceName, AccountName,\n              ParentImage = InitiatingProcessFolderPath,\n              ParentCmd = InitiatingProcessCommandLine,\n              ChildImage = FolderPath, ChildCmd = ProcessCommandLine,\n              ProxyName = FileName, SHA256;\nProxy\n| join kind=inner (\n    DeviceNetworkEvents\n    | where Timestamp > ago(Lookback)\n    | where InitiatingProcessFileName in~ (\"regsvr32.exe\",\"rundll32.exe\")\n    | where RemoteIPType == \"Public\"\n    | project NetTime = Timestamp, DeviceId, RemoteIP, RemotePort, RemoteUrl\n) on DeviceId\n| where NetTime between (ProcTime .. ProcTime + Window * 1s)   // 300s = lure-click\u2192beacon dwell observed in Dream Job intrusions\n| project ProcTime, DelaySec = datetime_diff('second', NetTime, ProcTime),\n          DeviceName, AccountName, ProxyName, ChildCmd, ParentCmd,\n          RemoteIP, RemotePort, RemoteUrl, SHA256\n| order by ProcTime desc",
+      "sentinel_kql": "let Lookback = 14d;\nlet Window = 300;\nlet Proxy = SecurityEvent\n    | where TimeGenerated > ago(Lookback)\n    | where EventID == 4688\n    | extend Child = tostring(split(NewProcessName, \"\\\\\")[-1])\n    | where Child in~ (\"regsvr32.exe\",\"rundll32.exe\")\n    | extend Parent = tostring(split(ParentProcessName, \"\\\\\")[-1])\n    | where Parent in~ (\"explorer.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\",\"powershell.exe\")\n    | where CommandLine has_any (@\"\\Users\\\", @\"\\AppData\\\", @\"\\Temp\\\", \".dll\")\n    | where SubjectUserName !endswith \"$\"\n    | project ProcTime = TimeGenerated, Computer, Account = SubjectUserName, ProxyName = Child, ChildCmd = CommandLine, ParentProcessName;\nProxy\n| join kind=inner (\n    CommonSecurityLog\n    | where TimeGenerated > ago(Lookback)\n    | where ProcessName has_any (\"regsvr32\",\"rundll32\")\n    | where DestinationIP !startswith \"10.\" and DestinationIP !startswith \"192.168.\" and DestinationIP !startswith \"172.\"\n    | project NetTime = TimeGenerated, Computer = DeviceName, DestinationIP, DestinationPort, ProcessName\n) on Computer\n| where NetTime between (ProcTime .. ProcTime + Window * 1s)\n| project ProcTime, DelaySec = datetime_diff('second', NetTime, ProcTime), Computer, Account, ProxyName, ChildCmd, DestinationIP, DestinationPort\n| order by ProcTime desc",
+      "sigma_yaml": "title: Lazarus Dream Job LNK Proxy-Execution via Regsvr32/Rundll32 from User Path\nid: 8c1f2a4e-7b9d-4e2a-9f1c-3a6b2d8e5c7f\nstatus: experimental\ndescription: Detects regsvr32/rundll32 proxy-executing a DLL from a user-writable or ISO-mount path when spawned by explorer/script host, matching Lazarus Operation Dream Job lures.\nreferences:\n  - https://attack.mitre.org/groups/G0032/\nauthor: SOC Detection Engineering\ntags:\n  - attack.execution\n  - attack.t1218.010\n  - attack.t1218.011\n  - attack.g0032\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_img:\n    Image|endswith:\n      - '\\regsvr32.exe'\n      - '\\rundll32.exe'\n  selection_parent:\n    ParentImage|endswith:\n      - '\\explorer.exe'\n      - '\\cmd.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\powershell.exe'\n  selection_path:\n    CommandLine|contains:\n      - '\\Users\\'\n      - '\\AppData\\'\n      - '\\Temp\\'\n      - '.dll'\n  condition: selection_img and selection_parent and selection_path\nfalsepositives:\n  - Legitimate installers run from user Downloads\nlevel: high",
+      "datadog_query": "source:windows.sysmon @EventID:1 @ParentImage:(*\\explorer.exe OR *\\Explorer.EXE OR *\\cmd.exe OR *\\wscript.exe OR *\\cscript.exe OR *\\powershell.exe OR *\\PowerShell.exe) @Image:(*\\regsvr32.exe OR *\\Regsvr32.exe OR *\\REGSVR32.EXE OR *\\rundll32.exe OR *\\RunDll32.exe OR *\\RUNDLL32.EXE) @CommandLine:(*\\\\Users\\\\* OR *\\\\AppData\\\\* OR *\\\\Temp\\\\* OR *.dll*)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ImageFileName=/\\\\(regsvr32|rundll32)\\.exe$/i ParentBaseFileName=/(explorer|cmd|wscript|cscript|powershell)\\.exe/i\n| regex(\"\\\\\\\\(Users|AppData|Temp)\\\\\\\\|\\\\.dll\", field=CommandLine)\n| join({#event_simpleName=NetworkConnectIP4 ContextImageFileName=/\\\\(regsvr32|rundll32)\\.exe$/i | NOT cidr(\"10.0.0.0/8\", field=RemoteAddressIP4) | NOT cidr(\"192.168.0.0/16\", field=RemoteAddressIP4)}, field=aid, include=[RemoteAddressIP4, RemotePort])\n| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine, RemoteAddressIP4, RemotePort], function=count())",
+      "cloudwatch_query": "",
+      "rationale": "This is not generic regsvr32 abuse \u2014 it pins the three Lazarus-specific fingerprints of Operation Dream Job: (1) explorer/script-host parent indicating an LNK/ISO double-click lure rather than a service or installer, (2) the signed-LOLBin proxy-loading a DLL from a user-writable/ISO-mount path (Lazarus packages decoy job-spec PDFs with the real DLL in the same archive), and (3) the same LOLBin rea",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "DeviceName",
+          "tables_in_scope": [
+            "CommonSecurityLog",
+            "SecurityEvent"
+          ],
+          "exists_on": [
+            "DeviceProcessEvents",
+            "DeviceNetworkEvents",
+            "DeviceFileEvents",
+            "DeviceRegistryEvents",
+            "DeviceLogonEvents",
+            "DeviceImageLoadEvents",
+            "DeviceEvents",
+            "DeviceInfo",
+            "DeviceNetworkInfo",
+            "IdentityLogonEvents",
+            "IdentityQueryEvents",
+            "IdentityDirectoryEvents",
+            "DeviceTvmSoftwareInventory",
+            "DeviceTvmSoftwareVulnerabilities",
+            "AlertEvidence",
+            "AADSignInEventsBeta",
+            "ASCDeviceEvents"
+          ],
+          "message": "`DeviceName` is not a column of CommonSecurityLog, SecurityEvent; it does exist on DeviceProcessEvents, DeviceNetworkEvents, DeviceFileEvents, DeviceRegistryEvents, DeviceLogonEvents, DeviceImageLoadEvents, DeviceEvents, DeviceInfo, DeviceNetworkInfo, IdentityLogonEvents, IdentityQueryEvents, IdentityDirectoryEvents, DeviceTvmSoftwareInventory, DeviceTvmSoftwareVulnerabilities, AlertEvidence, AADSignInEventsBeta, ASCDeviceEvents."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] Lazarus DLL side-loading into a signed legitimate binary (AppleJeus / 3CX / MagicLine tradecraft)",
+      "description": "Hunts Lazarus Group's signature DLL search-order hijack: a legitimately signed third-party executable (trojanized trading/PDF/VPN/comms app) loading an unsigned or company-mismatched DLL from a user-writable directory. This is the execution primitive behind AppleJeus crypto-theft installers, the 3CXDesktopApp supply-chain implant, and MagicLine4NX abuse \u2014 Lazarus repeatedly relies on side-loading to run code under a trusted, signed parent.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "medium",
+      "techs": [
+        "T1574.002",
+        "T1027",
+        "T1055.001",
+        "T1036.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name=\"*.dll\" AND (Filesystem.file_path IN (\"*\\\\Users\\\\*\",\"*\\\\AppData\\\\*\",\"*\\\\ProgramData\\\\*\",\"*\\\\Temp\\\\*\")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name _time | `drop_dm_object_name(Filesystem)` | search process_name!=\"msiexec.exe\" process_name!=\"TiWorker.exe\" process_name!=\"setup.exe\" | rename process_name as loader_process | join type=inner dest file_name [| tstats `security_content_summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name!=\"rundll32.exe\" by Processes.dest Processes.process_name Processes.process_path | `drop_dm_object_name(Processes)` | rename process_name as file_name] | table firstTime dest loader_process file_name file_path",
+      "kql": "let Lookback = 14d;\n// Trusted, commonly-abused signed loaders Lazarus has hijacked + signed apps in general\nDeviceImageLoadEvents\n| where Timestamp > ago(Lookback)\n| where FileName endswith \".dll\"\n// DLL resident in a user-writable directory (side-load staging), not System32/WinSxS\n| where FolderPath has_any (@\"\\Users\\\", @\"\\AppData\\\", @\"\\ProgramData\\\", @\"\\Temp\\\", @\"\\Public\\\")\n| where FolderPath !has @\"\\Windows\\\"\n// Loader is itself signed by a real vendor (the trust Lazarus borrows) but the DLL company differs / is blank\n| where isnotempty(InitiatingProcessVersionInfoCompanyName)\n| extend LoaderCompany = InitiatingProcessVersionInfoCompanyName\n| where InitiatingProcessFolderPath has_any (@\"\\Users\\\", @\"\\AppData\\\", @\"\\ProgramData\\\", @\"\\Program Files\\\")\n| where InitiatingProcessAccountName !endswith \"$\"\n| project Timestamp, DeviceName, InitiatingProcessAccountName,\n          LoaderExe = InitiatingProcessFileName, LoaderCompany,\n          LoaderPath = InitiatingProcessFolderPath,\n          SideLoadedDll = FileName, DllPath = FolderPath,\n          DllSHA256 = SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "",
+      "sigma_yaml": "title: Lazarus DLL Side-Load - Signed App Loading DLL From User-Writable Path\nid: 4d9e6b21-2c7a-4f83-bb1e-9a5c0e7d3f48\nstatus: experimental\ndescription: Detects a signed executable loading a DLL from a user-writable directory outside Windows, matching Lazarus AppleJeus/3CX/MagicLine DLL search-order hijack tradecraft.\nreferences:\n  - https://attack.mitre.org/groups/G0032/\n  - https://attack.mitre.org/techniques/T1574/002/\nauthor: SOC Detection Engineering\ntags:\n  - attack.persistence\n  - attack.privilege_escalation\n  - attack.defense_evasion\n  - attack.t1574.002\n  - attack.g0032\nlogsource:\n  category: image_load\n  product: windows\ndetection:\n  selection_dll:\n    ImageLoaded|endswith: '.dll'\n  selection_path:\n    ImageLoaded|contains:\n      - '\\Users\\'\n      - '\\AppData\\'\n      - '\\ProgramData\\'\n      - '\\Temp\\'\n      - '\\Public\\'\n  filter_windows:\n    ImageLoaded|contains: '\\Windows\\'\n  filter_signed_dll:\n    Signed: 'true'\n    SignatureStatus: 'Valid'\n  condition: selection_dll and selection_path and not filter_windows and not filter_signed_dll\nfalsepositives:\n  - Portable apps and dev tools loading bundled DLLs from user directories\nlevel: medium",
+      "datadog_query": "source:windows.sysmon @EventID:7 @ImageLoaded:(*\\\\Users\\\\* OR *\\\\AppData\\\\* OR *\\\\ProgramData\\\\* OR *\\\\Temp\\\\* OR *\\\\Public\\\\*) @ImageLoaded:*.dll AND -@ImageLoaded:(*\\\\Windows\\\\* OR *\\\\windows\\\\*) AND -@Signed:true",
+      "falcon_logscale_query": "",
+      "cloudwatch_query": "",
+      "rationale": "DLL side-loading is the recurring execution backbone across Lazarus's most consequential operations \u2014 AppleJeus trojanized crypto traders, the 3CXDesktopApp supply-chain implant, and the MagicLine4NX/watering-hole campaigns against South Korean targets \u2014 where the group deliberately runs payloads under a borrowed, validly-signed parent to defeat allowlisting and analyst trust. Scoping to a signed ",
+      "_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "InitiatingProcessVersionInfoCompanyName",
+          "tables_in_scope": [
+            "DeviceImageLoadEvents"
+          ],
+          "exists_on": [
+            "DeviceProcessEvents",
+            "DeviceNetworkEvents",
+            "DeviceFileEvents"
+          ],
+          "message": "`InitiatingProcessVersionInfoCompanyName` is not a column of DeviceImageLoadEvents; it does exist on DeviceProcessEvents, DeviceNetworkEvents, DeviceFileEvents."
+        }
+      ]
+    }
+  ]
+}

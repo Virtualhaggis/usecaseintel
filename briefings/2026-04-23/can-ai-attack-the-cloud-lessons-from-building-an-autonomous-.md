@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Burst GCP IAM/discovery enumeration by a single service account (AI-agent velocity fingerprint)
 
-`UC_288_6` · phase: **actions** · confidence: **Medium**
+`UC_279_6` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ CloudAppEvents
 
 ### [LLM] GCP service-account impersonation chain via iamcredentials.GenerateAccessToken / SignJwt
 
-`UC_288_7` · phase: **actions** · confidence: **High**
+`UC_279_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ CloudAppEvents
 
 ### [LLM] BigQuery query results or table data exported to a foreign GCP project / external GCS bucket
 
-`UC_288_8` · phase: **actions** · confidence: **High**
+`UC_279_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,7 +164,7 @@ CloudAppEvents
 
 ### [LLM] Compute Engine IMDS credential fetch from web-application runtime (SSRF chain entry)
 
-`UC_288_9` · phase: **exploit** · confidence: **High**
+`UC_279_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

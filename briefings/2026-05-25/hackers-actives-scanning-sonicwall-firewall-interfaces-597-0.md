@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SonicWall SonicOS mgmt-interface scanning via uniform Chrome 119 / Linux x86_64 user-agent
 
-`UC_4_3` · phase: **recon** · confidence: **High**
+`UC_6_3` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Anomalous volume spike of inbound HTTP sessions to SonicWall management ports (46x baseline)
 
-`UC_4_4` · phase: **recon** · confidence: **Medium**
+`UC_6_4` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -11,12 +11,8 @@ By Lawrence Abrams
 May 25, 2026
 08:45 AM
 0 
-
-
 The FBI is warning about the Kali365 phishing-as-a-service platform (PhaaS) that is used to hijack Microsoft 365 accounts by abusing OAuth device code authentication to steal session tokens and bypass multi-factor authentication (MFA).
-
-
-According to the FBI PSA , Kali365 first emerged in April 2026 and is distributed via Telegram channels for cybercriminals seeking an easie…
+According to the FBI PSA , Kali365 first emerged in April 2026 and is distributed via Telegram channels for cybercriminals seeking an easier way to…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -26,7 +22,6 @@ According to the FBI PSA , Kali365 first emerged in April 2026 and is distribute
 - **Domain (defanged):** `kali365.xyz`
 - **Domain (defanged):** `v2.kali365.xyz`
 - **Domain (defanged):** `api.kali365.xyz`
-- **Domain (defanged):** `duemineral.uk`
 - **SHA256:** `883d5d4a73b0ac8cf4f78fe46d8f4e76e21508872836f2b439af2de4a205128e`
 - **SHA256:** `09bb7e568e573497e22bfa3f36d71fe9d104899826608affedb25d988f391c85`
 - **SHA256:** `2fa6fc2199d3be55e240500d87e4484f39b9315bf336be25434f6716b8d28ec8`
@@ -62,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Microsoft 365 OAuth device code authentication flow (Kali365 token theft)
 
-`UC_1_8` · phase: **exploit** · confidence: **Medium**
+`UC_3_8` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +82,7 @@ AADSignInEventsBeta
 
 ### [LLM] Kali365 post-compromise mailbox hiding rule (spam/phish/click/link/SharePoint keywords)
 
-`UC_1_9` · phase: **actions** · confidence: **High**
+`UC_3_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +108,7 @@ CloudAppEvents
 
 ### [LLM] Attacker device registration in victim Entra tenant after device-code compromise
 
-`UC_1_10` · phase: **install** · confidence: **Medium**
+`UC_3_10` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +129,7 @@ CloudAppEvents
 
 ### [LLM] Microsoft 365 sign-in from Kali365 phishing infrastructure IPs
 
-`UC_1_11` · phase: **c2** · confidence: **High**
+`UC_3_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +151,7 @@ AADSignInEventsBeta
 
 ### [LLM] Endpoint connection or DNS lookup to Kali365 Cookie Link AitM domains
 
-`UC_1_12` · phase: **c2** · confidence: **High**
+`UC_3_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -413,7 +408,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `216.203.20.95`, `162.243.166.119`, `199.91.220.111`, `kali365.xyz`, `v2.kali365.xyz`, `api.kali365.xyz`, `duemineral.uk`
+  - IP / domain IOC(s): `216.203.20.95`, `162.243.166.119`, `199.91.220.111`, `kali365.xyz`, `v2.kali365.xyz`, `api.kali365.xyz`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `883d5d4a73b0ac8cf4f78fe46d8f4e76e21508872836f2b439af2de4a205128e`, `09bb7e568e573497e22bfa3f36d71fe9d104899826608affedb25d988f391c85`, `2fa6fc2199d3be55e240500d87e4484f39b9315bf336be25434f6716b8d28ec8`

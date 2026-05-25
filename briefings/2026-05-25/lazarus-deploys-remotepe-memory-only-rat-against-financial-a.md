@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Lazarus DPAPILoader masquerading as Iassvc.dll loaded from non-System32 path
 
-`UC_7_8` · phase: **install** · confidence: **High**
+`UC_9_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceImageLoadEvents
 
 ### [LLM] RemotePELoader HTTP C2 beacon to aes-secure.net
 
-`UC_7_9` · phase: **c2** · confidence: **Medium**
+`UC_9_9` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceNetworkEvents
 
 ### [LLM] RemotePE/PondRAT seven-pass file overwrite then rename and delete (anti-forensic wipe)
 
-`UC_7_10` · phase: **actions** · confidence: **Medium**
+`UC_9_10` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -346,7 +346,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Lazarus Deploys RemotePE Memory-Only RAT Against Financial and Crypto Firms
 
-`UC_7_7` · phase: **exploit** · confidence: **High**
+`UC_9_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

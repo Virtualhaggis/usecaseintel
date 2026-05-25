@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Creating SBOMs with the Snyk CLI
 
-`UC_977_0` · phase: **exploit** · confidence: **High**
+`UC_968_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
