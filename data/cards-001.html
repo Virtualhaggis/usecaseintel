@@ -818,8 +818,8 @@ level: critical
   data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,cloud,endpoint,network,web"
   data-targets="azure,m365,windows"
-  data-uc-count="13" data-llm-uc-count="5"
-  data-search="FBI warns of Kali365 phishing service targeting Microsoft 365 accounts The FBI is warning about the Kali365 phishing-as-a-service platform (PhaaS) that is used to hijack Microsoft 365 accounts by abusing OAuth device code authentication to steal session tokens and bypass multi-factor authentication (MFA). [...]  T1190 T1528 T1539 T1566 T1566.001 [LLM] Microsoft 365 OAuth device code authentication flow (Kali365 token theft) [LLM] Kali365 post-compromise mailbox hiding rule (spam/phish/click/link/SharePoint keywords) [LLM] Attacker device registration in victim Entra tenant after device-code compromise [LLM] Microsoft 365 sign-in from Kali365 phishing infrastructure IPs [LLM] Endpoint connection or DNS lookup to Kali365 Cookie Link AitM domains Infostealer — non-browser process accessing browser cookie/login DBs Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process OAuth consent / suspicious app grant Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Network connections to article IPs / domains File hash IOCs — endpoint file/process match">
+  data-uc-count="11" data-llm-uc-count="5"
+  data-search="FBI warns of Kali365 phishing service targeting Microsoft 365 accounts The FBI is warning about the Kali365 phishing-as-a-service platform (PhaaS) that is used to hijack Microsoft 365 accounts by abusing OAuth device code authentication to steal session tokens and bypass multi-factor authentication (MFA). [...]  T1190 T1528 T1539 T1566 T1566.001 [LLM] Microsoft 365 OAuth device code authentication flow (Kali365 token theft) [LLM] Kali365 post-compromise mailbox hiding rule (spam/phish/click/link/SharePoint keywords) [LLM] Attacker device registration in victim Entra tenant after device-code compromise [LLM] Microsoft 365 sign-in from Kali365 phishing infrastructure IPs [LLM] Endpoint connection or DNS lookup to Kali365 Cookie Link AitM domains Infostealer — non-browser process accessing browser cookie/login DBs Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process OAuth consent / suspicious app grant Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-05-25-fbi-warns-of-kali365-phishing-service-targeting-microsoft-36" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -828,15 +828,12 @@ level: critical
   <div class="source-badges"><span class="source-badge bc">BleepingComputer</span></div>
   <div class="pubmeta">
     <span>2026-05-25</span>
-    <span>13 use cases</span>
+    <span>11 use cases</span>
     <span>5 techniques</span>
     <span>5 kill-chain phases detected</span>
   </div>
   <p class="summary">The FBI is warning about the Kali365 phishing-as-a-service platform (PhaaS) that is used to hijack Microsoft 365 accounts by abusing OAuth device code authentication to steal session tokens and bypass multi-factor authentication (MFA). [...]</p>
   <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Phishing">T1566</span> <span class="ind tech" title="Spearphishing Attachment">T1566.001</span></div>
-<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">kali365.xyz</span> <span class="ind ">v2.kali365.xyz</span> <span class="ind ">api.kali365.xyz</span> <span class="ind ">duemineral.uk</span></div>
-<div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">216.203.20.95</span> <span class="ind ">162.243.166.119</span> <span class="ind ">199.91.220.111</span></div>
-<div class="ind-group"><span class="ind-label">SHA256</span><span class="ind ">883d5d4a73b0ac8c…</span> <span class="ind ">09bb7e568e573497…</span> <span class="ind ">2fa6fc2199d3be55…</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-01-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-01"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -882,8 +879,8 @@ level: critical
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Microsoft 365 OAuth device code authentication flow (Kali365 token theft) · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Attacker device registration in victim Entra tenant after device-code compromise · File hash IOCs — endpoint file/process match</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Microsoft 365 sign-in from Kali365 phishing infrastructure IPs · [LLM] Endpoint connection or DNS lookup to Kali365 Cookie Link AitM domains · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Attacker device registration in victim Entra tenant after device-code compromise</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Microsoft 365 sign-in from Kali365 phishing infrastructure IPs · [LLM] Endpoint connection or DNS lookup to Kali365 Cookie Link AitM domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Kali365 post-compromise mailbox hiding rule (spam/phish/click/link/SharePoint keywords) · Infostealer — non-browser process accessing browser cookie/login DBs · OAuth consent / suspicious app grant</em></div></div>
 </div>
   <div class="usecases"><details class="uc" data-uc-slug="c4fe802ac8" data-platforms="def,sent,sigma,spl" data-targets="azure" open>
@@ -1853,207 +1850,6 @@ level: high
         OR Processes.process=&quot;*hxxp*&quot; OR Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot;)
     by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
 | `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Network connections to article IPs / domains</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-01-uc11-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-01-uc11-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-01-uc11-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-01-uc11-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-01-uc11-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteIP in (&quot;216.203.20.95&quot;, &quot;162.243.166.119&quot;, &quot;199.91.220.111&quot;) or RemoteUrl has_any (&quot;kali365.xyz&quot;, &quot;v2.kali365.xyz&quot;, &quot;api.kali365.xyz&quot;, &quot;duemineral.uk&quot;)
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-01-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;216.203.20.95&quot;, &quot;162.243.166.119&quot;, &quot;199.91.220.111&quot;]);
-let BadDomains = dynamic([&quot;kali365.xyz&quot;, &quot;v2.kali365.xyz&quot;, &quot;api.kali365.xyz&quot;, &quot;duemineral.uk&quot;]);
-ImNetworkSession
-| where TimeGenerated &gt; ago(7d)
-| where DstIpAddr in (BadIPs)
-   or Url has_any (BadDomains)
-| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-01-uc11-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
-status: experimental
-description: |
-    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
-    article-specific destinations. For dynamic IOC management, use a
-    watchlist or external feed.
-references:
-    - https://attack.mitre.org/tactics/TA0011/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.command-and-control
-logsource:
-    category: network_connection
-    product: windows
-detection:
-    selection_ip:
-        DestinationIp:
-            - &#x27;__IP_PLACEHOLDER_1__&#x27;
-            - &#x27;__IP_PLACEHOLDER_2__&#x27;
-    selection_domain:
-        DestinationHostname:
-            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
-            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
-    condition: selection_ip or selection_domain
-falsepositives:
-    - None on a true-positive IOC match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-01-uc11-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc11-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;216.203.20.95&quot;, &quot;162.243.166.119&quot;, &quot;199.91.220.111&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN (&quot;kali365.xyz&quot;, &quot;v2.kali365.xyz&quot;, &quot;api.kali365.xyz&quot;, &quot;duemineral.uk&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;kali365.xyz&quot;, &quot;v2.kali365.xyz&quot;, &quot;api.kali365.xyz&quot;, &quot;duemineral.uk&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-01-uc11-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;216.203.20.95&quot;, &quot;162.243.166.119&quot;, &quot;199.91.220.111&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats summariesonly=false count from datamodel=Web
-        where Web.dest IN (&quot;kali365.xyz&quot;, &quot;v2.kali365.xyz&quot;, &quot;api.kali365.xyz&quot;, &quot;duemineral.uk&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;kali365.xyz&quot;, &quot;v2.kali365.xyz&quot;, &quot;api.kali365.xyz&quot;, &quot;duemineral.uk&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-01-uc12-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-01-uc12-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-01-uc12-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-01-uc12-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-01-uc12-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
-// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
-// (Initiating only) so column-projection has to differ per side.
-union
-    ( DeviceFileEvents
-        | where Timestamp &gt; ago(7d)
-        | where InitiatingProcessAccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;883d5d4a73b0ac8cf4f78fe46d8f4e76e21508872836f2b439af2de4a205128e&quot;, &quot;09bb7e568e573497e22bfa3f36d71fe9d104899826608affedb25d988f391c85&quot;, &quot;2fa6fc2199d3be55e240500d87e4484f39b9315bf336be25434f6716b8d28ec8&quot;) or SHA1 in~ (&quot;883d5d4a73b0ac8cf4f78fe46d8f4e76e21508872836f2b439af2de4a205128e&quot;, &quot;09bb7e568e573497e22bfa3f36d71fe9d104899826608affedb25d988f391c85&quot;, &quot;2fa6fc2199d3be55e240500d87e4484f39b9315bf336be25434f6716b8d28ec8&quot;) or MD5 in~ (&quot;883d5d4a73b0ac8cf4f78fe46d8f4e76e21508872836f2b439af2de4a205128e&quot;, &quot;09bb7e568e573497e22bfa3f36d71fe9d104899826608affedb25d988f391c85&quot;, &quot;2fa6fc2199d3be55e240500d87e4484f39b9315bf336be25434f6716b8d28ec8&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
-    ( DeviceProcessEvents
-        | where Timestamp &gt; ago(7d)
-        | where AccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;883d5d4a73b0ac8cf4f78fe46d8f4e76e21508872836f2b439af2de4a205128e&quot;, &quot;09bb7e568e573497e22bfa3f36d71fe9d104899826608affedb25d988f391c85&quot;, &quot;2fa6fc2199d3be55e240500d87e4484f39b9315bf336be25434f6716b8d28ec8&quot;) or SHA1 in~ (&quot;883d5d4a73b0ac8cf4f78fe46d8f4e76e21508872836f2b439af2de4a205128e&quot;, &quot;09bb7e568e573497e22bfa3f36d71fe9d104899826608affedb25d988f391c85&quot;, &quot;2fa6fc2199d3be55e240500d87e4484f39b9315bf336be25434f6716b8d28ec8&quot;) or MD5 in~ (&quot;883d5d4a73b0ac8cf4f78fe46d8f4e76e21508872836f2b439af2de4a205128e&quot;, &quot;09bb7e568e573497e22bfa3f36d71fe9d104899826608affedb25d988f391c85&quot;, &quot;2fa6fc2199d3be55e240500d87e4484f39b9315bf336be25434f6716b8d28ec8&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
-| order by Timestamp desc
-</code></pre></div>
-    <div class="tab-content" id="art-01-uc12-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
-// Defender version so the engine can push hash predicates per-side.
-let BadHashes = dynamic([&quot;883d5d4a73b0ac8cf4f78fe46d8f4e76e21508872836f2b439af2de4a205128e&quot;, &quot;09bb7e568e573497e22bfa3f36d71fe9d104899826608affedb25d988f391c85&quot;, &quot;2fa6fc2199d3be55e240500d87e4484f39b9315bf336be25434f6716b8d28ec8&quot;]);
-union
-    ( ImFileEvent
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where TargetFileSHA256 in~ (BadHashes)
-           or TargetFileSHA1 in~ (BadHashes)
-           or TargetFileMD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType,
-                  TargetFileName, TargetFilePath, TargetFileSHA256,
-                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
-    ( ImProcessCreate
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
-                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
-                  TargetFileSHA256 = SHA256,
-                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-01-uc12-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
-status: experimental
-description: |
-    Replace `__HASH_LIST__` placeholder with article-specific SHA256
-    values. Use a watchlist or external indicator file for management
-    at scale.
-references:
-    - https://attack.mitre.org/techniques/T1027/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1027
-    - attack.defense-evasion
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection:
-        Hashes|contains:
-            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
-    condition: selection
-falsepositives:
-    - None on a true-positive hash match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-01-uc12-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc12-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc12-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc12-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;883d5d4a73b0ac8cf4f78fe46d8f4e76e21508872836f2b439af2de4a205128e&quot;, &quot;09bb7e568e573497e22bfa3f36d71fe9d104899826608affedb25d988f391c85&quot;, &quot;2fa6fc2199d3be55e240500d87e4484f39b9315bf336be25434f6716b8d28ec8&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;883d5d4a73b0ac8cf4f78fe46d8f4e76e21508872836f2b439af2de4a205128e&quot;, &quot;09bb7e568e573497e22bfa3f36d71fe9d104899826608affedb25d988f391c85&quot;, &quot;2fa6fc2199d3be55e240500d87e4484f39b9315bf336be25434f6716b8d28ec8&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-01-uc12-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;883d5d4a73b0ac8cf4f78fe46d8f4e76e21508872836f2b439af2de4a205128e&quot;, &quot;09bb7e568e573497e22bfa3f36d71fe9d104899826608affedb25d988f391c85&quot;, &quot;2fa6fc2199d3be55e240500d87e4484f39b9315bf336be25434f6716b8d28ec8&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;883d5d4a73b0ac8cf4f78fe46d8f4e76e21508872836f2b439af2de4a205128e&quot;, &quot;09bb7e568e573497e22bfa3f36d71fe9d104899826608affedb25d988f391c85&quot;, &quot;2fa6fc2199d3be55e240500d87e4484f39b9315bf336be25434f6716b8d28ec8&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
   </div>
 </details></div>
 </article>

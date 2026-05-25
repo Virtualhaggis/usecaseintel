@@ -6769,6 +6769,16 @@ nav.toc h3{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-s
    user taps it open. */
 .filter-toolbar-collapse{display:block;}
 .filter-toolbar-collapse > summary.filter-toolbar-toggle{display:none;}
+/* Desktop: force the inner .filter-toolbar visible regardless of the
+   <details> [open] state. We ship the element without `open` so mobile
+   starts collapsed, but on desktop the native UA "details-closed-hides-
+   children" rule would also hide the whole toolbar. !important is
+   needed to override the UA stylesheet's internal rule. The mobile
+   media-query later in this file scopes the collapse behaviour to
+   <=780px viewports. */
+@media (min-width:781px){
+  .filter-toolbar-collapse > .filter-toolbar{display:flex !important;}
+}
 .filter-toolbar{
   display:flex; flex-direction:column; gap:8px;
   padding:14px 16px; margin-bottom:12px;
