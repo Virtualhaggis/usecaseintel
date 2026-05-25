@@ -1,0 +1,53 @@
+{
+  "name": "Berserk Bear",
+  "ucs": [
+    {
+      "title": "[LLM] Berserk Bear forced-authentication NTLM harvesting via outbound SMB to external host",
+      "description": "Hunts internal hosts initiating SMB (445/139) sessions to public/internet IPs \u2014 the signature of DragonFly/Energetic Bear watering-hole and template-injection (file://) lures that coerce Windows into leaking NTLMv2 credentials to actor-controlled SMB collectors. Legitimate SMB is almost never directed at the public internet.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1187",
+        "T1221",
+        "T1071.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (445,139) All_Traffic.transport=tcp NOT (All_Traffic.dest_ip IN (10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,169.254.0.0/16,127.0.0.0/8,fc00::/7,fe80::/10)) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - count",
+      "kql": "DeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemotePort in (445, 139)\n| where RemoteIPType == \"Public\"\n| where not(ipv4_is_private(RemoteIP))\n| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Attempts = count(), Procs = make_set(InitiatingProcessFileName, 8)\n          by DeviceName, RemoteIP, RemotePort\n| order by FirstSeen desc",
+      "sentinel_kql": "ImNetworkSession\n| where TimeGenerated > ago(7d)\n| where DstPortNumber in (445, 139)\n| where NetworkDirection == \"Outbound\"\n| where not(ipv4_is_private(DstIpAddr))\n| summarize FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), Attempts = count()\n          by SrcHostname, SrcIpAddr, DstIpAddr, DstPortNumber\n| order by FirstSeen desc",
+      "sigma_yaml": "title: Outbound SMB to External Host (Forced Authentication / NTLM Harvest)\nid: 5f1c9a3e-2b7d-4e8a-9c6f-3a1d7b4e8c20\nstatus: experimental\ndescription: Detects SMB/CIFS connections to public internet IPs, consistent with Berserk Bear/DragonFly forced-authentication credential harvesting\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection:\n    DestinationPort:\n      - 445\n      - 139\n    Initiated: 'true'\n  filter_private:\n    DestinationIp|cidr:\n      - '10.0.0.0/8'\n      - '172.16.0.0/12'\n      - '192.168.0.0/16'\n      - '169.254.0.0/16'\n      - '127.0.0.0/8'\n  condition: selection and not filter_private\nfalsepositives:\n  - Cloud-hosted file shares reached over the public internet\n  - Misconfigured backup/replication jobs\nlevel: high\ntags:\n  - attack.credential-access\n  - attack.t1187\n  - attack.t1221",
+      "datadog_query": "source:windows.sysmon @EventID:3 @DestinationPort:(445 OR 139) -CIDR(@DestinationIp, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.0.0/16, 127.0.0.0/8)",
+      "falcon_logscale_query": "#event_simpleName=NetworkConnectIP4 RemotePort=445 OR RemotePort=139\n| Protocol=6\n| NOT cidr(\"10.0.0.0/8\", field=RemoteAddressIP4)\n| NOT cidr(\"172.16.0.0/12\", field=RemoteAddressIP4)\n| NOT cidr(\"192.168.0.0/16\", field=RemoteAddressIP4)\n| NOT cidr(\"169.254.0.0/16\", field=RemoteAddressIP4)\n| NOT cidr(\"127.0.0.0/8\", field=RemoteAddressIP4)\n| groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort, ContextImageFileName], function=count())",
+      "cloudwatch_query": "",
+      "rationale": "Forced authentication via file:// SMB references embedded in watering-hole pages and Office template injection is a documented Berserk Bear/Energetic Bear (DragonFly, CISA AA20-296A / Iron Liberty) hallmark for harvesting NTLMv2 hashes from energy and government targets. Outbound SMB to the public internet is intrinsically anomalous and ties directly to this actor's credential-collection chain, un"
+    },
+    {
+      "title": "[LLM] Berserk Bear SAM/SYSTEM/SECURITY hive dump via reg.exe save",
+      "description": "Hunts execution of reg.exe saving the SAM, SYSTEM, or SECURITY registry hives \u2014 the offline credential-extraction method DragonFly/Berserk Bear used on compromised government and energy hosts (CISA AA20-296A) after gaining valid-account/RDP access, to recover local hashes and LSA secrets for lateral movement.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1003.002",
+        "T1003.004",
+        "T1012"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=reg.exe Processes.process=\"*save*\" (Processes.process=\"*hklm\\\\sam*\" OR Processes.process=\"*hklm\\\\system*\" OR Processes.process=\"*hklm\\\\security*\") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where NOT match(user, \"\\$$\") | convert ctime(firstTime) ctime(lastTime) | sort - count",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName =~ \"reg.exe\"\n| where ProcessCommandLine has \"save\"\n| where ProcessCommandLine has_any (\"hklm\\\\sam\", \"hklm\\\\system\", \"hklm\\\\security\", \"\\\\sam \", \"\\\\security \")\n| where AccountName !endswith \"$\"\n| where AccountName !in~ (\"system\", \"local service\", \"network service\")\n| project Timestamp, DeviceName, AccountName,\n          ParentCmd = InitiatingProcessCommandLine,\n          ChildCmd = ProcessCommandLine, SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where NewProcessName endswith \"\\\\reg.exe\"\n| where CommandLine has \"save\"\n| where CommandLine has_any (\"hklm\\\\sam\", \"hklm\\\\system\", \"hklm\\\\security\")\n| where SubjectUserName !endswith \"$\"\n| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, CommandLine\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Registry Hive Dump via reg.exe save (SAM/SYSTEM/SECURITY)\nid: 8d3b6f12-9a4c-4d2e-b7a1-6c2f0e9d5a31\nstatus: experimental\ndescription: Detects reg.exe saving credential-bearing registry hives, used by Berserk Bear/DragonFly for offline hash and LSA-secret extraction\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_img:\n    - Image|endswith: '\\reg.exe'\n    - OriginalFileName: 'reg.exe'\n  selection_save:\n    CommandLine|contains: 'save'\n  selection_hive:\n    CommandLine|contains:\n      - 'hklm\\sam'\n      - 'hklm\\system'\n      - 'hklm\\security'\n  condition: selection_img and selection_save and selection_hive\nfalsepositives:\n  - Legitimate backup or migration tooling exporting hives\nlevel: high\ntags:\n  - attack.credential-access\n  - attack.t1003.002\n  - attack.t1003.004",
+      "datadog_query": "source:windows.security @EventID:4688 @Image:(*\\\\reg.exe OR *\\\\REG.EXE OR *\\\\Reg.exe) @CommandLine:*save* (@CommandLine:*hklm\\\\sam* OR @CommandLine:*hklm\\\\system* OR @CommandLine:*hklm\\\\security* OR @CommandLine:*HKLM\\\\SAM* OR @CommandLine:*HKLM\\\\SYSTEM* OR @CommandLine:*HKLM\\\\SECURITY*)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ImageFileName=/\\\\reg\\.exe$/i\n| CommandLine=/save/i\n| CommandLine=/hklm\\\\(sam|system|security)/i\n| NOT UserName=/\\$$/\n| groupBy([aid, ComputerName, UserName, CommandLine], function=count())",
+      "cloudwatch_query": "",
+      "rationale": "CISA AA20-296A documents Berserk Bear (Energetic Bear/DragonFly/DYMALLOY, G0035) using reg.exe to save SAM/SYSTEM/SECURITY hives for offline credential recovery after valid-account and RDP access into U.S. government and energy networks. reg save of these specific hives is rarely benign and matches this actor's post-access credential-access step rather than a generic dumping template."
+    }
+  ]
+}

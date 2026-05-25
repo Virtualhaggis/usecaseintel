@@ -10,12 +10,8 @@ Home Cyber Security News
 Cybercriminals Use Telegram Channels to Sell Verified Bank and Fintech Mule Accounts 
 By Tushar Subhra Dutta 
 May 25, 2026 
-
-
-
-
 Cybercriminals are openly selling verified bank accounts, fintech wallets, and cryptocurrency exchange accounts through Telegram channels, turning money laundering into a structured, on-demand criminal service. 
-This underground market has grown far beyond informal recruitment and now operates like a professional industry, complete with tie…
+This underground market has grown far beyond informal recruitment and now operates like a professional industry, complete with tiered pric…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -50,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Connection to Exillio404 money-mule .onion forum (Telegram MaaS C2 marketplace)
 
-`UC_0_9` · phase: **c2** · confidence: **High**
+`UC_2_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

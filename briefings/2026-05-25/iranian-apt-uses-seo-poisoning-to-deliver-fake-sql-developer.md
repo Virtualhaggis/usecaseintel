@@ -78,7 +78,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Nimbus Manticore AppDomain hijacking — .config dropped beside signed .NET binary
 
-`UC_6_9` · phase: **install** · confidence: **Medium**
+`UC_8_9` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceFileEvents
 
 ### [LLM] Fake Oracle SQL Developer installer execution by MiniFast SHA256
 
-`UC_6_10` · phase: **delivery** · confidence: **High**
+`UC_8_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceProcessEvents
 
 ### [LLM] SEO-poisoned download origin from getsqldeveloper[.]com fake SQL Developer page
 
-`UC_6_11` · phase: **delivery** · confidence: **High**
+`UC_8_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceFileEvents
 
 ### [LLM] MiniFast C2 beacon to Nimbus Manticore Azure Web Apps infrastructure
 
-`UC_6_12` · phase: **c2** · confidence: **High**
+`UC_8_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

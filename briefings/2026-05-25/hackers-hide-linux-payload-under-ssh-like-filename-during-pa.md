@@ -10,12 +10,8 @@ Home Cyber Security News
 Hackers Hide Linux Payload Under SSH-Like Filename During Package Installation 
 By Tushar Subhra Dutta 
 May 25, 2026 
-
-
-
-
 A new supply chain attack campaign is quietly targeting developers through a method most would never think to look for. 
-Hidden inside software packages on GitHub, a malicious script downloads a Linux binary during installation and disguises it using a filename designed to look like a standard system process. The attack has now touched more than …
+Hidden inside software packages on GitHub, a malicious script downloads a Linux binary during installation and disguises it using a filename designed to look like a standard system process. The attack has now touched more than 700 repo…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -41,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Package postinstall curl downloads GitHub-Releases binary to /tmp/.sshd (supply-chain implant)
 
-`UC_1_4` · phase: **delivery** · confidence: **High**
+`UC_3_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +59,7 @@ DeviceProcessEvents
 
 ### [LLM] Execution of dot-prefixed /tmp binary masquerading as SSH daemon (/tmp/.sshd)
 
-`UC_1_5` · phase: **install** · confidence: **High**
+`UC_3_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +78,7 @@ DeviceProcessEvents
 
 ### [LLM] Hidden executable written to /tmp/.sshd by curl/package-manager (payload drop)
 
-`UC_1_6` · phase: **install** · confidence: **High**
+`UC_3_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -186,7 +182,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Hide Linux Payload Under SSH-Like Filename During Package Installation
 
-`UC_1_3` · phase: **exploit** · confidence: **High**
+`UC_3_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

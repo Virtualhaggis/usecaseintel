@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Underminr: non-browser process beaconing to shared-CDN edge over HTTPS
 
-`UC_3_7` · phase: **c2** · confidence: **Medium**
+`UC_5_7` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceNetworkEvents
 
 ### [LLM] Underminr: LOLBin / script-host HTTPS egress to shared-CDN edge (payload pull)
 
-`UC_3_8` · phase: **delivery** · confidence: **Medium**
+`UC_5_8` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

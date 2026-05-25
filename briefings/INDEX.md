@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,17 +9,18 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-25
+- [cloud atlas apt group modifies termsrv dll to enable multipl](./2026-05-25/cloud-atlas-apt-group-modifies-termsrv-dll-to-enable-multipl.md)
 - [cybercriminals use telegram channels to sell verified bank a](./2026-05-25/cybercriminals-use-telegram-channels-to-sell-verified-bank-a.md)
 - [fbi warns of kali365 phishing service targeting microsoft 36](./2026-05-25/fbi-warns-of-kali365-phishing-service-targeting-microsoft-36.md)
 - [ghost cms cve 2026 26980 exploited to hijack 700 sites for c](./2026-05-25/ghost-cms-cve-2026-26980-exploited-to-hijack-700-sites-for-c.md)
 - [hackers abuse shared cdn infrastructure to bypass domain rep](./2026-05-25/hackers-abuse-shared-cdn-infrastructure-to-bypass-domain-rep.md)
 - [hackers actives scanning sonicwall firewall interfaces 597 0](./2026-05-25/hackers-actives-scanning-sonicwall-firewall-interfaces-597-0.md)
 - [hackers hide linux payload under ssh like filename during pa](./2026-05-25/hackers-hide-linux-payload-under-ssh-like-filename-during-pa.md)
+- [invisibleferret malware now ships as pyd and so files to eva](./2026-05-25/invisibleferret-malware-now-ships-as-pyd-and-so-files-to-eva.md)
 - [iranian apt uses seo poisoning to deliver fake sql developer](./2026-05-25/iranian-apt-uses-seo-poisoning-to-deliver-fake-sql-developer.md)
 - [kazuar malware evolves into modular espionage ecosystem for ](./2026-05-25/kazuar-malware-evolves-into-modular-espionage-ecosystem-for-.md)
 - [knowledgedeliver lms zero day exploited to deploy bluebeam w](./2026-05-25/knowledgedeliver-lms-zero-day-exploited-to-deploy-bluebeam-w.md)
 - [lazarus deploys remotepe memory only rat against financial a](./2026-05-25/lazarus-deploys-remotepe-memory-only-rat-against-financial-a.md)
-- [miniupdate rat uses azure hosted c2 domains for targeted esp](./2026-05-25/miniupdate-rat-uses-azure-hosted-c2-domains-for-targeted-esp.md)
 - [russian hacker used jailbroken gemini to steal admin credent](./2026-05-25/russian-hacker-used-jailbroken-gemini-to-steal-admin-credent.md)
 - [trapdoor supply chain attack spreads credential stealing mal](./2026-05-25/trapdoor-supply-chain-attack-spreads-credential-stealing-mal.md)
 - [weekly recap linux flaws defender 0 days router botnets and ](./2026-05-25/weekly-recap-linux-flaws-defender-0-days-router-botnets-and-.md)
