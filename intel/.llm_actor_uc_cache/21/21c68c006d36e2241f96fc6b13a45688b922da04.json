@@ -1,0 +1,54 @@
+{
+  "name": "Qilin",
+  "ucs": [
+    {
+      "title": "[LLM] Qilin/Agenda mass Chrome credential harvesting via GPO logon script",
+      "description": "Hunts Qilin's signature domain-wide credential theft: a PowerShell script (observed as IPScanner.ps1, driven by a logon.bat pushed through a modified/created Group Policy) that copies Chromium 'Login Data' SQLite stores off every endpoint at user logon. Sophos attributed this mass Chrome-stealer-via-GPO behaviour specifically to the Qilin RaaS affiliate in 2024 \u2014 it is highly atypical for ransomware crews and is a strong pre-encryption pivot.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1555.003",
+        "T1059.001",
+        "T1003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=\"powershell.exe\" OR Processes.process_name=\"pwsh.exe\") (Processes.process=\"*Login Data*\" OR Processes.process=\"*\\\\Google\\\\Chrome\\\\User Data*\" OR Processes.process=\"*\\\\Chrome\\\\User Data\\\\Default*\" OR Processes.process=\"*IPScanner.ps1*\") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process\n| `drop_dm_object_name(Processes)`\n| eval gpo_vector=if(match(parent_process_name,\"(?i)(gpscript|userinit|cmd)\\.exe\"),1,0)\n| where NOT match(user,\"\\$$\")\n| sort - lastTime",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(30d)\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\")\n| where ProcessCommandLine has_any (\"Login Data\", @\"\\Google\\Chrome\\User Data\", @\"\\Chrome\\User Data\\Default\", \"IPScanner.ps1\")\n   or (ProcessCommandLine has_any (\"Copy-Item\",\"copy \") and ProcessCommandLine has \"Chrome\")\n| where AccountName !endswith \"$\"\n| extend GpoVector = InitiatingProcessFileName in~ (\"gpscript.exe\",\"userinit.exe\",\"cmd.exe\")   // logon-script delivery = Qilin GPO push\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine, GpoVector, SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "SecurityEvent\n| where TimeGenerated > ago(30d)\n| where EventID == 4688\n| where NewProcessName has_any (\"powershell.exe\",\"pwsh.exe\")\n| where CommandLine has_any (\"Login Data\", @\"\\Google\\Chrome\\User Data\", @\"\\Chrome\\User Data\\Default\", \"IPScanner.ps1\")\n   or (CommandLine has_any (\"Copy-Item\",\"copy \") and CommandLine has \"Chrome\")\n| where SubjectUserName !endswith \"$\"\n| extend GpoVector = ParentProcessName has_any (\"gpscript.exe\",\"userinit.exe\",\"cmd.exe\")\n| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine, GpoVector\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Qilin Chrome Credential Harvest via PowerShell Logon Script\nid: 9d2a7e54-1c3b-4f8a-bf21-7a0e5c9d61aa\nstatus: experimental\ndescription: PowerShell accessing Chromium Login Data store, characteristic of Qilin/Agenda GPO-deployed credential stealer\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_proc:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n  selection_cmd:\n    CommandLine|contains:\n      - 'Login Data'\n      - '\\Google\\Chrome\\User Data'\n      - '\\Chrome\\User Data\\Default'\n      - 'IPScanner.ps1'\n  condition: selection_proc and selection_cmd\n  filter_machine:\n    User|endswith: '$'\nfalsepositives:\n  - Enterprise browser-backup or credential-migration tooling\nlevel: high\ntags:\n  - attack.credential_access\n  - attack.t1555.003\n  - attack.t1059.001",
+      "datadog_query": "source:windows.sysmon @EventID:1 @Image:(*\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe) (@CommandLine:(*\"Login Data\"* OR *\\\\Google\\\\Chrome\\\\User\\ Data* OR *IPScanner.ps1*)) @ParentImage:(*\\gpscript.exe OR *\\GPScript.exe OR *\\userinit.exe OR *\\cmd.exe)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ImageFileName=/(powershell|pwsh)\\.exe$/i\n| (CommandLine=/Login\\s*Data/i OR CommandLine=/\\\\Google\\\\Chrome\\\\User Data/i OR CommandLine=/IPScanner\\.ps1/i)\n| ParentBaseFileName=/(gpscript|userinit|cmd)\\.exe/i\n| groupBy([aid, ComputerName, UserName], function=collect([CommandLine, ParentBaseFileName]))",
+      "cloudwatch_query": "",
+      "rationale": "Generic ransomware crews dump LSASS; Qilin's distinguishing move is harvesting Chrome browser credentials at domain scale by pushing a PowerShell stealer through a Group Policy logon script. The gpscript.exe/userinit.exe parent on a PowerShell process that touches Chrome 'Login Data' \u2014 plus the observed IPScanner.ps1 artifact \u2014 is a fingerprint Sophos tied directly to the Qilin affiliate, not a br"
+    },
+    {
+      "title": "[LLM] Qilin/Agenda safe-mode reboot + shadow-copy destruction pre-encryption",
+      "description": "Correlates the two-step detonation prep Qilin/Agenda runs on each host before T1486 encryption: forcing a Safe Mode boot via bcdedit (to neutralise EDR) combined with shadow-copy/backup-catalog deletion via vssadmin/wmic/wbadmin within the same hour. The Safe Mode reboot specifically to encrypt is a documented Qilin/Agenda behaviour and is rare for other crews.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1490",
+        "T1562.001",
+        "T1486",
+        "T1059.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `security_content_summariesonly` count values(Processes.process) as cmds values(Processes.process_name) as procs min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN (\"bcdedit.exe\",\"vssadmin.exe\",\"wmic.exe\",\"wbadmin.exe\",\"powershell.exe\")) (Processes.process=\"*safeboot*\" OR Processes.process=\"*delete shadows*\" OR Processes.process=\"*shadowcopy delete*\" OR Processes.process=\"*delete catalog*\" OR Processes.process=\"*delete systemstatebackup*\" OR Processes.process=\"*recoveryenabled no*\") by Processes.dest _time span=1h\n| `drop_dm_object_name(Processes)`\n| where match(cmds,\"(?i)safeboot\") AND (match(cmds,\"(?i)delete shadows\") OR match(cmds,\"(?i)shadowcopy delete\") OR match(cmds,\"(?i)delete catalog\"))\n| sort - firstTime",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where (FileName =~ \"bcdedit.exe\" and ProcessCommandLine has_any (\"safeboot\",\"recoveryenabled no\",\"bootstatuspolicy ignoreallfailures\"))\n   or (FileName in~ (\"vssadmin.exe\",\"wmic.exe\",\"wbadmin.exe\") and ProcessCommandLine has_any (\"delete shadows\",\"shadowcopy delete\",\"delete catalog\",\"delete systemstatebackup\"))\n| where AccountName !endswith \"$\"\n| summarize Cmds = make_set(ProcessCommandLine, 50), Procs = make_set(FileName, 20), Start = min(Timestamp), End = max(Timestamp), User = any(AccountName)\n         by DeviceName, bin(Timestamp, 1h)\n| where Procs has \"bcdedit.exe\" and (Procs has \"vssadmin.exe\" or Procs has \"wmic.exe\" or Procs has \"wbadmin.exe\")   // safe-mode + recovery-kill combo = Qilin detonation prep\n| order by Start desc",
+      "sentinel_kql": "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where (NewProcessName endswith \"bcdedit.exe\" and CommandLine has_any (\"safeboot\",\"recoveryenabled no\",\"bootstatuspolicy ignoreallfailures\"))\n   or (NewProcessName has_any (\"vssadmin.exe\",\"wmic.exe\",\"wbadmin.exe\") and CommandLine has_any (\"delete shadows\",\"shadowcopy delete\",\"delete catalog\",\"delete systemstatebackup\"))\n| where SubjectUserName !endswith \"$\"\n| summarize Cmds = make_set(CommandLine, 50), Procs = make_set(NewProcessName, 20), Start = min(TimeGenerated), User = any(SubjectUserName)\n         by Computer, bin(TimeGenerated, 1h)\n| where Procs has \"bcdedit.exe\" and (Procs has \"vssadmin.exe\" or Procs has \"wmic.exe\" or Procs has \"wbadmin.exe\")\n| order by Start desc",
+      "sigma_yaml": "title: bcdedit Safe Mode Boot Configuration (Qilin/Agenda Pre-Encryption)\nid: 4f1c8b90-6e2d-49a7-9b3c-2d5f0a17e3c2\nstatus: experimental\ndescription: bcdedit forcing a Safe Mode boot, characteristic of Qilin/Agenda rebooting hosts to disable EDR before encrypting\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection:\n    Image|endswith: '\\bcdedit.exe'\n    CommandLine|contains:\n      - 'safeboot'\n      - 'recoveryenabled no'\n      - 'bootstatuspolicy ignoreallfailures'\n  condition: selection\nfalsepositives:\n  - Legitimate OS recovery / boot troubleshooting by administrators\nlevel: high\ntags:\n  - attack.impact\n  - attack.t1490\n  - attack.t1562.001",
+      "datadog_query": "source:windows.security @EventID:4688 ((@Image:(*\\bcdedit.exe OR *\\BCDEDIT.EXE) AND @CommandLine:(*safeboot* OR *Safeboot* OR *\"recoveryenabled no\"*)) OR (@Image:(*\\vssadmin.exe OR *\\VSSADMIN.EXE OR *\\wmic.exe OR *\\WMIC.EXE OR *\\wbadmin.exe OR *\\WBADMIN.EXE) AND @CommandLine:(*\"delete shadows\"* OR *\"shadowcopy delete\"* OR *\"delete catalog\"*)))",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ImageFileName=/(bcdedit|vssadmin|wmic|wbadmin)\\.exe$/i\n| (CommandLine=/safeboot/i OR CommandLine=/recoveryenabled\\s+no/i OR CommandLine=/delete\\s+shadows/i OR CommandLine=/shadowcopy\\s+delete/i OR CommandLine=/delete\\s+catalog/i)\n| groupBy([aid, ComputerName], function=collect([ImageFileName, CommandLine]))\n| (CommandLine=/safeboot/i)\n| (CommandLine=/(delete\\s+shadows|shadowcopy\\s+delete|delete\\s+catalog)/i)",
+      "cloudwatch_query": "",
+      "rationale": "Most ransomware deletes shadow copies (T1490) \u2014 that alone is not actor-specific. What distinguishes Qilin/Agenda is pairing a forced Safe Mode reboot (bcdedit /set safeboot) with recovery destruction in the same window to strip EDR before encrypting. Requiring both the bcdedit safeboot signal and shadow/backup deletion on the same host within an hour fingerprints the Qilin detonation sequence rat"
+    }
+  ]
+}

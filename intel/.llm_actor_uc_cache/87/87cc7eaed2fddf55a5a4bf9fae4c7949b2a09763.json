@@ -1,0 +1,53 @@
+{
+  "name": "APT33",
+  "ucs": [
+    {
+      "title": "[LLM] Peach Sandstorm (APT33) Entra ID password-spray followed by successful sign-in from the spraying IP",
+      "description": "Detects APT33/Peach Sandstorm's signature low-and-slow password-spray campaigns (mass-targeted in 2023 against aerospace, satellite, defense and energy tenants) by correlating a single source IP failing auth against many distinct Entra ID accounts with a subsequent SUCCESS from that same IP \u2014 the moment a sprayed credential lands.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1110.003",
+        "T1078.004"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `summariesonly` count min(_time) as firstFail max(_time) as lastFail from datamodel=Authentication.Authentication where Authentication.action=failure by Authentication.src, Authentication.user, _time span=1h\n| `drop_dm_object_name(\"Authentication\")`\n| stats dc(user) as failed_users, sum(count) as fail_count, values(user) as targeted_users, min(firstFail) as spray_start, max(lastFail) as spray_end by src\n| where failed_users >= 15            `` 15 = P99 of distinct-user auth failures per src IP per hour from 30-day baseline ``\n| join type=inner src [\n    | tstats `summariesonly` count min(_time) as success_time from datamodel=Authentication.Authentication where Authentication.action=success by Authentication.src, Authentication.user\n    | `drop_dm_object_name(\"Authentication\")`\n    | rename user as compromised_user ]\n| where success_time >= spray_start AND success_time <= (spray_end + 7200)   `` success within 2h of the spray window ``\n| table spray_start, success_time, src, compromised_user, failed_users, fail_count, targeted_users\n| sort - success_time",
+      "kql": "let SprayWindow = 1h;\nlet FailThreshold = 15;   // P99 of distinct sprayed users per IP/hr from 30d baseline\nlet Sprays = AADSignInEventsBeta\n    | where Timestamp > ago(7d)\n    | where ErrorCode in (50126, 50053, 50055, 50056)   // bad creds / locked / expired / must-change\n    | summarize FailedUsers = dcount(AccountUpn), FailCount = count(),\n                TargetedUsers = make_set(AccountUpn, 100)\n                by IPAddress, bin(Timestamp, SprayWindow)\n    | where FailedUsers >= FailThreshold;\nAADSignInEventsBeta\n| where Timestamp > ago(7d)\n| where ErrorCode == 0                                  // successful interactive/non-interactive sign-in\n| join kind=inner Sprays on IPAddress\n| where Timestamp between (Timestamp1 .. Timestamp1 + 2h)\n| project SuccessTime = Timestamp, IPAddress, CompromisedUser = AccountUpn,\n          FailedUsers, FailCount, Country, City, ClientAppUsed, UserAgent, TargetedUsers\n| order by SuccessTime desc",
+      "sentinel_kql": "let SprayWindow = 1h;\nlet FailThreshold = 15;   // P99 of distinct sprayed users per IP/hr from 30d baseline\nlet Sprays = SigninLogs\n    | where TimeGenerated > ago(7d)\n    | where ResultType in (\"50126\",\"50053\",\"50055\",\"50056\")\n    | summarize FailedUsers = dcount(UserPrincipalName), FailCount = count(),\n                TargetedUsers = make_set(UserPrincipalName, 100)\n                by IPAddress, bin(TimeGenerated, SprayWindow)\n    | where FailedUsers >= FailThreshold;\nSigninLogs\n| where TimeGenerated > ago(7d)\n| where ResultType == \"0\"\n| join kind=inner Sprays on IPAddress\n| where TimeGenerated between (TimeGenerated1 .. TimeGenerated1 + 2h)\n| project SuccessTime = TimeGenerated, IPAddress, CompromisedUser = UserPrincipalName,\n          FailedUsers, FailCount, Location, AppDisplayName, UserAgent, TargetedUsers\n| order by SuccessTime desc",
+      "sigma_yaml": "",
+      "datadog_query": "source:azure.activeDirectory @evt.name:\"Sign-in activity\" @properties.status.errorCode:(50126 OR 50053 OR 50055 OR 50056)",
+      "falcon_logscale_query": "",
+      "cloudwatch_query": "",
+      "rationale": "Password spraying against cloud identity at scale is the defining 2023 Peach Sandstorm (APT33 / Refined Kitten / Elfin / Holmium) TTP per Microsoft's Sept-2023 reporting \u2014 they sprayed thousands of orgs from rotating IPs and pivoted on the rare success. The success-from-spraying-IP correlation is what separates this from a generic spray template: it fires only when a sprayed credential actually au"
+    },
+    {
+      "title": "[LLM] Holmium (APT33) HTA/Office-to-PowerShell download cradle (POWERTON / POSHC2 stager)",
+      "description": "Hunts APT33's spearphishing execution chain where a job-themed .hta or Office lure spawns PowerShell that pulls a second-stage backdoor (POWERTON, POSHC2, NanoCore/NetWire droppers). Pairs the actor-characteristic mshta/wscript/Office parent with an obfuscated download-cradle child command line.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "medium",
+      "techs": [
+        "T1566.001",
+        "T1218.005",
+        "T1059.001",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"winword.exe\",\"excel.exe\",\"outlook.exe\")) AND Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\") AND (Processes.process=\"*-enc*\" OR Processes.process=\"*EncodedCommand*\" OR Processes.process=\"*DownloadString*\" OR Processes.process=\"*DownloadFile*\" OR Processes.process=\"*IEX*\" OR Processes.process=\"*Invoke-Expression*\" OR Processes.process=\"*FromBase64String*\" OR Processes.process=\"*Net.WebClient*\" OR Processes.process=\"*-nop*\" OR Processes.process=\"*hidden*\") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process\n| `drop_dm_object_name(\"Processes\")`\n| where NOT user=\"*$\"\n| `ctime(firstTime)` | `ctime(lastTime)`\n| table firstTime, lastTime, dest, user, parent_process_name, parent_process, process\n| sort - lastTime",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"winword.exe\",\"excel.exe\",\"outlook.exe\")\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\")\n| where ProcessCommandLine has_any (\"-enc\",\"-EncodedCommand\",\"DownloadString\",\"DownloadFile\",\"IEX\",\"Invoke-Expression\",\"FromBase64String\",\"Net.WebClient\",\"-nop\",\"hidden\")\n| where AccountName !endswith \"$\"\n| project Timestamp, DeviceName, AccountName,\n          ParentImage = InitiatingProcessFolderPath,\n          ParentCmd   = InitiatingProcessCommandLine,\n          ChildCmd    = ProcessCommandLine,\n          SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "ImProcessCreate\n| where TimeGenerated > ago(7d)\n| where ParentProcessName has_any (\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"winword.exe\",\"excel.exe\",\"outlook.exe\")\n| where TargetProcessName has_any (\"powershell.exe\",\"pwsh.exe\")\n| where TargetProcessCommandLine has_any (\"-enc\",\"-EncodedCommand\",\"DownloadString\",\"DownloadFile\",\"IEX\",\"Invoke-Expression\",\"FromBase64String\",\"Net.WebClient\",\"-nop\",\"hidden\")\n| where ActorUsername !endswith \"$\"\n| project TimeGenerated, DvcHostname, ActorUsername,\n          ParentProcessName, ParentProcessCommandLine,\n          TargetProcessCommandLine, SHA256\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT33/Holmium HTA or Office spawning PowerShell download cradle\nid: 7d2f4c91-3b6a-4e2e-9f0a-2c1d8e6b4a55\nstatus: experimental\ndescription: Detects an mshta/wscript/cscript or Office process spawning PowerShell with an obfuscated download-cradle command line, matching APT33 (Holmium/Elfin) spearphishing-to-POWERTON/POSHC2 staging.\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_parent:\n    ParentImage|endswith:\n      - '\\mshta.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\winword.exe'\n      - '\\excel.exe'\n      - '\\outlook.exe'\n  selection_child:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n  selection_cmd:\n    CommandLine|contains:\n      - '-enc'\n      - 'EncodedCommand'\n      - 'DownloadString'\n      - 'DownloadFile'\n      - 'IEX'\n      - 'Invoke-Expression'\n      - 'FromBase64String'\n      - 'Net.WebClient'\n      - '-nop'\n      - 'hidden'\n  condition: selection_parent and selection_child and selection_cmd\nfalsepositives:\n  - Legitimate admin automation launched from signed Office macros (rare; verify the download URL)\nlevel: high\ntags:\n  - attack.execution\n  - attack.t1059.001\n  - attack.t1218.005\n  - attack.t1566.001\n  - attack.t1105",
+      "datadog_query": "source:windows.sysmon @EventID:1 @ParentImage:(*\\mshta.exe OR *\\MSHTA.EXE OR *\\wscript.exe OR *\\WScript.exe OR *\\cscript.exe OR *\\winword.exe OR *\\WINWORD.EXE OR *\\excel.exe OR *\\EXCEL.EXE OR *\\outlook.exe OR *\\OUTLOOK.EXE) @Image:(*\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe) (@CommandLine:*EncodedCommand* OR @CommandLine:*-enc* OR @CommandLine:*DownloadString* OR @CommandLine:*DownloadFile* OR @CommandLine:*IEX* OR @CommandLine:*FromBase64String* OR @CommandLine:*Net.WebClient* OR @CommandLine:*-nop*)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ParentBaseFileName=/(mshta|wscript|cscript|winword|excel|outlook)\\.exe/i\n| ImageFileName=/(powershell|pwsh)\\.exe/i\n| regex(\"(?i)(-enc|encodedcommand|downloadstring|downloadfile|iex|invoke-expression|frombase64string|net\\.webclient|-nop|-w\\s+hidden)\", field=CommandLine)\n| groupBy([aid, ComputerName, ParentBaseFileName, CommandLine], function=count())",
+      "cloudwatch_query": "",
+      "rationale": "APT33 (Holmium/Elfin) is documented using .hta lures and HTA/Office-launched PowerShell to stage POWERTON and POSHC2 backdoors and AutoIt/NanoCore/NetWire droppers. The mshta/Office-parent + PowerShell-download-cradle child is the actor's repeated install-stage fingerprint; the parent/child pairing plus obfuscated cradle keywords cuts the generic-PowerShell noise that a bare powershell.exe filter "
+    }
+  ]
+}

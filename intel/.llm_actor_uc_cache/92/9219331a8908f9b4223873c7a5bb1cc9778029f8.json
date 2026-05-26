@@ -1,0 +1,52 @@
+{
+  "name": "APT34",
+  "ucs": [
+    {
+      "title": "[LLM] OilRig (APT34) PowerShell backdoor DNS-tunneling C2 (BONDUPDATER / QUADAGENT / Helminth)",
+      "description": "Hunts the DNS-over-PowerShell command-and-control channel that defines APT34's custom backdoor family \u2014 a scripting engine emitting a high volume of distinct, high-entropy subdomain lookups under a single registrable domain (TXT/A beaconing). This is OilRig's signature C2, not generic DNS noise.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1071.004",
+        "T1059.001",
+        "T1008"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `summariesonly` count from datamodel=Network_Resolution.DNS where DNS.message_type=Query AND DNS.query!=\"\" by DNS.src DNS.query DNS.record_type _time span=1h\n| rex field=DNS.query \"(?<subdomain>.*)\\.(?<reg_domain>[^.]+\\.[^.]+)$\"\n| stats dc(DNS.query) as unique_subdomains sum(count) as total_queries values(DNS.record_type) as record_types min(_time) as firstTime by DNS.src reg_domain\n| where unique_subdomains > 100 AND total_queries > 200\n| eval note=\"High distinct-subdomain fan-out under one parent domain = DNS-tunnel C2 (APT34 BONDUPDATER/QUADAGENT pattern)\"\n| `security_content_ctime(firstTime)`\n| sort - unique_subdomains",
+      "kql": "// Defender lacks a raw DNS-query table; pivot on scripting engines making DNS (port 53) traffic \u2014 anomalous for PowerShell\nDeviceNetworkEvents\n| where Timestamp > ago(24h)\n| where RemotePort == 53\n| where InitiatingProcessFileName in~ (\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\")\n| where InitiatingProcessAccountName !endswith \"$\"\n| summarize DnsLookups = count(), DistinctResolvers = dcount(RemoteIP), FirstSeen = min(Timestamp), SampleCmd = any(InitiatingProcessCommandLine)\n    by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName\n| where DnsLookups > 50      // 50 = scripting-engine DNS volume is near-zero in baseline; tunneling beacons exceed this fast\n| order by DnsLookups desc",
+      "sentinel_kql": "DnsEvents\n| where TimeGenerated > ago(24h)\n| where isnotempty(Name)\n| where QueryType in (\"TXT\",\"A\",\"AAAA\",\"CNAME\",\"NULL\")\n| extend labels = split(Name, \".\")\n| where array_length(labels) >= 3\n| extend reg_domain = strcat(tostring(labels[array_length(labels)-2]), \".\", tostring(labels[array_length(labels)-1]))\n| summarize UniqueSubdomains = dcount(Name), TotalQueries = count(), RecordTypes = make_set(QueryType), FirstSeen = min(TimeGenerated)\n    by ClientIP, Computer, reg_domain\n| where UniqueSubdomains > 100 and TotalQueries > 200   // tunnel fan-out: many unique labels under one parent\n| order by UniqueSubdomains desc",
+      "sigma_yaml": "",
+      "datadog_query": "source:windows.sysmon @EventID:3 @DestinationPort:53 @Image:(*\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\wscript.exe OR *\\WScript.exe OR *\\cscript.exe OR *\\CScript.exe OR *\\mshta.exe OR *\\MSHTA.EXE)",
+      "falcon_logscale_query": "#event_simpleName=DnsRequest\n| ContextImageFileName=/(powershell|pwsh|wscript|cscript|mshta)\\.exe$/i\n| regex(\"(?<reg_domain>[^.]+\\.[^.]+)$\", field=DomainName)\n| groupBy([aid, ComputerName, reg_domain], function=[count(field=DomainName, distinct=true, as=unique_subdomains), count(as=total)])\n| unique_subdomains > 100",
+      "cloudwatch_query": "",
+      "rationale": "APT34 (OilRig / Helix Kitten / Hazel Sandstorm / Evasive Serpens) is distinguished from most state actors by its near-exclusive reliance on DNS-tunnel C2 across its bespoke PowerShell backdoors \u2014 Helminth, ISMAgent, BONDUPDATER, QUADAGENT \u2014 which encode beacon data into high-entropy subdomain labels and TXT responses. Generic actors use HTTPS C2; the combination of a scripting engine as the DNS in"
+    },
+    {
+      "title": "[LLM] OilRig (APT34) Outlook Home Page persistence / code-exec registry implant (T1137.004)",
+      "description": "Detects modification of the Outlook WebView/Today 'home page' registry URL \u2014 APT34's favored mail-client persistence and re-execution mechanism that loads attacker-controlled HTML to relaunch its backdoor when Outlook opens. Distinctively OilRig given their heavy Exchange/webmail-centric tradecraft.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1137.004",
+        "T1112"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `summariesonly` count from datamodel=Endpoint.Registry where (Registry.registry_path=\"*\\\\Outlook\\\\WebView\\\\*\\\\URL\" OR Registry.registry_path=\"*\\\\Outlook\\\\Today\\\\UserDefinedUrl\" OR Registry.registry_value_name=\"URL\" Registry.registry_path=\"*\\\\Outlook\\\\WebView\\\\*\") by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_id _time\n| where match(Registry.registry_value_data, \"(?i)^https?://\")\n| rename Registry.* as *\n| table _time dest user registry_path registry_value_name registry_value_data process_id\n| sort - _time",
+      "kql": "DeviceRegistryEvents\n| where Timestamp > ago(7d)\n| where ActionType in (\"RegistryValueSet\",\"RegistryKeyCreated\")\n| where RegistryKey has \"\\\\Outlook\\\\\" and (RegistryKey has \"WebView\" or RegistryKey has \"Today\")\n| where RegistryValueName in~ (\"URL\",\"UserDefinedUrl\")\n| where RegistryValueData matches regex @\"(?i)^https?://\"\n| where InitiatingProcessAccountName !endswith \"$\"\n| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData,\n          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName\n| order by Timestamp desc",
+      "sentinel_kql": "ImRegistryEvent\n| where TimeGenerated > ago(7d)\n| where EventType in (\"RegistryValueSet\",\"SetValue\",\"RegistryKeyCreated\")\n| where RegistryKey has \"\\\\Outlook\\\\\" and (RegistryKey has \"WebView\" or RegistryKey has \"Today\")\n| where RegistryValue in~ (\"URL\",\"UserDefinedUrl\")\n| where RegistryValueData matches regex @\"(?i)^https?://\"\n| project TimeGenerated, DvcHostname, ActorUsername, RegistryKey, RegistryValue, RegistryValueData,\n          ActingProcessName, ActingProcessCommandLine\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT34 Outlook Home Page Persistence Registry Set\nid: 6e2a1c4f-2b7d-4f3a-9c1e-0a7f2d3b8e10\nstatus: experimental\ndescription: Detects setting of the Outlook WebView/Today home-page URL registry value, an APT34 (OilRig) persistence and re-execution technique.\nreferences:\n  - https://attack.mitre.org/techniques/T1137/004/\n  - https://attack.mitre.org/groups/G0049/\nauthor: SOC Detection Engineering\ntags:\n  - attack.persistence\n  - attack.t1137.004\n  - attack.t1112\nlogsource:\n  category: registry_set\n  product: windows\ndetection:\n  selection_key:\n    TargetObject|contains:\n      - '\\Outlook\\WebView\\'\n      - '\\Outlook\\Today\\'\n    TargetObject|endswith:\n      - '\\URL'\n      - '\\UserDefinedUrl'\n  selection_value:\n    Details|startswith:\n      - 'http://'\n      - 'https://'\n  condition: selection_key and selection_value\nfalsepositives:\n  - Legitimate enterprise Outlook home-page GPO customizations (rare; baseline first)\nlevel: high",
+      "datadog_query": "source:windows.sysmon @EventID:13 @TargetObject:(*\\Outlook\\WebView\\*\\URL OR *\\Outlook\\WebView\\*\\url OR *\\Outlook\\Today\\UserDefinedUrl OR *\\Outlook\\Today\\userdefinedurl) @Details:(http\\://* OR https\\://* OR HTTP\\://* OR HTTPS\\://*)",
+      "falcon_logscale_query": "#event_simpleName=AsepValueUpdate\n| RegObjectName=/\\\\Outlook\\\\(WebView|Today)\\\\/i\n| RegValueName=/(URL|UserDefinedUrl)$/i\n| RegStringValue=/^https?:\\/\\//i\n| groupBy([aid, ComputerName, RegObjectName, RegValueName, RegStringValue, ContextImageFileName], function=count())",
+      "cloudwatch_query": "",
+      "rationale": "The Outlook Home Page implant (T1137.004) is a low-prevalence technique strongly associated with Iranian mail-centric operators, and APT34 (OilRig / Cobalt Gypsy / Evasive Serpens) repeatedly leverages Exchange/Outlook-resident persistence and webmail-based tradecraft. A WebView/Today URL value being set to an http(s) endpoint is almost never a benign admin action, making this a high-fidelity, nea"
+    }
+  ]
+}

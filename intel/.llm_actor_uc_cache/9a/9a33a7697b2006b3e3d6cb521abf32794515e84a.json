@@ -1,0 +1,60 @@
+{
+  "name": "APT37",
+  "ucs": [
+    {
+      "title": "[LLM] APT37/ScarCruft RokRat C2 over pCloud / Yandex / Dropbox APIs from non-browser process",
+      "description": "Hunts RokRat (and Dolphin/Chinotto variant) command-and-control, which uniquely tunnels tasking and exfil through legitimate cloud-storage REST APIs \u2014 api.pcloud.com, cloud-api.yandex.net and *.dropboxapi.com \u2014 to blend with normal HTTPS. Fires when a process that is NOT a browser or the vendor's own sync client reaches these specific endpoints, a signature of ScarCruft's RokRat family rather than generic cloud abuse.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1102.002",
+        "T1071.001",
+        "T1567.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN (\"*api.pcloud.com*\",\"*eapi.pcloud.com*\",\"*cloud-api.yandex.net*\",\"*content.dropboxapi.com*\",\"*api.dropboxapi.com*\")) NOT (Web.app IN (\"chrome\",\"msedge\",\"firefox\",\"iexplore\",\"opera\",\"brave\",\"dropbox\",\"yandexdisk\",\"pcloud\")) by Web.src Web.dest Web.url Web.app Web.user\n| `drop_dm_object_name(Web)`\n| convert ctime(firstTime) ctime(lastTime)\n| sort - lastTime",
+      "kql": "let cloudC2 = dynamic([\"api.pcloud.com\",\"eapi.pcloud.com\",\"cloud-api.yandex.net\",\"content.dropboxapi.com\",\"api.dropboxapi.com\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(14d)\n| where RemoteUrl has_any (cloudC2)\n| where InitiatingProcessFileName !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\"dropbox.exe\",\"yandexdisk.exe\",\"pcloud.exe\")   // vendor sync clients + browsers are the legit users of these APIs\n| where InitiatingProcessAccountName !endswith \"$\"\n| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort\n| order by Timestamp desc",
+      "sentinel_kql": "let cloudC2 = dynamic([\"api.pcloud.com\",\"eapi.pcloud.com\",\"cloud-api.yandex.net\",\"content.dropboxapi.com\",\"api.dropboxapi.com\"]);\nImDnsActivity\n| where TimeGenerated > ago(14d)\n| where DnsQuery has_any (cloudC2)\n| where isnotempty(SrcHostname)\n| project TimeGenerated, SrcHostname, SrcIpAddr, SrcUsername, DnsQuery, DnsResponseName\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT37 RokRat cloud-service C2 from non-browser process\nid: 8a1f0d2c-3b6e-4c2a-9b71-rokrat0c2cld1\nstatus: experimental\ndescription: Non-browser, non-sync-client process contacting pCloud/Yandex/Dropbox REST APIs used by ScarCruft RokRat for C2 and exfiltration\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection:\n    Initiated: 'true'\n    DestinationHostname:\n      - 'api.pcloud.com'\n      - 'eapi.pcloud.com'\n      - 'cloud-api.yandex.net'\n      - 'content.dropboxapi.com'\n      - 'api.dropboxapi.com'\n  filter_legit:\n    Image|endswith:\n      - '\\chrome.exe'\n      - '\\msedge.exe'\n      - '\\firefox.exe'\n      - '\\iexplore.exe'\n      - '\\opera.exe'\n      - '\\brave.exe'\n      - '\\dropbox.exe'\n      - '\\yandexdisk.exe'\n      - '\\pcloud.exe'\n  condition: selection and not filter_legit\nfalsepositives:\n  - Niche command-line tools or backup utilities using these cloud APIs\nlevel: high\ntags:\n  - attack.command_and_control\n  - attack.t1102.002\n  - attack.t1071.001",
+      "datadog_query": "source:windows.sysmon @EventID:3 @DestinationHostname:(api.pcloud.com OR eapi.pcloud.com OR cloud-api.yandex.net OR content.dropboxapi.com OR api.dropboxapi.com) -@Image:(*\\chrome.exe OR *\\Chrome.exe OR *\\msedge.exe OR *\\firefox.exe OR *\\iexplore.exe OR *\\opera.exe OR *\\brave.exe OR *\\Dropbox.exe OR *\\dropbox.exe OR *\\YandexDisk.exe OR *\\pCloud.exe)",
+      "falcon_logscale_query": "#event_simpleName=DnsRequest DomainName=/(api\\.pcloud\\.com|eapi\\.pcloud\\.com|cloud-api\\.yandex\\.net|(content|api)\\.dropboxapi\\.com)/i\n| NOT (ContextImageFileName=/\\\\(chrome|msedge|firefox|iexplore|opera|brave|dropbox|yandexdisk|pcloud)\\.exe$/i)\n| groupBy([aid, ComputerName, ContextImageFileName, DomainName], function=count())\n| count > 0",
+      "cloudwatch_query": "",
+      "rationale": "RokRat is APT37's signature implant and its defining trait is C2/exfil through these exact cloud-storage REST hosts rather than dedicated infrastructure \u2014 pinning the destination set to pCloud/Yandex/Dropbox API hosts AND requiring a non-browser/non-sync-client initiator isolates ScarCruft tradecraft from both generic cloud usage and other APTs that stand up their own domains. The vendor-client al",
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] APT37/ScarCruft weaponized HWP/LNK document spawning script interpreter (RokRat loader chain)",
+      "description": "Hunts ScarCruft's initial-access-to-execution chain: a spearphished Hancom HWP document or oversized LNK opened from Explorer/Office that spawns powershell, mshta, regsvr32 or wscript to stage the RokRat/Chinotto payload. Tied to APT37 by anchoring on Hancom Office (Hwp/Hword/Hcell/Hshow) and Explorer LNK parents \u2014 Korean-targeting tradecraft other crews rarely exhibit.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "medium",
+      "techs": [
+        "T1566.001",
+        "T1204.002",
+        "T1059.001",
+        "T1218.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t allow_old_summaries=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Endpoint.Processes.parent_process_name IN (\"explorer.exe\",\"Hwp.exe\",\"Hword.exe\",\"Hcell.exe\",\"Hshow.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\")) (Endpoint.Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\",\"regsvr32.exe\",\"rundll32.exe\")) by Endpoint.Processes.dest Endpoint.Processes.user Endpoint.Processes.parent_process_name Endpoint.Processes.process_name Endpoint.Processes.process\n| `drop_dm_object_name(Endpoint.Processes)`\n| search process IN (\"*-enc*\",\"*EncodedCommand*\",\"*FromBase64String*\",\"*DownloadString*\",\"*IEX*\",\"*Invoke-Expression*\",\"*hidden*\",\"*javascript:*\",\"*mshta*\",\"*http*\")\n| convert ctime(firstTime) ctime(lastTime)\n| sort - lastTime",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where InitiatingProcessFileName in~ (\"explorer.exe\",\"hwp.exe\",\"hword.exe\",\"hcell.exe\",\"hshow.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\")\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\",\"regsvr32.exe\",\"rundll32.exe\")\n| where ProcessCommandLine has_any (\"-enc\",\"-EncodedCommand\",\"FromBase64String\",\"DownloadString\",\"IEX\",\"Invoke-Expression\",\"hidden\",\"-w h\",\"javascript:\",\"mshta\",\"http\")\n| where AccountName !endswith \"$\"\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "ImProcessCreate\n| where TimeGenerated > ago(14d)\n| where ParentProcessName has_any (\"explorer.exe\",\"Hwp.exe\",\"Hword.exe\",\"Hcell.exe\",\"Hshow.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\")\n| where ActingProcessName has_any (\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\",\"cmd.exe\",\"wscript.exe\",\"cscript.exe\",\"regsvr32.exe\",\"rundll32.exe\")\n| where ActingProcessCommandLine has_any (\"-enc\",\"-EncodedCommand\",\"FromBase64String\",\"DownloadString\",\"IEX\",\"Invoke-Expression\",\"hidden\",\"javascript:\",\"mshta\",\"http\")\n| where ActorUsername !endswith \"$\"\n| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT37 HWP/LNK document spawning script interpreter\nid: 5c7e9a11-2d34-4f6b-8a90-scarcruft-hwpchain\nstatus: experimental\ndescription: Hancom Office or Explorer/Office parent spawning a script interpreter with download/encoded/proxy-exec arguments, matching ScarCruft RokRat loader chains\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_parent:\n    ParentImage|endswith:\n      - '\\explorer.exe'\n      - '\\Hwp.exe'\n      - '\\Hword.exe'\n      - '\\Hcell.exe'\n      - '\\Hshow.exe'\n      - '\\winword.exe'\n      - '\\excel.exe'\n      - '\\powerpnt.exe'\n      - '\\outlook.exe'\n  selection_child:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\mshta.exe'\n      - '\\cmd.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\regsvr32.exe'\n      - '\\rundll32.exe'\n  selection_cmd:\n    CommandLine|contains:\n      - '-enc'\n      - 'EncodedCommand'\n      - 'FromBase64String'\n      - 'DownloadString'\n      - 'IEX'\n      - 'Invoke-Expression'\n      - 'hidden'\n      - 'javascript:'\n      - 'mshta'\n      - 'http'\n  condition: selection_parent and selection_child and selection_cmd\nfalsepositives:\n  - Legitimate Office macros or admin login scripts launching PowerShell\nlevel: high\ntags:\n  - attack.execution\n  - attack.t1566.001\n  - attack.t1204.002\n  - attack.t1059.001\n  - attack.t1218.005",
+      "datadog_query": "source:windows.sysmon @EventID:1 @ParentImage:(*\\explorer.exe OR *\\Hwp.exe OR *\\Hword.exe OR *\\Hcell.exe OR *\\Hshow.exe OR *\\winword.exe OR *\\WINWORD.EXE OR *\\excel.exe OR *\\EXCEL.EXE OR *\\powerpnt.exe OR *\\POWERPNT.EXE OR *\\outlook.exe OR *\\OUTLOOK.EXE) @Image:(*\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\mshta.exe OR *\\MSHTA.EXE OR *\\cmd.exe OR *\\wscript.exe OR *\\cscript.exe OR *\\regsvr32.exe OR *\\RegSvr32.exe OR *\\rundll32.exe) @CommandLine:(*-enc* OR *EncodedCommand* OR *FromBase64String* OR *DownloadString* OR *IEX* OR *Invoke-Expression* OR *hidden* OR *javascript:* OR *mshta* OR *http*)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ParentBaseFileName=/(explorer|Hwp|Hword|Hcell|Hshow|winword|excel|powerpnt|outlook)\\.exe$/i ImageFileName=/\\\\(powershell|pwsh|mshta|cmd|wscript|cscript|regsvr32|rundll32)\\.exe$/i\n| regex(\"(?i)(-enc|encodedcommand|frombase64string|downloadstring|iex|invoke-expression|hidden|javascript:|mshta|http)\", field=CommandLine)\n| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())\n| count > 0",
+      "cloudwatch_query": "",
+      "rationale": "ScarCruft's hallmark initial access is weaponized Hancom HWP documents and large LNK files aimed at Korean-language targets \u2014 including Hwp/Hword/Hcell/Hshow as parents is what makes this APT37-specific rather than a generic 'Office spawns PowerShell' template, since almost no other tracked crew leans on Hancom Office. The Explorer parent captures the LNK double-click variant ScarCruft adopted in ",
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "name": "RansomHub",
+  "ucs": [
+    {
+      "title": "[LLM] RansomHub EDRKillShifter BYOVD \u2014 vulnerable driver drop + kernel service registration",
+      "description": "Hunts RansomHub's signature defense-evasion utility EDRKillShifter, which drops a legitimately-signed but vulnerable driver to a user-writable path and registers it as a kernel-mode service to terminate EDR/AV processes before encryption. The user-path .sys drop immediately followed by a kernel-driver service pointing at that file is highly specific to this loader and not seen in benign driver installs.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1562.001",
+        "T1543.003",
+        "T1068",
+        "T1218"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Services where Services.service_type=\"kernel_driver\" (Services.service_path=\"*\\\\Users\\\\*\" OR Services.service_path=\"*\\\\Temp\\\\*\" OR Services.service_path=\"*\\\\ProgramData\\\\*\" OR Services.service_path=\"*\\\\Public\\\\*\" OR Services.service_path=\"*\\\\Downloads\\\\*\") Services.service_path=\"*.sys\" by Services.dest Services.service_name Services.service_path Services.start_mode Services.user \n| `drop_dm_object_name(Services)` \n| `security_content_ctime(firstTime)` \n| `security_content_ctime(lastTime)` \n| sort - lastTime",
+      "kql": "let LookbackDays = 14d;\nlet UserWritable = dynamic([@\"\\Users\\\", @\"\\Temp\\\", @\"\\ProgramData\\\", @\"\\Downloads\\\", @\"\\Public\\\"]);\nlet DriverDrops = DeviceFileEvents\n| where Timestamp > ago(LookbackDays)\n| where FileName endswith \".sys\"\n| where FolderPath has_any (UserWritable)\n| where InitiatingProcessAccountName !endswith \"$\"          // exclude machine/SYSTEM context\n| project DriverWriteTime = Timestamp, DeviceId, DeviceName, DriverPath = FolderPath,\n          DriverFile = FileName, DropProc = InitiatingProcessFileName,\n          DropCmd = InitiatingProcessCommandLine, InitiatingProcessAccountName;\nDeviceRegistryEvents\n| where Timestamp > ago(LookbackDays)\n| where RegistryKey has @\"\\Services\\\"\n| where RegistryValueName =~ \"ImagePath\"\n| where RegistryValueData has \".sys\"\n| where RegistryValueData has_any (UserWritable)\n| join kind=inner DriverDrops on DeviceId\n| where Timestamp between (DriverWriteTime .. DriverWriteTime + 10m)   // drop->service-register within 10m\n| project Timestamp, DeviceName, DriverFile, DriverPath, ServiceKey = RegistryKey,\n          ImagePath = RegistryValueData, DropProc, DropCmd, InitiatingProcessAccountName\n| order by Timestamp desc",
+      "sentinel_kql": "SecurityEvent\n| where TimeGenerated > ago(14d)\n| where EventID == 4697 or EventID == 7045          // service installed (Security / System log)\n| extend SvcPath = coalesce(ServiceFileName, ServiceName)\n| where SvcPath endswith \".sys\"\n| where SvcPath has_any (@\"\\Users\\\", @\"\\Temp\\\", @\"\\ProgramData\\\", @\"\\Downloads\\\", @\"\\Public\\\")\n| where (isempty(ServiceType) or ServiceType has_any (\"0x1\",\"kernel\"))   // kernel-mode driver\n| project TimeGenerated, Computer, ServiceName, ServiceFileName = SvcPath, ServiceType, SubjectUserName, Account\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: RansomHub EDRKillShifter BYOVD Kernel Driver Service Install\nid: 7c3f2a91-4d6e-4b2a-9f0c-1ab5e8d3c910\nstatus: experimental\ndescription: Detects registration of a kernel-mode service whose image is a .sys driver written to a user-writable path, matching RansomHub's EDRKillShifter BYOVD EDR-killer.\nreferences:\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-242a\nauthor: SOC Detection Engineering\ndate: 2026/05/26\ntags:\n  - attack.defense_evasion\n  - attack.privilege_escalation\n  - attack.t1562.001\n  - attack.t1543.003\nlogsource:\n  product: windows\n  service: system\ndetection:\n  selection:\n    Provider_Name: 'Service Control Manager'\n    EventID: 7045\n    ImagePath|endswith: '.sys'\n    ImagePath|contains:\n      - '\\Users\\'\n      - '\\Temp\\'\n      - '\\ProgramData\\'\n      - '\\Public\\'\n      - '\\Downloads\\'\n  condition: selection\nfalsepositives:\n  - Rare third-party kernel drivers staged in user-writable directories\nlevel: high",
+      "datadog_query": "source:windows.sysmon @EventID:11 (@TargetFilename:(*\\Users\\* OR *\\Temp\\* OR *\\ProgramData\\* OR *\\Public\\* OR *\\Downloads\\*)) @TargetFilename:(*.sys OR *.SYS) -@Image:(*\\System32\\* OR *\\system32\\* OR *\\SysWOW64\\* OR *\\syswow64\\*)",
+      "falcon_logscale_query": "#event_simpleName=FileWritten TargetFileName=/\\.sys$/i\n| TargetFileName=/\\\\(Users|Temp|ProgramData|Public|Downloads)\\\\/i\n| ContextImageFileName=/\\.exe$/i\n| NOT (ContextImageFileName=/\\\\(System32|SysWOW64)\\\\/i)\n| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count(as=writes))",
+      "cloudwatch_query": "",
+      "rationale": "EDRKillShifter is a RansomHub-bespoke tool (CISA AA24-242A) that abuses BYOVD: it self-extracts a signed-but-vulnerable driver to a user-writable directory at runtime and loads it as a kernel service to blind EDR. Generic ransomware crews rely on stock vendor tools; the user-path .sys drop tightly coupled (<10m) to a kernel-driver service registration is the EDRKillShifter signature, distinguishin"
+    },
+    {
+      "title": "[LLM] RansomHub encryptor mass file-rename fan-out with README ransom-note drop",
+      "description": "Catches the RansomHub payload at the impact stage: a single non-system process rewriting/renaming hundreds of files across directories within minutes (intermittent encryption + random extension) while simultaneously dropping the RansomHub README ransom note. The fan-out paired with the actor's note-naming convention isolates RansomHub from benign bulk file operations.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "medium",
+      "techs": [
+        "T1486",
+        "T1083"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `security_content_summariesonly` count dc(Filesystem.file_path) as path_count values(Filesystem.file_name) as file_names min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN (\"modified\",\"renamed\",\"created\") by Filesystem.dest Filesystem.process_id Filesystem.process_guid _time span=5m \n| `drop_dm_object_name(Filesystem)` \n| where path_count > 200          /* P99 bulk-modify baseline ~150; encryptor touches 100s/min */ \n| eval note_present=if(match(mvjoin(file_names,\"|\"),\"(?i)(README|How.?To.?(Restore|Decrypt)|RansomHub)\"),1,0) \n| where note_present=1 \n| `security_content_ctime(firstTime)` \n| `security_content_ctime(lastTime)` \n| sort - lastTime",
+      "kql": "let LookbackHours = 24h;\nlet FanoutThreshold = 200;     // 200 = empirical bulk-modify ceiling; encryptor exceeds in minutes (P99 benign ~150)\nDeviceFileEvents\n| where Timestamp > ago(LookbackHours)\n| where ActionType in (\"FileRenamed\",\"FileModified\",\"FileCreated\")\n| where InitiatingProcessAccountName !endswith \"$\"            // exclude machine/SYSTEM\n| where InitiatingProcessFolderPath !has @\"\\Windows\\\"          // strip OS/update churn\n| summarize FileCount = dcount(FolderPath),\n            NoteSeen = countif(FileName matches regex @\"(?i)(README|How[_ ]?To[_ ]?(Restore|Decrypt)|RansomHub)\"),\n            DistinctExt = dcount(tostring(extract(@\"\\.([A-Za-z0-9]{4,12})$\", 1, FileName))),\n            SampleFile = any(FileName),\n            arg_min(Timestamp, InitiatingProcessCommandLine, InitiatingProcessSHA256)\n            by DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessId, bin(Timestamp, 5m)\n| where FileCount > FanoutThreshold and NoteSeen > 0\n| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessId,\n          FileCount, NoteSeen, DistinctExt, SampleFile, InitiatingProcessCommandLine, InitiatingProcessSHA256\n| order by Timestamp desc",
+      "sentinel_kql": "let LookbackHours = 24h;\nlet FanoutThreshold = 200;\nImFileEvent\n| where TimeGenerated > ago(LookbackHours)\n| where EventType in (\"FileModified\",\"FileRenamed\",\"FileCreated\")\n| where isnotempty(ActingProcessName)\n| where ActingProcessName !has @\"\\Windows\\\"\n| summarize FileCount = dcount(TargetFilePath),\n            NoteSeen = countif(TargetFileName matches regex @\"(?i)(README|How[_ ]?To[_ ]?(Restore|Decrypt)|RansomHub)\"),\n            SampleFile = any(TargetFileName),\n            CmdLine = any(ActingProcessCommandLine)\n            by DvcHostname, ActingProcessName, ActingProcessId, bin(TimeGenerated, 5m)\n| where FileCount > FanoutThreshold and NoteSeen > 0\n| project TimeGenerated, DvcHostname, ActingProcessName, ActingProcessId, FileCount, NoteSeen, SampleFile, CmdLine\n| order by TimeGenerated desc",
+      "sigma_yaml": "",
+      "datadog_query": "source:windows.sysmon @EventID:11 @TargetFilename:(*README* OR *readme* OR *How?To?Restore* OR *How?To?Decrypt* OR *RansomHub* OR *ransomhub*) -@Image:(*\\Windows\\* OR *\\windows\\*)",
+      "falcon_logscale_query": "#event_simpleName=FileWritten\n| ContextImageFileName=/\\.exe$/i\n| NOT (ContextImageFileName=/\\\\Windows\\\\/i)\n| groupBy([aid, ComputerName, ContextProcessId, ContextImageFileName], function={ count(as=fileWrites) | collect([TargetFileName]) })\n| fileWrites > 200\n| TargetFileName=/(README|How.?To.?(Restore|Decrypt)|RansomHub)/i",
+      "cloudwatch_query": "",
+      "rationale": "RansomHub's Go/C++ encryptor uses intermittent encryption, appends a per-victim random extension, and drops a README-style ransom note in every traversed directory. Detecting the high-cardinality file fan-out by a single non-OS process within a tight time bin AND the actor's note-naming convention in the same process context separates a RansomHub deployment from benign archiving/backup jobs and fr"
+    }
+  ]
+}
