@@ -1,0 +1,54 @@
+{
+  "name": "Turla",
+  "ucs": [
+    {
+      "title": "[LLM] Turla ComRAT non-browser process beaconing to Gmail web interface for C2",
+      "description": "Hunts a non-browser binary establishing connections to Gmail / Google Mail web endpoints \u2014 the signature C2 channel of Turla's ComRAT v4 (Agent.BTZ lineage), which polls a hard-coded Gmail inbox via the web UI to fetch tasking and exfiltrate. Tied to Turla (Snake / Venomous Bear / Secret Blizzard / G0010) because abusing legitimate web mail as a covert bidirectional channel is one of their hallmark OPSEC moves.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1102",
+        "T1102.002",
+        "T1071.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host IN (\"mail.google.com\",\"www.googleapis.com\") OR All_Traffic.dest_host=\"*.googlemail.com\") AND All_Traffic.app=\"https\" AND NOT All_Traffic.process_name IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"iexplore.exe\",\"brave.exe\",\"opera.exe\",\"msedgewebview2.exe\",\"thunderbird.exe\",\"outlook.exe\") by All_Traffic.src All_Traffic.dest_host All_Traffic.process_name \n| `drop_dm_object_name(\"All_Traffic\")` \n| convert ctime(firstTime) ctime(lastTime) \n| sort - lastTime",
+      "kql": "let browsers = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"iexplore.exe\",\"brave.exe\",\"opera.exe\",\"msedgewebview2.exe\",\"thunderbird.exe\",\"outlook.exe\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(14d)\n| where RemoteUrl has_any (\"mail.google.com\",\"googlemail.com\",\"www.googleapis.com\")\n| where InitiatingProcessFileName !in~ (browsers)\n| where InitiatingProcessAccountName !endswith \"$\"\n| summarize FirstSeen=min(Timestamp), Connections=count(), Urls=make_set(RemoteUrl, 6)\n          by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName\n| order by FirstSeen desc",
+      "sentinel_kql": "ImWebSession\n| where TimeGenerated > ago(14d)\n| where DstHostname has_any (\"mail.google.com\",\"googlemail.com\")\n| where isnotempty(HttpRequestHeaderUserAgent)\n| where HttpRequestHeaderUserAgent !has \"Mozilla\" and HttpRequestHeaderUserAgent !has \"Chrome\" and HttpRequestHeaderUserAgent !has \"Edg\" and HttpRequestHeaderUserAgent !has \"Safari\" and HttpRequestHeaderUserAgent !has \"Firefox\"\n| summarize FirstSeen=min(TimeGenerated), Hits=count(), Urls=make_set(Url, 6) by SrcIpAddr, SrcHostname, DstHostname, HttpRequestHeaderUserAgent\n| order by FirstSeen desc",
+      "sigma_yaml": "title: Non-Browser Process Connecting to Gmail Web Interface (Turla ComRAT C2)\nid: 4b2c1d6e-9a3f-4c0b-8e21-7f5d3a1c2b90\nstatus: experimental\ndescription: Detects a non-browser process reaching Gmail / Google Mail web endpoints, consistent with Turla ComRAT v4 using a Gmail inbox as a covert C2 channel.\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection:\n    Initiated: 'true'\n    DestinationHostname|contains:\n      - 'mail.google.com'\n      - 'googlemail.com'\n  filter_browsers:\n    Image|endswith:\n      - '\\chrome.exe'\n      - '\\msedge.exe'\n      - '\\firefox.exe'\n      - '\\iexplore.exe'\n      - '\\brave.exe'\n      - '\\opera.exe'\n      - '\\msedgewebview2.exe'\n      - '\\thunderbird.exe'\n      - '\\outlook.exe'\n  condition: selection and not filter_browsers\nfalsepositives:\n  - Mail-sync agents or backup utilities authorised to reach Google Mail\nlevel: high\ntags:\n  - attack.command_and_control\n  - attack.t1102.002\n  - attack.t1071.001\n  - attack.g0010",
+      "datadog_query": "source:windows.sysmon @EventID:3 @DestinationHostname:(mail.google.com OR *.googlemail.com OR www.googleapis.com) -@Image:(*\\chrome.exe OR *\\Chrome.exe OR *\\msedge.exe OR *\\MsEdge.exe OR *\\firefox.exe OR *\\Firefox.exe OR *\\iexplore.exe OR *\\IEXPLORE.EXE OR *\\brave.exe OR *\\opera.exe OR *\\msedgewebview2.exe OR *\\thunderbird.exe OR *\\outlook.exe OR *\\OUTLOOK.EXE)",
+      "falcon_logscale_query": "#event_simpleName=DnsRequest DomainName=/(mail\\.google\\.com|googlemail\\.com|googleapis\\.com)/i\n| NOT (ContextImageFileName=/(chrome|msedge|firefox|iexplore|brave|opera|msedgewebview2|thunderbird|outlook)\\.exe$/i)\n| groupBy([aid, ComputerName, ContextImageFileName, DomainName], function=count())\n| count > 0",
+      "cloudwatch_query": "",
+      "rationale": "Generic web-service C2 detections flag everything; this one is anchored on the precise ComRAT v4 behaviour publicly documented by ESET \u2014 a standalone implant (not a browser) talking to the Gmail web front-end to read its task queue. Excluding the full browser/mail-client set leaves almost exclusively programmatic access to Gmail, which for Turla is the implant itself. The non-browser-to-mail.googl"
+    },
+    {
+      "title": "[LLM] Turla PowerShell loader reflectively executing a registry-stored encrypted payload",
+      "description": "Hunts PowerShell that reads a blob from the registry and reflectively loads/executes it in memory \u2014 the exact pattern of Turla's documented PowerShell loader (used to stage Kazuar, the RPC backdoor and ComRAT), which hides AES/3DES-encrypted payloads in HKCU/HKLM values and injects them fileless. Tied to Turla (Secret Blizzard / Waterbug / IRON HUNTER / G0010) because the registry-resident, in-memory-only loader is a defining piece of their fileless tradecraft.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "medium",
+      "techs": [
+        "T1059.001",
+        "T1027",
+        "T1055.001",
+        "T1112"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\") AND (Processes.process=\"*HKCU:*\" OR Processes.process=\"*HKLM:*\" OR Processes.process=\"*Registry::*\" OR Processes.process=\"*Get-ItemProperty*\" OR Processes.process=\"*gp *\") AND (Processes.process=\"*FromBase64String*\" OR Processes.process=\"*[Convert]::*\" OR Processes.process=\"*Reflection.Assembly*\" OR Processes.process=\"*Invoke-Expression*\" OR Processes.process=\"*IEX*\" OR Processes.process=\"*VirtualAlloc*\" OR Processes.process=\"*GetDelegateForFunctionPointer*\") by Processes.dest Processes.user Processes.parent_process_name Processes.process \n| `drop_dm_object_name(\"Processes\")` \n| where NOT match(user, \"\\$$\") \n| convert ctime(firstTime) ctime(lastTime) \n| sort - lastTime",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(14d)\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\")\n| where ProcessCommandLine has_any (\"HKCU:\",\"HKLM:\",\"Registry::\",\"Get-ItemProperty\",\"gp \")\n| where ProcessCommandLine has_any (\"FromBase64String\",\"[Convert]::\",\"Reflection.Assembly\",\"Invoke-Expression\",\"IEX\",\"VirtualAlloc\",\"GetDelegateForFunctionPointer\",\".Invoke(\")\n| where AccountName !endswith \"$\"\n| where AccountName !in~ (\"system\",\"local service\",\"network service\")\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine, FolderPath, SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "ImProcessCreate\n| where TimeGenerated > ago(14d)\n| where TargetProcessName has_any (\"powershell.exe\",\"pwsh.exe\")\n| where TargetProcessCommandLine has_any (\"HKCU:\",\"HKLM:\",\"Registry::\",\"Get-ItemProperty\",\"gp \")\n| where TargetProcessCommandLine has_any (\"FromBase64String\",\"[Convert]::\",\"Reflection.Assembly\",\"Invoke-Expression\",\"IEX\",\"VirtualAlloc\",\"GetDelegateForFunctionPointer\",\".Invoke(\")\n| where ActorUsername !endswith \"$\"\n| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, TargetProcessCommandLine\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: PowerShell Reflectively Loading Registry-Stored Encrypted Payload (Turla Loader)\nid: 9d7e2a14-3b6c-4f81-bd09-1e5c8f2a4d77\nstatus: experimental\ndescription: Detects PowerShell that reads a value from the registry and reflectively decodes/loads it in memory, matching Turla's registry-resident fileless PowerShell loader.\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_img:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n  selection_reg:\n    CommandLine|contains:\n      - 'HKCU:'\n      - 'HKLM:'\n      - 'Registry::'\n      - 'Get-ItemProperty'\n  selection_exec:\n    CommandLine|contains:\n      - 'FromBase64String'\n      - 'Reflection.Assembly'\n      - 'Invoke-Expression'\n      - 'VirtualAlloc'\n      - 'GetDelegateForFunctionPointer'\n  condition: selection_img and selection_reg and selection_exec\nfalsepositives:\n  - Endpoint-management or software-deployment scripts that cache blobs in the registry\nlevel: high\ntags:\n  - attack.execution\n  - attack.defense_evasion\n  - attack.t1059.001\n  - attack.t1027\n  - attack.t1112\n  - attack.g0010",
+      "datadog_query": "source:windows.sysmon @EventID:1 @Image:(*\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\POWERSHELL.EXE) (@CommandLine:(*HKCU\\:* OR *HKLM\\:* OR *Registry\\:\\:* OR *Get-ItemProperty*)) AND (@CommandLine:(*FromBase64String* OR *Reflection.Assembly* OR *Invoke-Expression* OR *IEX* OR *VirtualAlloc* OR *GetDelegateForFunctionPointer*))",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ImageFileName=/(powershell|pwsh)\\.exe$/i\n| CommandLine=/(HKCU:|HKLM:|Registry::|Get-ItemProperty)/i\n| CommandLine=/(FromBase64String|Reflection\\.Assembly|Invoke-Expression|IEX|VirtualAlloc|GetDelegateForFunctionPointer)/i\n| groupBy([aid, ComputerName, ParentBaseFileName, CommandLine], function=count())\n| count > 0",
+      "cloudwatch_query": "",
+      "rationale": "A bare 'PowerShell + IEX' rule is pure noise; this requires the two-part combination Turla's loader exhibits \u2014 (a) pulling content out of a registry value and (b) reflectively decoding/injecting it in the same command \u2014 which is the documented mechanism Turla uses to keep Kazuar/Carbon/ComRAT stages off disk. The registry-as-payload-store plus in-memory .NET reflection pairing is rare in benign au"
+    }
+  ]
+}

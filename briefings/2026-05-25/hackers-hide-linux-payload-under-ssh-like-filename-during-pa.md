@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Package postinstall curl downloads GitHub-Releases binary to /tmp/.sshd (supply-chain implant)
 
-`UC_4_4` · phase: **delivery** · confidence: **High**
+`UC_5_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### [LLM] Execution of dot-prefixed /tmp binary masquerading as SSH daemon (/tmp/.sshd)
 
-`UC_4_5` · phase: **install** · confidence: **High**
+`UC_5_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceProcessEvents
 
 ### [LLM] Hidden executable written to /tmp/.sshd by curl/package-manager (payload drop)
 
-`UC_4_6` · phase: **install** · confidence: **High**
+`UC_5_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -182,7 +182,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Hide Linux Payload Under SSH-Like Filename During Package Installation
 
-`UC_4_3` · phase: **exploit** · confidence: **High**
+`UC_5_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

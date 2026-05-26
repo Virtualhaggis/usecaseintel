@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Connection to Exillio404 money-mule .onion forum (Telegram MaaS C2 marketplace)
 
-`UC_3_9` · phase: **c2** · confidence: **High**
+`UC_4_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

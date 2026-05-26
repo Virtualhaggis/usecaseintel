@@ -8,6 +8,9 @@ _1254 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-26
+- [new 7 zip vulnerabilities let attackers execute arbitrary co](./2026-05-26/new-7-zip-vulnerabilities-let-attackers-execute-arbitrary-co.md)
+
 ## 2026-05-25
 - [cloud atlas apt group modifies termsrv dll to enable multipl](./2026-05-25/cloud-atlas-apt-group-modifies-termsrv-dll-to-enable-multipl.md)
 - [cybercriminals use telegram channels to sell verified bank a](./2026-05-25/cybercriminals-use-telegram-channels-to-sell-verified-bank-a.md)
@@ -17,7 +20,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hackers hide linux payload under ssh like filename during pa](./2026-05-25/hackers-hide-linux-payload-under-ssh-like-filename-during-pa.md)
 - [invisibleferret malware now ships as pyd and so files to eva](./2026-05-25/invisibleferret-malware-now-ships-as-pyd-and-so-files-to-eva.md)
 - [iranian apt uses seo poisoning to deliver fake sql developer](./2026-05-25/iranian-apt-uses-seo-poisoning-to-deliver-fake-sql-developer.md)
-- [kazuar malware evolves into modular espionage ecosystem for ](./2026-05-25/kazuar-malware-evolves-into-modular-espionage-ecosystem-for-.md)
 - [knowledgedeliver lms zero day exploited to deploy bluebeam w](./2026-05-25/knowledgedeliver-lms-zero-day-exploited-to-deploy-bluebeam-w.md)
 - [lazarus deploys remotepe memory only rat against financial a](./2026-05-25/lazarus-deploys-remotepe-memory-only-rat-against-financial-a.md)
 - [russian hacker used jailbroken gemini to steal admin credent](./2026-05-25/russian-hacker-used-jailbroken-gemini-to-steal-admin-credent.md)
