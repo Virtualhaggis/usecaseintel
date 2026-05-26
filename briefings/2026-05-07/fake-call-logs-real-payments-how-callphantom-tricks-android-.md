@@ -1,65 +1,37 @@
-# [HIGH] Hackers Actives Scanning SonicWall Firewall Interfaces – 597,000 Sessions Observed
+# [CRIT] Fake call logs, real payments: How CallPhantom tricks Android users
 
-**Source:** Cyber Security News
-**Published:** 2026-05-25
-**Article:** https://cybersecuritynews.com/hackers-scan-sonicwall-firewall-interfaces/
+**Source:** ESET WeLiveSecurity
+**Published:** 2026-05-07
+**Article:** https://www.welivesecurity.com/en/eset-research/fake-call-logs-real-payments-how-callphantom-tricks-android-users/
 
 ## Threat Profile
 
-Home Cyber Security News 
-Hackers Actives Scanning SonicWall Firewall Interfaces – 597,000 Sessions Observed 
-By Abinaya 
-May 25, 2026 
-A sharp rise in internet-wide scanning activity targeting SonicWall firewall management interfaces has been detected, raising concerns about a potential pre-disclosure reconnaissance phase tied to new vulnerabilities.
-Threat intelligence firm GreyNoise reported a significant surge in scanning of SonicWall SonicOS management APIs between May 9 and May 18, 2026.
-T…
+Fake call logs, real payments: How CallPhantom tricks Android users 
+ESET Research
+Fake call logs, real payments: How CallPhantom tricks Android users ESET researchers uncovered fraudulent apps on Google Play that claim to provide the call history “for any number” and had been downloaded more than seven million times before being taken down
+Lukas Stefanko 
+07 May 2026 
+ •  
+, 
+11 min. read 
+There’s an app for everything nowadays… right? Well, looking up call records for a phone number of choice …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-0400`
+- **SHA1:** `799BB5127CA54239D3D4A14367DB3B712012CF14`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
-- **T1595.002** — Active Scanning: Vulnerability Scanning
-- **T1595.001** — Active Scanning: Scanning IP Blocks
-- **T1595** — Active Scanning
+- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] SonicWall SonicOS mgmt-interface scanning via uniform Chrome 119 / Linux x86_64 user-agent
-
-`UC_14_3` · phase: **recon** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.dest_port IN (80,8080) Web.http_user_agent="*Chrome/119*" Web.http_user_agent="*Linux x86_64*" Web.http_user_agent="*X11*" by Web.src Web.dest Web.dest_port Web.http_user_agent
-| `drop_dm_object_name(Web)`
-| where count > 50
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - count
-```
-
-### [LLM] Anomalous volume spike of inbound HTTP sessions to SonicWall management ports (46x baseline)
-
-`UC_14_4` · phase: **recon** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (80,8080) All_Traffic.direction=inbound by _time span=1d All_Traffic.dest_ip
-| `drop_dm_object_name(All_Traffic)`
-| eventstats avg(count) as baseline_avg p95(count) as baseline_p95 by dest_ip
-| where count > (baseline_avg * 30)   // 30x = conservative trip vs the ~46x peak GreyNoise reported
-| sort - count
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -124,10 +96,10 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-0400`
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `799BB5127CA54239D3D4A14367DB3B712012CF14`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

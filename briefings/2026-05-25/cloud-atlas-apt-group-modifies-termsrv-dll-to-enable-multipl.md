@@ -137,7 +137,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Cloud Atlas termsrv.dll patch enabling concurrent RDP sessions (takeown/icacls/sc)
 
-`UC_1_15` · phase: **install** · confidence: **High**
+`UC_2_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -166,7 +166,7 @@ Patchers
 
 ### [LLM] Cloud Atlas PowerCloud / RevSocks payloads masquerading in Windows system folders
 
-`UC_1_16` · phase: **install** · confidence: **High**
+`UC_2_16` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -199,7 +199,7 @@ union
 
 ### [LLM] Cloud Atlas reverse SSH tunnel via renamed ssh binaries to attacker C2
 
-`UC_1_17` · phase: **c2** · confidence: **High**
+`UC_2_17` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -222,7 +222,7 @@ DeviceNetworkEvents
 
 ### [LLM] Cloud Atlas VBS tunnel/keep-alive scripts executed from INF and PLA directories
 
-`UC_1_18` · phase: **install** · confidence: **High**
+`UC_2_18` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -242,7 +242,7 @@ DeviceProcessEvents
 
 ### [LLM] Cloud Atlas C2 / SOCKS-proxy / Tor egress to reported infrastructure
 
-`UC_1_19` · phase: **c2** · confidence: **Medium**
+`UC_2_19` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -262,7 +262,7 @@ DeviceNetworkEvents
 
 ### [LLM] Cloud Atlas PowerShower persistence: PowerShell running googleearth.ps1 from Pictures
 
-`UC_1_20` · phase: **install** · confidence: **High**
+`UC_2_20` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -661,7 +661,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Cloud Atlas APT Group Modifies termsrv.dll to Enable Multiple RDP Sessions on Vi
 
-`UC_1_14` · phase: **exploit** · confidence: **High**
+`UC_2_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
