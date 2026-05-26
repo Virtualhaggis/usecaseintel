@@ -12464,6 +12464,31 @@ document.addEventListener('click', e => {
 })();
 
 // =================================================================
+// Articles filter-toolbar collapse -- belt-and-braces sync of the
+// <details open> attribute against viewport width. CSS alone was not
+// reliably overriding the native <details>-closed-hides-children
+// behaviour on every browser, so we force the attribute here:
+//  - viewport > 780px  -> details has [open]   (toolbar visible)
+//  - viewport <= 780px -> details has no [open] (collapsed; user taps to expand)
+// Re-runs on resize so a desktop user rotating to mobile (or a mobile
+// user landscape-flipping) gets the right state.
+// =================================================================
+(function syncToolbarCollapse(){
+  const d = document.getElementById('srcFilterCollapse');
+  if (!d || !window.matchMedia) return;
+  const mq = window.matchMedia('(min-width: 781px)');
+  function sync(){
+    if (mq.matches) d.setAttribute('open', '');
+    else            d.removeAttribute('open');
+  }
+  sync();
+  // Modern browsers expose `addEventListener('change', ...)` on MQs;
+  // very old Safari only had addListener. Try the modern API first.
+  if (mq.addEventListener) mq.addEventListener('change', sync);
+  else if (mq.addListener) mq.addListener(sync);
+})();
+
+// =================================================================
 // Home -- count-up animation for the hero stat tiles. Each .num
 // carries data-count-to (integer target) and data-count-final (the
 // final locale-formatted text we want to land on). On first scroll
