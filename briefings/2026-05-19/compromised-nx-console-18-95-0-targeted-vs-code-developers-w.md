@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] macOS LaunchAgent persistence: com.user.kitty-monitor.plist drop (Nx Console stealer)
 
-`UC_127_13` · phase: **install** · confidence: **High**
+`UC_131_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceFileEvents
 
 ### [LLM] Python interpreter executing cat.py from kitty path (Nx Console backdoor)
 
-`UC_127_14` · phase: **c2** · confidence: **High**
+`UC_131_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### [LLM] Nx Console stealer known-bad SHA256/SHA1 hash sighting
 
-`UC_127_15` · phase: **delivery** · confidence: **High**
+`UC_131_15` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ union
 
 ### [LLM] Stealer state markers on disk: /var/tmp/.gh_update_state and /tmp/kitty-* (Nx Console)
 
-`UC_127_16` · phase: **install** · confidence: **High**
+`UC_131_16` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +154,7 @@ DeviceFileEvents
 
 ### [LLM] VS Code / Cursor spawning Bun runtime to execute remote payload (Nx Console workspace-open trigger)
 
-`UC_127_17` · phase: **exploit** · confidence: **Medium**
+`UC_131_17` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -555,7 +555,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Compromised Nx Console 18.95.0 Targeted VS Code Developers with Credential Steal
 
-`UC_127_12` · phase: **exploit** · confidence: **High**
+`UC_131_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

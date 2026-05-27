@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PHP/web-server process beaconing to flipboxstudio.info
 
-`UC_46_8` · phase: **c2** · confidence: **High**
+`UC_50_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceNetworkEvents
 
 ### [LLM] php-fpm/php-cli spawning cscript.exe with VBS launcher (Laravel-Lang dropper)
 
-`UC_46_9` · phase: **install** · confidence: **High**
+`UC_50_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceProcessEvents
 
 ### [LLM] Mass credential-file fan-out reads from single PHP/www-data process
 
-`UC_46_10` · phase: **actions** · confidence: **High**
+`UC_50_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceFileEvents
 
 ### [LLM] AES-encrypted exfil POST to flipboxstudio.info/exfil
 
-`UC_46_11` · phase: **actions** · confidence: **High**
+`UC_50_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ DeviceNetworkEvents
 
 ### [LLM] PHP/web-server worker querying cloud metadata IMDS endpoints
 
-`UC_46_12` · phase: **actions** · confidence: **Medium**
+`UC_50_12` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +162,7 @@ DeviceNetworkEvents
 
 ### [LLM] helpers.php write under vendor/laravel-lang and composer autoload tampering
 
-`UC_46_13` · phase: **install** · confidence: **High**
+`UC_50_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

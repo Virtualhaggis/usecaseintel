@@ -10,13 +10,9 @@ Home Cyber Security News
 Hackers Abuse Trusted Google Domains to Hide Phishing Links From Email Gateways 
 By Tushar Subhra Dutta 
 May 27, 2026 
-
-
-
-
 Phishing attacks are nothing new, but attackers keep finding smarter ways to stay one step ahead of security tools. 
 The latest campaign doing the rounds is a stark reminder that trust, especially the kind organizations place in big-name tech platforms, can be turned into a weapon. 
-Hackers are now hiding malicious links inside a chain of legiti…
+Hackers are now hiding malicious links inside a chain of legitimate Goo…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -60,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Inbound email with nested Google redirector chain (meet.google.com/linkredirect → google.com/url → adservice.google.com)
 
-`UC_0_6` · phase: **delivery** · confidence: **Medium**
+`UC_7_6` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +78,7 @@ SuspectUrls
 
 ### [LLM] Endpoint network/DNS to KnowBe4-tracked phishing IOCs (Cloudflare Workers + .vu/.pt/.app landing domains)
 
-`UC_0_7` · phase: **exploit** · confidence: **High**
+`UC_7_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +103,7 @@ union IocHits, ClickHits
 
 ### [LLM] Microsoft Entra device-code authentication flow — first-seen for user (potential device-code phishing relay)
 
-`UC_0_8` · phase: **exploit** · confidence: **Medium**
+`UC_7_8` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +130,7 @@ AADSignInEventsBeta
 
 ### [LLM] Click on Google nested-redirector or KnowBe4 IOC followed by device-code sign-in within 60 minutes for the same user
 
-`UC_0_9` · phase: **actions** · confidence: **High**
+`UC_7_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

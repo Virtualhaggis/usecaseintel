@@ -10,12 +10,8 @@ Home Cyber Security News
 New 0-Click WhatsApp Account Takeover Attack Targeting iOS 16 Users 
 By Abinaya 
 May 27, 2026 
-
-
-
-
 A new 0-Click WhatsApp Account Takeover Attack Targeting iOS 16 Users is raising serious concerns after multiple iPhone users reported their accounts being hijacked without any interaction, warnings, or visible linked devices.
-According to a recent forensic investigation by the Italian security firm Forenser, attackers are exploiting a zero-click attack chain that allo…
+According to a recent forensic investigation by the Italian security firm Forenser, attackers are exploiting a zero-click attack chain that allows them …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -44,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vulnerable iOS fleet exposed to WhatsApp 0-click chain (CVE-2025-43300 + CVE-2025-55177)
 
-`UC_8_5` · phase: **exploit** · confidence: **Medium**
+`UC_16_5` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

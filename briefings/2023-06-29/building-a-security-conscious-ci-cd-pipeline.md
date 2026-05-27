@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Building a security-conscious CI/CD pipeline
 
-`UC_1404_1` · phase: **exploit** · confidence: **High**
+`UC_1406_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Ghostwriter OYSTERFRESH: wscript.exe executing .js from user Downloads/Temp/Roaming
 
-`UC_56_10` · phase: **delivery** · confidence: **High**
+`UC_60_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### [LLM] Ghostwriter OYSTERBLUES: wscript.exe writing large encrypted blob to HKCU registry
 
-`UC_56_11` · phase: **install** · confidence: **High**
+`UC_60_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceRegistryEvents
 
 ### [LLM] Ghostwriter OYSTERBLUES C2: wscript.exe HTTP POST exfiltrating host recon to external IP
 
-`UC_56_12` · phase: **c2** · confidence: **High**
+`UC_60_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

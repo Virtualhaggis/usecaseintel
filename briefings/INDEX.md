@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1251 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,11 +12,18 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ai chatbot recommendations redirect users to cryptojacking m](./2026-05-27/ai-chatbot-recommendations-redirect-users-to-cryptojacking-m.md)
 - [bind 9 software vulnerabilities exposes resolvers and author](./2026-05-27/bind-9-software-vulnerabilities-exposes-resolvers-and-author.md)
 - [cisa gives feds 4 days to patch actively exploited cpanel pl](./2026-05-27/cisa-gives-feds-4-days-to-patch-actively-exploited-cpanel-pl.md)
+- [continuous offensive security the line we ve been walking](./2026-05-27/continuous-offensive-security-the-line-we-ve-been-walking.md)
 - [developer targeting glassworm malware abuses npm pypi openvs](./2026-05-27/developer-targeting-glassworm-malware-abuses-npm-pypi-openvs.md)
+- [fbi warns of in person data theft attacks from extortion gan](./2026-05-27/fbi-warns-of-in-person-data-theft-attacks-from-extortion-gan.md)
 - [ghsa critical cve 2026 44632 yamcs vulnerable to server side](./2026-05-27/ghsa-critical-cve-2026-44632-yamcs-vulnerable-to-server-side.md)
+- [gitea vulnerability exposes private container images without](./2026-05-27/gitea-vulnerability-exposes-private-container-images-without.md)
 - [gitlab suspends windows exploit researcher nightmare eclipse](./2026-05-27/gitlab-suspends-windows-exploit-researcher-nightmare-eclipse.md)
+- [glassworm botnet disrupted after resilient c2 infrastructure](./2026-05-27/glassworm-botnet-disrupted-after-resilient-c2-infrastructure.md)
+- [glassworm malware takedown disrupts developer supply chain a](./2026-05-27/glassworm-malware-takedown-disrupts-developer-supply-chain-a.md)
 - [hackers abuse trusted google domains to hide phishing links ](./2026-05-27/hackers-abuse-trusted-google-domains-to-hide-phishing-links-.md)
 - [new 0 click whatsapp account takeover attack targeting ios 1](./2026-05-27/new-0-click-whatsapp-account-takeover-attack-targeting-ios-1.md)
+- [roadtools misused in cloud attacks to steal tokens and bypas](./2026-05-27/roadtools-misused-in-cloud-attacks-to-steal-tokens-and-bypas.md)
+- [seedworm apt abuses signed fortemedia and sentinelone binari](./2026-05-27/seedworm-apt-abuses-signed-fortemedia-and-sentinelone-binari.md)
 
 ## 2026-05-26
 - [7 eleven data breach exposes personal information of 185 000](./2026-05-26/7-eleven-data-breach-exposes-personal-information-of-185-000.md)
@@ -32,7 +39,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [mfa prompt bombing why your second factor isn t saving you](./2026-05-26/mfa-prompt-bombing-why-your-second-factor-isn-t-saving-you.md)
 - [microsoft defender can now automatically isolate hacked endp](./2026-05-26/microsoft-defender-can-now-automatically-isolate-hacked-endp.md)
 - [muddywater uses dll side loading in espionage campaign targe](./2026-05-26/muddywater-uses-dll-side-loading-in-espionage-campaign-targe.md)
-- [multiple angular language service extension vulnerabilities ](./2026-05-26/multiple-angular-language-service-extension-vulnerabilities-.md)
 - [why developer machines are now the number one target for sup](./2026-05-26/why-developer-machines-are-now-the-number-one-target-for-sup.md)
 
 ## 2026-05-25
@@ -42,12 +48,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [trapdoor supply chain attack spreads credential stealing mal](./2026-05-25/trapdoor-supply-chain-attack-spreads-credential-stealing-mal.md)
 - [weekly recap linux flaws defender 0 days router botnets and ](./2026-05-25/weekly-recap-linux-flaws-defender-0-days-router-botnets-and-.md)
 
-## 2026-05-24
-- [ghost cms sql injection flaw exploited in large scale clickf](./2026-05-24/ghost-cms-sql-injection-flaw-exploited-in-large-scale-clickf.md)
-
 ## 2026-05-23
 - [ghsa critical cve 2026 46716 nezha monitoring rolemember can](./2026-05-23/ghsa-critical-cve-2026-46716-nezha-monitoring-rolemember-can.md)
-- [laravel lang packages hijacked to deploy credential stealing](./2026-05-23/laravel-lang-packages-hijacked-to-deploy-credential-stealing.md)
 - [laravel lang php packages compromised to deliver cross platf](./2026-05-23/laravel-lang-php-packages-compromised-to-deliver-cross-platf.md)
 - [laravel lang supply chain advisory](./2026-05-23/laravel-lang-supply-chain-advisory.md)
 - [laravel lang supply chain attack every tag across multiple c](./2026-05-23/laravel-lang-supply-chain-attack-every-tag-across-multiple-c.md)
@@ -125,8 +127,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46354 coder pkcs 7 signature bypass i](./2026-05-19/ghsa-critical-cve-2026-46354-coder-pkcs-7-signature-bypass-i.md)
 - [ghsa critical cve 2026 46395 haxcms private key disclosure v](./2026-05-19/ghsa-critical-cve-2026-46395-haxcms-private-key-disclosure-v.md)
 - [ghsa critical ghsa 27f5 xjrr q9ff malware in opensearch proj](./2026-05-19/ghsa-critical-ghsa-27f5-xjrr-q9ff-malware-in-opensearch-proj.md)
+- [introducing secure registry install time defense for the npm](./2026-05-19/introducing-secure-registry-install-time-defense-for-the-npm.md)
 - [microsoft s durabletask package on pypi compromised mini sha](./2026-05-19/microsoft-s-durabletask-package-on-pypi-compromised-mini-sha.md)
-- [popular github action tags redirected to imposter commit to ](./2026-05-19/popular-github-action-tags-redirected-to-imposter-commit-to-.md)
 - [seppmail secure e mail gateway vulnerabilities enable rce an](./2026-05-19/seppmail-secure-e-mail-gateway-vulnerabilities-enable-rce-an.md)
 - [the antv supply chain campaign expands microsoft s durableta](./2026-05-19/the-antv-supply-chain-campaign-expands-microsoft-s-durableta.md)
 - [the new phishing click how oauth consent bypasses mfa](./2026-05-19/the-new-phishing-click-how-oauth-consent-bypasses-mfa.md)
@@ -137,7 +139,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 45697 formie pre authenticated server](./2026-05-18/ghsa-critical-cve-2026-45697-formie-pre-authenticated-server.md)
 - [ghsa critical ghsa wx9m wx4f 4cmg malicious dropper in mistr](./2026-05-18/ghsa-critical-ghsa-wx9m-wx4f-4cmg-malicious-dropper-in-mistr.md)
 - [how storm 2949 turned a compromised identity into a cloud wi](./2026-05-18/how-storm-2949-turned-a-compromised-identity-into-a-cloud-wi.md)
-- [interpol operation ramz disrupts mena cybercrime networks wi](./2026-05-18/interpol-operation-ramz-disrupts-mena-cybercrime-networks-wi.md)
 - [it threat evolution in q1 2026 mobile statistics](./2026-05-18/it-threat-evolution-in-q1-2026-mobile-statistics.md)
 - [mini shai hulud hits antv 300 malicious npm packages publish](./2026-05-18/mini-shai-hulud-hits-antv-300-malicious-npm-packages-publish.md)
 
@@ -2324,5 +2325,4 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [snykers share wellness tips for mental health awareness mont](./2023-05-30/snykers-share-wellness-tips-for-mental-health-awareness-mont.md)
 
 ## 2023-05-25
-- [amplifying aapi voices to honor asian american pacific islan](./2023-05-25/amplifying-aapi-voices-to-honor-asian-american-pacific-islan.md)
 - [top 8 penetration testing tools](./2023-05-25/top-8-penetration-testing-tools.md)
