@@ -210,7 +210,6 @@ a{color:inherit;text-decoration:none}
   <button class="cs-tab" data-pane="datadog">Datadog <span class="badge">Cloud SIEM</span></button>
   <button class="cs-tab" data-pane="spl">SPL <span class="badge">Splunk · CIM</span></button>
   <button class="cs-tab" data-pane="sigma">Sigma <span class="badge">Platform-neutral</span></button>
-  <button class="cs-tab" data-href="file:///C:/Dev/BOTScripts/UK/index.html" title="Opens the local M365 Detection Library in a new tab">Detection Library <span class="badge">M365 · local</span></button>
 </nav>
 
 <div id="pane-kql" class="tab-pane active">
@@ -7123,13 +7122,6 @@ level: high
   const panes = document.querySelectorAll('.tab-pane');
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
-      // External-link tabs (e.g. local Detection Library) open in a new tab
-      // without disturbing the current pane selection.
-      const href = tab.dataset.href;
-      if (href) {
-        window.open(href, '_blank', 'noopener');
-        return;
-      }
       const target = tab.dataset.pane;
       tabs.forEach(t => t.classList.toggle('active', t === tab));
       panes.forEach(p => p.classList.toggle('active', p.id === 'pane-' + target));
