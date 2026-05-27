@@ -10,21 +10,14 @@ Home Cyber Security News
 GHOST STADIUM Phishing Campaign Targets FIFA World Cup Fans With 300+ Fake Domains 
 By Tushar Subhra Dutta 
 May 27, 2026 
-
-
-
-
 As the 2026 FIFA World Cup draws closer, cybercriminals are moving fast to cash in on the excitement. Researchers have uncovered a massive fraud operation targeting fans of the world’s biggest football tournament, with over 300 fake domains already live. 
-The operation is sophisticated, well-funded, and built to deceive even cautious users. W…
+The operation is sophisticated, well-funded, and built to deceive even cautious users. With bill…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `34.97.164.110`
 - **IPv4 (defanged):** `183.164.164.110`
-- **Domain (defanged):** `football-ticket.top`
-- **Domain (defanged):** `football-ticket.shop`
-- **Domain (defanged):** `football-game.shop`
-- **Domain (defanged):** `football-tickets.top`
+- **IPv4 (defanged):** `43.98.183.110`
 - **Domain (defanged):** `fifa.bio`
 - **Domain (defanged):** `fifa.center`
 - **Domain (defanged):** `goldfifa.red`
@@ -41,8 +34,16 @@ The operation is sophisticated, well-funded, and built to deceive even cautious 
 - **Domain (defanged):** `www-fifa.website`
 - **Domain (defanged):** `www-fifa.store`
 - **Domain (defanged):** `www-fifa.top`
+- **Domain (defanged):** `football-ticket.top`
+- **Domain (defanged):** `football-ticket.shop`
+- **Domain (defanged):** `football-game.shop`
+- **Domain (defanged):** `football-tickets.top`
 - **Domain (defanged):** `pay.zfxupi.net`
 - **Domain (defanged):** `testnet.chainugo.com`
+- **Domain (defanged):** `mm-fifa.top`
+- **SHA1:** `3b8bb7631b39f455d31544b55ba97b49ab1888c1`
+- **SHA1:** `84ecdca915f1af822ccc8a04479f5179104f353c`
+- **SHA1:** `9bd164dd3f50d196c7dff4f6c1b0f1345ac96d9a`
 
 ## MITRE ATT&CK Techniques
 
@@ -61,6 +62,7 @@ The operation is sophisticated, well-funded, and built to deceive even cautious 
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1027** — Obfuscated Files or Information
 - **T1583.008** — Acquire Infrastructure: Malvertising
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1583.004** — Acquire Infrastructure: Server
@@ -74,7 +76,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GHOST STADIUM FIFA World Cup 2026 phishing domain egress
 
-`UC_0_9` · phase: **delivery** · confidence: **High**
+`UC_2_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +97,7 @@ DeviceNetworkEvents
 
 ### [LLM] GHOST STADIUM hosting IP outbound connection (34.97.164.110 / 183.164.164.110)
 
-`UC_0_10` · phase: **c2** · confidence: **High**
+`UC_2_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +117,7 @@ DeviceNetworkEvents
 
 ### [LLM] Inbound email carrying GHOST STADIUM FIFA phishing URL
 
-`UC_0_11` · phase: **delivery** · confidence: **High**
+`UC_2_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +139,7 @@ EmailUrlInfo
 
 ### [LLM] GHOST STADIUM Tawk.to backend tracker beacon (property mpnmccbabann9eohpoaomimm)
 
-`UC_0_12` · phase: **c2** · confidence: **High**
+`UC_2_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -451,9 +453,12 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `34.97.164.110`, `183.164.164.110`, `football-ticket.top`, `football-ticket.shop`, `football-game.shop`, `football-tickets.top`, `fifa.bio`, `fifa.center` _(+16 more)_
+  - IP / domain IOC(s): `34.97.164.110`, `183.164.164.110`, `43.98.183.110`, `fifa.bio`, `fifa.center`, `goldfifa.red`, `salefifa.shopping`, `fifa.show` _(+18 more)_
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `3b8bb7631b39f455d31544b55ba97b49ab1888c1`, `84ecdca915f1af822ccc8a04479f5179104f353c`, `9bd164dd3f50d196c7dff4f6c1b0f1345ac96d9a`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

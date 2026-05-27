@@ -10,17 +10,17 @@ Home Cyber Security News
 Tycoon 2FA AiTM Kit Bypasses MFA on Entra ID and Google Workspace Accounts 
 By Tushar Subhra Dutta 
 May 27, 2026 
-
-
-
-
 A powerful phishing kit known as Tycoon 2FA has been making waves across the cybersecurity world since it first appeared in August 2023. 
 The kit operates as a Phishing-as-a-Service (PhaaS) platform, meaning cybercriminals can rent and deploy it without building anything from scratch. 
-Its primary goal is to steal authenticated session tokens from Mi…
+Its primary goal is to steal authenticated session tokens from Microsoft …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `api.ipapi.is`
+- **IPv4 (defanged):** `47.90.180.205`
+- **IPv4 (defanged):** `47.252.11.99`
+- **Domain (defanged):** `fijothi.com`
+- **Domain (defanged):** `shivacrio.com`
+- **Domain (defanged):** `cookies.28gholland.workers.dev`
 
 ## MITRE ATT&CK Techniques
 
@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Tycoon 2FA AiTM - Node.js HTTP Client Sign-in to Microsoft Authentication Broker
 
-`UC_2_9` · phase: **c2** · confidence: **High**
+`UC_4_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ AADSignInEventsBeta
 
 ### [LLM] Tycoon 2FA Microsoft Authentication Broker Sign-in from Cheap-VPS ASN
 
-`UC_2_10` · phase: **c2** · confidence: **Medium**
+`UC_4_10` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ AADSignInEventsBeta
 
 ### [LLM] Rogue Entra Device Registration Following Tycoon 2FA AiTM Sign-in (PRT Persistence)
 
-`UC_2_11` · phase: **install** · confidence: **High**
+`UC_4_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -396,7 +396,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Tycoon 2FA AiTM Kit Bypasses MFA on Entra ID and Google Workspace Accounts
 
-`UC_2_8` · phase: **exploit** · confidence: **High**
+`UC_4_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -448,7 +448,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `api.ipapi.is`
+  - IP / domain IOC(s): `47.90.180.205`, `47.252.11.99`, `fijothi.com`, `shivacrio.com`, `cookies.28gholland.workers.dev`
 
 
 ## Why this matters

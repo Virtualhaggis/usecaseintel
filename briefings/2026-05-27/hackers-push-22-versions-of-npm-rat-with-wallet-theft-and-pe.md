@@ -10,19 +10,14 @@ Home Cyber Security News
 Hackers Push 22 Versions of npm RAT With Wallet Theft and Persistent Backdoor 
 By Tushar Subhra Dutta 
 May 27, 2026 
-
-
-
-
 A malicious npm package called forge-jsxy has been quietly stealing cryptocurrency wallet keys, browser credentials, and sensitive developer data across Windows, macOS, and Linux systems. 
-Published to the npm registry on May 4, 2026, it pushed out 22 versions in 22 days, making it one of the most actively developed pieces of malware seen on the p…
+Published to the npm registry on May 4, 2026, it pushed out 22 versions in 22 days, making it one of the most actively developed pieces of malware seen on the platform.…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `204.10.194.247`
 - **Domain (defanged):** `taohunter.ai`
 - **SHA256:** `4938d47fe6216f8f9fee0527bf5112c04c15a9ea62f87869677619aa5400f09f`
-- **SHA256:** `4cb96c3b033c1aaf7b3d0fe54749058f14d4d914947a6d6d430aca108a7daa5a`
 
 ## MITRE ATT&CK Techniques
 
@@ -57,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] forge-jsxy npm RAT C2 to 204.10.194.247 (WebSocket 9877 / HTTP 8765)
 
-`UC_5_9` · phase: **c2** · confidence: **High**
+`UC_7_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +71,7 @@ DeviceNetworkEvents
 
 ### [LLM] forge-jsxy durable agent directory created outside node_modules
 
-`UC_5_10` · phase: **install** · confidence: **High**
+`UC_7_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +91,7 @@ DeviceFileEvents
 
 ### [LLM] forge-jsxy Windows persistence: ForgeJSWorker Run key / Scheduled Task
 
-`UC_5_11` · phase: **install** · confidence: **High**
+`UC_7_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +119,7 @@ union
 
 ### [LLM] forge-jsxy Linux persistence: systemd user unit forge-js-worker.service
 
-`UC_5_12` · phase: **install** · confidence: **High**
+`UC_7_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +139,7 @@ DeviceFileEvents
 
 ### [LLM] forge-jsxy macOS persistence: LaunchAgent com.forgejs.worker.plist
 
-`UC_5_13` · phase: **install** · confidence: **High**
+`UC_7_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,7 +159,7 @@ DeviceFileEvents
 
 ### [LLM] forge-jsxy crypto-wallet secret vault write (.vault/secret-audit/result.json)
 
-`UC_5_14` · phase: **actions** · confidence: **High**
+`UC_7_14` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -356,7 +351,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Push 22 Versions of npm RAT With Wallet Theft and Persistent Backdoor
 
-`UC_5_8` · phase: **exploit** · confidence: **High**
+`UC_7_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -411,7 +406,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
   - IP / domain IOC(s): `204.10.194.247`, `taohunter.ai`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `4938d47fe6216f8f9fee0527bf5112c04c15a9ea62f87869677619aa5400f09f`, `4cb96c3b033c1aaf7b3d0fe54749058f14d4d914947a6d6d430aca108a7daa5a`
+  - file hash IOC(s): `4938d47fe6216f8f9fee0527bf5112c04c15a9ea62f87869677619aa5400f09f`
 
 
 ## Why this matters

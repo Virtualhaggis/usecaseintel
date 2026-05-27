@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Risky/anonymized Microsoft Entra sign-in to Salesforce resource (ShinyHunters vishing ATO)
 
-`UC_32_4` · phase: **delivery** · confidence: **Medium**
+`UC_34_4` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ AADSignInEventsBeta
 
 ### [LLM] Unauthorized Salesforce connected-app (malicious Data Loader) authorization
 
-`UC_32_5` · phase: **install** · confidence: **Medium**
+`UC_34_5` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ CloudAppEvents
 
 ### [LLM] Salesforce bulk/mass data export burst from anonymized IP (UNC6040 exfiltration)
 
-`UC_32_6` · phase: **actions** · confidence: **Medium**
+`UC_34_6` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

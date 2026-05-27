@@ -10,13 +10,9 @@ Home Cyber Security News
 Hackers Use Fake ChatGPT and Claude Installers to Deploy DinDoor Backdoor 
 By Tushar Subhra Dutta 
 May 27, 2026 
-
-
-
-
 A new malware campaign is targeting content creators, gamers, and AI enthusiasts by disguising itself as popular software tools like ChatGPT and Claude. 
 The attackers are spreading a dangerous backdoor called DinDoor through fake installers hosted on trusted platforms, catching many users completely off guard. 
-The campaign has gained significant tra…
+The campaign has gained significant traction, p…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -74,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] msiexec.exe installs MSI from DinDoor fake-installer infrastructure (GitHub/SourceForge)
 
-`UC_4_9` · phase: **delivery** · confidence: **High**
+`UC_6_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +91,7 @@ DeviceProcessEvents
 
 ### [LLM] PowerShell installs Deno runtime via Scoop/WinGet then executes remote script (DinDoor stager)
 
-`UC_4_10` · phase: **install** · confidence: **High**
+`UC_6_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +112,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound connection to DinDoor C2 infrastructure (specific domains and IPs)
 
-`UC_4_11` · phase: **c2** · confidence: **High**
+`UC_6_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +139,7 @@ union isfuzzy=true
 
 ### [LLM] DinDoor persistence: Run-key value pointing to Deno or DinDoor C2 infrastructure
 
-`UC_4_12` · phase: **install** · confidence: **High**
+`UC_6_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,7 +159,7 @@ DeviceRegistryEvents
 
 ### [LLM] Hidden Microsoft Edge process spawned by deno.exe for covert screen streaming (DinDoor RAT)
 
-`UC_4_13` · phase: **actions** · confidence: **High**
+`UC_6_13` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

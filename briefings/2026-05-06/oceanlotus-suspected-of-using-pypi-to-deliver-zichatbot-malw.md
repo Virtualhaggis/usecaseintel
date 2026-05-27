@@ -64,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Pip install of OceanLotus-attributed ZiChatBot PyPI wheels (uuid32-utils, colorinal, termncolor)
 
-`UC_250_9` · phase: **delivery** · confidence: **High**
+`UC_251_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceProcessEvents
 
 ### [LLM] ZiChatBot runner vcpktsvr.exe executed from %LOCALAPPDATA%\vcpacket\
 
-`UC_250_10` · phase: **install** · confidence: **High**
+`UC_251_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceProcessEvents
 
 ### [LLM] ZiChatBot persistence Run-key write 'pkt-update' pointing to vcpacket\vcpktsvr.exe
 
-`UC_250_11` · phase: **install** · confidence: **High**
+`UC_251_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +128,7 @@ DeviceRegistryEvents
 
 ### [LLM] ZiChatBot Linux persistence /tmp/obsHub/obs-check-update via crontab
 
-`UC_250_12` · phase: **install** · confidence: **High**
+`UC_251_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ union
 
 ### [LLM] ZiChatBot Zulip C2 beacon to helper.zulipchat.com from non-browser process
 
-`UC_250_13` · phase: **c2** · confidence: **High**
+`UC_251_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -414,7 +414,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus suspected of using PyPI to deliver ZiChatBot malware
 
-`UC_250_8` · phase: **exploit** · confidence: **High**
+`UC_251_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
