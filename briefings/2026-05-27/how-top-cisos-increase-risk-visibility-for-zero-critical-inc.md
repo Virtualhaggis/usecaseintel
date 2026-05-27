@@ -10,19 +10,16 @@ Home ANY.RUN
 How Top CISOs Increase Risk Visibility for Zero Critical Incidents  
 By Balaji N 
 May 27, 2026 
-
-
-
-
 How CISOs Achieve Zero Critical Incidents 
 How many alerts in your SOC are truly business-critical, and how many only look urgent because the team lacks context? This is one of the hardest questions for CISOs today. Without clear visibility, teams can waste time on noise while real phishing and malware threats move deeper into the environment. 
-Top CISOs are solving this by treat…
+Top CISOs are solving this by treating visi…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `misinformenet.com`
-- **Domain (defanged):** `microsoftconnect.com`
-- **MD5:** `767834000223376cf7d2d6951632d00`
+- **Domain (defanged):** `microsoft-services.com`
+- **Domain (defanged):** `cdn.windowsupdate.com`
+- **Domain (defanged):** `cdn.windows.com`
+- **SHA256:** `cf42af2bdce3878f84ba7f8467bbc7`
 
 ## MITRE ATT&CK Techniques
 
@@ -261,10 +258,10 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `misinformenet.com`, `microsoftconnect.com`
+  - IP / domain IOC(s): `microsoft-services.com`, `cdn.windowsupdate.com`, `cdn.windows.com`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `767834000223376cf7d2d6951632d00`
+  - file hash IOC(s): `cf42af2bdce3878f84ba7f8467bbc7`
 
 
 ## Why this matters

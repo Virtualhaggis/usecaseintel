@@ -10,12 +10,8 @@ Home Cyber Security
 Motorola Phones Preinstalled App Found Hijacking Amazon App to Inject Affiliate Codes 
 By Guru Baran 
 May 27, 2026 
-
-
-
-
 A hidden system application bundled with Motorola smartphones has been caught intercepting user-initiated Amazon app launches and silently redirecting them through affiliate tracking URLs, raising serious concerns about supply chain integrity, user consent, and undisclosed revenue practices on premium Android devices.
-The behavior was first reported by …
+The behavior was first reported by a Motoro…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -46,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Motorola Smart Feed adware C2/redirect egress to devicenative.com & kira-abboud.com
 
-`UC_4_7` · phase: **c2** · confidence: **High**
+`UC_10_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

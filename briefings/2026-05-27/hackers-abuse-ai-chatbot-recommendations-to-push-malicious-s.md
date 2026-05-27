@@ -10,12 +10,8 @@ Home Cyber Security News
 Hackers Abuse AI Chatbot Recommendations to Push Malicious Software Download Links 
 By Tushar Subhra Dutta 
 May 27, 2026 
-
-
-
-
 Hackers are finding new ways to trick people into downloading malware, and this time, they are hiding behind tools many of us have come to trust. 
-A newly uncovered cryptojacking campaign is abusing AI chatbot interactions to steer unsuspecting users toward malicious software download sites. The threat is quiet, convincing, and surprisingly e…
+A newly uncovered cryptojacking campaign is abusing AI chatbot interactions to steer unsuspecting users toward malicious software download sites. The threat is quiet, convincing, and surprisingly easy for …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -61,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Fake utility download from gleeze[.]com / giize[.]com dynamic-DNS lure sites
 
-`UC_1_9` · phase: **delivery** · confidence: **High**
+`UC_7_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +76,7 @@ DeviceFileEvents
 
 ### [LLM] DLL side-load of autorun.dll / vcredist_x64.dll by spoofed PC utility binaries
 
-`UC_1_10` · phase: **install** · confidence: **Medium**
+`UC_7_10` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +96,7 @@ DeviceImageLoadEvents
 
 ### [LLM] ScreenConnect C2 beacon to attacker server 193.42.11[.]108
 
-`UC_1_11` · phase: **c2** · confidence: **High**
+`UC_7_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +114,7 @@ DeviceNetworkEvents
 
 ### [LLM] SimpleRunPE persistence + Defender exclusion configuration
 
-`UC_1_12` · phase: **install** · confidence: **Medium**
+`UC_7_12` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +138,7 @@ union exclusions, defcfg
 
 ### [LLM] Cryptominer execution (gminer / lolMiner / SRBMiner-MULTI) with mining args
 
-`UC_1_13` · phase: **actions** · confidence: **Medium**
+`UC_7_13` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -336,7 +332,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Abuse AI Chatbot Recommendations to Push Malicious Software Download Lin
 
-`UC_1_8` · phase: **exploit** · confidence: **High**
+`UC_7_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
