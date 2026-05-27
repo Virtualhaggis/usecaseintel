@@ -11,27 +11,17 @@ By Ionut Ilascu
 May 27, 2026
 09:28 AM
 0 
-
-
 The Glassworm botnet targeting developers in software supply-chain attacks has been disrupted after researchers took down its resilient command-and-control infrastructure relying on Solana blockchain transactions and the BitTorrent DHT network.
-
-
-​In a coordinated operation conducted  yesterday, CrowdStrike, Google, and The Shadowserver Foundation cut off the botnet operators’ a…
+​In a coordinated operation conducted  yesterday, CrowdStrike, Google, and The Shadowserver Foundation cut off the botnet operators’ access to…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `164.92.88.210`
-- **IPv4 (defanged):** `217.69.3.218`
-- **IPv4 (defanged):** `199.247.10.166`
-- **IPv4 (defanged):** `140.82.52.31`
-- **IPv4 (defanged):** `199.247.13.106`
-- **Domain (defanged):** `uhjdclolkdn@gmail.com`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
-- **T1071** — Application Layer Protocol
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1568** — Dynamic Resolution
@@ -54,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Post-takedown beacon to CrowdStrike Glassworm sinkhole 164.92.88.210
 
-`UC_0_3` · phase: **c2** · confidence: **High**
+`UC_8_2` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +62,7 @@ DeviceNetworkEvents
 
 ### [LLM] Outbound connection to Glassworm operator VPS C2 infrastructure
 
-`UC_0_4` · phase: **c2** · confidence: **High**
+`UC_8_3` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +81,7 @@ DeviceNetworkEvents
 
 ### [LLM] VS Code / Node / Cursor process resolving Solana mainnet RPC (Glassworm C2 channel)
 
-`UC_0_5` · phase: **c2** · confidence: **Medium**
+`UC_8_4` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +100,7 @@ DeviceNetworkEvents
 
 ### [LLM] Developer endpoint emitting BitTorrent DHT bootstrap traffic from non-torrent process
 
-`UC_0_6` · phase: **c2** · confidence: **High**
+`UC_8_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +120,7 @@ DeviceNetworkEvents
 
 ### [LLM] IDE / Node process resolving calendar.google.com as Glassworm C2 dead-drop
 
-`UC_0_7` · phase: **c2** · confidence: **Medium**
+`UC_8_6` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,7 +139,7 @@ DeviceNetworkEvents
 
 ### [LLM] Trojanized Glassworm VS Code / OpenVSX extension package files on developer host
 
-`UC_0_8` · phase: **install** · confidence: **High**
+`UC_8_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -169,7 +159,7 @@ DeviceFileEvents
 
 ### [LLM] VS Code child process reads wallet / dev-credential files (Glassworm credential theft)
 
-`UC_0_9` · phase: **actions** · confidence: **Medium**
+`UC_8_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -195,7 +185,7 @@ DeviceFileEvents
 
 ### [LLM] First-time install of any Glassworm-named extension across the org (baseline anti-join)
 
-`UC_0_10` · phase: **delivery** · confidence: **Medium**
+`UC_8_9` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -279,14 +269,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `164.92.88.210`, `217.69.3.218`, `199.247.10.166`, `140.82.52.31`, `199.247.13.106`, `uhjdclolkdn@gmail.com`
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

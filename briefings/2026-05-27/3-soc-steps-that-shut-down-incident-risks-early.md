@@ -1,30 +1,27 @@
-# [CRIT] GitLab Suspends Windows Exploit Researcher Nightmare-Eclipse After GitHub Ban
+# [HIGH] 3 SOC Steps that Shut Down Incident Risks Early
 
-**Source:** Cyber Security News
+**Source:** The Hacker News
 **Published:** 2026-05-27
-**Article:** https://cybersecuritynews.com/windows-exploit-researcher-suspended/
+**Article:** https://thehackernews.com/2026/05/3-soc-steps-that-shut-down-incident.html
 
 ## Threat Profile
 
-Home Cyber Security 
-GitLab Suspends Windows Exploit Researcher Nightmare-Eclipse After GitHub Ban 
-By Guru Baran 
-May 27, 2026 
-The anonymous researcher known as Nightmare-Eclipse has been blocked from two major code-hosting platforms in less than a week, as their disruptive public zero-day campaign against Microsoft draws serious real-world consequences.
-GitLab moved to suspend the account of security researcher Nightmare-Eclipse on May 26, 2026, just days after GitHub, owned by Microsoft, ter…
+3 SOC Steps that Shut Down Incident Risks Early 
+ The Hacker News  May 27, 2026 Threat Intelligence / Incident Response 
+Most organizations still picture cyber defense as a fortress problem: build stronger walls, add more guards, buy another detection engine. But modern incidents rarely crash through the front gate. They drift in disguised as routine activity, hide inside legitimate processes, and quietly accumulate risk long before anyone labels them an "incident."
+That changes the role of th…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-33825`
-- **IPv4 (defanged):** `78.29.48.29`
-- **IPv4 (defanged):** `212.232.23.69`
-- **IPv4 (defanged):** `179.43.140.214`
-- **Domain (defanged):** `staybud.dpdns.org`
-- **SHA256:** `a2b6c7a9c4490df70de3cdbfa5fc801a3e1cf6a872749259487e354de2876b7c`
+- **IPv4 (defanged):** `181.134.198.53`
+- **Domain (defanged):** `legacydb0528.yaba.eu`
+- **Domain (defanged):** `remnanterver0399.yaba.eu`
 
 ## MITRE ATT&CK Techniques
 
-- **T1190** — Exploit Public-Facing Application
+- **T1071.001** — Web Protocols
+- **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -32,19 +29,14 @@ GitLab moved to suspend the account of security researcher Nightmare-Eclipse on 
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
+- **T1528** — Steal Application Access Token
+- **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1486** — Data Encrypted for Impact
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1071** — Application Layer Protocol
-- **T1027** — Obfuscated Files or Information
-- **T1068** — Exploitation for Privilege Escalation
-- **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1568** — Dynamic Resolution
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1562.006** — Impair Defenses: Indicator Blocking
+- **T1195.002** — Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
@@ -52,133 +44,39 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Nightmare-Eclipse Defender exploit sample (SHA256 a2b6c7...) execution or drop
+### Beaconing — periodic outbound to small set of destinations
 
-`UC_17_10` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Processes WHERE Processes.process_hash="a2b6c7a9c4490df70de3cdbfa5fc801a3e1cf6a872749259487e354de2876b7c" BY Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_hash
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| append [| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Filesystem WHERE Endpoint.Filesystem.file_hash="a2b6c7a9c4490df70de3cdbfa5fc801a3e1cf6a872749259487e354de2876b7c" BY Endpoint.Filesystem.dest Endpoint.Filesystem.user Endpoint.Filesystem.file_path Endpoint.Filesystem.file_name Endpoint.Filesystem.file_hash | `drop_dm_object_name(Endpoint.Filesystem)` | convert ctime(firstTime) ctime(lastTime)]
-```
-
-**Defender KQL:**
-```kql
-let BadSha256 = "a2b6c7a9c4490df70de3cdbfa5fc801a3e1cf6a872749259487e354de2876b7c";
-let ProcHits = DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 =~ BadSha256
-    | project Timestamp, Source = "DeviceProcessEvents", DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
-              InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256;
-let FileHits = DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 =~ BadSha256
-    | project Timestamp, Source = "DeviceFileEvents", DeviceName,
-              AccountName = InitiatingProcessAccountName,
-              FileName, FolderPath,
-              ProcessCommandLine = InitiatingProcessCommandLine,
-              InitiatingProcessFileName, InitiatingProcessCommandLine = InitiatingProcessCommandLine, SHA256;
-union ProcHits, FileHits
-| order by Timestamp desc
-```
-
-### [LLM] Nightmare-Eclipse C2 callback to staybud.dpdns.org or campaign IPs
-
-`UC_17_11` · phase: **c2** · confidence: **High**
+`UC_BEACONING` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Network_Traffic.All_Traffic WHERE (All_Traffic.dest_ip IN ("78.29.48.29","212.232.23.69","179.43.140.214") OR All_Traffic.dest IN ("78.29.48.29","212.232.23.69","179.43.140.214")) BY All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_port All_Traffic.app
+| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
 | `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
-| append [| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Network_Resolution.DNS WHERE DNS.query="staybud.dpdns.org" OR DNS.query="*.staybud.dpdns.org" BY DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)]
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
-let BadIPs = dynamic(["78.29.48.29","212.232.23.69","179.43.140.214"]);
-let BadDomain = "staybud.dpdns.org";
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (BadIPs)
-      or RemoteUrl has BadDomain
-| project Timestamp, DeviceName,
-          InitiatingProcessAccountName,
-          InitiatingProcessFileName,
-          InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath,
-          RemoteIP, RemotePort, RemoteUrl, Protocol, ActionType
-| order by Timestamp desc
-```
-
-### [LLM] Nightmare-Eclipse disguised loader FunnyApp.exe execution
-
-`UC_17_12` · phase: **delivery** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Processes WHERE Processes.process_name="FunnyApp.exe" BY Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_path Processes.process_hash
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| eval suspicious_path = if(match(process_path, "(?i)\\\\(Users\\\\[^\\\\]+\\\\(Downloads|Desktop|AppData\\\\Local\\\\Temp)|Windows\\\\Temp|ProgramData)\\\\"), 1, 0)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "FunnyApp.exe"
-| extend SuspiciousPath = FolderPath matches regex @"(?i)\\(Users\\[^\\]+\\(Downloads|Desktop|AppData\\Local\\Temp)|Windows\\Temp|ProgramData)\\"
-| project Timestamp, DeviceName, AccountName, FolderPath, FileName, ProcessCommandLine, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath,
-          ProcessVersionInfoCompanyName, ProcessVersionInfoOriginalFileName, SuspiciousPath
-| order by Timestamp desc
-```
-
-### [LLM] Windows Defender signature update pipeline silently stalled (UnDefend behavior)
-
-`UC_17_13` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Processes WHERE (Processes.process_name="MpCmdRun.exe" OR Processes.process_name="MsMpEng.exe" OR Processes.process_name="NisSrv.exe") AND (Processes.process="*SignatureUpdate*" OR Processes.process="*-RemoveDefinitions*" OR Processes.process="*-DisableIOAVProtection*") BY Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let LookbackDays = 7d;
-let StaleThreshold = 2d;
-let ActiveDevices = DeviceInfo
-    | where Timestamp > ago(1d)
-    | summarize LastSeen = max(Timestamp) by DeviceId, DeviceName
-    | where LastSeen > ago(6h);
-let SigUpdates = DeviceEvents
-    | where Timestamp > ago(LookbackDays)
-    | where ActionType in ("AntivirusDefinitionsUpdated","AntivirusEmergencyUpdate","AntivirusDefinitionsUpdateFailed")
-    | summarize LastSigEvent = max(Timestamp),
-                LastSigSuccess = maxif(Timestamp, ActionType in ("AntivirusDefinitionsUpdated","AntivirusEmergencyUpdate")),
-                FailedAttempts = countif(ActionType == "AntivirusDefinitionsUpdateFailed")
-      by DeviceId;
-ActiveDevices
-| join kind=leftouter SigUpdates on DeviceId
-| where isnull(LastSigSuccess) or LastSigSuccess < ago(StaleThreshold)
-| extend RegistryTamperLookback = ago(LookbackDays)
-| join kind=leftouter (
-    DeviceRegistryEvents
-    | where Timestamp > ago(LookbackDays)
-    | where RegistryKey has_any (@"\Microsoft\Windows Defender\Signature Updates",
-                                @"\Microsoft\Windows Defender\Real-Time Protection",
-                                @"\Policies\Microsoft\Windows Defender")
-    | summarize TamperCount = count(),
-                AnyTamperProcess = make_set(InitiatingProcessFileName, 5)
-      by DeviceId
-  ) on DeviceId
-| project DeviceName, DeviceId, LastSeen, LastSigSuccess, LastSigEvent, FailedAttempts, TamperCount, AnyTamperProcess
-| order by LastSigSuccess asc nulls first
+| where Timestamp > ago(1d)
+| where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
+| project DeviceName, RemoteIP, RemotePort, Timestamp
+| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
+| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
+         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
+| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
+| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
+| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
+    by DeviceName, RemoteIP, RemotePort
+| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
+| order by conn_count desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -329,6 +227,33 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### OAuth consent / suspicious app grant
+
+`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Authentication.Authentication
+    where Authentication.action="success"
+      AND Authentication.signature IN (
+        "Consent to application",
+        "Add app role assignment grant to user",
+        "Add OAuth2PermissionGrant",
+        "Add delegated permission grant")
+    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+| `drop_dm_object_name(Authentication)`
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
+| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
+          ActivityObjects, IPAddress, UserAgent
+```
+
 ### Ransomware-style mass file rename / extension change
 
 `UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
@@ -413,69 +338,38 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### Article-specific behavioural hunt — GitLab Suspends Windows Exploit Researcher Nightmare-Eclipse After GitHub Ban
+### Trusted vendor binary / installer launching unusual children
 
-`UC_17_9` · phase: **exploit** · confidence: **High**
+`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — GitLab Suspends Windows Exploit Researcher Nightmare-Eclipse After GitHub Ban ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("funnyapp.exe"))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
+    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
+      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_name IN ("funnyapp.exe"))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]
 ```
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — GitLab Suspends Windows Exploit Researcher Nightmare-Eclipse After GitHub Ban
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName in~ ("funnyapp.exe"))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where (FileName in~ ("funnyapp.exe"))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
+| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-33825`
-
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `78.29.48.29`, `212.232.23.69`, `179.43.140.214`, `staybud.dpdns.org`
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `a2b6c7a9c4490df70de3cdbfa5fc801a3e1cf6a872749259487e354de2876b7c`
+  - IP / domain IOC(s): `181.134.198.53`, `legacydb0528.yaba.eu`, `remnanterver0399.yaba.eu`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

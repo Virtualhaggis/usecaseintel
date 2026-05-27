@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] npm/node postinstall spawning network egress tool or referencing Shai-Hulud payload strings
 
-`UC_133_4` · phase: **install** · confidence: **Medium**
+`UC_134_4` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceProcessEvents
 
 ### [LLM] TruffleHog secret scanner spawned by npm/node during package install (Mini Shai-Hulud credential harvest)
 
-`UC_133_5` · phase: **install** · confidence: **Medium**
+`UC_134_5` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound connection/DNS to Mini Shai-Hulud exfil domain git-tanstack.com
 
-`UC_133_6` · phase: **c2** · confidence: **High**
+`UC_134_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceNetworkEvents
 
 ### [LLM] Mini Shai-Hulud persistence: shai-hulud-workflow.yml / shai-hulud GitHub Actions workflow dropped on disk
 
-`UC_133_7` · phase: **install** · confidence: **High**
+`UC_134_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

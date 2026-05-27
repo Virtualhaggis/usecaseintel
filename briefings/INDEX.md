@@ -9,21 +9,24 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-27
+- [3 soc steps that shut down incident risks early](./2026-05-27/3-soc-steps-that-shut-down-incident-risks-early.md)
 - [ai chatbot recommendations redirect users to cryptojacking m](./2026-05-27/ai-chatbot-recommendations-redirect-users-to-cryptojacking-m.md)
-- [bind 9 software vulnerabilities exposes resolvers and author](./2026-05-27/bind-9-software-vulnerabilities-exposes-resolvers-and-author.md)
+- [attackers can exploit badhost to access sensitive ai agent s](./2026-05-27/attackers-can-exploit-badhost-to-access-sensitive-ai-agent-s.md)
+- [can you enforce strong active directory password rules witho](./2026-05-27/can-you-enforce-strong-active-directory-password-rules-witho.md)
 - [cisa gives feds 4 days to patch actively exploited cpanel pl](./2026-05-27/cisa-gives-feds-4-days-to-patch-actively-exploited-cpanel-pl.md)
+- [cisa warns of litespeed cpanel plugin vulnerability exploite](./2026-05-27/cisa-warns-of-litespeed-cpanel-plugin-vulnerability-exploite.md)
 - [continuous offensive security the line we ve been walking](./2026-05-27/continuous-offensive-security-the-line-we-ve-been-walking.md)
-- [developer targeting glassworm malware abuses npm pypi openvs](./2026-05-27/developer-targeting-glassworm-malware-abuses-npm-pypi-openvs.md)
 - [fbi warns of in person data theft attacks from extortion gan](./2026-05-27/fbi-warns-of-in-person-data-theft-attacks-from-extortion-gan.md)
 - [ghsa critical cve 2026 44632 yamcs vulnerable to server side](./2026-05-27/ghsa-critical-cve-2026-44632-yamcs-vulnerable-to-server-side.md)
 - [gitea vulnerability exposes private container images without](./2026-05-27/gitea-vulnerability-exposes-private-container-images-without.md)
-- [gitlab suspends windows exploit researcher nightmare eclipse](./2026-05-27/gitlab-suspends-windows-exploit-researcher-nightmare-eclipse.md)
+- [github enterprise server 3 20 3 released with fox for critic](./2026-05-27/github-enterprise-server-3-20-3-released-with-fox-for-critic.md)
 - [glassworm botnet disrupted after resilient c2 infrastructure](./2026-05-27/glassworm-botnet-disrupted-after-resilient-c2-infrastructure.md)
 - [glassworm malware takedown disrupts developer supply chain a](./2026-05-27/glassworm-malware-takedown-disrupts-developer-supply-chain-a.md)
 - [hackers abuse trusted google domains to hide phishing links ](./2026-05-27/hackers-abuse-trusted-google-domains-to-hide-phishing-links-.md)
-- [new 0 click whatsapp account takeover attack targeting ios 1](./2026-05-27/new-0-click-whatsapp-account-takeover-attack-targeting-ios-1.md)
+- [new btmob malware lets attackers remotely control android de](./2026-05-27/new-btmob-malware-lets-attackers-remotely-control-android-de.md)
 - [roadtools misused in cloud attacks to steal tokens and bypas](./2026-05-27/roadtools-misused-in-cloud-attacks-to-steal-tokens-and-bypas.md)
 - [seedworm apt abuses signed fortemedia and sentinelone binari](./2026-05-27/seedworm-apt-abuses-signed-fortemedia-and-sentinelone-binari.md)
+- [windows kernel vulnerability allows attackers to modify kern](./2026-05-27/windows-kernel-vulnerability-allows-attackers-to-modify-kern.md)
 
 ## 2026-05-26
 - [7 eleven data breach exposes personal information of 185 000](./2026-05-26/7-eleven-data-breach-exposes-personal-information-of-185-000.md)
@@ -42,7 +45,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [why developer machines are now the number one target for sup](./2026-05-26/why-developer-machines-are-now-the-number-one-target-for-sup.md)
 
 ## 2026-05-25
-- [fbi warns of kali365 phishing service targeting microsoft 36](./2026-05-25/fbi-warns-of-kali365-phishing-service-targeting-microsoft-36.md)
 - [ghost cms cve 2026 26980 exploited to hijack 700 sites for c](./2026-05-25/ghost-cms-cve-2026-26980-exploited-to-hijack-700-sites-for-c.md)
 - [lazarus deploys remotepe memory only rat against financial a](./2026-05-25/lazarus-deploys-remotepe-memory-only-rat-against-financial-a.md)
 - [trapdoor supply chain attack spreads credential stealing mal](./2026-05-25/trapdoor-supply-chain-attack-spreads-credential-stealing-mal.md)
@@ -114,7 +116,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-19
 - [actions cool issues helper github action compromised all tag](./2026-05-19/actions-cool-issues-helper-github-action-compromised-all-tag.md)
 - [active supply chain attack malicious node ipc versions publi](./2026-05-19/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
-- [compromised nx console 18 95 0 targeted vs code developers w](./2026-05-19/compromised-nx-console-18-95-0-targeted-vs-code-developers-w.md)
 - [dirtydecrypt poc released for linux kernel cve 2026 31635 lp](./2026-05-19/dirtydecrypt-poc-released-for-linux-kernel-cve-2026-31635-lp.md)
 - [drupal to release urgent core security updates on may 20 sit](./2026-05-19/drupal-to-release-urgent-core-security-updates-on-may-20-sit.md)
 - [exposing fox tempest a malware signing service operation](./2026-05-19/exposing-fox-tempest-a-malware-signing-service-operation.md)
@@ -268,7 +269,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-04-29
 - [a mini shai hulud has appeared bun based stealer hits sap ca](./2026-04-29/a-mini-shai-hulud-has-appeared-bun-based-stealer-hits-sap-ca.md)
-- [ai powered honeypots turning the tables on malicious ai agen](./2026-04-29/ai-powered-honeypots-turning-the-tables-on-malicious-ai-agen.md)
 - [bridging the gap to autonomous fixes snyk and atlassian unve](./2026-04-29/bridging-the-gap-to-autonomous-fixes-snyk-and-atlassian-unve.md)
 - [don t panic the thymeleaf template injection that only hurts](./2026-04-29/don-t-panic-the-thymeleaf-template-injection-that-only-hurts.md)
 - [mini shai hulud targets sap npm packages with a bun based se](./2026-04-29/mini-shai-hulud-targets-sap-npm-packages-with-a-bun-based-se.md)

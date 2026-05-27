@@ -65,7 +65,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] FrostyNeighbor PicassoLoader drop to %AppData%\WinDataScope\Update.js
 
-`UC_169_12` · phase: **install** · confidence: **High**
+`UC_170_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceFileEvents
 
 ### [LLM] FrostyNeighbor JS dropper self-relaunch with --update flag
 
-`UC_169_13` · phase: **exploit** · confidence: **High**
+`UC_170_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceProcessEvents
 
 ### [LLM] FrostyNeighbor C2 callout to needbinding/nebao/algsat/sardk/alexavegas/lavanille
 
-`UC_169_14` · phase: **c2** · confidence: **High**
+`UC_170_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ union NetHits, EventHits
 
 ### [LLM] PicassoLoader scheduled-task creation by wscript/cscript after C2 XML fetch
 
-`UC_169_15` · phase: **install** · confidence: **Medium**
+`UC_170_15` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -167,7 +167,7 @@ DeviceProcessEvents
 
 ### [LLM] FrostyNeighbor Cobalt Strike beacon ViberPC.dll image load
 
-`UC_169_16` · phase: **install** · confidence: **High**
+`UC_170_16` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -491,7 +491,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — FrostyNeighbor: Fresh mischief and digital shenanigans
 
-`UC_169_11` · phase: **exploit** · confidence: **High**
+`UC_170_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

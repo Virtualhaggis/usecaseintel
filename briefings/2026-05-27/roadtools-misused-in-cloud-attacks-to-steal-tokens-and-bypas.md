@@ -10,12 +10,9 @@ Home Uncategorized
 ROADtools Misused in Cloud Attacks to Steal Tokens and Bypass MFA Controls 
 By Tushar Subhra Dutta 
 May 27, 2026 
-
-
-
-
 A well-known open-source security framework called ROADtools has been turned against the organizations it was originally built to protect. 
-Once a legitimate red-teaming tool, attackers are now actively weaponizing it to steal authentication tokens, register rogue devices, and bypass multi-factor authentication (MFA) controls in Microsoft Azure environment…
+Once a legitimate red-teaming tool, attackers are now actively weaponizing it to steal authentication tokens, register rogue devices, and bypass multi-factor authentication (MFA) controls in Microsoft Azure environments. 
+ROAD…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -58,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Roadtx default rogue device registration fingerprint in Entra ID (DESKTOP-XXXXXXXX)
 
-`UC_6_10` · phase: **install** · confidence: **High**
+`UC_14_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +80,7 @@ AADSignInEventsBeta
 
 ### [LLM] Python-requests / roadtools user-agent in Entra ID authentication
 
-`UC_6_11` · phase: **c2** · confidence: **High**
+`UC_14_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +102,7 @@ AADSignInEventsBeta
 
 ### [LLM] Roadrecon-style high-volume Microsoft Graph enumeration burst (/users /groups /devices)
 
-`UC_6_12` · phase: **recon** · confidence: **Medium**
+`UC_14_12` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +125,7 @@ CloudAppEvents
 
 ### [LLM] Consent or grant for sensitive Microsoft Graph scopes (Directory/Device/Application.ReadWrite.All)
 
-`UC_6_13` · phase: **actions** · confidence: **High**
+`UC_14_13` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +148,7 @@ CloudAppEvents
 
 ### [LLM] Device code flow token issuance to scripted (python-requests/roadtools) user-agent
 
-`UC_6_14` · phase: **c2** · confidence: **High**
+`UC_14_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

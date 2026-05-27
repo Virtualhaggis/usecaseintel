@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Inbound email with nested Google redirector chain (meet.google.com/linkredirect → google.com/url → adservice.google.com)
 
-`UC_7_6` · phase: **delivery** · confidence: **Medium**
+`UC_15_6` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ SuspectUrls
 
 ### [LLM] Endpoint network/DNS to KnowBe4-tracked phishing IOCs (Cloudflare Workers + .vu/.pt/.app landing domains)
 
-`UC_7_7` · phase: **exploit** · confidence: **High**
+`UC_15_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ union IocHits, ClickHits
 
 ### [LLM] Microsoft Entra device-code authentication flow — first-seen for user (potential device-code phishing relay)
 
-`UC_7_8` · phase: **exploit** · confidence: **Medium**
+`UC_15_8` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ AADSignInEventsBeta
 
 ### [LLM] Click on Google nested-redirector or KnowBe4 IOC followed by device-code sign-in within 60 minutes for the same user
 
-`UC_7_9` · phase: **actions** · confidence: **High**
+`UC_15_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

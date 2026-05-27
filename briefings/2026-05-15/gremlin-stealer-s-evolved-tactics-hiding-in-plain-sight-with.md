@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Outbound connection to Gremlin Stealer exfiltration host 194.87.92.109
 
-`UC_141_8` · phase: **actions** · confidence: **High**
+`UC_142_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceNetworkEvents
 
 ### [LLM] ZIP archive named with public-IPv4 pattern created in user-writable directory (Gremlin Stealer)
 
-`UC_141_9` · phase: **actions** · confidence: **High**
+`UC_142_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceFileEvents
 
 ### [LLM] Gremlin Stealer packed sample SHA256 execution (2172dae9a5a695e00e0e4609e7db0207d8566d225f7e815fada246ae995c0f9b)
 
-`UC_141_10` · phase: **install** · confidence: **High**
+`UC_142_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -10,12 +10,8 @@ Home Cyber Security News
 Seedworm APT Abuses Signed Fortemedia and SentinelOne Binaries for DLL Sideloading 
 By Tushar Subhra Dutta 
 May 27, 2026 
-
-
-
-
 A well-known Iran-linked hacking group has been caught running a far-reaching espionage campaign that touched at least nine organizations across nine countries and four continents in early 2026. 
-The attackers used a clever trick to hide inside targeted networks: they abused legitimate, signed software to secretly load malicious code, making …
+The attackers used a clever trick to hide inside targeted networks: they abused legitimate, signed software to secretly load malicious code, making their ac…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -26,8 +22,8 @@ The attackers used a clever trick to hide inside targeted networks: they abused 
 - **IPv4 (defanged):** `37.187.78.41`
 - **IPv4 (defanged):** `34.117.59.81`
 - **Domain (defanged):** `timetrakr.cloud`
+- **Domain (defanged):** `svc.wompworthy.com`
 - **Domain (defanged):** `sendit.sh`
-- **Domain (defanged):** `svc.wompworthy.cloud`
 - **SHA256:** `e25892603c42e34bd7ba0d8ea73be600d898cadc290e3417a82c04d6281b743b`
 - **SHA256:** `c6182fd01b14d84723e3c9d11bc0e16b34de6607ccb8334fc9bb97c1b44f0cde`
 - **SHA256:** `128b58a2a2f1df66c474094aacb7e50189025fbf45d7cd8e0834e93a8fbed667`
@@ -68,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Seedworm DLL sideload via signed Fortemedia fmapp.exe loading malicious fmapp.dll
 
-`UC_2_10` · phase: **install** · confidence: **High**
+`UC_10_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +87,7 @@ DeviceImageLoadEvents
 
 ### [LLM] Seedworm DLL sideload via signed SentinelOne memory scanner loading sentinelagentcore.dll
 
-`UC_2_11` · phase: **install** · confidence: **High**
+`UC_10_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +110,7 @@ DeviceImageLoadEvents
 
 ### [LLM] Seedworm node.exe execution orchestrated from XML script wrapper
 
-`UC_2_12` · phase: **exploit** · confidence: **Medium**
+`UC_10_12` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +133,7 @@ DeviceProcessEvents
 
 ### [LLM] Seedworm PowerShell / curl payload retrieval from 179.43.177.220:8080 staging server
 
-`UC_2_13` · phase: **delivery** · confidence: **High**
+`UC_10_13` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +155,7 @@ DeviceNetworkEvents
 
 ### [LLM] Seedworm Run-key persistence pointing at node.exe or sideload binary path
 
-`UC_2_14` · phase: **install** · confidence: **High**
+`UC_10_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -181,7 +177,7 @@ DeviceRegistryEvents
 
 ### [LLM] Seedworm exfiltration to sendit.sh / svc.wompworthy.com / timetrakr.cloud
 
-`UC_2_15` · phase: **c2** · confidence: **High**
+`UC_10_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -466,7 +462,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Seedworm APT Abuses Signed Fortemedia and SentinelOne Binaries for DLL Sideloadi
 
-`UC_2_9` · phase: **exploit** · confidence: **High**
+`UC_10_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -518,7 +514,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `179.43.177.220`, `178.128.233.36`, `172.67.156.47`, `104.21.48.205`, `37.187.78.41`, `34.117.59.81`, `timetrakr.cloud`, `sendit.sh` _(+1 more)_
+  - IP / domain IOC(s): `179.43.177.220`, `178.128.233.36`, `172.67.156.47`, `104.21.48.205`, `37.187.78.41`, `34.117.59.81`, `timetrakr.cloud`, `svc.wompworthy.com` _(+1 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `e25892603c42e34bd7ba0d8ea73be600d898cadc290e3417a82c04d6281b743b`, `c6182fd01b14d84723e3c9d11bc0e16b34de6607ccb8334fc9bb97c1b44f0cde`, `128b58a2a2f1df66c474094aacb7e50189025fbf45d7cd8e0834e93a8fbed667`, `0c9b911935a3705b0ad569446804d80026feb6db3884aeb240b6c76e9b8cf139`, `74ab3838ebed7054b2254bf7d334c80c8b2cfec4a97d1706723f8ea55f11061f`, `3ee7dab4ae4f6d4f16dfabb6f38faef370411a9fc00ff035844e54703b99600a`, `bee79c3302b1a7afc0952842d14eff83a604ef00bfdae525176c16c80b2045f7`, `d587959841a763669279ad831b8f0379f6a7b037dffc19deab5d41f37f8b5ffc` _(+1 more)_

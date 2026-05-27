@@ -11,19 +11,17 @@ By Sergiu Gatlan
 May 27, 2026
 07:51 AM
 0 
-
-
 The FBI warned on Tuesday that the Silent Ransom Group (SRG) extortion gang is now targeting U.S.-based law firms in in-person data theft attacks.
-
-
-"As of Spring 2026, SRG actors use a social engineering scheme to pose as an employee from the victim's IT department. SRG actors either directly call or send phishing emails to urge employees to call the SRG actor posing as IT support," t…
+"As of Spring 2026, SRG actors use a social engineering scheme to pose as an employee from the victim's IT department. SRG actors either directly call or send phishing emails to urge employees to call the SRG actor posing as IT support," the FBI w…
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **Domain (defanged):** `business-data-leaks.com`
 - **Domain (defanged):** `duanemorris-helpdesk.com`
 - **Domain (defanged):** `perkinscoie-helpdesk.com`
 - **Domain (defanged):** `millermartin-helpdesk.com`
-- **Domain (defanged):** `business-data-leaks.com`
+- **Domain (defanged):** `kobrekim-helpdesk.com`
+- **Domain (defanged):** `ciso-helpdesk.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -58,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SRG/Luna Moth typosquatted IT-helpdesk lookalike domain resolution
 
-`UC_3_10` · phase: **delivery** · confidence: **High**
+`UC_11_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +76,7 @@ DeviceNetworkEvents
 
 ### [LLM] SRG in-person USB exfil: mass file copy to non-system drive after remote-help tool
 
-`UC_3_11` · phase: **actions** · confidence: **Medium**
+`UC_11_11` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +104,7 @@ DeviceFileEvents
 
 ### [LLM] SRG extortion leak-site contact: traffic to business-data-leaks.com
 
-`UC_3_12` · phase: **actions** · confidence: **High**
+`UC_11_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -440,7 +438,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `duanemorris-helpdesk.com`, `perkinscoie-helpdesk.com`, `millermartin-helpdesk.com`, `business-data-leaks.com`
+  - IP / domain IOC(s): `business-data-leaks.com`, `duanemorris-helpdesk.com`, `perkinscoie-helpdesk.com`, `millermartin-helpdesk.com`, `kobrekim-helpdesk.com`, `ciso-helpdesk.com`
 
 
 ## Why this matters
