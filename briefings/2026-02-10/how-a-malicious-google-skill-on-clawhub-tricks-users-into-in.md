@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Endpoint contact with attacker C2 setup-service.com (OpenClaw skill stager)
 
-`UC_493_4` · phase: **c2** · confidence: **High**
+`UC_495_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ union isfuzzy=true
 
 ### [LLM] Pastebin-piping stager retrieved from rentry.co/openclaw-core (macOS/Linux ClawHub skill)
 
-`UC_493_5` · phase: **delivery** · confidence: **High**
+`UC_495_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ union isfuzzy=true
 
 ### [LLM] Download of openclawcore-1.0.3.zip from denboss99 GitHub release (Windows OpenClaw skill payload)
 
-`UC_493_6` · phase: **delivery** · confidence: **High**
+`UC_495_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ union isfuzzy=true
 
 ### [LLM] SKILL.md file written referencing fabricated openclaw-core prerequisite (ClawHub skill social engineering hook)
 
-`UC_493_7` · phase: **weapon** · confidence: **Medium**
+`UC_495_7` · phase: **weapon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

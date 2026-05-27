@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1251 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -8,21 +8,37 @@ _1254 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-27
+- [ai chatbot recommendations redirect users to cryptojacking m](./2026-05-27/ai-chatbot-recommendations-redirect-users-to-cryptojacking-m.md)
+- [bind 9 software vulnerabilities exposes resolvers and author](./2026-05-27/bind-9-software-vulnerabilities-exposes-resolvers-and-author.md)
+- [cisa gives feds 4 days to patch actively exploited cpanel pl](./2026-05-27/cisa-gives-feds-4-days-to-patch-actively-exploited-cpanel-pl.md)
+- [developer targeting glassworm malware abuses npm pypi openvs](./2026-05-27/developer-targeting-glassworm-malware-abuses-npm-pypi-openvs.md)
+- [ghsa critical cve 2026 44632 yamcs vulnerable to server side](./2026-05-27/ghsa-critical-cve-2026-44632-yamcs-vulnerable-to-server-side.md)
+- [gitlab suspends windows exploit researcher nightmare eclipse](./2026-05-27/gitlab-suspends-windows-exploit-researcher-nightmare-eclipse.md)
+- [hackers abuse trusted google domains to hide phishing links ](./2026-05-27/hackers-abuse-trusted-google-domains-to-hide-phishing-links-.md)
+- [new 0 click whatsapp account takeover attack targeting ios 1](./2026-05-27/new-0-click-whatsapp-account-takeover-attack-targeting-ios-1.md)
+
 ## 2026-05-26
-- [new 7 zip vulnerabilities let attackers execute arbitrary co](./2026-05-26/new-7-zip-vulnerabilities-let-attackers-execute-arbitrary-co.md)
+- [7 eleven data breach exposes personal information of 185 000](./2026-05-26/7-eleven-data-breach-exposes-personal-information-of-185-000.md)
+- [btmob a stealthy rat burrowing deep into android devices](./2026-05-26/btmob-a-stealthy-rat-burrowing-deep-into-android-devices.md)
+- [charter confirms data breach after shinyhunters extortion th](./2026-05-26/charter-confirms-data-breach-after-shinyhunters-extortion-th.md)
+- [cisa kev cve 2026 48172 litespeed cpanel plugin privilege es](./2026-05-26/cisa-kev-cve-2026-48172-litespeed-cpanel-plugin-privilege-es.md)
+- [cisa orders feds to patch actively exploited drupal vulnerab](./2026-05-26/cisa-orders-feds-to-patch-actively-exploited-drupal-vulnerab.md)
+- [from poisoned search results to gpu mining a cryptojacking c](./2026-05-26/from-poisoned-search-results-to-gpu-mining-a-cryptojacking-c.md)
+- [ghsa critical cve 2026 33137 xwiki platform has an unauthent](./2026-05-26/ghsa-critical-cve-2026-33137-xwiki-platform-has-an-unauthent.md)
+- [iranian hackers deploy minifast and minijunk v2 via phishing](./2026-05-26/iranian-hackers-deploy-minifast-and-minijunk-v2-via-phishing.md)
+- [knowledgedeliver flaw exploited as a zero day to install web](./2026-05-26/knowledgedeliver-flaw-exploited-as-a-zero-day-to-install-web.md)
+- [knowledgedeliver lms flaw exploited to deploy godzilla and c](./2026-05-26/knowledgedeliver-lms-flaw-exploited-to-deploy-godzilla-and-c.md)
+- [mfa prompt bombing why your second factor isn t saving you](./2026-05-26/mfa-prompt-bombing-why-your-second-factor-isn-t-saving-you.md)
+- [microsoft defender can now automatically isolate hacked endp](./2026-05-26/microsoft-defender-can-now-automatically-isolate-hacked-endp.md)
+- [muddywater uses dll side loading in espionage campaign targe](./2026-05-26/muddywater-uses-dll-side-loading-in-espionage-campaign-targe.md)
+- [multiple angular language service extension vulnerabilities ](./2026-05-26/multiple-angular-language-service-extension-vulnerabilities-.md)
+- [why developer machines are now the number one target for sup](./2026-05-26/why-developer-machines-are-now-the-number-one-target-for-sup.md)
 
 ## 2026-05-25
-- [cloud atlas apt group modifies termsrv dll to enable multipl](./2026-05-25/cloud-atlas-apt-group-modifies-termsrv-dll-to-enable-multipl.md)
-- [cybercriminals use telegram channels to sell verified bank a](./2026-05-25/cybercriminals-use-telegram-channels-to-sell-verified-bank-a.md)
 - [fbi warns of kali365 phishing service targeting microsoft 36](./2026-05-25/fbi-warns-of-kali365-phishing-service-targeting-microsoft-36.md)
 - [ghost cms cve 2026 26980 exploited to hijack 700 sites for c](./2026-05-25/ghost-cms-cve-2026-26980-exploited-to-hijack-700-sites-for-c.md)
-- [hackers abuse shared cdn infrastructure to bypass domain rep](./2026-05-25/hackers-abuse-shared-cdn-infrastructure-to-bypass-domain-rep.md)
-- [hackers hide linux payload under ssh like filename during pa](./2026-05-25/hackers-hide-linux-payload-under-ssh-like-filename-during-pa.md)
-- [invisibleferret malware now ships as pyd and so files to eva](./2026-05-25/invisibleferret-malware-now-ships-as-pyd-and-so-files-to-eva.md)
-- [iranian apt uses seo poisoning to deliver fake sql developer](./2026-05-25/iranian-apt-uses-seo-poisoning-to-deliver-fake-sql-developer.md)
-- [knowledgedeliver lms zero day exploited to deploy bluebeam w](./2026-05-25/knowledgedeliver-lms-zero-day-exploited-to-deploy-bluebeam-w.md)
 - [lazarus deploys remotepe memory only rat against financial a](./2026-05-25/lazarus-deploys-remotepe-memory-only-rat-against-financial-a.md)
-- [russian hacker used jailbroken gemini to steal admin credent](./2026-05-25/russian-hacker-used-jailbroken-gemini-to-steal-admin-credent.md)
 - [trapdoor supply chain attack spreads credential stealing mal](./2026-05-25/trapdoor-supply-chain-attack-spreads-credential-stealing-mal.md)
 - [weekly recap linux flaws defender 0 days router botnets and ](./2026-05-25/weekly-recap-linux-flaws-defender-0-days-router-botnets-and-.md)
 
@@ -42,7 +58,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-22
 - [cisa kev cve 2026 9082 drupal core sql injection vulnerabili](./2026-05-22/cisa-kev-cve-2026-9082-drupal-core-sql-injection-vulnerabili.md)
 - [cloud atlas activity in the second half of 2025 and early 20](./2026-05-22/cloud-atlas-activity-in-the-second-half-of-2025-and-early-20.md)
-- [drupal critical sql injection flaw now targeted in attacks](./2026-05-22/drupal-critical-sql-injection-flaw-now-targeted-in-attacks.md)
 - [first vpn dismantled in global takedown over use by 25 ranso](./2026-05-22/first-vpn-dismantled-in-global-takedown-over-use-by-25-ranso.md)
 - [foul play fake fifa websites target soccer fans looking for ](./2026-05-22/foul-play-fake-fifa-websites-target-soccer-fans-looking-for-.md)
 - [from edge appliance to enterprise compromise multi stage lin](./2026-05-22/from-edge-appliance-to-enterprise-compromise-multi-stage-lin.md)
@@ -54,13 +69,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [megalodon github attack targets 5 561 repos with malicious c](./2026-05-22/megalodon-github-attack-targets-5-561-repos-with-malicious-c.md)
 - [megalodon mass github actions secret exfiltration across 5 5](./2026-05-22/megalodon-mass-github-actions-secret-exfiltration-across-5-5.md)
 - [microsoft security success stories how st luke s and manpowe](./2026-05-22/microsoft-security-success-stories-how-st-luke-s-and-manpowe.md)
-- [netherlands seizes 800 servers of hosting firm enabling cybe](./2026-05-22/netherlands-seizes-800-servers-of-hosting-firm-enabling-cybe.md)
 - [nx console vs code extension compromised](./2026-05-22/nx-console-vs-code-extension-compromised.md)
 - [paved with intent roadtools and nation state tactics in the ](./2026-05-22/paved-with-intent-roadtools-and-nation-state-tactics-in-the-.md)
 - [tracking iranian apt screening serpens 2026 espionage campai](./2026-05-22/tracking-iranian-apt-screening-serpens-2026-espionage-campai.md)
-- [trend micro warns of apex one zero day exploited in the wild](./2026-05-22/trend-micro-warns-of-apex-one-zero-day-exploited-in-the-wild.md)
-- [ubiquiti patches three max severity unifi os vulnerabilities](./2026-05-22/ubiquiti-patches-three-max-severity-unifi-os-vulnerabilities.md)
-- [us and canada arrest and charge suspected kimwolf botnet adm](./2026-05-22/us-and-canada-arrest-and-charge-suspected-kimwolf-botnet-adm.md)
 
 ## 2026-05-21
 - [5 supply chain attacks in 48 hours why securing one layer is](./2026-05-21/5-supply-chain-attacks-in-48-hours-why-securing-one-layer-is.md)
@@ -72,7 +83,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46703 boxlite path traversal vulnerab](./2026-05-21/ghsa-critical-cve-2026-46703-boxlite-path-traversal-vulnerab.md)
 - [ghsa critical ghsa q2f7 m237 v562 hulumi policies github oid](./2026-05-21/ghsa-critical-ghsa-q2f7-m237-v562-hulumi-policies-github-oid.md)
 - [github internal repositories breached via malicious nx conso](./2026-05-21/github-internal-repositories-breached-via-malicious-nx-conso.md)
-- [inside a crypto drainer how to spot it before it empties you](./2026-05-21/inside-a-crypto-drainer-how-to-spot-it-before-it-empties-you.md)
 - [securing the ai revolution how snyk and our partners are sca](./2026-05-21/securing-the-ai-revolution-how-snyk-and-our-partners-are-sca.md)
 - [showboat linux malware hits middle east telecom with socks5 ](./2026-05-21/showboat-linux-malware-hits-middle-east-telecom-with-socks5-.md)
 - [the art of being ungovernable](./2026-05-21/the-art-of-being-ungovernable.md)
@@ -127,17 +137,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 45697 formie pre authenticated server](./2026-05-18/ghsa-critical-cve-2026-45697-formie-pre-authenticated-server.md)
 - [ghsa critical ghsa wx9m wx4f 4cmg malicious dropper in mistr](./2026-05-18/ghsa-critical-ghsa-wx9m-wx4f-4cmg-malicious-dropper-in-mistr.md)
 - [how storm 2949 turned a compromised identity into a cloud wi](./2026-05-18/how-storm-2949-turned-a-compromised-identity-into-a-cloud-wi.md)
-- [how to reduce phishing exposure before it turns into busines](./2026-05-18/how-to-reduce-phishing-exposure-before-it-turns-into-busines.md)
 - [interpol operation ramz disrupts mena cybercrime networks wi](./2026-05-18/interpol-operation-ramz-disrupts-mena-cybercrime-networks-wi.md)
 - [it threat evolution in q1 2026 mobile statistics](./2026-05-18/it-threat-evolution-in-q1-2026-mobile-statistics.md)
-- [ivanti fortinet sap vmware n8n patch rce sql injection privi](./2026-05-18/ivanti-fortinet-sap-vmware-n8n-patch-rce-sql-injection-privi.md)
 - [mini shai hulud hits antv 300 malicious npm packages publish](./2026-05-18/mini-shai-hulud-hits-antv-300-malicious-npm-packages-publish.md)
-- [miniplasma windows 0 day enables system privilege escalation](./2026-05-18/miniplasma-windows-0-day-enables-system-privilege-escalation.md)
-- [pre stuxnet fast16 malware tampered with nuclear weapons sim](./2026-05-18/pre-stuxnet-fast16-malware-tampered-with-nuclear-weapons-sim.md)
-- [weekly recap exchange 0 day npm worm fake ai repo cisco expl](./2026-05-18/weekly-recap-exchange-0-day-npm-worm-fake-ai-repo-cisco-expl.md)
-
-## 2026-05-17
-- [nginx cve 2026 42945 exploited in the wild causing worker cr](./2026-05-17/nginx-cve-2026-42945-exploited-in-the-wild-causing-worker-cr.md)
 
 ## 2026-05-15
 - [cisa kev cve 2026 42897 microsoft exchange server cross site](./2026-05-15/cisa-kev-cve-2026-42897-microsoft-exchange-server-cross-site.md)
@@ -219,9 +221,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 6973 ivanti endpoint manager mobile epmm i](./2026-05-07/cisa-kev-cve-2026-6973-ivanti-endpoint-manager-mobile-epmm-i.md)
 - [fake call logs real payments how callphantom tricks android ](./2026-05-07/fake-call-logs-real-payments-how-callphantom-tricks-android-.md)
 - [ghsa critical cve 2025 63706 next npm version is vulnerable ](./2026-05-07/ghsa-critical-cve-2025-63706-next-npm-version-is-vulnerable-.md)
-- [ghsa critical cve 2026 41050 fleet helm impersonation bypass](./2026-05-07/ghsa-critical-cve-2026-41050-fleet-helm-impersonation-bypass.md)
-- [ghsa critical cve 2026 42596 gotenberg vulnerable to unauthe](./2026-05-07/ghsa-critical-cve-2026-42596-gotenberg-vulnerable-to-unauthe.md)
-- [ghsa critical cve 2026 42880 argocd serversidediff is vulner](./2026-05-07/ghsa-critical-cve-2026-42880-argocd-serversidediff-is-vulner.md)
 - [ghsa critical cve 2026 43997 vm2 access to host object enabl](./2026-05-07/ghsa-critical-cve-2026-43997-vm2-access-to-host-object-enabl.md)
 - [ghsa critical cve 2026 43999 vm2 has a nodevm builtin allowl](./2026-05-07/ghsa-critical-cve-2026-43999-vm2-has-a-nodevm-builtin-allowl.md)
 - [ghsa critical cve 2026 44005 vm2 mutable proxies for host in](./2026-05-07/ghsa-critical-cve-2026-44005-vm2-mutable-proxies-for-host-in.md)
@@ -277,7 +276,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-28
 - [cisa kev cve 2024 1708 connectwise screenconnect path traver](./2026-04-28/cisa-kev-cve-2024-1708-connectwise-screenconnect-path-traver.md)
 - [cisa kev cve 2026 32202 microsoft windows protection mechani](./2026-04-28/cisa-kev-cve-2026-32202-microsoft-windows-protection-mechani.md)
-- [five defender priorities from the talos year in review](./2026-04-28/five-defender-priorities-from-the-talos-year-in-review.md)
 
 ## 2026-04-27
 - [malicious release of elementary data pypi package steals clo](./2026-04-27/malicious-release-of-elementary-data-pypi-package-steals-clo.md)
@@ -1837,7 +1835,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [snyk apprisk pro a holistic approach to application risk man](./2024-05-01/snyk-apprisk-pro-a-holistic-approach-to-application-risk-man.md)
 
 ## 2024-04-30
-- [cisa kev cve 2024 29988 microsoft smartscreen prompt securit](./2024-04-30/cisa-kev-cve-2024-29988-microsoft-smartscreen-prompt-securit.md)
 - [how mulesoft fosters a developer first shift left culture wi](./2024-04-30/how-mulesoft-fosters-a-developer-first-shift-left-culture-wi.md)
 - [snyk cli introducing semantic versioning and release channel](./2024-04-30/snyk-cli-introducing-semantic-versioning-and-release-channel.md)
 
