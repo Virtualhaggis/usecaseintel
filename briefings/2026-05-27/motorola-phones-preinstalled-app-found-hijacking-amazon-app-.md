@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Motorola Smart Feed adware C2/redirect egress to devicenative.com & kira-abboud.com
 
-`UC_12_7` · phase: **c2** · confidence: **High**
+`UC_17_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

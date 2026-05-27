@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Packagist supply chain: Composer/npm postinstall fetching parikhpreyash4 GitHub payload
 
-`UC_57_5` · phase: **install** · confidence: **High**
+`UC_61_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceProcessEvents
 
 ### [LLM] Linux dotfile drop at /tmp/.sshd masquerading as OpenSSH daemon
 
-`UC_57_6` · phase: **install** · confidence: **High**
+`UC_61_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceFileEvents
 
 ### [LLM] gvfsd-network binary executing from non-standard path (GNOME daemon masquerade)
 
-`UC_57_7` · phase: **c2** · confidence: **High**
+`UC_61_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceProcessEvents
 
 ### [LLM] Build tooling spawning curl/wget with TLS verification disabled
 
-`UC_57_8` · phase: **install** · confidence: **Medium**
+`UC_61_8` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### [LLM] Compromised Packagist Composer package vendor/ presence on hosts
 
-`UC_57_9` · phase: **delivery** · confidence: **High**
+`UC_61_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -258,7 +258,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — npm Adds 2FA-Gated Publishing and Package Install Controls Against Supply Chain
 
-`UC_57_4` · phase: **install** · confidence: **High**
+`UC_61_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

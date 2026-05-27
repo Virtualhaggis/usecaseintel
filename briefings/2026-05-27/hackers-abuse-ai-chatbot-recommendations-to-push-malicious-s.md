@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Fake utility download from gleeze[.]com / giize[.]com dynamic-DNS lure sites
 
-`UC_9_9` · phase: **delivery** · confidence: **High**
+`UC_13_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceFileEvents
 
 ### [LLM] DLL side-load of autorun.dll / vcredist_x64.dll by spoofed PC utility binaries
 
-`UC_9_10` · phase: **install** · confidence: **Medium**
+`UC_13_10` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceImageLoadEvents
 
 ### [LLM] ScreenConnect C2 beacon to attacker server 193.42.11[.]108
 
-`UC_9_11` · phase: **c2** · confidence: **High**
+`UC_13_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceNetworkEvents
 
 ### [LLM] SimpleRunPE persistence + Defender exclusion configuration
 
-`UC_9_12` · phase: **install** · confidence: **Medium**
+`UC_13_12` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ union exclusions, defcfg
 
 ### [LLM] Cryptominer execution (gminer / lolMiner / SRBMiner-MULTI) with mining args
 
-`UC_9_13` · phase: **actions** · confidence: **Medium**
+`UC_13_13` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -332,7 +332,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Abuse AI Chatbot Recommendations to Push Malicious Software Download Lin
 
-`UC_9_8` · phase: **exploit** · confidence: **High**
+`UC_13_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

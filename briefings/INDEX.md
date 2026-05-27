@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1259 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -22,9 +22,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghost stadium phishing campaign targets fifa world cup fans ](./2026-05-27/ghost-stadium-phishing-campaign-targets-fifa-world-cup-fans-.md)
 - [ghsa critical cve 2026 44632 yamcs vulnerable to server side](./2026-05-27/ghsa-critical-cve-2026-44632-yamcs-vulnerable-to-server-side.md)
 - [ghsa critical cve 2026 45618 liquidjs is vulnerable to remot](./2026-05-27/ghsa-critical-cve-2026-45618-liquidjs-is-vulnerable-to-remot.md)
+- [ghsa critical cve 2026 46562 yamcs vulnerable to remote code](./2026-05-27/ghsa-critical-cve-2026-46562-yamcs-vulnerable-to-remote-code.md)
+- [ghsa critical cve 2026 46621 yamcs vulnerable to authenticat](./2026-05-27/ghsa-critical-cve-2026-46621-yamcs-vulnerable-to-authenticat.md)
 - [gitea vulnerability exposes private container images without](./2026-05-27/gitea-vulnerability-exposes-private-container-images-without.md)
 - [glassworm botnet disrupted after resilient c2 infrastructure](./2026-05-27/glassworm-botnet-disrupted-after-resilient-c2-infrastructure.md)
 - [glassworm malware takedown disrupts developer supply chain a](./2026-05-27/glassworm-malware-takedown-disrupts-developer-supply-chain-a.md)
+- [gpu mining malware spreads via seo poisoning ai chatbots](./2026-05-27/gpu-mining-malware-spreads-via-seo-poisoning-ai-chatbots.md)
 - [grandoreiro malware and btmob rat campaigns target windows a](./2026-05-27/grandoreiro-malware-and-btmob-rat-campaigns-target-windows-a.md)
 - [hackers abuse ai chatbot recommendations to push malicious s](./2026-05-27/hackers-abuse-ai-chatbot-recommendations-to-push-malicious-s.md)
 - [hackers push 22 versions of npm rat with wallet theft and pe](./2026-05-27/hackers-push-22-versions-of-npm-rat-with-wallet-theft-and-pe.md)
@@ -35,6 +38,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [malicious npm package stole files from claude ai user direct](./2026-05-27/malicious-npm-package-stole-files-from-claude-ai-user-direct.md)
 - [motorola phones preinstalled app found hijacking amazon app ](./2026-05-27/motorola-phones-preinstalled-app-found-hijacking-amazon-app-.md)
 - [new btmob malware lets attackers remotely control android de](./2026-05-27/new-btmob-malware-lets-attackers-remotely-control-android-de.md)
+- [out of the crypt the evolving cyber extortion economy](./2026-05-27/out-of-the-crypt-the-evolving-cyber-extortion-economy.md)
+- [top gitguardian alternatives for secrets scanning in 2026](./2026-05-27/top-gitguardian-alternatives-for-secrets-scanning-in-2026.md)
 - [tycoon 2fa aitm kit bypasses mfa on entra id and google work](./2026-05-27/tycoon-2fa-aitm-kit-bypasses-mfa-on-entra-id-and-google-work.md)
 
 ## 2026-05-26
@@ -185,6 +190,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-12
 - [ghsa critical cve 2026 31220 pysyft server side arbitrary py](./2026-05-12/ghsa-critical-cve-2026-31220-pysyft-server-side-arbitrary-py.md)
+- [ghsa critical cve 2026 31233 guardrails ai contains a code i](./2026-05-12/ghsa-critical-cve-2026-31233-guardrails-ai-contains-a-code-i.md)
+- [ghsa critical cve 2026 31234 horovod contains an insecure de](./2026-05-12/ghsa-critical-cve-2026-31234-horovod-contains-an-insecure-de.md)
+- [ghsa critical cve 2026 31235 imgaug contains an insecure des](./2026-05-12/ghsa-critical-cve-2026-31235-imgaug-contains-an-insecure-des.md)
+- [ghsa critical cve 2026 31236 llm cli tool contains a code in](./2026-05-12/ghsa-critical-cve-2026-31236-llm-cli-tool-contains-a-code-in.md)
+- [ghsa critical cve 2026 31238 ludwig framework is vulnerable ](./2026-05-12/ghsa-critical-cve-2026-31238-ludwig-framework-is-vulnerable-.md)
+- [ghsa critical cve 2026 31239 mamba language model framework ](./2026-05-12/ghsa-critical-cve-2026-31239-mamba-language-model-framework-.md)
 - [ghsa critical cve 2026 42074 openclaude sandbox bypass via m](./2026-05-12/ghsa-critical-cve-2026-42074-openclaude-sandbox-bypass-via-m.md)
 - [ghsa critical cve 2026 43512 apache tomcat digest authentica](./2026-05-12/ghsa-critical-cve-2026-43512-apache-tomcat-digest-authentica.md)
 - [ghsa critical cve 2026 44593 esm sh legacy route path traver](./2026-05-12/ghsa-critical-cve-2026-44593-esm-sh-legacy-route-path-traver.md)
@@ -229,15 +240,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-07
 - [cisa kev cve 2026 6973 ivanti endpoint manager mobile epmm i](./2026-05-07/cisa-kev-cve-2026-6973-ivanti-endpoint-manager-mobile-epmm-i.md)
 - [fake call logs real payments how callphantom tricks android ](./2026-05-07/fake-call-logs-real-payments-how-callphantom-tricks-android-.md)
-- [ghsa critical cve 2025 63706 next npm version is vulnerable ](./2026-05-07/ghsa-critical-cve-2025-63706-next-npm-version-is-vulnerable-.md)
-- [ghsa critical cve 2026 43997 vm2 access to host object enabl](./2026-05-07/ghsa-critical-cve-2026-43997-vm2-access-to-host-object-enabl.md)
-- [ghsa critical cve 2026 43999 vm2 has a nodevm builtin allowl](./2026-05-07/ghsa-critical-cve-2026-43999-vm2-has-a-nodevm-builtin-allowl.md)
-- [ghsa critical cve 2026 44005 vm2 mutable proxies for host in](./2026-05-07/ghsa-critical-cve-2026-44005-vm2-mutable-proxies-for-host-in.md)
-- [ghsa critical cve 2026 44007 vm2 nodevm nesting true bypasse](./2026-05-07/ghsa-critical-cve-2026-44007-vm2-nodevm-nesting-true-bypasse.md)
 - [ghsa critical cve 2026 44497 zebra has consensus divergence ](./2026-05-07/ghsa-critical-cve-2026-44497-zebra-has-consensus-divergence-.md)
 - [ghsa critical cve 2026 44498 zebra s block validator underco](./2026-05-07/ghsa-critical-cve-2026-44498-zebra-s-block-validator-underco.md)
 - [ghsa critical cve 2026 44523 note mark has a jwt secret weak](./2026-05-07/ghsa-critical-cve-2026-44523-note-mark-has-a-jwt-secret-weak.md)
-- [ghsa critical ghsa 54pg 9963 v8vg compromised version of int](./2026-05-07/ghsa-critical-ghsa-54pg-9963-v8vg-compromised-version-of-int.md)
 - [ghsa critical ghsa cwfq rfcr 8hmp zebra s transparent sighas](./2026-05-07/ghsa-critical-ghsa-cwfq-rfcr-8hmp-zebra-s-transparent-sighas.md)
 - [pcpjack cloud worm evicts teampcp and steals credentials at ](./2026-05-07/pcpjack-cloud-worm-evicts-teampcp-and-steals-credentials-at-.md)
 - [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
@@ -322,7 +327,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 20122 cisco catalyst sd wan manager incorr](./2026-04-20/cisa-kev-cve-2026-20122-cisco-catalyst-sd-wan-manager-incorr.md)
 - [cisa kev cve 2026 20128 cisco catalyst sd wan manager storin](./2026-04-20/cisa-kev-cve-2026-20128-cisco-catalyst-sd-wan-manager-storin.md)
 - [cisa kev cve 2026 20133 cisco catalyst sd wan manager exposu](./2026-04-20/cisa-kev-cve-2026-20133-cisco-catalyst-sd-wan-manager-exposu.md)
-- [fracturing software security with frontier ai models](./2026-04-20/fracturing-software-security-with-frontier-ai-models.md)
 - [what the ransom note won t say](./2026-04-20/what-the-ransom-note-won-t-say.md)
 
 ## 2026-04-17

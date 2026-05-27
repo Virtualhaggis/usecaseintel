@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Snyk Finds Prompt Injection in 36%, 1467 Malicious Payloads in a ToxicSkills Stu
 
-`UC_512_2` · phase: **exploit** · confidence: **High**
+`UC_513_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

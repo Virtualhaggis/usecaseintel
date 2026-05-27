@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] forge-jsxy npm RAT C2 to 204.10.194.247 (WebSocket 9877 / HTTP 8765)
 
-`UC_7_9` · phase: **c2** · confidence: **High**
+`UC_11_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceNetworkEvents
 
 ### [LLM] forge-jsxy durable agent directory created outside node_modules
 
-`UC_7_10` · phase: **install** · confidence: **High**
+`UC_11_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceFileEvents
 
 ### [LLM] forge-jsxy Windows persistence: ForgeJSWorker Run key / Scheduled Task
 
-`UC_7_11` · phase: **install** · confidence: **High**
+`UC_11_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ union
 
 ### [LLM] forge-jsxy Linux persistence: systemd user unit forge-js-worker.service
 
-`UC_7_12` · phase: **install** · confidence: **High**
+`UC_11_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceFileEvents
 
 ### [LLM] forge-jsxy macOS persistence: LaunchAgent com.forgejs.worker.plist
 
-`UC_7_13` · phase: **install** · confidence: **High**
+`UC_11_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +159,7 @@ DeviceFileEvents
 
 ### [LLM] forge-jsxy crypto-wallet secret vault write (.vault/secret-audit/result.json)
 
-`UC_7_14` · phase: **actions** · confidence: **High**
+`UC_11_14` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -351,7 +351,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Push 22 Versions of npm RAT With Wallet Theft and Persistent Backdoor
 
-`UC_7_8` · phase: **exploit** · confidence: **High**
+`UC_11_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
