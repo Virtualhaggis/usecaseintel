@@ -11,9 +11,7 @@ Sponsored by Specops Software
 May 27, 2026
 10:00 AM
 0 
-
-
-Protecting Active Directory (AD) accounts starts with strong password policies, backed by consistent enforcement across the organization. However, make the rules too weak and you increase your attack surface; make them too strict and users will find workarounds, such as writing passwords down, reusing them across systems, or adding a predictable “!” to th…
+Protecting Active Directory (AD) accounts starts with strong password policies, backed by consistent enforcement across the organization. However, make the rules too weak and you increase your attack surface; make them too strict and users will find workarounds, such as writing passwords down, reusing them across systems, or adding a predictable “!” to the en…
 
 ## Indicators of Compromise (high-fidelity only)
 

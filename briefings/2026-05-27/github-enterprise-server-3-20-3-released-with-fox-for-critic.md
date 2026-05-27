@@ -10,12 +10,8 @@ Home Cyber Security News
 GitHub Enterprise Server 3.20.3 Released With Fox for Critical Vulnerabilities 
 By Abinaya 
 May 27, 2026 
-
-
-
-
 GitHub has shipped GitHub Enterprise Server (GHES) 3.20.3 as a security‑driven patch release that fixes multiple critical and high‑severity vulnerabilities and rotates the signing key used to validate GHES release packages.
-Organizations running any earlier 3.20.x build is strongly encouraged to move to this version to close serious gaps affecting network‑ex…
+Organizations running any earlier 3.20.x build is strongly encouraged to move to this version to close serious gaps affecting network‑exposed an…
 
 ## Indicators of Compromise (high-fidelity only)
 

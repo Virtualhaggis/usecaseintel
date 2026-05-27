@@ -64,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Seedworm DLL sideload via signed Fortemedia fmapp.exe loading malicious fmapp.dll
 
-`UC_10_10` · phase: **install** · confidence: **High**
+`UC_15_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceImageLoadEvents
 
 ### [LLM] Seedworm DLL sideload via signed SentinelOne memory scanner loading sentinelagentcore.dll
 
-`UC_10_11` · phase: **install** · confidence: **High**
+`UC_15_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceImageLoadEvents
 
 ### [LLM] Seedworm node.exe execution orchestrated from XML script wrapper
 
-`UC_10_12` · phase: **exploit** · confidence: **Medium**
+`UC_15_12` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +133,7 @@ DeviceProcessEvents
 
 ### [LLM] Seedworm PowerShell / curl payload retrieval from 179.43.177.220:8080 staging server
 
-`UC_10_13` · phase: **delivery** · confidence: **High**
+`UC_15_13` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,7 +155,7 @@ DeviceNetworkEvents
 
 ### [LLM] Seedworm Run-key persistence pointing at node.exe or sideload binary path
 
-`UC_10_14` · phase: **install** · confidence: **High**
+`UC_15_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -177,7 +177,7 @@ DeviceRegistryEvents
 
 ### [LLM] Seedworm exfiltration to sendit.sh / svc.wompworthy.com / timetrakr.cloud
 
-`UC_10_15` · phase: **c2** · confidence: **High**
+`UC_15_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -462,7 +462,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Seedworm APT Abuses Signed Fortemedia and SentinelOne Binaries for DLL Sideloadi
 
-`UC_10_9` · phase: **exploit** · confidence: **High**
+`UC_15_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

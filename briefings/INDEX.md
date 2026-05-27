@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -14,6 +14,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [attackers can exploit badhost to access sensitive ai agent s](./2026-05-27/attackers-can-exploit-badhost-to-access-sensitive-ai-agent-s.md)
 - [can you enforce strong active directory password rules witho](./2026-05-27/can-you-enforce-strong-active-directory-password-rules-witho.md)
 - [cisa gives feds 4 days to patch actively exploited cpanel pl](./2026-05-27/cisa-gives-feds-4-days-to-patch-actively-exploited-cpanel-pl.md)
+- [cisa kev cve 2026 45321 tanstack unspecified vulnerability](./2026-05-27/cisa-kev-cve-2026-45321-tanstack-unspecified-vulnerability.md)
+- [cisa kev cve 2026 48027 nx console embedded malicious code v](./2026-05-27/cisa-kev-cve-2026-48027-nx-console-embedded-malicious-code-v.md)
+- [cisa kev cve 2026 8398 daemon tools lite embedded malicious ](./2026-05-27/cisa-kev-cve-2026-8398-daemon-tools-lite-embedded-malicious-.md)
 - [cisa warns of litespeed cpanel plugin vulnerability exploite](./2026-05-27/cisa-warns-of-litespeed-cpanel-plugin-vulnerability-exploite.md)
 - [continuous offensive security the line we ve been walking](./2026-05-27/continuous-offensive-security-the-line-we-ve-been-walking.md)
 - [fbi warns of in person data theft attacks from extortion gan](./2026-05-27/fbi-warns-of-in-person-data-theft-attacks-from-extortion-gan.md)
@@ -22,9 +25,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [github enterprise server 3 20 3 released with fox for critic](./2026-05-27/github-enterprise-server-3-20-3-released-with-fox-for-critic.md)
 - [glassworm botnet disrupted after resilient c2 infrastructure](./2026-05-27/glassworm-botnet-disrupted-after-resilient-c2-infrastructure.md)
 - [glassworm malware takedown disrupts developer supply chain a](./2026-05-27/glassworm-malware-takedown-disrupts-developer-supply-chain-a.md)
-- [hackers abuse trusted google domains to hide phishing links ](./2026-05-27/hackers-abuse-trusted-google-domains-to-hide-phishing-links-.md)
+- [grandoreiro malware and btmob rat campaigns target windows a](./2026-05-27/grandoreiro-malware-and-btmob-rat-campaigns-target-windows-a.md)
+- [hackers abuse ai chatbot recommendations to push malicious s](./2026-05-27/hackers-abuse-ai-chatbot-recommendations-to-push-malicious-s.md)
+- [how top cisos increase risk visibility for zero critical inc](./2026-05-27/how-top-cisos-increase-risk-visibility-for-zero-critical-inc.md)
+- [malicious npm package stole files from claude ai user direct](./2026-05-27/malicious-npm-package-stole-files-from-claude-ai-user-direct.md)
+- [motorola phones preinstalled app found hijacking amazon app ](./2026-05-27/motorola-phones-preinstalled-app-found-hijacking-amazon-app-.md)
 - [new btmob malware lets attackers remotely control android de](./2026-05-27/new-btmob-malware-lets-attackers-remotely-control-android-de.md)
-- [roadtools misused in cloud attacks to steal tokens and bypas](./2026-05-27/roadtools-misused-in-cloud-attacks-to-steal-tokens-and-bypas.md)
 - [seedworm apt abuses signed fortemedia and sentinelone binari](./2026-05-27/seedworm-apt-abuses-signed-fortemedia-and-sentinelone-binari.md)
 - [windows kernel vulnerability allows attackers to modify kern](./2026-05-27/windows-kernel-vulnerability-allows-attackers-to-modify-kern.md)
 
@@ -117,7 +123,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [actions cool issues helper github action compromised all tag](./2026-05-19/actions-cool-issues-helper-github-action-compromised-all-tag.md)
 - [active supply chain attack malicious node ipc versions publi](./2026-05-19/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
 - [dirtydecrypt poc released for linux kernel cve 2026 31635 lp](./2026-05-19/dirtydecrypt-poc-released-for-linux-kernel-cve-2026-31635-lp.md)
-- [drupal to release urgent core security updates on may 20 sit](./2026-05-19/drupal-to-release-urgent-core-security-updates-on-may-20-sit.md)
 - [exposing fox tempest a malware signing service operation](./2026-05-19/exposing-fox-tempest-a-malware-signing-service-operation.md)
 - [from pdb strings to maas tracking a commodity badiis ecosyst](./2026-05-19/from-pdb-strings-to-maas-tracking-a-commodity-badiis-ecosyst.md)
 - [ghsa critical cve 2026 45568 rok python proxyshare can be us](./2026-05-19/ghsa-critical-cve-2026-45568-rok-python-proxyshare-can-be-us.md)
@@ -128,9 +133,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46354 coder pkcs 7 signature bypass i](./2026-05-19/ghsa-critical-cve-2026-46354-coder-pkcs-7-signature-bypass-i.md)
 - [ghsa critical cve 2026 46395 haxcms private key disclosure v](./2026-05-19/ghsa-critical-cve-2026-46395-haxcms-private-key-disclosure-v.md)
 - [ghsa critical ghsa 27f5 xjrr q9ff malware in opensearch proj](./2026-05-19/ghsa-critical-ghsa-27f5-xjrr-q9ff-malware-in-opensearch-proj.md)
-- [introducing secure registry install time defense for the npm](./2026-05-19/introducing-secure-registry-install-time-defense-for-the-npm.md)
 - [microsoft s durabletask package on pypi compromised mini sha](./2026-05-19/microsoft-s-durabletask-package-on-pypi-compromised-mini-sha.md)
-- [seppmail secure e mail gateway vulnerabilities enable rce an](./2026-05-19/seppmail-secure-e-mail-gateway-vulnerabilities-enable-rce-an.md)
+- [mini shai hulud strikes again npm worm compromises hundreds ](./2026-05-19/mini-shai-hulud-strikes-again-npm-worm-compromises-hundreds-.md)
 - [the antv supply chain campaign expands microsoft s durableta](./2026-05-19/the-antv-supply-chain-campaign-expands-microsoft-s-durableta.md)
 - [the new phishing click how oauth consent bypasses mfa](./2026-05-19/the-new-phishing-click-how-oauth-consent-bypasses-mfa.md)
 - [trapdoor android ad fraud scheme hit 659 million daily bid r](./2026-05-19/trapdoor-android-ad-fraud-scheme-hit-659-million-daily-bid-r.md)
@@ -1815,11 +1819,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2024-05-14
 - [cisa kev cve 2024 30040 microsoft windows mshtml platform se](./2024-05-14/cisa-kev-cve-2024-30040-microsoft-windows-mshtml-platform-se.md)
-- [cisa kev cve 2024 30051 microsoft dwm core library privilege](./2024-05-14/cisa-kev-cve-2024-30051-microsoft-dwm-core-library-privilege.md)
 
 ## 2024-05-13
 - [appsec spring cleaning checklist](./2024-05-13/appsec-spring-cleaning-checklist.md)
-- [cisa kev cve 2024 4671 google chromium visuals use after fre](./2024-05-13/cisa-kev-cve-2024-4671-google-chromium-visuals-use-after-fre.md)
 
 ## 2024-05-09
 - [meet the new host for the secure developer podcast](./2024-05-09/meet-the-new-host-for-the-secure-developer-podcast.md)
@@ -1832,7 +1834,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [more accurate than gpt 4 how snyk s codereduce improved the ](./2024-05-07/more-accurate-than-gpt-4-how-snyk-s-codereduce-improved-the-.md)
 
 ## 2024-05-01
-- [cisa kev cve 2023 7028 gitlab community and enterprise editi](./2024-05-01/cisa-kev-cve-2023-7028-gitlab-community-and-enterprise-editi.md)
 - [snyk apprisk pro a holistic approach to application risk man](./2024-05-01/snyk-apprisk-pro-a-holistic-approach-to-application-risk-man.md)
 
 ## 2024-04-30

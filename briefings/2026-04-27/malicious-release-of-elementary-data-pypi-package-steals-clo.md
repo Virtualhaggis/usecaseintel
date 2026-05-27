@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Compromised elementary-data==0.23.3 PyPI install on developer / CI host
 
-`UC_281_7` · phase: **delivery** · confidence: **High**
+`UC_284_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### [LLM] Trinny marker file creation (.trinny-security-update)
 
-`UC_281_8` · phase: **install** · confidence: **High**
+`UC_284_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceFileEvents
 
 ### [LLM] Credential archive staging — trin.tar.gz created by python process
 
-`UC_281_9` · phase: **actions** · confidence: **High**
+`UC_284_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceFileEvents
 
 ### [LLM] Exfil to skyhanni.cloud C2 with X-Rise-To-The-Trinny header
 
-`UC_281_10` · phase: **c2** · confidence: **High**
+`UC_284_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -251,7 +251,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious Release of elementary-data PyPI Package Steals Cloud Credentials from
 
-`UC_281_6` · phase: **exploit** · confidence: **High**
+`UC_284_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
