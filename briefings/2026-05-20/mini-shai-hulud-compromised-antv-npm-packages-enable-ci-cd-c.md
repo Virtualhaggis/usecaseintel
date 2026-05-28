@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud durabletask dropper C2 callback to git-service.com
 
-`UC_109_8` · phase: **c2** · confidence: **High**
+`UC_110_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceNetworkEvents
 
 ### [LLM] durabletask second-stage dropper: python3 executing /tmp/managed.pyz
 
-`UC_109_9` · phase: **install** · confidence: **High**
+`UC_110_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceProcessEvents
 
 ### [LLM] gh CLI token enumeration via python parent (managed.pyz credential exfil)
 
-`UC_109_10` · phase: **actions** · confidence: **High**
+`UC_110_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceProcessEvents
 
 ### [LLM] Fake pgsql-monitor.service systemd user persistence
 
-`UC_109_11` · phase: **install** · confidence: **High**
+`UC_110_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ union isfuzzy=true
 
 ### [LLM] Single python parent fans out 3+ managed.pyz children within seconds
 
-`UC_109_12` · phase: **install** · confidence: **High**
+`UC_110_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -307,7 +307,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mini Shai Hulud: Compromised @antv npm packages enable CI/CD credential theft
 
-`UC_109_7` · phase: **exploit** · confidence: **High**
+`UC_110_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

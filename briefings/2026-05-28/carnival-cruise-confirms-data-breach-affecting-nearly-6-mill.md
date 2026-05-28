@@ -11,15 +11,9 @@ By Sergiu Gatlan
 May 28, 2026
 06:49 AM
 0 
-
-
 Carnival Corporation, the world's largest cruise line operator, has confirmed a data breach affecting nearly 6 million people claimed by the ShinyHunters extortion gang in April 2026.
-
-
 The cruise line giant has over 160,000 employees and served around 13.5 million guests in 2024 via a fleet of over 90 ships.
-
-
-Carnival operates nine of the world's leading cruise line brands…
+Carnival operates nine of the world's leading cruise line brands (Carnival C…
 
 ## Indicators of Compromise (high-fidelity only)
 

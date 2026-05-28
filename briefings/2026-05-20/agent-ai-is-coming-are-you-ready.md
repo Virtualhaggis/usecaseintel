@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] YellowKey CVE-2026-45585 unmitigated state — autofstx.exe still in WinRE BootExecute
 
-`UC_116_6` · phase: **exploit** · confidence: **High**
+`UC_117_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceRegistryEvents
 
 ### [LLM] YellowKey mitigation tampered — autofstx.exe re-added to WinRE BootExecute REG_MULTI_SZ
 
-`UC_116_7` · phase: **install** · confidence: **High**
+`UC_117_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -206,7 +206,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Agent AI is Coming. Are You Ready?
 
-`UC_116_5` · phase: **exploit** · confidence: **High**
+`UC_117_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

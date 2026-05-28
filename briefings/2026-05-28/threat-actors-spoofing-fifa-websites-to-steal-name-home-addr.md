@@ -10,18 +10,11 @@ Home Cyber Security News
 Threat Actors Spoofing FIFA Websites to Steal Name, Home Address, and Phone Number 
 By Abinaya 
 May 28, 2026 
-
-
-
-
 Threat actors are actively spoofing official FIFA websites ahead of the 2026 FIFA World Cup , targeting unsuspecting users to steal sensitive personal data, including names, home addresses, and phone numbers.
-According to the FBI, attackers are creating highly convincing replica websites that mimic the legitimate FIFA domain, www.fifa.com, using techniqu…
+According to the FBI, attackers are creating highly convincing replica websites that mimic the legitimate FIFA domain, www.fifa.com, using techniques such …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `fifa.cab`
-- **Domain (defanged):** `fifa.pink`
-- **Domain (defanged):** `fifa.pub`
 - **Domain (defanged):** `fifa.ceo`
 - **Domain (defanged):** `wvvw-fifa.com`
 - **Domain (defanged):** `fifa-com.com`
@@ -57,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Network egress to FBI-listed FIFA 2026 World Cup spoofed domains (PSA I-052726)
 
-`UC_3_6` · phase: **delivery** · confidence: **High**
+`UC_8_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +71,7 @@ DeviceNetworkEvents
 
 ### [LLM] Inbound email from FIFA typosquat sender domains (FBI PSA I-052726)
 
-`UC_3_7` · phase: **delivery** · confidence: **High**
+`UC_8_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +96,7 @@ SuspectMail
 
 ### [LLM] User click-through to FIFA spoofed domain followed by HTTP POST (PII submission)
 
-`UC_3_8` · phase: **actions** · confidence: **Medium**
+`UC_8_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -345,7 +338,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `fifa.cab`, `fifa.pink`, `fifa.pub`, `fifa.ceo`, `wvvw-fifa.com`, `fifa-com.com`, `jobs-fifa.com`, `fifa-careerhub.com` _(+3 more)_
+  - IP / domain IOC(s): `fifa.ceo`, `wvvw-fifa.com`, `fifa-com.com`, `jobs-fifa.com`, `fifa-careerhub.com`, `fifaworldcup-careers.com`, `fifa-ticket.live`, `worldcup26ticket.com`
 
 
 ## Why this matters

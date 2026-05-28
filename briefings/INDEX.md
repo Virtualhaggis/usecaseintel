@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1257 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1256 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,14 +11,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-28
 - [2026 world cup discussing the world s biggest game s attack ](./2026-05-28/2026-world-cup-discussing-the-world-s-biggest-game-s-attack-.md)
 - [carnival cruise confirms data breach affecting nearly 6 mill](./2026-05-28/carnival-cruise-confirms-data-breach-affecting-nearly-6-mill.md)
-- [critical notepad vulnerabilities allow attackers to execute ](./2026-05-28/critical-notepad-vulnerabilities-allow-attackers-to-execute-.md)
+- [carnival cruise data breach exposes millions of customers pe](./2026-05-28/carnival-cruise-data-breach-exposes-millions-of-customers-pe.md)
 - [critical roundcube webmail vulnerability let attackers injec](./2026-05-28/critical-roundcube-webmail-vulnerability-let-attackers-injec.md)
+- [gitea container vulnerability exposes private container imag](./2026-05-28/gitea-container-vulnerability-exposes-private-container-imag.md)
 - [hackers abuse shared cdn edge ips to bypass protective dns f](./2026-05-28/hackers-abuse-shared-cdn-edge-ips-to-bypass-protective-dns-f.md)
+- [hackers use ghostynetworks and omegatech to host js malware ](./2026-05-28/hackers-use-ghostynetworks-and-omegatech-to-host-js-malware-.md)
 - [jinx 0164 targets cryptocurrency firms with fake recruiter l](./2026-05-28/jinx-0164-targets-cryptocurrency-firms-with-fake-recruiter-l.md)
-- [microsoft warns public release of zero day details before ve](./2026-05-28/microsoft-warns-public-release-of-zero-day-details-before-ve.md)
+- [new ai usage report enterprise ai risk is heavily concentrat](./2026-05-28/new-ai-usage-report-enterprise-ai-risk-is-heavily-concentrat.md)
 - [new purelogs variant uses msbuild exe process hollowing to e](./2026-05-28/new-purelogs-variant-uses-msbuild-exe-process-hollowing-to-e.md)
 - [pirates in the crosshairs how one cybercrime gang has been i](./2026-05-28/pirates-in-the-crosshairs-how-one-cybercrime-gang-has-been-i.md)
-- [silent ransom group targets law firms with it support impers](./2026-05-28/silent-ransom-group-targets-law-firms-with-it-support-impers.md)
 - [threat actors spoofing fifa websites to steal name home addr](./2026-05-28/threat-actors-spoofing-fifa-websites-to-steal-name-home-addr.md)
 - [veeam backup replication tool vulnerability enables privileg](./2026-05-28/veeam-backup-replication-tool-vulnerability-enables-privileg.md)
 
@@ -50,7 +51,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [btmob a stealthy rat burrowing deep into android devices](./2026-05-26/btmob-a-stealthy-rat-burrowing-deep-into-android-devices.md)
 - [charter confirms data breach after shinyhunters extortion th](./2026-05-26/charter-confirms-data-breach-after-shinyhunters-extortion-th.md)
 - [cisa kev cve 2026 48172 litespeed cpanel plugin privilege es](./2026-05-26/cisa-kev-cve-2026-48172-litespeed-cpanel-plugin-privilege-es.md)
-- [cisa orders feds to patch actively exploited drupal vulnerab](./2026-05-26/cisa-orders-feds-to-patch-actively-exploited-drupal-vulnerab.md)
 - [from poisoned search results to gpu mining a cryptojacking c](./2026-05-26/from-poisoned-search-results-to-gpu-mining-a-cryptojacking-c.md)
 - [ghsa critical cve 2026 33137 xwiki platform has an unauthent](./2026-05-26/ghsa-critical-cve-2026-33137-xwiki-platform-has-an-unauthent.md)
 - [iranian hackers deploy minifast and minijunk v2 via phishing](./2026-05-26/iranian-hackers-deploy-minifast-and-minijunk-v2-via-phishing.md)
@@ -133,7 +133,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-19
 - [actions cool issues helper github action compromised all tag](./2026-05-19/actions-cool-issues-helper-github-action-compromised-all-tag.md)
 - [active supply chain attack malicious node ipc versions publi](./2026-05-19/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
-- [dirtydecrypt poc released for linux kernel cve 2026 31635 lp](./2026-05-19/dirtydecrypt-poc-released-for-linux-kernel-cve-2026-31635-lp.md)
 - [exposing fox tempest a malware signing service operation](./2026-05-19/exposing-fox-tempest-a-malware-signing-service-operation.md)
 - [from pdb strings to maas tracking a commodity badiis ecosyst](./2026-05-19/from-pdb-strings-to-maas-tracking-a-commodity-badiis-ecosyst.md)
 - [ghsa critical cve 2026 45568 rok python proxyshare can be us](./2026-05-19/ghsa-critical-cve-2026-45568-rok-python-proxyshare-can-be-us.md)

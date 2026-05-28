@@ -10,21 +10,17 @@ Home Cyber Security News
 New PureLogs Variant Uses MsBuild.exe Process Hollowing to Evade Detection 
 By Tushar Subhra Dutta 
 May 28, 2026 
-
-
-
-
 A new and dangerous version of the PureLogs information-stealing malware has emerged, raising serious concerns across the cybersecurity community. 
-This variant takes a more evasive approach than its predecessors, using a carefully crafted chain of stages to reach victims without triggering standard security tools. What makes it stand out is how it w…
+This variant takes a more evasive approach than its predecessors, using a carefully crafted chain of stages to reach victims without triggering standard security tools. What makes it stand out is how it weaponize…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `77.83.39.211`
-- **SHA256:** `3d510977d60a44322f88100b515f06cb5ed83babc64247068d1a489595faa6c5`
-- **SHA256:** `670384fafb23140d96f2f8fe04a13fc8cc8e2a6e5e8c973e39b58d103c5fea92`
-- **SHA256:** `b90988400cced319d260c4937f334ecc364785ed5c593cd2139965e62ca58173`
-- **SHA256:** `e20b35a8c30e076cdd0e1df05ba1ff2e418dbd39a674f084787cc0af2fda9e95`
-- **SHA256:** `07cd03e2082bcb0b890cc59ce4c770d1a095ac6f1ae9cf999f5542555c56f841`
+- **SHA256:** `3D510977D60A44322F88100B515F06CB5ED83BABC64247068D1A489595FAA6C5`
+- **SHA256:** `670384FAFB23140D96F2F8FE04A13FC8CC8E2A6E5E8C973E39B58D103C5FEA92`
+- **SHA256:** `B90988400CCED319D260C4937F334ECC364785ED5C593CD2139965E62CA58173`
+- **SHA256:** `E20B35A8C30E076CDD0E1DF05BA1FF2E418DBD39A674F084787CC0AF2FDA9E95`
+- **SHA256:** `07CD03E2082BCB0B890CC59CE4C770D1A095AC6F1AE9CF999F5542555C56F841`
 
 ## MITRE ATT&CK Techniques
 
@@ -60,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Purchase-order phishing delivering pankocrs.js JavaScript loader
 
-`UC_0_11` · phase: **delivery** · confidence: **High**
+`UC_5_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +77,7 @@ EmailAttachmentInfo
 
 ### [LLM] wscript/cscript spawning PowerShell that loads .NET assembly (PureLogs stage 2)
 
-`UC_0_12` · phase: **install** · confidence: **High**
+`UC_5_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +98,7 @@ DeviceProcessEvents
 
 ### [LLM] PowerShell launching MsBuild.exe with no project file (PureLogs hollowing target)
 
-`UC_0_13` · phase: **install** · confidence: **High**
+`UC_5_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +118,7 @@ DeviceProcessEvents
 
 ### [LLM] Cross-process injection (CreateRemoteThread / WriteProcessMemory) targeting MsBuild.exe
 
-`UC_0_14` · phase: **install** · confidence: **High**
+`UC_5_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +138,7 @@ DeviceEvents
 
 ### [LLM] MsBuild.exe reading browser Login Data / wallet / mail credential stores
 
-`UC_0_15` · phase: **actions** · confidence: **High**
+`UC_5_15` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -178,7 +174,7 @@ DeviceFileEvents
 
 ### [LLM] MsBuild.exe HTTPS C2 beacon to 77.83.39.211 (PureLogs exfil)
 
-`UC_0_16` · phase: **c2** · confidence: **High**
+`UC_5_16` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -495,7 +491,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New PureLogs Variant Uses MsBuild.exe Process Hollowing to Evade Detection
 
-`UC_0_10` · phase: **exploit** · confidence: **High**
+`UC_5_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -550,7 +546,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
   - IP / domain IOC(s): `77.83.39.211`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `3d510977d60a44322f88100b515f06cb5ed83babc64247068d1a489595faa6c5`, `670384fafb23140d96f2f8fe04a13fc8cc8e2a6e5e8c973e39b58d103c5fea92`, `b90988400cced319d260c4937f334ecc364785ed5c593cd2139965e62ca58173`, `e20b35a8c30e076cdd0e1df05ba1ff2e418dbd39a674f084787cc0af2fda9e95`, `07cd03e2082bcb0b890cc59ce4c770d1a095ac6f1ae9cf999f5542555c56f841`
+  - file hash IOC(s): `3D510977D60A44322F88100B515F06CB5ED83BABC64247068D1A489595FAA6C5`, `670384FAFB23140D96F2F8FE04A13FC8CC8E2A6E5E8C973E39B58D103C5FEA92`, `B90988400CCED319D260C4937F334ECC364785ED5C593CD2139965E62CA58173`, `E20B35A8C30E076CDD0E1DF05BA1FF2E418DBD39A674F084787CC0AF2FDA9E95`, `07CD03E2082BCB0B890CC59CE4C770D1A095AC6F1AE9CF999F5542555C56F841`
 
 
 ## Why this matters

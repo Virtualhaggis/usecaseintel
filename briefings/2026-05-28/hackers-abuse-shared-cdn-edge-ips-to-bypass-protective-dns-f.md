@@ -10,12 +10,8 @@ Home Cyber Security News
 Hackers Abuse Shared CDN Edge IPs to Bypass Protective DNS Filtering 
 By Abinaya 
 May 28, 2026 
-
-
-
-
 Hackers are increasingly abusing shared Content Delivery Network (CDN) infrastructure to bypass protective DNS filtering, according to new research from ADAMnetworks, which has identified a stealthy technique allowing malicious traffic to hide behind trusted domains.
-The method, dubbed “Underminr,” exploits gaps in how security systems validate DNS requests, TLS conne…
+The method, dubbed “Underminr,” exploits gaps in how security systems validate DNS requests, TLS connections, …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -47,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Direct-to-IP TLS egress to shared CDN edge ranges by non-browser process (Underminr Direct-to-IP Mode)
 
-`UC_2_5` · phase: **c2** · confidence: **Medium**
+`UC_7_5` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +78,7 @@ directIp
 
 ### [LLM] SoftEther VPN client/server binaries linked to Flax Typhoon / GALLIUM Underminr operations
 
-`UC_2_6` · phase: **install** · confidence: **High**
+`UC_7_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +104,7 @@ DeviceProcessEvents
 
 ### [LLM] IP-check / geolocation lookup by non-browser process (Underminr decoy reconnaissance)
 
-`UC_2_7` · phase: **c2** · confidence: **Medium**
+`UC_7_7` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
