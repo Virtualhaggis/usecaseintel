@@ -76,7 +76,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GHOST STADIUM FIFA World Cup 2026 phishing domain egress
 
-`UC_6_10` · phase: **delivery** · confidence: **High**
+`UC_7_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceNetworkEvents
 
 ### [LLM] GHOST STADIUM hosting IP outbound connection (34.97.164.110 / 183.164.164.110)
 
-`UC_6_11` · phase: **c2** · confidence: **High**
+`UC_7_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceNetworkEvents
 
 ### [LLM] Inbound email carrying GHOST STADIUM FIFA phishing URL
 
-`UC_6_12` · phase: **delivery** · confidence: **High**
+`UC_7_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ EmailUrlInfo
 
 ### [LLM] GHOST STADIUM Tawk.to backend tracker beacon (property mpnmccbabann9eohpoaomimm)
 
-`UC_6_13` · phase: **c2** · confidence: **High**
+`UC_7_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1259 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -37,7 +37,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [legitimate looking codex remote ui secretly steals your ai t](./2026-05-27/legitimate-looking-codex-remote-ui-secretly-steals-your-ai-t.md)
 - [malicious npm package stole files from claude ai user direct](./2026-05-27/malicious-npm-package-stole-files-from-claude-ai-user-direct.md)
 - [motorola phones preinstalled app found hijacking amazon app ](./2026-05-27/motorola-phones-preinstalled-app-found-hijacking-amazon-app-.md)
-- [new btmob malware lets attackers remotely control android de](./2026-05-27/new-btmob-malware-lets-attackers-remotely-control-android-de.md)
 - [out of the crypt the evolving cyber extortion economy](./2026-05-27/out-of-the-crypt-the-evolving-cyber-extortion-economy.md)
 - [top gitguardian alternatives for secrets scanning in 2026](./2026-05-27/top-gitguardian-alternatives-for-secrets-scanning-in-2026.md)
 - [tycoon 2fa aitm kit bypasses mfa on entra id and google work](./2026-05-27/tycoon-2fa-aitm-kit-bypasses-mfa-on-entra-id-and-google-work.md)
