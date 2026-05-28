@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1259 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,7 +9,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-28
-- [forticlient code execution vulnerability exploited to deploy](./2026-05-28/forticlient-code-execution-vulnerability-exploited-to-deploy.md)
+- [forticlient ems code execution vulnerability exploited to de](./2026-05-28/forticlient-ems-code-execution-vulnerability-exploited-to-de.md)
+- [pirates in the crosshairs how one cybercrime gang has been i](./2026-05-28/pirates-in-the-crosshairs-how-one-cybercrime-gang-has-been-i.md)
+- [sbi warns of scammers are sending fake messages claiming you](./2026-05-28/sbi-warns-of-scammers-are-sending-fake-messages-claiming-you.md)
+- [silent ransom group targets law firms with it support impers](./2026-05-28/silent-ransom-group-targets-law-firms-with-it-support-impers.md)
 
 ## 2026-05-27
 - [3 soc steps that shut down incident risks early](./2026-05-27/3-soc-steps-that-shut-down-incident-risks-early.md)
@@ -31,14 +34,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [glassworm malware takedown disrupts developer supply chain a](./2026-05-27/glassworm-malware-takedown-disrupts-developer-supply-chain-a.md)
 - [gpu mining malware spreads via seo poisoning ai chatbots](./2026-05-27/gpu-mining-malware-spreads-via-seo-poisoning-ai-chatbots.md)
 - [grandoreiro malware and btmob rat campaigns target windows a](./2026-05-27/grandoreiro-malware-and-btmob-rat-campaigns-target-windows-a.md)
-- [hackers abuse ai chatbot recommendations to push malicious s](./2026-05-27/hackers-abuse-ai-chatbot-recommendations-to-push-malicious-s.md)
 - [hackers push 22 versions of npm rat with wallet theft and pe](./2026-05-27/hackers-push-22-versions-of-npm-rat-with-wallet-theft-and-pe.md)
 - [hackers use fake chatgpt and claude installers to deploy din](./2026-05-27/hackers-use-fake-chatgpt-and-claude-installers-to-deploy-din.md)
 - [hackers use grandoreiro malware to target portuguese banks a](./2026-05-27/hackers-use-grandoreiro-malware-to-target-portuguese-banks-a.md)
 - [how top cisos increase risk visibility for zero critical inc](./2026-05-27/how-top-cisos-increase-risk-visibility-for-zero-critical-inc.md)
 - [legitimate looking codex remote ui secretly steals your ai t](./2026-05-27/legitimate-looking-codex-remote-ui-secretly-steals-your-ai-t.md)
 - [malicious npm package stole files from claude ai user direct](./2026-05-27/malicious-npm-package-stole-files-from-claude-ai-user-direct.md)
-- [motorola phones preinstalled app found hijacking amazon app ](./2026-05-27/motorola-phones-preinstalled-app-found-hijacking-amazon-app-.md)
 - [out of the crypt the evolving cyber extortion economy](./2026-05-27/out-of-the-crypt-the-evolving-cyber-extortion-economy.md)
 - [top gitguardian alternatives for secrets scanning in 2026](./2026-05-27/top-gitguardian-alternatives-for-secrets-scanning-in-2026.md)
 - [tycoon 2fa aitm kit bypasses mfa on entra id and google work](./2026-05-27/tycoon-2fa-aitm-kit-bypasses-mfa-on-entra-id-and-google-work.md)

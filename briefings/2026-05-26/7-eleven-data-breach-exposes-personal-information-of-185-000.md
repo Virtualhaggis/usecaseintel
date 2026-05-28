@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Salesforce malicious connected-app (Data Loader) OAuth authorization — ShinyHunters/UNC6040
 
-`UC_53_4` · phase: **delivery** · confidence: **Medium**
+`UC_55_4` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ CloudAppEvents
 
 ### [LLM] Salesforce bulk/Bulk-API mass export burst — Salesforce data theft (ShinyHunters)
 
-`UC_53_5` · phase: **actions** · confidence: **Medium**
+`UC_55_5` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

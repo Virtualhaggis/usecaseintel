@@ -70,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] msiexec.exe installs MSI from DinDoor fake-installer infrastructure (GitHub/SourceForge)
 
-`UC_12_9` · phase: **delivery** · confidence: **High**
+`UC_15_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### [LLM] PowerShell installs Deno runtime via Scoop/WinGet then executes remote script (DinDoor stager)
 
-`UC_12_10` · phase: **install** · confidence: **High**
+`UC_15_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound connection to DinDoor C2 infrastructure (specific domains and IPs)
 
-`UC_12_11` · phase: **c2** · confidence: **High**
+`UC_15_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ union isfuzzy=true
 
 ### [LLM] DinDoor persistence: Run-key value pointing to Deno or DinDoor C2 infrastructure
 
-`UC_12_12` · phase: **install** · confidence: **High**
+`UC_15_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +159,7 @@ DeviceRegistryEvents
 
 ### [LLM] Hidden Microsoft Edge process spawned by deno.exe for covert screen streaming (DinDoor RAT)
 
-`UC_12_13` · phase: **actions** · confidence: **High**
+`UC_15_13` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
