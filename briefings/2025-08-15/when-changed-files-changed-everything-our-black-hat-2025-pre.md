@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] CI/CD runner outbound to gist.githubusercontent.com (tj-actions CVE-2025-30066 staging fetch)
 
-`UC_778_4` · phase: **c2** · confidence: **High**
+`UC_777_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceNetworkEvents
 
 ### [LLM] Runner.Worker process memory dump via memdump.py on CI/CD runner (tj-actions credential theft)
 
-`UC_778_5` · phase: **actions** · confidence: **High**
+`UC_777_5` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceProcessEvents
 
 ### [LLM] Compromised tj-actions/changed-files commit SHA referenced on host (CVE-2025-30066 IOC hunt)
 
-`UC_778_6` · phase: **delivery** · confidence: **High**
+`UC_777_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — When 'Changed Files' Changed Everything: Our Black Hat 2025 Presentation on the
 
-`UC_778_3` · phase: **exploit** · confidence: **High**
+`UC_777_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

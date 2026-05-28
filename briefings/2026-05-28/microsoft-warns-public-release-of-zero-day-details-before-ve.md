@@ -10,12 +10,8 @@ Home Cyber Security News
 Microsoft Warns Public Release of Zero-Day Details Before Vendor Coordination 
 By Abinaya 
 May 28, 2026 
-
-
-
-
 Microsoft has issued a strong warning after multiple zero-day vulnerabilities were publicly disclosed without prior coordination, raising concerns about increased risk to users and enterprise environments.
-The company stated that recent disclosures exposed critical security flaws before patches were available, giving threat actors a potential advantage in exp…
+The company stated that recent disclosures exposed critical security flaws before patches were available, giving threat actors a potential advantage in exploiting …
 
 ## Indicators of Compromise (high-fidelity only)
 

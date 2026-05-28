@@ -72,7 +72,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] MuddyWater DLL side-load: signed Fortemedia fmapp.exe loading rogue fmapp.dll
 
-`UC_46_11` · phase: **install** · confidence: **High**
+`UC_48_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceImageLoadEvents
 
 ### [LLM] MuddyWater DLL side-load: SentinelOne sentinelmemoryscanner.exe loading rogue sentinelagentcore.dll
 
-`UC_46_12` · phase: **install** · confidence: **High**
+`UC_48_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceImageLoadEvents
 
 ### [LLM] MuddyWater node.exe implant chain spawning PowerShell recon
 
-`UC_46_13` · phase: **exploit** · confidence: **High**
+`UC_48_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ DeviceProcessEvents
 
 ### [LLM] SAM/SYSTEM hive theft via reg.exe save under MuddyWater node/PowerShell chain
 
-`UC_46_14` · phase: **actions** · confidence: **High**
+`UC_48_14` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,7 +163,7 @@ DeviceProcessEvents
 
 ### [LLM] MuddyWater C2 beacon to 157.20.182.49 and campaign domains
 
-`UC_46_15` · phase: **c2** · confidence: **High**
+`UC_48_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -183,7 +183,7 @@ DeviceNetworkEvents
 
 ### [LLM] MuddyWater data exfiltration staging to sendit.sh file-transfer service
 
-`UC_46_16` · phase: **actions** · confidence: **Medium**
+`UC_48_16` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -494,7 +494,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — MuddyWater Uses DLL Side-Loading in Espionage Campaign Targeting 9 Countries
 
-`UC_46_10` · phase: **exploit** · confidence: **High**
+`UC_48_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

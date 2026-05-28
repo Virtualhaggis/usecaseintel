@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1257 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,13 +9,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-28
+- [2026 world cup discussing the world s biggest game s attack ](./2026-05-28/2026-world-cup-discussing-the-world-s-biggest-game-s-attack-.md)
+- [carnival cruise confirms data breach affecting nearly 6 mill](./2026-05-28/carnival-cruise-confirms-data-breach-affecting-nearly-6-mill.md)
 - [critical notepad vulnerabilities allow attackers to execute ](./2026-05-28/critical-notepad-vulnerabilities-allow-attackers-to-execute-.md)
-- [forticlient ems code execution vulnerability exploited to de](./2026-05-28/forticlient-ems-code-execution-vulnerability-exploited-to-de.md)
+- [critical roundcube webmail vulnerability let attackers injec](./2026-05-28/critical-roundcube-webmail-vulnerability-let-attackers-injec.md)
+- [hackers abuse shared cdn edge ips to bypass protective dns f](./2026-05-28/hackers-abuse-shared-cdn-edge-ips-to-bypass-protective-dns-f.md)
 - [jinx 0164 targets cryptocurrency firms with fake recruiter l](./2026-05-28/jinx-0164-targets-cryptocurrency-firms-with-fake-recruiter-l.md)
 - [microsoft warns public release of zero day details before ve](./2026-05-28/microsoft-warns-public-release-of-zero-day-details-before-ve.md)
+- [new purelogs variant uses msbuild exe process hollowing to e](./2026-05-28/new-purelogs-variant-uses-msbuild-exe-process-hollowing-to-e.md)
 - [pirates in the crosshairs how one cybercrime gang has been i](./2026-05-28/pirates-in-the-crosshairs-how-one-cybercrime-gang-has-been-i.md)
-- [sbi warns of scammers are sending fake messages claiming you](./2026-05-28/sbi-warns-of-scammers-are-sending-fake-messages-claiming-you.md)
 - [silent ransom group targets law firms with it support impers](./2026-05-28/silent-ransom-group-targets-law-firms-with-it-support-impers.md)
+- [threat actors spoofing fifa websites to steal name home addr](./2026-05-28/threat-actors-spoofing-fifa-websites-to-steal-name-home-addr.md)
 - [veeam backup replication tool vulnerability enables privileg](./2026-05-28/veeam-backup-replication-tool-vulnerability-enables-privileg.md)
 
 ## 2026-05-27
@@ -28,7 +32,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 8398 daemon tools lite embedded malicious ](./2026-05-27/cisa-kev-cve-2026-8398-daemon-tools-lite-embedded-malicious-.md)
 - [continuous offensive security the line we ve been walking](./2026-05-27/continuous-offensive-security-the-line-we-ve-been-walking.md)
 - [fbi warns of in person data theft attacks from extortion gan](./2026-05-27/fbi-warns-of-in-person-data-theft-attacks-from-extortion-gan.md)
-- [ghost stadium phishing campaign targets fifa world cup fans ](./2026-05-27/ghost-stadium-phishing-campaign-targets-fifa-world-cup-fans-.md)
 - [ghsa critical cve 2026 44632 yamcs vulnerable to server side](./2026-05-27/ghsa-critical-cve-2026-44632-yamcs-vulnerable-to-server-side.md)
 - [ghsa critical cve 2026 45618 liquidjs is vulnerable to remot](./2026-05-27/ghsa-critical-cve-2026-45618-liquidjs-is-vulnerable-to-remot.md)
 - [ghsa critical cve 2026 46562 yamcs vulnerable to remote code](./2026-05-27/ghsa-critical-cve-2026-46562-yamcs-vulnerable-to-remote-code.md)
@@ -38,12 +41,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [glassworm malware takedown disrupts developer supply chain a](./2026-05-27/glassworm-malware-takedown-disrupts-developer-supply-chain-a.md)
 - [gpu mining malware spreads via seo poisoning ai chatbots](./2026-05-27/gpu-mining-malware-spreads-via-seo-poisoning-ai-chatbots.md)
 - [grandoreiro malware and btmob rat campaigns target windows a](./2026-05-27/grandoreiro-malware-and-btmob-rat-campaigns-target-windows-a.md)
-- [hackers use grandoreiro malware to target portuguese banks a](./2026-05-27/hackers-use-grandoreiro-malware-to-target-portuguese-banks-a.md)
 - [legitimate looking codex remote ui secretly steals your ai t](./2026-05-27/legitimate-looking-codex-remote-ui-secretly-steals-your-ai-t.md)
 - [malicious npm package stole files from claude ai user direct](./2026-05-27/malicious-npm-package-stole-files-from-claude-ai-user-direct.md)
 - [out of the crypt the evolving cyber extortion economy](./2026-05-27/out-of-the-crypt-the-evolving-cyber-extortion-economy.md)
 - [top gitguardian alternatives for secrets scanning in 2026](./2026-05-27/top-gitguardian-alternatives-for-secrets-scanning-in-2026.md)
-- [tycoon 2fa aitm kit bypasses mfa on entra id and google work](./2026-05-27/tycoon-2fa-aitm-kit-bypasses-mfa-on-entra-id-and-google-work.md)
 
 ## 2026-05-26
 - [btmob a stealthy rat burrowing deep into android devices](./2026-05-26/btmob-a-stealthy-rat-burrowing-deep-into-android-devices.md)
@@ -273,7 +274,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-04-30
 - [cisa kev cve 2026 41940 webpros cpanel whm and wp2 wordpress](./2026-04-30/cisa-kev-cve-2026-41940-webpros-cpanel-whm-and-wp2-wordpress.md)
-- [great responsibility without great power](./2026-04-30/great-responsibility-without-great-power.md)
 - [lightning pypi compromise a bun based credential stealer in ](./2026-04-30/lightning-pypi-compromise-a-bun-based-credential-stealer-in-.md)
 - [popular pytorch lightning package compromised by mini shai h](./2026-04-30/popular-pytorch-lightning-package-compromised-by-mini-shai-h.md)
 - [that ai extension helping you write emails it s reading them](./2026-04-30/that-ai-extension-helping-you-write-emails-it-s-reading-them.md)
@@ -314,7 +314,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-22
 - [cisa kev cve 2026 33825 microsoft defender insufficient gran](./2026-04-22/cisa-kev-cve-2026-33825-microsoft-defender-insufficient-gran.md)
 - [gpt proxy backdoor in npm and pypi turns servers into chines](./2026-04-22/gpt-proxy-backdoor-in-npm-and-pypi-turns-servers-into-chines.md)
-- [when wi fi encryption fails protecting your enterprise from ](./2026-04-22/when-wi-fi-encryption-fails-protecting-your-enterprise-from-.md)
 
 ## 2026-04-21
 - [new ngate variant hides in a trojanized nfc payment app](./2026-04-21/new-ngate-variant-hides-in-a-trojanized-nfc-payment-app.md)

@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Silent Ransom Group / Luna Moth RMM Tool First-Time Execution
 
-`UC_5_10` · phase: **install** · confidence: **High**
+`UC_13_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceProcessEvents
 
 ### [LLM] Renamed Rclone Binary Identified by Exfil Cmdline Signature
 
-`UC_5_11` · phase: **actions** · confidence: **High**
+`UC_13_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### [LLM] WinSCP / SFTP Outbound to Public IP on Port 22 from Endpoint
 
-`UC_5_12` · phase: **actions** · confidence: **High**
+`UC_13_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceNetworkEvents
 
 ### [LLM] DNS / Proxy Resolution of SRG Leak Site business-data-leaks[.]com
 
-`UC_5_13` · phase: **actions** · confidence: **High**
+`UC_13_13` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ union
 
 ### [LLM] Rclone / WinSCP Beaconing to OneDrive or Google Drive (Cloud Exfil Chain)
 
-`UC_5_14` · phase: **actions** · confidence: **Medium**
+`UC_13_14` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

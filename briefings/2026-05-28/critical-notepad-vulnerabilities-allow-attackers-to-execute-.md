@@ -10,12 +10,8 @@ Home Cyber Security
 Critical Notepad++ Vulnerabilities Allow Attackers to Execute Arbitrary Code 
 By Guru Baran 
 May 28, 2026 
-
-
-
-
 Notepad++, one of the most widely used open-source text editors for Windows, has released an urgent security update addressing three vulnerabilities, including two arbitrary code execution flaws that could allow attackers to silently run malicious programs on a victim’s machine.
-The Notepad++ development team released version v8.9.6.1 on May 26, 2026, patching a…
+The Notepad++ development team released version v8.9.6.1 on May 26, 2026, patching all three…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -53,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Non-Notepad++ process writes to %APPDATA%\Notepad++\config.xml or shortcuts.xml (CVE-2026-48778/48800 persistence)
 
-`UC_3_8` · phase: **install** · confidence: **High**
+`UC_11_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +78,7 @@ DeviceFileEvents
 
 ### [LLM] Notepad++ launched with -settingsDir= flag (CVE-2026-48778 redirection vector)
 
-`UC_3_9` · phase: **delivery** · confidence: **High**
+`UC_11_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +104,7 @@ DeviceProcessEvents
 
 ### [LLM] Notepad++ spawning unexpected child process (CVE-2026-48778/48800 exploit firing)
 
-`UC_3_10` · phase: **exploit** · confidence: **High**
+`UC_11_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +133,7 @@ DeviceProcessEvents
 
 ### [LLM] Vulnerable Notepad++ install inventory (<= v8.9.6) — CVE-2026-48770/48778/48800 exposure hunt
 
-`UC_3_11` · phase: **recon** · confidence: **High**
+`UC_11_11` · phase: **recon** · confidence: **High**
 
 **Defender KQL:**
 ```kql
