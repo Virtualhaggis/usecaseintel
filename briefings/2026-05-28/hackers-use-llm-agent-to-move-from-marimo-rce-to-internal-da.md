@@ -10,12 +10,8 @@ Home Cyber Security News
 Hackers Use LLM Agent to Move From Marimo RCE to Internal Database in Four Pivots 
 By Tushar Subhra Dutta 
 May 28, 2026 
-
-
-
-
 A new kind of cyberattack is changing how defenders must think about intrusion detection. On May 10, 2026, a threat actor used a large language model (LLM) agent to drive a full post-exploitation chain, starting from an exposed notebook server and ending with an internal database dumped in under two minutes. 
-This was not a pre-scripted attack…
+This was not a pre-scripted attack. Comman…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -56,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] marimo notebook Python process spawning interactive shell (CVE-2026-39987 post-exploit)
 
-`UC_1_6` · phase: **exploit** · confidence: **High**
+`UC_3_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +72,7 @@ DeviceProcessEvents
 
 ### [LLM] Burst AWS API calls fanned across Cloudflare Workers egress (104.28.0.0/16) for one principal
 
-`UC_1_7` · phase: **c2** · confidence: **High**
+`UC_3_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +81,7 @@ DeviceProcessEvents
 
 ### [LLM] AWS Secrets Manager retrieval from Cloudflare Workers egress pool
 
-`UC_1_8` · phase: **actions** · confidence: **High**
+`UC_3_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +90,7 @@ DeviceProcessEvents
 
 ### [LLM] SSH authentication to bastion from Cloudflare Workers CIDR (104.28.0.0/16)
 
-`UC_1_9` · phase: **actions** · confidence: **High**
+`UC_3_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +111,7 @@ DeviceLogonEvents
 
 ### [LLM] PostgreSQL HEREDOC credential-table dump invoked from compromised host
 
-`UC_1_10` · phase: **actions** · confidence: **Medium**
+`UC_3_10` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

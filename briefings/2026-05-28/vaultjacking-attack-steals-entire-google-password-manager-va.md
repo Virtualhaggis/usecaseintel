@@ -10,12 +10,8 @@ Home Cyber Security News
 VaultJacking Attack Steals Entire Google Password Manager Vault With One Captured PIN 
 By Tushar Subhra Dutta 
 May 28, 2026 
-
-
-
-
 A new phishing technique called VaultJacking has emerged, and it is raising serious alarms across the cybersecurity community. With just a single captured 6-digit PIN, an attacker can walk away with an entire Google Password Manager vault, including every saved password and passkey stored inside. 
-This is not a theoretical risk, as it is a…
+This is not a theoretical risk, as it is a fully d…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -49,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Browser navigation to Google Password Manager PIN prompt lookalike domain (VaultJacking phishing)
 
-`UC_3_6` · phase: **delivery** · confidence: **Medium**
+`UC_5_6` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +83,7 @@ DeviceNetworkEvents
 
 ### [LLM] New Google passkey / security key enrolled from unseen geo or IP (VaultJacking operator persistence)
 
-`UC_3_7` · phase: **install** · confidence: **Medium**
+`UC_5_7` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

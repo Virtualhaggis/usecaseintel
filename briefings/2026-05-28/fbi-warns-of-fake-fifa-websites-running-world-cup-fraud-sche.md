@@ -11,15 +11,9 @@ By Bill Toulas
 May 28, 2026
 03:08 PM
 0 
-
-
 The FBI is warning of fake websites impersonating FIFA ahead of the 2026 World Cup, to steal personal and financial information, sell fake tickets and hospitality packages, and push other fraud related to the event.
-
-
 With the international soccer tournament set between June 11 and July 19 in the United States, Canada, and Mexico, threat actors prepared hundreds of phishing sites.
-
-
-…
+According th…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -37,36 +31,40 @@ With the international soccer tournament set between June 11 and July 19 in the 
 - **IPv4 (defanged):** `85.121.242.41`
 - **IPv4 (defanged):** `216.189.149.193`
 - **IPv4 (defanged):** `137.220.224.67`
+- **IPv4 (defanged):** `43.98.183.110`
 - **Domain (defanged):** `fiffa.com`
 - **Domain (defanged):** `jobs-fifa.com`
 - **Domain (defanged):** `fifa-hiring.com`
-- **Domain (defanged):** `filfa.org`
-- **Domain (defanged):** `wvvw-fifa.com`
-- **Domain (defanged):** `ww-fifa.com`
-- **Domain (defanged):** `fifa-hr.com`
-- **Domain (defanged):** `fifa-careerhub.com`
-- **Domain (defanged):** `fifaworldcup-careers.com`
-- **Domain (defanged):** `fifahiring.com`
-- **Domain (defanged):** `fifa-ticket.live`
-- **Domain (defanged):** `fifa-com.com`
-- **Domain (defanged):** `fifa-2026.xyz`
-- **Domain (defanged):** `fifa-online.com`
-- **Domain (defanged):** `football-ticket.top`
-- **Domain (defanged):** `football-ticket.shop`
-- **Domain (defanged):** `football-game.shop`
-- **Domain (defanged):** `football-tickets.top`
-- **Domain (defanged):** `testnet.chainugo.com`
-- **Domain (defanged):** `mm-fifa.top`
 - **Domain (defanged):** `fifa.bio`
-- **Domain (defanged):** `fifa.cab`
-- **Domain (defanged):** `fifa.pink`
-- **Domain (defanged):** `fifa.ceo`
+- **Domain (defanged):** `fifa.sale`
+- **Domain (defanged):** `fifa.shopping`
+- **Domain (defanged):** `fifa.show`
+- **Domain (defanged):** `fifa.cafe`
+- **Domain (defanged):** `fifa.market`
+- **Domain (defanged):** `fifa.cash`
+- **Domain (defanged):** `fifa-com.co`
+- **Domain (defanged):** `fifa-com.shop`
+- **Domain (defanged):** `fifa-com.xyz`
+- **Domain (defanged):** `fifa-com.vip`
 - **Domain (defanged):** `www-fifa.com`
+- **Domain (defanged):** `www-fifaworldcup.com`
 - **Domain (defanged):** `wc26-fifa.com`
 - **Domain (defanged):** `fifa-26-worldcup.com`
-- **Domain (defanged):** `fwc2026.net`
-- **Domain (defanged):** `worldcup26ticket.com`
-- **Domain (defanged):** `2026fifaworldcuptickets.online`
+- **Domain (defanged):** `fifaweb.com`
+- **Domain (defanged):** `football-ticket.top`
+- **Domain (defanged):** `football-ticket.shop`
+- **Domain (defanged):** `football-tickets.top`
+- **Domain (defanged):** `fifa-tickets.vip`
+- **Domain (defanged):** `mm-fifa.top`
+- **Domain (defanged):** `faithoutfit.uk`
+- **Domain (defanged):** `defwear.uk`
+- **Domain (defanged):** `savebigwear.com`
+- **Domain (defanged):** `teamcollections.com`
+- **Domain (defanged):** `fanzonewear.com`
+- **Domain (defanged):** `malskitukpatch.com`
+- **SHA1:** `3b8bb7631b39f455d31544b55ba97b49ab1888c1`
+- **SHA1:** `84ecdca915f1af822ccc8a04479f5179104f353c`
+- **SHA1:** `9bd164dd3f50d196c7dff4f6c1b0f1345ac96d9a`
 
 ## MITRE ATT&CK Techniques
 
@@ -78,6 +76,7 @@ With the international soccer tournament set between June 11 and July 19 in the 
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
 - **T1566.002** — Phishing: Spearphishing Link
 - **T1189** — Drive-by Compromise
 - **T1583.001** — Acquire Infrastructure: Domains
@@ -96,7 +95,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DNS/HTTP traffic to Ghost Stadium FIFA typosquat domains (2026 World Cup fraud)
 
-`UC_0_4` · phase: **delivery** · confidence: **High**
+`UC_2_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +119,7 @@ union NetHits, ClickHits
 
 ### [LLM] Outbound connection to Ghost Stadium FIFA fraud staging IPs
 
-`UC_0_5` · phase: **c2** · confidence: **High**
+`UC_2_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +138,7 @@ DeviceNetworkEvents
 
 ### [LLM] Browser navigation to FIFA-themed look-alike hostname (typosquat pattern hunt)
 
-`UC_0_6` · phase: **delivery** · confidence: **Medium**
+`UC_2_7` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -161,7 +160,7 @@ DeviceNetworkEvents
 
 ### [LLM] Risky AAD sign-in after user contact with FIFA typosquat phishing portal
 
-`UC_0_7` · phase: **actions** · confidence: **Medium**
+`UC_2_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -339,9 +338,12 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `148.178.18.23`, `148.178.18.60`, `154.86.0.33`, `207.56.1.93`, `66.112.212.25`, `148.178.16.48`, `148.178.16.5`, `104.225.235.49` _(+36 more)_
+  - IP / domain IOC(s): `148.178.18.23`, `148.178.18.60`, `154.86.0.33`, `207.56.1.93`, `66.112.212.25`, `148.178.16.48`, `148.178.16.5`, `104.225.235.49` _(+37 more)_
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `3b8bb7631b39f455d31544b55ba97b49ab1888c1`, `84ecdca915f1af822ccc8a04479f5179104f353c`, `9bd164dd3f50d196c7dff4f6c1b0f1345ac96d9a`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
