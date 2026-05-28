@@ -8,10 +8,12 @@ _1258 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-28
+- [forticlient code execution vulnerability exploited to deploy](./2026-05-28/forticlient-code-execution-vulnerability-exploited-to-deploy.md)
+
 ## 2026-05-27
 - [3 soc steps that shut down incident risks early](./2026-05-27/3-soc-steps-that-shut-down-incident-risks-early.md)
 - [ai chatbot recommendations redirect users to cryptojacking m](./2026-05-27/ai-chatbot-recommendations-redirect-users-to-cryptojacking-m.md)
-- [attackers can exploit badhost to access sensitive ai agent s](./2026-05-27/attackers-can-exploit-badhost-to-access-sensitive-ai-agent-s.md)
 - [can you enforce strong active directory password rules witho](./2026-05-27/can-you-enforce-strong-active-directory-password-rules-witho.md)
 - [cisa gives feds 4 days to patch actively exploited cpanel pl](./2026-05-27/cisa-gives-feds-4-days-to-patch-actively-exploited-cpanel-pl.md)
 - [cisa kev cve 2026 45321 tanstack unspecified vulnerability](./2026-05-27/cisa-kev-cve-2026-45321-tanstack-unspecified-vulnerability.md)

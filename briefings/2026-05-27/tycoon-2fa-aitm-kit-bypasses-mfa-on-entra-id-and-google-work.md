@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Tycoon 2FA AiTM - Node.js HTTP Client Sign-in to Microsoft Authentication Broker
 
-`UC_9_9` · phase: **c2** · confidence: **High**
+`UC_10_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ AADSignInEventsBeta
 
 ### [LLM] Tycoon 2FA Microsoft Authentication Broker Sign-in from Cheap-VPS ASN
 
-`UC_9_10` · phase: **c2** · confidence: **Medium**
+`UC_10_10` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ AADSignInEventsBeta
 
 ### [LLM] Rogue Entra Device Registration Following Tycoon 2FA AiTM Sign-in (PRT Persistence)
 
-`UC_9_11` · phase: **install** · confidence: **High**
+`UC_10_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -396,7 +396,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Tycoon 2FA AiTM Kit Bypasses MFA on Entra ID and Google Workspace Accounts
 
-`UC_9_8` · phase: **exploit** · confidence: **High**
+`UC_10_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
