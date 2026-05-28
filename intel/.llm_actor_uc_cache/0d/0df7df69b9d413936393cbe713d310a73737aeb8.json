@@ -1,0 +1,150 @@
+{
+  "name": "Turla",
+  "ucs": [
+    {
+      "title": "[LLM] Turla ComRAT v4 \u2014 WMI-persisted orchestrator beaconing to Gmail web UI for C2",
+      "description": "Hunts ESET-documented ComRAT v4 (Secret Blizzard / Snake) behaviour: a PowerShell or rundll32 loader spawned by WmiPrvSE.exe (Event Subscription persistence) that subsequently reaches mail.google.com / apis.google.com from a non-browser process \u2014 Turla's signature Gmail-as-C2 channel where commands are exfil'd via Gmail cookies and inbox drafts.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1546.003",
+        "T1059.001",
+        "T1102.002",
+        "T1071.001",
+        "T1027"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=\"WmiPrvSE.exe\" AND Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"rundll32.exe\") AND (Processes.process IN (\"*FromBase64String*\",\"*IEX*\",\"*Invoke-Expression*\",\"*Reflection.Assembly*\",\"*DownloadString*\") OR Processes.process IN (\"*rundll32*.dat,*\",\"*rundll32*.tmp,*\",\"*rundll32*.bin,*\",\"*rundll32*.log,*\")) by host Processes.parent_process_name Processes.process_name Processes.process Processes.user | `drop_dm_object_name(Processes)` | join host [ | tstats summariesonly=true count as dns_count values(DNS.query) as gmail_query min(_time) as dns_firstTime from datamodel=Network_Resolution.DNS where DNS.query IN (\"mail.google.com\",\"accounts.google.com\",\"apis.google.com\") by host | `drop_dm_object_name(DNS)` ] | where dns_firstTime >= firstTime AND dns_firstTime <= firstTime+7200 | table firstTime, dns_firstTime, host, user, parent_process_name, process_name, process, gmail_query, dns_count | sort - firstTime",
+      "kql": "let SuspiciousWmi = DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName =~ \"WmiPrvSE.exe\"\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"rundll32.exe\")\n| where ProcessCommandLine has_any (\"FromBase64String\",\"IEX\",\"Invoke-Expression\",\"Reflection.Assembly\",\"DownloadString\")\n    or ProcessCommandLine matches regex @\"(?i)rundll32\\.exe\\s+[\\\"']?.+\\.(dat|tmp|bin|log|cfg)[\\\"']?,\"\n| where AccountName !endswith \"$\"\n| project WmiTime=Timestamp, DeviceName, AccountName,\n          WmiChild=FileName, WmiCmd=ProcessCommandLine,\n          ParentCmd=InitiatingProcessCommandLine;\nlet GmailC2 = DeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemoteUrl has_any (\"mail.google.com\",\"accounts.google.com\",\"apis.google.com\",\"www.googleapis.com\")\n| where InitiatingProcessFileName !in~ (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"iexplore.exe\",\"opera.exe\",\"safari.exe\",\"OneDrive.exe\",\"Teams.exe\",\"OUTLOOK.EXE\")\n| project NetTime=Timestamp, DeviceName,\n          NetProc=InitiatingProcessFileName, NetCmd=InitiatingProcessCommandLine,\n          RemoteUrl, RemoteIP;\nSuspiciousWmi\n| join kind=inner GmailC2 on DeviceName\n| where NetTime between (WmiTime .. WmiTime + 2h)   // ComRAT polls Gmail within minutes of orchestrator launch\n| project WmiTime, NetTime,\n          DelaySec = datetime_diff('second', NetTime, WmiTime),\n          DeviceName, AccountName,\n          WmiChild, WmiCmd, NetProc, NetCmd, RemoteUrl, RemoteIP\n| order by WmiTime desc",
+      "sentinel_kql": "let SuspiciousWmi = SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where ParentProcessName endswith \"\\\\WmiPrvSE.exe\"\n| where NewProcessName endswith \"\\\\powershell.exe\" or NewProcessName endswith \"\\\\pwsh.exe\" or NewProcessName endswith \"\\\\rundll32.exe\"\n| where CommandLine has_any (\"FromBase64String\",\"IEX\",\"Invoke-Expression\",\"Reflection.Assembly\",\"DownloadString\")\n    or CommandLine matches regex @\"(?i)rundll32\\.exe\\s+.+\\.(dat|tmp|bin|log|cfg),\"\n| where SubjectUserName !endswith \"$\"\n| project WmiTime=TimeGenerated, Computer, SubjectUserName,\n          WmiChild=NewProcessName, WmiCmd=CommandLine;\nlet GmailC2 = DnsEvents\n| where TimeGenerated > ago(7d)\n| where Name in~ (\"mail.google.com\",\"accounts.google.com\",\"apis.google.com\",\"www.googleapis.com\")\n| project DnsTime=TimeGenerated, Computer, DnsQuery=Name, ClientIP;\nSuspiciousWmi\n| join kind=inner GmailC2 on Computer\n| where DnsTime between (WmiTime .. WmiTime + 2h)\n| project WmiTime, DnsTime,\n          DelaySec = datetime_diff('second', DnsTime, WmiTime),\n          Computer, SubjectUserName, WmiChild, WmiCmd, DnsQuery, ClientIP\n| order by WmiTime desc",
+      "sigma_yaml": "",
+      "datadog_query": "source:windows.sysmon @EventID:1 @ParentImage:(*\\\\WmiPrvSE.exe OR *\\\\wmiprvse.exe OR *\\\\WMIPRVSE.EXE) @Image:(*\\\\powershell.exe OR *\\\\PowerShell.exe OR *\\\\POWERSHELL.EXE OR *\\\\pwsh.exe OR *\\\\rundll32.exe OR *\\\\RunDll32.exe OR *\\\\RUNDLL32.EXE) @CommandLine:(*FromBase64String* OR *frombase64string* OR *IEX* OR *Invoke-Expression* OR *Reflection.Assembly* OR *DownloadString*)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ParentBaseFileName=/WmiPrvSE\\.exe/i\n| ImageFileName=/(powershell|pwsh|rundll32)\\.exe$/i\n| regex(\"(FromBase64String|IEX|Invoke-Expression|Reflection\\\\.Assembly|DownloadString|rundll32\\\\.exe.+\\\\.(dat|tmp|bin|log|cfg),)\", field=CommandLine, flags=\"i\")\n| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())\n| join({#event_simpleName=DnsRequest DomainName=/^(mail\\.google\\.com|accounts\\.google\\.com|apis\\.google\\.com|www\\.googleapis\\.com)$/i}, field=aid, include=[DomainName, ContextImageFileName])",
+      "cloudwatch_query": "",
+      "rationale": "ComRAT v4 (ESET 2020, attributed to Turla / Secret Blizzard) is the only well-documented APT framework that combines (a) WMI Event Subscription persistence launching a small PowerShell/rundll32 loader for the orchestrator with (b) using the Gmail web UI as a bidirectional C2 channel by replaying stolen cookies from a non-browser process. APT29 uses cloud-app C2 but via legitimate OAuth flows, not ",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "OneDrive",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`OneDrive` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Teams",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Teams` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "OUTLOOK",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`OUTLOOK` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemoteUrl",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteUrl` is not a column of DeviceProcessEvents; it does exist on DeviceNetworkEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemoteIP",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceLogonEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteIP` is not a column of DeviceProcessEvents; it does exist on DeviceNetworkEvents, DeviceLogonEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "GmailC2",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`GmailC2` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "WmiTime",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`WmiTime` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "WmiChild",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`WmiChild` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "WmiCmd",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`WmiCmd` is not a canonical column of DeviceProcessEvents."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] Turla LightNeuron \u2014 Exchange Transport Agent backdoor installation",
+      "description": "Hunts ESET-documented LightNeuron (Turla / Snake / Venomous Bear) persistence on Microsoft Exchange: an unsigned (non-Microsoft) DLL written under \\TransportRoles\\agents\\, or PowerShell invoking Install-TransportAgent / Enable-TransportAgent referencing a non-vendor assembly. LightNeuron is the only known APT mail-server implant of this design; the same TTP applies to Turla's later Exchange-side tooling.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1505.002",
+        "T1547.001",
+        "T1059.001",
+        "T1036.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=\"*\\\\TransportRoles\\\\agents\\\\*\" OR Filesystem.file_path=\"*\\\\Exchange Server\\\\V15\\\\TransportRoles\\\\*\") AND Filesystem.file_name=\"*.dll\" AND Filesystem.action IN (\"created\",\"modified\",\"renamed\") by host Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | eval source_event=\"transport_dll_drop\" | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\") AND (Processes.process=\"*Install-TransportAgent*\" OR Processes.process=\"*Enable-TransportAgent*\") by host Processes.process Processes.user Processes.parent_process_name | `drop_dm_object_name(Processes)` | rename process as file_path | eval source_event=\"transport_agent_install\" ] | append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path=\"*\\\\TransportRoles\\\\Shared\\\\agents.config\" AND Filesystem.action IN (\"modified\",\"created\") by host Filesystem.file_path Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | eval source_event=\"agents_config_edit\" ] | sort - firstTime",
+      "kql": "let LookbackDays = 30d;\nlet TransportAgentDrop = DeviceFileEvents\n| where Timestamp > ago(LookbackDays)\n| where ActionType in (\"FileCreated\",\"FileRenamed\",\"FileModified\")\n| where FolderPath has @\"\\TransportRoles\\agents\\\" \n   or FolderPath has @\"\\Exchange Server\\V15\\TransportRoles\\\"\n| where FileName endswith \".dll\"\n| where InitiatingProcessVersionInfoCompanyName !has \"Microsoft\"      // LightNeuron drops unsigned/non-MS assemblies\n| where InitiatingProcessFileName !in~ (\"trustedinstaller.exe\",\"msiexec.exe\",\"setup.exe\",\"ExSetup.exe\",\"ServiceModelReg.exe\")\n| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,\n          InitiatorImage=InitiatingProcessFileName,\n          InitiatorCmd=InitiatingProcessCommandLine,\n          InitiatorAccount=InitiatingProcessAccountName,\n          InitiatorVendor=InitiatingProcessVersionInfoCompanyName,\n          Source=\"TransportAgentDllDrop\";\nlet TransportAgentInstall = DeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\")\n| where ProcessCommandLine has_any (\"Install-TransportAgent\",\"Enable-TransportAgent\")\n| where AccountName !endswith \"$\"\n| project Timestamp, DeviceName, ActionType=\"ProcessCreated\",\n          FileName=\"\", FolderPath=\"\", SHA256=\"\",\n          InitiatorImage=FileName,\n          InitiatorCmd=ProcessCommandLine,\n          InitiatorAccount=AccountName,\n          InitiatorVendor=\"\",\n          Source=\"TransportAgentInstallCmd\";\nlet AgentsConfigEdit = DeviceFileEvents\n| where Timestamp > ago(LookbackDays)\n| where ActionType in (\"FileModified\",\"FileCreated\")\n| where FolderPath has @\"\\TransportRoles\\Shared\\\" and FileName =~ \"agents.config\"\n| where InitiatingProcessVersionInfoCompanyName !has \"Microsoft\"\n| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,\n          InitiatorImage=InitiatingProcessFileName,\n          InitiatorCmd=InitiatingProcessCommandLine,\n          InitiatorAccount=InitiatingProcessAccountName,\n          InitiatorVendor=InitiatingProcessVersionInfoCompanyName,\n          Source=\"AgentsConfigEdit\";\nunion TransportAgentDrop, TransportAgentInstall, AgentsConfigEdit\n| order by Timestamp desc",
+      "sentinel_kql": "let LookbackDays = 30d;\nlet InstallCmd = SecurityEvent\n| where TimeGenerated > ago(LookbackDays)\n| where EventID == 4688\n| where NewProcessName endswith \"\\\\powershell.exe\" or NewProcessName endswith \"\\\\pwsh.exe\"\n| where CommandLine has_any (\"Install-TransportAgent\",\"Enable-TransportAgent\")\n| where SubjectUserName !endswith \"$\"\n| project Timestamp=TimeGenerated, Computer, Account=SubjectUserName,\n          ActionType=\"ProcessCreated\", FilePath=\"\",\n          Image=NewProcessName, Cmd=CommandLine,\n          Source=\"TransportAgentInstallCmd\";\nlet DllDrop = ImFileEvent\n| where TimeGenerated > ago(LookbackDays)\n| where EventType =~ \"FileCreated\" or EventType =~ \"FileModified\" or EventType =~ \"FileRenamed\"\n| where TargetFilePath has @\"\\TransportRoles\\agents\\\"\n     or TargetFilePath has @\"\\Exchange Server\\V15\\TransportRoles\\\"\n| where TargetFileExtension =~ \"dll\" or TargetFileName endswith \".dll\"\n| where ActingProcessName !endswith \"\\\\TrustedInstaller.exe\"\n     and ActingProcessName !endswith \"\\\\msiexec.exe\"\n     and ActingProcessName !endswith \"\\\\ExSetup.exe\"\n| project Timestamp=TimeGenerated, Computer=DvcHostname, Account=ActorUsername,\n          ActionType=EventType, FilePath=TargetFilePath,\n          Image=ActingProcessName, Cmd=ActingProcessCommandLine,\n          Source=\"TransportAgentDllDrop\";\nlet ConfigEdit = ImFileEvent\n| where TimeGenerated > ago(LookbackDays)\n| where EventType in~ (\"FileModified\",\"FileCreated\")\n| where TargetFilePath has @\"\\TransportRoles\\Shared\\\" and TargetFileName =~ \"agents.config\"\n| project Timestamp=TimeGenerated, Computer=DvcHostname, Account=ActorUsername,\n          ActionType=EventType, FilePath=TargetFilePath,\n          Image=ActingProcessName, Cmd=ActingProcessCommandLine,\n          Source=\"AgentsConfigEdit\";\nunion InstallCmd, DllDrop, ConfigEdit\n| order by Timestamp desc",
+      "sigma_yaml": "title: Turla LightNeuron Exchange Transport Agent Installation\nid: 9c4c8fb1-7c3d-4f5a-b8c0-2a1e6d7e4f3b\nstatus: experimental\ndescription: Detects PowerShell invocation of Install-TransportAgent or Enable-TransportAgent on Exchange \u2014 Turla's LightNeuron backdoor persists by registering itself as a transport agent. Combine with file-write telemetry under \\TransportRoles\\agents\\ for higher fidelity.\nreferences:\n  - https://www.welivesecurity.com/2019/05/07/turla-lightneuron-email-too-far/\n  - https://attack.mitre.org/groups/G0010/\n  - https://attack.mitre.org/techniques/T1505/002/\nauthor: SOC Detection Engineering\ndate: 2026/05/28\ntags:\n  - attack.persistence\n  - attack.t1505.002\n  - attack.g0010\nlogsource:\n  product: windows\n  category: process_creation\ndetection:\n  selection_image:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n  selection_cmd:\n    CommandLine|contains:\n      - 'Install-TransportAgent'\n      - 'Enable-TransportAgent'\n  filter_machine:\n    User|endswith: '$'\n  condition: selection_image and selection_cmd and not filter_machine\nfalsepositives:\n  - Approved Exchange administrators installing vendor anti-spam / DLP transport agents (validate Assembly path is signed by the vendor)\nlevel: high",
+      "datadog_query": "source:windows.sysmon ((@EventID:11 @TargetFilename:(*\\\\TransportRoles\\\\agents\\\\*.dll OR *\\\\TransportRoles\\\\agents\\\\*.DLL OR *\\\\TransportRoles\\\\Shared\\\\agents.config)) OR (@EventID:1 @Image:(*\\\\powershell.exe OR *\\\\PowerShell.exe OR *\\\\POWERSHELL.EXE OR *\\\\pwsh.exe) @CommandLine:(*Install-TransportAgent* OR *Enable-TransportAgent*)))",
+      "falcon_logscale_query": "(#event_simpleName=FileWritten regex(\"\\\\\\\\TransportRoles\\\\\\\\(agents|Shared)\\\\\\\\\", field=TargetFileName, flags=\"i\") regex(\"\\\\.(dll|config)$\", field=TargetFileName, flags=\"i\") NOT ContextImageFileName=/(TrustedInstaller|msiexec|ExSetup|ServiceModelReg)\\.exe$/i)\nOR (#event_simpleName=ProcessRollup2 ImageFileName=/(powershell|pwsh)\\.exe$/i regex(\"(Install-TransportAgent|Enable-TransportAgent)\", field=CommandLine, flags=\"i\"))\n| groupBy([aid, ComputerName, UserName, ImageFileName, ContextImageFileName, TargetFileName, CommandLine], function=count())",
+      "cloudwatch_query": "",
+      "rationale": "LightNeuron (ESET 2019) is Turla / Venomous Bear's only publicly-documented Exchange mail-server backdoor and is one of the only known APT implants to weaponise the Microsoft Exchange Transport Agent extensibility surface (T1505.002). Custom transport agents are extremely rare in normal estates \u2014 virtually all are vendor-signed anti-spam/DLP products dropped by setup.exe / msiexec. A non-Microsoft"
+    }
+  ]
+}

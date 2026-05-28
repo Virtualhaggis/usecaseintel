@@ -11,27 +11,29 @@ By Sergiu Gatlan
 May 28, 2026
 10:25 AM
 0 
-
-
 An unpatched zero-day vulnerability in the Gogs self-hosted Git service can allow attackers to gain remote code execution (RCE) on Internet-facing instances.
-
-
 Designed as an alternative to GitHub Enterprise or GitLab and written in Go, Gogs is often exposed online for remote collaboration.
-
-
-This critical severity argument injection security flaw has yet to be assigned a CVE ID, aff…
+This critical severity argument injection security flaw has yet to be assigned a CVE ID, affects the lat…
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **CVE:** `CVE-2025-8110`
+- **CVE:** `CVE-2024-55947`
 - **CVE:** `CVE-2024-39933`
 - **CVE:** `CVE-2024-39932`
 - **CVE:** `CVE-2026-26194`
 - **CVE:** `CVE-2024-39930`
-- **CVE:** `CVE-2025-8110`
+- **IPv4 (defanged):** `119.45.176.196`
+- **IPv4 (defanged):** `106.53.108.81`
+- **IPv4 (defanged):** `119.91.42.53`
+- **SHA1:** `d8fcd57a71f9f6e55b063939dc7c1523660b7383`
+- **SHA1:** `efda81e1100ea977321d0f2eeb0dfa7a6b132abd`
 
 ## MITRE ATT&CK Techniques
 
 - **T1190** — Exploit Public-Facing Application
+- **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1068** — Exploitation for Privilege Escalation
 - **T1505.003** — Server Software Component: Web Shell
@@ -45,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Gogs RCE: git rebase invoked with --exec flag (argument injection)
 
-`UC_5_1` · phase: **exploit** · confidence: **High**
+`UC_9_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +72,7 @@ DeviceProcessEvents
 
 ### [LLM] Post-exploit shell or LOLBin spawned by git invoked from Gogs server
 
-`UC_5_2` · phase: **install** · confidence: **High**
+`UC_9_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,9 +104,15 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2024-39933`, `CVE-2024-39932`, `CVE-2026-26194`, `CVE-2024-39930`, `CVE-2025-8110`
+  - CVE(s): `CVE-2025-8110`, `CVE-2024-55947`, `CVE-2024-39933`, `CVE-2024-39932`, `CVE-2026-26194`, `CVE-2024-39930`
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `119.45.176.196`, `106.53.108.81`, `119.91.42.53`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `d8fcd57a71f9f6e55b063939dc7c1523660b7383`, `efda81e1100ea977321d0f2eeb0dfa7a6b132abd`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, IOCs present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

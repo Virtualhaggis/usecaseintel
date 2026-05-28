@@ -1,0 +1,84 @@
+{
+  "name": "Berserk Bear",
+  "ucs": [
+    {
+      "title": "[LLM] Berserk Bear ICS reconnaissance: outlook.exe \u2192 LOLBin SMB enumeration of file shares",
+      "description": "Hunts the characteristic DragonFly/Energetic Bear post-compromise reconnaissance chain where a spear-phished Outlook session spawns native Windows enumeration tooling (net.exe, net1.exe, nltest, dsquery) to inventory shares, domain trusts and SCADA/ICS file servers \u2014 the TTP combination CISA/FBI flagged in AA20-296A and the 2017\u20132020 western energy-sector intrusions attributed to TEMP.Isotope / DYMALLOY.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1018",
+        "T1135",
+        "T1087.002",
+        "T1069.002",
+        "T1059.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_name) as recon_tools dc(Processes.process_name) as distinct_tools from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"outlook.exe\",\"winword.exe\",\"excel.exe\",\"acrord32.exe\") (Processes.process_name IN (\"net.exe\",\"net1.exe\",\"nltest.exe\",\"dsquery.exe\",\"systeminfo.exe\",\"whoami.exe\",\"qwinsta.exe\",\"tasklist.exe\",\"arp.exe\",\"ipconfig.exe\") OR Processes.process IN (\"*net view*\",\"*net group*\",\"*net user /domain*\",\"*nltest /domain_trusts*\",\"*dsquery server*\")) by host Processes.user Processes.parent_process_name Processes.dest | where distinct_tools >= 3 | rename Processes.* as * | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime",
+      "kql": "let LookbackDays = 7d;\nlet ReconTools = dynamic([\"net.exe\",\"net1.exe\",\"nltest.exe\",\"dsquery.exe\",\"systeminfo.exe\",\"whoami.exe\",\"qwinsta.exe\",\"tasklist.exe\",\"arp.exe\",\"ipconfig.exe\"]);\nlet OfficeParents = dynamic([\"outlook.exe\",\"winword.exe\",\"excel.exe\",\"acrord32.exe\",\"powerpnt.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where InitiatingProcessFileName in~ (OfficeParents)\n   or InitiatingProcessParentFileName in~ (OfficeParents)\n| where FileName in~ (ReconTools)\n   or ProcessCommandLine has_any (\"net view\",\"net group\",\"net user /domain\",\"nltest /domain_trusts\",\"dsquery server\",\"net share\",\"net use\")\n| where AccountName !endswith \"$\"\n| summarize ReconCount = count(),\n            DistinctTools = dcount(FileName),\n            ToolList = make_set(FileName, 25),\n            SampleCmds = make_set(ProcessCommandLine, 10),\n            FirstSeen = min(Timestamp),\n            LastSeen = max(Timestamp)\n          by DeviceName, AccountName, InitiatingProcessFileName, bin(Timestamp, 10m)\n| where DistinctTools >= 3   // 3+ distinct recon binaries within 10m off the same Office parent\n| project FirstSeen, LastSeen, DeviceName, AccountName, OfficeParent = InitiatingProcessFileName, DistinctTools, ToolList, SampleCmds\n| order by LastSeen desc",
+      "sentinel_kql": "let LookbackDays = 7d;\nlet ReconTools = dynamic([\"net.exe\",\"net1.exe\",\"nltest.exe\",\"dsquery.exe\",\"systeminfo.exe\",\"whoami.exe\",\"qwinsta.exe\",\"tasklist.exe\",\"arp.exe\",\"ipconfig.exe\"]);\nlet OfficeParents = dynamic([\"outlook.exe\",\"winword.exe\",\"excel.exe\",\"acrord32.exe\",\"powerpnt.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(LookbackDays)\n| where EventID == 4688\n| extend NewProcLower = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| extend ParentProcLower = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1]))\n| where ParentProcLower in (OfficeParents)\n| where NewProcLower in (ReconTools)\n   or CommandLine has_any (\"net view\",\"net group\",\"net user /domain\",\"nltest /domain_trusts\",\"dsquery server\",\"net share\")\n| where SubjectUserName !endswith \"$\"\n| summarize DistinctTools = dcount(NewProcLower),\n            ToolList = make_set(NewProcLower, 25),\n            SampleCmds = make_set(CommandLine, 10),\n            FirstSeen = min(TimeGenerated),\n            LastSeen = max(TimeGenerated)\n          by Computer, SubjectUserName, ParentProcLower, bin(TimeGenerated, 10m)\n| where DistinctTools >= 3\n| project FirstSeen, LastSeen, Computer, SubjectUserName, OfficeParent = ParentProcLower, DistinctTools, ToolList, SampleCmds\n| order by LastSeen desc",
+      "sigma_yaml": "",
+      "datadog_query": "source:windows.sysmon @EventID:1 @ParentImage:(*\\outlook.exe OR *\\OUTLOOK.EXE OR *\\winword.exe OR *\\WINWORD.EXE OR *\\excel.exe OR *\\EXCEL.EXE OR *\\acrord32.exe OR *\\AcroRd32.exe) @Image:(*\\net.exe OR *\\NET.EXE OR *\\net1.exe OR *\\NET1.EXE OR *\\nltest.exe OR *\\NLTEST.EXE OR *\\dsquery.exe OR *\\DSQUERY.EXE OR *\\whoami.exe OR *\\WHOAMI.EXE OR *\\systeminfo.exe OR *\\SYSTEMINFO.EXE OR *\\qwinsta.exe OR *\\QWINSTA.EXE)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(outlook|winword|excel|acrord32|powerpnt)\\.exe$/i\n| ImageFileName=/\\\\(net|net1|nltest|dsquery|systeminfo|whoami|qwinsta|tasklist|arp|ipconfig)\\.exe$/i OR regex(\"(net view|net group|net user /domain|nltest /domain_trusts|dsquery server|net share)\", field=CommandLine)\n| NOT UserName=/\\$$/\n| groupBy([aid, ComputerName, UserName, ParentBaseFileName], function=[count(as=runs), count(field=ImageFileName, distinct=true, as=distinct_tools), collect([ImageFileName, CommandLine])])\n| distinct_tools >= 3",
+      "cloudwatch_query": "",
+      "rationale": "DragonFly/Berserk Bear's CISA-documented playbook (AA20-296A, ICS-CERT TA17-293A, Symantec 'Dragonfly 2.0') consistently shows the same post-phish recon sequence: Office/Outlook-spawned cmd.exe runs net view / net group / nltest /domain_trusts / dsquery server back-to-back to map the ICS engineering network. Bundling THREE+ distinct enumeration LOLBins under a single Office parent in a 10-minute w"
+    },
+    {
+      "title": "[LLM] Berserk Bear SMB credential-theft via forced authentication (T1187) to attacker-controlled responder",
+      "description": "Hunts DragonFly/DYMALLOY's distinctive watering-hole + template-injection credential harvesting chain: a Word/Excel document loads a remote SMB resource over port 445 to an external IP, forcing the user's NTLM hash out to attacker infrastructure for offline cracking \u2014 the exact TTP Symantec and CISA attributed to this group's 2017\u20132018 energy-sector campaigns and reused against US state/local govt in 2020.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1187",
+        "T1221",
+        "T1003.003",
+        "T1071.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (445,139) NOT (All_Traffic.dest_ip IN (10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,169.254.0.0/16,127.0.0.0/8)) by host All_Traffic.src All_Traffic.dest All_Traffic.dest_port | rename All_Traffic.* as * | join type=inner host [| tstats summariesonly=t values(Processes.process_name) as parent_proc values(Processes.process) as parent_cmd from datamodel=Endpoint.Processes where Processes.process_name IN (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\") by host Processes.user | rename Processes.* as *] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime",
+      "kql": "let LookbackDays = 7d;\nlet OfficeBins = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"onenote.exe\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(LookbackDays)\n| where RemotePort in (445, 139)\n| where RemoteIPType == \"Public\"   // external SMB = inherently suspicious\n| where InitiatingProcessFileName in~ (OfficeBins)\n   or InitiatingProcessParentFileName in~ (OfficeBins)\n| where InitiatingProcessAccountName !endswith \"$\"\n| project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,\n          OfficeProcess = InitiatingProcessFileName,\n          OfficeCmd = InitiatingProcessCommandLine,\n          RemoteIP, RemotePort, RemoteUrl,\n          ParentProcess = InitiatingProcessParentFileName\n| order by Timestamp desc",
+      "sentinel_kql": "let LookbackDays = 7d;\nlet OfficeBins = dynamic([\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"onenote.exe\"]);\nImNetworkSession\n| where TimeGenerated > ago(LookbackDays)\n| where DstPortNumber in (445, 139)\n| where not(ipv4_is_private(DstIpAddr))\n| extend ActingBin = tolower(tostring(split(ActingProcessName, \"\\\\\")[-1]))\n| where ActingBin in (OfficeBins)\n| where SrcUsername !endswith \"$\"\n| project TimeGenerated, Host = SrcHostname, User = SrcUsername,\n          OfficeProcess = ActingBin,\n          OfficeCmd = ActingProcessCommandLine,\n          DstIpAddr, DstPortNumber\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Berserk Bear SMB Forced-Authentication via Office Document\nid: 7b3f2d18-2c4a-4e6f-9a8d-5e1c4f0a9c33\nstatus: experimental\ndescription: Detects Office applications initiating outbound SMB (445/139) to external IPs \u2014 the DragonFly/Berserk Bear T1187 forced-authentication NTLM-relay TTP.\nreferences:\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-296a\n  - https://attack.mitre.org/groups/G0035/\nauthor: Detection Engineering\ndate: 2024/01/15\ntags:\n  - attack.credential_access\n  - attack.t1187\n  - attack.t1221\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection_proc:\n    Image|endswith:\n      - '\\winword.exe'\n      - '\\excel.exe'\n      - '\\powerpnt.exe'\n      - '\\outlook.exe'\n      - '\\onenote.exe'\n  selection_port:\n    DestinationPort:\n      - 445\n      - 139\n  filter_private:\n    DestinationIp|cidr:\n      - '10.0.0.0/8'\n      - '172.16.0.0/12'\n      - '192.168.0.0/16'\n      - '127.0.0.0/8'\n      - '169.254.0.0/16'\n  condition: selection_proc and selection_port and not filter_private\nfalsepositives:\n  - Legitimate Office connectivity to cloud SMB (rare; should be Azure Files via 445 with private endpoint)\nlevel: high",
+      "datadog_query": "source:windows.sysmon @EventID:3 @Image:(*\\winword.exe OR *\\WINWORD.EXE OR *\\excel.exe OR *\\EXCEL.EXE OR *\\powerpnt.exe OR *\\POWERPNT.EXE OR *\\outlook.exe OR *\\OUTLOOK.EXE) @DestinationPort:(445 OR 139) -CIDR(@DestinationIp, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8, 169.254.0.0/16)",
+      "falcon_logscale_query": "#event_simpleName=NetworkConnectIP4 RemotePort=445 OR RemotePort=139\n| ContextImageFileName=/\\\\(winword|excel|powerpnt|outlook|onenote)\\.exe$/i\n| NOT cidr(\"10.0.0.0/8\", field=RemoteAddressIP4)\n| NOT cidr(\"172.16.0.0/12\", field=RemoteAddressIP4)\n| NOT cidr(\"192.168.0.0/16\", field=RemoteAddressIP4)\n| NOT cidr(\"169.254.0.0/16\", field=RemoteAddressIP4)\n| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=[count(as=attempts), min(@timestamp, as=first_seen), max(@timestamp, as=last_seen)])\n| sort(last_seen, order=desc)",
+      "cloudwatch_query": "",
+      "rationale": "Outbound SMB to a public IP from a Microsoft Office process is essentially never legitimate \u2014 Office Online uses HTTPS, not raw SMB. Symantec's Dragonfly 2.0 report and CISA AA20-296A both highlight that Berserk Bear distributed weaponized .docx files with embedded remote SMB template references (file://attacker-ip/template.dotm) specifically to coerce NTLMv2 hashes from energy-sector engineers' w",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessCommandLine",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessCommandLine` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        }
+      ]
+    }
+  ]
+}

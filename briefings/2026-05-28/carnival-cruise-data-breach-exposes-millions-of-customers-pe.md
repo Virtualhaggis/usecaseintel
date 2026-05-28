@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Carnival Cruise Data Breach Exposes Millions of Customers’ Personal Information
 
-`UC_10_0` · phase: **exploit** · confidence: **High**
+`UC_14_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

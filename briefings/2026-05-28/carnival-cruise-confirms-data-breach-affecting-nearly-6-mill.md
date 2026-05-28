@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Bulk Salesforce record export / report download by single user (UNC6040 data-theft TTP)
 
-`UC_16_4` · phase: **actions** · confidence: **Medium**
+`UC_18_4` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ CloudAppEvents
 
 ### [LLM] User consent to non-corporate OAuth app requesting Salesforce or mail-read scope
 
-`UC_16_5` · phase: **install** · confidence: **High**
+`UC_18_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ CloudAppEvents
 
 ### [LLM] Helpdesk-impersonation pattern: AAD MFA method registration immediately followed by sign-in from new geo
 
-`UC_16_6` · phase: **delivery** · confidence: **Medium**
+`UC_18_6` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

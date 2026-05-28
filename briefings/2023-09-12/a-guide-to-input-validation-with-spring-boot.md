@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — A guide to input validation with Spring Boot
 
-`UC_1354_0` · phase: **exploit** · confidence: **High**
+`UC_1363_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

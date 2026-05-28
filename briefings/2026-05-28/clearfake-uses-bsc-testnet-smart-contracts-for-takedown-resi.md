@@ -10,12 +10,8 @@ Home Cyber Security News
 ClearFake Uses BSC Testnet Smart Contracts for Takedown-Resistant Command and Control 
 By Tushar Subhra Dutta 
 May 28, 2026 
-
-
-
-
 A new and dangerously clever malware campaign called ClearFake has been caught using blockchain smart contracts to run its operations, making it nearly impossible for security teams to shut it down. 
-Instead of relying on traditional servers that can be taken offline, the attackers hid their command-and-control infrastructure inside the BN…
+Instead of relying on traditional servers that can be taken offline, the attackers hid their command-and-control infrastructure inside the BNB Smart …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -64,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ClearFake C2 query to BNB Smart Chain testnet RPC endpoint
 
-`UC_1_13` · phase: **c2** · confidence: **High**
+`UC_4_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +86,7 @@ DeviceNetworkEvents
 
 ### [LLM] ClickFix Run-dialog rundll32 with WebDAV UNC port syntax
 
-`UC_1_14` · phase: **exploit** · confidence: **High**
+`UC_4_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +113,7 @@ DeviceProcessEvents
 
 ### [LLM] Rundll32 loads put34b.camp DLL via WebDAV mini-redirector
 
-`UC_1_15` · phase: **install** · confidence: **High**
+`UC_4_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +141,7 @@ LoadEvents
 
 ### [LLM] ClearFake dllhost spawned by rundll32 injecting into Chrome/Edge
 
-`UC_1_16` · phase: **actions** · confidence: **High**
+`UC_4_16` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -179,7 +175,7 @@ SuspiciousDllHost
 
 ### [LLM] ClearFake Python RAT staging in FileZilla Data masquerade directory
 
-`UC_1_17` · phase: **install** · confidence: **High**
+`UC_4_17` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -589,7 +585,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ClearFake Uses BSC Testnet Smart Contracts for Takedown-Resistant Command and Co
 
-`UC_1_12` · phase: **exploit** · confidence: **High**
+`UC_4_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -10,12 +10,8 @@ Home Cyber Security News
 Hackers Deploy VIP Keylogger Through Phishing Emails Masquerading as Business Documents 
 By Tushar Subhra Dutta 
 May 28, 2026 
-
-
-
-
 Hackers are using deceptive phishing emails dressed up as routine business documents to spread a dangerous malware strain known as VIP Keylogger. 
-The campaign has been active for months, with attackers showing absolutely no signs of slowing down. VIP Keylogger is part of a broader wave of information-stealing malware that has taken over…
+The campaign has been active for months, with attackers showing absolutely no signs of slowing down. VIP Keylogger is part of a broader wave of information-stealing malware that has taken over the thr…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -74,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] VIP Keylogger persistence via UserInitMprLogonScript registry value
 
-`UC_0_9` · phase: **install** · confidence: **High**
+`UC_3_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +90,7 @@ DeviceRegistryEvents
 
 ### [LLM] VIP Keylogger PowerShell stager hidden in INTERNAL_DB_CACHE environment variable
 
-`UC_0_10` · phase: **install** · confidence: **High**
+`UC_3_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +113,7 @@ union
 
 ### [LLM] aspnet_compiler.exe making outbound public network connections (VIP Keylogger injection target)
 
-`UC_0_11` · phase: **c2** · confidence: **High**
+`UC_3_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +133,7 @@ DeviceNetworkEvents
 
 ### [LLM] VIP Keylogger steganographic PNG payload download from vault88x.secure-efficient2.su
 
-`UC_0_12` · phase: **delivery** · confidence: **High**
+`UC_3_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,7 +151,7 @@ DeviceNetworkEvents
 
 ### [LLM] VIP Keylogger loader chain: script-host parent spawning PowerShell that reads environment variables
 
-`UC_0_13` · phase: **install** · confidence: **High**
+`UC_3_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -176,7 +172,7 @@ DeviceProcessEvents
 
 ### [LLM] VIP Keylogger sandbox / geolocation reconnaissance via reallyfreegeoip and checkip.dyndns from non-browser process
 
-`UC_0_14` · phase: **actions** · confidence: **High**
+`UC_3_14` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -435,7 +431,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Deploy VIP Keylogger Through Phishing Emails Masquerading as Business Do
 
-`UC_0_8` · phase: **exploit** · confidence: **High**
+`UC_3_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

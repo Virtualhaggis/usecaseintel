@@ -13,17 +13,56 @@ A new campaign orchestrated by a previously undocumented threat actor has target
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-45585`
-- **CVE:** `CVE-2026-31635`
-- **CVE:** `CVE-2026-42945`
+- **IPv4 (defanged):** `185.100.85.250`
+- **IPv4 (defanged):** `84.32.83.250`
+- **IPv4 (defanged):** `163.172.53.20`
+- **IPv4 (defanged):** `185.100.85.98`
+- **IPv4 (defanged):** `153.92.126.84`
+- **IPv4 (defanged):** `45.45.217.242`
+- **IPv4 (defanged):** `89.36.224.5`
+- **IPv4 (defanged):** `208.115.220.17`
+- **IPv4 (defanged):** `185.175.59.85`
 - **Domain (defanged):** `apple.driver-store.com`
+- **Domain (defanged):** `driver-store.com`
+- **Domain (defanged):** `windows.driver-store.com`
+- **Domain (defanged):** `driver-updater.net`
+- **Domain (defanged):** `driver-hub.net`
+- **Domain (defanged):** `apple.driver-hub.net`
+- **Domain (defanged):** `driver-update.io`
+- **Domain (defanged):** `apple.driver-update.io`
+- **Domain (defanged):** `drvstore.com`
+- **Domain (defanged):** `live.us.org`
+- **Domain (defanged):** `team.live.us.org`
+- **Domain (defanged):** `teams.live.us.org`
+- **Domain (defanged):** `teams.us.org`
+- **Domain (defanged):** `teams.cam`
+- **Domain (defanged):** `teamicrosoft.com`
+- **Domain (defanged):** `bitget-meeting.com`
+- **Domain (defanged):** `us03-slack.online`
+- **Domain (defanged):** `slktest.live`
+- **Domain (defanged):** `live.ong`
+- **Domain (defanged):** `retesta.live`
+- **Domain (defanged):** `datahub.ink`
+- **Domain (defanged):** `cloud-sync.online`
+- **Domain (defanged):** `byte-io.us`
+- **SHA256:** `65cba741fe30fa4799fb9002ea8de6d96042a59159dd7c3419c766af24c835e6`
+- **SHA256:** `0b1a36a31b952341a534fe24890f1ed2921ee259773cff46e4f6273b8c4d5d21`
+- **SHA256:** `e8ee6f5145c9d503c5130bfc6585567f6e19d409158c3c0ca0b259f1875b15f4`
+- **SHA256:** `3e3901519c2305fbe9d5483b7234c25c6d2b562512916481d96f26b849c39fdb`
+- **SHA256:** `0a8ab3d16b12d3a453ee5a3208fe04744ad54514ef8ea27bb8fe32679efad270`
+- **SHA256:** `a35d2b67fa478a7174e308b43ce30bf69b3bc6f44fa76197fdf95fc2fbc1cf5b`
+- **SHA256:** `9c2ce925133a3bf5a924063bbef8df49918d5b7258695c1894cd18c75970157a`
+- **SHA256:** `402625ec79e3573a80b6de9b33fc1e503e3c7803603cd958ddd515fb0549007c`
+- **SHA256:** `b6cab0b3aa8e56e2427f486c74588d598ae58bb0cbc0eda6939fe171cb0aed17`
+- **SHA256:** `d4e863f9818bfb2f1dd932df6441dff204e6142c3bdb55b298cb08dc7b6a0c62`
+- **SHA256:** `c6ef82d2864dfd26f117a1ef5602679153423f2742970a7949cec72722f0a01e`
+- **SHA256:** `2a10ffe0367bb1b26ba2c3bc600892c21074725c0b8c9dc9161e6ceb33915460`
 
 ## MITRE ATT&CK Techniques
 
 - **T1176** — Browser Extensions
 - **T1539** — Steal Web Session Cookie
 - **T1555.003** — Credentials from Web Browsers
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -36,6 +75,7 @@ A new campaign orchestrated by a previously undocumented threat actor has target
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
@@ -327,13 +367,13 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-45585`, `CVE-2026-31635`, `CVE-2026-42945`
-
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `apple.driver-store.com`
+  - IP / domain IOC(s): `185.100.85.250`, `84.32.83.250`, `163.172.53.20`, `185.100.85.98`, `153.92.126.84`, `45.45.217.242`, `89.36.224.5`, `208.115.220.17` _(+24 more)_
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `65cba741fe30fa4799fb9002ea8de6d96042a59159dd7c3419c766af24c835e6`, `0b1a36a31b952341a534fe24890f1ed2921ee259773cff46e4f6273b8c4d5d21`, `e8ee6f5145c9d503c5130bfc6585567f6e19d409158c3c0ca0b259f1875b15f4`, `3e3901519c2305fbe9d5483b7234c25c6d2b562512916481d96f26b849c39fdb`, `0a8ab3d16b12d3a453ee5a3208fe04744ad54514ef8ea27bb8fe32679efad270`, `a35d2b67fa478a7174e308b43ce30bf69b3bc6f44fa76197fdf95fc2fbc1cf5b`, `9c2ce925133a3bf5a924063bbef8df49918d5b7258695c1894cd18c75970157a`, `402625ec79e3573a80b6de9b33fc1e503e3c7803603cd958ddd515fb0549007c` _(+4 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

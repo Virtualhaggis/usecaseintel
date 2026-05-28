@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Best practices for building a production-ready Dockerfile for PHP applications
 
-`UC_1367_0` · phase: **exploit** · confidence: **High**
+`UC_1376_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

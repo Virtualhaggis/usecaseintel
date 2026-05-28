@@ -10,13 +10,10 @@ Home Cyber Security
 New Zapocalypse Attack Chain Enables Full Zapier Account Takeover 
 By Guru Baran 
 May 28, 2026 
-
-
-
-
 A newly disclosed exploit chain dubbed Zapocalypse shows how a low-privilege code-execution feature inside Zapier could have been chained into a supply-chain path with platform-wide account takeover impact.
 Token Security said its researcher will present the Zapocalypse exploit chain targeting Zapier users at fwd:cloudsec North America on June 1, 2026.
-Zapocalypse Attack C…
+Zapocalypse Attack Chain 
+Ac…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -56,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] os.system / shell exec in Code by Zapier Lambda runtime (Zapocalypse stage 1)
 
-`UC_4_9` · phase: **exploit** · confidence: **Medium**
+`UC_8_9` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +74,7 @@ DeviceProcessEvents
 
 ### [LLM] Process reading /proc/self/mem or /proc/<pid>/mem on Linux container host (Zapocalypse stage 2)
 
-`UC_4_10` · phase: **install** · confidence: **High**
+`UC_8_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +95,7 @@ DeviceFileEvents
 
 ### [LLM] ECR enumeration + image layer pull chain from Lambda execution role (Zapocalypse stage 3)
 
-`UC_4_11` · phase: **actions** · confidence: **High**
+`UC_8_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +119,7 @@ CloudAppEvents
 
 ### [LLM] AssumedRole STS-derived call from Lambda role used outside Lambda service IP space (Zapocalypse stage 3 pivot)
 
-`UC_4_12` · phase: **actions** · confidence: **Medium**
+`UC_8_12` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -429,7 +426,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Zapocalypse Attack Chain Enables Full Zapier Account Takeover
 
-`UC_4_8` · phase: **exploit** · confidence: **High**
+`UC_8_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
