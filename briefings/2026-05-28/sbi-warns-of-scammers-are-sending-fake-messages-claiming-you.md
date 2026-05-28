@@ -10,12 +10,8 @@ Home Cyber Security News
 SBI Warns of Scammers are Sending Fake Messages Claiming Your YONO App Will be Deactivated 
 By Tushar Subhra Dutta 
 May 28, 2026 
-
-
-
-
 A new wave of social engineering attacks is targeting millions of State Bank of India customers across the country. Fraudsters are sending fake messages warning users that their YONO banking app will be deactivated unless they update their Aadhaar number immediately. 
-The scam has been circulating through SMS, WhatsApp, and unsolicite…
+The scam has been circulating through SMS, WhatsApp, and unsolicited emails…
 
 ## Indicators of Compromise (high-fidelity only)
 

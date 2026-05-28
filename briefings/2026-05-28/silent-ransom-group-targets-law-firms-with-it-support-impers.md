@@ -10,13 +10,9 @@ Home Cyber Security News
 Silent Ransom Group Targets Law Firms With IT Support Impersonation Attacks 
 By Tushar Subhra Dutta 
 May 28, 2026 
-
-
-
-
 A threat group known as the Silent Ransom Group is actively targeting US-based law firms using a bold and deceptive social engineering playbook. 
 Rather than deploying ransomware in the traditional sense, this group goes straight for the data and then turns it into a weapon against the very organizations it stole from. 
-The Silent Ransom Group (SRG)…
+The Silent Ransom Group (SRG), also t…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -57,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Silent Ransom Group / Luna Moth RMM Tool First-Time Execution
 
-`UC_0_10` · phase: **install** · confidence: **High**
+`UC_5_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +78,7 @@ DeviceProcessEvents
 
 ### [LLM] Renamed Rclone Binary Identified by Exfil Cmdline Signature
 
-`UC_0_11` · phase: **actions** · confidence: **High**
+`UC_5_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +100,7 @@ DeviceProcessEvents
 
 ### [LLM] WinSCP / SFTP Outbound to Public IP on Port 22 from Endpoint
 
-`UC_0_12` · phase: **actions** · confidence: **High**
+`UC_5_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +124,7 @@ DeviceNetworkEvents
 
 ### [LLM] DNS / Proxy Resolution of SRG Leak Site business-data-leaks[.]com
 
-`UC_0_13` · phase: **actions** · confidence: **High**
+`UC_5_13` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +147,7 @@ union
 
 ### [LLM] Rclone / WinSCP Beaconing to OneDrive or Google Drive (Cloud Exfil Chain)
 
-`UC_0_14` · phase: **actions** · confidence: **Medium**
+`UC_5_14` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

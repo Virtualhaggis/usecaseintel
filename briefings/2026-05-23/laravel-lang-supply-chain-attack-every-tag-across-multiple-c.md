@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Egress to typosquatted C2 flipboxstudio.info (Laravel-Lang Composer SC)
 
-`UC_68_5` · phase: **c2** · confidence: **High**
+`UC_69_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceNetworkEvents
 
 ### [LLM] PHP CLI drops hidden /tmp dropper artefacts (Laravel-Lang autoload payload)
 
-`UC_68_6` · phase: **install** · confidence: **High**
+`UC_69_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceFileEvents
 
 ### [LLM] Orphaned process (ppid=1) executing from /tmp hidden hex path (post-dropper stage-2)
 
-`UC_68_7` · phase: **actions** · confidence: **High**
+`UC_69_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceProcessEvents
 
 ### [LLM] GitHub bulk git tag force-push by single actor across multiple org repos
 
-`UC_68_8` · phase: **delivery** · confidence: **Medium**
+`UC_69_8` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -191,7 +191,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Laravel-Lang Supply Chain Attack: Every Tag Across Multiple Composer Packages Re
 
-`UC_68_4` · phase: **install** · confidence: **High**
+`UC_69_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

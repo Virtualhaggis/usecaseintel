@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1259 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,10 +9,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-28
+- [critical notepad vulnerabilities allow attackers to execute ](./2026-05-28/critical-notepad-vulnerabilities-allow-attackers-to-execute-.md)
 - [forticlient ems code execution vulnerability exploited to de](./2026-05-28/forticlient-ems-code-execution-vulnerability-exploited-to-de.md)
+- [jinx 0164 targets cryptocurrency firms with fake recruiter l](./2026-05-28/jinx-0164-targets-cryptocurrency-firms-with-fake-recruiter-l.md)
+- [microsoft warns public release of zero day details before ve](./2026-05-28/microsoft-warns-public-release-of-zero-day-details-before-ve.md)
 - [pirates in the crosshairs how one cybercrime gang has been i](./2026-05-28/pirates-in-the-crosshairs-how-one-cybercrime-gang-has-been-i.md)
 - [sbi warns of scammers are sending fake messages claiming you](./2026-05-28/sbi-warns-of-scammers-are-sending-fake-messages-claiming-you.md)
 - [silent ransom group targets law firms with it support impers](./2026-05-28/silent-ransom-group-targets-law-firms-with-it-support-impers.md)
+- [veeam backup replication tool vulnerability enables privileg](./2026-05-28/veeam-backup-replication-tool-vulnerability-enables-privileg.md)
 
 ## 2026-05-27
 - [3 soc steps that shut down incident risks early](./2026-05-27/3-soc-steps-that-shut-down-incident-risks-early.md)
@@ -34,10 +38,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [glassworm malware takedown disrupts developer supply chain a](./2026-05-27/glassworm-malware-takedown-disrupts-developer-supply-chain-a.md)
 - [gpu mining malware spreads via seo poisoning ai chatbots](./2026-05-27/gpu-mining-malware-spreads-via-seo-poisoning-ai-chatbots.md)
 - [grandoreiro malware and btmob rat campaigns target windows a](./2026-05-27/grandoreiro-malware-and-btmob-rat-campaigns-target-windows-a.md)
-- [hackers push 22 versions of npm rat with wallet theft and pe](./2026-05-27/hackers-push-22-versions-of-npm-rat-with-wallet-theft-and-pe.md)
-- [hackers use fake chatgpt and claude installers to deploy din](./2026-05-27/hackers-use-fake-chatgpt-and-claude-installers-to-deploy-din.md)
 - [hackers use grandoreiro malware to target portuguese banks a](./2026-05-27/hackers-use-grandoreiro-malware-to-target-portuguese-banks-a.md)
-- [how top cisos increase risk visibility for zero critical inc](./2026-05-27/how-top-cisos-increase-risk-visibility-for-zero-critical-inc.md)
 - [legitimate looking codex remote ui secretly steals your ai t](./2026-05-27/legitimate-looking-codex-remote-ui-secretly-steals-your-ai-t.md)
 - [malicious npm package stole files from claude ai user direct](./2026-05-27/malicious-npm-package-stole-files-from-claude-ai-user-direct.md)
 - [out of the crypt the evolving cyber extortion economy](./2026-05-27/out-of-the-crypt-the-evolving-cyber-extortion-economy.md)
@@ -45,7 +46,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [tycoon 2fa aitm kit bypasses mfa on entra id and google work](./2026-05-27/tycoon-2fa-aitm-kit-bypasses-mfa-on-entra-id-and-google-work.md)
 
 ## 2026-05-26
-- [7 eleven data breach exposes personal information of 185 000](./2026-05-26/7-eleven-data-breach-exposes-personal-information-of-185-000.md)
 - [btmob a stealthy rat burrowing deep into android devices](./2026-05-26/btmob-a-stealthy-rat-burrowing-deep-into-android-devices.md)
 - [charter confirms data breach after shinyhunters extortion th](./2026-05-26/charter-confirms-data-breach-after-shinyhunters-extortion-th.md)
 - [cisa kev cve 2026 48172 litespeed cpanel plugin privilege es](./2026-05-26/cisa-kev-cve-2026-48172-litespeed-cpanel-plugin-privilege-es.md)
@@ -146,7 +146,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft s durabletask package on pypi compromised mini sha](./2026-05-19/microsoft-s-durabletask-package-on-pypi-compromised-mini-sha.md)
 - [mini shai hulud strikes again npm worm compromises hundreds ](./2026-05-19/mini-shai-hulud-strikes-again-npm-worm-compromises-hundreds-.md)
 - [the antv supply chain campaign expands microsoft s durableta](./2026-05-19/the-antv-supply-chain-campaign-expands-microsoft-s-durableta.md)
-- [the new phishing click how oauth consent bypasses mfa](./2026-05-19/the-new-phishing-click-how-oauth-consent-bypasses-mfa.md)
 - [trapdoor android ad fraud scheme hit 659 million daily bid r](./2026-05-19/trapdoor-android-ad-fraud-scheme-hit-659-million-daily-bid-r.md)
 
 ## 2026-05-18
