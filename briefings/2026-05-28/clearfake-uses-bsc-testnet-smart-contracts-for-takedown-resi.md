@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ClearFake C2 query to BNB Smart Chain testnet RPC endpoint
 
-`UC_4_13` · phase: **c2** · confidence: **High**
+`UC_11_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceNetworkEvents
 
 ### [LLM] ClickFix Run-dialog rundll32 with WebDAV UNC port syntax
 
-`UC_4_14` · phase: **exploit** · confidence: **High**
+`UC_11_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceProcessEvents
 
 ### [LLM] Rundll32 loads put34b.camp DLL via WebDAV mini-redirector
 
-`UC_4_15` · phase: **install** · confidence: **High**
+`UC_11_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ LoadEvents
 
 ### [LLM] ClearFake dllhost spawned by rundll32 injecting into Chrome/Edge
 
-`UC_4_16` · phase: **actions** · confidence: **High**
+`UC_11_16` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -175,7 +175,7 @@ SuspiciousDllHost
 
 ### [LLM] ClearFake Python RAT staging in FileZilla Data masquerade directory
 
-`UC_4_17` · phase: **install** · confidence: **High**
+`UC_11_17` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -585,7 +585,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ClearFake Uses BSC Testnet Smart Contracts for Takedown-Resistant Command and Co
 
-`UC_4_12` · phase: **exploit** · confidence: **High**
+`UC_11_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

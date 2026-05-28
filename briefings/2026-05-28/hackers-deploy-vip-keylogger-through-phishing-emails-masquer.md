@@ -70,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] VIP Keylogger persistence via UserInitMprLogonScript registry value
 
-`UC_3_9` · phase: **install** · confidence: **High**
+`UC_10_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceRegistryEvents
 
 ### [LLM] VIP Keylogger PowerShell stager hidden in INTERNAL_DB_CACHE environment variable
 
-`UC_3_10` · phase: **install** · confidence: **High**
+`UC_10_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ union
 
 ### [LLM] aspnet_compiler.exe making outbound public network connections (VIP Keylogger injection target)
 
-`UC_3_11` · phase: **c2** · confidence: **High**
+`UC_10_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +133,7 @@ DeviceNetworkEvents
 
 ### [LLM] VIP Keylogger steganographic PNG payload download from vault88x.secure-efficient2.su
 
-`UC_3_12` · phase: **delivery** · confidence: **High**
+`UC_10_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceNetworkEvents
 
 ### [LLM] VIP Keylogger loader chain: script-host parent spawning PowerShell that reads environment variables
 
-`UC_3_13` · phase: **install** · confidence: **High**
+`UC_10_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -172,7 +172,7 @@ DeviceProcessEvents
 
 ### [LLM] VIP Keylogger sandbox / geolocation reconnaissance via reallyfreegeoip and checkip.dyndns from non-browser process
 
-`UC_3_14` · phase: **actions** · confidence: **High**
+`UC_10_14` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -431,7 +431,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Deploy VIP Keylogger Through Phishing Emails Masquerading as Business Do
 
-`UC_3_8` · phase: **exploit** · confidence: **High**
+`UC_10_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

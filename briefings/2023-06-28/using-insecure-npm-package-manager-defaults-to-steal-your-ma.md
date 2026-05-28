@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] macOS Text Replacements exfiltration via `defaults read NSUserDictionaryReplacementItems`
 
-`UC_1408_2` · phase: **actions** · confidence: **High**
+`UC_1409_2` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — Using insecure npm package manager defaults to steal your macOS keyboard shortcu
 
-`UC_1408_1` · phase: **exploit** · confidence: **High**
+`UC_1409_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

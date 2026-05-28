@@ -76,12 +76,159 @@ A new campaign orchestrated by a previously undocumented threat actor has target
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568** — Dynamic Resolution
+- **T1583.001** — Acquire Infrastructure: Domains
+- **T1543.001** — Create or Modify System Process: Launch Agent
+- **T1543.004** — Create or Modify System Process: Launch Daemon
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1105** — Ingress Tool Transfer
+- **T1555.001** — Credentials from Password Stores: Keychain
+- **T1555.003** — Credentials from Password Stores: Credentials from Web Browsers
+- **T1552.004** — Unsecured Credentials: Private Keys
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1027.013** — Obfuscated Files or Information: Encrypted/Encoded File
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] JINX-0164 C2 communication to fake driver-store infrastructure
+
+`UC_26_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest) as dest_host values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic where (All_Traffic.dest_ip IN ("185.100.85.250","84.32.83.250","163.172.53.20","185.100.85.98","153.92.126.84","45.45.217.242","89.36.224.5","208.115.220.17") OR All_Traffic.dest IN ("*driver-store.com","*driver-hub.net","*driver-update.io","*driver-updater.net")) by All_Traffic.src host index | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let JinxDomains = dynamic(["driver-store.com","driver-hub.net","driver-update.io","driver-updater.net"]);
+let JinxIPs = dynamic(["185.100.85.250","84.32.83.250","163.172.53.20","185.100.85.98","153.92.126.84","45.45.217.242","89.36.224.5","208.115.220.17"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (JinxIPs)
+   or RemoteUrl has_any (JinxDomains)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemoteUrl, RemotePort, Protocol
+| order by Timestamp desc
+```
+
+### [LLM] AUDIOFIX persistence: ChromeUpdater binary loaded via launchctl on macOS
+
+`UC_26_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.user) as user values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where ((Processes.process_name="launchctl" AND Processes.process="*ChromeUpdater*") OR Processes.process_name="ChromeUpdater" OR Processes.process_path="*ChromeUpdater*") by host Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/Library/LaunchAgents/*" OR Filesystem.file_path="*/Library/LaunchDaemons/*") (Filesystem.file_name="*ChromeUpdater*" OR Filesystem.file_path="*ChromeUpdater*") by host Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)`]
+```
+
+**Defender KQL:**
+```kql
+union
+  (DeviceProcessEvents
+   | where Timestamp > ago(30d)
+   | where (FileName =~ "launchctl" and ProcessCommandLine has "ChromeUpdater")
+        or FileName =~ "ChromeUpdater"
+        or FolderPath has "/ChromeUpdater"
+   | project Timestamp, DeviceName, AccountName, EventKind="ProcessExec", FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, SHA256),
+  (DeviceFileEvents
+   | where Timestamp > ago(30d)
+   | where ActionType in ("FileCreated","FileRenamed","FileModified")
+   | where (FolderPath has_any ("/Library/LaunchAgents/","/Library/LaunchDaemons/","/LaunchAgents/","/LaunchDaemons/") and (FileName has "ChromeUpdater" or FileName endswith ".plist"))
+        or FileName =~ "ChromeUpdater"
+   | where InitiatingProcessFileName !in~ ("GoogleSoftwareUpdate","GoogleSoftwareUpdateAgent","GoogleSoftwareUpdateDaemon")
+   | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, EventKind="FileWrite", FileName, FolderPath, ProcessCommandLine="", InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, SHA256)
+| order by Timestamp desc
+```
+
+### [LLM] JINX-0164 AUDIOFIX delivery: shell payload retrieved from driver-store family domain
+
+`UC_26_12` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN ("curl","wget","bash","zsh","sh","osascript") (Processes.process="*driver-store.com*" OR Processes.process="*driver-hub.net*" OR Processes.process="*driver-update.io*" OR Processes.process="*driver-updater.net*") by host Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("curl","wget","bash","zsh","sh","osascript")
+| where ProcessCommandLine has_any ("driver-store.com","driver-hub.net","driver-update.io","driver-updater.net")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] AUDIOFIX credential staging: Python parent invoking security/sqlite3/keychain extraction on macOS
+
+`UC_26_13` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name="python*" Processes.process_name IN ("security","sqlite3","plutil","ditto","cp","mv","tar","zip","openssl","base64") (Processes.process="*login.keychain*" OR Processes.process="*keychain-db*" OR Processes.process="*find-generic-password*" OR Processes.process="*find-internet-password*" OR Processes.process="*Local Extension Settings*" OR Processes.process="*MetaMask*" OR Processes.process="*Phantom*" OR Processes.process="*/Discord*" OR Processes.process="*/Slack*" OR Processes.process="*/Telegram*" OR Processes.process="*/.ssh/*" OR Processes.process="*Bitwarden*" OR Processes.process="*1Password*") by host Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName matches regex @"^python[0-9.]*$"
+| where FileName in~ ("security","sqlite3","plutil","ditto","cp","mv","tar","zip","openssl","base64")
+| where ProcessCommandLine has_any (
+    "login.keychain",
+    "keychain-db",
+    "find-generic-password",
+    "find-internet-password",
+    "Local Extension Settings",
+    "/Discord",
+    "/Slack",
+    "/Telegram",
+    "/.ssh/",
+    "MetaMask",
+    "Phantom",
+    "Bitwarden",
+    "1Password",
+    "nkbihfbeogaeaoehlefnkodbefgpgknn",
+    "fhbohimaelbohpjbbldcngcnapndodjp",
+    "ejbalbakoplchlghecdalmeeeajnimhm")
+| summarize DistinctTargets = dcount(ProcessCommandLine), SampleCmds = make_set(ProcessCommandLine, 8), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), ChildBins = make_set(FileName) by DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where DistinctTargets >= 2
+| order by LastSeen desc
+```
+
+### [LLM] Supply chain: install or runtime import of poisoned @velora-dex/sdk@9.4.1 (MiniRAT dropper)
+
+`UC_26_14` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN ("npm","node","yarn","pnpm","npx") (Processes.process="*@velora-dex/sdk*" OR Processes.process="*velora-dex+sdk*") by host Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*node_modules/@velora-dex/sdk*" OR Filesystem.file_path="*node_modules/.pnpm/@velora-dex+sdk@9.4.1*") by host Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)`]
+```
+
+**Defender KQL:**
+```kql
+union
+  (DeviceProcessEvents
+   | where Timestamp > ago(60d)
+   | where FileName in~ ("npm","node","yarn","pnpm","npx")
+        or InitiatingProcessFileName in~ ("npm","node","yarn","pnpm","npx")
+   | where ProcessCommandLine has "@velora-dex/sdk"
+        or ProcessCommandLine has "velora-dex+sdk"
+        or InitiatingProcessCommandLine has "@velora-dex/sdk"
+   | project Timestamp, DeviceName, AccountName, EventKind="ProcessExec", FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName),
+  (DeviceFileEvents
+   | where Timestamp > ago(60d)
+   | where FolderPath has_any ("node_modules/@velora-dex/sdk","node_modules/.pnpm/@velora-dex+sdk@9.4.1","@velora-dex\\sdk")
+   | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, EventKind="FileWrite", FileName, FolderPath, ProcessCommandLine="", InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName="")
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -376,4 +523,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 31 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

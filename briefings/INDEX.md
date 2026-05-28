@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1246 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1248 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,19 +10,23 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-28
 - [2026 world cup discussing the world s biggest game s attack ](./2026-05-28/2026-world-cup-discussing-the-world-s-biggest-game-s-attack-.md)
+- [ai generated npm malware accidentally exposes threat actor s](./2026-05-28/ai-generated-npm-malware-accidentally-exposes-threat-actor-s.md)
 - [carnival cruise confirms data breach affecting nearly 6 mill](./2026-05-28/carnival-cruise-confirms-data-breach-affecting-nearly-6-mill.md)
-- [carnival cruise data breach exposes millions of customers pe](./2026-05-28/carnival-cruise-data-breach-exposes-millions-of-customers-pe.md)
 - [clearfake uses bsc testnet smart contracts for takedown resi](./2026-05-28/clearfake-uses-bsc-testnet-smart-contracts-for-takedown-resi.md)
+- [critical gogs rce vulnerability lets any authenticated user ](./2026-05-28/critical-gogs-rce-vulnerability-lets-any-authenticated-user-.md)
+- [fbi warns of fake fifa websites running world cup fraud sche](./2026-05-28/fbi-warns-of-fake-fifa-websites-running-world-cup-fraud-sche.md)
 - [hackers deploy vip keylogger through phishing emails masquer](./2026-05-28/hackers-deploy-vip-keylogger-through-phishing-emails-masquer.md)
-- [hackers use ghostynetworks and omegatech to host js malware ](./2026-05-28/hackers-use-ghostynetworks-and-omegatech-to-host-js-malware-.md)
+- [hackers use llm agent to move from marimo rce to internal da](./2026-05-28/hackers-use-llm-agent-to-move-from-marimo-rce-to-internal-da.md)
 - [jinx 0164 targets cryptocurrency firms with fake recruiter l](./2026-05-28/jinx-0164-targets-cryptocurrency-firms-with-fake-recruiter-l.md)
+- [less panic patching more precision](./2026-05-28/less-panic-patching-more-precision.md)
 - [microsoft slams public zero day disclosures amid github rese](./2026-05-28/microsoft-slams-public-zero-day-disclosures-amid-github-rese.md)
 - [new gogs 0 day vulnerability lets attackers run malicious co](./2026-05-28/new-gogs-0-day-vulnerability-lets-attackers-run-malicious-co.md)
 - [new gogs zero day flaw lets hackers get remote code executio](./2026-05-28/new-gogs-zero-day-flaw-lets-hackers-get-remote-code-executio.md)
-- [new zapocalypse attack chain enables full zapier account tak](./2026-05-28/new-zapocalypse-attack-chain-enables-full-zapier-account-tak.md)
 - [pirates in the crosshairs how one cybercrime gang has been i](./2026-05-28/pirates-in-the-crosshairs-how-one-cybercrime-gang-has-been-i.md)
 - [the gentlemen ransomware dissecting a self propagating go en](./2026-05-28/the-gentlemen-ransomware-dissecting-a-self-propagating-go-en.md)
 - [threat actors exploit critical forticlient ems flaw to deplo](./2026-05-28/threat-actors-exploit-critical-forticlient-ems-flaw-to-deplo.md)
+- [vaultjacking attack steals entire google password manager va](./2026-05-28/vaultjacking-attack-steals-entire-google-password-manager-va.md)
+- [what mdm can t protect on developer machines and what to do ](./2026-05-28/what-mdm-can-t-protect-on-developer-machines-and-what-to-do-.md)
 
 ## 2026-05-27
 - [3 soc steps that shut down incident risks early](./2026-05-27/3-soc-steps-that-shut-down-incident-risks-early.md)
@@ -53,7 +57,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [from poisoned search results to gpu mining a cryptojacking c](./2026-05-26/from-poisoned-search-results-to-gpu-mining-a-cryptojacking-c.md)
 - [ghsa critical cve 2026 33137 xwiki platform has an unauthent](./2026-05-26/ghsa-critical-cve-2026-33137-xwiki-platform-has-an-unauthent.md)
 - [iranian hackers deploy minifast and minijunk v2 via phishing](./2026-05-26/iranian-hackers-deploy-minifast-and-minijunk-v2-via-phishing.md)
-- [knowledgedeliver flaw exploited as a zero day to install web](./2026-05-26/knowledgedeliver-flaw-exploited-as-a-zero-day-to-install-web.md)
 - [knowledgedeliver lms flaw exploited to deploy godzilla and c](./2026-05-26/knowledgedeliver-lms-flaw-exploited-to-deploy-godzilla-and-c.md)
 - [mfa prompt bombing why your second factor isn t saving you](./2026-05-26/mfa-prompt-bombing-why-your-second-factor-isn-t-saving-you.md)
 - [muddywater uses dll side loading in espionage campaign targe](./2026-05-26/muddywater-uses-dll-side-loading-in-espionage-campaign-targe.md)
@@ -246,7 +249,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-05
 - [a rigged game scarcruft compromises gaming platform in a sup](./2026-05-05/a-rigged-game-scarcruft-compromises-gaming-platform-in-a-sup.md)
-- [cloudz rat potentially steals otp messages using pheno plugi](./2026-05-05/cloudz-rat-potentially-steals-otp-messages-using-pheno-plugi.md)
 - [copy fail what you need to know about the most severe linux ](./2026-05-05/copy-fail-what-you-need-to-know-about-the-most-severe-linux-.md)
 - [security metamorphosis a mythos ready architecture checklist](./2026-05-05/security-metamorphosis-a-mythos-ready-architecture-checklist.md)
 - [uat 8302 and its box full of malware](./2026-05-05/uat-8302-and-its-box-full-of-malware.md)

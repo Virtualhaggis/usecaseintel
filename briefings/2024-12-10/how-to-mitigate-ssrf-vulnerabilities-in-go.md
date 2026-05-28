@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — How to Mitigate SSRF Vulnerabilities in Go
 
-`UC_1027_0` · phase: **exploit** · confidence: **High**
+`UC_1028_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
