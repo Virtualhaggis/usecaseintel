@@ -56,12 +56,71 @@ The 2026 FIFA World Cup will be the largest sporting event ever staged. Across 3
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1498** — Network Denial of Service
+- **T1583.003** — Acquire Infrastructure: Virtual Private Server
+- **T1583.001** — Acquire Infrastructure: Domains
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1598.003** — Phishing for Information: Spearphishing Link
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] NoName057(16) DDoSia client check-in (/client/login, /client/get_targets)
+
+`UC_17_11` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_user_agent) as user_agents values(Web.dest) as dests from datamodel=Web where (Web.url="*/client/login*" OR Web.url="*/client/get_targets*" OR Web.url="*/client/post_solved*") by Web.src Web.dest_port
+| `drop_dm_object_name(Web)`
+| where match(user_agents,"Go-http-client") OR mvcount(urls) > 1
+| where NOT match(dests,"(github\.com|atlassian\.com|gitlab\.com)$")
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has_any ("/client/login", "/client/get_targets", "/client/post_solved")
+| where not (RemoteUrl has_any ("github.com", "atlassian.com", "gitlab.com", "microsoft.com"))
+| summarize URIs = make_set(RemoteUrl, 10), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Hits = count() by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemoteIP
+| where array_length(URIs) >= 2 or Hits > 5
+| order by LastSeen desc
+```
+
+### [LLM] World Cup 2026 themed lookalike / typosquat domain resolution by corporate hosts
+
+`UC_17_12` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src_hosts dc(DNS.src) as host_count from datamodel=Network_Resolution where (DNS.query="*fifa*" OR DNS.query="*worldcup*" OR DNS.query="*world-cup*" OR DNS.query="*wc2026*" OR DNS.query="*hayya*" OR DNS.query="*fanid*" OR DNS.query="*fan-id*") by DNS.query
+| `drop_dm_object_name(DNS)`
+| where NOT match(query,"(fifa\.com|fifaworldcup\.com|hayya\.qa|hayya\.com|fifamuseum\.com)$")
+| where host_count < 50
+| convert ctime(firstTime) ctime(lastTime)
+| sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+let LookalikeRegex = @"(?i)(fifa|world.?cup.?2026|wc.?2026|hayya|fan.?id)";
+let LegitTLDs = dynamic(["fifa.com", "fifaworldcup.com", "hayya.qa", "hayya.com", "fifamuseum.com", "ussoccer.com", "canadasoccer.com", "miseleccion.mx"]);
+DeviceNetworkEvents
+| where Timestamp > ago(1d)
+| where isnotempty(RemoteUrl)
+| where RemoteUrl matches regex LookalikeRegex
+| extend domain = tostring(split(RemoteUrl, "/")[2])
+| where not (LegitTLDs has_any (domain)) and not (domain endswith "fifa.com" or domain endswith "fifaworldcup.com" or domain endswith "hayya.qa")
+| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), DeviceCount = dcount(DeviceName), SampleProc = any(InitiatingProcessFileName), SampleHost = any(DeviceName) by domain
+| where DeviceCount < 50
+| order by FirstSeen desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -439,4 +498,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 11 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 13 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Browser extension folder write at vulnerable React DevTools 4.27.8 / Vue.js devtools 6.5.0
 
-`UC_1310_4` · phase: **exploit** · confidence: **Medium**
+`UC_1302_4` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — Exploring WebExtension security vulnerabilities in React Developer Tools and Vue
 
-`UC_1310_3` · phase: **exploit** · confidence: **High**
+`UC_1302_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

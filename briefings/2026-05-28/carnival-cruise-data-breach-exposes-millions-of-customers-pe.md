@@ -10,12 +10,8 @@ Home Cyber Security News
 Carnival Cruise Data Breach Exposes Millions of Customers’ Personal Information 
 By Guru Baran 
 May 28, 2026 
-
-
-
-
 Carnival Corporation, the world’s largest cruise company and parent of Carnival Cruise Line, has begun notifying customers of a significant cybersecurity breach that exposed sensitive personal data after a threat actor s uccessfully used social engineering to compromise an employee account.
-The company’s IT security team first detected unauthorized activ…
+The company’s IT security team first detected unauthorized activity on A…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -33,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Carnival Cruise Data Breach Exposes Millions of Customers’ Personal Information
 
-`UC_1_0` · phase: **exploit** · confidence: **High**
+`UC_10_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

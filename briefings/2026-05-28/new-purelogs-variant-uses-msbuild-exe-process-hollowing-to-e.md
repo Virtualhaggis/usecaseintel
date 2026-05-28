@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Purchase-order phishing delivering pankocrs.js JavaScript loader
 
-`UC_5_11` · phase: **delivery** · confidence: **High**
+`UC_14_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ EmailAttachmentInfo
 
 ### [LLM] wscript/cscript spawning PowerShell that loads .NET assembly (PureLogs stage 2)
 
-`UC_5_12` · phase: **install** · confidence: **High**
+`UC_14_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### [LLM] PowerShell launching MsBuild.exe with no project file (PureLogs hollowing target)
 
-`UC_5_13` · phase: **install** · confidence: **High**
+`UC_14_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceProcessEvents
 
 ### [LLM] Cross-process injection (CreateRemoteThread / WriteProcessMemory) targeting MsBuild.exe
 
-`UC_5_14` · phase: **install** · confidence: **High**
+`UC_14_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceEvents
 
 ### [LLM] MsBuild.exe reading browser Login Data / wallet / mail credential stores
 
-`UC_5_15` · phase: **actions** · confidence: **High**
+`UC_14_15` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -174,7 +174,7 @@ DeviceFileEvents
 
 ### [LLM] MsBuild.exe HTTPS C2 beacon to 77.83.39.211 (PureLogs exfil)
 
-`UC_5_16` · phase: **c2** · confidence: **High**
+`UC_14_16` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -491,7 +491,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New PureLogs Variant Uses MsBuild.exe Process Hollowing to Evade Detection
 
-`UC_5_10` · phase: **exploit** · confidence: **High**
+`UC_14_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

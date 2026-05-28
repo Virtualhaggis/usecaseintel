@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Using JLink to create smaller Docker images for your Spring Boot Java applicatio
 
-`UC_1373_0` · phase: **exploit** · confidence: **High**
+`UC_1365_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -17,7 +17,7 @@ Carnival operates nine of the world's leading cruise line brands (Carnival C…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `carnivalcorp.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -26,12 +26,94 @@ Carnival operates nine of the world's leading cruise line brands (Carnival C…
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1071** — Application Layer Protocol
+- **T1567** — Exfiltration Over Web Service
+- **T1530** — Data from Cloud Storage
+- **T1213** — Data from Information Repositories
+- **T1528** — Steal Application Access Token
+- **T1550.001** — Application Access Token
+- **T1098.003** — Additional Cloud Roles
+- **T1556.006** — Multi-Factor Authentication
+- **T1078.004** — Cloud Accounts
+- **T1098.005** — Device Registration
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Bulk Salesforce record export / report download by single user (UNC6040 data-theft TTP)
+
+`UC_16_4` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+`summariesonly` | tstats count from datamodel=Authentication where Authentication.app="salesforce" Authentication.action="success" by Authentication.user Authentication.src _time span=1h | join type=outer Authentication.user [ search index=salesforce sourcetype=salesforce:eventlogfile EVENT_TYPE IN ("ReportExport","MassTransfer","BulkApi","BulkApi2","ListViewEvent","ContentDistribution","ContentDocumentLink","ApiTotalUsage") | rename USER_ID as user | stats sum(ROWS_PROCESSED) as RowsExported dc(EVENT_TYPE) as DistinctActions values(EVENT_TYPE) as ActionTypes by user ] | where RowsExported > 5000 OR DistinctActions >= 3 | sort - RowsExported
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application =~ "Salesforce"
+| where ActionType has_any ("ReportExport", "MassTransfer", "BulkApi", "BulkApi2", "DataExport", "ListViewExport", "ReportRunAsync", "ContentDistributionDownload")
+| summarize EventCount = count(), DistinctObjects = dcount(ObjectName), SampleActions = make_set(ActionType, 10), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), SrcIPs = make_set(IPAddress, 5), Geos = make_set(CountryCode, 5) by bin(Timestamp, 1h), AccountObjectId, AccountDisplayName
+| where EventCount > 50 or DistinctObjects > 20
+| order by EventCount desc
+```
+
+### [LLM] User consent to non-corporate OAuth app requesting Salesforce or mail-read scope
+
+`UC_16_5` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+`summariesonly` | tstats count from datamodel=Change where Change.action="created" Change.object_category="oauth_application" by Change.user Change.object Change.object_attrs _time | rename Change.user as user Change.object as AppDisplayName Change.object_attrs as Scopes | search Scopes IN ("*Mail.Read*","*Mail.ReadWrite*","*offline_access*","*Files.Read.All*","*Sites.Read.All*","*full*","*api*","*refresh_token*") AppDisplayName!="Microsoft*" AppDisplayName!="Carnival*" | sort - _time
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(30d)
+| where ActionType in~ ("Consent to application", "Add OAuth2PermissionGrant", "Add delegated permission grant", "Add app role assignment grant to user")
+| extend Raw = tostring(RawEventData)
+| where Raw has_any ("Mail.Read", "Mail.ReadWrite", "offline_access", "Files.Read.All", "Sites.Read.All", "full_access", "refresh_token")
+| extend AppName = tostring(parse_json(Raw).Target[0].Name)
+| where isnotempty(AppName)
+| where AppName !startswith "Microsoft" and AppName !has "Carnival"
+| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, CountryCode, ActionType, AppName, Raw
+| order by Timestamp desc
+```
+
+### [LLM] Helpdesk-impersonation pattern: AAD MFA method registration immediately followed by sign-in from new geo
+
+`UC_16_6` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+`summariesonly` | tstats min(_time) as MfaTime from datamodel=Change where Change.action="modified" Change.object_category="user" (Change.object_attrs="*StrongAuthenticationMethod*" OR Change.object_attrs="*authenticationPhoneMethod*" OR Change.object_attrs="Update user*") by Change.user | rename Change.user as user | join type=inner user [ tstats min(_time) as LoginTime from datamodel=Authentication where Authentication.action="success" by Authentication.user Authentication.src Authentication.src_country | rename Authentication.user as user Authentication.src as src Authentication.src_country as country ] | where LoginTime > MfaTime AND LoginTime < MfaTime + 3600 | table user MfaTime LoginTime src country
+```
+
+**Defender KQL:**
+```kql
+let MFAEvents = CloudAppEvents
+| where Timestamp > ago(7d)
+| where ActionType in~ ("Update user", "Register security info", "User registered security info", "Admin registered security info on behalf of user", "Reset user password", "Reset password (by admin)")
+| extend Raw = tostring(RawEventData)
+| where Raw has_any ("StrongAuthenticationMethod", "authenticatorAppMethod", "phoneAuthenticationMethod", "PhoneNumber")
+| project MFATime = Timestamp, AccountObjectId, MFAAction = ActionType, MFAIP = IPAddress;
+AADSignInEventsBeta
+| where Timestamp > ago(7d)
+| where ErrorCode == 0
+| where IsInteractive == true
+| join kind=inner MFAEvents on AccountObjectId
+| where Timestamp between (MFATime .. MFATime + 1h)
+| extend MinutesAfterMFAChange = datetime_diff('minute', Timestamp, MFATime)
+| join kind=leftanti (AADSignInEventsBeta | where Timestamp between (ago(90d) .. ago(7d)) | distinct AccountObjectId, Country) on AccountObjectId, Country
+| project MFATime, SignInTime = Timestamp, MinutesAfterMFAChange, AccountUpn, MFAAction, MFAIP, SignInIP = IPAddress, Country, City, IPAddress, UserAgent
+| order by SignInTime desc
+```
 
 ### Ransomware-style mass file rename / extension change
 
@@ -117,7 +199,14 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `carnivalcorp.com`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
