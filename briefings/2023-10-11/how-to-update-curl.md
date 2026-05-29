@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — How to update cURL
 
-`UC_1345_1` · phase: **exploit** · confidence: **High**
+`UC_1346_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

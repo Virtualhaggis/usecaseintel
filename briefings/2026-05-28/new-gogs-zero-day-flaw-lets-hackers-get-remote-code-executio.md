@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Gogs RCE: git rebase invoked with --exec flag (argument injection)
 
-`UC_19_3` · phase: **exploit** · confidence: **High**
+`UC_21_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### [LLM] Post-exploit shell or LOLBin spawned by git invoked from Gogs server
 
-`UC_19_4` · phase: **install** · confidence: **High**
+`UC_21_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1249 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1252 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,9 +9,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-29
+- [critical samba vulnerability enables remote code execution a](./2026-05-29/critical-samba-vulnerability-enables-remote-code-execution-a.md)
 - [hackers exploit microsoft teams collaboration features to im](./2026-05-29/hackers-exploit-microsoft-teams-collaboration-features-to-im.md)
+- [kimsuky deploys httpspy expands arsenal with hellodoor and v](./2026-05-29/kimsuky-deploys-httpspy-expands-arsenal-with-hellodoor-and-v.md)
+- [malicious rvtools installer abuses sectigo certificate to by](./2026-05-29/malicious-rvtools-installer-abuses-sectigo-certificate-to-by.md)
 - [typosquatted npm packages used to steal cloud and ci cd secr](./2026-05-29/typosquatted-npm-packages-used-to-steal-cloud-and-ci-cd-secr.md)
 - [vs code remote ssh rce lets attackers pivot from developer m](./2026-05-29/vs-code-remote-ssh-rce-lets-attackers-pivot-from-developer-m.md)
+- [what s in the container analyzing vulnerabilities risks and ](./2026-05-29/what-s-in-the-container-analyzing-vulnerabilities-risks-and-.md)
 
 ## 2026-05-28
 - [2026 world cup discussing the world s biggest game s attack ](./2026-05-28/2026-world-cup-discussing-the-world-s-biggest-game-s-attack-.md)
@@ -19,13 +23,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [btmob android malware service generates custom phishing payl](./2026-05-28/btmob-android-malware-service-generates-custom-phishing-payl.md)
 - [carnival cruise confirms data breach affecting nearly 6 mill](./2026-05-28/carnival-cruise-confirms-data-breach-affecting-nearly-6-mill.md)
 - [critical gogs rce vulnerability lets any authenticated user ](./2026-05-28/critical-gogs-rce-vulnerability-lets-any-authenticated-user-.md)
+- [eset apt activity report q4 2025 q1 2026](./2026-05-28/eset-apt-activity-report-q4-2025-q1-2026.md)
 - [fbi warns of fake fifa websites running world cup fraud sche](./2026-05-28/fbi-warns-of-fake-fifa-websites-running-world-cup-fraud-sche.md)
 - [greyvibe hackers use chatgpt gemini to power cyberattacks](./2026-05-28/greyvibe-hackers-use-chatgpt-gemini-to-power-cyberattacks.md)
 - [hackers use llm agent to move from marimo rce to internal da](./2026-05-28/hackers-use-llm-agent-to-move-from-marimo-rce-to-internal-da.md)
 - [jinx 0164 targets cryptocurrency firms with fake recruiter l](./2026-05-28/jinx-0164-targets-cryptocurrency-firms-with-fake-recruiter-l.md)
 - [less panic patching more precision](./2026-05-28/less-panic-patching-more-precision.md)
 - [microsoft slams public zero day disclosures amid github rese](./2026-05-28/microsoft-slams-public-zero-day-disclosures-amid-github-rese.md)
-- [new gogs 0 day vulnerability lets attackers run malicious co](./2026-05-28/new-gogs-0-day-vulnerability-lets-attackers-run-malicious-co.md)
 - [new gogs zero day flaw lets hackers get remote code executio](./2026-05-28/new-gogs-zero-day-flaw-lets-hackers-get-remote-code-executio.md)
 - [pirates in the crosshairs how one cybercrime gang has been i](./2026-05-28/pirates-in-the-crosshairs-how-one-cybercrime-gang-has-been-i.md)
 - [the gentlemen ransomware dissecting a self propagating go en](./2026-05-28/the-gentlemen-ransomware-dissecting-a-self-propagating-go-en.md)
@@ -124,7 +128,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 41091 microsoft defender link following vu](./2026-05-20/cisa-kev-cve-2026-41091-microsoft-defender-link-following-vu.md)
 - [cisa kev cve 2026 45498 microsoft defender denial of service](./2026-05-20/cisa-kev-cve-2026-45498-microsoft-defender-denial-of-service.md)
 - [ghsa critical cve 2026 46421 supply chain compromise via mal](./2026-05-20/ghsa-critical-cve-2026-46421-supply-chain-compromise-via-mal.md)
-- [github breached employee device hack led to exfiltration of ](./2026-05-20/github-breached-employee-device-hack-led-to-exfiltration-of-.md)
+- [github breached via a malicious vs code extension why develo](./2026-05-20/github-breached-via-a-malicious-vs-code-extension-why-develo.md)
 - [microsoft takes down malware signing service behind ransomwa](./2026-05-20/microsoft-takes-down-malware-signing-service-behind-ransomwa.md)
 - [mini shai hulud compromised antv npm packages enable ci cd c](./2026-05-20/mini-shai-hulud-compromised-antv-npm-packages-enable-ci-cd-c.md)
 - [securing the gaming culture of cultures](./2026-05-20/securing-the-gaming-culture-of-cultures.md)
@@ -248,7 +252,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-06
 - [cisa kev cve 2026 0300 palo alto networks pan os out of boun](./2026-05-06/cisa-kev-cve-2026-0300-palo-alto-networks-pan-os-out-of-boun.md)
 - [easterbunny advanced espionage artifacts attributed to apt29](./2026-05-06/easterbunny-advanced-espionage-artifacts-attributed-to-apt29.md)
-- [oceanlotus suspected of using pypi to deliver zichatbot malw](./2026-05-06/oceanlotus-suspected-of-using-pypi-to-deliver-zichatbot-malw.md)
 
 ## 2026-05-05
 - [a rigged game scarcruft compromises gaming platform in a sup](./2026-05-05/a-rigged-game-scarcruft-compromises-gaming-platform-in-a-sup.md)

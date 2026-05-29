@@ -1,0 +1,354 @@
+{
+  "name": "Kimsuky",
+  "ucs": [
+    {
+      "title": "[LLM] Kimsuky spearphish: Hangul/Office macro spawning mshta/regsvr32 to fetch staged HTA from compromised KR/JP web infra",
+      "description": "Hunts the Kimsuky (APT43 / Emerald Sleet / Velvet Chollima) signature chain where a spearphishing attachment (HWP, DOCX, or LNK delivered via ZIP) opened by Outlook/Word/Hangul spawns mshta.exe, regsvr32.exe, or wscript.exe within seconds and immediately reaches out to a remote HTA/SCT/JS payload. This combination \u2014 Office/HWP parent + script-host child + remote staging \u2014 is the most repeatable Kimsuky initial-access-to-execution chain observed by Mandiant, KISA, and Microsoft (Emerald Sleet) since 2020.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1566.001",
+        "T1059.005",
+        "T1059.007",
+        "T1218.005",
+        "T1218.010",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_hash) as hash values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"outlook.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"hwp.exe\",\"hword.exe\",\"hcell.exe\",\"explorer.exe\") Processes.process_name IN (\"mshta.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\",\"powershell.exe\",\"pwsh.exe\") by Processes.dest Processes.parent_process_name Processes.process_name Processes.process Processes.user host | `drop_dm_object_name(Processes)` | where match(cmdline,\"(?i)(https?://|\\\\\\\\[^\\\\s]+|scrobj|\\\\.hta|\\\\.sct|\\\\.js|/i:https?|/s:|-nop|-w hidden|frombase64string|downloadstring|wscript\\\\.shell)\") | join type=inner dest [| tstats `security_content_summariesonly` count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (80,443,8080,8443) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | rename src as dest, dest as remote_ip | fields dest remote_ip dest_port] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime dest user parent_process_name process_name cmdline hash remote_ip dest_port",
+      "kql": "let LookbackDays = 14d;\nlet LureParents = dynamic([\"outlook.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"hwp.exe\",\"hword.exe\",\"hcell.exe\",\"explorer.exe\"]);\nlet KimsukyScriptHosts = dynamic([\"mshta.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\",\"powershell.exe\",\"pwsh.exe\"]);\nlet ScriptHostExec = DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where InitiatingProcessFileName in~ (LureParents)\n    | where FileName in~ (KimsukyScriptHosts)\n    // Kimsuky always uses an inline URL, scrobj COM, or a remote .hta/.sct fetch from the script-host cmdline\n    | where ProcessCommandLine matches regex @\"(?i)(https?://|scrobj\\.dll|\\.hta\\b|\\.sct\\b|/i:https?|frombase64string|downloadstring|-nop|-w\\s+hidden|wscript\\.shell)\"\n    | where AccountName !endswith \"$\"\n    | project Timestamp, DeviceId, DeviceName, AccountName,\n              Parent = InitiatingProcessFileName,\n              ParentCmd = InitiatingProcessCommandLine,\n              Child = FileName,\n              ChildCmd = ProcessCommandLine,\n              ChildSHA256 = SHA256,\n              ChildPid = ProcessId;\nScriptHostExec\n| join kind=inner (\n    DeviceNetworkEvents\n    | where Timestamp > ago(LookbackDays)\n    | where RemoteIPType == \"Public\"\n    | where InitiatingProcessFileName in~ (KimsukyScriptHosts)\n    | project NetTime = Timestamp, DeviceId, NetPid = InitiatingProcessId,\n              RemoteIP, RemoteUrl, RemotePort\n  ) on DeviceId\n| where NetPid == ChildPid and NetTime between (Timestamp .. Timestamp + 5m)\n| project Timestamp, NetTime,\n          DelaySec = datetime_diff('second', NetTime, Timestamp),\n          DeviceName, AccountName, Parent, Child, ChildCmd,\n          RemoteUrl, RemoteIP, RemotePort, ChildSHA256\n| order by Timestamp desc",
+      "sentinel_kql": "let LookbackDays = 14d;\nlet LureParents = dynamic([\"outlook.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"hwp.exe\",\"hword.exe\",\"hcell.exe\",\"explorer.exe\"]);\nlet KimsukyScriptHosts = dynamic([\"mshta.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\",\"powershell.exe\",\"pwsh.exe\"]);\nlet ScriptHostExec = SecurityEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventID == 4688\n    | extend ParentLeaf = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1]))\n    | extend ChildLeaf  = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n    | where ParentLeaf in (LureParents)\n    | where ChildLeaf in (KimsukyScriptHosts)\n    | where CommandLine matches regex @\"(?i)(https?://|scrobj\\.dll|\\.hta\\b|\\.sct\\b|/i:https?|frombase64string|downloadstring|-nop|-w\\s+hidden|wscript\\.shell)\"\n    | where SubjectUserName !endswith \"$\"\n    | project Timestamp = TimeGenerated, Computer, SubjectUserName,\n              ParentLeaf, ChildLeaf, CommandLine,\n              ChildPid = tostring(toint(NewProcessId));\nScriptHostExec\n| join kind=inner (\n    CommonSecurityLog\n    | where TimeGenerated > ago(LookbackDays)\n    | where DeviceEventClassID has_any (\"traffic\",\"http\",\"web\")\n    | where DestinationIP !startswith \"10.\" and DestinationIP !startswith \"192.168.\" and DestinationIP !startswith \"172.\"\n    | project NetTime = TimeGenerated, Computer = DeviceHostName,\n              RemoteIP = DestinationIP, RemoteUrl = RequestURL, RemotePort = DestinationPort,\n              SrcProc = SourceProcessName\n  ) on Computer\n| where NetTime between (Timestamp .. Timestamp + 5m)\n| where SrcProc has_any (\"mshta\",\"regsvr32\",\"wscript\",\"cscript\",\"powershell\")\n| project Timestamp, NetTime,\n          DelaySec = datetime_diff('second', NetTime, Timestamp),\n          Computer, SubjectUserName, ParentLeaf, ChildLeaf, CommandLine,\n          RemoteUrl, RemoteIP, RemotePort\n| order by Timestamp desc",
+      "sigma_yaml": "",
+      "datadog_query": "source:windows.sysmon @EventID:1 @ParentImage:(*\\\\outlook.exe OR *\\\\OUTLOOK.EXE OR *\\\\winword.exe OR *\\\\WINWORD.EXE OR *\\\\excel.exe OR *\\\\EXCEL.EXE OR *\\\\powerpnt.exe OR *\\\\POWERPNT.EXE OR *\\\\hwp.exe OR *\\\\Hwp.exe OR *\\\\hword.exe OR *\\\\hcell.exe OR *\\\\explorer.exe OR *\\\\EXPLORER.EXE) @Image:(*\\\\mshta.exe OR *\\\\MSHTA.EXE OR *\\\\regsvr32.exe OR *\\\\REGSVR32.EXE OR *\\\\wscript.exe OR *\\\\WSCRIPT.EXE OR *\\\\cscript.exe OR *\\\\CSCRIPT.EXE OR *\\\\powershell.exe OR *\\\\PowerShell.exe OR *\\\\POWERSHELL.EXE) @CommandLine:(*http\\://* OR *https\\://* OR *scrobj.dll* OR *.hta* OR *.sct* OR *DownloadString* OR *FromBase64String* OR *-nop* OR *\"-w hidden\"*)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(outlook|winword|excel|powerpnt|hwp|hword|hcell|explorer)\\.exe$/i ImageFileName=/(mshta|regsvr32|wscript|cscript|powershell|pwsh)\\.exe$/i\n| regex(\"(?i)(https?://|scrobj\\\\.dll|\\\\.hta\\\\b|\\\\.sct\\\\b|/i:https?|FromBase64String|DownloadString|-nop|-w\\\\s+hidden|WScript\\\\.Shell)\", field=CommandLine)\n| join({#event_simpleName=DnsRequest OR #event_simpleName=NetworkConnectIP4 ContextImageFileName=/(mshta|regsvr32|wscript|cscript|powershell|pwsh)\\.exe$/i | groupBy([aid, ContextProcessId], function=[count(), collect([DomainName, RemoteAddressIP4])])}, field=[aid, TargetProcessId], include=[DomainName, RemoteAddressIP4])\n| groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine, DomainName, RemoteAddressIP4], function=count())",
+      "cloudwatch_query": "",
+      "rationale": "Kimsuky is one of the very few crews that routinely targets Hangul Office (HWP/HWORD/HCELL) parents alongside the Western Office suite \u2014 that's why those four binaries are explicit. The chain Office/HWP \u2192 mshta|regsvr32|wscript fetching a remote .hta/.sct/scrobj.dll payload is documented across KISA, Mandiant (APT43), Microsoft (Emerald Sleet), and CISA AA20-301A. The 5-minute parent\u2192net join elim",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Public",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Public` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemoteIP",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceLogonEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteIP` is not a column of DeviceProcessEvents; it does exist on DeviceNetworkEvents, DeviceLogonEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemoteUrl",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteUrl` is not a column of DeviceProcessEvents; it does exist on DeviceNetworkEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemotePort",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceLogonEvents",
+            "DeviceEvents",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemotePort` is not a column of DeviceProcessEvents; it does exist on DeviceNetworkEvents, DeviceLogonEvents, DeviceEvents, ASCDeviceEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ChildPid",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ChildPid` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Parent",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Parent` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Child",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Child` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ChildCmd",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ChildCmd` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ChildSHA256",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "SHA256",
+          "message": "`ChildSHA256` is not a canonical column of DeviceProcessEvents. Did you mean `SHA256`?"
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "Timestamp",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "exists_on": [
+            "DeviceProcessEvents",
+            "DeviceNetworkEvents",
+            "DeviceFileEvents",
+            "DeviceRegistryEvents",
+            "DeviceLogonEvents",
+            "DeviceImageLoadEvents",
+            "DeviceEvents",
+            "DeviceInfo",
+            "DeviceNetworkInfo",
+            "EmailEvents",
+            "EmailUrlInfo",
+            "EmailAttachmentInfo",
+            "EmailPostDeliveryEvents",
+            "UrlClickEvents",
+            "IdentityLogonEvents",
+            "IdentityQueryEvents",
+            "IdentityDirectoryEvents",
+            "IdentityInfo",
+            "CloudAppEvents",
+            "DeviceTvmSoftwareInventory",
+            "DeviceTvmSoftwareVulnerabilities",
+            "AlertInfo",
+            "AlertEvidence",
+            "AADSignInEventsBeta"
+          ],
+          "message": "`Timestamp` is not a column of SecurityEvent; it does exist on DeviceProcessEvents, DeviceNetworkEvents, DeviceFileEvents, DeviceRegistryEvents, DeviceLogonEvents, DeviceImageLoadEvents, DeviceEvents, DeviceInfo, DeviceNetworkInfo, EmailEvents, EmailUrlInfo, EmailAttachmentInfo, EmailPostDeliveryEvents, UrlClickEvents, IdentityLogonEvents, IdentityQueryEvents, IdentityDirectoryEvents, IdentityInfo, CloudAppEvents, DeviceTvmSoftwareInventory, DeviceTvmSoftwareVulnerabilities, AlertInfo, AlertEvidence, AADSignInEventsBeta."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "NetTime",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`NetTime` is not a canonical column of SecurityEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemoteUrl",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteUrl` is not a column of SecurityEvent; it does exist on DeviceNetworkEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemoteIP",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceLogonEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteIP` is not a column of SecurityEvent; it does exist on DeviceNetworkEvents, DeviceLogonEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemotePort",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceLogonEvents",
+            "DeviceEvents",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemotePort` is not a column of SecurityEvent; it does exist on DeviceNetworkEvents, DeviceLogonEvents, DeviceEvents, ASCDeviceEvents."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] Kimsuky/APT43 BabyShark/ReconShark persistence: Run-key autorun calling mshta/wscript with a remote URL and host recon batch",
+      "description": "Hunts the post-exploitation host-survey + persistence behavior that Kimsuky's BabyShark/ReconShark/QuasarRAT loaders consistently exhibit: writing an HKCU\\...\\Run value pointing at mshta/wscript/powershell with a remote URL or staged script, immediately followed by lightweight recon (whoami, systeminfo, net user/group, tasklist, query session, ipconfig, reg query) collected to a staging file under %APPDATA%/%TEMP%/%PUBLIC%. KISA and S2W have repeatedly published this exact survey-bundle + Run-key combination for Kimsuky.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1547.001",
+        "T1059.001",
+        "T1059.003",
+        "T1082",
+        "T1016",
+        "T1033",
+        "T1057",
+        "T1074.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `security_content_summariesonly` count min(_time) as runkey_time values(Registry.registry_path) as reg_path values(Registry.registry_value_name) as reg_value values(Registry.registry_value_data) as reg_data values(Registry.user) as user from datamodel=Endpoint.Registry where Registry.registry_path IN (\"*\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run\\\\*\",\"*\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\RunOnce\\\\*\") Registry.registry_value_data IN (\"*mshta*\",\"*wscript*\",\"*cscript*\",\"*powershell*\",\"*regsvr32*\",\"*.hta*\",\"*.vbs*\",\"*.js*\") by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.user | `drop_dm_object_name(Registry)` | where match(reg_data,\"(?i)(https?://|\\\\\\\\\\\\\\\\|\\\\.hta|/i:|frombase64string|downloadstring|%APPDATA%|%TEMP%|%PUBLIC%)\") | join type=inner dest [| tstats `security_content_summariesonly` count values(Processes.process) as recon_cmds from datamodel=Endpoint.Processes where Processes.process_name IN (\"whoami.exe\",\"systeminfo.exe\",\"net.exe\",\"net1.exe\",\"tasklist.exe\",\"query.exe\",\"ipconfig.exe\",\"reg.exe\",\"nslookup.exe\",\"arp.exe\",\"route.exe\") by Processes.dest Processes.parent_process_name | `drop_dm_object_name(Processes)` | where parent_process_name IN (\"cmd.exe\",\"powershell.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\") | stats values(recon_cmds) as recon_cmds dc(recon_cmds) as recon_distinct by dest | where recon_distinct >= 4] | table runkey_time dest user reg_path reg_value reg_data recon_cmds recon_distinct",
+      "kql": "let LookbackDays = 7d;\nlet RunKeys = dynamic([\n    @\"HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\",\n    @\"HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce\",\n    @\"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\",\n    @\"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce\"]);\nlet ReconBins = dynamic([\"whoami.exe\",\"systeminfo.exe\",\"net.exe\",\"net1.exe\",\"tasklist.exe\",\"query.exe\",\"qwinsta.exe\",\"ipconfig.exe\",\"reg.exe\",\"nslookup.exe\",\"arp.exe\",\"route.exe\",\"hostname.exe\",\"wmic.exe\"]);\nlet RunKeyHits = DeviceRegistryEvents\n    | where Timestamp > ago(LookbackDays)\n    | where ActionType in (\"RegistryValueSet\",\"RegistryKeyCreated\")\n    | where RegistryKey has_any (RunKeys)\n    | where isnotempty(RegistryValueData)\n    | where RegistryValueData matches regex @\"(?i)(mshta|wscript|cscript|powershell|pwsh|regsvr32|\\.hta\\b|\\.vbs\\b|\\.js\\b)\"\n    // Kimsuky's BabyShark Run-keys almost always carry a URL, UNC, base64 blob, or staged-folder env-var\n    | where RegistryValueData matches regex @\"(?i)(https?://|\\\\\\\\[a-z0-9._-]+\\\\|/i:|frombase64string|downloadstring|%appdata%|%temp%|%public%|%programdata%)\"\n    | where InitiatingProcessAccountName !endswith \"$\"\n    | project RunKeyTime = Timestamp, DeviceId, DeviceName,\n              User = InitiatingProcessAccountName,\n              RegistryKey, RegistryValueName, RegistryValueData,\n              WriterProc = InitiatingProcessFileName,\n              WriterCmd = InitiatingProcessCommandLine;\nlet ReconBurst = DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where FileName in~ (ReconBins)\n    | where InitiatingProcessFileName in~ (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"regsvr32.exe\")\n    | summarize ReconStart = min(Timestamp),\n                ReconBinSet = make_set(InitiatingProcessFileName, 32),\n                ReconCmds = make_set(InitiatingProcessCommandLine, 16),\n                DistinctRecon = dcount(InitiatingProcessFileName)\n      by DeviceId, InitiatingProcessAccountName, bin(Timestamp, 10m)\n    // Kimsuky/BabyShark survey bundle: whoami + systeminfo + net + tasklist + ipconfig in <10m\n    | where DistinctRecon >= 4;\nRunKeyHits\n| join kind=inner ReconBurst on DeviceId\n| where ReconStart between (RunKeyTime - 30m .. RunKeyTime + 30m)\n| project RunKeyTime, ReconStart,\n          DriftMin = datetime_diff('minute', ReconStart, RunKeyTime),\n          DeviceName, User, InitiatingProcessAccountName,\n          RegistryKey, RegistryValueName, RegistryValueData,\n          WriterProc, WriterCmd,\n          ReconBinSet, DistinctRecon, ReconCmds\n| order by RunKeyTime desc",
+      "sentinel_kql": "let LookbackDays = 7d;\nlet RunKeyRegex = @\"(?i)\\\\(Software|SOFTWARE)\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run(Once)?\\b\";\nlet ReconBins = dynamic([\"whoami.exe\",\"systeminfo.exe\",\"net.exe\",\"net1.exe\",\"tasklist.exe\",\"query.exe\",\"qwinsta.exe\",\"ipconfig.exe\",\"reg.exe\",\"nslookup.exe\",\"arp.exe\",\"route.exe\",\"hostname.exe\",\"wmic.exe\"]);\nlet RunKeyHits = Event\n    | where TimeGenerated > ago(LookbackDays)\n    | where Source == \"Microsoft-Windows-Sysmon\" and EventID == 13\n    | extend TargetObject  = tostring(parse_xml(EventData).EventData.Data[3][\"#text\"])\n    | extend DetailsField  = tostring(parse_xml(EventData).EventData.Data[4][\"#text\"])\n    | extend WriterImage   = tostring(parse_xml(EventData).EventData.Data[5][\"#text\"])\n    | extend UserField     = tostring(parse_xml(EventData).EventData.Data[6][\"#text\"])\n    | where TargetObject matches regex RunKeyRegex\n    | where DetailsField matches regex @\"(?i)(mshta|wscript|cscript|powershell|pwsh|regsvr32|\\.hta\\b|\\.vbs\\b|\\.js\\b)\"\n    | where DetailsField matches regex @\"(?i)(https?://|\\\\\\\\[a-z0-9._-]+\\\\|/i:|FromBase64String|DownloadString|%APPDATA%|%TEMP%|%PUBLIC%|%PROGRAMDATA%)\"\n    | project RunKeyTime = TimeGenerated, Computer, UserField,\n              TargetObject, DetailsField, WriterImage;\nlet ReconBurst = SecurityEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventID == 4688\n    | extend ChildLeaf  = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n    | extend ParentLeaf = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1]))\n    | where ChildLeaf in (ReconBins)\n    | where ParentLeaf in (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"regsvr32.exe\")\n    | summarize ReconStart = min(TimeGenerated),\n                ReconBinSet = make_set(ChildLeaf, 32),\n                ReconCmds = make_set(CommandLine, 16),\n                DistinctRecon = dcount(ChildLeaf)\n      by Computer, SubjectUserName, bin(TimeGenerated, 10m)\n    | where DistinctRecon >= 4;\nRunKeyHits\n| join kind=inner ReconBurst on Computer\n| where ReconStart between (RunKeyTime - 30m .. RunKeyTime + 30m)\n| project RunKeyTime, ReconStart,\n          DriftMin = datetime_diff('minute', ReconStart, RunKeyTime),\n          Computer, UserField, SubjectUserName,\n          TargetObject, DetailsField, WriterImage,\n          ReconBinSet, DistinctRecon, ReconCmds\n| order by RunKeyTime desc",
+      "sigma_yaml": "title: Kimsuky BabyShark Run-Key Persistence with Script Host and Remote URL\nid: 7a2c1f3e-9d4b-4f1a-bc6f-3b8d2e9c7a51\nstatus: experimental\ndescription: Detects a Windows Run/RunOnce registry value being set with a payload referencing mshta/wscript/cscript/powershell/regsvr32 and a remote URL, UNC path, base64 blob, or staged-folder environment variable \u2014 the canonical BabyShark/ReconShark autorun pattern used by Kimsuky (APT43 / Emerald Sleet / Velvet Chollima).\nreferences:\n  - https://attack.mitre.org/groups/G0094/\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-301a\nauthor: SOC Detection Engineering\ndate: 2026/05/29\ntags:\n  - attack.persistence\n  - attack.t1547.001\n  - attack.g0094\nlogsource:\n  category: registry_set\n  product: windows\ndetection:\n  selection_runkey:\n    TargetObject|contains:\n      - '\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\'\n      - '\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce\\'\n  selection_payload:\n    Details|contains:\n      - 'mshta'\n      - 'wscript'\n      - 'cscript'\n      - 'powershell'\n      - 'pwsh'\n      - 'regsvr32'\n      - '.hta'\n      - '.vbs'\n      - '.js'\n  selection_remote:\n    Details|contains:\n      - 'http://'\n      - 'https://'\n      - '\\\\\\\\'\n      - '/i:'\n      - 'FromBase64String'\n      - 'DownloadString'\n      - '%APPDATA%'\n      - '%TEMP%'\n      - '%PUBLIC%'\n      - '%PROGRAMDATA%'\n  filter_machine_acct:\n    User|endswith: '$'\n  condition: selection_runkey and selection_payload and selection_remote and not filter_machine_acct\nfalsepositives:\n  - Legitimate vendor installers writing Run-keys that legitimately invoke scripts from %PROGRAMDATA% (suppress per vendor signing context)\nlevel: high",
+      "datadog_query": "source:windows.sysmon @EventID:13 @TargetObject:(*\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run\\\\* OR *\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\RunOnce\\\\* OR *\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run\\\\* OR *\\\\SOFTWARE\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\RunOnce\\\\*) @Details:(*mshta* OR *MSHTA* OR *wscript* OR *WScript* OR *cscript* OR *CScript* OR *powershell* OR *PowerShell* OR *regsvr32* OR *RegSvr32* OR *.hta* OR *.vbs* OR *.js*) @Details:(*http\\://* OR *https\\://* OR *\\\\\\\\* OR *FromBase64String* OR *DownloadString* OR *%APPDATA%* OR *%TEMP%* OR *%PUBLIC%*)",
+      "falcon_logscale_query": "#event_simpleName=AsepValueUpdate RegObjectName=/\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run(Once)?$/i\n| regex(\"(?i)(mshta|wscript|cscript|powershell|pwsh|regsvr32|\\\\.hta\\\\b|\\\\.vbs\\\\b|\\\\.js\\\\b)\", field=RegStringValue)\n| regex(\"(?i)(https?://|\\\\\\\\\\\\\\\\[a-z0-9._-]+\\\\\\\\|/i:|FromBase64String|DownloadString|%APPDATA%|%TEMP%|%PUBLIC%|%PROGRAMDATA%)\", field=RegStringValue)\n| join({#event_simpleName=ProcessRollup2 ImageFileName=/(whoami|systeminfo|net1?|tasklist|q(uery|winsta)|ipconfig|reg|nslookup|arp|route|hostname|wmic)\\.exe$/i ParentBaseFileName=/(cmd|powershell|pwsh|mshta|wscript|cscript|regsvr32)\\.exe$/i | groupBy([aid], function=[count(field=ImageFileName, distinct=true, as=DistinctRecon), collect(ImageFileName, multival=true), min(_time, as=ReconStart)]) | DistinctRecon >= 4}, field=aid, include=[DistinctRecon, ImageFileName, ReconStart])\n| groupBy([aid, ComputerName, UserName, RegObjectName, RegValueName, RegStringValue, DistinctRecon], function=count())",
+      "cloudwatch_query": "",
+      "rationale": "Per-component each piece is noisy (Run-keys get written, recon binaries get run), but the BabyShark/ReconShark family is unique in pairing them: a Run-key whose value invokes a script host with a remote URL or staged-folder reference, *and* a tight burst (\u22654 distinct recon binaries within 10 minutes, parented by cmd/powershell/script-host) on the same host within 30 minutes. KISA, S2W (LabyrinthCh",
+      "_field_issues_autofix": [
+        "FileName -> InitiatingProcessFileName",
+        "ProcessCommandLine -> InitiatingProcessCommandLine",
+        "AccountName -> InitiatingProcessAccountName"
+      ],
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "ReconBurst",
+          "tables_in_scope": [
+            "DeviceRegistryEvents"
+          ],
+          "suggestion": null,
+          "message": "`ReconBurst` is not a canonical column of DeviceRegistryEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "RunKeyTime",
+          "tables_in_scope": [
+            "DeviceRegistryEvents"
+          ],
+          "suggestion": null,
+          "message": "`RunKeyTime` is not a canonical column of DeviceRegistryEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "User",
+          "tables_in_scope": [
+            "DeviceRegistryEvents"
+          ],
+          "exists_on": [
+            "Event",
+            "AKSAudit"
+          ],
+          "message": "`User` is not a column of DeviceRegistryEvents; it does exist on Event, AKSAudit."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "WriterProc",
+          "tables_in_scope": [
+            "DeviceRegistryEvents"
+          ],
+          "suggestion": null,
+          "message": "`WriterProc` is not a canonical column of DeviceRegistryEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "WriterCmd",
+          "tables_in_scope": [
+            "DeviceRegistryEvents"
+          ],
+          "suggestion": null,
+          "message": "`WriterCmd` is not a canonical column of DeviceRegistryEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "ChildLeaf",
+          "tables_in_scope": [
+            "Event"
+          ],
+          "suggestion": null,
+          "message": "`ChildLeaf` is not a canonical column of Event."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "CommandLine",
+          "tables_in_scope": [
+            "Event"
+          ],
+          "exists_on": [
+            "SecurityEvent"
+          ],
+          "message": "`CommandLine` is not a column of Event; it does exist on SecurityEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "SubjectUserName",
+          "tables_in_scope": [
+            "Event"
+          ],
+          "exists_on": [
+            "SecurityEvent"
+          ],
+          "message": "`SubjectUserName` is not a column of Event; it does exist on SecurityEvent."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ReconBurst",
+          "tables_in_scope": [
+            "Event"
+          ],
+          "suggestion": null,
+          "message": "`ReconBurst` is not a canonical column of Event."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "RunKeyTime",
+          "tables_in_scope": [
+            "Event"
+          ],
+          "suggestion": null,
+          "message": "`RunKeyTime` is not a canonical column of Event."
+        }
+      ]
+    }
+  ]
+}

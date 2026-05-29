@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GhostAction malicious workflow file added with curl POST to Plesk infrastructure
 
-`UC_749_2` · phase: **install** · confidence: **High**
+`UC_750_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceFileEvents
 
 ### [LLM] GhostAction C2 egress to Plesk-hosted exfiltration infrastructure
 
-`UC_749_3` · phase: **c2** · confidence: **High**
+`UC_750_3` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceNetworkEvents
 
 ### [LLM] GhostAction curl/wget POST of CI/CD secret token to Plesk endpoint
 
-`UC_749_4` · phase: **actions** · confidence: **High**
+`UC_750_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceProcessEvents
 
 ### [LLM] GitHub Actions self-hosted runner spawning curl/wget POST to non-allowlisted egress
 
-`UC_749_5` · phase: **exploit** · confidence: **Medium**
+`UC_750_5` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceProcessEvents
 
 ### [LLM] GhostAction GitHub workflow secret-enumeration commit pattern
 
-`UC_749_6` · phase: **weapon** · confidence: **Medium**
+`UC_750_6` · phase: **weapon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -10,12 +10,8 @@ Home Cyber Security News
 VS Code Remote-SSH RCE Lets Attackers Pivot From Developer Machines to Cloud Servers 
 By Abinaya 
 May 29, 2026 
-
-
-
-
 A newly disclosed vulnerability in Visual Studio Code’s Remote-SSH extension exposes a critical post-compromise attack path that allows threat actors to pivot from infected developer machines into cloud and production environments.
-Given the extension’s widespread adoption across modern development workflows, the issue poses a significant risk to organ…
+Given the extension’s widespread adoption across modern development workflows, the issue poses a significant risk to organizations…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -38,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TOCTOU tamper of VS Code Remote-SSH bootstrap script in user temp by non-VS-Code
 
-`UC_1_2` · phase: **weapon** · confidence: **Medium**
+`UC_6_2` · phase: **weapon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
