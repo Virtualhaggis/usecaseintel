@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Browser navigation to Google Password Manager PIN prompt lookalike domain (VaultJacking phishing)
 
-`UC_5_6` · phase: **delivery** · confidence: **Medium**
+`UC_6_6` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceNetworkEvents
 
 ### [LLM] New Google passkey / security key enrolled from unseen geo or IP (VaultJacking operator persistence)
 
-`UC_5_7` · phase: **install** · confidence: **Medium**
+`UC_6_7` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

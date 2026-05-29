@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Post-takedown beacon to CrowdStrike Glassworm sinkhole 164.92.88.210
 
-`UC_42_2` · phase: **c2** · confidence: **High**
+`UC_43_2` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceNetworkEvents
 
 ### [LLM] Outbound connection to Glassworm operator VPS C2 infrastructure
 
-`UC_42_3` · phase: **c2** · confidence: **High**
+`UC_43_3` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceNetworkEvents
 
 ### [LLM] VS Code / Node / Cursor process resolving Solana mainnet RPC (Glassworm C2 channel)
 
-`UC_42_4` · phase: **c2** · confidence: **Medium**
+`UC_43_4` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceNetworkEvents
 
 ### [LLM] Developer endpoint emitting BitTorrent DHT bootstrap traffic from non-torrent process
 
-`UC_42_5` · phase: **c2** · confidence: **High**
+`UC_43_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceNetworkEvents
 
 ### [LLM] IDE / Node process resolving calendar.google.com as Glassworm C2 dead-drop
 
-`UC_42_6` · phase: **c2** · confidence: **Medium**
+`UC_43_6` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceNetworkEvents
 
 ### [LLM] Trojanized Glassworm VS Code / OpenVSX extension package files on developer host
 
-`UC_42_7` · phase: **install** · confidence: **High**
+`UC_43_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +159,7 @@ DeviceFileEvents
 
 ### [LLM] VS Code child process reads wallet / dev-credential files (Glassworm credential theft)
 
-`UC_42_8` · phase: **actions** · confidence: **Medium**
+`UC_43_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -185,7 +185,7 @@ DeviceFileEvents
 
 ### [LLM] First-time install of any Glassworm-named extension across the org (baseline anti-join)
 
-`UC_42_9` · phase: **delivery** · confidence: **Medium**
+`UC_43_9` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

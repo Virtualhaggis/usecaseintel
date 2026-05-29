@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1249 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -16,6 +16,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [clearfake uses bsc testnet smart contracts for takedown resi](./2026-05-28/clearfake-uses-bsc-testnet-smart-contracts-for-takedown-resi.md)
 - [critical gogs rce vulnerability lets any authenticated user ](./2026-05-28/critical-gogs-rce-vulnerability-lets-any-authenticated-user-.md)
 - [fbi warns of fake fifa websites running world cup fraud sche](./2026-05-28/fbi-warns-of-fake-fifa-websites-running-world-cup-fraud-sche.md)
+- [greyvibe hackers use chatgpt gemini to power cyberattacks](./2026-05-28/greyvibe-hackers-use-chatgpt-gemini-to-power-cyberattacks.md)
 - [hackers deploy vip keylogger through phishing emails masquer](./2026-05-28/hackers-deploy-vip-keylogger-through-phishing-emails-masquer.md)
 - [hackers use llm agent to move from marimo rce to internal da](./2026-05-28/hackers-use-llm-agent-to-move-from-marimo-rce-to-internal-da.md)
 - [jinx 0164 targets cryptocurrency firms with fake recruiter l](./2026-05-28/jinx-0164-targets-cryptocurrency-firms-with-fake-recruiter-l.md)

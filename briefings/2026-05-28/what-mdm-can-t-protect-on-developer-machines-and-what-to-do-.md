@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Cyberhaven trojanized Chrome extension C2 callback to cyberhavenext.pro
 
-`UC_20_10` · phase: **c2** · confidence: **High**
+`UC_21_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceNetworkEvents
 
 ### [LLM] Mini Shai-Hulud npm worm exfil to filev2.getsession.org
 
-`UC_20_11` · phase: **actions** · confidence: **High**
+`UC_21_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceNetworkEvents
 
 ### [LLM] Shai-Hulud worm GitHub Action workflow file dropped under .github/workflows
 
-`UC_20_12` · phase: **install** · confidence: **High**
+`UC_21_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceFileEvents
 
 ### [LLM] postmark-mcp BCC exfil to giftshop.club
 
-`UC_20_13` · phase: **actions** · confidence: **High**
+`UC_21_13` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ union Net, Mail
 
 ### [LLM] npm/yarn/pnpm postinstall hook spawning credential-harvest tooling
 
-`UC_20_14` · phase: **install** · confidence: **Medium**
+`UC_21_14` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

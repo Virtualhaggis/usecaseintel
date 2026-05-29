@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SRG/Luna Moth typosquatted IT-helpdesk lookalike domain resolution
 
-`UC_43_10` · phase: **delivery** · confidence: **High**
+`UC_44_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceNetworkEvents
 
 ### [LLM] SRG in-person USB exfil: mass file copy to non-system drive after remote-help tool
 
-`UC_43_11` · phase: **actions** · confidence: **Medium**
+`UC_44_11` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceFileEvents
 
 ### [LLM] SRG extortion leak-site contact: traffic to business-data-leaks.com
 
-`UC_43_12` · phase: **actions** · confidence: **High**
+`UC_44_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
