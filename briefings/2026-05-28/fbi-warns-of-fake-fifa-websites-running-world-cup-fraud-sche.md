@@ -95,7 +95,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DNS/HTTP traffic to Ghost Stadium FIFA typosquat domains (2026 World Cup fraud)
 
-`UC_37_5` · phase: **delivery** · confidence: **High**
+`UC_39_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ union NetHits, ClickHits
 
 ### [LLM] Outbound connection to Ghost Stadium FIFA fraud staging IPs
 
-`UC_37_6` · phase: **c2** · confidence: **High**
+`UC_39_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceNetworkEvents
 
 ### [LLM] Browser navigation to FIFA-themed look-alike hostname (typosquat pattern hunt)
 
-`UC_37_7` · phase: **delivery** · confidence: **Medium**
+`UC_39_7` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +160,7 @@ DeviceNetworkEvents
 
 ### [LLM] Risky AAD sign-in after user contact with FIFA typosquat phishing portal
 
-`UC_37_8` · phase: **actions** · confidence: **Medium**
+`UC_39_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

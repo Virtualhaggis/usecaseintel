@@ -52,7 +52,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Want to avoid a data breach? Employ secrets detection
 
-`UC_1127_1` · phase: **exploit** · confidence: **High**
+`UC_1128_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

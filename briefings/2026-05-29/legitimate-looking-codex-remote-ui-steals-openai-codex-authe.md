@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Outbound traffic to BrutalStrike Codex stealer C2 (anyclaw.store /startlog)
 
-`UC_23_4` · phase: **c2** · confidence: **High**
+`UC_24_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ union isfuzzy=true
 
 ### [LLM] HTTP POST to /startlog with XOR+base64 stealer beacon shape
 
-`UC_23_5` · phase: **c2** · confidence: **High**
+`UC_24_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceNetworkEvents
 
 ### [LLM] codexui-android npm package install or chunk-PUR7OUAG.js write on developer host
 
-`UC_23_6` · phase: **install** · confidence: **High**
+`UC_24_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceFileEvents
 
 ### [LLM] Codex auth.json read followed by outbound HTTP within 60s (token theft pattern)
 
-`UC_23_7` · phase: **actions** · confidence: **Medium**
+`UC_24_7` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ auth_reads
 
 ### [LLM] Android emulator / WSL extracts Linux rootfs and runs node.exe pulling unpinned npm
 
-`UC_23_8` · phase: **install** · confidence: **Medium**
+`UC_24_8` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -234,7 +234,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — Legitimate-Looking Codex Remote UI Steals OpenAI Codex Authentication Tokens
 
-`UC_23_3` · phase: **exploit** · confidence: **High**
+`UC_24_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

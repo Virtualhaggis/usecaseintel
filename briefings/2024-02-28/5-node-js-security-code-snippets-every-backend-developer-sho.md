@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — 5 Node.js security code snippets every backend developer should know
 
-`UC_1269_0` · phase: **exploit** · confidence: **High**
+`UC_1270_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

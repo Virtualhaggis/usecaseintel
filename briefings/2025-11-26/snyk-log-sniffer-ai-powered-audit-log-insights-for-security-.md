@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Snyk Log Sniffer: AI-Powered Audit Log Insights for Security Leaders
 
-`UC_649_0` · phase: **exploit** · confidence: **High**
+`UC_650_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

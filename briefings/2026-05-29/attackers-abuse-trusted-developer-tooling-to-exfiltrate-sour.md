@@ -10,17 +10,12 @@ Home Cyber Security News
 Attackers Abuse Trusted Developer Tooling to Exfiltrate Source Code and Secrets 
 By Tushar Subhra Dutta 
 May 29, 2026 
-
-
-
-
 A wave of sophisticated supply chain attacks has put millions of software developers on high alert, with threat actors turning everyday developer tools into weapons for stealing credentials, cloud tokens, and source code. 
-What makes these campaigns especially alarming is how they exploit the very systems developers trust most: their editors, au…
+What makes these campaigns especially alarming is how they exploit the very systems developers trust most: their editors, automated …
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-48027`
-- **CVE:** `CVE-2026-45321`
 - **IPv4 (defanged):** `216.126.225.129`
 - **SHA256:** `1a4afce34918bdc74ae3f31edaffffaa0ee074d83618f53edfd88137927340b8`
 - **SHA256:** `b0cefb66b953e5184b6adb3035e9e267335ac5eabfe1848e07834777b9397b74`
@@ -68,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Nx Console v18.95.0 payload — kitty/cat.py backdoor file drop
 
-`UC_11_13` · phase: **install** · confidence: **High**
+`UC_12_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +87,7 @@ DeviceFileEvents
 
 ### [LLM] GitHub Search API dead-drop C2 polling (firedalazer marker)
 
-`UC_11_14` · phase: **c2** · confidence: **High**
+`UC_12_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +111,7 @@ DeviceNetworkEvents
 
 ### [LLM] Megalodon C2 IP egress — 216.126.225.129:8443
 
-`UC_11_15` · phase: **c2** · confidence: **High**
+`UC_12_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +134,7 @@ DeviceNetworkEvents
 
 ### [LLM] AWS IMDS access from VS Code / Node / Bun developer tooling
 
-`UC_11_16` · phase: **actions** · confidence: **Medium**
+`UC_12_16` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +157,7 @@ DeviceNetworkEvents
 
 ### [LLM] macOS LaunchAgent kitty-monitor persistence
 
-`UC_11_17` · phase: **install** · confidence: **High**
+`UC_12_17` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +179,7 @@ DeviceFileEvents
 
 ### [LLM] Megalodon malicious GitHub Actions workflow file written to repo
 
-`UC_11_18` · phase: **delivery** · confidence: **Medium**
+`UC_12_18` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -523,7 +518,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Attackers Abuse Trusted Developer Tooling to Exfiltrate Source Code and Secrets
 
-`UC_11_12` · phase: **exploit** · confidence: **High**
+`UC_12_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -578,7 +573,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
   - IP / domain IOC(s): `216.126.225.129`
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-48027`, `CVE-2026-45321`
+  - CVE(s): `CVE-2026-48027`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
   - file hash IOC(s): `1a4afce34918bdc74ae3f31edaffffaa0ee074d83618f53edfd88137927340b8`, `b0cefb66b953e5184b6adb3035e9e267335ac5eabfe1848e07834777b9397b74`, `e7347d90653efc565f03733a95e9209d78f9cfa81e31ff2b2dd9d48d75a4b8b1`, `43f2b001846c4966073ebffa5be8f15e491a1e7d32bbd805d57406ff540e0dd9`

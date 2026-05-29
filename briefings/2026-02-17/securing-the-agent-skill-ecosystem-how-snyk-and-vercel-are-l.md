@@ -52,7 +52,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Securing the Agent Skill Ecosystem: How Snyk and Vercel Are Locking Down the New
 
-`UC_479_1` · phase: **exploit** · confidence: **High**
+`UC_480_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

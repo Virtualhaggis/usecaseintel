@@ -10,12 +10,8 @@ Home Cyber Security News
 JINX-0164 Threat Actor Using LinkedIn Social Engineering to Deploy Custom macOS Malware 
 By Tushar Subhra Dutta 
 May 29, 2026 
-
-
-
-
 A new threat actor tracked as JINX-0164 has been running calculated attacks against cryptocurrency organizations, using LinkedIn profiles to lure developers into downloading custom macOS malware. 
-Active since at least mid-2025, the group has combined social engineering, credential theft, and supply chain sabotage into a seamless operati…
+Active since at least mid-2025, the group has combined social engineering, credential theft, and supply chain sabotage into a seamless operation that …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -75,12 +71,133 @@ Active since at least mid-2025, the group has combined social engineering, crede
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1543.001** — Persistence (article-specific)
+- **T1543.001** — Create or Modify System Process: Launch Agent
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1573.001** — Encrypted Channel: Symmetric Cryptography
+- **T1105** — Ingress Tool Transfer
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1656** — Impersonation
+- **T1552.004** — Unsecured Credentials: Private Keys
+- **T1213.003** — Data from Information Repositories: Code Repositories
+- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] JINX-0164 AUDIOFIX/MINIRAT macOS LaunchAgent plist persistence
+
+`UC_11_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*/Library/LaunchAgents/*" Filesystem.file_name IN ("com.microsoft.teams.coreaudiod.plist","io.aircall.workspace.helper.plist","com.apple.Terminal.profiler.plist") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath has "/Library/LaunchAgents/"
+| where FileName in~ ("com.microsoft.teams.coreaudiod.plist","io.aircall.workspace.helper.plist","com.apple.Terminal.profiler.plist")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessSHA256, SHA256, ActionType
+| order by Timestamp desc
+```
+
+### [LLM] JINX-0164 C2 and payload delivery infrastructure callback
+
+`UC_11_12` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("208.115.220.17","185.175.59.85","89.36.224.5","185.100.85.250","84.32.83.250","153.92.126.84","45.45.217.242","163.172.53.20") OR All_Traffic.dest_host IN ("datahub.ink","cloud-sync.online","byte-io.us","apple.driver-store.com","apple.driver-update.io","driver-updater.net","driver-hub.net","drvstore.com")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let JinxDomains = dynamic(["datahub.ink","cloud-sync.online","byte-io.us","apple.driver-store.com","apple.driver-update.io","driver-updater.net","driver-hub.net","drvstore.com","bitget-meeting.com","teamicrosoft.com","teams.cam","live.us.org","us03-slack.online","live.ong"]);
+let JinxIPs = dynamic(["208.115.220.17","185.175.59.85","89.36.224.5","185.100.85.250","84.32.83.250","153.92.126.84","45.45.217.242","163.172.53.20"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (JinxIPs) or RemoteUrl has_any (JinxDomains)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemoteUrl, RemotePort, Protocol, ActionType
+| order by Timestamp desc
+```
+
+### [LLM] Trojanized npm @velora-dex/sdk v4.9.1 install or import
+
+`UC_11_13` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("npm","yarn","pnpm","npx","node") (Processes.process="*@velora-dex/sdk@4.9.1*" OR Processes.process="*velora-dex/sdk*4.9.1*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+union isfuzzy=true
+(DeviceProcessEvents
+  | where Timestamp > ago(60d)
+  | where FileName in~ ("npm","yarn","pnpm","npx","node","npm.exe","yarn.exe","pnpm.cmd")
+  | where ProcessCommandLine has "@velora-dex/sdk" and ProcessCommandLine has "4.9.1"
+  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath),
+(DeviceFileEvents
+  | where Timestamp > ago(60d)
+  | where FileName in~ ("package.json","package-lock.json","yarn.lock","pnpm-lock.yaml")
+  | where InitiatingProcessCommandLine has "@velora-dex/sdk" and InitiatingProcessCommandLine has "4.9.1"
+  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath)
+| order by Timestamp desc
+```
+
+### [LLM] User access to JINX-0164 fake conferencing platform domains (Teams/Slack/Bitget spoofs)
+
+`UC_11_14` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url IN ("*bitget-meeting.com*","*teamicrosoft.com*","*teams.cam*","*live.us.org*","*us03-slack.online*","*live.ong*") by Web.src Web.user Web.url Web.http_referrer Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let SpoofDomains = dynamic(["bitget-meeting.com","teamicrosoft.com","teams.cam","live.us.org","us03-slack.online","live.ong"]);
+let ClickHits = UrlClickEvents
+    | where Timestamp > ago(30d)
+    | where Url has_any (SpoofDomains)
+    | project Timestamp, AccountUpn, Url, ActionType, IPAddress, NetworkMessageId, Source="UrlClickEvents";
+let NetHits = DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has_any (SpoofDomains)
+    | project Timestamp, AccountUpn=InitiatingProcessAccountUpn, Url=RemoteUrl, ActionType, IPAddress=RemoteIP, NetworkMessageId="", Source="DeviceNetworkEvents", DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine;
+union isfuzzy=true ClickHits, NetHits
+| order by Timestamp desc
+```
+
+### [LLM] nord-stream CI/CD secret-exfiltration tool execution
+
+`UC_11_15` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="nord-stream" OR Processes.process_name="nord-stream.py" OR Processes.process="*nord-stream*" OR Processes.process="*nord_stream*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(90d)
+| where FileName in~ ("nord-stream","nord-stream.py","nord_stream.py")
+    or ProcessCommandLine has_any ("nord-stream","nord_stream")
+    or InitiatingProcessCommandLine has_any ("nord-stream","nord_stream")
+| where not(ProcessCommandLine has_any ("--help","-h "," -V","--version"))
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -373,7 +490,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — JINX-0164 Threat Actor Using LinkedIn Social Engineering to Deploy Custom macOS
 
-`UC_10_10` · phase: **install** · confidence: **High**
+`UC_11_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -417,4 +534,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 30 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

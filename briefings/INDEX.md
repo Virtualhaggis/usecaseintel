@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -24,6 +24,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47210 vm2 sandbox escape via jspi bac](./2026-05-29/ghsa-critical-cve-2026-47210-vm2-sandbox-escape-via-jspi-bac.md)
 - [hackers use fake adobe document cloud pages to deliver scree](./2026-05-29/hackers-use-fake-adobe-document-cloud-pages-to-deliver-scree.md)
 - [hackers use fake video player updates to deploy miner and ra](./2026-05-29/hackers-use-fake-video-player-updates-to-deploy-miner-and-ra.md)
+- [how relay network adopted ai coding securely and built the f](./2026-05-29/how-relay-network-adopted-ai-coding-securely-and-built-the-f.md)
 - [jinx 0164 threat actor using linkedin social engineering to ](./2026-05-29/jinx-0164-threat-actor-using-linkedin-social-engineering-to-.md)
 - [kimsuky deploys httpspy expands arsenal with hellodoor and v](./2026-05-29/kimsuky-deploys-httpspy-expands-arsenal-with-hellodoor-and-v.md)
 - [legitimate looking codex remote ui steals openai codex authe](./2026-05-29/legitimate-looking-codex-remote-ui-steals-openai-codex-authe.md)
@@ -246,7 +247,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44330 free5gc s nef nnef pfdmanagemen](./2026-05-08/ghsa-critical-cve-2026-44330-free5gc-s-nef-nnef-pfdmanagemen.md)
 - [ghsa critical cve 2026 44551 open webui has an ldap empty pa](./2026-05-08/ghsa-critical-cve-2026-44551-open-webui-has-an-ldap-empty-pa.md)
 - [ghsa critical cve 2026 44588 siyuan electron renderer rce vi](./2026-05-08/ghsa-critical-cve-2026-44588-siyuan-electron-renderer-rce-vi.md)
-- [ghsa critical ghsa pvmv cwg8 v6c8 zebra v4 4 0 still accepts](./2026-05-08/ghsa-critical-ghsa-pvmv-cwg8-v6c8-zebra-v4-4-0-still-accepts.md)
 
 ## 2026-05-07
 - [cisa kev cve 2026 6973 ivanti endpoint manager mobile epmm i](./2026-05-07/cisa-kev-cve-2026-6973-ivanti-endpoint-manager-mobile-epmm-i.md)
@@ -2327,4 +2327,3 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2023-05-30
 - [snyk announces new slack integration](./2023-05-30/snyk-announces-new-slack-integration.md)
-- [snykers share wellness tips for mental health awareness mont](./2023-05-30/snykers-share-wellness-tips-for-mental-health-awareness-mont.md)

@@ -10,12 +10,9 @@ Home Cyber Security News
 Ransomware Uses SYSTEM Scheduled Task to Encrypt Local Drives With Elevated Privileges 
 By Tushar Subhra Dutta 
 May 29, 2026 
-
-
-
-
 A newly analyzed ransomware strain called The Gentlemen is raising serious alarms across the cybersecurity community. 
-Built in the Go programming language and obfuscated with a tool called Garble, it combines powerful per-file encryption with an aggressive ability to spread itself silently across entire networks without any human interve…
+Built in the Go programming language and obfuscated with a tool called Garble, it combines powerful per-file encryption with an aggressive ability to spread itself silently across entire networks without any human intervention. 
+…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -42,134 +39,12 @@ Built in the Go programming language and obfuscated with a tool called Garble, i
 - **T1219** — Remote Access Software
 - **T1053.005** — Persistence (article-specific)
 - **T1543.003** — Persistence (article-specific)
-- **T1053.005** — Scheduled Task/Job: Scheduled Task
-- **T1134.001** — Access Token Manipulation: Token Impersonation
-- **T1027.002** — Obfuscated Files or Information: Software Packing
-- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys
-- **T1021.002** — Remote Services: SMB/Windows Admin Shares
-- **T1570** — Lateral Tool Transfer
-- **T1047** — Windows Management Instrumentation
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] The Gentlemen ransomware: creation of 'gentlemen_system' SYSTEM scheduled task
-
-`UC_9_12` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=schtasks.exe OR Processes.process_name=powershell.exe OR Processes.process_name=pwsh.exe) (Processes.process="*gentlemen_system*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | rename firstTime as firstTime lastTime as lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where ProcessCommandLine has "gentlemen_system"
-   or InitiatingProcessCommandLine has "gentlemen_system"
-| where FileName in~ ("schtasks.exe","powershell.exe","pwsh.exe","cmd.exe") or InitiatingProcessFileName in~ ("schtasks.exe","powershell.exe","pwsh.exe")
-| project Timestamp, DeviceName, AccountName, AccountSid, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
-| order by Timestamp desc
-```
-
-### [LLM] The Gentlemen ransomware: mass file rename to .umc16h and README-GENTLEMEN.txt drop
-
-`UC_9_13` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="*.umc16h" OR Filesystem.file_name="README-GENTLEMEN.txt") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | where count > 5 OR file_name="README-GENTLEMEN.txt"
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(1d)
-| where ActionType in ("FileCreated","FileRenamed")
-| where FileName endswith ".umc16h" or FileName =~ "README-GENTLEMEN.txt"
-| summarize EncryptedCount = count(), NotesDropped = countif(FileName =~ "README-GENTLEMEN.txt"), DistinctDirs = dcount(FolderPath), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), SampleFiles = make_set(FileName, 5) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256, InitiatingProcessAccountName
-| where EncryptedCount > 10 or NotesDropped > 0
-```
-
-### [LLM] The Gentlemen ransomware encryptor execution by SHA256 + LOCKER_BACKGROUND env
-
-`UC_9_14` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash="22b38dad7da097ea03aa28d0614164cd25fafeb1383dbc15047e34c8050f6f67" OR Processes.process="*LOCKER_BACKGROUND=1*" OR Processes.process="*9VoAvR7G*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where SHA256 == "22b38dad7da097ea03aa28d0614164cd25fafeb1383dbc15047e34c8050f6f67"
-   or InitiatingProcessSHA256 == "22b38dad7da097ea03aa28d0614164cd25fafeb1383dbc15047e34c8050f6f67"
-   or ProcessCommandLine has "LOCKER_BACKGROUND=1"
-   or ProcessCommandLine has "9VoAvR7G"
-| project Timestamp, DeviceName, AccountName, AccountSid, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### [LLM] The Gentlemen persistence: UpdateSystem/UpdateUser tasks + GupdateS/GupdateU Run keys
-
-`UC_9_15` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path="*\\CurrentVersion\\Run\\GupdateS" OR Registry.registry_path="*\\CurrentVersion\\Run\\GupdateU" OR Registry.registry_value_name="GupdateS" OR Registry.registry_value_name="GupdateU") by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | append [ | tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process IN ("*UpdateSystem*","*UpdateUser*") (Processes.process_name=schtasks.exe OR Processes.process_name=powershell.exe) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)`]
-```
-
-**Defender KQL:**
-```kql
-let TaskHits = DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where FileName =~ "schtasks.exe" or InitiatingProcessFileName =~ "schtasks.exe" or ProcessCommandLine has_any ("Register-ScheduledTask","schtasks")
-    | where ProcessCommandLine has_any ("\"UpdateSystem\"","/TN UpdateSystem","/tn UpdateSystem","\"UpdateUser\"","/TN UpdateUser","/tn UpdateUser"," UpdateSystem "," UpdateUser ")
-    | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, Artefact = "Task";
-let RegHits = DeviceRegistryEvents
-    | where Timestamp > ago(30d)
-    | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
-    | where RegistryKey has_any (@"\Software\Microsoft\Windows\CurrentVersion\Run", @"\SOFTWARE\Microsoft\Windows\CurrentVersion\Run")
-    | where RegistryValueName in~ ("GupdateS","GupdateU")
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName=InitiatingProcessFileName, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine=RegistryValueData, Artefact = strcat("Run:", RegistryValueName);
-union TaskHits, RegHits
-| order by Timestamp desc
-```
-
-### [LLM] The Gentlemen self-propagation: C:\Temp\psexec.exe + admin-share staging + multi-method remote exec
-
-`UC_9_16` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count values(Filesystem.dest_file_path) as paths dc(Filesystem.dest) as remoteHostCount from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("\\\\*\\ADMIN$\\*","\\\\*\\C$\\*") (Filesystem.file_name="*.exe" OR Filesystem.file_name="*.tmp") by Filesystem.src Filesystem.user Filesystem.process_name _time span=10m | `drop_dm_object_name(Filesystem)` | where remoteHostCount >= 3 | append [ | tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.process="*C:\\Temp\\psexec.exe*" by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)`]
-```
-
-**Defender KQL:**
-```kql
-let WindowMin = 10m;
-let StagingFromSource = DeviceFileEvents
-    | where Timestamp > ago(7d)
-    | where ActionType in ("FileCreated","FileRenamed")
-    | where FolderPath startswith @"\\" and (FolderPath has @"\ADMIN$\\" or FolderPath has @"\C$\\") 
-    | where FileName endswith ".exe" or FileName endswith ".tmp"
-    | summarize RemoteHostCount = dcount(tostring(extract(@"\\\\([^\\]+)\\", 1, FolderPath))), SampleTargets = make_set(FolderPath, 6), Count = count() by DeviceName, InitiatingProcessFileName, InitiatingProcessSHA256, InitiatingProcessAccountName, bin(Timestamp, WindowMin)
-    | where RemoteHostCount >= 3;
-let PsExecFromTemp = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where FolderPath =~ @"C:\Temp" and FileName =~ "psexec.exe"
-         or ProcessCommandLine has @"C:\Temp\psexec.exe"
-    | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256;
-StagingFromSource
-| join kind=fullouter (PsExecFromTemp | summarize PsExecHits = count() by DeviceName) on DeviceName
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -524,7 +399,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Ransomware Uses SYSTEM Scheduled Task to Encrypt Local Drives With Elevated Priv
 
-`UC_9_11` · phase: **exploit** · confidence: **High**
+`UC_10_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -581,4 +456,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 17 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
