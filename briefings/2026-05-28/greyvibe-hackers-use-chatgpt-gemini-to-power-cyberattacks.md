@@ -11,12 +11,8 @@ By Bill Toulas
 May 28, 2026
 06:24 PM
 0 
-
-
 A likely Russian threat group tracked as GreyVibe has been using AI-generated lures and a rich set of custom malware tools to target entities in the military, government, civilian, and business sectors.
-
-
-The cyberespionage campaign has been active since at least August 2025 and appears to align with Russian state interests, although researchers cannot confidently classify it as a nation-st…
+The cyberespionage campaign has been active since at least August 2025 and appears to align with Russian state interests, although researchers cannot confidently classify it as a nation-state oper…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -54,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PhantomMail: Ukrainian-themed ZIP/RAR delivered via Google Drive or 4sync links
 
-`UC_0_6` · phase: **delivery** · confidence: **Medium**
+`UC_1_6` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +64,7 @@ let SuspectArchive = EmailAttachmentInfo | where Timestamp > ago(14d) | where Fi
 
 ### [LLM] PhantomClick: browser → mshta/powershell/cmd within 60s of fake Cloudflare/Zoom/LAPAS lure
 
-`UC_0_7` · phase: **exploit** · confidence: **High**
+`UC_1_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +78,7 @@ DeviceProcessEvents | where Timestamp > ago(7d) | where InitiatingProcessFileNam
 
 ### [LLM] LegionRelay browser credential theft from Chromium/Firefox Login Data by PowerShell
 
-`UC_0_8` · phase: **actions** · confidence: **High**
+`UC_1_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +92,7 @@ DeviceFileEvents | where Timestamp > ago(14d) | where FileName in~ ("Login Data"
 
 ### [LLM] LegionRelay Telegram / WhatsApp messenger store exfiltration
 
-`UC_0_9` · phase: **actions** · confidence: **High**
+`UC_1_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +106,7 @@ DeviceFileEvents | where Timestamp > ago(14d) | where FolderPath has_any ("\\Tel
 
 ### [LLM] GreyVibe: RDP enablement via fDenyTSConnections=0 + firewall by PowerShell RAT
 
-`UC_0_10` · phase: **install** · confidence: **High**
+`UC_1_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +120,7 @@ let RegFlip = DeviceRegistryEvents | where Timestamp > ago(14d) | where (Registr
 
 ### [LLM] PowerShell.exe sustained beaconing to uncategorized web endpoint (LegionRelay/PhantomRelay C2)
 
-`UC_0_11` · phase: **c2** · confidence: **Medium**
+`UC_1_11` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +134,7 @@ DeviceNetworkEvents | where Timestamp > ago(7d) | where InitiatingProcessFileNam
 
 ### [LLM] GreyVibe cryptocurrency miner deployment via PowerShell RAT
 
-`UC_0_12` · phase: **actions** · confidence: **High**
+`UC_1_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

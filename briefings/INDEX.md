@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1249 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -34,7 +34,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [3 soc steps that shut down incident risks early](./2026-05-27/3-soc-steps-that-shut-down-incident-risks-early.md)
 - [ai chatbot recommendations redirect users to cryptojacking m](./2026-05-27/ai-chatbot-recommendations-redirect-users-to-cryptojacking-m.md)
 - [can you enforce strong active directory password rules witho](./2026-05-27/can-you-enforce-strong-active-directory-password-rules-witho.md)
-- [cisa gives feds 4 days to patch actively exploited cpanel pl](./2026-05-27/cisa-gives-feds-4-days-to-patch-actively-exploited-cpanel-pl.md)
 - [cisa kev cve 2026 45321 tanstack unspecified vulnerability](./2026-05-27/cisa-kev-cve-2026-45321-tanstack-unspecified-vulnerability.md)
 - [cisa kev cve 2026 48027 nx console embedded malicious code v](./2026-05-27/cisa-kev-cve-2026-48027-nx-console-embedded-malicious-code-v.md)
 - [cisa kev cve 2026 8398 daemon tools lite embedded malicious ](./2026-05-27/cisa-kev-cve-2026-8398-daemon-tools-lite-embedded-malicious-.md)
