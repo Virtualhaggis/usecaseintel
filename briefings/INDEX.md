@@ -8,16 +8,19 @@ _1249 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-29
+- [hackers exploit microsoft teams collaboration features to im](./2026-05-29/hackers-exploit-microsoft-teams-collaboration-features-to-im.md)
+- [typosquatted npm packages used to steal cloud and ci cd secr](./2026-05-29/typosquatted-npm-packages-used-to-steal-cloud-and-ci-cd-secr.md)
+- [vs code remote ssh rce lets attackers pivot from developer m](./2026-05-29/vs-code-remote-ssh-rce-lets-attackers-pivot-from-developer-m.md)
+
 ## 2026-05-28
 - [2026 world cup discussing the world s biggest game s attack ](./2026-05-28/2026-world-cup-discussing-the-world-s-biggest-game-s-attack-.md)
 - [ai generated npm malware accidentally exposes threat actor s](./2026-05-28/ai-generated-npm-malware-accidentally-exposes-threat-actor-s.md)
 - [btmob android malware service generates custom phishing payl](./2026-05-28/btmob-android-malware-service-generates-custom-phishing-payl.md)
 - [carnival cruise confirms data breach affecting nearly 6 mill](./2026-05-28/carnival-cruise-confirms-data-breach-affecting-nearly-6-mill.md)
-- [clearfake uses bsc testnet smart contracts for takedown resi](./2026-05-28/clearfake-uses-bsc-testnet-smart-contracts-for-takedown-resi.md)
 - [critical gogs rce vulnerability lets any authenticated user ](./2026-05-28/critical-gogs-rce-vulnerability-lets-any-authenticated-user-.md)
 - [fbi warns of fake fifa websites running world cup fraud sche](./2026-05-28/fbi-warns-of-fake-fifa-websites-running-world-cup-fraud-sche.md)
 - [greyvibe hackers use chatgpt gemini to power cyberattacks](./2026-05-28/greyvibe-hackers-use-chatgpt-gemini-to-power-cyberattacks.md)
-- [hackers deploy vip keylogger through phishing emails masquer](./2026-05-28/hackers-deploy-vip-keylogger-through-phishing-emails-masquer.md)
 - [hackers use llm agent to move from marimo rce to internal da](./2026-05-28/hackers-use-llm-agent-to-move-from-marimo-rce-to-internal-da.md)
 - [jinx 0164 targets cryptocurrency firms with fake recruiter l](./2026-05-28/jinx-0164-targets-cryptocurrency-firms-with-fake-recruiter-l.md)
 - [less panic patching more precision](./2026-05-28/less-panic-patching-more-precision.md)
@@ -133,7 +136,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-19
 - [actions cool issues helper github action compromised all tag](./2026-05-19/actions-cool-issues-helper-github-action-compromised-all-tag.md)
 - [active supply chain attack malicious node ipc versions publi](./2026-05-19/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
-- [exposing fox tempest a malware signing service operation](./2026-05-19/exposing-fox-tempest-a-malware-signing-service-operation.md)
 - [from pdb strings to maas tracking a commodity badiis ecosyst](./2026-05-19/from-pdb-strings-to-maas-tracking-a-commodity-badiis-ecosyst.md)
 - [ghsa critical cve 2026 45568 rok python proxyshare can be us](./2026-05-19/ghsa-critical-cve-2026-45568-rok-python-proxyshare-can-be-us.md)
 - [ghsa critical cve 2026 45695 kopia rce via ssh proxycommand ](./2026-05-19/ghsa-critical-cve-2026-45695-kopia-rce-via-ssh-proxycommand-.md)

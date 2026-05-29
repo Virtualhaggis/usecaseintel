@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Megalodon CI/CD exfil: outbound HTTPS to C2 216.126.225.129:8443
 
-`UC_85_6` · phase: **c2** · confidence: **High**
+`UC_86_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceNetworkEvents
 
 ### [LLM] Megalodon harvester: curl POST to C2 /collect endpoint on Linux runner
 
-`UC_85_7` · phase: **actions** · confidence: **High**
+`UC_86_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### [LLM] Megalodon harvester: bash secret-grep across workspace (API_KEY|SECRET|TOKEN|PRIVATE_KEY|BEGIN RSA)
 
-`UC_85_8` · phase: **actions** · confidence: **Medium**
+`UC_86_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceProcessEvents
 
 ### [LLM] Megalodon backdoor workflow file (SysDiag.yml / Optimize-Build.yml) written to .github/workflows/
 
-`UC_85_9` · phase: **install** · confidence: **High**
+`UC_86_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceFileEvents
 
 ### [LLM] Megalodon harvester: clustered read of ~/.ssh/id_*, ~/.kube/config, ~/.npmrc, ~/.docker/config.json in one session
 
-`UC_85_10` · phase: **actions** · confidence: **Medium**
+`UC_86_10` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -242,7 +242,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Megalodon: Mass GitHub Actions Secret Exfiltration Across 5,500+ Public Reposito
 
-`UC_85_5` · phase: **install** · confidence: **High**
+`UC_86_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

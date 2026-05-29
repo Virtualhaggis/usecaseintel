@@ -1,0 +1,146 @@
+{
+  "name": "Turla",
+  "ucs": [
+    {
+      "title": "[LLM] Turla (Secret Blizzard) ComRAT v4 / Crutch \u2014 covert C2 via Gmail web UI and Dropbox API from non-browser process",
+      "description": "Hunts for the signature Turla cloud-service C2 channel: ComRAT v4 reuses cookies to drive mail.google.com through the web UI (commands hidden in drafts/attachments), while the Crutch backdoor uses content.dropboxapi.com / api.dropboxapi.com to stage commands and exfil. Connections to these endpoints from any process other than known browsers/sync clients is a near-actor-unique tell.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1071.001",
+        "T1102.002",
+        "T1567.002",
+        "T1132.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Web.Web WHERE (Web.dest IN (\"mail.google.com\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"www.googleapis.com\") OR Web.url=\"*mail.google.com*\" OR Web.url=\"*dropboxapi.com*\") AND NOT Web.app IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\"outlook.exe\",\"dropbox.exe\",\"onedrive.exe\",\"teams.exe\",\"ms-teams.exe\",\"slack.exe\",\"thunderbird.exe\") BY Web.src Web.user Web.app Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | where user!=\"unknown\" AND NOT match(user,\"\\\\$$\")",
+      "kql": "// Turla ComRAT v4 (Gmail) + Crutch (Dropbox) \u2014 non-browser / non-sync-client process reaching the covert C2 surface\nlet LegitCloudClients = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\"safari.exe\",\"outlook.exe\",\"dropbox.exe\",\"onedrive.exe\",\"onedrivestandaloneupdater.exe\",\"teams.exe\",\"ms-teams.exe\",\"slack.exe\",\"thunderbird.exe\"]);\nlet Cloud_C2_Hosts = dynamic([\"mail.google.com\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"api-content.dropbox.com\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemoteIPType == \"Public\"\n| where RemoteUrl has_any (Cloud_C2_Hosts)\n| where not(InitiatingProcessFileName in~ (LegitCloudClients))\n| where InitiatingProcessAccountName !endswith \"$\"\n| where InitiatingProcessAccountName !in~ (\"system\",\"local service\",\"network service\")\n// pivot LOLBins + script hosts + user-writable launchpads \u2014 ComRAT/Crutch loaders live here\n| extend Suspicious = InitiatingProcessFileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"wmic.exe\",\"msbuild.exe\",\"installutil.exe\")\n           or InitiatingProcessFolderPath has_any (@\"\\AppData\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\Windows\\Temp\\\")\n| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, Suspicious\n| order by Timestamp desc",
+      "sentinel_kql": "// Turla ComRAT/Crutch cloud-service C2 \u2014 Sentinel via M365 Defender connector\nlet LegitCloudClients = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\"safari.exe\",\"outlook.exe\",\"dropbox.exe\",\"onedrive.exe\",\"onedrivestandaloneupdater.exe\",\"teams.exe\",\"ms-teams.exe\",\"slack.exe\",\"thunderbird.exe\"]);\nlet Cloud_C2_Hosts = dynamic([\"mail.google.com\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"api-content.dropbox.com\"]);\nDeviceNetworkEvents\n| where TimeGenerated > ago(7d)\n| where RemoteIPType == \"Public\"\n| where RemoteUrl has_any (Cloud_C2_Hosts)\n| where not(InitiatingProcessFileName in~ (LegitCloudClients))\n| where InitiatingProcessAccountName !endswith \"$\"\n| extend Suspicious = InitiatingProcessFileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"wmic.exe\",\"msbuild.exe\",\"installutil.exe\")\n           or InitiatingProcessFolderPath has_any (@\"\\AppData\\\", @\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\Windows\\Temp\\\")\n| project TimeGenerated, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, Suspicious\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Turla ComRAT/Crutch cloud C2 from non-browser process\nid: 8c2a7b3e-1f4d-4f9c-bf2a-7d3e5b1c9a01\nstatus: experimental\ndescription: Detects non-browser/non-sync processes establishing connections to mail.google.com or *.dropboxapi.com, consistent with Turla (Secret Blizzard) ComRAT v4 (Gmail web UI C2) and Crutch (Dropbox API C2) tradecraft.\nreferences:\n  - https://www.welivesecurity.com/2020/05/26/agent-comrat-evolution-turla-mosquito/\n  - https://www.welivesecurity.com/2020/12/02/turla-crutch-keeping-back-door-dropbox/\nauthor: SOC Detection Team\ndate: 2026/05/29\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection:\n    DestinationHostname|contains:\n      - 'mail.google.com'\n      - 'content.dropboxapi.com'\n      - 'api.dropboxapi.com'\n      - 'api-content.dropbox.com'\n  filter_legit:\n    Image|endswith:\n      - '\\chrome.exe'\n      - '\\msedge.exe'\n      - '\\firefox.exe'\n      - '\\brave.exe'\n      - '\\opera.exe'\n      - '\\iexplore.exe'\n      - '\\outlook.exe'\n      - '\\dropbox.exe'\n      - '\\onedrive.exe'\n      - '\\teams.exe'\n      - '\\slack.exe'\n      - '\\thunderbird.exe'\n  condition: selection and not filter_legit\nfalsepositives:\n  - Custom in-house apps integrated with Gmail/Dropbox via OAuth (allowlist by hash)\n  - PowerShell-based DevOps scripts that exfil to Dropbox\nlevel: high\ntags:\n  - attack.command_and_control\n  - attack.t1071.001\n  - attack.t1102.002\n  - attack.t1567.002\n  - attack.g0010",
+      "datadog_query": "source:windows.sysmon @EventID:3 @DestinationHostname:(mail.google.com OR content.dropboxapi.com OR api.dropboxapi.com OR api-content.dropbox.com) -@Image:(*\\\\chrome.exe OR *\\\\Chrome.exe OR *\\\\msedge.exe OR *\\\\MsEdge.exe OR *\\\\firefox.exe OR *\\\\Firefox.exe OR *\\\\brave.exe OR *\\\\Brave.exe OR *\\\\opera.exe OR *\\\\iexplore.exe OR *\\\\IEXPLORE.EXE OR *\\\\outlook.exe OR *\\\\OUTLOOK.EXE OR *\\\\dropbox.exe OR *\\\\Dropbox.exe OR *\\\\onedrive.exe OR *\\\\OneDrive.exe OR *\\\\teams.exe OR *\\\\Teams.exe OR *\\\\ms-teams.exe OR *\\\\slack.exe OR *\\\\Slack.exe OR *\\\\thunderbird.exe)",
+      "falcon_logscale_query": "#event_simpleName=DnsRequest DomainName=/^(mail\\.google\\.com|content\\.dropboxapi\\.com|api\\.dropboxapi\\.com|api-content\\.dropbox\\.com)$/i\n| NOT (ContextImageFileName=/\\\\(chrome|msedge|firefox|brave|opera|iexplore|outlook|dropbox|onedrive|teams|ms-teams|slack|thunderbird)\\.exe$/i)\n| Suspicious := if(ContextImageFileName=/\\\\(powershell|pwsh|cmd|rundll32|regsvr32|mshta|wscript|cscript|wmic|msbuild|installutil)\\.exe$/i, \"true\", \"false\")\n| groupBy([aid, ComputerName, ContextImageFileName, DomainName, Suspicious], function=[count(), min(@timestamp, as=firstSeen), max(@timestamp, as=lastSeen)])",
+      "cloudwatch_query": "",
+      "rationale": "Both ComRAT v4 (ESET, May 2020) and Crutch (ESET, Dec 2020) are publicly attributed to Turla/Secret Blizzard and share the same operational signature: a custom loader (PowerShell stager, rundll32 DLL, or service binary) speaking HTTPS to a legitimate consumer cloud service. The combination of (a) Gmail-web or Dropbox-API hostnames and (b) a non-browser, non-sync-client initiator is empirically rar",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "TimeGenerated",
+          "tables_in_scope": [
+            "DeviceNetworkEvents"
+          ],
+          "exists_on": [
+            "DeviceInfo",
+            "IdentityInfo",
+            "DeviceTvmSoftwareVulnerabilities",
+            "SigninLogs",
+            "AADNonInteractiveUserSignInLogs",
+            "AADServicePrincipalSignInLogs",
+            "AADManagedIdentitySignInLogs",
+            "AuditLogs",
+            "SecurityEvent",
+            "WindowsEvent",
+            "Event",
+            "Syslog",
+            "OfficeActivity",
+            "AzureActivity",
+            "AzureDiagnostics",
+            "AppServiceHTTPLogs",
+            "AKSAudit",
+            "CommonSecurityLog",
+            "DnsEvents",
+            "W3CIISLog",
+            "ThreatIntelligenceIndicator",
+            "SecurityAlert",
+            "SecurityIncident",
+            "Heartbeat",
+            "Update",
+            "ImProcessCreate",
+            "ImNetworkSession",
+            "ImAuthentication",
+            "ImWebSession",
+            "ImFileEvent",
+            "ImDnsActivity",
+            "ImRegistryEvent",
+            "ASCDeviceEvents"
+          ],
+          "message": "`TimeGenerated` is not a column of DeviceNetworkEvents; it does exist on DeviceInfo, IdentityInfo, DeviceTvmSoftwareVulnerabilities, SigninLogs, AADNonInteractiveUserSignInLogs, AADServicePrincipalSignInLogs, AADManagedIdentitySignInLogs, AuditLogs, SecurityEvent, WindowsEvent, Event, Syslog, OfficeActivity, AzureActivity, AzureDiagnostics, AppServiceHTTPLogs, AKSAudit, CommonSecurityLog, DnsEvents, W3CIISLog, ThreatIntelligenceIndicator, SecurityAlert, SecurityIncident, Heartbeat, Update, ImProcessCreate, ImNetworkSession, ImAuthentication, ImWebSession, ImFileEvent, ImDnsActivity, ImRegistryEvent, ASCDeviceEvents."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] Turla LightNeuron \u2014 Microsoft Exchange Transport Agent persistence install",
+      "description": "Hunts the installation footprint of Turla's LightNeuron Exchange backdoor: a malicious managed Transport Agent DLL + winex.tlb + EdgeTransport.exe.config modification dropped under the Exchange TransportRoles\\agents directory by a process other than the legitimate installer chain. Transport Agent persistence on Exchange is an actor-unique TTP \u2014 LightNeuron is the only publicly documented APT toolkit using it.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1505.002",
+        "T1036.005",
+        "T1027",
+        "T1059.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Filesystem WHERE (Filesystem.file_path=\"*\\\\TransportRoles\\\\agents\\\\*\" OR Filesystem.file_path=\"*\\\\Exchange Server\\\\V15\\\\TransportRoles\\\\*\" OR Filesystem.file_path=\"*\\\\Exchange Server\\\\V14\\\\TransportRoles\\\\*\") AND (Filesystem.file_name=\"*.dll\" OR Filesystem.file_name=\"*.tlb\" OR Filesystem.file_name=\"EdgeTransport.exe.config\") AND NOT Filesystem.process_name IN (\"TrustedInstaller.exe\",\"msiexec.exe\",\"setup.exe\",\"Microsoft.Exchange.Setup.WindowsInstaller.exe\",\"UMWorkerProcess.exe\",\"ServiceHub.exe\") BY Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.process_path Filesystem.file_path Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | join type=outer dest, process_name [| tstats summariesonly=true count FROM datamodel=Endpoint.Processes WHERE Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\") AND (Processes.process=\"*Install-TransportAgent*\" OR Processes.process=\"*Enable-TransportAgent*\" OR Processes.process=\"*New-TransportAgent*\") BY Processes.dest Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | rename process_name as install_proc, process as install_cmd]",
+      "kql": "// Turla LightNeuron \u2014 Transport Agent DLL/TLB drops + Install-TransportAgent PS\nlet KnownInstallers = dynamic([\"trustedinstaller.exe\",\"msiexec.exe\",\"setup.exe\",\"microsoft.exchange.setup.windowsinstaller.exe\",\"umworkerprocess.exe\",\"servicehub.exe\"]);\nlet TransportFiles =\n    DeviceFileEvents\n    | where Timestamp > ago(30d)\n    | where ActionType in (\"FileCreated\",\"FileModified\",\"FileRenamed\")\n    | where FolderPath has_any (@\"\\TransportRoles\\agents\\\", @\"\\Exchange Server\\V15\\TransportRoles\\\", @\"\\Exchange Server\\V14\\TransportRoles\\\")\n    | where FileName endswith \".dll\" or FileName endswith \".tlb\" or FileName =~ \"EdgeTransport.exe.config\" or FileName =~ \"winex.tlb\"\n    | where not(tolower(InitiatingProcessFileName) in (KnownInstallers))\n    | where InitiatingProcessAccountName !endswith \"$\";\nlet TransportAgentCmds =\n    DeviceProcessEvents\n    | where Timestamp > ago(30d)\n    | where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"ManagementShell.exe\")\n    | where ProcessCommandLine has_any (\"Install-TransportAgent\",\"Enable-TransportAgent\",\"New-TransportAgent\",\"Set-TransportConfig\")\n    | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName;\nTransportFiles\n| project FileEventTime = Timestamp, DeviceName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName\n| union (TransportAgentCmds | project FileEventTime = Timestamp, DeviceName, FolderPath = \"<cmd>\", FileName = \"<cmd>\", SHA256 = \"\", InitiatingProcessFileName = FileName, InitiatingProcessFolderPath = \"\", InitiatingProcessCommandLine = ProcessCommandLine, InitiatingProcessAccountName = AccountName)\n| order by FileEventTime desc",
+      "sentinel_kql": "// Turla LightNeuron Transport Agent persistence \u2014 Sentinel via M365 Defender connector\nlet KnownInstallers = dynamic([\"trustedinstaller.exe\",\"msiexec.exe\",\"setup.exe\",\"microsoft.exchange.setup.windowsinstaller.exe\",\"umworkerprocess.exe\",\"servicehub.exe\"]);\nlet TransportFiles =\n    DeviceFileEvents\n    | where TimeGenerated > ago(30d)\n    | where ActionType in (\"FileCreated\",\"FileModified\",\"FileRenamed\")\n    | where FolderPath has_any (@\"\\TransportRoles\\agents\\\", @\"\\Exchange Server\\V15\\TransportRoles\\\", @\"\\Exchange Server\\V14\\TransportRoles\\\")\n    | where FileName endswith \".dll\" or FileName endswith \".tlb\" or FileName =~ \"EdgeTransport.exe.config\" or FileName =~ \"winex.tlb\"\n    | where not(tolower(InitiatingProcessFileName) in (KnownInstallers))\n    | where InitiatingProcessAccountName !endswith \"$\";\nlet TransportAgentCmds =\n    DeviceProcessEvents\n    | where TimeGenerated > ago(30d)\n    | where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"ManagementShell.exe\")\n    | where ProcessCommandLine has_any (\"Install-TransportAgent\",\"Enable-TransportAgent\",\"New-TransportAgent\",\"Set-TransportConfig\")\n    | project TimeGenerated, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName;\nTransportFiles\n| project TimeGenerated, DeviceName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName\n| union (TransportAgentCmds | project TimeGenerated, DeviceName, FolderPath = \"<cmd>\", FileName = \"<cmd>\", SHA256 = \"\", InitiatingProcessFileName = FileName, InitiatingProcessFolderPath = \"\", InitiatingProcessCommandLine = ProcessCommandLine, InitiatingProcessAccountName = AccountName)\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Turla LightNeuron Exchange Transport Agent persistence\nid: 4d8c6f2a-7e1b-43a9-9f5d-2c8b6a4e1d02\nstatus: experimental\ndescription: Detects DLL/TLB/config writes to the Microsoft Exchange TransportRoles\\agents directory by a process outside the legitimate Exchange installer chain, consistent with Turla LightNeuron backdoor installation (ESET, May 2019).\nreferences:\n  - https://www.welivesecurity.com/2019/05/07/turla-lightneuron-email-too-far/\n  - https://attack.mitre.org/software/S0395/\nauthor: SOC Detection Team\ndate: 2026/05/29\nlogsource:\n  category: file_event\n  product: windows\ndetection:\n  selection_path:\n    TargetFilename|contains:\n      - '\\TransportRoles\\agents\\'\n      - '\\Exchange Server\\V15\\TransportRoles\\'\n      - '\\Exchange Server\\V14\\TransportRoles\\'\n  selection_ext:\n    TargetFilename|endswith:\n      - '.dll'\n      - '.tlb'\n      - 'EdgeTransport.exe.config'\n  filter_legit:\n    Image|endswith:\n      - '\\TrustedInstaller.exe'\n      - '\\msiexec.exe'\n      - '\\setup.exe'\n      - '\\Microsoft.Exchange.Setup.WindowsInstaller.exe'\n      - '\\UMWorkerProcess.exe'\n      - '\\ServiceHub.exe'\n  condition: selection_path and selection_ext and not filter_legit\nfalsepositives:\n  - Exchange CU/SU patching outside TrustedInstaller (rare; correlate to MS update process)\n  - Authorised third-party transport agents (antispam/DLP) \u2014 allowlist by file hash + vendor\nlevel: critical\ntags:\n  - attack.persistence\n  - attack.t1505.002\n  - attack.t1036.005\n  - attack.g0010\n  - attack.s0395",
+      "datadog_query": "source:windows.sysmon @EventID:11 @TargetFilename:(*\\\\TransportRoles\\\\agents\\\\* OR *\\\\TransportRoles\\\\Agents\\\\* OR *\\\\Exchange Server\\\\V15\\\\TransportRoles\\\\* OR *\\\\Exchange Server\\\\V14\\\\TransportRoles\\\\*) @TargetFilename:(*.dll OR *.DLL OR *.tlb OR *.TLB OR *EdgeTransport.exe.config OR *winex.tlb) -@Image:(*\\\\TrustedInstaller.exe OR *\\\\trustedinstaller.exe OR *\\\\msiexec.exe OR *\\\\MsiExec.exe OR *\\\\setup.exe OR *\\\\Microsoft.Exchange.Setup.WindowsInstaller.exe OR *\\\\UMWorkerProcess.exe OR *\\\\ServiceHub.exe)",
+      "falcon_logscale_query": "#event_simpleName=FileWritten TargetFileName=/\\\\(TransportRoles\\\\agents|Exchange Server\\\\V1[45]\\\\TransportRoles)\\\\.+\\.(dll|tlb|config)$/i\n| NOT (ContextImageFileName=/\\\\(TrustedInstaller|msiexec|setup|Microsoft\\.Exchange\\.Setup\\.WindowsInstaller|UMWorkerProcess|ServiceHub)\\.exe$/i)\n| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName, SHA256HashData], function=[count(), min(@timestamp, as=firstSeen), max(@timestamp, as=lastSeen)])",
+      "cloudwatch_query": "",
+      "rationale": "LightNeuron (ESET, May 2019) is publicly attributed to Turla / Snake / Venomous Bear and is one of the only documented backdoors that abuses the Microsoft Exchange Transport Agent extensibility surface for persistence \u2014 the malicious DLL receives every email passing through the server, hides commands in PDF/JPG attachments, and uses MAPI properties for control. Any non-installer process writing DL",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "TimeGenerated",
+          "tables_in_scope": [
+            "DeviceFileEvents",
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceInfo",
+            "IdentityInfo",
+            "DeviceTvmSoftwareVulnerabilities",
+            "SigninLogs",
+            "AADNonInteractiveUserSignInLogs",
+            "AADServicePrincipalSignInLogs",
+            "AADManagedIdentitySignInLogs",
+            "AuditLogs",
+            "SecurityEvent",
+            "WindowsEvent",
+            "Event",
+            "Syslog",
+            "OfficeActivity",
+            "AzureActivity",
+            "AzureDiagnostics",
+            "AppServiceHTTPLogs",
+            "AKSAudit",
+            "CommonSecurityLog",
+            "DnsEvents",
+            "W3CIISLog",
+            "ThreatIntelligenceIndicator",
+            "SecurityAlert",
+            "SecurityIncident",
+            "Heartbeat",
+            "Update",
+            "ImProcessCreate",
+            "ImNetworkSession",
+            "ImAuthentication",
+            "ImWebSession",
+            "ImFileEvent",
+            "ImDnsActivity",
+            "ImRegistryEvent",
+            "ASCDeviceEvents"
+          ],
+          "message": "`TimeGenerated` is not a column of DeviceFileEvents, DeviceProcessEvents; it does exist on DeviceInfo, IdentityInfo, DeviceTvmSoftwareVulnerabilities, SigninLogs, AADNonInteractiveUserSignInLogs, AADServicePrincipalSignInLogs, AADManagedIdentitySignInLogs, AuditLogs, SecurityEvent, WindowsEvent, Event, Syslog, OfficeActivity, AzureActivity, AzureDiagnostics, AppServiceHTTPLogs, AKSAudit, CommonSecurityLog, DnsEvents, W3CIISLog, ThreatIntelligenceIndicator, SecurityAlert, SecurityIncident, Heartbeat, Update, ImProcessCreate, ImNetworkSession, ImAuthentication, ImWebSession, ImFileEvent, ImDnsActivity, ImRegistryEvent, ASCDeviceEvents."
+        }
+      ]
+    }
+  ]
+}

@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] marimo notebook Python process spawning interactive shell (CVE-2026-39987 post-exploit)
 
-`UC_5_6` · phase: **exploit** · confidence: **High**
+`UC_9_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### [LLM] Burst AWS API calls fanned across Cloudflare Workers egress (104.28.0.0/16) for one principal
 
-`UC_5_7` · phase: **c2** · confidence: **High**
+`UC_9_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### [LLM] AWS Secrets Manager retrieval from Cloudflare Workers egress pool
 
-`UC_5_8` · phase: **actions** · confidence: **High**
+`UC_9_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceProcessEvents
 
 ### [LLM] SSH authentication to bastion from Cloudflare Workers CIDR (104.28.0.0/16)
 
-`UC_5_9` · phase: **actions** · confidence: **High**
+`UC_9_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceLogonEvents
 
 ### [LLM] PostgreSQL HEREDOC credential-table dump invoked from compromised host
 
-`UC_5_10` · phase: **actions** · confidence: **Medium**
+`UC_9_10` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

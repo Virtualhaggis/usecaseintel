@@ -151,7 +151,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PowerShell-parented taskkill of winrar.exe (Cloud Atlas LNK anti-forensic cleanup)
 
-`UC_93_12` · phase: **install** · confidence: **High**
+`UC_94_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -173,7 +173,7 @@ DeviceProcessEvents
 
 ### [LLM] PowerShower dropped to user Pictures folder as googleearth.ps1
 
-`UC_93_13` · phase: **install** · confidence: **High**
+`UC_94_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -198,7 +198,7 @@ union
 
 ### [LLM] SAM/SECURITY registry hives copied from VSS shadow to Public\Documents as .pdf
 
-`UC_93_14` · phase: **actions** · confidence: **High**
+`UC_94_14` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -220,7 +220,7 @@ DeviceProcessEvents
 
 ### [LLM] termsrv.dll patched (multi-RDP enabling) - takeown + binary write + TermService restart
 
-`UC_93_15` · phase: **install** · confidence: **High**
+`UC_94_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -247,7 +247,7 @@ union TermsrvProc, TermsrvFileWrite
 
 ### [LLM] OpenSSH reverse port-forward (-R) launched on a workstation - Cloud Atlas backup C2
 
-`UC_93_16` · phase: **c2** · confidence: **High**
+`UC_94_16` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -567,7 +567,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Cloud Atlas activity in the second half of 2025 and early 2026: new tools and a
 
-`UC_93_11` · phase: **exploit** · confidence: **High**
+`UC_94_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

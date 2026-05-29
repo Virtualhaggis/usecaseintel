@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Browser contact with Trust Wallet impostor analytics domain (metrics-trustwallet.com)
 
-`UC_125_8` · phase: **c2** · confidence: **High**
+`UC_126_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ union isfuzzy=true net, dns
 
 ### [LLM] Shai-Hulud npm worm C2 callback to websocket-api2.publicvm.com
 
-`UC_125_9` · phase: **c2** · confidence: **High**
+`UC_126_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ union isfuzzy=true net, dns
 
 ### [LLM] npm credential phishing typosquat domain visit (npmjs.help)
 
-`UC_125_10` · phase: **delivery** · confidence: **High**
+`UC_126_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
