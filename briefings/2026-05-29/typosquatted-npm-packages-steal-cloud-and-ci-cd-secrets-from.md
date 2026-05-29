@@ -10,19 +10,15 @@ Home Cyber Security News
 Typosquatted npm Packages Steal Cloud and CI/CD Secrets From Developer Systems 
 By Tushar Subhra Dutta 
 May 29, 2026 
-
-
-
-
 A new wave of malicious software packages has been caught stealing cloud credentials and CI/CD pipeline secrets from developer machines, raising fresh alarms about the security of the open-source software supply chain. 
-The attack, uncovered on May 28, 2026, shows just how easy it has become for bad actors to slip dangerous code into the hands of…
+The attack, uncovered on May 28, 2026, shows just how easy it has become for bad actors to slip dangerous code into the hands of unsuspe…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `aab.sportsontheweb.net`
-- **SHA256:** `638788AFC4F1B5860A328312CAF5895ABD5F5632D28A4F2A85B09076E270D15D`
-- **SHA256:** `77D92EFE7AF3547F71FD41D4A884872D66B1BE9499EAA637E91EAC866911694D`
-- **SHA256:** `BFA149694EC6411C23936311A999163ADE54D6F38E2F4B0E3CFB8CB67BD7CFAA`
+- **SHA256:** `638788afc4f1b5860a328312caf5895abd5f5632d28a4f2a85b09076e270d15d`
+- **SHA256:** `77d92efe7af3547f71fd41d4a884872d66b1be9499eaa637e91eac866911694d`
+- **SHA256:** `bfa149694ec6411c23936311a999163ade54d6f38e2f4b0e3cfb8cb67bd7cfaa`
 
 ## MITRE ATT&CK Techniques
 
@@ -53,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] vpmdhaj npm campaign C2 callback to aab.sportsontheweb.net (X-Supply: 1 marker)
 
-`UC_4_8` · phase: **c2** · confidence: **High**
+`UC_9_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +81,7 @@ union NetHits, ProcHits
 
 ### [LLM] Node.js descendant queries AWS IMDS (169.254.169.254) or ECS task metadata (169.254.170.2)
 
-`UC_4_9` · phase: **actions** · confidence: **High**
+`UC_9_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +112,7 @@ DeviceNetworkEvents
 
 ### [LLM] vpmdhaj campaign stager / payload artifact written under node_modules
 
-`UC_4_10` · phase: **install** · confidence: **High**
+`UC_9_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +137,7 @@ DeviceFileEvents
 
 ### [LLM] npm install lifecycle hook spawning detached Bun / Node child (vpmdhaj _DAEMONIZED marker)
 
-`UC_4_11` · phase: **install** · confidence: **Medium**
+`UC_9_11` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -366,7 +362,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Typosquatted npm Packages Steal Cloud and CI/CD Secrets From Developer Systems
 
-`UC_4_7` · phase: **exploit** · confidence: **High**
+`UC_9_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -421,7 +417,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
   - IP / domain IOC(s): `aab.sportsontheweb.net`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `638788AFC4F1B5860A328312CAF5895ABD5F5632D28A4F2A85B09076E270D15D`, `77D92EFE7AF3547F71FD41D4A884872D66B1BE9499EAA637E91EAC866911694D`, `BFA149694EC6411C23936311A999163ADE54D6F38E2F4B0E3CFB8CB67BD7CFAA`
+  - file hash IOC(s): `638788afc4f1b5860a328312caf5895abd5f5632d28a4f2a85b09076e270d15d`, `77d92efe7af3547f71fd41d4a884872d66b1be9499eaa637e91eac866911694d`, `bfa149694ec6411c23936311a999163ade54d6f38e2f4b0e3cfb8cb67bd7cfaa`
 
 
 ## Why this matters

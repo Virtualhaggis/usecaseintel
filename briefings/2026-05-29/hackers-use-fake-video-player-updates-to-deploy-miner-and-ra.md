@@ -10,12 +10,8 @@ Home Cyber Security News
 Hackers Use Fake Video Player Updates to Deploy Miner and RAT Malware 
 By Tushar Subhra Dutta 
 May 29, 2026 
-
-
-
-
 Hackers are using a clever trick to get people to install dangerous malware, and most victims have no idea it is happening. By visiting pirated movie and TV show streaming sites, users are met with a fake alert claiming their video player plugin is out of date. 
-One click on that fake update button kicks off an infection that quietly mines cryptocurrency …
+One click on that fake update button kicks off an infection that quietly mines cryptocurrency while ha…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -28,7 +24,7 @@ One click on that fake update button kicks off an infection that quietly mines c
 - **Domain (defanged):** `qdmagva5.space`
 - **Domain (defanged):** `m4yuri.online`
 - **Domain (defanged):** `kristina.quest`
-- **SHA1:** `6a0fe6065d76715feebc1526d456db737f624407`
+- **SHA1:** `6A0FE6065D76715FEEBC1526D456DB737F624407`
 
 ## MITRE ATT&CK Techniques
 
@@ -64,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] HLS Installer.874.exe DLL side-load drops malicious library (Securelist fake-plugin miner)
 
-`UC_6_9` · phase: **install** · confidence: **High**
+`UC_11_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +87,7 @@ DeviceProcessEvents
 
 ### [LLM] Fake GoogleUpdateTaskMachineQC scheduled-task/service persistence (SilentCryptoMiner derivative)
 
-`UC_6_10` · phase: **install** · confidence: **High**
+`UC_11_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +114,7 @@ union isfuzzy=true
 
 ### [LLM] C2 callback to Securelist fake-plugin miner .space rotating domains / config IP 107.172.212.235
 
-`UC_6_11` · phase: **c2** · confidence: **High**
+`UC_11_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +137,7 @@ DeviceNetworkEvents
 
 ### [LLM] Defender exclusion added for C:\ProgramData\Google\Chrome (miner staging dir)
 
-`UC_6_12` · phase: **install** · confidence: **High**
+`UC_11_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -168,7 +164,7 @@ union isfuzzy=true
 
 ### [LLM] explorer.exe writes EXE/DLL into C:\ProgramData\Google\Chrome (miner watchdog restore)
 
-`UC_6_13` · phase: **install** · confidence: **High**
+`UC_11_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -433,7 +429,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use Fake Video Player Updates to Deploy Miner and RAT Malware
 
-`UC_6_8` · phase: **exploit** · confidence: **High**
+`UC_11_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -488,7 +484,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
   - IP / domain IOC(s): `107.172.212.235`, `urush1bar4.online`, `5d14vnfb.space`, `r7mvjl67.space`, `zgj1tam9.space`, `jeaw520i.space`, `qdmagva5.space`, `m4yuri.online` _(+1 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `6a0fe6065d76715feebc1526d456db737f624407`
+  - file hash IOC(s): `6A0FE6065D76715FEEBC1526D456DB737F624407`
 
 
 ## Why this matters

@@ -1,0 +1,85 @@
+{
+  "name": "APT28",
+  "ucs": [
+    {
+      "title": "[LLM] APT28 GooseEgg / CVE-2022-38028 PrintNightmare-style PrintSpooler abuse with JavaScript payload drop",
+      "description": "Hunts APT28's signature 'GooseEgg' tool (disclosed by Microsoft April 2024) which exploits the Windows Print Spooler service via a modified MS-PAR/MS-RPRN JavaScript constraints file to escalate to SYSTEM and drop a follow-on payload. This is uniquely tied to Forest Blizzard/Fancy Bear \u2014 no other tracked actor has been observed weaponizing CVE-2022-38028 with this specific JS-constraint vector.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1068",
+        "T1059.005",
+        "T1059.007",
+        "T1547.012"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN (\"*\\\\System32\\\\spool\\\\drivers\\\\x64\\\\3\\\\*\", \"*\\\\System32\\\\spool\\\\drivers\\\\W32X86\\\\3\\\\*\", \"*\\\\System32\\\\spool\\\\prtprocs\\\\x64\\\\*\") AND (Filesystem.file_name=\"*.js\" OR Filesystem.file_name=\"*.dll\" OR Filesystem.file_name=\"MPDW-constraints.js\")) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name\n| `drop_dm_object_name(\"Filesystem\")`\n| join type=inner dest [\n    | tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.parent_process_name=\"spoolsv.exe\" AND (Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"rundll32.exe\",\"wscript.exe\",\"cscript.exe\") OR Processes.process_integrity_level=\"system\") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process\n    | `drop_dm_object_name(\"Processes\")`\n]\n| where file_name!=\"MPDW-constraints.js\" OR (file_name=\"MPDW-constraints.js\" AND user!=\"SYSTEM\")\n| convert ctime(firstTime) ctime(lastTime)",
+      "kql": "// APT28 GooseEgg \u2014 JS dropped into Spooler drivers dir + spoolsv child process\nlet LookbackDays = 14d;\nlet SpoolerWrites = DeviceFileEvents\n    | where Timestamp > ago(LookbackDays)\n    | where FolderPath has_any (@\"\\System32\\spool\\drivers\\\", @\"\\System32\\spool\\prtprocs\\\")\n    | where FileName endswith \".js\" or FileName =~ \"MPDW-constraints.js\" or FileName endswith \".dll\"\n    | where InitiatingProcessAccountName !endswith \"$\"\n    | where InitiatingProcessFileName !in~ (\"spoolsv.exe\", \"trustedinstaller.exe\", \"msiexec.exe\")\n    | project WriteTime = Timestamp, DeviceId, DeviceName, FileName, FolderPath,\n              WriterProc = InitiatingProcessFileName,\n              WriterCmd = InitiatingProcessCommandLine,\n              WriterAcct = InitiatingProcessAccountName;\nlet SpoolerChildren = DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where InitiatingProcessFileName =~ \"spoolsv.exe\"\n    | where FileName in~ (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"rundll32.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"regsvr32.exe\")\n         or ProcessIntegrityLevel =~ \"System\"\n    | project ChildTime = Timestamp, DeviceId, ChildProc = FileName,\n              ChildCmd = ProcessCommandLine, ChildIntegrity = ProcessIntegrityLevel,\n              ChildAcct = AccountName;\nSpoolerWrites\n| join kind=inner SpoolerChildren on DeviceId\n| where ChildTime between (WriteTime - 5m .. WriteTime + 15m)\n| project WriteTime, ChildTime,\n          DelaySec = datetime_diff('second', ChildTime, WriteTime),\n          DeviceName, FileName, FolderPath, WriterProc, WriterCmd, WriterAcct,\n          ChildProc, ChildCmd, ChildIntegrity, ChildAcct\n| order by WriteTime desc",
+      "sentinel_kql": "// APT28 GooseEgg on Sentinel \u2014 pair Sysmon FileCreate (11) with spoolsv child (1/4688)\nlet LookbackDays = 14d;\nlet SpoolerWrites = ImFileEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventType == \"FileCreated\"\n    | where TargetFilePath has_any (@\"\\System32\\spool\\drivers\\\", @\"\\System32\\spool\\prtprocs\\\")\n    | where TargetFileName endswith \".js\" or TargetFileName =~ \"MPDW-constraints.js\" or TargetFileName endswith \".dll\"\n    | where ActorUsername !endswith \"$\"\n    | where ActingProcessName !in~ (\"spoolsv.exe\",\"trustedinstaller.exe\",\"msiexec.exe\")\n    | project WriteTime = TimeGenerated, DvcHostname, TargetFileName, TargetFilePath,\n              WriterProc = ActingProcessName, WriterCmd = ActingProcessCommandLine,\n              WriterAcct = ActorUsername;\nlet SpoolerChildren = SecurityEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventID == 4688\n    | where ParentProcessName endswith @\"\\spoolsv.exe\"\n    | where NewProcessName has_any (@\"\\cmd.exe\",@\"\\powershell.exe\",@\"\\pwsh.exe\",@\"\\rundll32.exe\",@\"\\wscript.exe\",@\"\\cscript.exe\",@\"\\mshta.exe\",@\"\\regsvr32.exe\")\n         or TokenElevationType == \"%%1936\"\n    | project ChildTime = TimeGenerated, DvcHostname = Computer,\n              ChildProc = NewProcessName, ChildCmd = CommandLine,\n              ChildAcct = SubjectUserName;\nSpoolerWrites\n| join kind=inner SpoolerChildren on DvcHostname\n| where ChildTime between (WriteTime - 5m .. WriteTime + 15m)\n| project WriteTime, ChildTime,\n          DelaySec = datetime_diff('second', ChildTime, WriteTime),\n          DvcHostname, TargetFileName, TargetFilePath,\n          WriterProc, WriterCmd, WriterAcct,\n          ChildProc, ChildCmd, ChildAcct\n| order by WriteTime desc",
+      "sigma_yaml": "",
+      "datadog_query": "source:windows.sysmon @EventID:11 @TargetFilename:(*\\\\System32\\\\spool\\\\drivers\\\\* OR *\\\\System32\\\\spool\\\\prtprocs\\\\* OR *\\\\system32\\\\spool\\\\drivers\\\\* OR *\\\\system32\\\\spool\\\\prtprocs\\\\*) AND (@TargetFilename:(*.js OR *.JS OR *MPDW-constraints* OR *.dll OR *.DLL)) AND -@Image:(*\\\\spoolsv.exe OR *\\\\Spoolsv.exe OR *\\\\trustedinstaller.exe OR *\\\\TrustedInstaller.exe OR *\\\\msiexec.exe OR *\\\\MsiExec.exe)",
+      "falcon_logscale_query": "#event_simpleName=FileWritten\n| regex(\"\\\\\\\\System32\\\\\\\\spool\\\\\\\\(drivers|prtprocs)\\\\\\\\\", field=TargetFileName)\n| TargetFileName=/\\.(js|dll)$/i OR TargetFileName=/MPDW-constraints\\.js$/i\n| NOT (ContextImageFileName=/\\\\(spoolsv|trustedinstaller|msiexec)\\.exe$/i)\n| join({\n    #event_simpleName=ProcessRollup2\n    | ParentBaseFileName=/^spoolsv\\.exe$/i\n    | ImageFileName=/\\\\(cmd|powershell|pwsh|rundll32|wscript|cscript|mshta|regsvr32)\\.exe$/i OR IntegrityLevel=\"System\"\n  }, field=aid, include=[ImageFileName, CommandLine, ParentBaseFileName, IntegrityLevel])\n| groupBy([aid, ComputerName, TargetFileName, ImageFileName, CommandLine], function=count())",
+      "cloudwatch_query": "",
+      "rationale": "GooseEgg is APT28-specific tradecraft publicly disclosed by MSTIC in April 2024 \u2014 Forest Blizzard has used this Spooler-exploit chain since at least June 2020 against Ukraine, Western Europe, and US government targets. The detection chains the specific vector (write to %SystemRoot%\\System32\\spool\\drivers\\* or \\prtprocs\\* by a non-system process) with the post-exploitation primitive (spoolsv.exe sp"
+    },
+    {
+      "title": "[LLM] APT28 NTLMv2 relay via Outlook CVE-2023-23397 reminder.PlaySound SMB callback",
+      "description": "Hunts the APT28/Forest Blizzard exploitation pattern for CVE-2023-23397: a crafted Outlook calendar/task/email item sets PidLidReminderFileParameter to a UNC path on attacker infrastructure, causing the Outlook client to authenticate via SMB and leak the user's Net-NTLMv2 hash for relay. APT28 weaponized this against NATO defense/government targets in 2022-2023 and Trend Micro / Microsoft attributed it directly to this actor.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1187",
+        "T1212",
+        "T1071.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port IN (445,139) OR All_Traffic.app=\"smb\") AND All_Traffic.process_name IN (\"outlook.exe\",\"OUTLOOK.EXE\") AND NOT (All_Traffic.dest IN (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8, 169.254.0.0/16)) by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name All_Traffic.bytes_out\n| `drop_dm_object_name(\"All_Traffic\")`\n| eval risk_reason=\"Outlook initiated SMB egress to public IP \u2014 CVE-2023-23397 / APT28 NTLM-leak pattern\"\n| stats min(firstTime) as firstTime max(lastTime) as lastTime values(dest) as dest_ips values(dest_port) as dest_ports sum(bytes_out) as total_bytes_out by src user process_name\n| convert ctime(firstTime) ctime(lastTime)\n| where mvcount(dest_ips) >= 1",
+      "kql": "// APT28 CVE-2023-23397 \u2014 Outlook SMB authentication to public IP\nlet LookbackDays = 30d;\nlet PrivateRanges = dynamic([\"10.\",\"172.16.\",\"172.17.\",\"172.18.\",\"172.19.\",\"172.20.\",\"172.21.\",\"172.22.\",\"172.23.\",\"172.24.\",\"172.25.\",\"172.26.\",\"172.27.\",\"172.28.\",\"172.29.\",\"172.30.\",\"172.31.\",\"192.168.\",\"127.\",\"169.254.\",\"fe80:\",\"fd\",\"fc\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(LookbackDays)\n| where InitiatingProcessFileName =~ \"outlook.exe\"\n| where RemotePort in (445, 139)\n| where ActionType in (\"ConnectionSuccess\",\"ConnectionAttempt\",\"ConnectionRequest\")\n| where RemoteIPType == \"Public\"\n   and not(RemoteIP startswith_cs \"10.\")\n   and not(RemoteIP startswith_cs \"192.168.\")\n   and not(RemoteIP startswith_cs \"127.\")\n   and not(RemoteIP startswith_cs \"169.254.\")\n| where InitiatingProcessAccountName !endswith \"$\"\n| project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,\n          AccountUpn = InitiatingProcessAccountUpn,\n          RemoteIP, RemoteUrl, RemotePort,\n          OutlookCmd = InitiatingProcessCommandLine,\n          OutlookVersion = InitiatingProcessVersionInfoProductVersion,\n          ReportId\n| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp),\n            ConnectionAttempts = count(),\n            SampleCmd = any(OutlookCmd)\n            by DeviceName, AccountUpn, RemoteIP, RemotePort, OutlookVersion\n| order by FirstSeen desc",
+      "sentinel_kql": "// APT28 CVE-2023-23397 on Sentinel \u2014 Outlook\u2192external SMB via firewall/CommonSecurityLog or ASIM\nlet LookbackDays = 30d;\nImNetworkSession\n| where TimeGenerated > ago(LookbackDays)\n| where ActingProcessName endswith_cs @\"\\outlook.exe\" or ActingProcessName =~ \"outlook.exe\"\n| where DstPortNumber in (445, 139)\n| where not(ipv4_is_private(DstIpAddr))\n| where isnotempty(DstIpAddr)\n| where SrcUsername !endswith \"$\"\n| project TimeGenerated, DvcHostname, SrcUsername, DstIpAddr, DstPortNumber,\n          ActingProcessCommandLine, NetworkBytes\n| summarize FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated),\n            Attempts = count(),\n            SampleCmd = any(ActingProcessCommandLine)\n            by DvcHostname, SrcUsername, DstIpAddr, DstPortNumber\n| order by FirstSeen desc",
+      "sigma_yaml": "title: APT28 CVE-2023-23397 Outlook Outbound SMB NTLM Leak\nid: 9a4f5c1e-7d21-4ab3-a04f-b8a2f63e1c47\nstatus: experimental\ndescription: Detects Outlook initiating outbound SMB (TCP 445/139) to a public IP \u2014 the network signature of CVE-2023-23397 PidLidReminderFileParameter NTLM-leak exploitation attributed to APT28 / Forest Blizzard.\nreferences:\n  - https://www.microsoft.com/en-us/security/blog/2023/03/14/cve-2023-23397/\n  - https://attack.mitre.org/groups/G0007/\nauthor: detection-engineering\ndate: 2026/05/29\ntags:\n  - attack.credential_access\n  - attack.t1187\n  - attack.t1212\n  - attack.g0007\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection_proc:\n    Image|endswith: '\\outlook.exe'\n  selection_port:\n    DestinationPort:\n      - 445\n      - 139\n  filter_private:\n    DestinationIp|startswith:\n      - '10.'\n      - '172.16.'\n      - '172.17.'\n      - '172.18.'\n      - '172.19.'\n      - '172.20.'\n      - '172.21.'\n      - '172.22.'\n      - '172.23.'\n      - '172.24.'\n      - '172.25.'\n      - '172.26.'\n      - '172.27.'\n      - '172.28.'\n      - '172.29.'\n      - '172.30.'\n      - '172.31.'\n      - '192.168.'\n      - '127.'\n      - '169.254.'\n      - 'fe80:'\n      - 'fd'\n  condition: selection_proc and selection_port and not filter_private\nfalsepositives:\n  - Niche Outlook add-ins that legitimately reach SMB shares hosted on cloud providers (rare; should be allowlisted by destination)\nlevel: high",
+      "datadog_query": "source:windows.sysmon @EventID:3 @Image:(*\\\\outlook.exe OR *\\\\OUTLOOK.EXE OR *\\\\Outlook.exe) @DestinationPort:(445 OR 139) -CIDR(@DestinationIp, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8, 169.254.0.0/16)",
+      "falcon_logscale_query": "#event_simpleName=NetworkConnectIP4\n| ContextImageFileName=/\\\\outlook\\.exe$/i\n| RemotePort=445 OR RemotePort=139\n| NOT cidr(\"10.0.0.0/8\", field=RemoteAddressIP4)\n| NOT cidr(\"172.16.0.0/12\", field=RemoteAddressIP4)\n| NOT cidr(\"192.168.0.0/16\", field=RemoteAddressIP4)\n| NOT cidr(\"127.0.0.0/8\", field=RemoteAddressIP4)\n| NOT cidr(\"169.254.0.0/16\", field=RemoteAddressIP4)\n| groupBy([aid, ComputerName, UserName, RemoteAddressIP4, RemotePort], function=[count(), min(@timestamp)])",
+      "cloudwatch_query": "",
+      "rationale": "CVE-2023-23397 was actively exploited by APT28 from April 2022 against government, military, energy and transport targets in Europe (publicly confirmed by MSTIC, CERT-EU, and Polish CERT). The exploit's defining network signature is unambiguous: Outlook itself \u2014 not a child process \u2014 initiating outbound SMB to a public IP, which has essentially zero legitimate use case in 2026 (Outlook calendar re",
+      "_sentinel_field_issues_autofix": [
+        "ActorUsername -> SrcUsername"
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessCommandLine",
+          "tables_in_scope": [
+            "ImNetworkSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessCommandLine` is not a column of ImNetworkSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        }
+      ]
+    }
+  ]
+}

@@ -10,12 +10,8 @@ Home Cyber Attack News
 Malicious NuGet Package as Sicoob SDK Exfiltrates Banking Passwords 
 By Abinaya 
 May 29, 2026 
-
-
-
-
 A newly discovered malicious NuGet package masquerading as an official Sicoob software development kit (SDK) has been caught exfiltrating highly sensitive banking credentials, raising serious concerns about software supply chain security in financial ecosystems.
-The package, published under the name “Sicoob. Sdk,” targeted developers building integrations with Brazil’s S…
+The package, published under the name “Sicoob. Sdk,” targeted developers building integrations with Brazil’s Sicoob ba…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -54,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious Sicoob.Sdk NuGet package restore to .NET project
 
-`UC_1_9` · phase: **delivery** · confidence: **High**
+`UC_6_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +70,7 @@ DeviceFileEvents
 
 ### [LLM] PFX certificate read by .NET process correlated with attacker Sentry egress
 
-`UC_1_10` · phase: **actions** · confidence: **High**
+`UC_6_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +98,7 @@ PfxReads
 
 ### [LLM] Outbound traffic to attacker Sentry tenant o4511335034847232.ingest.de.sentry.io
 
-`UC_1_11` · phase: **c2** · confidence: **High**
+`UC_6_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
