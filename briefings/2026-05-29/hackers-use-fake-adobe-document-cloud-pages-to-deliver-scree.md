@@ -10,13 +10,9 @@ Home Cyber Security News
 Hackers Use Fake Adobe Document Cloud Pages to Deliver ScreenConnect Malware 
 By Tushar Subhra Dutta 
 May 29, 2026 
-
-
-
-
 A sophisticated phishing campaign is actively targeting financial organizations by using fake Adobe Document Cloud pages to silently install ScreenConnect remote access malware on victim machines. 
 The operation is well-structured, deceptive, and difficult to detect because it blends into everyday enterprise software activity. 
-The campaign works b…
+The campaign works by sendin…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -64,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] RatPressto phishing-kit URL paths on compromised WordPress hosts (/download.html, /complete.php, /download.php)
 
-`UC_0_9` · phase: **delivery** · confidence: **High**
+`UC_2_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +80,7 @@ DeviceNetworkEvents
 
 ### [LLM] ScreenConnect MSI install via msiexec from user-writable temp/Downloads (RatPressto delivery)
 
-`UC_0_10` · phase: **install** · confidence: **High**
+`UC_2_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +101,7 @@ DeviceProcessEvents
 
 ### [LLM] ScreenConnect agent beaconing to RatPressto C2 (TCP/8041 to zistopstoabetterlife.com / 177.154.191.148 / 84.32.41.64)
 
-`UC_0_11` · phase: **c2** · confidence: **High**
+`UC_2_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +121,7 @@ DeviceNetworkEvents
 
 ### [LLM] Browser/email-client drop of ScreenConnect installer or victim-named VBS dropper (RatPressto silent download)
 
-`UC_0_12` · phase: **delivery** · confidence: **Medium**
+`UC_2_12` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -415,7 +411,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use Fake Adobe Document Cloud Pages to Deliver ScreenConnect Malware
 
-`UC_0_8` · phase: **exploit** · confidence: **High**
+`UC_2_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

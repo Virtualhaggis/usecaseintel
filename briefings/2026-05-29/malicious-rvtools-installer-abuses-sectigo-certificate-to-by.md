@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious RVTools MSI signed by Xiamen Lunwei Huage (Sectigo) — hash + cert subject
 
-`UC_10_7` · phase: **delivery** · confidence: **High**
+`UC_12_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ union
 
 ### [LLM] msiexec spawning wscript Binary.MyScript.vbs → hidden powershell (RVTools chain)
 
-`UC_10_8` · phase: **exploit** · confidence: **High**
+`UC_12_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ VbsExec
 
 ### [LLM] PowerShell download of winp.zip ~33MB from Dropbox into %APPDATA%
 
-`UC_10_9` · phase: **delivery** · confidence: **High**
+`UC_12_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ union DropboxDownload, ZipDrop
 
 ### [LLM] Portable python.exe launching from AppData running Pmanager.py / collector.py
 
-`UC_10_10` · phase: **c2** · confidence: **High**
+`UC_12_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -170,7 +170,7 @@ PyExec
 
 ### [LLM] RVTools RAT persistence: Run key + SYSTEM scheduled task pointing to AppData python
 
-`UC_10_11` · phase: **install** · confidence: **High**
+`UC_12_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -343,7 +343,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious RVTools Installer Abuses Sectigo Certificate to Bypass SmartScreen War
 
-`UC_10_6` · phase: **exploit** · confidence: **High**
+`UC_12_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

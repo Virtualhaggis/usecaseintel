@@ -67,7 +67,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ZIP delivery from gleeze.com look-alike utility download sites (SEO/AI poisoning)
 
-`UC_62_13` · phase: **delivery** · confidence: **High**
+`UC_63_13` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceFileEvents
 
 ### [LLM] DLL side-loading of autorun.dll by spoofed hardware-utility executables
 
-`UC_62_14` · phase: **install** · confidence: **High**
+`UC_63_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceImageLoadEvents
 
 ### [LLM] msiexec silently installing masqueraded vcredist_x64.dll (ScreenConnect packaged installer)
 
-`UC_62_15` · phase: **install** · confidence: **High**
+`UC_63_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +133,7 @@ DeviceProcessEvents
 
 ### [LLM] Unauthorized ScreenConnect client beaconing to directdownload.icu:8041 / 193.42.11.108
 
-`UC_62_16` · phase: **c2** · confidence: **High**
+`UC_63_16` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +154,7 @@ DeviceProcessEvents
 
 ### [LLM] SimpleRunPE / RuntimeHost.exe dropped to hidden D3F4E2A1 install folder
 
-`UC_62_17` · phase: **install** · confidence: **High**
+`UC_63_17` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -177,7 +177,7 @@ DeviceFileEvents
 
 ### [LLM] Defender exclusion added via Add-MpPreference for campaign install path
 
-`UC_62_18` · phase: **install** · confidence: **Medium**
+`UC_63_18` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -200,7 +200,7 @@ DeviceProcessEvents
 
 ### [LLM] Cryptojacking persistence: Run key WinSysCache
 
-`UC_62_19` · phase: **install** · confidence: **High**
+`UC_63_19` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -222,7 +222,7 @@ DeviceRegistryEvents
 
 ### [LLM] Cryptojacking persistence: 'Windows System Health' scheduled tasks
 
-`UC_62_20` · phase: **install** · confidence: **High**
+`UC_63_20` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -604,7 +604,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — From poisoned search results to GPU mining: A cryptojacking campaign abusing Scr
 
-`UC_62_12` · phase: **exploit** · confidence: **High**
+`UC_63_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

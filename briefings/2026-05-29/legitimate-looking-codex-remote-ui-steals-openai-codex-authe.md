@@ -10,18 +10,13 @@ Home Cyber Security News
 Legitimate-Looking Codex Remote UI Steals OpenAI Codex Authentication Tokens 
 By Tushar Subhra Dutta 
 May 29, 2026 
-
-
-
-
 A polished, fully functional npm package has been caught secretly stealing OpenAI Codex authentication tokens from developers who trusted it. 
 The package, named codexui-android, presented itself as a remote web UI for OpenAI Codex with no obvious signs of being malicious. 
-It built a genuine user base, amassed 27,000 weekly downloads, and maintain…
+It built a genuine user base, amassed 27,000 weekly downloads, and maintained an ac…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `sentry.anyclaw.store`
-- **Domain (defanged):** `anyclaw.store`
 
 ## MITRE ATT&CK Techniques
 
@@ -50,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Outbound traffic to BrutalStrike Codex stealer C2 (anyclaw.store /startlog)
 
-`UC_1_4` · phase: **c2** · confidence: **High**
+`UC_3_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +70,7 @@ union isfuzzy=true
 
 ### [LLM] HTTP POST to /startlog with XOR+base64 stealer beacon shape
 
-`UC_1_5` · phase: **c2** · confidence: **High**
+`UC_3_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +91,7 @@ DeviceNetworkEvents
 
 ### [LLM] codexui-android npm package install or chunk-PUR7OUAG.js write on developer host
 
-`UC_1_6` · phase: **install** · confidence: **High**
+`UC_3_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +113,7 @@ DeviceFileEvents
 
 ### [LLM] Codex auth.json read followed by outbound HTTP within 60s (token theft pattern)
 
-`UC_1_7` · phase: **actions** · confidence: **Medium**
+`UC_3_7` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +145,7 @@ auth_reads
 
 ### [LLM] Android emulator / WSL extracts Linux rootfs and runs node.exe pulling unpinned npm
 
-`UC_1_8` · phase: **install** · confidence: **Medium**
+`UC_3_8` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -239,7 +234,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — Legitimate-Looking Codex Remote UI Steals OpenAI Codex Authentication Tokens
 
-`UC_1_3` · phase: **exploit** · confidence: **High**
+`UC_3_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -291,7 +286,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `sentry.anyclaw.store`, `anyclaw.store`
+  - IP / domain IOC(s): `sentry.anyclaw.store`
 
 
 ## Why this matters

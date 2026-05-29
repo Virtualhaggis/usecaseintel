@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1249 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -18,6 +18,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [malicious rvtools installer abuses sectigo certificate to by](./2026-05-29/malicious-rvtools-installer-abuses-sectigo-certificate-to-by.md)
 - [malicious sicoob nuget steals banking credentials as npm pac](./2026-05-29/malicious-sicoob-nuget-steals-banking-credentials-as-npm-pac.md)
 - [microsoftsystem64 malware uses huggingface datasets for stea](./2026-05-29/microsoftsystem64-malware-uses-huggingface-datasets-for-stea.md)
+- [new russian linked greyvibe targets ukraine with ai powered ](./2026-05-29/new-russian-linked-greyvibe-targets-ukraine-with-ai-powered-.md)
 - [typosquatted npm packages used to steal cloud and ci cd secr](./2026-05-29/typosquatted-npm-packages-used-to-steal-cloud-and-ci-cd-secr.md)
 - [vs code remote ssh rce lets attackers pivot from developer m](./2026-05-29/vs-code-remote-ssh-rce-lets-attackers-pivot-from-developer-m.md)
 - [what s in the container analyzing vulnerabilities risks and ](./2026-05-29/what-s-in-the-container-analyzing-vulnerabilities-risks-and-.md)
@@ -52,7 +53,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46621 yamcs vulnerable to authenticat](./2026-05-27/ghsa-critical-cve-2026-46621-yamcs-vulnerable-to-authenticat.md)
 - [gitea vulnerability exposes private container images without](./2026-05-27/gitea-vulnerability-exposes-private-container-images-without.md)
 - [glassworm malware takedown disrupts developer supply chain a](./2026-05-27/glassworm-malware-takedown-disrupts-developer-supply-chain-a.md)
-- [gpu mining malware spreads via seo poisoning ai chatbots](./2026-05-27/gpu-mining-malware-spreads-via-seo-poisoning-ai-chatbots.md)
 - [grandoreiro malware and btmob rat campaigns target windows a](./2026-05-27/grandoreiro-malware-and-btmob-rat-campaigns-target-windows-a.md)
 - [legitimate looking codex remote ui secretly steals your ai t](./2026-05-27/legitimate-looking-codex-remote-ui-secretly-steals-your-ai-t.md)
 - [malicious npm package stole files from claude ai user direct](./2026-05-27/malicious-npm-package-stole-files-from-claude-ai-user-direct.md)
@@ -128,7 +128,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 45498 microsoft defender denial of service](./2026-05-20/cisa-kev-cve-2026-45498-microsoft-defender-denial-of-service.md)
 - [ghsa critical cve 2026 46421 supply chain compromise via mal](./2026-05-20/ghsa-critical-cve-2026-46421-supply-chain-compromise-via-mal.md)
 - [github breached via a malicious vs code extension why develo](./2026-05-20/github-breached-via-a-malicious-vs-code-extension-why-develo.md)
-- [microsoft takes down malware signing service behind ransomwa](./2026-05-20/microsoft-takes-down-malware-signing-service-behind-ransomwa.md)
 - [mini shai hulud compromised antv npm packages enable ci cd c](./2026-05-20/mini-shai-hulud-compromised-antv-npm-packages-enable-ci-cd-c.md)
 - [securing the gaming culture of cultures](./2026-05-20/securing-the-gaming-culture-of-cultures.md)
 - [the wild west of vs code extensions and how a poisoned exten](./2026-05-20/the-wild-west-of-vs-code-extensions-and-how-a-poisoned-exten.md)

@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TOCTOU tamper of VS Code Remote-SSH bootstrap script in user temp by non-VS-Code
 
-`UC_15_2` · phase: **weapon** · confidence: **Medium**
+`UC_17_2` · phase: **weapon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
