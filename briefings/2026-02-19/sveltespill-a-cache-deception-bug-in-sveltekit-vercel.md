@@ -1,0 +1,210 @@
+# [CRIT] SvelteSpill: A Cache Deception Bug in SvelteKit + Vercel
+
+**Source:** Aikido
+**Published:** 2026-02-19
+**Article:** https://www.aikido.dev/blog/sveltespill-cache-deception-sveltekit-vercel
+
+## Threat Profile
+
+Blog Vulnerabilities & Threats SvelteSpill: A Cache Deception Bug in SvelteKit + Vercel SvelteSpill: A Cache Deception Bug in SvelteKit + Vercel Written by Jorian Woltjer Published on: Feb 19, 2026 SvelteKit is a popular full-stack JavaScript framework, and Vercel is its most common deployment platform. What if we told you that all apps built using this combination were vulnerable to attackers reading responses from any route of other signed-in users?
+Well, it’s true. This attack vector, called …
+
+## Indicators of Compromise (high-fidelity only)
+
+- **CVE:** `CVE-2026-27118`
+
+## MITRE ATT&CK Techniques
+
+- **T1005** — Data from Local System
+- **T1539** — Steal Web Session Cookie
+- **T1555.003** — Credentials from Web Browsers
+- **T1190** — Exploit Public-Facing Application
+- **T1195.002** — Compromise Software Supply Chain
+- **T1204.002** — User Execution: Malicious File
+- **T1212** — Exploitation for Credential Access
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1204.001** — User Execution: Malicious Link
+
+## Kill chain phases observed
+
+_(none detected from narrative keywords)_
+
+## Recommended hunts
+
+### [LLM] SvelteKit Vercel __pathname cache deception exploit request (CVE-2026-27118)
+
+`UC_468_5` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.uri_query) as uri_query values(Web.uri_path) as uri_path values(Web.src) as src values(Web.user_agent) as user_agent values(Web.http_method) as method values(Web.status) as status from datamodel=Web where Web.url="*__pathname=*" Web.url="*/_app/immutable/*" by Web.dest | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+### [LLM] User-targeted SvelteSpill exploit URL delivered or clicked (CVE-2026-27118)
+
+`UC_468_6` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user values(Web.dest) as dest values(Web.user_agent) as user_agent from datamodel=Web where Web.url="*__pathname=*" Web.url="*/_app/immutable/*" by Web.src | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let ExploitClicks = UrlClickEvents
+    | where Timestamp > ago(LookbackDays)
+    | where Url has "__pathname=" and Url has "/_app/immutable/"
+    | project Timestamp, AccountUpn, Url, ActionType, Workload, NetworkMessageId, IPAddress, IsClickedThrough, Source = "UrlClickEvents";
+let ExploitInEmail = EmailUrlInfo
+    | where Timestamp > ago(LookbackDays)
+    | where Url has "__pathname=" and Url has "/_app/immutable/"
+    | join kind=leftouter (EmailEvents | project NetworkMessageId, RecipientEmailAddress, SenderFromAddress, Subject, DeliveryAction) on NetworkMessageId
+    | project Timestamp, AccountUpn = RecipientEmailAddress, Url, ActionType = DeliveryAction, Workload = "Email", NetworkMessageId, IPAddress = "", IsClickedThrough = bool(null), Source = "EmailUrlInfo";
+union ExploitClicks, ExploitInEmail
+| order by Timestamp desc
+```
+
+### Crypto-wallet file/keystore access by non-wallet process
+
+`UC_CRYPTO_WALLET` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path="*\Ethereum\keystore\*"
+        OR Filesystem.file_path="*\Bitcoin\wallet.dat"
+        OR Filesystem.file_path="*\Exodus\exodus.wallet*"
+        OR Filesystem.file_path="*\Electrum\wallets\*"
+        OR Filesystem.file_path="*\MetaMask\*"
+        OR Filesystem.file_path="*\Phantom\*"
+        OR Filesystem.file_path="*\Atomic\Local Storage\*")
+      AND NOT Filesystem.process_name IN ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Ethereum\keystore\", @"\Bitcoin\", @"\Exodus\", @"\Electrum\wallets\", @"\MetaMask\", @"\Phantom\", @"\Atomic\Local Storage\")
+| where InitiatingProcessFileName !in~ ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+```
+
+### Infostealer — non-browser process accessing browser cookie/login DBs
+
+`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
+        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
+      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
+| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+```
+
+### Trusted vendor binary / installer launching unusual children
+
+`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
+      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
+| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+```
+
+### Article-specific behavioural hunt — SvelteSpill: A Cache Deception Bug in SvelteKit + Vercel
+
+`UC_468_4` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+``` Article-specific bespoke detection — SvelteSpill: A Cache Deception Bug in SvelteKit + Vercel ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN ("serverless.js","clo1dlt2.js","kqf6jjr8.js"))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN ("created","modified")
+      AND (Filesystem.file_name IN ("serverless.js","clo1dlt2.js","kqf6jjr8.js"))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]
+```
+
+**Defender KQL:**
+```kql
+// Article-specific bespoke detection — SvelteSpill: A Cache Deception Bug in SvelteKit + Vercel
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName in~ ("serverless.js", "clo1dlt2.js", "kqf6jjr8.js"))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified")
+| where (FileName in~ ("serverless.js", "clo1dlt2.js", "kqf6jjr8.js"))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-27118`
+
+
+## Why this matters
+
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

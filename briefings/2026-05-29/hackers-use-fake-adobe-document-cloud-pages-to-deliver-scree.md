@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] RatPressto phishing-kit URL paths on compromised WordPress hosts (/download.html, /complete.php, /download.php)
 
-`UC_14_9` · phase: **delivery** · confidence: **High**
+`UC_22_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceNetworkEvents
 
 ### [LLM] ScreenConnect MSI install via msiexec from user-writable temp/Downloads (RatPressto delivery)
 
-`UC_14_10` · phase: **install** · confidence: **High**
+`UC_22_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceProcessEvents
 
 ### [LLM] ScreenConnect agent beaconing to RatPressto C2 (TCP/8041 to zistopstoabetterlife.com / 177.154.191.148 / 84.32.41.64)
 
-`UC_14_11` · phase: **c2** · confidence: **High**
+`UC_22_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceNetworkEvents
 
 ### [LLM] Browser/email-client drop of ScreenConnect installer or victim-named VBS dropper (RatPressto silent download)
 
-`UC_14_12` · phase: **delivery** · confidence: **Medium**
+`UC_22_12` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -411,7 +411,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use Fake Adobe Document Cloud Pages to Deliver ScreenConnect Malware
 
-`UC_14_8` · phase: **exploit** · confidence: **High**
+`UC_22_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

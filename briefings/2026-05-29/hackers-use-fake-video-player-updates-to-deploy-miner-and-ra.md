@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] HLS Installer.874.exe DLL side-load drops malicious library (Securelist fake-plugin miner)
 
-`UC_11_9` · phase: **install** · confidence: **High**
+`UC_19_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### [LLM] Fake GoogleUpdateTaskMachineQC scheduled-task/service persistence (SilentCryptoMiner derivative)
 
-`UC_11_10` · phase: **install** · confidence: **High**
+`UC_19_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ union isfuzzy=true
 
 ### [LLM] C2 callback to Securelist fake-plugin miner .space rotating domains / config IP 107.172.212.235
 
-`UC_11_11` · phase: **c2** · confidence: **High**
+`UC_19_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceNetworkEvents
 
 ### [LLM] Defender exclusion added for C:\ProgramData\Google\Chrome (miner staging dir)
 
-`UC_11_12` · phase: **install** · confidence: **High**
+`UC_19_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,7 +164,7 @@ union isfuzzy=true
 
 ### [LLM] explorer.exe writes EXE/DLL into C:\ProgramData\Google\Chrome (miner watchdog restore)
 
-`UC_11_13` · phase: **install** · confidence: **High**
+`UC_19_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -429,7 +429,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Use Fake Video Player Updates to Deploy Miner and RAT Malware
 
-`UC_11_8` · phase: **exploit** · confidence: **High**
+`UC_19_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

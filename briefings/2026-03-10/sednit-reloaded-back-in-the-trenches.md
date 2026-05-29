@@ -1,0 +1,486 @@
+# [CRIT] Sednit reloaded: Back in the trenches
+
+**Source:** ESET WeLiveSecurity
+**Published:** 2026-03-10
+**Article:** https://www.welivesecurity.com/en/eset-research/sednit-reloaded-back-trenches/
+
+## Threat Profile
+
+Sednit reloaded: Back in the trenches 
+ESET Research
+Sednit reloaded: Back in the trenches The resurgence of one of Russia’s most notorious APT groups
+ESET Research 
+10 Mar 2026 
+ •  
+, 
+13 min. read 
+Since April 2024, Sednit’s advanced development team has reemerged with a modern toolkit centered on two paired implants, BeardShell and Covenant, each using a different cloud provider for resilience. This dual‑implant approach enabled long‑term surveillance of Ukrainian military personnel. Interes…
+
+## Indicators of Compromise (high-fidelity only)
+
+- **SHA1:** `D0DB619A7A160949528D46D20FC0151BF9775C32`
+- **SHA1:** `99B454262DC26B081600E844371982A49D334E5E`
+
+## MITRE ATT&CK Techniques
+
+- **T1071.001** — Web Protocols
+- **T1071.004** — DNS
+- **T1566.002** — Spearphishing Link
+- **T1204.001** — User Execution: Malicious Link
+- **T1059.001** — PowerShell
+- **T1566.001** — Spearphishing Attachment
+- **T1204.002** — User Execution: Malicious File
+- **T1059.005** — Visual Basic
+- **T1218** — System Binary Proxy Execution
+- **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1027** — Obfuscated Files or Information
+- **T1587.001** — Develop Capabilities: Malware
+- **T1129** — Shared Modules
+- **T1574.002** — DLL Side-Loading
+- **T1036.005** — Match Legitimate Name or Location
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1583.006** — Acquire Infrastructure: Web Services
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1546.015** — Event Triggered Execution: Component Object Model Hijacking
+- **T1056.001** — Input Capture: Keylogging
+- **T1074.001** — Local Data Staging
+- **T1115** — Clipboard Data
+
+## Kill chain phases observed
+
+_(none detected from narrative keywords)_
+
+## Recommended hunts
+
+### [LLM] Sednit known-bad SHA-1 hash match: Xagent / SlimAgent / BeardShell binaries
+
+`UC_427_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_name) as process_name values(Processes.parent_process_name) as parent_process_name values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_hash IN ("D0DB619A7A160949528D46D20FC0151BF9775C32","99B454262DC26B081600E844371982A49D334E5E","5603E99151F8803C13D48D83B8A64D071542F01B","6D39F49AA11CE0574D581F10DB0F9BAE423CE3D5") by host Processes.dest Processes.process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let SednitSha1 = dynamic(["D0DB619A7A160949528D46D20FC0151BF9775C32","99B454262DC26B081600E844371982A49D334E5E","5603E99151F8803C13D48D83B8A64D071542F01B","6D39F49AA11CE0574D581F10DB0F9BAE423CE3D5"]);
+union (DeviceProcessEvents | where Timestamp > ago(30d) | where SHA1 in~ (SednitSha1) or InitiatingProcessSHA1 in~ (SednitSha1) | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA1, InitiatingProcessFileName, InitiatingProcessSHA1, ProcessCommandLine),
+(DeviceImageLoadEvents | where Timestamp > ago(30d) | where SHA1 in~ (SednitSha1) | project Timestamp, DeviceName, FileName, FolderPath, SHA1, InitiatingProcessFileName, InitiatingProcessCommandLine),
+(DeviceFileEvents | where Timestamp > ago(30d) | where SHA1 in~ (SednitSha1) | project Timestamp, DeviceName, FileName, FolderPath, SHA1, InitiatingProcessFileName, InitiatingProcessCommandLine)
+| order by Timestamp desc
+```
+
+### [LLM] SlimAgent / BeardShell DLL load with implant filename outside System32
+
+`UC_427_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process IN ("*eapphost.dll*","*tcpiphlpsvc.dll*")) AND Processes.parent_process_name IN ("rundll32.exe","svchost.exe","regsvr32.exe","explorer.exe") AND NOT Processes.process IN ("*\\Windows\\System32\\eapphost.dll*","*\\Windows\\System32\\tcpiphlpsvc.dll*","*\\Windows\\SysWOW64\\eapphost.dll*","*\\Windows\\SysWOW64\\tcpiphlpsvc.dll*") by host Processes.dest Processes.process_id Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let ImplantNames = dynamic(["eapphost.dll","tcpiphlpsvc.dll"]);
+union
+(DeviceImageLoadEvents
+  | where Timestamp > ago(30d)
+  | where FileName in~ (ImplantNames)
+  | where FolderPath !startswith @"C:\Windows\System32\" and FolderPath !startswith @"C:\Windows\SysWOW64\" and FolderPath !startswith @"C:\Windows\WinSxS\"
+  | project Timestamp, DeviceName, FileName, FolderPath, SHA1, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
+(DeviceProcessEvents
+  | where Timestamp > ago(30d)
+  | where FileName in~ ("rundll32.exe","regsvr32.exe","svchost.exe")
+  | where ProcessCommandLine has_any (ImplantNames)
+  | where not(ProcessCommandLine has_any (@"\Windows\System32\", @"\Windows\SysWOW64\"))
+  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, SHA1)
+| order by Timestamp desc
+```
+
+### [LLM] BeardShell C2: outbound to Icedrive cloud-storage API as non-browser process
+
+`UC_427_10` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host IN ("*.icedrive.net","*.icedrive.com","icedrive.net","icedrive.com") OR All_Traffic.url IN ("*icedrive.net*","*icedrive.com*")) AND NOT All_Traffic.app IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","safari.exe") by host All_Traffic.src All_Traffic.user All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let Browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","safari.exe","vivaldi.exe"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("icedrive.net","icedrive.com") or RemoteUrl endswith ".icedrive.net"
+| where not(InitiatingProcessFileName in~ (Browsers))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### [LLM] Covenant C2: outbound to Filen cloud-storage API as non-browser process
+
+`UC_427_11` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.url) as url from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host IN ("*.filen.io","*.filen.net","filen.io","filen.net","gateway.filen.io") OR All_Traffic.url IN ("*filen.io*","*filen.net*")) AND NOT All_Traffic.app IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","safari.exe","filen.exe") by host All_Traffic.src All_Traffic.user All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let Browsers = dynamic(["chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","safari.exe","vivaldi.exe","filen.exe"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has_any ("filen.io","filen.net") or RemoteUrl endswith ".filen.io" or RemoteUrl endswith ".filen.net"
+| where not(InitiatingProcessFileName in~ (Browsers))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### [LLM] Sednit COM-hijacking persistence via HKCU CLSID InprocServer32 to user-writable DLL
+
+`UC_427_12` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as registry_value_data values(Registry.user) as user values(Registry.process_name) as process_name from datamodel=Endpoint.Registry where Registry.registry_path IN ("*\\Software\\Classes\\CLSID\\*\\InprocServer32*") AND Registry.registry_hive="HKEY_USERS" AND (Registry.registry_value_data IN ("*\\AppData\\*","*\\Users\\Public\\*","*\\Temp\\*","*\\ProgramData\\*","*eapphost.dll*","*tcpiphlpsvc.dll*")) by host Registry.dest Registry.registry_path Registry.registry_value_name | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where ActionType in~ ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has @"\Software\Classes\CLSID\" and RegistryKey has "InprocServer32"
+| where (RegistryValueName == "" or RegistryValueName =~ "(Default)")
+| where RegistryValueData has_any (@"\AppData\", @"\Users\Public\", @"\Windows\Temp\", @"\ProgramData\", "eapphost.dll", "tcpiphlpsvc.dll")
+| where not(InitiatingProcessFileName in~ ("msiexec.exe","trustedinstaller.exe","regsvr32.exe"))
+   or RegistryValueData has_any ("eapphost.dll","tcpiphlpsvc.dll")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RegistryKey, RegistryValueName, RegistryValueData
+| order by Timestamp desc
+```
+
+### [LLM] SlimAgent keylogger HTML log artefact written to disk (Xagent-lineage colour scheme)
+
+`UC_427_13` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("*.html","*.htm","*.log","*.dat")) AND (Filesystem.file_path IN ("*\\AppData\\Local\\*","*\\AppData\\Roaming\\*","*\\Windows\\Temp\\*","*\\Users\\Public\\*","*\\ProgramData\\*")) AND (Filesystem.process_name IN ("svchost.exe","rundll32.exe","regsvr32.exe") OR Filesystem.process IN ("*eapphost.dll*","*tcpiphlpsvc.dll*")) by host Filesystem.dest Filesystem.file_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let ImplantDlls = dynamic(["eapphost.dll","tcpiphlpsvc.dll"]);
+let UserWritablePaths = dynamic([@"\AppData\Local\", @"\AppData\Roaming\", @"\Windows\Temp\", @"\Users\Public\", @"\ProgramData\"]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in~ ("FileCreated","FileModified")
+| where FileName endswith ".html" or FileName endswith ".htm" or FileName endswith ".log" or FileName endswith ".dat"
+| where FolderPath has_any (UserWritablePaths)
+| where (InitiatingProcessFileName in~ ("svchost.exe","rundll32.exe","regsvr32.exe") and InitiatingProcessCommandLine has_any (ImplantDlls))
+   or (InitiatingProcessFolderPath has_any (UserWritablePaths) and not(InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","notepad.exe","notepad++.exe","code.exe","outlook.exe","winword.exe","excel.exe","powerpnt.exe","teams.exe","slack.exe","onenote.exe")))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath, SHA1
+| order by Timestamp desc
+```
+
+### Beaconing — periodic outbound to small set of destinations
+
+`UC_BEACONING` · phase: **c2** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(1d)
+| where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
+| project DeviceName, RemoteIP, RemotePort, Timestamp
+| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
+| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
+         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
+| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
+| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
+| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
+    by DeviceName, RemoteIP, RemotePort
+| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
+| order by conn_count desc
+```
+
+### Phishing-link click correlated to endpoint execution
+
+`UC_PHISH_LINK` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+``` Phishing-link click that drives endpoint execution within 60s ```
+| tstats `summariesonly` earliest(_time) AS click_time
+    from datamodel=Web
+    where Web.action="allowed"
+    by Web.src, Web.user, Web.dest, Web.url
+| `drop_dm_object_name(Web)`
+| rename user AS recipient, dest AS clicked_domain, url AS clicked_url
+| join type=inner recipient
+    [| tstats `summariesonly` count
+         from datamodel=Email.All_Email
+         where All_Email.action="delivered" AND All_Email.url!="-"
+         by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
+     | `drop_dm_object_name(All_Email)`
+     | rex field=url "https?://(?<email_domain>[^/]+)"
+     | rename recipient AS recipient]
+| join type=inner src
+    [| tstats `summariesonly` earliest(_time) AS exec_time
+         values(Processes.process) AS exec_cmd, values(Processes.process_name) AS exec_proc
+         from datamodel=Endpoint.Processes
+         where Processes.parent_process_name IN ("chrome.exe","msedge.exe","firefox.exe",
+                                                   "outlook.exe","brave.exe","arc.exe")
+           AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe",
+                                            "rundll32.exe","regsvr32.exe","wscript.exe",
+                                            "cscript.exe","bitsadmin.exe","certutil.exe",
+                                            "curl.exe","wget.exe")
+         by Processes.dest, Processes.user
+     | `drop_dm_object_name(Processes)`
+     | rename dest AS src]
+| eval delta_sec = exec_time - click_time
+| where delta_sec >= 0 AND delta_sec <= 60
+| table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
+        clicked_domain, clicked_url, exec_proc, exec_cmd
+| sort - click_time
+```
+
+**Defender KQL:**
+```kql
+// Phishing-link click that drives endpoint execution within 60s.
+// Far higher fidelity than "every clicked URL" — most legitimate clicks
+// never spawn a non-browser child process, so the join eliminates the
+// 99% of noise that makes a raw click query unactionable.
+let LookbackDays = 7d;
+let SuspectClicks = UrlClickEvents
+    | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
+    | where ActionType in ("ClickAllowed","ClickedThrough")
+    | join kind=inner (
+        EmailEvents
+        | where Timestamp > ago(LookbackDays)
+        | where DeliveryAction == "Delivered"
+        | where EmailDirection == "Inbound"
+        | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,
+                  RecipientEmailAddress, EmailTimestamp = Timestamp
+      ) on NetworkMessageId
+    | join kind=leftouter (
+        EmailUrlInfo | project NetworkMessageId, Url, UrlDomain
+      ) on NetworkMessageId, Url
+    | project ClickTime = Timestamp, AccountUpn, IPAddress, Url, UrlDomain,
+              Subject, SenderFromAddress, SenderFromDomain, RecipientEmailAddress,
+              ActionType;
+// Correlate to a non-browser child process spawned within 60 seconds on
+// the recipient's device.
+DeviceProcessEvents
+| where Timestamp > ago(LookbackDays)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe",
+                                         "outlook.exe","brave.exe","arc.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe",
+                        "rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe",
+                        "bitsadmin.exe","certutil.exe","curl.exe","wget.exe")
+| join kind=inner SuspectClicks on $left.AccountName == $right.AccountUpn
+| where Timestamp between (ClickTime .. ClickTime + 60s)
+| project ClickTime, ProcessTime = Timestamp,
+          DelaySec = datetime_diff('second', Timestamp, ClickTime),
+          DeviceName, AccountName, RecipientEmailAddress, SenderFromAddress,
+          Subject, Url, UrlDomain, ActionType,
+          FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by ClickTime desc
+```
+
+### Email attachment opened from external sender
+
+`UC_PHISH_ATTACH` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count
+    from datamodel=Email.All_Email
+    where All_Email.file_name!="-"
+    by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
+| rename All_Email.recipient as user
+| join type=inner user
+    [| tstats `summariesonly` count
+        from datamodel=Endpoint.Processes
+        where Processes.parent_process_name IN ("OUTLOOK.EXE","winword.exe","excel.exe","powerpnt.exe")
+          AND Processes.process_name IN ("cmd.exe","powershell.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe")
+        by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+     | rename Processes.user as user]
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let MalAttachments = EmailAttachmentInfo
+    | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
+    | project NetworkMessageId, RecipientEmailAddress,
+              AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
+DeviceProcessEvents
+| where Timestamp > ago(LookbackDays)
+| where InitiatingProcessFileName in~ ("OUTLOOK.EXE","winword.exe","excel.exe","powerpnt.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","wscript.exe","cscript.exe",
+                      "mshta.exe","rundll32.exe","regsvr32.exe")
+| join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256
+```
+
+### Office app spawning script/LOLBin child process
+
+`UC_OFFICE_CHILD` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
+      AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+```
+
+### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
+
+`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
+      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
+      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
+| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
+```
+
+### PowerShell encoded / obfuscated command
+
+`UC_PS_OBFUSCATED` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("powershell.exe","pwsh.exe")
+      AND (Processes.process="*-enc *" OR Processes.process="*EncodedCommand*"
+        OR Processes.process="*FromBase64String*" OR Processes.process="*-nop*"
+        OR Processes.process="*-w hidden*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*IEX(*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*Net.WebClient*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine matches regex @"(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+```
+
+### Article-specific behavioural hunt — Sednit reloaded: Back in the trenches
+
+`UC_427_7` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+``` Article-specific bespoke detection — Sednit reloaded: Back in the trenches ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN ("remotekeylogger.dll","eapphost.dll","tcpiphlpsvc.dll","taskhost.exe"))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN ("created","modified")
+      AND (Filesystem.file_name IN ("remotekeylogger.dll","eapphost.dll","tcpiphlpsvc.dll","taskhost.exe"))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]
+```
+
+**Defender KQL:**
+```kql
+// Article-specific bespoke detection — Sednit reloaded: Back in the trenches
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (FileName in~ ("remotekeylogger.dll", "eapphost.dll", "tcpiphlpsvc.dll", "taskhost.exe"))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified")
+| where (FileName in~ ("remotekeylogger.dll", "eapphost.dll", "tcpiphlpsvc.dll", "taskhost.exe"))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `D0DB619A7A160949528D46D20FC0151BF9775C32`, `99B454262DC26B081600E844371982A49D334E5E`
+
+
+## Why this matters
+
+Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

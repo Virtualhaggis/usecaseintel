@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] vpmdhaj npm campaign C2 callback to aab.sportsontheweb.net (X-Supply: 1 marker)
 
-`UC_9_8` · phase: **c2** · confidence: **High**
+`UC_17_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ union NetHits, ProcHits
 
 ### [LLM] Node.js descendant queries AWS IMDS (169.254.169.254) or ECS task metadata (169.254.170.2)
 
-`UC_9_9` · phase: **actions** · confidence: **High**
+`UC_17_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceNetworkEvents
 
 ### [LLM] vpmdhaj campaign stager / payload artifact written under node_modules
 
-`UC_9_10` · phase: **install** · confidence: **High**
+`UC_17_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceFileEvents
 
 ### [LLM] npm install lifecycle hook spawning detached Bun / Node child (vpmdhaj _DAEMONIZED marker)
 
-`UC_9_11` · phase: **install** · confidence: **Medium**
+`UC_17_11` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -362,7 +362,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Typosquatted npm Packages Steal Cloud and CI/CD Secrets From Developer Systems
 
-`UC_9_7` · phase: **exploit** · confidence: **High**
+`UC_17_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
