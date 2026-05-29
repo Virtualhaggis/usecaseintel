@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1249 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,23 +10,25 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-29
 - [charter communications data breach affects 4 9 million accou](./2026-05-29/charter-communications-data-breach-affects-4-9-million-accou.md)
-- [critical samba vulnerability enables remote code execution a](./2026-05-29/critical-samba-vulnerability-enables-remote-code-execution-a.md)
-- [hackers exploit microsoft teams collaboration features to im](./2026-05-29/hackers-exploit-microsoft-teams-collaboration-features-to-im.md)
+- [dutch govt disrupts malware botnet with 17 million infected ](./2026-05-29/dutch-govt-disrupts-malware-botnet-with-17-million-infected-.md)
+- [from 5 attacks to botnet powered platforms inside the ddos a](./2026-05-29/from-5-attacks-to-botnet-powered-platforms-inside-the-ddos-a.md)
 - [hackers use fake adobe document cloud pages to deliver scree](./2026-05-29/hackers-use-fake-adobe-document-cloud-pages-to-deliver-scree.md)
+- [hackers use fake video player updates to deploy miner and ra](./2026-05-29/hackers-use-fake-video-player-updates-to-deploy-miner-and-ra.md)
 - [kimsuky deploys httpspy expands arsenal with hellodoor and v](./2026-05-29/kimsuky-deploys-httpspy-expands-arsenal-with-hellodoor-and-v.md)
 - [legitimate looking codex remote ui steals openai codex authe](./2026-05-29/legitimate-looking-codex-remote-ui-steals-openai-codex-authe.md)
+- [malicious nuget package as sicoob sdk exfiltrates banking pa](./2026-05-29/malicious-nuget-package-as-sicoob-sdk-exfiltrates-banking-pa.md)
 - [malicious rvtools installer abuses sectigo certificate to by](./2026-05-29/malicious-rvtools-installer-abuses-sectigo-certificate-to-by.md)
 - [malicious sicoob nuget steals banking credentials as npm pac](./2026-05-29/malicious-sicoob-nuget-steals-banking-credentials-as-npm-pac.md)
 - [microsoftsystem64 malware uses huggingface datasets for stea](./2026-05-29/microsoftsystem64-malware-uses-huggingface-datasets-for-stea.md)
+- [new chatgpt vulnerability lets attackers turn web pages into](./2026-05-29/new-chatgpt-vulnerability-lets-attackers-turn-web-pages-into.md)
 - [new russian linked greyvibe targets ukraine with ai powered ](./2026-05-29/new-russian-linked-greyvibe-targets-ukraine-with-ai-powered-.md)
+- [typosquatted npm packages steal cloud and ci cd secrets from](./2026-05-29/typosquatted-npm-packages-steal-cloud-and-ci-cd-secrets-from.md)
 - [typosquatted npm packages used to steal cloud and ci cd secr](./2026-05-29/typosquatted-npm-packages-used-to-steal-cloud-and-ci-cd-secr.md)
-- [vs code remote ssh rce lets attackers pivot from developer m](./2026-05-29/vs-code-remote-ssh-rce-lets-attackers-pivot-from-developer-m.md)
 - [what s in the container analyzing vulnerabilities risks and ](./2026-05-29/what-s-in-the-container-analyzing-vulnerabilities-risks-and-.md)
 
 ## 2026-05-28
 - [2026 world cup discussing the world s biggest game s attack ](./2026-05-28/2026-world-cup-discussing-the-world-s-biggest-game-s-attack-.md)
 - [btmob android malware service generates custom phishing payl](./2026-05-28/btmob-android-malware-service-generates-custom-phishing-payl.md)
-- [carnival cruise confirms data breach affecting nearly 6 mill](./2026-05-28/carnival-cruise-confirms-data-breach-affecting-nearly-6-mill.md)
 - [critical gogs rce vulnerability lets any authenticated user ](./2026-05-28/critical-gogs-rce-vulnerability-lets-any-authenticated-user-.md)
 - [eset apt activity report q4 2025 q1 2026](./2026-05-28/eset-apt-activity-report-q4-2025-q1-2026.md)
 - [fbi warns of fake fifa websites running world cup fraud sche](./2026-05-28/fbi-warns-of-fake-fifa-websites-running-world-cup-fraud-sche.md)
@@ -677,7 +679,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 20393 cisco multiple products improper inp](./2025-12-17/cisa-kev-cve-2025-20393-cisco-multiple-products-improper-inp.md)
 - [cisa kev cve 2025 40602 sonicwall sma1000 missing authorizat](./2025-12-17/cisa-kev-cve-2025-40602-sonicwall-sma1000-missing-authorizat.md)
 - [cisa kev cve 2025 59374 asus live update embedded malicious ](./2025-12-17/cisa-kev-cve-2025-59374-asus-live-update-embedded-malicious-.md)
-- [the fork awakens why github s invisible networks break packa](./2025-12-17/the-fork-awakens-why-github-s-invisible-networks-break-packa.md)
 
 ## 2025-12-16
 - [cisa kev cve 2025 59718 fortinet multiple products improper ](./2025-12-16/cisa-kev-cve-2025-59718-fortinet-multiple-products-improper-.md)

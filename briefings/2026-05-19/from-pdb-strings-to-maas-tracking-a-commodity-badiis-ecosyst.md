@@ -78,7 +78,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] BadIIS demo.pdb variant known SHA256 file/process hashes
 
-`UC_152_5` · phase: **install** · confidence: **High**
+`UC_153_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ union
 
 ### [LLM] BadIIS C2 IP / domain beacon (lee.6686ty.vip, iis.01nmwe.xyz)
 
-`UC_152_6` · phase: **c2** · confidence: **High**
+`UC_153_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceNetworkEvents
 
 ### [LLM] IIS worker (w3wp.exe) initiating outbound connection to public IP
 
-`UC_152_7` · phase: **c2** · confidence: **Medium**
+`UC_153_7` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceNetworkEvents
 
 ### [LLM] IIS native module DLL drop or applicationHost.config modification by non-IIS process
 
-`UC_152_8` · phase: **install** · confidence: **High**
+`UC_153_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +162,7 @@ DeviceFileEvents
 
 ### [LLM] IIS worker (w3wp.exe) writing robots.txt / .php / .js into web root
 
-`UC_152_9` · phase: **actions** · confidence: **Medium**
+`UC_153_9` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -253,7 +253,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — From PDB strings to MaaS: Tracking a commodity BadIIS ecosystem used by Chinese-
 
-`UC_152_4` · phase: **exploit** · confidence: **High**
+`UC_153_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

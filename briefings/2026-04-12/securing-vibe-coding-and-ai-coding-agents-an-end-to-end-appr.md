@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Trust Wallet Shai-Hulud C2 callback to metrics-trustwallet.com / 138.124.70.40
 
-`UC_339_7` · phase: **c2** · confidence: **High**
+`UC_340_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceNetworkEvents
 
 ### [LLM] Shai-Hulud 2.0 npm worm artifact: setup_bun.js / bun_environment.js dropped by node/npm
 
-`UC_339_8` · phase: **install** · confidence: **High**
+`UC_340_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceFileEvents
 
 ### [LLM] Shai-Hulud preinstall: node/npm spawning git/curl/gh pushing to attacker repo or GitHub API
 
-`UC_339_9` · phase: **actions** · confidence: **Medium**
+`UC_340_9` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
