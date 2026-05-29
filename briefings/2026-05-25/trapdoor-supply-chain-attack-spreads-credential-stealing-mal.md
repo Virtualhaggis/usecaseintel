@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TrapDoor named-package install via npm / pip / cargo on developer host
 
-`UC_76_13` · phase: **delivery** · confidence: **High**
+`UC_78_13` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceProcessEvents
 
 ### [LLM] Python interpreter spawning node -e fetching remote JS (TrapDoor PyPI delegation)
 
-`UC_76_14` · phase: **install** · confidence: **High**
+`UC_78_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceProcessEvents
 
 ### [LLM] TrapDoor C2 contact to ddjidd564.github.io payload host
 
-`UC_76_15` · phase: **c2** · confidence: **High**
+`UC_78_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ union
 
 ### [LLM] TrapDoor AI prompt-injection persistence — .cursorrules / CLAUDE.md drop by build tools
 
-`UC_76_16` · phase: **install** · confidence: **High**
+`UC_78_16` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ DeviceFileEvents
 
 ### [LLM] TrapDoor persistence install via cron / systemd / git hooks / SSH from package-manager parent
 
-`UC_76_17` · phase: **install** · confidence: **Medium**
+`UC_78_17` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -543,7 +543,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TrapDoor Supply Chain Attack Spreads Credential-Stealing Malware via npm, PyPI,
 
-`UC_76_12` · phase: **exploit** · confidence: **High**
+`UC_78_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

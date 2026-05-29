@@ -11,12 +11,8 @@ By Sergiu Gatlan
 May 29, 2026
 04:29 AM
 0 
-
-
 The ShinyHunters extortion gang stole personal information from 4.9 million accounts after hacking the U.S. telecom giant Charter Communications in early April, according to data breach notification service Have I Been Pwned.
-
-
-Charter has over 92,000 employees and provides internet, mobile, video, and voice services to more than 32 million customers and over 57 million homes in 41 s…
+Charter has over 92,000 employees and provides internet, mobile, video, and voice services to more than 32 million customers and over 57 million homes in 41 states ac…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -48,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vishing-induced Entra ID sign-in from new location/IP after employee call
 
-`UC_1_3` · phase: **delivery** · confidence: **Medium**
+`UC_8_3` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +78,7 @@ AADSignInEventsBeta
 
 ### [LLM] OAuth consent granted to look-alike Salesforce/Data-Loader app from compromised employee
 
-`UC_1_4` · phase: **install** · confidence: **High**
+`UC_8_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +102,7 @@ CloudAppEvents
 
 ### [LLM] Salesforce Bulk/REST API mass-export volume burst from newly-consented app
 
-`UC_1_5` · phase: **actions** · confidence: **Medium**
+`UC_8_5` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +127,7 @@ CloudAppEvents
 
 ### [LLM] ShinyHunters leak-site Charter URI checked from corporate browsing
 
-`UC_1_6` · phase: **c2** · confidence: **Low**
+`UC_8_6` · phase: **c2** · confidence: **Low**
 
 **Splunk SPL (CIM):**
 ```spl
