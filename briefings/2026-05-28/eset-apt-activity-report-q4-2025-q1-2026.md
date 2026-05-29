@@ -28,12 +28,94 @@ During the monito…
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1546.016** — Event Triggered Execution: Installer Packages
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1059.005** — Command and Scripting Interpreter: Visual Basic
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Trojanized axios npm package postinstall: node.exe spawned from plain-crypto-js dependency
+
+`UC_33_7` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="node.exe" (Processes.process="*plain-crypto-js*" OR Processes.process="*\\plain-crypto-js\\setup.js*" OR Processes.parent_process="*plain-crypto-js*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | where match(process, "(?i)plain-crypto-js") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(60d)
+| where (FileName =~ "node.exe" or InitiatingProcessFileName =~ "node.exe")
+| where ProcessCommandLine has "plain-crypto-js"
+   or InitiatingProcessCommandLine has "plain-crypto-js"
+   or FolderPath has @"\node_modules\plain-crypto-js\"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
+          ProcessCommandLine, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### [LLM] axios RAT Windows persistence: %PROGRAMDATA%\wt.exe drop + %TEMP%\6202033.vbs/.ps1 staging
+
+`UC_33_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where (Filesystem.file_name="wt.exe" AND Filesystem.file_path="*\\ProgramData\\wt.exe") OR Filesystem.file_name="6202033.vbs" OR Filesystem.file_name="6202033.ps1" by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(60d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where (FileName =~ "wt.exe" and FolderPath has @"\ProgramData\" and not(FolderPath has @"\WindowsApps\"))
+     or (FileName matches regex @"(?i)^6202033\.(vbs|ps1)$")
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, FileSize,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] axios RAT C2 callout to sfrclak.com / 142.11.206.73:8000
+
+`UC_33_9` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="sfrclak.com" OR DNS.query="*.sfrclak.com" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="142.11.206.73" AND All_Traffic.dest_port=8000 by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`]
+```
+
+**Defender KQL:**
+```kql
+let C2Domain = dynamic(["sfrclak.com"]);
+let C2IP = dynamic(["142.11.206.73"]);
+DeviceNetworkEvents
+| where Timestamp > ago(90d)
+| where RemoteIP in (C2IP)
+   or RemoteUrl has_any (C2Domain)
+   or (RemoteIP in (C2IP) and RemotePort == 8000)
+| project Timestamp, DeviceName, ActionType,
+          RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName,
+          InitiatingProcessParentFileName
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -294,4 +376,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 10 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

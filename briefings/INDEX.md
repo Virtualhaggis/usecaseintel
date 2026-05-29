@@ -9,17 +9,18 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-29
+- [charter communications data breach affects 4 9 million accou](./2026-05-29/charter-communications-data-breach-affects-4-9-million-accou.md)
 - [critical samba vulnerability enables remote code execution a](./2026-05-29/critical-samba-vulnerability-enables-remote-code-execution-a.md)
 - [hackers exploit microsoft teams collaboration features to im](./2026-05-29/hackers-exploit-microsoft-teams-collaboration-features-to-im.md)
 - [kimsuky deploys httpspy expands arsenal with hellodoor and v](./2026-05-29/kimsuky-deploys-httpspy-expands-arsenal-with-hellodoor-and-v.md)
 - [malicious rvtools installer abuses sectigo certificate to by](./2026-05-29/malicious-rvtools-installer-abuses-sectigo-certificate-to-by.md)
+- [microsoftsystem64 malware uses huggingface datasets for stea](./2026-05-29/microsoftsystem64-malware-uses-huggingface-datasets-for-stea.md)
 - [typosquatted npm packages used to steal cloud and ci cd secr](./2026-05-29/typosquatted-npm-packages-used-to-steal-cloud-and-ci-cd-secr.md)
 - [vs code remote ssh rce lets attackers pivot from developer m](./2026-05-29/vs-code-remote-ssh-rce-lets-attackers-pivot-from-developer-m.md)
 - [what s in the container analyzing vulnerabilities risks and ](./2026-05-29/what-s-in-the-container-analyzing-vulnerabilities-risks-and-.md)
 
 ## 2026-05-28
 - [2026 world cup discussing the world s biggest game s attack ](./2026-05-28/2026-world-cup-discussing-the-world-s-biggest-game-s-attack-.md)
-- [ai generated npm malware accidentally exposes threat actor s](./2026-05-28/ai-generated-npm-malware-accidentally-exposes-threat-actor-s.md)
 - [btmob android malware service generates custom phishing payl](./2026-05-28/btmob-android-malware-service-generates-custom-phishing-payl.md)
 - [carnival cruise confirms data breach affecting nearly 6 mill](./2026-05-28/carnival-cruise-confirms-data-breach-affecting-nearly-6-mill.md)
 - [critical gogs rce vulnerability lets any authenticated user ](./2026-05-28/critical-gogs-rce-vulnerability-lets-any-authenticated-user-.md)
@@ -45,7 +46,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 48027 nx console embedded malicious code v](./2026-05-27/cisa-kev-cve-2026-48027-nx-console-embedded-malicious-code-v.md)
 - [cisa kev cve 2026 8398 daemon tools lite embedded malicious ](./2026-05-27/cisa-kev-cve-2026-8398-daemon-tools-lite-embedded-malicious-.md)
 - [continuous offensive security the line we ve been walking](./2026-05-27/continuous-offensive-security-the-line-we-ve-been-walking.md)
-- [fbi warns of in person data theft attacks from extortion gan](./2026-05-27/fbi-warns-of-in-person-data-theft-attacks-from-extortion-gan.md)
 - [ghsa critical cve 2026 44632 yamcs vulnerable to server side](./2026-05-27/ghsa-critical-cve-2026-44632-yamcs-vulnerable-to-server-side.md)
 - [ghsa critical cve 2026 45618 liquidjs is vulnerable to remot](./2026-05-27/ghsa-critical-cve-2026-45618-liquidjs-is-vulnerable-to-remot.md)
 - [ghsa critical cve 2026 46562 yamcs vulnerable to remote code](./2026-05-27/ghsa-critical-cve-2026-46562-yamcs-vulnerable-to-remote-code.md)

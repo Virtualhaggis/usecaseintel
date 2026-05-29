@@ -10,12 +10,8 @@ Home Cyber Security News
 Malicious RVTools Installer Abuses Sectigo Certificate to Bypass SmartScreen Warnings 
 By Tushar Subhra Dutta 
 May 29, 2026 
-
-
-
-
 A trusted tool for VMware administrators has been weaponized. Attackers built a fake version of RVTools, a widely used utility for managing virtual infrastructure, and disguised it with a real digital certificate to slip past Windows security warnings without raising a flag. 
-RVTools is a staple in enterprise environments. IT administrator…
+RVTools is a staple in enterprise environments. IT administrators rely o…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -59,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious RVTools MSI signed by Xiamen Lunwei Huage (Sectigo) — hash + cert subject
 
-`UC_1_7` · phase: **delivery** · confidence: **High**
+`UC_3_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +82,7 @@ union
 
 ### [LLM] msiexec spawning wscript Binary.MyScript.vbs → hidden powershell (RVTools chain)
 
-`UC_1_8` · phase: **exploit** · confidence: **High**
+`UC_3_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +112,7 @@ VbsExec
 
 ### [LLM] PowerShell download of winp.zip ~33MB from Dropbox into %APPDATA%
 
-`UC_1_9` · phase: **delivery** · confidence: **High**
+`UC_3_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +140,7 @@ union DropboxDownload, ZipDrop
 
 ### [LLM] Portable python.exe launching from AppData running Pmanager.py / collector.py
 
-`UC_1_10` · phase: **c2** · confidence: **High**
+`UC_3_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -174,7 +170,7 @@ PyExec
 
 ### [LLM] RVTools RAT persistence: Run key + SYSTEM scheduled task pointing to AppData python
 
-`UC_1_11` · phase: **install** · confidence: **High**
+`UC_3_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -347,7 +343,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious RVTools Installer Abuses Sectigo Certificate to Bypass SmartScreen War
 
-`UC_1_6` · phase: **exploit** · confidence: **High**
+`UC_3_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
