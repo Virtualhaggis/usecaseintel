@@ -10,15 +10,13 @@ Home Cyber Security News
 GREYVIBE Hackers Leverage ChatGPT and Google Gemini to Fuel Cyberattacks 
 By Abinaya 
 May 30, 2026 
-
-
-
-
 GREYVIBE hackers are increasingly leveraging generative AI tools such as ChatGPT and Google Gemini to enhance cyberattack operations.
-The campaign, active since at least August 2025, primarily targets Ukraine and related entities across the government, military, and civilian sectors, highlighting a growing convergence between artificial intelligence and modern cyb…
+The campaign, active since at least August 2025, primarily targets Ukraine and related entities across the government, military, and civilian sectors, highlighting a growing convergence between artificial intelligence and modern cyber warfa…
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **IPv4 (defanged):** `188.124.59.120`
+- **IPv4 (defanged):** `193.233.23.81`
 - **IPv4 (defanged):** `89.37.185.60`
 - **IPv4 (defanged):** `74.112.102.120`
 - **IPv4 (defanged):** `194.87.128.243`
@@ -26,9 +24,11 @@ The campaign, active since at least August 2025, primarily targets Ukraine and r
 - **IPv4 (defanged):** `89.125.189.118`
 - **IPv4 (defanged):** `89.125.189.85`
 - **IPv4 (defanged):** `91.149.221.124`
+- **Domain (defanged):** `frontforce.org`
 - **Domain (defanged):** `lapas.live`
 - **Domain (defanged):** `zoomconference.click`
 - **Domain (defanged):** `zoomconference.app`
+- **Domain (defanged):** `strip-mens.tilda.ws`
 - **Domain (defanged):** `princess-mens.fun`
 - **Domain (defanged):** `princess-mens-club.com`
 - **Domain (defanged):** `princess-mens.click`
@@ -37,25 +37,23 @@ The campaign, active since at least August 2025, primarily targets Ukraine and r
 - **Domain (defanged):** `princessclub.online`
 - **Domain (defanged):** `princessclub.cyou`
 - **Domain (defanged):** `clubprincess.click`
-- **Domain (defanged):** `strip-mens.tilda.ws`
-- **Domain (defanged):** `frontforce.org`
 - **Domain (defanged):** `ukrguard.org`
 - **Domain (defanged):** `ukrbezpeka.online`
 - **Domain (defanged):** `ironbrave.online`
 - **Domain (defanged):** `ukrvarta.online`
 - **Domain (defanged):** `edbo.linkpc.net`
+- **Domain (defanged):** `edbo.publicvm.com`
+- **Domain (defanged):** `edbo.work.gd`
 - **Domain (defanged):** `dsszzi.linkpc.net`
+- **Domain (defanged):** `declaration.linkpc.net`
 - **Domain (defanged):** `goodhillsenterprise.com`
-- **Domain (defanged):** `ny-car-dealership.it.com`
 - **Domain (defanged):** `doct0rsim.com`
 - **Domain (defanged):** `routinesyscheckup.com`
 - **Domain (defanged):** `serotoninenterprise.com`
-- **Domain (defanged):** `nycpartnersenterprise.com`
-- **Domain (defanged):** `chiselworksenterprise.com`
-- **Domain (defanged):** `newrentalsenterprise.com`
-- **Domain (defanged):** `j4jobspk.com`
-- **Domain (defanged):** `storage.vlasiuk.kiev.ua`
-- **Domain (defanged):** `share.secureinfo.eu`
+- **Domain (defanged):** `ny-car-dealership.it.com`
+- **Domain (defanged):** `newstarcommunity.com`
+- **Domain (defanged):** `prosearium.net`
+- **Domain (defanged):** `aerobionix.com`
 - **SHA256:** `476334f9254ef0277b3462b6086655f38358a983b95991cfe4dcdd787740906a`
 - **SHA256:** `78773eb9738bc3306a56bf39adc8212226479c24af8bf453be9d57103a91a904`
 - **SHA256:** `62b585f36d4b14fa1e036feed692267aa098e7fc6cabb468a07997a025309299`
@@ -68,6 +66,24 @@ The campaign, active since at least August 2025, primarily targets Ukraine and r
 - **SHA256:** `5115eca388860371d994457793f3a3c2c3d106da48ca12ecccb9432522c56cc3`
 - **SHA256:** `bd3f35b91bf83427e953d4cf531a0ee4b5ec9fc76b91700274effe0eba22510f`
 - **SHA256:** `2abb318455960b446d034967c8403ec4339ba248b946f02cb1307ed7e6f4e327`
+- **SHA256:** `e8d0943042e34a37ae8d79aeb4f9a2fa07b4a37955af2b0cc0e232b79c2e72f3`
+- **SHA256:** `42464c188cb8116b63938b3236504ec4ae31c7cadb9063085b30dd468d88860f`
+- **SHA256:** `7ac06aaf0cdc1c1f0f14b0e8ccc550f9df20e79f3ce321207ec7a1867d6227ef`
+- **SHA256:** `f79b9d14b93d4c509386684f2aeebe53ab088e704b38b359db3ee7991942aec6`
+- **SHA256:** `08eba15964cae61156a99d7ac33eedebdd6e9f3465dc77b5d8dc17dbedc2194a`
+- **SHA256:** `18db95f2ae20a4ea86b3296f409eb3fc1131d2758c5bfdbda16a424a64e97d18`
+- **SHA256:** `e9634032df81334e9e960ab8b88ff05a0f7ec9c034dc012f816f09e23c18d41b`
+- **SHA256:** `40f9399ea067d69c0985aecdc54beddbcb585d7f660606e5bb4be981811c28ba`
+- **SHA256:** `f8fd89b4d0d2608dbdf6e79282b7dc3fa3bef9b199a0dd02f15660cd02c73361`
+- **SHA256:** `5e6c5b6604d88f044bff53b6576f7b15046baa666fa72bafe62069a8b9e9452f`
+- **SHA256:** `48a371a3973983a9bdb395cb33d6fce68d75b41d4bfd86d3f923cff79b545efc`
+- **SHA256:** `f56170fc141e2fce7449a01af9bda7b22b8909b6c8eaf698e5a149e3da75eeac`
+- **SHA256:** `1b916c486ec621fb66bd4521dddad5df69bd35c4b76a980c0b924babf566cb84`
+- **SHA256:** `cbaf6cdb2acbd293d7e58cabe41449027a28b84223ba88f19e4463ec4176dad0`
+- **SHA256:** `bcb9e99021f88b9720a667d737a3ddd7d5b9f963ac3cae6d26e74701e406dcdc`
+- **SHA256:** `87b8abb05c7ee5642a5e801e7825dfa5ee4c1393ac998e87470ab53cc75e1842`
+- **SHA256:** `b189b6099e6ad190fd67e0dfa41f0adf29f75bb46d541dce6d4d4c632b58d42f`
+- **SHA256:** `a1a67fbceac6b3b840893e375da5c449d0dacb22b4a914c5ff9827d42c991758`
 
 ## MITRE ATT&CK Techniques
 
@@ -88,14 +104,14 @@ The campaign, active since at least August 2025, primarily targets Ukraine and r
 - **T1569.002** — Service Execution
 - **T1219** — Remote Access Software
 - **T1071** — Application Layer Protocol
-- **T1059.003** — Windows Command Shell
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1095** — Non-Application Layer Protocol
-- **T1189** — Drive-by Compromise
 - **T1583.001** — Acquire Infrastructure: Domains
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1555.003** — Credentials from Password Stores: Credentials from Web Browsers
 - **T1005** — Data from Local System
-- **T1119** — Automated Collection
-- **T1036** — Masquerading
+- **T1113** — Screen Capture
 
 ## Kill chain phases observed
 
@@ -103,144 +119,94 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] GREYVIBE fake-CAPTCHA ClickFix: explorer→powershell from Run dialog
+### [LLM] GREYVIBE C2 egress: connections to PhantomRelay/LegionRelay infrastructure
 
-`UC_1_12` · phase: **delivery** · confidence: **High**
+`UC_2_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="explorer.exe" (Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe","cmd.exe")) (Processes.process IN ("*iex*","*Invoke-Expression*","*DownloadString*","*IWR *","*Invoke-WebRequest*","*curl *","*-EncodedCommand*","*FromBase64String*","*WebClient*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Network_Traffic.app) as app values(Network_Traffic.dest_port) as dest_port from datamodel=Network_Traffic where Network_Traffic.dest in ("188.124.59.120","193.233.23.81","89.37.185.60","74.112.102.120","194.87.128.243","194.87.108.110","89.125.189.118","89.125.189.85") by Network_Traffic.src Network_Traffic.dest Network_Traffic.user host | `drop_dm_object_name(Network_Traffic)` | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where Network_Resolution.DNS.query IN ("frontforce.org","lapas.live","zoomconference.click","zoomconference.app","strip-mens.tilda.ws","princess-mens.fun","princess-mens-club.com","princess-mens.click","*.princess-mens.fun","*.princess-mens-club.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)`] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName =~ "explorer.exe"
-| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe","cmd.exe")
-| where ProcessCommandLine has_any ("IEX","Invoke-Expression","DownloadString","Invoke-WebRequest","IWR ","-EncodedCommand","FromBase64String","WebClient","curl ","mshta http","mshta hxxp")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### [LLM] GREYVIBE C2 callback to known PhantomRelay / FallSpy IPs
-
-`UC_1_13` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("89.37.185.60","74.112.102.120","194.87.128.243","194.87.108.110","89.125.189.118","89.125.189.85","91.149.221.124") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let GreyvibeIPs = dynamic(["89.37.185.60","74.112.102.120","194.87.128.243","194.87.108.110","89.125.189.118","89.125.189.85","91.149.221.124"]);
+let GreyvibeIPs = dynamic(["188.124.59.120","193.233.23.81","89.37.185.60","74.112.102.120","194.87.128.243","194.87.108.110","89.125.189.118","89.125.189.85"]);
+let GreyvibeDoms = dynamic(["frontforce.org","lapas.live","zoomconference.click","zoomconference.app","strip-mens.tilda.ws","princess-mens.fun","princess-mens-club.com","princess-mens.click"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP in (GreyvibeIPs)
-| project Timestamp, DeviceName, RemoteIP, RemotePort, Protocol, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+   or RemoteUrl has_any (GreyvibeDoms)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, Protocol
 | order by Timestamp desc
 ```
 
-### [LLM] GREYVIBE adult-club & Zoom lure domain resolution
+### [LLM] GREYVIBE sample hashes (PhantomRelay/LegionRelay/DAYLIGHT/TEASOUP) on disk or executed
 
-`UC_1_14` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("lapas.live","zoomconference.click","zoomconference.app","princess-mens.fun","princess-mens-club.com","princess-mens.click","princessclub.click","princessclub.best") OR DNS.query="*.princess-mens.fun" OR DNS.query="*.princessclub.best" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let LureDomains = dynamic(["lapas.live","zoomconference.click","zoomconference.app","princess-mens.fun","princess-mens-club.com","princess-mens.click","princessclub.click","princessclub.best"]);
-let LureRegex = @"(?i)(lapas\.live|zoomconference\.(click|app)|princess-mens(-club)?\.(fun|com|click)|princessclub\.(click|best))";
-union isfuzzy=true
-(DeviceNetworkEvents
-    | where Timestamp > ago(30d)
-    | where RemoteUrl matches regex LureRegex
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, RemoteUrl, RemoteIP, InitiatingProcessFileName, Source="DeviceNetworkEvents"),
-(UrlClickEvents
-    | where Timestamp > ago(30d)
-    | where Url matches regex LureRegex
-    | project Timestamp, DeviceName="", AccountName=AccountUpn, RemoteUrl=Url, RemoteIP=IPAddress, InitiatingProcessFileName="", Source="UrlClickEvents"),
-(EmailUrlInfo
-    | where Timestamp > ago(30d)
-    | where Url matches regex LureRegex
-    | project Timestamp, DeviceName="", AccountName="", RemoteUrl=Url, RemoteIP="", InitiatingProcessFileName="", Source="EmailUrlInfo")
-| order by Timestamp desc
-```
-
-### [LLM] LegionRelay PowerShell collecting Telegram/Signal messaging data
-
-`UC_1_15` · phase: **actions** · confidence: **High**
+`UC_2_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("powershell.exe","pwsh.exe") (Filesystem.file_path="*\\Telegram Desktop\\tdata\\*" OR Filesystem.file_path="*\\Signal\\sql\\*" OR Filesystem.file_path="*\\Signal\\attachments.noindex\\*" OR Filesystem.file_path="*\\AppData\\Roaming\\Telegram Desktop\\*") by Filesystem.dest Filesystem.user Filesystem.process_name | where count > 5 | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe")
-| where FolderPath has_any ("\\Telegram Desktop\\tdata\\","\\AppData\\Roaming\\Telegram Desktop\\","\\Signal\\sql\\","\\Signal\\attachments.noindex\\","\\AppData\\Roaming\\Signal\\")
-| where ActionType in ("FileCreated","FileModified","FileRenamed","FileOpened")
-| summarize FileCount=dcount(FolderPath), Files=make_set(FolderPath, 25), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine, InitiatingProcessId
-| where FileCount > 3
-| order by LastSeen desc
-```
-
-### [LLM] PhantomRelay PowerShell WebSocket C2
-
-`UC_1_16` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe") (Processes.process="*ClientWebSocket*" OR Processes.process="*System.Net.WebSockets*" OR Processes.process="*ws://*" OR Processes.process="*wss://*" OR Processes.process="*MemoryStream*WebSocket*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("powershell.exe","pwsh.exe")
-| where ProcessCommandLine has_any ("ClientWebSocket","System.Net.WebSockets","ws://","wss://","WebSocketCreate")
-| where InitiatingProcessFileName !in~ ("devenv.exe","code.exe","vsdbg.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc
-```
-
-### [LLM] Archive from Google Drive followed by decoy doc + loader execution
-
-`UC_1_17` · phase: **delivery** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("winrar.exe","7zg.exe","7zfm.exe","explorer.exe") (Processes.process_path="*\\Downloads\\*" OR Processes.process_path="*\\Temp\\*") (Processes.process_name IN ("powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","cmd.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_hash IN ("476334f9254ef0277b3462b6086655f38358a983b95991cfe4dcdd787740906a","78773eb9738bc3306a56bf39adc8212226479c24af8bf453be9d57103a91a904","62b585f36d4b14fa1e036feed692267aa098e7fc6cabb468a07997a025309299","d60dd96ef92b43e2e4f955dd76448fc320c3f8445b661d9a4a3c40caca0aa8a5","687629ca9dc5b9b4bdf6c06fb1405449638b905f3a0c08bccac1c519ef22964d","8a7401444dd7c85b36ff7b1d0b36c5953692ef32dbeac7642fb7c1034bd8a726","e81af6ae6862d905d8634a1f6e0a8893ba28e3ce61d12ccac020ef6fae802e8b","93111e523c38d98247a78a0d1d9ae163e9874acb70721f6fe0bf451c62fff283") by Processes.dest Processes.user Processes.process_name Processes.process_hash | `drop_dm_object_name(Processes)` | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("476334f9254ef0277b3462b6086655f38358a983b95991cfe4dcdd787740906a","78773eb9738bc3306a56bf39adc8212226479c24af8bf453be9d57103a91a904","62b585f36d4b14fa1e036feed692267aa098e7fc6cabb468a07997a025309299","d60dd96ef92b43e2e4f955dd76448fc320c3f8445b661d9a4a3c40caca0aa8a5","687629ca9dc5b9b4bdf6c06fb1405449638b905f3a0c08bccac1c519ef22964d","8a7401444dd7c85b36ff7b1d0b36c5953692ef32dbeac7642fb7c1034bd8a726","e81af6ae6862d905d8634a1f6e0a8893ba28e3ce61d12ccac020ef6fae802e8b","93111e523c38d98247a78a0d1d9ae163e9874acb70721f6fe0bf451c62fff283") by Filesystem.dest Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)`] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 let GreyvibeHashes = dynamic(["476334f9254ef0277b3462b6086655f38358a983b95991cfe4dcdd787740906a","78773eb9738bc3306a56bf39adc8212226479c24af8bf453be9d57103a91a904","62b585f36d4b14fa1e036feed692267aa098e7fc6cabb468a07997a025309299","d60dd96ef92b43e2e4f955dd76448fc320c3f8445b661d9a4a3c40caca0aa8a5","687629ca9dc5b9b4bdf6c06fb1405449638b905f3a0c08bccac1c519ef22964d","8a7401444dd7c85b36ff7b1d0b36c5953692ef32dbeac7642fb7c1034bd8a726","e81af6ae6862d905d8634a1f6e0a8893ba28e3ce61d12ccac020ef6fae802e8b","93111e523c38d98247a78a0d1d9ae163e9874acb70721f6fe0bf451c62fff283"]);
-let ArchiveDrops = DeviceFileEvents
-    | where Timestamp > ago(7d)
-    | where FileName endswith ".zip" or FileName endswith ".rar" or FileName endswith ".7z" or FileName endswith ".iso"
-    | where FileOriginUrl has_any ("drive.google.com","drive.usercontent.google.com","docs.google.com")
-    | project DropTime=Timestamp, DeviceName, ArchiveFolder=FolderPath, ArchiveFile=FileName, DownloadUrl=FileOriginUrl;
-let SuspiciousChildren = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where InitiatingProcessFileName in~ ("winrar.exe","7zg.exe","7zfm.exe","explorer.exe")
-    | where FileName in~ ("powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","cmd.exe")
-        or SHA256 in (GreyvibeHashes)
-    | project ProcTime=Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, SHA256;
-ArchiveDrops
-| join kind=inner SuspiciousChildren on DeviceName
-| where ProcTime between (DropTime .. DropTime + 30m)
-| project DropTime, ProcTime, DelayMin=datetime_diff("minute", ProcTime, DropTime), DeviceName, AccountName, ArchiveFile, DownloadUrl, FileName, ProcessCommandLine, SHA256
-| order by ProcTime desc
+union
+  (DeviceProcessEvents
+     | where Timestamp > ago(30d)
+     | where SHA256 in (GreyvibeHashes)
+     | project Timestamp, DeviceName, AccountName, FolderPath, FileName, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, Source="DeviceProcessEvents"),
+  (DeviceFileEvents
+     | where Timestamp > ago(30d)
+     | where SHA256 in (GreyvibeHashes)
+     | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FolderPath, FileName, ProcessCommandLine=InitiatingProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, Source="DeviceFileEvents")
+| order by Timestamp desc
+```
+
+### [LLM] GREYVIBE fake-CAPTCHA ClickFix: browser/Run-dialog -> PowerShell with paste-execute payload
+
+`UC_2_14` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("explorer.exe","chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe") Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe") (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*" OR Processes.process="*DownloadString*" OR Processes.process="*Invoke-WebRequest*" OR Processes.process="*IWR *" OR Processes.process="*FromBase64String*" OR Processes.process="*WebClient*" OR Processes.process="*curl *" OR Processes.process="*certutil*" OR Processes.process="*-EncodedCommand*" OR Processes.process="*captcha*" OR Processes.process="*verification*" OR Processes.process="*Verify*" OR Processes.process="*frontforce.org*" OR Processes.process="*lapas.live*" OR Processes.process="*zoomconference.click*" OR Processes.process="*zoomconference.app*" OR Processes.process="*princess-mens*" OR Processes.process="*strip-mens*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let SuspectCmd = dynamic(["iex","invoke-expression","downloadstring","invoke-webrequest","iwr ","frombase64string","webclient","-encodedcommand","-enc ","-ec ","certutil -urlcache","curl ","bitsadmin","captcha","verification","verify","i'm not a robot","cloudflare","frontforce.org","lapas.live","zoomconference.click","zoomconference.app","princess-mens","strip-mens"]);
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("explorer.exe","chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe")
+| where ProcessCommandLine has_any (SuspectCmd)
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] LegionRelay/PhantomRelay PowerShell RAT collection: Telegram/WhatsApp/browser credential access
+
+`UC_2_15` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("powershell.exe","pwsh.exe") (Filesystem.file_path="*\\Telegram Desktop\\tdata\\*" OR Filesystem.file_path="*\\WhatsApp\\*" OR Filesystem.file_path="*\\Local State*" OR Filesystem.file_path="*\\Login Data*" OR Filesystem.file_path="*\\Cookies*" OR Filesystem.file_path="*\\Web Data*" OR Filesystem.file_name="key_datas" OR Filesystem.file_name="D877F783D5D3EF8C*") by Filesystem.dest Filesystem.user host span=10m | `drop_dm_object_name(Filesystem)` | where count >= 3 | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let SensitivePaths = dynamic([@"\Telegram Desktop\tdata", @"\WhatsApp\", @"\WhatsApp Web", @"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\BraveSoftware\Brave-Browser\User Data\", @"\Mozilla\Firefox\Profiles\"]);
+let SensitiveFiles = dynamic(["Login Data","Cookies","Local State","Web Data","key_datas","logins.json","key4.db","places.sqlite"]);
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe")
+| where FolderPath has_any (SensitivePaths) or FileName in~ (SensitiveFiles) or FolderPath has @"\Telegram Desktop\tdata\"
+| where InitiatingProcessAccountName !endswith "$"
+| summarize PathsTouched = dcount(FolderPath), SampleFiles = make_set(strcat(FolderPath, "\\", FileName), 25), Cmds = make_set(InitiatingProcessCommandLine, 5), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, bin(Timestamp, 15m)
+| where PathsTouched >= 3
+| order by LastSeen desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -592,12 +558,12 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `89.37.185.60`, `74.112.102.120`, `194.87.128.243`, `194.87.108.110`, `89.125.189.118`, `89.125.189.85`, `91.149.221.124`, `lapas.live` _(+29 more)_
+  - IP / domain IOC(s): `188.124.59.120`, `193.233.23.81`, `89.37.185.60`, `74.112.102.120`, `194.87.128.243`, `194.87.108.110`, `89.125.189.118`, `89.125.189.85` _(+31 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `476334f9254ef0277b3462b6086655f38358a983b95991cfe4dcdd787740906a`, `78773eb9738bc3306a56bf39adc8212226479c24af8bf453be9d57103a91a904`, `62b585f36d4b14fa1e036feed692267aa098e7fc6cabb468a07997a025309299`, `d60dd96ef92b43e2e4f955dd76448fc320c3f8445b661d9a4a3c40caca0aa8a5`, `687629ca9dc5b9b4bdf6c06fb1405449638b905f3a0c08bccac1c519ef22964d`, `8a7401444dd7c85b36ff7b1d0b36c5953692ef32dbeac7642fb7c1034bd8a726`, `e81af6ae6862d905d8634a1f6e0a8893ba28e3ce61d12ccac020ef6fae802e8b`, `93111e523c38d98247a78a0d1d9ae163e9874acb70721f6fe0bf451c62fff283` _(+4 more)_
+  - file hash IOC(s): `476334f9254ef0277b3462b6086655f38358a983b95991cfe4dcdd787740906a`, `78773eb9738bc3306a56bf39adc8212226479c24af8bf453be9d57103a91a904`, `62b585f36d4b14fa1e036feed692267aa098e7fc6cabb468a07997a025309299`, `d60dd96ef92b43e2e4f955dd76448fc320c3f8445b661d9a4a3c40caca0aa8a5`, `687629ca9dc5b9b4bdf6c06fb1405449638b905f3a0c08bccac1c519ef22964d`, `8a7401444dd7c85b36ff7b1d0b36c5953692ef32dbeac7642fb7c1034bd8a726`, `e81af6ae6862d905d8634a1f6e0a8893ba28e3ce61d12ccac020ef6fae802e8b`, `93111e523c38d98247a78a0d1d9ae163e9874acb70721f6fe0bf451c62fff283` _(+22 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 18 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

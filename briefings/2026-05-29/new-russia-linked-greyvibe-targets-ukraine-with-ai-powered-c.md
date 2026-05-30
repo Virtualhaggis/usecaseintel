@@ -1,4 +1,4 @@
-# [CRIT] New Russian-Linked GREYVIBE Targets Ukraine with AI-Powered Cyberattacks
+# [CRIT] New Russia-Linked GREYVIBE Targets Ukraine with AI-Powered Cyberattacks
 
 **Source:** The Hacker News
 **Published:** 2026-05-29

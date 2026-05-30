@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Can Snyk Detect JWT Security Issues?
 
-`UC_956_0` · phase: **exploit** · confidence: **High**
+`UC_955_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

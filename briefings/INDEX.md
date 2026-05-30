@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1251 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,7 +11,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-30
 - [greyvibe hackers leverage chatgpt and google gemini to fuel ](./2026-05-30/greyvibe-hackers-leverage-chatgpt-and-google-gemini-to-fuel-.md)
 - [malicious npm packages abuse dependency confusion to profile](./2026-05-30/malicious-npm-packages-abuse-dependency-confusion-to-profile.md)
-- [palo alto networks pan os authentication vulnerability bypas](./2026-05-30/palo-alto-networks-pan-os-authentication-vulnerability-bypas.md)
+- [pan os globalprotect authentication bypass cve 2026 0257 und](./2026-05-30/pan-os-globalprotect-authentication-bypass-cve-2026-0257-und.md)
 
 ## 2026-05-29
 - [attackers abuse trusted developer tooling to exfiltrate sour](./2026-05-29/attackers-abuse-trusted-developer-tooling-to-exfiltrate-sour.md)
@@ -39,7 +39,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [malicious nuget package as sicoob sdk exfiltrates banking pa](./2026-05-29/malicious-nuget-package-as-sicoob-sdk-exfiltrates-banking-pa.md)
 - [malicious sicoob nuget steals banking credentials as npm pac](./2026-05-29/malicious-sicoob-nuget-steals-banking-credentials-as-npm-pac.md)
 - [microsoft is named a leader in the 2026 gartner magic quadra](./2026-05-29/microsoft-is-named-a-leader-in-the-2026-gartner-magic-quadra.md)
-- [new russian linked greyvibe targets ukraine with ai powered ](./2026-05-29/new-russian-linked-greyvibe-targets-ukraine-with-ai-powered-.md)
+- [new russia linked greyvibe targets ukraine with ai powered c](./2026-05-29/new-russia-linked-greyvibe-targets-ukraine-with-ai-powered-c.md)
 - [ransomware uses system scheduled task to encrypt local drive](./2026-05-29/ransomware-uses-system-scheduled-task-to-encrypt-local-drive.md)
 - [typosquatted npm packages steal cloud and ci cd secrets from](./2026-05-29/typosquatted-npm-packages-steal-cloud-and-ci-cd-secrets-from.md)
 - [typosquatted npm packages used to steal cloud and ci cd secr](./2026-05-29/typosquatted-npm-packages-used-to-steal-cloud-and-ci-cd-secr.md)
@@ -132,7 +132,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46633 twig php code injection via use](./2026-05-21/ghsa-critical-cve-2026-46633-twig-php-code-injection-via-use.md)
 - [ghsa critical cve 2026 46703 boxlite path traversal vulnerab](./2026-05-21/ghsa-critical-cve-2026-46703-boxlite-path-traversal-vulnerab.md)
 - [ghsa critical ghsa q2f7 m237 v562 hulumi policies github oid](./2026-05-21/ghsa-critical-ghsa-q2f7-m237-v562-hulumi-policies-github-oid.md)
-- [github internal repositories breached via malicious nx conso](./2026-05-21/github-internal-repositories-breached-via-malicious-nx-conso.md)
 - [securing the ai revolution how snyk and our partners are sca](./2026-05-21/securing-the-ai-revolution-how-snyk-and-our-partners-are-sca.md)
 - [showboat linux malware hits middle east telecom with socks5 ](./2026-05-21/showboat-linux-malware-hits-middle-east-telecom-with-socks5-.md)
 - [the art of being ungovernable](./2026-05-21/the-art-of-being-ungovernable.md)
