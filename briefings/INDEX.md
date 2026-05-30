@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1251 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-05-30
+- [greyvibe hackers leverage chatgpt and google gemini to fuel ](./2026-05-30/greyvibe-hackers-leverage-chatgpt-and-google-gemini-to-fuel-.md)
 - [malicious npm packages abuse dependency confusion to profile](./2026-05-30/malicious-npm-packages-abuse-dependency-confusion-to-profile.md)
 - [palo alto networks pan os authentication vulnerability bypas](./2026-05-30/palo-alto-networks-pan-os-authentication-vulnerability-bypas.md)
 
@@ -32,15 +33,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47407 praisonai platform has a cross ](./2026-05-29/ghsa-critical-cve-2026-47407-praisonai-platform-has-a-cross-.md)
 - [ghsa critical cve 2026 47410 praisonai platform jwt signing ](./2026-05-29/ghsa-critical-cve-2026-47410-praisonai-platform-jwt-signing-.md)
 - [ghsa critical cve 2026 47416 praisonai platform any workspac](./2026-05-29/ghsa-critical-cve-2026-47416-praisonai-platform-any-workspac.md)
-- [hackers use fake adobe document cloud pages to deliver scree](./2026-05-29/hackers-use-fake-adobe-document-cloud-pages-to-deliver-scree.md)
-- [hackers use fake video player updates to deploy miner and ra](./2026-05-29/hackers-use-fake-video-player-updates-to-deploy-miner-and-ra.md)
 - [how relay network adopted ai coding securely and built the f](./2026-05-29/how-relay-network-adopted-ai-coding-securely-and-built-the-f.md)
 - [jinx 0164 threat actor using linkedin social engineering to ](./2026-05-29/jinx-0164-threat-actor-using-linkedin-social-engineering-to-.md)
 - [kimsuky deploys httpspy expands arsenal with hellodoor and v](./2026-05-29/kimsuky-deploys-httpspy-expands-arsenal-with-hellodoor-and-v.md)
 - [malicious nuget package as sicoob sdk exfiltrates banking pa](./2026-05-29/malicious-nuget-package-as-sicoob-sdk-exfiltrates-banking-pa.md)
 - [malicious sicoob nuget steals banking credentials as npm pac](./2026-05-29/malicious-sicoob-nuget-steals-banking-credentials-as-npm-pac.md)
 - [microsoft is named a leader in the 2026 gartner magic quadra](./2026-05-29/microsoft-is-named-a-leader-in-the-2026-gartner-magic-quadra.md)
-- [new chatgpt vulnerability lets attackers turn web pages into](./2026-05-29/new-chatgpt-vulnerability-lets-attackers-turn-web-pages-into.md)
 - [new russian linked greyvibe targets ukraine with ai powered ](./2026-05-29/new-russian-linked-greyvibe-targets-ukraine-with-ai-powered-.md)
 - [ransomware uses system scheduled task to encrypt local drive](./2026-05-29/ransomware-uses-system-scheduled-task-to-encrypt-local-drive.md)
 - [typosquatted npm packages steal cloud and ci cd secrets from](./2026-05-29/typosquatted-npm-packages-steal-cloud-and-ci-cd-secrets-from.md)
