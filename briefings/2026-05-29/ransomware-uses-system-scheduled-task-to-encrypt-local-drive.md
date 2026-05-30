@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] The Gentlemen ransomware 'gentlemen_system' SYSTEM scheduled task creation
 
-`UC_27_12` · phase: **install** · confidence: **High**
+`UC_28_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceProcessEvents
 
 ### [LLM] The Gentlemen ransomware UpdateSystem/UpdateUser persistence scheduled tasks
 
-`UC_27_13` · phase: **install** · confidence: **High**
+`UC_28_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceProcessEvents
 
 ### [LLM] The Gentlemen ransomware GupdateS/GupdateU autorun registry persistence
 
-`UC_27_14` · phase: **install** · confidence: **High**
+`UC_28_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceRegistryEvents
 
 ### [LLM] The Gentlemen ransomware .umc16h extension and README-GENTLEMEN.txt drops
 
-`UC_27_15` · phase: **actions** · confidence: **High**
+`UC_28_15` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ DeviceFileEvents
 
 ### [LLM] The Gentlemen ransomware PsExec staging at C:\Temp\psexec.exe for lateral movement
 
-`UC_27_16` · phase: **actions** · confidence: **High**
+`UC_28_16` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -175,7 +175,7 @@ PsExecAtTemp
 
 ### [LLM] The Gentlemen ransomware encryptor SHA256 hash execution
 
-`UC_27_17` · phase: **install** · confidence: **High**
+`UC_28_17` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -557,7 +557,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Ransomware Uses SYSTEM Scheduled Task to Encrypt Local Drives With Elevated Priv
 
-`UC_27_11` · phase: **exploit** · confidence: **High**
+`UC_28_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,705 +1,3 @@
-<article class="card" id="art-41" data-art-slug="2026-05-29-charter-communications-data-breach-affects-4-9-million-accou"
-  data-phases="actions,c2,delivery,exploit,install" data-sev="high"
-  data-techs="T1190,T1566"
-  data-sources="BleepingComputer"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint,network,web"
-  data-targets="azure,m365,windows"
-  data-uc-count="7" data-llm-uc-count="4"
-  data-search="Charter Communications data breach affects 4.9 million accounts The ShinyHunters extortion gang stole personal information from 4.9 million accounts after hacking the U.S. telecom giant Charter Communications in early April, according to data breach notification service Have I Been Pwned. [...]  T1190 T1566 [LLM] Vishing-induced Entra ID sign-in from new location/IP after employee call [LLM] OAuth consent granted to look-alike Salesforce/Data-Loader app from compromised employee [LLM] Salesforce Bulk/REST API mass-export volume burst from newly-consented app [LLM] ShinyHunters leak-site Charter URI checked from corporate browsing Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2026-05-29-charter-communications-data-breach-affects-4-9-million-accou" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.bleepingcomputer.com/news/security/charter-communications-data-breach-affects-49-million-accounts/" target="_blank" rel="noopener">Charter Communications data breach affects 4.9 million accounts</a></h2>
-  <div class="source-badges"><span class="source-badge bc">BleepingComputer</span></div>
-  <div class="pubmeta">
-    <span>2026-05-29</span>
-    <span>7 use cases</span>
-    <span>2 techniques</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">The ShinyHunters extortion gang stole personal information from 4.9 million accounts after hacking the U.S. telecom giant Charter Communications in early April, according to data breach notification service Have I Been Pwned. [...]</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Phishing">T1566</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-41-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-41"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-41-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Vishing-induced Entra ID sign-in from new location/IP after employee call · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Office app spawning script/LOLBin child process</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] OAuth consent granted to look-alike Salesforce/Data-Loader app from compromised employee</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] ShinyHunters leak-site Charter URI checked from corporate browsing</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Salesforce Bulk/REST API mass-export volume burst from newly-consented app</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="fab4d59c5d" data-platforms="datadog,def,falcon,sent,spl" data-targets="azure" open>
-  <summary>
-    <span class="uc-title">[LLM] Vishing-induced Entra ID sign-in from new location/IP after employee call</span>
-    <span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="fab4d59c5d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts for an Entra ID interactive sign-in following the ShinyHunters vishing pattern that compromised the Charter employee: a successful auth from an IP/ASN/country never seen for that user, often using legacy MFA flows the actor walked the victim through on the phone. Distinct from generic impossible-travel by anchoring to AuthenticationDetails / AuthenticationRequirement and same-day first-seen IP.
-
-Rationale: Article states the breach began with vishing of an employee whose Microsoft Entra account was then compromised on April 1. Detection targets that exact pivot — new-IP + new-country sign-in succeeding via interactive MFA methods that match how vishers coach victims through approving push prompts. Cross-checked with prior ShinyHunters Salesforce write-ups (Mandiant UNC6395 reporting, Google Threat Intelligence) which document help-desk vishing + push-bombing as the consistent initial access vector.
-
-Cross-checked against:
-  • https://cloud.google.com/blog/topics/threat-intelligence/voice-phishing-data-extortion
-  • https://attack.mitre.org/techniques/T1566/004/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Phishing: Spearphishing Voice">T1566.004</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-41-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-41-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-41-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-41-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-41-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-41-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let lookback = 30d;
-let recent = 24h;
-let KnownIPs = AADSignInEventsBeta
-    | where Timestamp between (ago(lookback) .. ago(recent))
-    | where ErrorCode == 0
-    | summarize by AccountUpn, IPAddress;
-let KnownCountries = AADSignInEventsBeta
-    | where Timestamp between (ago(lookback) .. ago(recent))
-    | where ErrorCode == 0
-    | summarize by AccountUpn, Country;
-AADSignInEventsBeta
-| where Timestamp &gt; ago(recent)
-| where ErrorCode == 0
-| where IsInteractive == true
-| where isnotempty(AccountUpn)
-| join kind=leftanti KnownIPs on AccountUpn, IPAddress
-| join kind=leftanti KnownCountries on AccountUpn, Country
-| extend AuthMethods = tostring(AuthenticationDetails)
-| where AuthMethods has_any (&quot;Mobile app notification&quot;,&quot;Phone call&quot;,&quot;Text&quot;,&quot;SMS&quot;)
-| project Timestamp, AccountUpn, IPAddress, Country, City, UserAgent, ClientAppUsed, Application, RiskLevelDuringSignIn, ConditionalAccessStatus, AuthMethods
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-41-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let lookback = 30d;
-let recent = 24h;
-let KnownIPs = SigninLogs
-    | where TimeGenerated between (ago(lookback) .. ago(recent))
-    | where ResultType == 0
-    | summarize by UserPrincipalName, IPAddress;
-let KnownCountries = SigninLogs
-    | where TimeGenerated between (ago(lookback) .. ago(recent))
-    | where ResultType == 0
-    | extend Country = tostring(LocationDetails.countryOrRegion)
-    | summarize by UserPrincipalName, Country;
-SigninLogs
-| where TimeGenerated &gt; ago(recent)
-| where ResultType == 0
-| where IsInteractive == true
-| extend Country = tostring(LocationDetails.countryOrRegion)
-| join kind=leftanti KnownIPs on UserPrincipalName, IPAddress
-| join kind=leftanti KnownCountries on UserPrincipalName, Country
-| extend AuthMethods = tostring(AuthenticationDetails)
-| where AuthMethods has_any (&quot;Mobile app notification&quot;,&quot;Phone call&quot;,&quot;Text&quot;,&quot;SMS&quot;)
-| project TimeGenerated, UserPrincipalName, IPAddress, Country, UserAgent, ClientAppUsed, AppDisplayName, RiskLevelDuringSignIn, ConditionalAccessStatus, AuthMethods
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-41-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:azure.activeDirectory @evt.name:&quot;Sign-in activity&quot; @properties.status.errorCode:0 @properties.isInteractive:true (@properties.authenticationDetails:*&quot;Mobile app notification&quot;* OR @properties.authenticationDetails:*&quot;Phone call&quot;* OR @properties.authenticationDetails:*&quot;Text&quot;*)</code></pre></div>
-    <div class="tab-content" id="art-41-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=UserLogon LogonType=10 OR LogonType=2
-| AuthenticationPackage=/(Negotiate|Kerberos)/i
-| groupBy([UserName, RemoteAddressIP4, ComputerName], function=[count(), min(_time)])
-| count &gt; 0</code></pre></div>
-    <div class="tab-content" id="art-41-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-41-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-41-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-41-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.action=success Authentication.signature_id=&quot;AAD-Interactive&quot; by Authentication.user Authentication.src Authentication.src_country Authentication.app | `drop_dm_object_name(Authentication)` | eval recent=if(firstTime&gt;=relative_time(now(),&quot;-7d&quot;),1,0) | where recent=1 | join type=left user [| tstats summariesonly=true dc(src_country) as historic_countries min(_time) as historic_first from datamodel=Authentication where Authentication.action=success earliest=-90d@d latest=-7d@d by Authentication.user | `drop_dm_object_name(Authentication)`] | where isnull(historic_countries) OR historic_countries&lt;=2 | table firstTime user src src_country app</code></pre><pre class="spl-mode-body" id="art-41-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.action=success Authentication.signature_id=&quot;AAD-Interactive&quot; by Authentication.user Authentication.src Authentication.src_country Authentication.app | `drop_dm_object_name(Authentication)` | eval recent=if(firstTime&gt;=relative_time(now(),&quot;-7d&quot;),1,0) | where recent=1 | join type=left user [| tstats summariesonly=false dc(src_country) as historic_countries min(_time) as historic_first from datamodel=Authentication where Authentication.action=success earliest=-90d@d latest=-7d@d by Authentication.user | `drop_dm_object_name(Authentication)`] | where isnull(historic_countries) OR historic_countries&lt;=2 | table firstTime user src src_country app</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="cf9979b461" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="azure">
-  <summary>
-    <span class="uc-title">[LLM] OAuth consent granted to look-alike Salesforce/Data-Loader app from compromised employee</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="cf9979b461" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">ShinyHunters&#x27; Salesforce campaign hinges on tricking the vished employee into granting OAuth consent to a connected app masquerading as &#x27;Salesforce Data Loader&#x27; or &#x27;My Ticket Portal&#x27;. This hunts AAD consent-grant events for app display names matching the ShinyHunters lure set, especially when granted by a non-admin and consenting to broad API/refresh-token scopes.
-
-Rationale: ShinyHunters&#x27; Salesforce-centric campaign (2024-2025) is documented by Google Mandiant (UNC6240/UNC6395) and Salesforce themselves as using lookalike OAuth apps named &#x27;Salesforce Inc. Data Loader&#x27; or &#x27;My Ticket Portal&#x27; to grant the actor API access without needing the victim&#x27;s password again. The Charter article confirms the same actor + Salesforce data theft pattern, so this is the highest-fidelity pivot specific to this campaign — far more specific than generic &#x27;illicit consent grant&#x27; rules.
-
-Cross-checked against:
-  • https://cloud.google.com/blog/topics/threat-intelligence/voice-phishing-data-extortion
-  • https://www.salesforce.com/blog/protect-against-social-engineering/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.Account_Management</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-41-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-41-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-41-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-41-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-41-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-41-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-41-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let LureApps = dynamic([&quot;Salesforce Inc. Data Loader&quot;,&quot;Data Loader&quot;,&quot;My Ticket Portal&quot;,&quot;Salesforce Data Loader&quot;,&quot;Salesforce CLI&quot;]);
-CloudAppEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;Consent to application.&quot;,&quot;Add delegated permission grant.&quot;,&quot;Add OAuth2PermissionGrant.&quot;)
-| extend AppName = tostring(parse_json(tostring(RawEventData)).ModifiedProperties[0].NewValue)
-| extend TargetApp = tostring(ObjectName)
-| where TargetApp has_any (LureApps) or AppName has_any (LureApps)
-   or TargetApp matches regex @&quot;(?i)(data\s?loader|salesforce.*data|my\s?ticket\s?portal)&quot;
-| extend Consenter = AccountDisplayName, ConsenterUpn = tostring(parse_json(tostring(RawEventData)).UserId)
-| project Timestamp, Consenter, ConsenterUpn, TargetApp, AppName, IPAddress, UserAgent, CountryCode, IsAdminOperation, ActionType
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-41-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let LureApps = dynamic([&quot;Salesforce Inc. Data Loader&quot;,&quot;Data Loader&quot;,&quot;My Ticket Portal&quot;,&quot;Salesforce Data Loader&quot;,&quot;Salesforce CLI&quot;]);
-AuditLogs
-| where TimeGenerated &gt; ago(30d)
-| where OperationName in (&quot;Consent to application&quot;,&quot;Add delegated permission grant&quot;,&quot;Add OAuth2PermissionGrant&quot;,&quot;Add app role assignment grant to user&quot;)
-| extend TargetApp = tostring(TargetResources[0].displayName)
-| extend ConsenterUpn = tostring(InitiatedBy.user.userPrincipalName)
-| extend ConsenterIp = tostring(InitiatedBy.user.ipAddress)
-| extend ModProps = TargetResources[0].modifiedProperties
-| where TargetApp has_any (LureApps)
-   or tostring(ModProps) has_any (LureApps)
-   or TargetApp matches regex &quot;(?i)(data ?loader|salesforce.*data|my ?ticket ?portal)&quot;
-| project TimeGenerated, ConsenterUpn, ConsenterIp, TargetApp, OperationName, ModProps, Result
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-41-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: ShinyHunters Salesforce Data Loader OAuth Consent
-id: 3c2a9d18-7e4b-4f6c-b1e3-2a8d0c4f1b21
-description: Detects user consent to OAuth apps with display names matching the ShinyHunters Salesforce vishing campaign lure set (Data Loader / My Ticket Portal masquerades).
-references:
-  - https://www.bleepingcomputer.com/news/security/charter-communications-data-breach-affects-49-million-accounts/
-  - https://cloud.google.com/blog/topics/threat-intelligence/voice-phishing-data-extortion
-author: SOC Detection Engineering
-date: 2026/05/29
-tags:
-  - attack.t1528
-  - attack.t1550.001
-  - attack.initial_access
-logsource:
-  product: azure
-  service: auditlogs
-detection:
-  selection:
-    OperationName:
-      - &#x27;Consent to application&#x27;
-      - &#x27;Add delegated permission grant&#x27;
-      - &#x27;Add OAuth2PermissionGrant&#x27;
-    TargetResources|contains:
-      - &#x27;Data Loader&#x27;
-      - &#x27;My Ticket Portal&#x27;
-      - &#x27;Salesforce Inc. Data Loader&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-41-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:azure.activeDirectory @evt.name:(&quot;Consent to application&quot; OR &quot;Add delegated permission grant&quot; OR &quot;Add OAuth2PermissionGrant&quot;) (@properties.targetResources.displayName:*&quot;Data Loader&quot;* OR @properties.targetResources.displayName:*&quot;My Ticket Portal&quot;* OR @properties.targetResources.displayName:*&quot;Salesforce Inc.&quot;*)</code></pre></div>
-    <div class="tab-content" id="art-41-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=IdpAuthenticationLog OperationName=/(Consent to application|OAuth2PermissionGrant)/i
-| regex(&quot;(?i)(data ?loader|salesforce.*data|my ?ticket ?portal)&quot;, field=TargetResources)
-| groupBy([UserPrincipalName, TargetResources, IPAddress], function=[count(), min(_time)])</code></pre></div>
-    <div class="tab-content" id="art-41-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-41-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-41-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-41-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Change where Change.action=created Change.object_category=oauth_app by Change.user Change.object Change.result _time | `drop_dm_object_name(Change)` | rex field=object &quot;(?i)(?&lt;lure&gt;data\s?loader|salesforce|my\s?ticket\s?portal|salesforce\s?inc)&quot; | where isnotnull(lure) | table _time user object result lure</code></pre><pre class="spl-mode-body" id="art-41-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Change where Change.action=created Change.object_category=oauth_app by Change.user Change.object Change.result _time | `drop_dm_object_name(Change)` | rex field=object &quot;(?i)(?&lt;lure&gt;data\s?loader|salesforce|my\s?ticket\s?portal|salesforce\s?inc)&quot; | where isnotnull(lure) | table _time user object result lure</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="69b603a4a2" data-platforms="datadog,def,falcon,sent,spl" data-targets="azure">
-  <summary>
-    <span class="uc-title">[LLM] Salesforce Bulk/REST API mass-export volume burst from newly-consented app</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="69b603a4a2" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the data-exfiltration phase of the Charter/ShinyHunters Salesforce theft: a connected app or session generating an abnormal volume of REST/Bulk API queries against Account/Contact objects within a short window. Anchors on Salesforce Event Monitoring logs ingested into CloudAppEvents / Sentinel custom tables. The 42M-record claim implies sustained Bulk API jobs the EventLogFile.API record makes visible.
-
-Rationale: Article quantifies the theft as 42M records and explicitly names Charter&#x27;s Salesforce instance as the source. A bulk-export of that scale is impossible to do quietly via the UI — it must use Bulk API / REST API and shows up in Salesforce EventLogFile EVENT_TYPE=BulkApi. Cross-referenced with Salesforce&#x27;s own published guidance after the 2025 ShinyHunters wave which recommends Event Monitoring queries on EVENT_TYPE=BulkApi joined to non-baselined SOURCE_IP.
-
-Cross-checked against:
-  • https://www.salesforce.com/blog/protect-against-social-engineering/
-  • https://cloud.google.com/blog/topics/threat-intelligence/voice-phishing-data-extortion</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Cloud Storage">T1530</span> <span class="ind tech" title="Exfiltration Over Web Service">T1567</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-41-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-41-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-41-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-41-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-41-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-41-uc2-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
-| where Timestamp &gt; ago(7d)
-| where Application has &quot;Salesforce&quot;
-| where ActionType in (&quot;BulkApiRequest&quot;,&quot;RestApiRequest&quot;,&quot;ApiCall&quot;,&quot;ApiTotalUsage&quot;,&quot;BulkApi2&quot;)
-| extend Records = tolong(parse_json(tostring(RawEventData)).RowsProcessed)
-| extend Object = tostring(parse_json(tostring(RawEventData)).EntityName)
-| extend ClientName = tostring(parse_json(tostring(RawEventData)).ClientName)
-| where Object has_any (&quot;Account&quot;,&quot;Contact&quot;,&quot;Lead&quot;,&quot;Case&quot;,&quot;User&quot;)
-| summarize TotalRecords = sum(Records), Calls = count(), Objects = make_set(Object), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
-    by AccountObjectId, AccountDisplayName, ClientName, IPAddress, bin(Timestamp, 1h)
-| where TotalRecords &gt; 50000 or Calls &gt; 1000
-| order by TotalRecords desc</code></pre></div>
-    <div class="tab-content" id="art-41-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let SuspectApps = dynamic([&quot;Salesforce Inc. Data Loader&quot;,&quot;Data Loader&quot;,&quot;My Ticket Portal&quot;,&quot;Salesforce Data Loader&quot;]);
-SigninLogs
-| where TimeGenerated &gt; ago(30d)
-| where ResourceDisplayName has &quot;Salesforce&quot; or AppDisplayName has_any (SuspectApps)
-| where ResultType == 0
-| summarize SignInCount = count(), Apps = make_set(AppDisplayName), IPs = make_set(IPAddress), Countries = make_set(tostring(LocationDetails.countryOrRegion))
-    by UserPrincipalName, bin(TimeGenerated, 1h)
-| where SignInCount &gt; 50 or array_length(IPs) &gt; 5
-| order by SignInCount desc</code></pre></div>
-    <div class="tab-content" id="art-41-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:azure.activeDirectory @evt.name:&quot;Sign-in activity&quot; @properties.resourceDisplayName:*Salesforce* @properties.status.errorCode:0</code></pre></div>
-    <div class="tab-content" id="art-41-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/(my\.salesforce\.com|salesforce\.com|force\.com)/i
-| groupBy([aid, ComputerName, ContextImageFileName], function=[count(), min(_time), max(_time)])
-| count &gt; 500</code></pre></div>
-    <div class="tab-content" id="art-41-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>`salesforce_eventlogfile` EVENT_TYPE IN (&quot;API&quot;,&quot;BulkApi&quot;,&quot;BulkApi2&quot;,&quot;RestApi&quot;) | stats sum(ROWS_PROCESSED) as records dc(ENTITY_NAME) as objects values(ENTITY_NAME) as objs by USER_ID CLIENT_NAME SOURCE_IP _time span=1h | where records &gt; 50000 OR (objects&gt;=2 AND records&gt;10000) | where match(objs,&quot;(?i)(Account|Contact|Lead|Case|User)&quot;)</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="557bd9d812" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">[LLM] ShinyHunters leak-site Charter URI checked from corporate browsing</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf low">Low</span>
-    <button class="share-btn" data-share-uc="557bd9d812" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts for any corporate device contacting the ShinyHunters dark-web leak site or its clearnet mirrors after the Charter listing went up — useful both to detect employees rubbernecking (insider risk / OpSec) and to catch an attacker pivoting from the same infrastructure into the network. Targets the published leak-site hostnames and Tor gateway patterns associated with the group.
-
-Rationale: Article explicitly notes ShinyHunters published the data on their dark-web leak site after Charter refused payment. Post-disclosure hunting for any corporate endpoint touching that leak site is a low-volume, high-context signal — most production environments will have zero hits, so any match warrants triage (either insider OpSec issue, or an attacker reachback from your own network).
-
-Cross-checked against:
-  • https://www.bleepingcomputer.com/news/security/charter-communications-data-breach-affects-49-million-accounts/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Proxy: Multi-hop Proxy">T1090.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web.Web</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-41-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-41-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-41-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-41-uc3-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-41-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-41-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-41-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(14d)
-| where RemoteUrl matches regex @&quot;(?i)(shinyhunters|\.onion(\.ws|\.ly|\.cab|\.to|\.pet)?|tor2web)&quot;
-   or RemoteUrl has_any (&quot;onion.ws&quot;,&quot;onion.ly&quot;,&quot;tor2web.io&quot;,&quot;darkfailllnkf4vf&quot;,&quot;shinyhunters&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountUpn, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-41-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
-(CommonSecurityLog
-  | where TimeGenerated &gt; ago(14d)
-  | where RequestURL matches regex &quot;(?i)(shinyhunters|\\.onion(\\.ws|\\.ly|\\.cab|\\.to|\\.pet)?|tor2web)&quot;
-  | project TimeGenerated, SourceUserName, SourceIP, DestinationHostName, RequestURL, DeviceVendor),
-(DnsEvents
-  | where TimeGenerated &gt; ago(14d)
-  | where Name matches regex &quot;(?i)(shinyhunters|\\.onion|tor2web)&quot;
-  | project TimeGenerated, Computer, ClientIP, Name, QueryType)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-41-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Corporate Browsing to ShinyHunters Leak Site or Tor Gateway
-id: 9d4f1c0e-8b3a-4b62-9a17-7c2d6e8f1c44
-description: Detects HTTP/DNS access from corporate endpoints to the ShinyHunters extortion leak site or common clearnet Tor gateways (onion.ws / tor2web). Investigative signal post-Charter disclosure.
-references:
-  - https://www.bleepingcomputer.com/news/security/charter-communications-data-breach-affects-49-million-accounts/
-author: SOC Detection Engineering
-date: 2026/05/29
-tags:
-  - attack.t1071.001
-  - attack.t1090.003
-  - attack.command_and_control
-logsource:
-  category: dns
-detection:
-  selection:
-    query|re|i: &#x27;(shinyhunters|\.onion(\.ws|\.ly|\.cab|\.to|\.pet)?|tor2web)&#x27;
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-41-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>(source:zeek OR source:windows.sysmon OR source:cloudflare) (@dns.question.name:*shinyhunters* OR @dns.question.name:*onion.ws OR @dns.question.name:*tor2web* OR @http.url:*shinyhunters* OR @http.url:*onion.ws*)</code></pre></div>
-    <div class="tab-content" id="art-41-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
-| regex(&quot;(?i)(shinyhunters|\\.onion(\\.ws|\\.ly|\\.cab|\\.to|\\.pet)?|tor2web)&quot;, field=DomainName)
-| groupBy([aid, ComputerName, ContextImageFileName, DomainName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-41-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-41-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-41-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-41-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Web where Web.url IN (&quot;*shinyhunters*&quot;,&quot;*.onion*&quot;,&quot;*tor2web*&quot;,&quot;*onion.ws*&quot;,&quot;*onion.ly*&quot;) OR Web.dest IN (&quot;*shinyhunters*&quot;) by Web.src Web.user Web.url Web.http_user_agent _time | `drop_dm_object_name(Web)`</code></pre><pre class="spl-mode-body" id="art-41-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where Web.url IN (&quot;*shinyhunters*&quot;,&quot;*.onion*&quot;,&quot;*tor2web*&quot;,&quot;*onion.ws*&quot;,&quot;*onion.ly*&quot;) OR Web.dest IN (&quot;*shinyhunters*&quot;) by Web.src Web.user Web.url Web.http_user_agent _time | `drop_dm_object_name(Web)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="53a9c31d59" data-platforms="def,sent,spl" data-targets="azure,m365,windows">
-  <summary>
-    <span class="uc-title">Phishing-link click correlated to endpoint execution</span>
-    <span class="uc-phase">Delivery</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="53a9c31d59" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">User received an external email containing a URL, clicked it, and within
-60 seconds the recipient&#x27;s endpoint spawned a scripting interpreter or
-network downloader (PowerShell / cmd / mshta / curl / certutil / bitsadmin).
-This is the high-fidelity shape — a raw &quot;user clicked an emailed URL&quot;
-query is too noisy to alert on because every Microsoft 365 tenant
-generates thousands of legitimate clicks per day. The exec-correlation
-step suppresses the noise to roughly the rate at which a click actually
-drives onto-host execution, which is the actionable signal.
-Pair with UC_PHISH_LINK_BYPASS (Safe Links override) and UC_PHISH_LINK_NEWDOMAIN
-for orthogonal high-fidelity variants.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Link">T1566.002</span> <span class="ind tech" title="User Execution: Malicious Link">T1204.001</span> <span class="ind tech" title="PowerShell">T1059.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-41-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-41-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-41-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-41-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
-// Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
-// never spawn a non-browser child process, so the join eliminates the
-// 99% of noise that makes a raw click query unactionable.
-let LookbackDays = 7d;
-let SuspectClicks = UrlClickEvents
-    | where Timestamp &gt; ago(LookbackDays)
-    | where AccountName !endswith &quot;$&quot;
-    | where ActionType in (&quot;ClickAllowed&quot;,&quot;ClickedThrough&quot;)
-    | join kind=inner (
-        EmailEvents
-        | where Timestamp &gt; ago(LookbackDays)
-        | where DeliveryAction == &quot;Delivered&quot;
-        | where EmailDirection == &quot;Inbound&quot;
-        | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,
-                  RecipientEmailAddress, EmailTimestamp = Timestamp
-      ) on NetworkMessageId
-    | join kind=leftouter (
-        EmailUrlInfo | project NetworkMessageId, Url, UrlDomain
-      ) on NetworkMessageId, Url
-    | project ClickTime = Timestamp, AccountUpn, IPAddress, Url, UrlDomain,
-              Subject, SenderFromAddress, SenderFromDomain, RecipientEmailAddress,
-              ActionType;
-// Correlate to a non-browser child process spawned within 60 seconds on
-// the recipient&#x27;s device.
-DeviceProcessEvents
-| where Timestamp &gt; ago(LookbackDays)
-| where InitiatingProcessFileName in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,
-                                         &quot;outlook.exe&quot;,&quot;brave.exe&quot;,&quot;arc.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;,
-                        &quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,
-                        &quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;)
-| join kind=inner SuspectClicks on $left.AccountName == $right.AccountUpn
-| where Timestamp between (ClickTime .. ClickTime + 60s)
-| project ClickTime, ProcessTime = Timestamp,
-          DelaySec = datetime_diff(&#x27;second&#x27;, Timestamp, ClickTime),
-          DeviceName, AccountName, RecipientEmailAddress, SenderFromAddress,
-          Subject, Url, UrlDomain, ActionType,
-          FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-41-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
-// pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
-// non-browser child process. Lower fidelity than the Defender version.
-let LookbackDays = 7d;
-let SuspectMailUsers = OfficeActivity
-    | where TimeGenerated &gt; ago(LookbackDays)
-    | where OfficeWorkload == &quot;Exchange&quot;
-    | where Operation =~ &quot;Receive&quot;
-    | summarize Subject = any(Subject), Sender = any(Sender)
-                by MailboxOwnerUPN, MessageId, EmailTime = bin(TimeGenerated, 1m);
-SecurityEvent
-| where TimeGenerated &gt; ago(LookbackDays)
-| where EventID == 4688
-| where ParentProcessName has_any (&quot;\chrome.exe&quot;,&quot;\msedge.exe&quot;,
-                                     &quot;\firefox.exe&quot;,&quot;\outlook.exe&quot;,&quot;\brave.exe&quot;)
-| where NewProcessName has_any (&quot;\powershell.exe&quot;,&quot;\pwsh.exe&quot;,&quot;\cmd.exe&quot;,
-                                  &quot;\mshta.exe&quot;,&quot;\rundll32.exe&quot;,&quot;\regsvr32.exe&quot;,
-                                  &quot;\wscript.exe&quot;,&quot;\cscript.exe&quot;,&quot;\bitsadmin.exe&quot;,
-                                  &quot;\certutil.exe&quot;,&quot;\curl.exe&quot;,&quot;\wget.exe&quot;)
-| join kind=inner SuspectMailUsers on $left.Account == $right.MailboxOwnerUPN
-| where TimeGenerated between (EmailTime .. EmailTime + 60s)
-| project TimeGenerated, EmailTime, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine, Sender, Subject
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-41-uc4-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-41-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-41-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-41-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
-| tstats `summariesonly` earliest(_time) AS click_time
-    from datamodel=Web
-    where Web.action=&quot;allowed&quot;
-    by Web.src, Web.user, Web.dest, Web.url
-| `drop_dm_object_name(Web)`
-| rename user AS recipient, dest AS clicked_domain, url AS clicked_url
-| join type=inner recipient
-    [| tstats `summariesonly` count
-         from datamodel=Email.All_Email
-         where All_Email.action=&quot;delivered&quot; AND All_Email.url!=&quot;-&quot;
-         by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
-     | `drop_dm_object_name(All_Email)`
-     | rex field=url &quot;https?://(?&lt;email_domain&gt;[^/]+)&quot;
-     | rename recipient AS recipient]
-| join type=inner src
-    [| tstats `summariesonly` earliest(_time) AS exec_time
-         values(Processes.process) AS exec_cmd, values(Processes.process_name) AS exec_proc
-         from datamodel=Endpoint.Processes
-         where Processes.parent_process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,
-                                                   &quot;outlook.exe&quot;,&quot;brave.exe&quot;,&quot;arc.exe&quot;)
-           AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;,
-                                            &quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wscript.exe&quot;,
-                                            &quot;cscript.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,
-                                            &quot;curl.exe&quot;,&quot;wget.exe&quot;)
-         by Processes.dest, Processes.user
-     | `drop_dm_object_name(Processes)`
-     | rename dest AS src]
-| eval delta_sec = exec_time - click_time
-| where delta_sec &gt;= 0 AND delta_sec &lt;= 60
-| table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
-        clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-41-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
-| tstats summariesonly=false earliest(_time) AS click_time
-    from datamodel=Web
-    where Web.action=&quot;allowed&quot;
-    by Web.src, Web.user, Web.dest, Web.url
-| `drop_dm_object_name(Web)`
-| rename user AS recipient, dest AS clicked_domain, url AS clicked_url
-| join type=inner recipient
-    [| tstats summariesonly=false count
-         from datamodel=Email.All_Email
-         where All_Email.action=&quot;delivered&quot; AND All_Email.url!=&quot;-&quot;
-         by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
-     | `drop_dm_object_name(All_Email)`
-     | rex field=url &quot;https?://(?&lt;email_domain&gt;[^/]+)&quot;
-     | rename recipient AS recipient]
-| join type=inner src
-    [| tstats summariesonly=false earliest(_time) AS exec_time
-         values(Processes.process) AS exec_cmd, values(Processes.process_name) AS exec_proc
-         from datamodel=Endpoint.Processes
-         where Processes.parent_process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,
-                                                   &quot;outlook.exe&quot;,&quot;brave.exe&quot;,&quot;arc.exe&quot;)
-           AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;,
-                                            &quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wscript.exe&quot;,
-                                            &quot;cscript.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,
-                                            &quot;curl.exe&quot;,&quot;wget.exe&quot;)
-         by Processes.dest, Processes.user
-     | `drop_dm_object_name(Processes)`
-     | rename dest AS src]
-| eval delta_sec = exec_time - click_time
-| where delta_sec &gt;= 0 AND delta_sec &lt;= 60
-| table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
-        clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="384c7f898c" data-platforms="def,sent,spl" data-targets="azure,m365,windows">
-  <summary>
-    <span class="uc-title">Email attachment opened from external sender</span>
-    <span class="uc-phase">Delivery</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="384c7f898c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Attachment delivery + execution by recipient — most common malware initial access.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Attachment">T1566.001</span> <span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailAttachmentInfo</span> <span class="ind">DeviceProcessEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-41-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-41-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-41-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-41-uc5-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
-let MalAttachments = EmailAttachmentInfo
-    | where Timestamp &gt; ago(LookbackDays)
-    | where AccountName !endswith &quot;$&quot;
-    | project NetworkMessageId, RecipientEmailAddress,
-              AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
-DeviceProcessEvents
-| where Timestamp &gt; ago(LookbackDays)
-| where InitiatingProcessFileName in~ (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,
-                      &quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
-| join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256</code></pre></div>
-    <div class="tab-content" id="art-41-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
-// OfficeActivity Send/Receive activity + correlate to host process spawn.
-let LookbackDays = 7d;
-let MailWithAttach = OfficeActivity
-    | where TimeGenerated &gt; ago(LookbackDays)
-    | where OfficeWorkload == &quot;Exchange&quot;
-    | where Operation in~ (&quot;Send&quot;,&quot;Receive&quot;)
-    | where isnotempty(MessageId)
-    | project EmailTime = TimeGenerated, MailboxOwnerUPN, Sender,
-              Recipients, Subject, MessageId;
-SecurityEvent
-| where TimeGenerated &gt; ago(LookbackDays)
-| where EventID == 4688
-| where ParentProcessName endswith &quot;OUTLOOK.EXE&quot;
-| where NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-| project TimeGenerated, Computer, Account, NewProcessName, CommandLine,
-          ParentProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-41-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-41-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-41-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-41-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
-    from datamodel=Email.All_Email
-    where All_Email.file_name!=&quot;-&quot;
-    by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
-| rename All_Email.recipient as user
-| join type=inner user
-    [| tstats `summariesonly` count
-        from datamodel=Endpoint.Processes
-        where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
-          AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
-        by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-41-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
-    from datamodel=Email.All_Email
-    where All_Email.file_name!=&quot;-&quot;
-    by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
-| rename All_Email.recipient as user
-| join type=inner user
-    [| tstats summariesonly=false count
-        from datamodel=Endpoint.Processes
-        where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
-          AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
-        by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="3e2a4a3a7f" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Office app spawning script/LOLBin child process</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="3e2a4a3a7f" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Classic macro/exploit pattern — Office app launching cmd/powershell/wmic/regsvr32.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Visual Basic">T1059.005</span> <span class="ind tech" title="System Binary Proxy Execution">T1218</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-41-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-41-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-41-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-41-uc6-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-41-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-41-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName endswith &quot;\winword.exe&quot;
-   or ParentProcessName endswith &quot;\excel.exe&quot;
-   or ParentProcessName endswith &quot;\powerpnt.exe&quot;
-   or ParentProcessName endswith &quot;\outlook.exe&quot;
-   or ParentProcessName endswith &quot;\onenote.exe&quot;
-   or ParentProcessName endswith &quot;\mspub.exe&quot;
-   or ParentProcessName endswith &quot;\visio.exe&quot;
-| where NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\pwsh.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-41-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
-status: experimental
-description: |
-    Word/Excel/Outlook/OneNote spawning powershell, cmd, wscript,
-    cscript, mshta, rundll32, regsvr32 — classic macro / embedded-
-    object payload signature.
-references:
-    - https://attack.mitre.org/techniques/T1059/
-    - https://attack.mitre.org/techniques/T1566/001/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1059
-    - attack.t1566.001
-    - attack.execution
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_parent:
-        ParentImage|endswith:
-            - &#x27;\winword.exe&#x27;
-            - &#x27;\excel.exe&#x27;
-            - &#x27;\powerpnt.exe&#x27;
-            - &#x27;\outlook.exe&#x27;
-            - &#x27;\onenote.exe&#x27;
-            - &#x27;\mspub.exe&#x27;
-            - &#x27;\visio.exe&#x27;
-    selection_child:
-        Image|endswith:
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-    condition: selection_parent and selection_child
-falsepositives:
-    - Legitimate automation macros in trusted internal documents
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-41-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-41-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-41-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-41-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
-      AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-41-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
-      AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-43" data-art-slug="2026-05-29-what-s-in-the-container-analyzing-vulnerabilities-risks-and-"
   data-phases="actions,c2,delivery,exploit,install,recon,weapon" data-sev="crit"
   data-techs="T1190,T1195.002"
@@ -23605,6 +22903,359 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-72" data-art-slug="2026-05-27-ghsa-critical-cve-2026-45618-liquidjs-is-vulnerable-to-remot"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,cloud,endpoint,web"
+  data-targets="azure,linux,vcs,windows"
+  data-uc-count="4" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-45618: LiquidJS is Vulnerable to Remote Code Execution LiquidJS is Vulnerable to Remote Code Execution CVE-2026-45618 T1190 [LLM] LiquidJS SSTI gadget tokens in inbound HTTP (CVE-2026-45618) [LLM] Node.js web process spawning shell (LiquidJS RCE post-exploit) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-45618: LiquidJS is Vulnerable to Remote Code Executio">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-05-27-ghsa-critical-cve-2026-45618-liquidjs-is-vulnerable-to-remot" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-gf2q-c269-pqgc" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-45618: LiquidJS is Vulnerable to Remote Code Execution</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-05-27</span>
+    <span>4 use cases</span>
+    <span>1 technique</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">LiquidJS is Vulnerable to Remote Code Execution</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-45618</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-72-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-72"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-72-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] LiquidJS SSTI gadget tokens in inbound HTTP (CVE-2026-45618) · [LLM] Node.js web process spawning shell (LiquidJS RCE post-exploit)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-45618: LiquidJS is Vulnerable to Remote Code Executio</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="af7217b5fc" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="azure,vcs,windows" open>
+  <summary>
+    <span class="uc-title">[LLM] LiquidJS SSTI gadget tokens in inbound HTTP (CVE-2026-45618)</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="af7217b5fc" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts for LiquidJS template-injection PoC strings — `1|valueOf`, `r.context.scopes`, `r.liquid.parser`, `r.liquid.options.fs`, `assign __proto__`, `process.getBuiltinModule`, `child_process`, `execSync` — appearing in inbound URLs, query strings, referers, or form bodies served by IIS / App Service / WAF-fronted Node.js apps embedding LiquidJS templates.
+
+Rationale: Anchored to literal LiquidJS PoC tokens (`1|valueOf`, `r.context.scopes`, `r.liquid.parser`, `r.liquid.options.fs`, `assign __proto__`, `getBuiltinModule`, `child_process`, `execSync`, `fs.readFileSync`) — none of these are legitimate query-string contents and they are unique to the GHSA-gf2q-c269-pqgc gadget chain. Cross-checked against the GitHub advisory and the LiquidJS NPM page for fix version 10.26.0.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-gf2q-c269-pqgc
+  • https://www.npmjs.com/package/liquidjs
+  • https://attack.mitre.org/techniques/T1190/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-72-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-72-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-72-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-72-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-72-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-72-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-72-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType in (&quot;InboundConnectionAccepted&quot;,&quot;ConnectionInbound&quot;,&quot;ConnectionSuccess&quot;)
+   or InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;w3wp.exe&quot;,&quot;iisexpress.exe&quot;)
+| where RemoteUrl has_any (&quot;1|valueOf&quot;,&quot;1%7CvalueOf&quot;,&quot;r.context.scopes&quot;,&quot;r.liquid.parser&quot;,&quot;r.liquid.options.fs&quot;,&quot;assign __proto__&quot;,&quot;assign%20__proto__&quot;,&quot;getBuiltinModule&quot;,&quot;child_process&quot;,&quot;execSync&quot;,&quot;fs.readFileSync&quot;)
+   or AdditionalFields has_any (&quot;1|valueOf&quot;,&quot;r.context.scopes&quot;,&quot;r.liquid.parser&quot;,&quot;__proto__&quot;,&quot;getBuiltinModule&quot;,&quot;child_process&quot;)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, LocalPort, AdditionalFields
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-72-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Hits HTTP logs from any of IIS / App Service / WAF in front of a Node app using LiquidJS
+let payload = dynamic([&quot;1|valueOf&quot;,&quot;1%7CvalueOf&quot;,&quot;r.context.scopes&quot;,&quot;r.liquid.parser&quot;,&quot;r.liquid.options.fs&quot;,&quot;assign __proto__&quot;,&quot;assign%20__proto__&quot;,&quot;__proto__&quot;,&quot;getBuiltinModule&quot;,&quot;child_process&quot;,&quot;execSync&quot;,&quot;fs.readFileSync&quot;,&quot;group_by&quot;]);
+(union isfuzzy=true
+    (W3CIISLog
+        | where TimeGenerated &gt; ago(7d)
+        | extend Host = Computer, ClientIP = cIP, Method = csMethod, Path = csUriStem, Query = csUriQuery, UA = csUserAgent, Referer = csReferer
+        | where Query has_any (payload) or Path has_any (payload) or Referer has_any (payload) or UA has_any (payload)
+        | project TimeGenerated, Source=&quot;IIS&quot;, Host, ClientIP, Method, Path, Query, UA, Referer),
+    (AppServiceHTTPLogs
+        | where TimeGenerated &gt; ago(7d)
+        | extend Host = CsHost, ClientIP = CIp, Method = CsMethod, Path = CsUriStem, Query = CsUriQuery, UA = UserAgent, Referer = Referer
+        | where Query has_any (payload) or Path has_any (payload) or Referer has_any (payload) or UA has_any (payload)
+        | project TimeGenerated, Source=&quot;AppService&quot;, Host, ClientIP, Method, Path, Query, UA, Referer),
+    (CommonSecurityLog
+        | where TimeGenerated &gt; ago(7d)
+        | extend Host = coalesce(DestinationHostName, DeviceExternalID, &quot;&quot;), ClientIP = SourceIP, Method = RequestMethod, Path = RequestURL, UA = RequestClientApplication, Referer = RequestContext
+        | where RequestURL has_any (payload) or RequestContext has_any (payload) or RequestClientApplication has_any (payload) or Message has_any (payload)
+        | project TimeGenerated, Source=&quot;WAF&quot;, Host, ClientIP, Method, Path, Query=&quot;&quot;, UA, Referer))
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-72-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: LiquidJS Template Injection Payload in HTTP Request (CVE-2026-45618)
+id: 7b4a2c3d-9e1f-4f01-8a2b-2d5c6e7f8a01
+description: Detects LiquidJS SSTI / prototype-pollution exploitation strings from CVE-2026-45618 PoC in inbound HTTP URI, query, referer or user-agent fields.
+references:
+  - https://github.com/advisories/GHSA-gf2q-c269-pqgc
+author: SOC Detection Engineering
+date: 2026/05/27
+tags:
+  - attack.initial_access
+  - attack.t1190
+  - cve.2026.45618
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-uri-query|contains:
+      - &#x27;1|valueOf&#x27;
+      - &#x27;1%7CvalueOf&#x27;
+      - &#x27;r.context.scopes&#x27;
+      - &#x27;r.liquid.parser&#x27;
+      - &#x27;r.liquid.options.fs&#x27;
+      - &#x27;assign __proto__&#x27;
+      - &#x27;assign%20__proto__&#x27;
+      - &#x27;getBuiltinModule&#x27;
+      - &#x27;child_process&#x27;
+      - &#x27;execSync&#x27;
+      - &#x27;fs.readFileSync&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-72-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.iis OR source:nginx OR source:nodejs OR source:azure.app_service) (@http.url_details.queryString:(*1\|valueOf* OR *1%7CvalueOf* OR *r.context.scopes* OR *r.liquid.parser* OR *r.liquid.options.fs* OR *assign\ __proto__* OR *assign%20__proto__* OR *getBuiltinModule* OR *child_process* OR *execSync* OR *fs.readFileSync*) OR @http.url:(*1%7CvalueOf* OR *r.context.scopes* OR *r.liquid.parser* OR *assign%20__proto__* OR *getBuiltinModule* OR *child_process*) OR @http.referer:(*1%7CvalueOf* OR *r.liquid.parser*))</code></pre></div>
+    <div class="tab-content" id="art-72-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ConnectionDirection=1
+| ContextImageFileName=/(node|w3wp|iisexpress)\.exe$/i
+| #event_simpleName=DnsRequest OR regex(&quot;(1\\|valueOf|1%7CvalueOf|r\\.context\\.scopes|r\\.liquid\\.parser|r\\.liquid\\.options\\.fs|assign __proto__|assign%20__proto__|getBuiltinModule|child_process|execSync|fs\\.readFileSync)&quot;, field=CommandLine)
+| groupBy([aid, ComputerName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-72-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-72-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-72-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-72-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src values(Web.http_user_agent) as ua from datamodel=Web.Web where Web.url=&quot;*1%7CvalueOf*&quot; OR Web.url=&quot;*r.context.scopes*&quot; OR Web.url=&quot;*r.liquid.parser*&quot; OR Web.url=&quot;*r.liquid.options.fs*&quot; OR Web.url=&quot;*assign%20__proto__*&quot; OR Web.url=&quot;*getBuiltinModule*&quot; OR Web.url=&quot;*child_process*&quot; OR Web.url=&quot;*group_by*where*first*last*&quot; by Web.dest Web.http_method Web.status | `drop_dm_object_name(&quot;Web&quot;)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-72-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src values(Web.http_user_agent) as ua from datamodel=Web.Web where Web.url=&quot;*1%7CvalueOf*&quot; OR Web.url=&quot;*r.context.scopes*&quot; OR Web.url=&quot;*r.liquid.parser*&quot; OR Web.url=&quot;*r.liquid.options.fs*&quot; OR Web.url=&quot;*assign%20__proto__*&quot; OR Web.url=&quot;*getBuiltinModule*&quot; OR Web.url=&quot;*child_process*&quot; OR Web.url=&quot;*group_by*where*first*last*&quot; by Web.dest Web.http_method Web.status | `drop_dm_object_name(&quot;Web&quot;)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="1e6cd17e80" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">[LLM] Node.js web process spawning shell (LiquidJS RCE post-exploit)</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="1e6cd17e80" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects `node.exe` (or Linux `node`) — and IIS-hosted Node via `iisnode`/`w3wp.exe` running a Node app — spawning an interactive shell (`sh`, `bash`, `cmd.exe`, `powershell.exe`) immediately after the LiquidJS PoC executes `process.getBuiltinModule(&#x27;child_process&#x27;).execSync(&#x27;sh&#x27;, {stdio:&#x27;inherit&#x27;})`. This child-shell pattern is the deterministic post-exploit signal of CVE-2026-45618.
+
+Rationale: PoC ends with `process.getBuiltinModule(&#x27;child_process&#x27;).execSync(&#x27;sh&#x27;, {stdio:&#x27;inherit&#x27;})` — so the deterministic post-exploitation signal is `node` (or `w3wp.exe` hosting `iisnode`) becoming the parent of an interactive shell. node→sh is exceedingly rare in production: Node apps almost never `exec` a TTY-bearing shell. Cross-checked against the GHSA PoC body and standard Node.js production process trees.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-gf2q-c269-pqgc
+  • https://attack.mitre.org/techniques/T1059/004/
+  • https://attack.mitre.org/techniques/T1190/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter">T1059</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-72-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-72-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-72-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-72-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-72-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-72-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-72-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;node&quot;,&quot;w3wp.exe&quot;,&quot;iisnode.exe&quot;)
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd   = InitiatingProcessCommandLine,
+          ChildImage  = FolderPath,
+          ChildCmd    = ProcessCommandLine,
+          InitiatingProcessTokenElevation, ProcessIntegrityLevel, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-72-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ParentProcessName has_any (&quot;node.exe&quot;,&quot;\\node&quot;,&quot;/node&quot;,&quot;w3wp.exe&quot;,&quot;iisnode.exe&quot;)
+| where TargetProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;\\sh&quot;,&quot;/sh&quot;,&quot;/bash&quot;,&quot;/dash&quot;,&quot;/zsh&quot;,&quot;\\bash.exe&quot;)
+| where ActorUsername !endswith &quot;$&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, TargetProcessName, TargetProcessCommandLine, EventVendor, EventProduct
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-72-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Node.js Spawning Interactive Shell (LiquidJS RCE Post-Exploit)
+id: 7b4a2c3d-9e1f-4f01-8a2b-2d5c6e7f8a02
+description: Detects node.exe / node / w3wp.exe (iisnode-hosted Node) spawning cmd.exe, powershell.exe, sh, bash — the deterministic child-shell pattern produced by the CVE-2026-45618 PoC calling child_process.execSync(&#x27;sh&#x27;, {stdio:&#x27;inherit&#x27;}).
+references:
+  - https://github.com/advisories/GHSA-gf2q-c269-pqgc
+author: SOC Detection Engineering
+date: 2026/05/27
+tags:
+  - attack.execution
+  - attack.t1059
+  - attack.t1059.004
+  - cve.2026.45618
+logsource:
+  category: process_creation
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - &#x27;\node.exe&#x27;
+      - &#x27;/node&#x27;
+      - &#x27;\w3wp.exe&#x27;
+      - &#x27;\iisnode.exe&#x27;
+  selection_child:
+    Image|endswith:
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+      - &#x27;/sh&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/zsh&#x27;
+      - &#x27;\bash.exe&#x27;
+  condition: selection_parent and selection_child
+level: high</code></pre></div>
+    <div class="tab-content" id="art-72-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon OR source:linux.auditd OR source:windows.security) (@ParentImage:(*\\node.exe OR *\\Node.exe OR */node OR *\\w3wp.exe OR *\\W3WP.EXE OR *\\iisnode.exe) OR @process.parent.executable.path:(*/node OR *\\node.exe)) AND (@Image:(*\\cmd.exe OR *\\CMD.EXE OR *\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\sh.exe OR *\\bash.exe) OR @process.executable.path:(*/sh OR */bash OR */dash OR */zsh OR */ksh))</code></pre></div>
+    <div class="tab-content" id="art-72-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(node\.exe|node|w3wp\.exe|iisnode\.exe)$/i
+| ImageFileName=/(cmd\.exe|powershell\.exe|pwsh\.exe|\\sh$|/sh$|/bash$|/dash$|/zsh$|/ksh$|bash\.exe)/i
+| UserName!=/\$$/
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-72-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-72-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-72-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-72-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;node.exe&quot; OR Processes.parent_process_name=&quot;node&quot; OR Processes.parent_process_name=&quot;w3wp.exe&quot;) (Processes.process_name=&quot;cmd.exe&quot; OR Processes.process_name=&quot;powershell.exe&quot; OR Processes.process_name=&quot;pwsh.exe&quot; OR Processes.process_name=&quot;sh&quot; OR Processes.process_name=&quot;bash&quot; OR Processes.process_name=&quot;dash&quot; OR Processes.process_name=&quot;zsh&quot;) by host Processes.dest Processes.process_name Processes.parent_process_name | `drop_dm_object_name(&quot;Processes&quot;)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-72-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;node.exe&quot; OR Processes.parent_process_name=&quot;node&quot; OR Processes.parent_process_name=&quot;w3wp.exe&quot;) (Processes.process_name=&quot;cmd.exe&quot; OR Processes.process_name=&quot;powershell.exe&quot; OR Processes.process_name=&quot;pwsh.exe&quot; OR Processes.process_name=&quot;sh&quot; OR Processes.process_name=&quot;bash&quot; OR Processes.process_name=&quot;dash&quot; OR Processes.process_name=&quot;zsh&quot;) by host Processes.dest Processes.process_name Processes.parent_process_name | `drop_dm_object_name(&quot;Processes&quot;)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-72-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-72-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-72-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-72-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-45618&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-72-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-45618&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-72-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-72-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-72-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-72-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-45618&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-72-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-45618&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="67e1680843" data-platforms="def,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-45618: LiquidJS is Vulnerable to Remote Code Executio</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="67e1680843" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-72-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-72-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-72-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45618: LiquidJS is Vulnerable to Remote Code Executio
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/etc/passwd&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-72-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-72-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-72-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-72-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45618: LiquidJS is Vulnerable to Remote Code Executio ```
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/etc/passwd*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-72-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45618: LiquidJS is Vulnerable to Remote Code Executio ```
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/etc/passwd*&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
   </div>
 </details></div>
 </article>
