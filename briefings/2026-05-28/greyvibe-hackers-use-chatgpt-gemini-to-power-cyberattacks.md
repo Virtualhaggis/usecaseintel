@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PhantomMail: Ukrainian-themed ZIP/RAR delivered via Google Drive or 4sync links
 
-`UC_49_6` · phase: **delivery** · confidence: **Medium**
+`UC_50_6` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ let SuspectArchive = EmailAttachmentInfo | where Timestamp > ago(14d) | where Fi
 
 ### [LLM] PhantomClick: browser → mshta/powershell/cmd within 60s of fake Cloudflare/Zoom/LAPAS lure
 
-`UC_49_7` · phase: **exploit** · confidence: **High**
+`UC_50_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceProcessEvents | where Timestamp > ago(7d) | where InitiatingProcessFileNam
 
 ### [LLM] LegionRelay browser credential theft from Chromium/Firefox Login Data by PowerShell
 
-`UC_49_8` · phase: **actions** · confidence: **High**
+`UC_50_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceFileEvents | where Timestamp > ago(14d) | where FileName in~ ("Login Data"
 
 ### [LLM] LegionRelay Telegram / WhatsApp messenger store exfiltration
 
-`UC_49_9` · phase: **actions** · confidence: **High**
+`UC_50_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceFileEvents | where Timestamp > ago(14d) | where FolderPath has_any ("\\Tel
 
 ### [LLM] GreyVibe: RDP enablement via fDenyTSConnections=0 + firewall by PowerShell RAT
 
-`UC_49_10` · phase: **install** · confidence: **High**
+`UC_50_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ let RegFlip = DeviceRegistryEvents | where Timestamp > ago(14d) | where (Registr
 
 ### [LLM] PowerShell.exe sustained beaconing to uncategorized web endpoint (LegionRelay/PhantomRelay C2)
 
-`UC_49_11` · phase: **c2** · confidence: **Medium**
+`UC_50_11` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceNetworkEvents | where Timestamp > ago(7d) | where InitiatingProcessFileNam
 
 ### [LLM] GreyVibe cryptocurrency miner deployment via PowerShell RAT
 
-`UC_49_12` · phase: **actions** · confidence: **High**
+`UC_50_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
