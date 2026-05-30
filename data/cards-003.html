@@ -17327,11 +17327,11 @@ level: critical
   data-phases="actions,c2,delivery,exploit,install" data-sev="crit"
   data-techs="T1190,T1204.002,T1566"
   data-sources="ESET WeLiveSecurity"
-  data-platforms="def,sent,sigma,spl"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="endpoint,network,web"
-  data-targets="azure,m365,windows"
-  data-uc-count="5" data-llm-uc-count="0"
-  data-search="BTMOB: A stealthy RAT burrowing deep into Android devices The malware pairs remote access capabilities with ready-made campaign tools, lowering the barrier for full device compromise  T1190 T1204.002 T1566 Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Network connections to article IPs / domains File hash IOCs — endpoint file/process match">
+  data-targets="azure,linux,m365,windows"
+  data-uc-count="8" data-llm-uc-count="3"
+  data-search="BTMOB: A stealthy RAT burrowing deep into Android devices The malware pairs remote access capabilities with ready-made campaign tools, lowering the barrier for full device compromise  T1190 T1204.002 T1566 [LLM] BTMOB Android RAT C2 contact to arbsniper.com domain [LLM] BTMOB C2 IP cluster contact (191.96.78.0/23, 191.96.224.0/22, Hetzner/PT/etc.) [LLM] BTMOB malicious APK file write by SHA256 hash Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Network connections to article IPs / domains File hash IOCs — endpoint file/process match">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-05-26-btmob-a-stealthy-rat-burrowing-deep-into-android-devices" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -17340,7 +17340,7 @@ level: critical
   <div class="source-badges"><span class="source-badge eset">ESET WeLiveSecurity</span></div>
   <div class="pubmeta">
     <span>2026-05-26</span>
-    <span>5 use cases</span>
+    <span>8 use cases</span>
     <span>3 techniques</span>
     <span>5 kill-chain phases detected</span>
   </div>
@@ -17392,13 +17392,391 @@ level: critical
 </div></div>
   <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] BTMOB malicious APK file write by SHA256 hash · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Office app spawning script/LOLBin child process</em></div>
 <div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ File hash IOCs — endpoint file/process match</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] BTMOB Android RAT C2 contact to arbsniper.com domain · [LLM] BTMOB C2 IP cluster contact (191.96.78.0/23, 191.96.224.0/22, Hetzner/PT/etc.) · Network connections to article IPs / domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="53a9c31d59" data-platforms="def,sent,spl" data-targets="azure,m365,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="63822e45fa" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
+  <summary>
+    <span class="uc-title">[LLM] BTMOB Android RAT C2 contact to arbsniper.com domain</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="63822e45fa" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects any corporate device (endpoint, MDE-for-Mobile Android, or proxy-routed mobile) resolving or connecting to the BTMOB-attributed domain arbsniper.com. This is the only named C2 domain in the ESET write-up — high-fidelity initial trigger for a BTMOB infection or a user landing on the BTMOB-spreading phishing infrastructure.
+
+Rationale: arbsniper.com is the only domain listed in ESET&#x27;s IOC table for BTMOB and does not appear in any benign passive-DNS pivot. A single resolution or HTTP fetch from a managed endpoint is enough to alert on. Cross-checked against Cyble&#x27;s Feb 2025 write-up (cyble.com/blog/btmob-rat-newly-discovered-android-malware) and Malpedia (malpedia.caad.fkie.fraunhofer.de/details/apk.btmob).
+
+Cross-checked against:
+  • https://cyble.com/blog/btmob-rat-newly-discovered-android-malware/
+  • https://malpedia.caad.fkie.fraunhofer.de/details/apk.btmob
+  • https://www.securityweek.com/new-btmob-android-malware-enables-full-device-takeover/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Dynamic Resolution">T1568</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">Web.Web</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-95-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-95-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-95-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-95-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-95-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-95-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-95-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let badDomain = &quot;arbsniper.com&quot;;
+let dns = DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteUrl has badDomain or RemoteUrl endswith strcat(&quot;.&quot;, badDomain)
+| project Timestamp, DeviceName, DeviceId, RemoteUrl, RemoteIP, RemotePort,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, Source=&quot;DeviceNetworkEvents&quot;;
+let platform = DeviceInfo
+| where Timestamp &gt; ago(7d)
+| summarize arg_max(Timestamp, OSPlatform) by DeviceId;
+dns
+| join kind=leftouter platform on DeviceId
+| project Timestamp, DeviceName, OSPlatform, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-95-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let badDomain = &quot;arbsniper.com&quot;;
+union isfuzzy=true
+  (DnsEvents
+   | where TimeGenerated &gt; ago(7d)
+   | where Name has badDomain
+   | project TimeGenerated, Computer, ClientIP, Name, QueryType, Source=&quot;DnsEvents&quot;),
+  (CommonSecurityLog
+   | where TimeGenerated &gt; ago(7d)
+   | where RequestURL has badDomain or DestinationHostName has badDomain or DestinationDnsDomain has badDomain
+   | project TimeGenerated, Computer=DeviceName, ClientIP=SourceIP, Name=coalesce(DestinationHostName, RequestURL, DestinationDnsDomain), QueryType=&quot;&quot;, Source=&quot;CommonSecurityLog&quot;),
+  (ImDnsActivity
+   | where TimeGenerated &gt; ago(7d)
+   | where DnsQuery has badDomain
+   | project TimeGenerated, Computer=SrcHostname, ClientIP=SrcIpAddr, Name=DnsQuery, QueryType=DnsQueryTypeName, Source=&quot;ImDnsActivity&quot;)
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-95-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: BTMOB Android RAT C2 Domain - arbsniper.com
+id: c7e3d8f4-1a2b-4c5d-9e6f-7a8b9c0d1e2f
+description: Detects DNS or web traffic to arbsniper.com, the named C2 domain attributed to the BTMOB Android RAT by ESET.
+references:
+  - https://www.welivesecurity.com/en/malware/btmob-stealthy-rat-burrowing-deep-android-devices/
+  - https://cyble.com/blog/btmob-rat-newly-discovered-android-malware/
+author: SOC Detection Engineering
+date: 2026/05/30
+tags:
+  - attack.t1071.001
+  - attack.t1568
+  - attack.command_and_control
+logsource:
+  category: dns
+detection:
+  selection:
+    QueryName|contains: &#x27;arbsniper.com&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-95-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:(windows.sysmon OR linux.auditd OR cisco.firewall OR paloalto.panos OR zscaler OR netskope OR cloudflare) AND (@DnsQuery:*arbsniper.com* OR @dns.question.name:*arbsniper.com* OR @network.destination.domain:*arbsniper.com* OR @http.url:*arbsniper.com* OR @url.domain:*arbsniper.com*))</code></pre></div>
+    <div class="tab-content" id="art-95-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/arbsniper\.com$/i
+| groupBy([aid, ComputerName, DomainName, ContextImageFileName], function=[count(as=hits), min(@timestamp, as=firstSeen), max(@timestamp, as=lastSeen)])
+| sort(firstSeen, order=desc)</code></pre></div>
+    <div class="tab-content" id="art-95-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-95-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-95-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-95-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.answer) as answer from datamodel=Network_Resolution where DNS.query=&quot;arbsniper.com&quot; OR DNS.query=&quot;*.arbsniper.com&quot; by DNS.query DNS.src host | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-95-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.answer) as answer from datamodel=Network_Resolution where DNS.query=&quot;arbsniper.com&quot; OR DNS.query=&quot;*.arbsniper.com&quot; by DNS.query DNS.src host | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="0a06afdf42" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">[LLM] BTMOB C2 IP cluster contact (191.96.78.0/23, 191.96.224.0/22, Hetzner/PT/etc.)</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="0a06afdf42" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects network connections from any corporate device to the BTMOB C2 IP infrastructure cluster called out by ESET. Filters out the legitimate Google CDN and Cloudflare IPs that appear in the same IOC table to avoid drowning the SOC. The clustered 191.96.x.x /24 prefixes are strong tell-tales of shared BTMOB tenancy.
+
+Rationale: Two clear C2 clusters: 191.96.78.0/23 and 191.96.224.0/22 — multiple distinct IPs from ESET&#x27;s table fall inside each /24, which means the operator is rotating across leased addresses on the same provider. I deliberately dropped 74.125.x / 142.251.x / 173.194.x / 192.178.x (Google) and 104.21.x (Cloudflare) from the C2 set because connections to those would generate thousands of FPs/day from normal Chrome and Google service traffic.
+
+Cross-checked against:
+  • https://cyble.com/blog/btmob-rat-newly-discovered-android-malware/
+  • https://www.welivesecurity.com/en/malware/btmob-stealthy-rat-burrowing-deep-android-devices/
+  • https://malpedia.caad.fkie.fraunhofer.de/details/apk.btmob</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Non-Application Layer Protocol">T1095</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-95-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-95-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-95-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-95-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-95-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-95-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-95-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let btmobC2 = dynamic([
+  &quot;178.156.177.192&quot;,&quot;191.101.131.250&quot;,&quot;195.160.221.203&quot;,&quot;200.9.155.153&quot;,&quot;79.133.57.141&quot;,
+  &quot;191.96.78.28&quot;,&quot;191.96.78.172&quot;,&quot;191.96.79.41&quot;,&quot;191.96.79.133&quot;,&quot;191.96.79.179&quot;,
+  &quot;191.96.224.87&quot;,&quot;191.96.225.241&quot;
+]);
+DeviceNetworkEvents
+| where Timestamp &gt; ago(14d)
+| where RemoteIP in (btmobC2)
+  or (ipv4_is_in_range(RemoteIP, &quot;191.96.78.0/23&quot;) and RemotePort in (80, 443, 8080, 8443, 5000, 8000))
+  or (ipv4_is_in_range(RemoteIP, &quot;191.96.224.0/22&quot;) and RemotePort in (80, 443, 8080, 8443, 5000, 8000))
+| project Timestamp, DeviceName, DeviceId, LocalIP, RemoteIP, RemotePort, Protocol,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, InitiatingProcessFolderPath
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-95-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let btmobC2 = dynamic([
+  &quot;178.156.177.192&quot;,&quot;191.101.131.250&quot;,&quot;195.160.221.203&quot;,&quot;200.9.155.153&quot;,&quot;79.133.57.141&quot;,
+  &quot;191.96.78.28&quot;,&quot;191.96.78.172&quot;,&quot;191.96.79.41&quot;,&quot;191.96.79.133&quot;,&quot;191.96.79.179&quot;,
+  &quot;191.96.224.87&quot;,&quot;191.96.225.241&quot;
+]);
+let c2Range1 = &quot;191.96.78.0/23&quot;;
+let c2Range2 = &quot;191.96.224.0/22&quot;;
+union isfuzzy=true
+  (CommonSecurityLog
+   | where TimeGenerated &gt; ago(14d)
+   | where DestinationIP in (btmobC2) or ipv4_is_in_range(DestinationIP, c2Range1) or ipv4_is_in_range(DestinationIP, c2Range2)
+   | where DeviceAction !in~ (&quot;deny&quot;,&quot;drop&quot;,&quot;block&quot;,&quot;reject&quot;)
+   | project TimeGenerated, SourceHost=SourceHostName, SourceIP, DestinationIP, DestinationPort, Protocol, Action=DeviceAction, Source=&quot;CommonSecurityLog&quot;),
+  (ImNetworkSession
+   | where TimeGenerated &gt; ago(14d)
+   | where DstIpAddr in (btmobC2) or ipv4_is_in_range(DstIpAddr, c2Range1) or ipv4_is_in_range(DstIpAddr, c2Range2)
+   | project TimeGenerated, SourceHost=SrcHostname, SourceIP=SrcIpAddr, DestinationIP=DstIpAddr, DestinationPort=DstPortNumber, Protocol=NetworkProtocol, Action=DvcAction, Source=&quot;ImNetworkSession&quot;)
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-95-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: BTMOB Android RAT C2 IP Cluster Contact
+id: 9b2c5e3a-4d7f-4a8e-b1c2-3d4e5f6a7b8c
+description: Network connection to one of the BTMOB-attributed C2 IPs (excludes the Google/Cloudflare IPs from the source IOC list to avoid mass FPs).
+references:
+  - https://www.welivesecurity.com/en/malware/btmob-stealthy-rat-burrowing-deep-android-devices/
+  - https://cyble.com/blog/btmob-rat-newly-discovered-android-malware/
+author: SOC Detection Engineering
+date: 2026/05/30
+tags:
+  - attack.t1071.001
+  - attack.command_and_control
+logsource:
+  category: network_connection
+detection:
+  selection:
+    DestinationIp:
+      - &#x27;178.156.177.192&#x27;
+      - &#x27;191.101.131.250&#x27;
+      - &#x27;195.160.221.203&#x27;
+      - &#x27;200.9.155.153&#x27;
+      - &#x27;79.133.57.141&#x27;
+      - &#x27;191.96.78.28&#x27;
+      - &#x27;191.96.78.172&#x27;
+      - &#x27;191.96.79.41&#x27;
+      - &#x27;191.96.79.133&#x27;
+      - &#x27;191.96.79.179&#x27;
+      - &#x27;191.96.224.87&#x27;
+      - &#x27;191.96.225.241&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-95-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:(windows.sysmon OR linux.auditd OR cisco.firewall OR paloalto.panos OR zscaler OR cloudflare OR netskope) AND (@DestinationIp:(178.156.177.192 OR 191.101.131.250 OR 195.160.221.203 OR 200.9.155.153 OR 79.133.57.141 OR 191.96.78.28 OR 191.96.78.172 OR 191.96.79.41 OR 191.96.79.133 OR 191.96.79.179 OR 191.96.224.87 OR 191.96.225.241) OR @network.destination.ip:(178.156.177.192 OR 191.101.131.250 OR 195.160.221.203 OR 200.9.155.153 OR 79.133.57.141 OR 191.96.78.28 OR 191.96.78.172 OR 191.96.79.41 OR 191.96.79.133 OR 191.96.79.179 OR 191.96.224.87 OR 191.96.225.241) OR CIDR(@network.destination.ip, 191.96.78.0/23, 191.96.224.0/22)))</code></pre></div>
+    <div class="tab-content" id="art-95-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=/^NetworkConnectIP[46]$/ (RemoteAddressIP4=/^178\.156\.177\.192$/ OR RemoteAddressIP4=/^191\.101\.131\.250$/ OR RemoteAddressIP4=/^195\.160\.221\.203$/ OR RemoteAddressIP4=/^200\.9\.155\.153$/ OR RemoteAddressIP4=/^79\.133\.57\.141$/ OR cidr(&quot;191.96.78.0/23&quot;, field=RemoteAddressIP4) OR cidr(&quot;191.96.224.0/22&quot;, field=RemoteAddressIP4))
+| groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort, ContextImageFileName], function=[count(as=connections), min(@timestamp, as=firstSeen), max(@timestamp, as=lastSeen)])
+| sort(firstSeen, order=desc)</code></pre></div>
+    <div class="tab-content" id="art-95-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-95-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-95-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-95-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as ports values(All_Traffic.app) as app from datamodel=Network_Traffic where (All_Traffic.dest IN (&quot;178.156.177.192&quot;,&quot;191.101.131.250&quot;,&quot;195.160.221.203&quot;,&quot;200.9.155.153&quot;,&quot;79.133.57.141&quot;,&quot;191.96.78.28&quot;,&quot;191.96.78.172&quot;,&quot;191.96.79.41&quot;,&quot;191.96.79.133&quot;,&quot;191.96.79.179&quot;,&quot;191.96.224.87&quot;,&quot;191.96.225.241&quot;)) by All_Traffic.src host All_Traffic.dest All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-95-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as ports values(All_Traffic.app) as app from datamodel=Network_Traffic where (All_Traffic.dest IN (&quot;178.156.177.192&quot;,&quot;191.101.131.250&quot;,&quot;195.160.221.203&quot;,&quot;200.9.155.153&quot;,&quot;79.133.57.141&quot;,&quot;191.96.78.28&quot;,&quot;191.96.78.172&quot;,&quot;191.96.79.41&quot;,&quot;191.96.79.133&quot;,&quot;191.96.79.179&quot;,&quot;191.96.224.87&quot;,&quot;191.96.225.241&quot;)) by All_Traffic.src host All_Traffic.dest All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ffa5cf6149" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">[LLM] BTMOB malicious APK file write by SHA256 hash</span>
+    <span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ffa5cf6149" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Catches an APK with one of ESET&#x27;s published BTMOB SHA256 hashes being written to a corporate endpoint — typically an Android device via MDE for Mobile, a Windows host with an Android emulator/SDK, or a researcher&#x27;s workstation analyzing a sample outside the approved sandbox. Hash-based, so zero false positives on a true match.
+
+Rationale: 36 SHA256 hashes are listed in ESET&#x27;s IOC table — these are unique APK builds emitted from the BTMOB builder. SHA256 is collision-resistant so any match is a true positive. Cross-checked against Cyble&#x27;s BTMOB report and Malpedia&#x27;s apk.btmob entry — both publish overlapping hashes from the same campaign cluster.
+
+Cross-checked against:
+  • https://cyble.com/blog/btmob-rat-newly-discovered-android-malware/
+  • https://malpedia.caad.fkie.fraunhofer.de/details/apk.btmob
+  • https://www.infosecurity-magazine.com/news/btmob-android-rat-maas-builder/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Phishing: Spearphishing Link">T1566.002</span> <span class="ind tech" title="User Execution: Malicious File">T1204.002</span> <span class="ind tech" title="Drive-By Compromise (Mobile)">T1456</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-95-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-95-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-95-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-95-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-95-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-95-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-95-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let btmobHashes = dynamic([
+  &quot;58AC130A8EBB09E37592AC69841483EDC5695D1545B1F04F23D5B760AC17CD94&quot;,
+  &quot;0A542751724A432A8448324613E0CE10393E41739A1800CBB7D5A2C648FCDC35&quot;,
+  &quot;A764D73795ABE47AE640BA09999A18C47B5340E5ECC7B897AFEBF34F3F37638F&quot;,
+  &quot;26A2268281E8043125EF72B92F8980B42912048753D56894BC378FB54C7C188A&quot;,
+  &quot;6AE94CE710016D86ED7457236DEEF2C4C51478587F3609B6E827A348828B3931&quot;,
+  &quot;E5A9FDFF900DD502E8F3DCE52D2D1B69AA9AFAFB5094A28F9037E8770DB0E63B&quot;,
+  &quot;C6199E175FB988CBBEACDF0F5ACDF9ED83F5BDAAE5C95B7A6C27EE72CD11B0B1&quot;,
+  &quot;6BBA64FA9E8A7B11CB2476CD071DE08986DB44B0783EFF211C68FA5594EF8143&quot;,
+  &quot;5AAAF972C8BF39A98F2748E526DE3CC0370BA831997D7D9765CDABA599645C0D&quot;,
+  &quot;DDCE0219923D152B8FACD303F058A6286CF1F6924992B9FB9F5BF4D96436CC39&quot;,
+  &quot;D55057CD9110D12A192281356F06B94F342B9FEBB305CF0A5898A7E6AF40758F&quot;,
+  &quot;676CB2D0A60403AFC06CEA1B572CB7261F706365FAC65621B5A4907893E7AC0D&quot;,
+  &quot;75DD4FB011ED598374A46FC0D9C0D1D64A298341C34AFC83A56A6983CFD27764&quot;,
+  &quot;702261BA38B57ECC3A5407FED28B2F0611A74C2EC0C116AEA4F9E6DEF0899AED&quot;,
+  &quot;998A7ED1572AD9DC11375BC25294E1954E606B7CFF9FABC5C120713E597CD274&quot;,
+  &quot;244D81FD9908CD17815501D4EDADEB1BAF1C421AA25D8BD61C7CB481C939540E&quot;,
+  &quot;512EDE9F2FA794907999F3C26165557FDFD383B7AAD71BA022CE2C8BA6C0019D&quot;,
+  &quot;7AC974899E8E05AAACD417577C97E382D5E8C5F7F4A85632CFFB47EC2F6AE4E0&quot;,
+  &quot;168F50BF9A87099094EF410E3AC33E676A6A8740A5437CD09E7B63D73DF8431A&quot;,
+  &quot;2525D1E427A9983B0B4CA0906A4B44FFB9814B23D53FD8A2E3AB6512B027C733&quot;,
+  &quot;6101D1E1811DB052F869F7EB3402DAD28DA7E92103D4A44EE43F95846A075012&quot;,
+  &quot;1A60CB5F7E2FB7C09FC3DC8459108B26AC98EE73131F37A28CFDAD5FC75B7A7D&quot;,
+  &quot;97A0497DE585D3BE6EC75064AB3BD0979CD85561193C1F0669CCF4DB31330687&quot;,
+  &quot;02A52C4CC11748D44C9B49D508EE4E46425661981FA1406F30EC0830CB69DDC5&quot;,
+  &quot;6F9832EBB4C3054BEE4A6CE5CCB69C00E2020053E1308353343097E6A4041109&quot;,
+  &quot;F76B13040C634F82A8332FF9443D84C89A5BCED51AE9ADAD7FD15C05FADB4324&quot;,
+  &quot;C99139B0053C4C698EA0246D26D747F2A984C7ABA4613DA818ECD9F97899EF3A&quot;,
+  &quot;8F09274E808E0063D51F34CAC82A5770B3DF30C792E426DA2F6A80657F27AFFC&quot;,
+  &quot;140A7F995B0336942691A2E93E2017FD575267C017C7D0728D69169306F91963&quot;,
+  &quot;A1E457C52EAB430C20D48F2AC476E080386313F16EFB135A0471902CF68CE475&quot;,
+  &quot;5A4E86BBCF0EBC455D2995DB225D9AD682E9B37B6BAD472A604A462099D988BD&quot;,
+  &quot;A892F1EF2E530D67BF948A48C734DA3F27718EB8B883CA0B686DDB0A81071731&quot;,
+  &quot;AA56F350882CE63429C6626567487B041F06168BB60F4FC371A262EABADFA660&quot;,
+  &quot;752C1CFE783ED343E470AB95A4843A23872CDC98B7D3ED5633DD6C881C071A14&quot;,
+  &quot;0628AD6D1FD836B13B22E75FA169502D8CE78B7AD20F0261EB5151DA98437BCA&quot;,
+  &quot;6844CE1539014571360495C6FB50965E813C2721663BDD40D577D9E5163773C6&quot;
+]);
+union isfuzzy=true
+  (DeviceFileEvents
+   | where Timestamp &gt; ago(30d)
+   | where SHA256 in (btmobHashes)
+   | project Timestamp, DeviceName, DeviceId, ActionType, FileName, FolderPath, SHA256,
+             FileOriginUrl, FileOriginReferrerUrl, FileOriginIP,
+             InitiatingProcessFileName, InitiatingProcessCommandLine,
+             InitiatingProcessAccountName, Source=&quot;DeviceFileEvents&quot;),
+  (DeviceProcessEvents
+   | where Timestamp &gt; ago(30d)
+   | where SHA256 in (btmobHashes) or InitiatingProcessSHA256 in (btmobHashes)
+   | project Timestamp, DeviceName, DeviceId, ActionType=&quot;ProcessCreated&quot;, FileName, FolderPath, SHA256,
+             FileOriginUrl=&quot;&quot;, FileOriginReferrerUrl=&quot;&quot;, FileOriginIP=&quot;&quot;,
+             InitiatingProcessFileName, InitiatingProcessCommandLine,
+             InitiatingProcessAccountName=AccountName, Source=&quot;DeviceProcessEvents&quot;)
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-95-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let btmobHashes = dynamic([
+  &quot;58AC130A8EBB09E37592AC69841483EDC5695D1545B1F04F23D5B760AC17CD94&quot;,
+  &quot;0A542751724A432A8448324613E0CE10393E41739A1800CBB7D5A2C648FCDC35&quot;,
+  &quot;A764D73795ABE47AE640BA09999A18C47B5340E5ECC7B897AFEBF34F3F37638F&quot;,
+  &quot;26A2268281E8043125EF72B92F8980B42912048753D56894BC378FB54C7C188A&quot;,
+  &quot;6AE94CE710016D86ED7457236DEEF2C4C51478587F3609B6E827A348828B3931&quot;,
+  &quot;E5A9FDFF900DD502E8F3DCE52D2D1B69AA9AFAFB5094A28F9037E8770DB0E63B&quot;,
+  &quot;C6199E175FB988CBBEACDF0F5ACDF9ED83F5BDAAE5C95B7A6C27EE72CD11B0B1&quot;,
+  &quot;6BBA64FA9E8A7B11CB2476CD071DE08986DB44B0783EFF211C68FA5594EF8143&quot;,
+  &quot;5AAAF972C8BF39A98F2748E526DE3CC0370BA831997D7D9765CDABA599645C0D&quot;,
+  &quot;DDCE0219923D152B8FACD303F058A6286CF1F6924992B9FB9F5BF4D96436CC39&quot;,
+  &quot;D55057CD9110D12A192281356F06B94F342B9FEBB305CF0A5898A7E6AF40758F&quot;,
+  &quot;676CB2D0A60403AFC06CEA1B572CB7261F706365FAC65621B5A4907893E7AC0D&quot;,
+  &quot;75DD4FB011ED598374A46FC0D9C0D1D64A298341C34AFC83A56A6983CFD27764&quot;,
+  &quot;702261BA38B57ECC3A5407FED28B2F0611A74C2EC0C116AEA4F9E6DEF0899AED&quot;,
+  &quot;998A7ED1572AD9DC11375BC25294E1954E606B7CFF9FABC5C120713E597CD274&quot;,
+  &quot;244D81FD9908CD17815501D4EDADEB1BAF1C421AA25D8BD61C7CB481C939540E&quot;,
+  &quot;512EDE9F2FA794907999F3C26165557FDFD383B7AAD71BA022CE2C8BA6C0019D&quot;,
+  &quot;7AC974899E8E05AAACD417577C97E382D5E8C5F7F4A85632CFFB47EC2F6AE4E0&quot;,
+  &quot;168F50BF9A87099094EF410E3AC33E676A6A8740A5437CD09E7B63D73DF8431A&quot;,
+  &quot;2525D1E427A9983B0B4CA0906A4B44FFB9814B23D53FD8A2E3AB6512B027C733&quot;,
+  &quot;6101D1E1811DB052F869F7EB3402DAD28DA7E92103D4A44EE43F95846A075012&quot;,
+  &quot;1A60CB5F7E2FB7C09FC3DC8459108B26AC98EE73131F37A28CFDAD5FC75B7A7D&quot;,
+  &quot;97A0497DE585D3BE6EC75064AB3BD0979CD85561193C1F0669CCF4DB31330687&quot;,
+  &quot;02A52C4CC11748D44C9B49D508EE4E46425661981FA1406F30EC0830CB69DDC5&quot;,
+  &quot;6F9832EBB4C3054BEE4A6CE5CCB69C00E2020053E1308353343097E6A4041109&quot;,
+  &quot;F76B13040C634F82A8332FF9443D84C89A5BCED51AE9ADAD7FD15C05FADB4324&quot;,
+  &quot;C99139B0053C4C698EA0246D26D747F2A984C7ABA4613DA818ECD9F97899EF3A&quot;,
+  &quot;8F09274E808E0063D51F34CAC82A5770B3DF30C792E426DA2F6A80657F27AFFC&quot;,
+  &quot;140A7F995B0336942691A2E93E2017FD575267C017C7D0728D69169306F91963&quot;,
+  &quot;A1E457C52EAB430C20D48F2AC476E080386313F16EFB135A0471902CF68CE475&quot;,
+  &quot;5A4E86BBCF0EBC455D2995DB225D9AD682E9B37B6BAD472A604A462099D988BD&quot;,
+  &quot;A892F1EF2E530D67BF948A48C734DA3F27718EB8B883CA0B686DDB0A81071731&quot;,
+  &quot;AA56F350882CE63429C6626567487B041F06168BB60F4FC371A262EABADFA660&quot;,
+  &quot;752C1CFE783ED343E470AB95A4843A23872CDC98B7D3ED5633DD6C881C071A14&quot;,
+  &quot;0628AD6D1FD836B13B22E75FA169502D8CE78B7AD20F0261EB5151DA98437BCA&quot;,
+  &quot;6844CE1539014571360495C6FB50965E813C2721663BDD40D577D9E5163773C6&quot;
+]);
+union isfuzzy=true
+  (ImFileEvent
+   | where TimeGenerated &gt; ago(30d)
+   | where TargetFileSHA256 in (btmobHashes) or Hash in (btmobHashes)
+   | project TimeGenerated, Host=DvcHostname, FileName=TargetFileName, FilePath=TargetFilePath, SHA256=TargetFileSHA256, ActorUsername, ActingProcessName, Source=&quot;ImFileEvent&quot;),
+  (CommonSecurityLog
+   | where TimeGenerated &gt; ago(30d)
+   | where FileHash in (btmobHashes)
+   | project TimeGenerated, Host=DeviceName, FileName, FilePath, SHA256=FileHash, ActorUsername=SourceUserName, ActingProcessName=ProcessName, Source=&quot;CommonSecurityLog&quot;),
+  (SecurityAlert
+   | where TimeGenerated &gt; ago(30d)
+   | where Entities has_any (btmobHashes)
+   | project TimeGenerated, Host=CompromisedEntity, FileName=AlertName, FilePath=&quot;&quot;, SHA256=&quot;&quot;, ActorUsername=&quot;&quot;, ActingProcessName=ProviderName, Source=&quot;SecurityAlert&quot;)
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-95-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: BTMOB Android RAT APK Hash Match
+id: 4f8a6d2b-3c5e-4a1f-9d8e-2b3c4d5e6f7a
+description: Detects file activity matching one of ESET&#x27;s published BTMOB APK SHA256 hashes. Hash-based, so any match is a true positive.
+references:
+  - https://www.welivesecurity.com/en/malware/btmob-stealthy-rat-burrowing-deep-android-devices/
+  - https://cyble.com/blog/btmob-rat-newly-discovered-android-malware/
+author: SOC Detection Engineering
+date: 2026/05/30
+tags:
+  - attack.t1566.002
+  - attack.t1204.002
+  - attack.initial_access
+  - attack.execution
+logsource:
+  category: file_event
+detection:
+  selection:
+    SHA256:
+      - &#x27;58AC130A8EBB09E37592AC69841483EDC5695D1545B1F04F23D5B760AC17CD94&#x27;
+      - &#x27;0A542751724A432A8448324613E0CE10393E41739A1800CBB7D5A2C648FCDC35&#x27;
+      - &#x27;A764D73795ABE47AE640BA09999A18C47B5340E5ECC7B897AFEBF34F3F37638F&#x27;
+      - &#x27;26A2268281E8043125EF72B92F8980B42912048753D56894BC378FB54C7C188A&#x27;
+      - &#x27;6AE94CE710016D86ED7457236DEEF2C4C51478587F3609B6E827A348828B3931&#x27;
+      - &#x27;E5A9FDFF900DD502E8F3DCE52D2D1B69AA9AFAFB5094A28F9037E8770DB0E63B&#x27;
+      - &#x27;C6199E175FB988CBBEACDF0F5ACDF9ED83F5BDAAE5C95B7A6C27EE72CD11B0B1&#x27;
+      - &#x27;6BBA64FA9E8A7B11CB2476CD071DE08986DB44B0783EFF211C68FA5594EF8143&#x27;
+      - &#x27;5AAAF972C8BF39A98F2748E526DE3CC0370BA831997D7D9765CDABA599645C0D&#x27;
+      - &#x27;DDCE0219923D152B8FACD303F058A6286CF1F6924992B9FB9F5BF4D96436CC39&#x27;
+      - &#x27;D55057CD9110D12A192281356F06B94F342B9FEBB305CF0A5898A7E6AF40758F&#x27;
+      - &#x27;676CB2D0A60403AFC06CEA1B572CB7261F706365FAC65621B5A4907893E7AC0D&#x27;
+      - &#x27;75DD4FB011ED598374A46FC0D9C0D1D64A298341C34AFC83A56A6983CFD27764&#x27;
+      - &#x27;702261BA38B57ECC3A5407FED28B2F0611A74C2EC0C116AEA4F9E6DEF0899AED&#x27;
+      - &#x27;998A7ED1572AD9DC11375BC25294E1954E606B7CFF9FABC5C120713E597CD274&#x27;
+      - &#x27;244D81FD9908CD17815501D4EDADEB1BAF1C421AA25D8BD61C7CB481C939540E&#x27;
+      - &#x27;512EDE9F2FA794907999F3C26165557FDFD383B7AAD71BA022CE2C8BA6C0019D&#x27;
+      - &#x27;7AC974899E8E05AAACD417577C97E382D5E8C5F7F4A85632CFFB47EC2F6AE4E0&#x27;
+      - &#x27;168F50BF9A87099094EF410E3AC33E676A6A8740A5437CD09E7B63D73DF8431A&#x27;
+      - &#x27;2525D1E427A9983B0B4CA0906A4B44FFB9814B23D53FD8A2E3AB6512B027C733&#x27;
+      - &#x27;6101D1E1811DB052F869F7EB3402DAD28DA7E92103D4A44EE43F95846A075012&#x27;
+      - &#x27;1A60CB5F7E2FB7C09FC3DC8459108B26AC98EE73131F37A28CFDAD5FC75B7A7D&#x27;
+      - &#x27;97A0497DE585D3BE6EC75064AB3BD0979CD85561193C1F0669CCF4DB31330687&#x27;
+      - &#x27;02A52C4CC11748D44C9B49D508EE4E46425661981FA1406F30EC0830CB69DDC5&#x27;
+      - &#x27;6F9832EBB4C3054BEE4A6CE5CCB69C00E2020053E1308353343097E6A4041109&#x27;
+      - &#x27;F76B13040C634F82A8332FF9443D84C89A5BCED51AE9ADAD7FD15C05FADB4324&#x27;
+      - &#x27;C99139B0053C4C698EA0246D26D747F2A984C7ABA4613DA818ECD9F97899EF3A&#x27;
+      - &#x27;8F09274E808E0063D51F34CAC82A5770B3DF30C792E426DA2F6A80657F27AFFC&#x27;
+      - &#x27;140A7F995B0336942691A2E93E2017FD575267C017C7D0728D69169306F91963&#x27;
+      - &#x27;A1E457C52EAB430C20D48F2AC476E080386313F16EFB135A0471902CF68CE475&#x27;
+      - &#x27;5A4E86BBCF0EBC455D2995DB225D9AD682E9B37B6BAD472A604A462099D988BD&#x27;
+      - &#x27;A892F1EF2E530D67BF948A48C734DA3F27718EB8B883CA0B686DDB0A81071731&#x27;
+      - &#x27;AA56F350882CE63429C6626567487B041F06168BB60F4FC371A262EABADFA660&#x27;
+      - &#x27;752C1CFE783ED343E470AB95A4843A23872CDC98B7D3ED5633DD6C881C071A14&#x27;
+      - &#x27;0628AD6D1FD836B13B22E75FA169502D8CE78B7AD20F0261EB5151DA98437BCA&#x27;
+      - &#x27;6844CE1539014571360495C6FB50965E813C2721663BDD40D577D9E5163773C6&#x27;
+  condition: selection
+level: critical</code></pre></div>
+    <div class="tab-content" id="art-95-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(source:(windows.sysmon OR linux.auditd OR windows.defender) AND (@Hashes:(*58AC130A8EBB09E37592AC69841483EDC5695D1545B1F04F23D5B760AC17CD94* OR *0A542751724A432A8448324613E0CE10393E41739A1800CBB7D5A2C648FCDC35* OR *A764D73795ABE47AE640BA09999A18C47B5340E5ECC7B897AFEBF34F3F37638F* OR *26A2268281E8043125EF72B92F8980B42912048753D56894BC378FB54C7C188A* OR *6AE94CE710016D86ED7457236DEEF2C4C51478587F3609B6E827A348828B3931* OR *E5A9FDFF900DD502E8F3DCE52D2D1B69AA9AFAFB5094A28F9037E8770DB0E63B* OR *C6199E175FB988CBBEACDF0F5ACDF9ED83F5BDAAE5C95B7A6C27EE72CD11B0B1* OR *6BBA64FA9E8A7B11CB2476CD071DE08986DB44B0783EFF211C68FA5594EF8143*) OR @file.hash.sha256:(58AC130A8EBB09E37592AC69841483EDC5695D1545B1F04F23D5B760AC17CD94 OR 0A542751724A432A8448324613E0CE10393E41739A1800CBB7D5A2C648FCDC35 OR A764D73795ABE47AE640BA09999A18C47B5340E5ECC7B897AFEBF34F3F37638F OR 26A2268281E8043125EF72B92F8980B42912048753D56894BC378FB54C7C188A OR 6AE94CE710016D86ED7457236DEEF2C4C51478587F3609B6E827A348828B3931 OR E5A9FDFF900DD502E8F3DCE52D2D1B69AA9AFAFB5094A28F9037E8770DB0E63B OR C6199E175FB988CBBEACDF0F5ACDF9ED83F5BDAAE5C95B7A6C27EE72CD11B0B1 OR 6BBA64FA9E8A7B11CB2476CD071DE08986DB44B0783EFF211C68FA5594EF8143)))</code></pre></div>
+    <div class="tab-content" id="art-95-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=/^(FileWritten|FileOpenInfo|ProcessRollup2)$/
+| (SHA256HashData=/^(58AC130A8EBB09E37592AC69841483EDC5695D1545B1F04F23D5B760AC17CD94|0A542751724A432A8448324613E0CE10393E41739A1800CBB7D5A2C648FCDC35|A764D73795ABE47AE640BA09999A18C47B5340E5ECC7B897AFEBF34F3F37638F|26A2268281E8043125EF72B92F8980B42912048753D56894BC378FB54C7C188A|6AE94CE710016D86ED7457236DEEF2C4C51478587F3609B6E827A348828B3931|E5A9FDFF900DD502E8F3DCE52D2D1B69AA9AFAFB5094A28F9037E8770DB0E63B|C6199E175FB988CBBEACDF0F5ACDF9ED83F5BDAAE5C95B7A6C27EE72CD11B0B1|6BBA64FA9E8A7B11CB2476CD071DE08986DB44B0783EFF211C68FA5594EF8143|5AAAF972C8BF39A98F2748E526DE3CC0370BA831997D7D9765CDABA599645C0D|DDCE0219923D152B8FACD303F058A6286CF1F6924992B9FB9F5BF4D96436CC39|D55057CD9110D12A192281356F06B94F342B9FEBB305CF0A5898A7E6AF40758F|676CB2D0A60403AFC06CEA1B572CB7261F706365FAC65621B5A4907893E7AC0D|75DD4FB011ED598374A46FC0D9C0D1D64A298341C34AFC83A56A6983CFD27764|702261BA38B57ECC3A5407FED28B2F0611A74C2EC0C116AEA4F9E6DEF0899AED|998A7ED1572AD9DC11375BC25294E1954E606B7CFF9FABC5C120713E597CD274|244D81FD9908CD17815501D4EDADEB1BAF1C421AA25D8BD61C7CB481C939540E|512EDE9F2FA794907999F3C26165557FDFD383B7AAD71BA022CE2C8BA6C0019D|7AC974899E8E05AAACD417577C97E382D5E8C5F7F4A85632CFFB47EC2F6AE4E0|168F50BF9A87099094EF410E3AC33E676A6A8740A5437CD09E7B63D73DF8431A|2525D1E427A9983B0B4CA0906A4B44FFB9814B23D53FD8A2E3AB6512B027C733|6101D1E1811DB052F869F7EB3402DAD28DA7E92103D4A44EE43F95846A075012|1A60CB5F7E2FB7C09FC3DC8459108B26AC98EE73131F37A28CFDAD5FC75B7A7D|97A0497DE585D3BE6EC75064AB3BD0979CD85561193C1F0669CCF4DB31330687|02A52C4CC11748D44C9B49D508EE4E46425661981FA1406F30EC0830CB69DDC5|6F9832EBB4C3054BEE4A6CE5CCB69C00E2020053E1308353343097E6A4041109|F76B13040C634F82A8332FF9443D84C89A5BCED51AE9ADAD7FD15C05FADB4324|C99139B0053C4C698EA0246D26D747F2A984C7ABA4613DA818ECD9F97899EF3A|8F09274E808E0063D51F34CAC82A5770B3DF30C792E426DA2F6A80657F27AFFC|140A7F995B0336942691A2E93E2017FD575267C017C7D0728D69169306F91963|A1E457C52EAB430C20D48F2AC476E080386313F16EFB135A0471902CF68CE475|5A4E86BBCF0EBC455D2995DB225D9AD682E9B37B6BAD472A604A462099D988BD|A892F1EF2E530D67BF948A48C734DA3F27718EB8B883CA0B686DDB0A81071731|AA56F350882CE63429C6626567487B041F06168BB60F4FC371A262EABADFA660|752C1CFE783ED343E470AB95A4843A23872CDC98B7D3ED5633DD6C881C071A14|0628AD6D1FD836B13B22E75FA169502D8CE78B7AD20F0261EB5151DA98437BCA|6844CE1539014571360495C6FB50965E813C2721663BDD40D577D9E5163773C6)$/i)
+| groupBy([aid, ComputerName, TargetFileName, SHA256HashData, ContextImageFileName], function=[count(as=hits), min(@timestamp, as=firstSeen)])
+| sort(firstSeen, order=desc)</code></pre></div>
+    <div class="tab-content" id="art-95-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-95-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-95-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-95-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN (&quot;58AC130A8EBB09E37592AC69841483EDC5695D1545B1F04F23D5B760AC17CD94&quot;,&quot;0A542751724A432A8448324613E0CE10393E41739A1800CBB7D5A2C648FCDC35&quot;,&quot;A764D73795ABE47AE640BA09999A18C47B5340E5ECC7B897AFEBF34F3F37638F&quot;,&quot;26A2268281E8043125EF72B92F8980B42912048753D56894BC378FB54C7C188A&quot;,&quot;6AE94CE710016D86ED7457236DEEF2C4C51478587F3609B6E827A348828B3931&quot;,&quot;E5A9FDFF900DD502E8F3DCE52D2D1B69AA9AFAFB5094A28F9037E8770DB0E63B&quot;,&quot;C6199E175FB988CBBEACDF0F5ACDF9ED83F5BDAAE5C95B7A6C27EE72CD11B0B1&quot;,&quot;6BBA64FA9E8A7B11CB2476CD071DE08986DB44B0783EFF211C68FA5594EF8143&quot;,&quot;5AAAF972C8BF39A98F2748E526DE3CC0370BA831997D7D9765CDABA599645C0D&quot;,&quot;DDCE0219923D152B8FACD303F058A6286CF1F6924992B9FB9F5BF4D96436CC39&quot;,&quot;D55057CD9110D12A192281356F06B94F342B9FEBB305CF0A5898A7E6AF40758F&quot;,&quot;676CB2D0A60403AFC06CEA1B572CB7261F706365FAC65621B5A4907893E7AC0D&quot;,&quot;75DD4FB011ED598374A46FC0D9C0D1D64A298341C34AFC83A56A6983CFD27764&quot;,&quot;702261BA38B57ECC3A5407FED28B2F0611A74C2EC0C116AEA4F9E6DEF0899AED&quot;,&quot;998A7ED1572AD9DC11375BC25294E1954E606B7CFF9FABC5C120713E597CD274&quot;,&quot;244D81FD9908CD17815501D4EDADEB1BAF1C421AA25D8BD61C7CB481C939540E&quot;,&quot;512EDE9F2FA794907999F3C26165557FDFD383B7AAD71BA022CE2C8BA6C0019D&quot;,&quot;7AC974899E8E05AAACD417577C97E382D5E8C5F7F4A85632CFFB47EC2F6AE4E0&quot;,&quot;168F50BF9A87099094EF410E3AC33E676A6A8740A5437CD09E7B63D73DF8431A&quot;,&quot;2525D1E427A9983B0B4CA0906A4B44FFB9814B23D53FD8A2E3AB6512B027C733&quot;,&quot;6101D1E1811DB052F869F7EB3402DAD28DA7E92103D4A44EE43F95846A075012&quot;,&quot;1A60CB5F7E2FB7C09FC3DC8459108B26AC98EE73131F37A28CFDAD5FC75B7A7D&quot;,&quot;97A0497DE585D3BE6EC75064AB3BD0979CD85561193C1F0669CCF4DB31330687&quot;,&quot;02A52C4CC11748D44C9B49D508EE4E46425661981FA1406F30EC0830CB69DDC5&quot;,&quot;6F9832EBB4C3054BEE4A6CE5CCB69C00E2020053E1308353343097E6A4041109&quot;,&quot;F76B13040C634F82A8332FF9443D84C89A5BCED51AE9ADAD7FD15C05FADB4324&quot;,&quot;C99139B0053C4C698EA0246D26D747F2A984C7ABA4613DA818ECD9F97899EF3A&quot;,&quot;8F09274E808E0063D51F34CAC82A5770B3DF30C792E426DA2F6A80657F27AFFC&quot;,&quot;140A7F995B0336942691A2E93E2017FD575267C017C7D0728D69169306F91963&quot;,&quot;A1E457C52EAB430C20D48F2AC476E080386313F16EFB135A0471902CF68CE475&quot;,&quot;5A4E86BBCF0EBC455D2995DB225D9AD682E9B37B6BAD472A604A462099D988BD&quot;,&quot;A892F1EF2E530D67BF948A48C734DA3F27718EB8B883CA0B686DDB0A81071731&quot;,&quot;AA56F350882CE63429C6626567487B041F06168BB60F4FC371A262EABADFA660&quot;,&quot;752C1CFE783ED343E470AB95A4843A23872CDC98B7D3ED5633DD6C881C071A14&quot;,&quot;0628AD6D1FD836B13B22E75FA169502D8CE78B7AD20F0261EB5151DA98437BCA&quot;,&quot;6844CE1539014571360495C6FB50965E813C2721663BDD40D577D9E5163773C6&quot;)) by Filesystem.dest Filesystem.file_name Filesystem.file_hash host | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-95-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN (&quot;58AC130A8EBB09E37592AC69841483EDC5695D1545B1F04F23D5B760AC17CD94&quot;,&quot;0A542751724A432A8448324613E0CE10393E41739A1800CBB7D5A2C648FCDC35&quot;,&quot;A764D73795ABE47AE640BA09999A18C47B5340E5ECC7B897AFEBF34F3F37638F&quot;,&quot;26A2268281E8043125EF72B92F8980B42912048753D56894BC378FB54C7C188A&quot;,&quot;6AE94CE710016D86ED7457236DEEF2C4C51478587F3609B6E827A348828B3931&quot;,&quot;E5A9FDFF900DD502E8F3DCE52D2D1B69AA9AFAFB5094A28F9037E8770DB0E63B&quot;,&quot;C6199E175FB988CBBEACDF0F5ACDF9ED83F5BDAAE5C95B7A6C27EE72CD11B0B1&quot;,&quot;6BBA64FA9E8A7B11CB2476CD071DE08986DB44B0783EFF211C68FA5594EF8143&quot;,&quot;5AAAF972C8BF39A98F2748E526DE3CC0370BA831997D7D9765CDABA599645C0D&quot;,&quot;DDCE0219923D152B8FACD303F058A6286CF1F6924992B9FB9F5BF4D96436CC39&quot;,&quot;D55057CD9110D12A192281356F06B94F342B9FEBB305CF0A5898A7E6AF40758F&quot;,&quot;676CB2D0A60403AFC06CEA1B572CB7261F706365FAC65621B5A4907893E7AC0D&quot;,&quot;75DD4FB011ED598374A46FC0D9C0D1D64A298341C34AFC83A56A6983CFD27764&quot;,&quot;702261BA38B57ECC3A5407FED28B2F0611A74C2EC0C116AEA4F9E6DEF0899AED&quot;,&quot;998A7ED1572AD9DC11375BC25294E1954E606B7CFF9FABC5C120713E597CD274&quot;,&quot;244D81FD9908CD17815501D4EDADEB1BAF1C421AA25D8BD61C7CB481C939540E&quot;,&quot;512EDE9F2FA794907999F3C26165557FDFD383B7AAD71BA022CE2C8BA6C0019D&quot;,&quot;7AC974899E8E05AAACD417577C97E382D5E8C5F7F4A85632CFFB47EC2F6AE4E0&quot;,&quot;168F50BF9A87099094EF410E3AC33E676A6A8740A5437CD09E7B63D73DF8431A&quot;,&quot;2525D1E427A9983B0B4CA0906A4B44FFB9814B23D53FD8A2E3AB6512B027C733&quot;,&quot;6101D1E1811DB052F869F7EB3402DAD28DA7E92103D4A44EE43F95846A075012&quot;,&quot;1A60CB5F7E2FB7C09FC3DC8459108B26AC98EE73131F37A28CFDAD5FC75B7A7D&quot;,&quot;97A0497DE585D3BE6EC75064AB3BD0979CD85561193C1F0669CCF4DB31330687&quot;,&quot;02A52C4CC11748D44C9B49D508EE4E46425661981FA1406F30EC0830CB69DDC5&quot;,&quot;6F9832EBB4C3054BEE4A6CE5CCB69C00E2020053E1308353343097E6A4041109&quot;,&quot;F76B13040C634F82A8332FF9443D84C89A5BCED51AE9ADAD7FD15C05FADB4324&quot;,&quot;C99139B0053C4C698EA0246D26D747F2A984C7ABA4613DA818ECD9F97899EF3A&quot;,&quot;8F09274E808E0063D51F34CAC82A5770B3DF30C792E426DA2F6A80657F27AFFC&quot;,&quot;140A7F995B0336942691A2E93E2017FD575267C017C7D0728D69169306F91963&quot;,&quot;A1E457C52EAB430C20D48F2AC476E080386313F16EFB135A0471902CF68CE475&quot;,&quot;5A4E86BBCF0EBC455D2995DB225D9AD682E9B37B6BAD472A604A462099D988BD&quot;,&quot;A892F1EF2E530D67BF948A48C734DA3F27718EB8B883CA0B686DDB0A81071731&quot;,&quot;AA56F350882CE63429C6626567487B041F06168BB60F4FC371A262EABADFA660&quot;,&quot;752C1CFE783ED343E470AB95A4843A23872CDC98B7D3ED5633DD6C881C071A14&quot;,&quot;0628AD6D1FD836B13B22E75FA169502D8CE78B7AD20F0261EB5151DA98437BCA&quot;,&quot;6844CE1539014571360495C6FB50965E813C2721663BDD40D577D9E5163773C6&quot;)) by Filesystem.dest Filesystem.file_name Filesystem.file_hash host | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="53a9c31d59" data-platforms="def,sent,spl" data-targets="azure,m365,windows">
   <summary>
     <span class="uc-title">Phishing-link click correlated to endpoint execution</span>
     <span class="uc-phase">Delivery</span>
@@ -17421,11 +17799,11 @@ for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Link">T1566.002</span> <span class="ind tech" title="User Execution: Malicious Link">T1204.001</span> <span class="ind tech" title="PowerShell">T1059.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-95-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-95-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-95-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-95-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-95-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-95-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-95-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+    <div class="tab-content active" id="art-95-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
 // Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
 // never spawn a non-browser child process, so the join eliminates the
 // 99% of noise that makes a raw click query unactionable.
@@ -17465,7 +17843,7 @@ DeviceProcessEvents
           Subject, Url, UrlDomain, ActionType,
           FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-95-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+    <div class="tab-content" id="art-95-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
 // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
 // non-browser child process. Lower fidelity than the Defender version.
 let LookbackDays = 7d;
@@ -17490,7 +17868,7 @@ SecurityEvent
           NewProcessName, CommandLine, Sender, Subject
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-95-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-95-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-95-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-95-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+    <div class="tab-content" id="art-95-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-95-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-95-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-95-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats `summariesonly` earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -17522,7 +17900,7 @@ SecurityEvent
 | where delta_sec &gt;= 0 AND delta_sec &lt;= 60
 | table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
         clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-95-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-95-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats summariesonly=false earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -17571,11 +17949,11 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Attachment">T1566.001</span> <span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailAttachmentInfo</span> <span class="ind">DeviceProcessEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-95-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-95-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-95-uc1-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-95-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-95-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-95-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-95-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+    <div class="tab-content active" id="art-95-uc4-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp &gt; ago(LookbackDays)
     | where AccountName !endswith &quot;$&quot;
@@ -17589,7 +17967,7 @@ DeviceProcessEvents
 | join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
           InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256</code></pre></div>
-    <div class="tab-content" id="art-95-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
+    <div class="tab-content" id="art-95-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
 // OfficeActivity Send/Receive activity + correlate to host process spawn.
 let LookbackDays = 7d;
 let MailWithAttach = OfficeActivity
@@ -17612,7 +17990,7 @@ SecurityEvent
           ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-95-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-95-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-95-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-95-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
+    <div class="tab-content" id="art-95-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-95-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-95-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-95-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -17623,7 +18001,7 @@ SecurityEvent
         where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
           AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
         by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-95-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
+     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-95-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -17651,18 +18029,18 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Visual Basic">T1059.005</span> <span class="ind tech" title="System Binary Proxy Execution">T1218</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-95-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-95-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-95-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-95-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-95-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-95-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-95-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-95-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-95-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-95-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
 | where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-95-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-95-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -17685,7 +18063,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-95-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
+    <div class="tab-content" id="art-95-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
 status: experimental
 description: |
@@ -17729,13 +18107,13 @@ falsepositives:
     - Legitimate automation macros in trusted internal documents
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-95-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-95-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-95-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-95-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-95-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-95-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-95-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-95-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-95-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-95-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
@@ -17758,17 +18136,17 @@ level: high
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-95-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-95-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-95-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-95-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-95-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-95-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-95-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-95-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-95-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-95-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
 | where RemoteIP in (&quot;74.125.202.103&quot;, &quot;142.251.183.138&quot;, &quot;173.194.193.138&quot;, &quot;173.194.206.106&quot;, &quot;178.156.177.192&quot;, &quot;191.101.131.250&quot;, &quot;195.160.221.203&quot;, &quot;104.21.64.137&quot;, &quot;173.194.194.94&quot;, &quot;191.96.224.87&quot;, &quot;191.96.225.241&quot;, &quot;191.96.78.172&quot;, &quot;191.96.78.28&quot;, &quot;191.96.79.133&quot;, &quot;191.96.79.179&quot;, &quot;191.96.79.41&quot;, &quot;192.178.209.95&quot;, &quot;200.9.155.153&quot;, &quot;74.125.132.95&quot;, &quot;78.135.93.123&quot;, &quot;79.133.57.141&quot;) or RemoteUrl has_any (&quot;arbsniper.com&quot;)
 | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-95-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;74.125.202.103&quot;, &quot;142.251.183.138&quot;, &quot;173.194.193.138&quot;, &quot;173.194.206.106&quot;, &quot;178.156.177.192&quot;, &quot;191.101.131.250&quot;, &quot;195.160.221.203&quot;, &quot;104.21.64.137&quot;, &quot;173.194.194.94&quot;, &quot;191.96.224.87&quot;, &quot;191.96.225.241&quot;, &quot;191.96.78.172&quot;, &quot;191.96.78.28&quot;, &quot;191.96.79.133&quot;, &quot;191.96.79.179&quot;, &quot;191.96.79.41&quot;, &quot;192.178.209.95&quot;, &quot;200.9.155.153&quot;, &quot;74.125.132.95&quot;, &quot;78.135.93.123&quot;, &quot;79.133.57.141&quot;]);
+    <div class="tab-content" id="art-95-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;74.125.202.103&quot;, &quot;142.251.183.138&quot;, &quot;173.194.193.138&quot;, &quot;173.194.206.106&quot;, &quot;178.156.177.192&quot;, &quot;191.101.131.250&quot;, &quot;195.160.221.203&quot;, &quot;104.21.64.137&quot;, &quot;173.194.194.94&quot;, &quot;191.96.224.87&quot;, &quot;191.96.225.241&quot;, &quot;191.96.78.172&quot;, &quot;191.96.78.28&quot;, &quot;191.96.79.133&quot;, &quot;191.96.79.179&quot;, &quot;191.96.79.41&quot;, &quot;192.178.209.95&quot;, &quot;200.9.155.153&quot;, &quot;74.125.132.95&quot;, &quot;78.135.93.123&quot;, &quot;79.133.57.141&quot;]);
 let BadDomains = dynamic([&quot;arbsniper.com&quot;]);
 ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
@@ -17777,7 +18155,7 @@ ImNetworkSession
 | project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-95-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+    <div class="tab-content" id="art-95-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
 status: experimental
 description: |
@@ -17807,7 +18185,7 @@ falsepositives:
     - None on a true-positive IOC match
 level: critical
 </code></pre></div>
-    <div class="tab-content" id="art-95-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-95-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-95-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-95-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-95-uc6-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-95-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-95-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-95-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;74.125.202.103&quot;, &quot;142.251.183.138&quot;, &quot;173.194.193.138&quot;, &quot;173.194.206.106&quot;, &quot;178.156.177.192&quot;, &quot;191.101.131.250&quot;, &quot;195.160.221.203&quot;, &quot;104.21.64.137&quot;, &quot;173.194.194.94&quot;, &quot;191.96.224.87&quot;, &quot;191.96.225.241&quot;, &quot;191.96.78.172&quot;, &quot;191.96.78.28&quot;, &quot;191.96.79.133&quot;, &quot;191.96.79.179&quot;, &quot;191.96.79.41&quot;, &quot;192.178.209.95&quot;, &quot;200.9.155.153&quot;, &quot;74.125.132.95&quot;, &quot;78.135.93.123&quot;, &quot;79.133.57.141&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -17821,7 +18199,7 @@ level: critical
     [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
         where DNS.query IN (&quot;arbsniper.com&quot;)
         by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-95-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-95-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;74.125.202.103&quot;, &quot;142.251.183.138&quot;, &quot;173.194.193.138&quot;, &quot;173.194.206.106&quot;, &quot;178.156.177.192&quot;, &quot;191.101.131.250&quot;, &quot;195.160.221.203&quot;, &quot;104.21.64.137&quot;, &quot;173.194.194.94&quot;, &quot;191.96.224.87&quot;, &quot;191.96.225.241&quot;, &quot;191.96.78.172&quot;, &quot;191.96.78.28&quot;, &quot;191.96.79.133&quot;, &quot;191.96.79.179&quot;, &quot;191.96.79.41&quot;, &quot;192.178.209.95&quot;, &quot;200.9.155.153&quot;, &quot;74.125.132.95&quot;, &quot;78.135.93.123&quot;, &quot;79.133.57.141&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -17852,12 +18230,12 @@ level: critical
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-95-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-95-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-95-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-95-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-95-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-95-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-95-uc7-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-95-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-95-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
+    <div class="tab-content active" id="art-95-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
 // predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
 // (Initiating only) so column-projection has to differ per side.
 union
@@ -17875,7 +18253,7 @@ union
                   Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
 | order by Timestamp desc
 </code></pre></div>
-    <div class="tab-content" id="art-95-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
+    <div class="tab-content" id="art-95-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
 // Defender version so the engine can push hash predicates per-side.
 let BadHashes = dynamic([&quot;58AC130A8EBB09E37592AC69841483EDC5695D1545B1F04F23D5B760AC17CD94&quot;, &quot;0A542751724A432A8448324613E0CE10393E41739A1800CBB7D5A2C648FCDC35&quot;, &quot;A764D73795ABE47AE640BA09999A18C47B5340E5ECC7B897AFEBF34F3F37638F&quot;, &quot;26A2268281E8043125EF72B92F8980B42912048753D56894BC378FB54C7C188A&quot;, &quot;6AE94CE710016D86ED7457236DEEF2C4C51478587F3609B6E827A348828B3931&quot;, &quot;E5A9FDFF900DD502E8F3DCE52D2D1B69AA9AFAFB5094A28F9037E8770DB0E63B&quot;, &quot;C6199E175FB988CBBEACDF0F5ACDF9ED83F5BDAAE5C95B7A6C27EE72CD11B0B1&quot;, &quot;6BBA64FA9E8A7B11CB2476CD071DE08986DB44B0783EFF211C68FA5594EF8143&quot;, &quot;5AAAF972C8BF39A98F2748E526DE3CC0370BA831997D7D9765CDABA599645C0D&quot;, &quot;DDCE0219923D152B8FACD303F058A6286CF1F6924992B9FB9F5BF4D96436CC39&quot;, &quot;D55057CD9110D12A192281356F06B94F342B9FEBB305CF0A5898A7E6AF40758F&quot;, &quot;676CB2D0A60403AFC06CEA1B572CB7261F706365FAC65621B5A4907893E7AC0D&quot;, &quot;75DD4FB011ED598374A46FC0D9C0D1D64A298341C34AFC83A56A6983CFD27764&quot;, &quot;702261BA38B57ECC3A5407FED28B2F0611A74C2EC0C116AEA4F9E6DEF0899AED&quot;, &quot;998A7ED1572AD9DC11375BC25294E1954E606B7CFF9FABC5C120713E597CD274&quot;, &quot;244D81FD9908CD17815501D4EDADEB1BAF1C421AA25D8BD61C7CB481C939540E&quot;, &quot;512EDE9F2FA794907999F3C26165557FDFD383B7AAD71BA022CE2C8BA6C0019D&quot;, &quot;7AC974899E8E05AAACD417577C97E382D5E8C5F7F4A85632CFFB47EC2F6AE4E0&quot;, &quot;168F50BF9A87099094EF410E3AC33E676A6A8740A5437CD09E7B63D73DF8431A&quot;, &quot;2525D1E427A9983B0B4CA0906A4B44FFB9814B23D53FD8A2E3AB6512B027C733&quot;, &quot;6101D1E1811DB052F869F7EB3402DAD28DA7E92103D4A44EE43F95846A075012&quot;, &quot;1A60CB5F7E2FB7C09FC3DC8459108B26AC98EE73131F37A28CFDAD5FC75B7A7D&quot;, &quot;97A0497DE585D3BE6EC75064AB3BD0979CD85561193C1F0669CCF4DB31330687&quot;, &quot;02A52C4CC11748D44C9B49D508EE4E46425661981FA1406F30EC0830CB69DDC5&quot;, &quot;6F9832EBB4C3054BEE4A6CE5CCB69C00E2020053E1308353343097E6A4041109&quot;, &quot;F76B13040C634F82A8332FF9443D84C89A5BCED51AE9ADAD7FD15C05FADB4324&quot;, &quot;C99139B0053C4C698EA0246D26D747F2A984C7ABA4613DA818ECD9F97899EF3A&quot;, &quot;8F09274E808E0063D51F34CAC82A5770B3DF30C792E426DA2F6A80657F27AFFC&quot;, &quot;140A7F995B0336942691A2E93E2017FD575267C017C7D0728D69169306F91963&quot;, &quot;A1E457C52EAB430C20D48F2AC476E080386313F16EFB135A0471902CF68CE475&quot;]);
 union
@@ -17898,7 +18276,7 @@ union
                   Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-95-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
+    <div class="tab-content" id="art-95-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
 status: experimental
 description: |
@@ -17924,7 +18302,7 @@ falsepositives:
     - None on a true-positive hash match
 level: critical
 </code></pre></div>
-    <div class="tab-content" id="art-95-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-95-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-95-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-95-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-95-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-95-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-95-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-95-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where Filesystem.file_hash IN (&quot;58AC130A8EBB09E37592AC69841483EDC5695D1545B1F04F23D5B760AC17CD94&quot;, &quot;0A542751724A432A8448324613E0CE10393E41739A1800CBB7D5A2C648FCDC35&quot;, &quot;A764D73795ABE47AE640BA09999A18C47B5340E5ECC7B897AFEBF34F3F37638F&quot;, &quot;26A2268281E8043125EF72B92F8980B42912048753D56894BC378FB54C7C188A&quot;, &quot;6AE94CE710016D86ED7457236DEEF2C4C51478587F3609B6E827A348828B3931&quot;, &quot;E5A9FDFF900DD502E8F3DCE52D2D1B69AA9AFAFB5094A28F9037E8770DB0E63B&quot;, &quot;C6199E175FB988CBBEACDF0F5ACDF9ED83F5BDAAE5C95B7A6C27EE72CD11B0B1&quot;, &quot;6BBA64FA9E8A7B11CB2476CD071DE08986DB44B0783EFF211C68FA5594EF8143&quot;, &quot;5AAAF972C8BF39A98F2748E526DE3CC0370BA831997D7D9765CDABA599645C0D&quot;, &quot;DDCE0219923D152B8FACD303F058A6286CF1F6924992B9FB9F5BF4D96436CC39&quot;, &quot;D55057CD9110D12A192281356F06B94F342B9FEBB305CF0A5898A7E6AF40758F&quot;, &quot;676CB2D0A60403AFC06CEA1B572CB7261F706365FAC65621B5A4907893E7AC0D&quot;, &quot;75DD4FB011ED598374A46FC0D9C0D1D64A298341C34AFC83A56A6983CFD27764&quot;, &quot;702261BA38B57ECC3A5407FED28B2F0611A74C2EC0C116AEA4F9E6DEF0899AED&quot;, &quot;998A7ED1572AD9DC11375BC25294E1954E606B7CFF9FABC5C120713E597CD274&quot;, &quot;244D81FD9908CD17815501D4EDADEB1BAF1C421AA25D8BD61C7CB481C939540E&quot;, &quot;512EDE9F2FA794907999F3C26165557FDFD383B7AAD71BA022CE2C8BA6C0019D&quot;, &quot;7AC974899E8E05AAACD417577C97E382D5E8C5F7F4A85632CFFB47EC2F6AE4E0&quot;, &quot;168F50BF9A87099094EF410E3AC33E676A6A8740A5437CD09E7B63D73DF8431A&quot;, &quot;2525D1E427A9983B0B4CA0906A4B44FFB9814B23D53FD8A2E3AB6512B027C733&quot;, &quot;6101D1E1811DB052F869F7EB3402DAD28DA7E92103D4A44EE43F95846A075012&quot;, &quot;1A60CB5F7E2FB7C09FC3DC8459108B26AC98EE73131F37A28CFDAD5FC75B7A7D&quot;, &quot;97A0497DE585D3BE6EC75064AB3BD0979CD85561193C1F0669CCF4DB31330687&quot;, &quot;02A52C4CC11748D44C9B49D508EE4E46425661981FA1406F30EC0830CB69DDC5&quot;, &quot;6F9832EBB4C3054BEE4A6CE5CCB69C00E2020053E1308353343097E6A4041109&quot;, &quot;F76B13040C634F82A8332FF9443D84C89A5BCED51AE9ADAD7FD15C05FADB4324&quot;, &quot;C99139B0053C4C698EA0246D26D747F2A984C7ABA4613DA818ECD9F97899EF3A&quot;, &quot;8F09274E808E0063D51F34CAC82A5770B3DF30C792E426DA2F6A80657F27AFFC&quot;, &quot;140A7F995B0336942691A2E93E2017FD575267C017C7D0728D69169306F91963&quot;, &quot;A1E457C52EAB430C20D48F2AC476E080386313F16EFB135A0471902CF68CE475&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
@@ -17933,7 +18311,7 @@ level: critical
     [| tstats `summariesonly` count from datamodel=Endpoint.Processes
         where Processes.process_hash IN (&quot;58AC130A8EBB09E37592AC69841483EDC5695D1545B1F04F23D5B760AC17CD94&quot;, &quot;0A542751724A432A8448324613E0CE10393E41739A1800CBB7D5A2C648FCDC35&quot;, &quot;A764D73795ABE47AE640BA09999A18C47B5340E5ECC7B897AFEBF34F3F37638F&quot;, &quot;26A2268281E8043125EF72B92F8980B42912048753D56894BC378FB54C7C188A&quot;, &quot;6AE94CE710016D86ED7457236DEEF2C4C51478587F3609B6E827A348828B3931&quot;, &quot;E5A9FDFF900DD502E8F3DCE52D2D1B69AA9AFAFB5094A28F9037E8770DB0E63B&quot;, &quot;C6199E175FB988CBBEACDF0F5ACDF9ED83F5BDAAE5C95B7A6C27EE72CD11B0B1&quot;, &quot;6BBA64FA9E8A7B11CB2476CD071DE08986DB44B0783EFF211C68FA5594EF8143&quot;, &quot;5AAAF972C8BF39A98F2748E526DE3CC0370BA831997D7D9765CDABA599645C0D&quot;, &quot;DDCE0219923D152B8FACD303F058A6286CF1F6924992B9FB9F5BF4D96436CC39&quot;, &quot;D55057CD9110D12A192281356F06B94F342B9FEBB305CF0A5898A7E6AF40758F&quot;, &quot;676CB2D0A60403AFC06CEA1B572CB7261F706365FAC65621B5A4907893E7AC0D&quot;, &quot;75DD4FB011ED598374A46FC0D9C0D1D64A298341C34AFC83A56A6983CFD27764&quot;, &quot;702261BA38B57ECC3A5407FED28B2F0611A74C2EC0C116AEA4F9E6DEF0899AED&quot;, &quot;998A7ED1572AD9DC11375BC25294E1954E606B7CFF9FABC5C120713E597CD274&quot;, &quot;244D81FD9908CD17815501D4EDADEB1BAF1C421AA25D8BD61C7CB481C939540E&quot;, &quot;512EDE9F2FA794907999F3C26165557FDFD383B7AAD71BA022CE2C8BA6C0019D&quot;, &quot;7AC974899E8E05AAACD417577C97E382D5E8C5F7F4A85632CFFB47EC2F6AE4E0&quot;, &quot;168F50BF9A87099094EF410E3AC33E676A6A8740A5437CD09E7B63D73DF8431A&quot;, &quot;2525D1E427A9983B0B4CA0906A4B44FFB9814B23D53FD8A2E3AB6512B027C733&quot;, &quot;6101D1E1811DB052F869F7EB3402DAD28DA7E92103D4A44EE43F95846A075012&quot;, &quot;1A60CB5F7E2FB7C09FC3DC8459108B26AC98EE73131F37A28CFDAD5FC75B7A7D&quot;, &quot;97A0497DE585D3BE6EC75064AB3BD0979CD85561193C1F0669CCF4DB31330687&quot;, &quot;02A52C4CC11748D44C9B49D508EE4E46425661981FA1406F30EC0830CB69DDC5&quot;, &quot;6F9832EBB4C3054BEE4A6CE5CCB69C00E2020053E1308353343097E6A4041109&quot;, &quot;F76B13040C634F82A8332FF9443D84C89A5BCED51AE9ADAD7FD15C05FADB4324&quot;, &quot;C99139B0053C4C698EA0246D26D747F2A984C7ABA4613DA818ECD9F97899EF3A&quot;, &quot;8F09274E808E0063D51F34CAC82A5770B3DF30C792E426DA2F6A80657F27AFFC&quot;, &quot;140A7F995B0336942691A2E93E2017FD575267C017C7D0728D69169306F91963&quot;, &quot;A1E457C52EAB430C20D48F2AC476E080386313F16EFB135A0471902CF68CE475&quot;)
         by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-95-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-95-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Filesystem
     where Filesystem.file_hash IN (&quot;58AC130A8EBB09E37592AC69841483EDC5695D1545B1F04F23D5B760AC17CD94&quot;, &quot;0A542751724A432A8448324613E0CE10393E41739A1800CBB7D5A2C648FCDC35&quot;, &quot;A764D73795ABE47AE640BA09999A18C47B5340E5ECC7B897AFEBF34F3F37638F&quot;, &quot;26A2268281E8043125EF72B92F8980B42912048753D56894BC378FB54C7C188A&quot;, &quot;6AE94CE710016D86ED7457236DEEF2C4C51478587F3609B6E827A348828B3931&quot;, &quot;E5A9FDFF900DD502E8F3DCE52D2D1B69AA9AFAFB5094A28F9037E8770DB0E63B&quot;, &quot;C6199E175FB988CBBEACDF0F5ACDF9ED83F5BDAAE5C95B7A6C27EE72CD11B0B1&quot;, &quot;6BBA64FA9E8A7B11CB2476CD071DE08986DB44B0783EFF211C68FA5594EF8143&quot;, &quot;5AAAF972C8BF39A98F2748E526DE3CC0370BA831997D7D9765CDABA599645C0D&quot;, &quot;DDCE0219923D152B8FACD303F058A6286CF1F6924992B9FB9F5BF4D96436CC39&quot;, &quot;D55057CD9110D12A192281356F06B94F342B9FEBB305CF0A5898A7E6AF40758F&quot;, &quot;676CB2D0A60403AFC06CEA1B572CB7261F706365FAC65621B5A4907893E7AC0D&quot;, &quot;75DD4FB011ED598374A46FC0D9C0D1D64A298341C34AFC83A56A6983CFD27764&quot;, &quot;702261BA38B57ECC3A5407FED28B2F0611A74C2EC0C116AEA4F9E6DEF0899AED&quot;, &quot;998A7ED1572AD9DC11375BC25294E1954E606B7CFF9FABC5C120713E597CD274&quot;, &quot;244D81FD9908CD17815501D4EDADEB1BAF1C421AA25D8BD61C7CB481C939540E&quot;, &quot;512EDE9F2FA794907999F3C26165557FDFD383B7AAD71BA022CE2C8BA6C0019D&quot;, &quot;7AC974899E8E05AAACD417577C97E382D5E8C5F7F4A85632CFFB47EC2F6AE4E0&quot;, &quot;168F50BF9A87099094EF410E3AC33E676A6A8740A5437CD09E7B63D73DF8431A&quot;, &quot;2525D1E427A9983B0B4CA0906A4B44FFB9814B23D53FD8A2E3AB6512B027C733&quot;, &quot;6101D1E1811DB052F869F7EB3402DAD28DA7E92103D4A44EE43F95846A075012&quot;, &quot;1A60CB5F7E2FB7C09FC3DC8459108B26AC98EE73131F37A28CFDAD5FC75B7A7D&quot;, &quot;97A0497DE585D3BE6EC75064AB3BD0979CD85561193C1F0669CCF4DB31330687&quot;, &quot;02A52C4CC11748D44C9B49D508EE4E46425661981FA1406F30EC0830CB69DDC5&quot;, &quot;6F9832EBB4C3054BEE4A6CE5CCB69C00E2020053E1308353343097E6A4041109&quot;, &quot;F76B13040C634F82A8332FF9443D84C89A5BCED51AE9ADAD7FD15C05FADB4324&quot;, &quot;C99139B0053C4C698EA0246D26D747F2A984C7ABA4613DA818ECD9F97899EF3A&quot;, &quot;8F09274E808E0063D51F34CAC82A5770B3DF30C792E426DA2F6A80657F27AFFC&quot;, &quot;140A7F995B0336942691A2E93E2017FD575267C017C7D0728D69169306F91963&quot;, &quot;A1E457C52EAB430C20D48F2AC476E080386313F16EFB135A0471902CF68CE475&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
