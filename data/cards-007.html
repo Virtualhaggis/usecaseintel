@@ -1,128 +1,3 @@
-<article class="card" id="art-193" data-art-slug="2026-05-15-cisa-kev-cve-2026-42897-microsoft-exchange-server-cross-site"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
-  data-sources="CISA KEV"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2026-42897 — Microsoft Exchange Server Cross-Site Scripting Vulnerability Microsoft Exchange Server contains a cross-site scripting vulnerability during web page generation in Outlook Web Access and when certain interaction conditions are met, arbitrary JavaScript can be executed in the browser context. Vendor: Microsoft, Product: Microsoft. Federal patch due: 2026-05-29. CVE-2026-42897  Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-05-15-cisa-kev-cve-2026-42897-microsoft-exchange-server-cross-site" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2026-42897 — Microsoft Exchange Server Cross-Site Scripting Vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
-  <div class="pubmeta">
-    <span>2026-05-15</span>
-    <span>1 use case</span>
-    <span>0 techniques</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Microsoft Exchange Server contains a cross-site scripting vulnerability during web page generation in Outlook Web Access and when certain interaction conditions are met, arbitrary JavaScript can be executed in the browser context. Vendor: Microsoft, Product: Microsoft. Federal patch due: 2026-05-29.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-42897</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-193-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-193"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-193-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-193-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-193-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-193-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-193-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-42897&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-193-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-42897&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-193-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-193-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-193-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-193-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-42897&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-193-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-42897&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-195" data-art-slug="2026-05-14-ghsa-critical-cve-2026-45411-vm2-has-a-sandbox-breakout-usin"
   data-phases="c2,exploit,install,recon,weapon" data-sev="crit"
   data-techs="T1190"
@@ -12223,6 +12098,301 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-224-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-44672&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-225" data-art-slug="2026-05-12-ghsa-critical-cve-2026-44650-sillytavern-has-a-path-traversa"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,cloud,endpoint"
+  data-targets="vcs,windows"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-44650: SillyTavern has a Path Traversal issue SillyTavern has a Path Traversal issue CVE-2026-44650 CVE-2025-59159  [LLM] SillyTavern CVE-2026-44650 unauthenticated POST to vulnerable /api/extensions/* endpoints [LLM] node.exe bulk-deletes SillyTavern data\*\extensions\ directory (CVE-2026-44650 post-exploit) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-05-12-ghsa-critical-cve-2026-44650-sillytavern-has-a-path-traversa" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-886q-f44j-h6wh" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-44650: SillyTavern has a Path Traversal issue</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-05-12</span>
+    <span>3 use cases</span>
+    <span>0 techniques</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">SillyTavern has a Path Traversal issue</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-44650</span> <span class="ind cve">CVE-2025-59159</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-225-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-225"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-225-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] SillyTavern CVE-2026-44650 unauthenticated POST to vulnerable /api/extensions/* endpoints</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] node.exe bulk-deletes SillyTavern data\*\extensions\ directory (CVE-2026-44650 post-exploit)</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="cec72cbf51" data-platforms="datadog,def,sent,sigma,spl" data-targets="vcs,windows" open>
+  <summary>
+    <span class="uc-title">[LLM] SillyTavern CVE-2026-44650 unauthenticated POST to vulnerable /api/extensions/* endpoints</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="cec72cbf51" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects POST requests to the five SillyTavern endpoints vulnerable to path-traversal-via-dot (&#x27;.&#x27;) wipe of the user extensions directory: /api/extensions/{delete,update,version,branches,switch}. Targets the network/web-log pivot — the exploit is a single POST that returns HTTP 200 with a body referencing &#x27;data\default-user\extensions&#x27;. Because no auth is required in default config (basicAuthMode:false), any source IP reaching the listener is suspect.
+
+Rationale: Article-specific URI stems are verbatim from the GHSA PoC (`POST /api/extensions/delete` with body `{&quot;extensionName&quot;:&quot;.&quot;}`) and the explicit &#x27;Same Pattern in Other Endpoints&#x27; list (`/update`, `/version`, `/branches`, `/switch`). No auth means a single 200-OK POST to any of these paths is exploitation. Cross-checked against the DailyCVE write-up which confirms the same five endpoints and PoC shape.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-886q-f44j-h6wh
+  • https://dailycve.com/sillytavern-unauthenticated-path-traversal-directory-deletion-cve-n-a-critical/
+  • https://advisories.gitlab.com/pkg/npm/sillytavern/CVE-2026-34524/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Data Destruction">T1485</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-225-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-225-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-225-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-225-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-225-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-225-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Defender XDR has no native HTTP-server access-log table; this falls back to the egress pivot: a host that *initiated* a POST to a SillyTavern listener.
+// Most useful where Defender-managed clients (browsers / curl from compromised hosts) hit the vulnerable instance.
+DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;ConnectionSuccess&quot;
+| where RemoteUrl has_any (&quot;/api/extensions/delete&quot;,&quot;/api/extensions/update&quot;,&quot;/api/extensions/version&quot;,&quot;/api/extensions/branches&quot;,&quot;/api/extensions/switch&quot;)
+| where InitiatingProcessFileName in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;curl.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;python.exe&quot;,&quot;node.exe&quot;)
+| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-225-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Covers IIS-fronted, App-Service-fronted, CEF/firewall, and any ASIM-normalised web telemetry feeding the SillyTavern listener.
+let vulnPaths = dynamic([&quot;/api/extensions/delete&quot;,&quot;/api/extensions/update&quot;,&quot;/api/extensions/version&quot;,&quot;/api/extensions/branches&quot;,&quot;/api/extensions/switch&quot;]);
+union isfuzzy=true
+(W3CIISLog
+  | where TimeGenerated &gt; ago(7d)
+  | where csMethod =~ &quot;POST&quot;
+  | where csUriStem has_any (vulnPaths)
+  | project TimeGenerated, SrcIp=cIP, DstHost=Computer, Method=csMethod, Uri=csUriStem, Status=scStatus, UserAgent=csUserAgent, Source=&quot;W3CIISLog&quot;),
+(AppServiceHTTPLogs
+  | where TimeGenerated &gt; ago(7d)
+  | where CsMethod =~ &quot;POST&quot;
+  | where CsUriStem has_any (vulnPaths)
+  | project TimeGenerated, SrcIp=CIp, DstHost=CsHost, Method=CsMethod, Uri=CsUriStem, Status=ScStatus, UserAgent=UserAgent, Source=&quot;AppServiceHTTPLogs&quot;),
+(CommonSecurityLog
+  | where TimeGenerated &gt; ago(7d)
+  | where RequestMethod =~ &quot;POST&quot;
+  | where RequestURL has_any (vulnPaths)
+  | project TimeGenerated, SrcIp=SourceIP, DstHost=DestinationHostName, Method=RequestMethod, Uri=RequestURL, Status=tostring(EventOutcome), UserAgent=RequestClientApplication, Source=&quot;CommonSecurityLog&quot;),
+(ImWebSession
+  | where TimeGenerated &gt; ago(7d)
+  | where HttpMethod =~ &quot;POST&quot;
+  | where Url has_any (vulnPaths)
+  | project TimeGenerated, SrcIp=SrcIpAddr, DstHost=DstHostname, Method=HttpMethod, Uri=Url, Status=tostring(HttpStatusCode), UserAgent=HttpRequestHeaderUserAgent, Source=&quot;ImWebSession&quot;)
+| where Status startswith &quot;2&quot; or Status == &quot;200&quot;
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-225-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: SillyTavern Extensions Wipe via Path Traversal (CVE-2026-44650)
+id: 7f3c2d18-9b4e-4a92-86f1-2c9e44650abc
+description: Detects POST requests to the SillyTavern /api/extensions/{delete,update,version,branches,switch} endpoints which are vulnerable to unauthenticated path-traversal recursive deletion of the user extensions directory.
+references:
+  - https://github.com/advisories/GHSA-886q-f44j-h6wh
+  - https://dailycve.com/sillytavern-unauthenticated-path-traversal-directory-deletion-cve-n-a-critical/
+author: SOC Detection Engineering
+date: 2026/05/20
+tags:
+  - attack.t1190
+  - attack.t1485
+  - attack.initial_access
+  - attack.impact
+  - cve.2026.44650
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-method: POST
+    cs-uri-stem|contains:
+      - &#x27;/api/extensions/delete&#x27;
+      - &#x27;/api/extensions/update&#x27;
+      - &#x27;/api/extensions/version&#x27;
+      - &#x27;/api/extensions/branches&#x27;
+      - &#x27;/api/extensions/switch&#x27;
+  condition: selection
+falsepositives:
+  - Legitimate SillyTavern administrators uninstalling/upgrading extensions through the UI
+level: high</code></pre></div>
+    <div class="tab-content" id="art-225-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>@http.method:POST (@http.url_details.path:&quot;/api/extensions/delete&quot; OR @http.url_details.path:&quot;/api/extensions/update&quot; OR @http.url_details.path:&quot;/api/extensions/version&quot; OR @http.url_details.path:&quot;/api/extensions/branches&quot; OR @http.url_details.path:&quot;/api/extensions/switch&quot;) @http.status_code:[200 TO 299]</code></pre></div>
+    <div class="tab-content" id="art-225-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-225-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-225-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-225-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.user_agent) as user_agent values(Web.status) as status values(Web.dest) as dest from datamodel=Web where Web.http_method=POST AND (Web.url=&quot;*/api/extensions/delete*&quot; OR Web.url=&quot;*/api/extensions/update*&quot; OR Web.url=&quot;*/api/extensions/version*&quot; OR Web.url=&quot;*/api/extensions/branches*&quot; OR Web.url=&quot;*/api/extensions/switch*&quot;) by Web.src Web.url Web.http_method Web.status
+| `drop_dm_object_name(&quot;Web&quot;)`
+| where status=200
+| convert ctime(firstTime) ctime(lastTime)
+| sort - firstTime</code></pre><pre class="spl-mode-body" id="art-225-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.user_agent) as user_agent values(Web.status) as status values(Web.dest) as dest from datamodel=Web where Web.http_method=POST AND (Web.url=&quot;*/api/extensions/delete*&quot; OR Web.url=&quot;*/api/extensions/update*&quot; OR Web.url=&quot;*/api/extensions/version*&quot; OR Web.url=&quot;*/api/extensions/branches*&quot; OR Web.url=&quot;*/api/extensions/switch*&quot;) by Web.src Web.url Web.http_method Web.status
+| `drop_dm_object_name(&quot;Web&quot;)`
+| where status=200
+| convert ctime(firstTime) ctime(lastTime)
+| sort - firstTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="9aa0a37f9b" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">[LLM] node.exe bulk-deletes SillyTavern data\*\extensions\ directory (CVE-2026-44650 post-exploit)</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="9aa0a37f9b" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the destructive side-effect of CVE-2026-44650: the SillyTavern node.exe process recursively deleting files under `data\&lt;user&gt;\extensions\`. The GHSA PoC shows `fs.promises.rm(extensionPath, { recursive: true })` against `data\default-user\extensions` — this surfaces as a tight burst of FileDeleted events from a single node.exe PID against files under that path. Hits even when no web logs are retained.
+
+Rationale: PoC body &#x27;Extension has been deleted at data\default-user\extensions&#x27; confirms the destructive path pattern — `&lt;basePath&gt;\data\&lt;user&gt;\extensions\`. SillyTavern is a Node app so the deleting process is `node.exe`. Threshold of 5 deletions/minute distinguishes a wipe from the single-file legitimate uninstall (which removes one extension subdir, typically 1-3 files in one event). Cross-checked against related SillyTavern path-traversal CVEs (2026-34522/-34523/-34524) which describe the same parent directory layout.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-886q-f44j-h6wh
+  • https://dailycve.com/sillytavern-unauthenticated-path-traversal-directory-deletion-cve-n-a-critical/
+  • https://advisories.gitlab.com/pkg/npm/sillytavern/CVE-2026-34524/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Destruction">T1485</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-225-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-225-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-225-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-225-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-225-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-225-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;FileDeleted&quot;
+| where InitiatingProcessFileName =~ &quot;node.exe&quot;
+| where FolderPath has @&quot;\data\&quot; and FolderPath has @&quot;\extensions\&quot;
+| summarize DeletedCount = count(),
+            FirstDeletion = min(Timestamp),
+            LastDeletion  = max(Timestamp),
+            SampleFiles   = make_set(FileName, 25),
+            SamplePaths   = make_set(FolderPath, 10)
+            by DeviceName, InitiatingProcessId, InitiatingProcessFolderPath, InitiatingProcessCommandLine, bin(Timestamp, 1m)
+| where DeletedCount &gt;= 5     // 5+ files removed under data\*\extensions\ in 1 minute = bulk wipe, not a single uninstall
+| order by FirstDeletion desc</code></pre></div>
+    <div class="tab-content" id="art-225-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventType == &quot;FileDeleted&quot;
+| where ActingProcessName endswith_cs &quot;node.exe&quot; or ActingProcessName endswith_cs &quot;Node.exe&quot;
+| where TargetFilePath has @&quot;\data\&quot; and TargetFilePath has @&quot;\extensions\&quot;
+| summarize DeletedCount = count(),
+            FirstDeletion = min(TimeGenerated),
+            LastDeletion  = max(TimeGenerated),
+            SampleFiles   = make_set(TargetFileName, 25),
+            SamplePaths   = make_set(TargetFilePath, 10)
+            by DvcHostname, ActingProcessId, ActingProcessName, ActingProcessCommandLine, bin(TimeGenerated, 1m)
+| where DeletedCount &gt;= 5
+| order by FirstDeletion desc</code></pre></div>
+    <div class="tab-content" id="art-225-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:23 (@Image:*\\node.exe OR @Image:*\\Node.exe OR @Image:*\\NODE.EXE) (@TargetFilename:*\\data\\*\\extensions\\* OR @TargetFilename:*\\Data\\*\\Extensions\\*)</code></pre></div>
+    <div class="tab-content" id="art-225-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileDeleted ContextImageFileName=/\\node\.exe$/i TargetFileName=/\\data\\[^\\]+\\extensions\\/i
+| groupBy([aid, ComputerName, ContextProcessId, ContextImageFileName], function=count(as=DeletedCount))
+| DeletedCount &gt;= 5</code></pre></div>
+    <div class="tab-content" id="art-225-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-225-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-225-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-225-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where Filesystem.action=deleted AND Filesystem.process_name=node.exe AND Filesystem.file_path=&quot;*\\data\\*\\extensions\\*&quot; by Filesystem.dest Filesystem.process_id span=1m
+| `drop_dm_object_name(&quot;Filesystem&quot;)`
+| where count &gt;= 5
+| convert ctime(firstTime) ctime(lastTime)
+| sort - firstTime</code></pre><pre class="spl-mode-body" id="art-225-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where Filesystem.action=deleted AND Filesystem.process_name=node.exe AND Filesystem.file_path=&quot;*\\data\\*\\extensions\\*&quot; by Filesystem.dest Filesystem.process_id span=1m
+| `drop_dm_object_name(&quot;Filesystem&quot;)`
+| where count &gt;= 5
+| convert ctime(firstTime) ctime(lastTime)
+| sort - firstTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-225-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-225-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-225-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-225-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-44650&quot;, &quot;CVE-2025-59159&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-225-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-44650&quot;, &quot;CVE-2025-59159&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-225-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-225-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-225-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-225-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-44650&quot;, &quot;CVE-2025-59159&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-225-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-44650&quot;, &quot;CVE-2025-59159&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
