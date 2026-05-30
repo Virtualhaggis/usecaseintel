@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Repeated SUID helper invocation (ssh-keysign/chage) by unprivileged user — ssh-keysign-pwn race
 
-`UC_132_6` · phase: **exploit** · confidence: **High**
+`UC_142_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### [LLM] kernel.yama.ptrace_scope lowered or disabled — ssh-keysign-pwn mitigation tampering
 
-`UC_132_7` · phase: **weapon** · confidence: **Medium**
+`UC_142_7` · phase: **weapon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### [LLM] Read of /etc/shadow or /etc/ssh/*_key by non-root, non-canonical process — ssh-keysign-pwn post-exploit
 
-`UC_132_8` · phase: **actions** · confidence: **High**
+`UC_142_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceFileEvents
 
 ### [LLM] RDS kernel module loaded — PinTheft LPE exploit prerequisite
 
-`UC_132_9` · phase: **weapon** · confidence: **High**
+`UC_142_9` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -221,7 +221,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 9-Year-Old Linux Kernel Flaw Enables Root Command Execution on Major Distros
 
-`UC_132_5` · phase: **install** · confidence: **High**
+`UC_142_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

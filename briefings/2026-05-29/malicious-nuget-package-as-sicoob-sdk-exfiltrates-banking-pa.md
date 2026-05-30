@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious Sicoob.Sdk NuGet package restore to .NET project
 
-`UC_15_9` · phase: **delivery** · confidence: **High**
+`UC_25_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceFileEvents
 
 ### [LLM] PFX certificate read by .NET process correlated with attacker Sentry egress
 
-`UC_15_10` · phase: **actions** · confidence: **High**
+`UC_25_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ PfxReads
 
 ### [LLM] Outbound traffic to attacker Sentry tenant o4511335034847232.ingest.de.sentry.io
 
-`UC_15_11` · phase: **c2** · confidence: **High**
+`UC_25_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

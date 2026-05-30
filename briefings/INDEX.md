@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -22,6 +22,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47140 nodevm builtin denylist bypass ](./2026-05-29/ghsa-critical-cve-2026-47140-nodevm-builtin-denylist-bypass-.md)
 - [ghsa critical cve 2026 47208 vm2 is vulnerable to sandbox br](./2026-05-29/ghsa-critical-cve-2026-47208-vm2-is-vulnerable-to-sandbox-br.md)
 - [ghsa critical cve 2026 47210 vm2 sandbox escape via jspi bac](./2026-05-29/ghsa-critical-cve-2026-47210-vm2-sandbox-escape-via-jspi-bac.md)
+- [ghsa critical cve 2026 47391 praisonai s unauthenticated a2a](./2026-05-29/ghsa-critical-cve-2026-47391-praisonai-s-unauthenticated-a2a.md)
+- [ghsa critical cve 2026 47392 praisonai vulnerable to sandbox](./2026-05-29/ghsa-critical-cve-2026-47392-praisonai-vulnerable-to-sandbox.md)
+- [ghsa critical cve 2026 47393 praisonai deploy type api emits](./2026-05-29/ghsa-critical-cve-2026-47393-praisonai-deploy-type-api-emits.md)
+- [ghsa critical cve 2026 47407 praisonai platform has a cross ](./2026-05-29/ghsa-critical-cve-2026-47407-praisonai-platform-has-a-cross-.md)
+- [ghsa critical cve 2026 47410 praisonai platform jwt signing ](./2026-05-29/ghsa-critical-cve-2026-47410-praisonai-platform-jwt-signing-.md)
+- [ghsa critical cve 2026 47416 praisonai platform any workspac](./2026-05-29/ghsa-critical-cve-2026-47416-praisonai-platform-any-workspac.md)
 - [hackers use fake adobe document cloud pages to deliver scree](./2026-05-29/hackers-use-fake-adobe-document-cloud-pages-to-deliver-scree.md)
 - [hackers use fake video player updates to deploy miner and ra](./2026-05-29/hackers-use-fake-video-player-updates-to-deploy-miner-and-ra.md)
 - [how relay network adopted ai coding securely and built the f](./2026-05-29/how-relay-network-adopted-ai-coding-securely-and-built-the-f.md)
@@ -240,13 +246,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-08
 - [cisa kev cve 2026 42208 berriai litellm sql injection vulner](./2026-05-08/cisa-kev-cve-2026-42208-berriai-litellm-sql-injection-vulner.md)
 - [cve 2025 68670 discovering an rce vulnerability in xrdp](./2026-05-08/cve-2025-68670-discovering-an-rce-vulnerability-in-xrdp.md)
-- [ghsa critical cve 2026 43940 electerm runwidget has a path t](./2026-05-08/ghsa-critical-cve-2026-43940-electerm-runwidget-has-a-path-t.md)
-- [ghsa critical cve 2026 44211 cline kanban server has a cross](./2026-05-08/ghsa-critical-cve-2026-44211-cline-kanban-server-has-a-cross.md)
-- [ghsa critical cve 2026 44327 free5gc s nef nnef oam route gr](./2026-05-08/ghsa-critical-cve-2026-44327-free5gc-s-nef-nnef-oam-route-gr.md)
-- [ghsa critical cve 2026 44329 free5gc s smf upi management in](./2026-05-08/ghsa-critical-cve-2026-44329-free5gc-s-smf-upi-management-in.md)
-- [ghsa critical cve 2026 44330 free5gc s nef nnef pfdmanagemen](./2026-05-08/ghsa-critical-cve-2026-44330-free5gc-s-nef-nnef-pfdmanagemen.md)
-- [ghsa critical cve 2026 44551 open webui has an ldap empty pa](./2026-05-08/ghsa-critical-cve-2026-44551-open-webui-has-an-ldap-empty-pa.md)
-- [ghsa critical cve 2026 44588 siyuan electron renderer rce vi](./2026-05-08/ghsa-critical-cve-2026-44588-siyuan-electron-renderer-rce-vi.md)
 
 ## 2026-05-07
 - [cisa kev cve 2026 6973 ivanti endpoint manager mobile epmm i](./2026-05-07/cisa-kev-cve-2026-6973-ivanti-endpoint-manager-mobile-epmm-i.md)

@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — How to use AI for software development and cybersecurity
 
-`UC_1376_0` · phase: **exploit** · confidence: **High**
+`UC_1378_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

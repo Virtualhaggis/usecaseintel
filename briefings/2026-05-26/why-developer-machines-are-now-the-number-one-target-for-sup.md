@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud npm worm C2/exfil egress (masscan.cloud, git-tanstack.com, getsession.org)
 
-`UC_83_5` · phase: **actions** · confidence: **High**
+`UC_93_5` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceNetworkEvents
 
 ### [LLM] Package-manager process harvesting cloud metadata / Vault (IMDS 169.254.169.254, ECS 169.254.170.2, Vault :8200)
 
-`UC_83_6` · phase: **actions** · confidence: **Medium**
+`UC_93_6` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceNetworkEvents
 
 ### [LLM] Mini Shai-Hulud 'gh-token-monitor' persistence daemon (LaunchAgent / systemd)
 
-`UC_83_7` · phase: **install** · confidence: **High**
+`UC_93_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceFileEvents
 
 ### [LLM] npm/bun process writing GitHub Actions workflow files (worm secret-exfil injection)
 
-`UC_83_8` · phase: **actions** · confidence: **Medium**
+`UC_93_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
