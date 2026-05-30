@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] MuddyWater Fooder loader (OsUpdater.exe) execution from Downloads
 
-`UC_643_0` · phase: **install** · confidence: **High**
+`UC_644_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### [LLM] MuddyViper persistence via ManageOnDriveUpdater scheduled task or Startup folder hijack
 
-`UC_643_1` · phase: **install** · confidence: **High**
+`UC_644_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ union SchedTaskHits, StartupHijackHits
 
 ### [LLM] MuddyViper C2 fingerprint: 'A WinHTTP Example Program/1.0' UA + distinctive URI paths
 
-`UC_643_2` · phase: **c2** · confidence: **High**
+`UC_644_2` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceNetworkEvents
 
 ### [LLM] MuddyWater CE-Notes / LP-Notes / Blub stealer staging-file writes
 
-`UC_643_3` · phase: **actions** · confidence: **High**
+`UC_644_3` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ DeviceFileEvents
 
 ### [LLM] Non-browser process reading Chrome/Edge/Opera Login Data or Local State
 
-`UC_643_4` · phase: **actions** · confidence: **High**
+`UC_644_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
