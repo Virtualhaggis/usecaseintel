@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Browser/proxy fetch of compromised @lottiefiles/lottie-player from unpkg or jsDelivr CDN
 
-`UC_1075_4` · phase: **delivery** · confidence: **High**
+`UC_1061_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceNetworkEvents
 
 ### [LLM] npm/yarn/pnpm install of compromised @lottiefiles/lottie-player versions 2.0.5-2.0.7
 
-`UC_1075_5` · phase: **install** · confidence: **High**
+`UC_1061_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -161,7 +161,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Lottie Player npm package compromised for crypto wallet theft
 
-`UC_1075_3` · phase: **exploit** · confidence: **High**
+`UC_1061_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
