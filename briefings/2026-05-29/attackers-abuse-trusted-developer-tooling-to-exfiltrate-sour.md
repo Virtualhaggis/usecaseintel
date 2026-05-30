@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Nx Console v18.95.0 payload — kitty/cat.py backdoor file drop
 
-`UC_30_13` · phase: **install** · confidence: **High**
+`UC_31_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceFileEvents
 
 ### [LLM] GitHub Search API dead-drop C2 polling (firedalazer marker)
 
-`UC_30_14` · phase: **c2** · confidence: **High**
+`UC_31_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceNetworkEvents
 
 ### [LLM] Megalodon C2 IP egress — 216.126.225.129:8443
 
-`UC_30_15` · phase: **c2** · confidence: **High**
+`UC_31_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceNetworkEvents
 
 ### [LLM] AWS IMDS access from VS Code / Node / Bun developer tooling
 
-`UC_30_16` · phase: **actions** · confidence: **Medium**
+`UC_31_16` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ DeviceNetworkEvents
 
 ### [LLM] macOS LaunchAgent kitty-monitor persistence
 
-`UC_30_17` · phase: **install** · confidence: **High**
+`UC_31_17` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -179,7 +179,7 @@ DeviceFileEvents
 
 ### [LLM] Megalodon malicious GitHub Actions workflow file written to repo
 
-`UC_30_18` · phase: **delivery** · confidence: **Medium**
+`UC_31_18` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -518,7 +518,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Attackers Abuse Trusted Developer Tooling to Exfiltrate Source Code and Secrets
 
-`UC_30_12` · phase: **exploit** · confidence: **High**
+`UC_31_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

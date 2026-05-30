@@ -11,6 +11,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-30
 - [greyvibe hackers leverage chatgpt and google gemini to fuel ](./2026-05-30/greyvibe-hackers-leverage-chatgpt-and-google-gemini-to-fuel-.md)
 - [malicious npm packages abuse dependency confusion to profile](./2026-05-30/malicious-npm-packages-abuse-dependency-confusion-to-profile.md)
+- [palo alto globalprotect vpn auth bypass flaw now exploited i](./2026-05-30/palo-alto-globalprotect-vpn-auth-bypass-flaw-now-exploited-i.md)
 - [pan os globalprotect authentication bypass cve 2026 0257 und](./2026-05-30/pan-os-globalprotect-authentication-bypass-cve-2026-0257-und.md)
 
 ## 2026-05-29
@@ -53,7 +54,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [jinx 0164 targets cryptocurrency firms with fake recruiter l](./2026-05-28/jinx-0164-targets-cryptocurrency-firms-with-fake-recruiter-l.md)
 - [less panic patching more precision](./2026-05-28/less-panic-patching-more-precision.md)
 - [microsoft slams public zero day disclosures amid github rese](./2026-05-28/microsoft-slams-public-zero-day-disclosures-amid-github-rese.md)
-- [new gogs zero day flaw lets hackers get remote code executio](./2026-05-28/new-gogs-zero-day-flaw-lets-hackers-get-remote-code-executio.md)
 - [pirates in the crosshairs how one cybercrime gang has been i](./2026-05-28/pirates-in-the-crosshairs-how-one-cybercrime-gang-has-been-i.md)
 - [the gentlemen ransomware dissecting a self propagating go en](./2026-05-28/the-gentlemen-ransomware-dissecting-a-self-propagating-go-en.md)
 - [threat actors exploit critical forticlient ems flaw to deplo](./2026-05-28/threat-actors-exploit-critical-forticlient-ems-flaw-to-deplo.md)
