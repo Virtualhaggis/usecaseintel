@@ -8,6 +8,10 @@ _1253 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-30
+- [malicious npm packages abuse dependency confusion to profile](./2026-05-30/malicious-npm-packages-abuse-dependency-confusion-to-profile.md)
+- [palo alto networks pan os authentication vulnerability bypas](./2026-05-30/palo-alto-networks-pan-os-authentication-vulnerability-bypas.md)
+
 ## 2026-05-29
 - [attackers abuse trusted developer tooling to exfiltrate sour](./2026-05-29/attackers-abuse-trusted-developer-tooling-to-exfiltrate-sour.md)
 - [attackers use llm agent for post exploitation after marimo c](./2026-05-29/attackers-use-llm-agent-for-post-exploitation-after-marimo-c.md)
@@ -33,7 +37,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [how relay network adopted ai coding securely and built the f](./2026-05-29/how-relay-network-adopted-ai-coding-securely-and-built-the-f.md)
 - [jinx 0164 threat actor using linkedin social engineering to ](./2026-05-29/jinx-0164-threat-actor-using-linkedin-social-engineering-to-.md)
 - [kimsuky deploys httpspy expands arsenal with hellodoor and v](./2026-05-29/kimsuky-deploys-httpspy-expands-arsenal-with-hellodoor-and-v.md)
-- [legitimate looking codex remote ui steals openai codex authe](./2026-05-29/legitimate-looking-codex-remote-ui-steals-openai-codex-authe.md)
 - [malicious nuget package as sicoob sdk exfiltrates banking pa](./2026-05-29/malicious-nuget-package-as-sicoob-sdk-exfiltrates-banking-pa.md)
 - [malicious sicoob nuget steals banking credentials as npm pac](./2026-05-29/malicious-sicoob-nuget-steals-banking-credentials-as-npm-pac.md)
 - [microsoft is named a leader in the 2026 gartner magic quadra](./2026-05-29/microsoft-is-named-a-leader-in-the-2026-gartner-magic-quadra.md)
@@ -149,7 +152,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46421 supply chain compromise via mal](./2026-05-20/ghsa-critical-cve-2026-46421-supply-chain-compromise-via-mal.md)
 - [github breached via a malicious vs code extension why develo](./2026-05-20/github-breached-via-a-malicious-vs-code-extension-why-develo.md)
 - [mini shai hulud compromised antv npm packages enable ci cd c](./2026-05-20/mini-shai-hulud-compromised-antv-npm-packages-enable-ci-cd-c.md)
-- [securing the gaming culture of cultures](./2026-05-20/securing-the-gaming-culture-of-cultures.md)
 - [the wild west of vs code extensions and how a poisoned exten](./2026-05-20/the-wild-west-of-vs-code-extensions-and-how-a-poisoned-exten.md)
 - [tracking tamperedchef clusters via certificate and code reus](./2026-05-20/tracking-tamperedchef-clusters-via-certificate-and-code-reus.md)
 - [webworm new burrowing techniques](./2026-05-20/webworm-new-burrowing-techniques.md)

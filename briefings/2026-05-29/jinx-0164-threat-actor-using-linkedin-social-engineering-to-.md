@@ -92,7 +92,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] JINX-0164 AUDIOFIX/MINIRAT macOS LaunchAgent plist persistence
 
-`UC_21_11` · phase: **install** · confidence: **High**
+`UC_23_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceFileEvents
 
 ### [LLM] JINX-0164 C2 and payload delivery infrastructure callback
 
-`UC_21_12` · phase: **c2** · confidence: **High**
+`UC_23_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceNetworkEvents
 
 ### [LLM] Trojanized npm @velora-dex/sdk v4.9.1 install or import
 
-`UC_21_13` · phase: **delivery** · confidence: **High**
+`UC_23_13` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +156,7 @@ union isfuzzy=true
 
 ### [LLM] User access to JINX-0164 fake conferencing platform domains (Teams/Slack/Bitget spoofs)
 
-`UC_21_14` · phase: **delivery** · confidence: **High**
+`UC_23_14` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -180,7 +180,7 @@ union isfuzzy=true ClickHits, NetHits
 
 ### [LLM] nord-stream CI/CD secret-exfiltration tool execution
 
-`UC_21_15` · phase: **actions** · confidence: **Medium**
+`UC_23_15` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -490,7 +490,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — JINX-0164 Threat Actor Using LinkedIn Social Engineering to Deploy Custom macOS
 
-`UC_21_10` · phase: **install** · confidence: **High**
+`UC_23_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
