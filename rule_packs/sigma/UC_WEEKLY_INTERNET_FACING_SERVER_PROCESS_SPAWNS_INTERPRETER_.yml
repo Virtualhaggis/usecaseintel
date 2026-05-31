@@ -1,0 +1,41 @@
+title: [WEEKLY] Internet-facing server process spawns interpreter then beacons to first-seen external host within 5 minutes
+id: UC_WEEKLY_INTERNET_FACING_SERVER_PROCESS_SPAWNS_INTERPRETER_
+status: experimental
+description: Detects the post-exploitation chain in which a server-side process exposed to the internet (web-worker, edge appliance daemon, endpoint-management agent, IIS worker) spawns a scripting interpreter or LOLBin, and that child process — within a 5-minute window — initiates outbound traffic to an external host the organisation has not contacted in the prior 30 days. This fortnight the pattern dominates the briefing set: Microsoft's 'From edge appliance to enterprise compromise: Multi-stage Linux intrusion via F5 and Confluence' (2026-05-22) chains CVE-2025-33073 from edge to lateral, Arctic Wolf's 'Threat Actors Exploit Critical FortiClient EMS Flaw to Deploy Credential Stealer' (2026-05-28, CVE-2026-35616) abuses EmsService.exe to drop stealers, Talos's 'From PDB strings to MaaS: Tracking a commodity BadIIS ecosystem' (2026-05-19) places its loader under w3wp, and the LiquidJS SSTI advisory (CVE-2026-45618, 2026-05-27) hands attackers a node-driven RCE primitive — every one of these surfaces an interpreter child of a server parent followed almost immediately by attacker-infra callout. Spans exploit -> install -> c2 in a single signal. It fires when both the parent-child relation and a first-seen public destination hold inside the window; it will NOT fire on routine sysadmin shells against the same parent, scheduled patching/telemetry to long-established vendor endpoints (those clear the 30-day baseline), or interpreter spawns whose only egress is to internal/RFC1918 ranges.
+references:
+  - https://clankerusecase.com/use_cases/install/UC_WEEKLY_INTERNET_FACING_SERVER_PROCESS_SPAWNS_INTERPRETER_.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.install
+  - attack.t1190
+  - attack.t1059
+  - attack.t1505_004
+  - attack.t1071_001
+  - attack.t1105
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'w3wp.exe'
+      - 'httpd.exe'
+      - 'httpd'
+      - 'nginx.exe'
+      - 'nginx'
+      - 'java.exe'
+      - 'java'
+      - 'node.exe'
+      - 'node'
+      - 'tomcat.exe'
+      - 'EmsService.exe'
+      - 'fmsd'
+      - 'jboss.exe'
+      - 'confluence'
+      - 'atlassian-confluence'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

@@ -1,0 +1,43 @@
+title: [WEEKLY] Language-runtime server (node/python/java) spawns OS shell shortly after inbound request — eval / sandbox-escape exploitation chain
+id: UC_WEEKLY_LANGUAGE_RUNTIME_SERVER_NODE_PYTHON_JAVA_SPAWNS_OS
+status: experimental
+description: Detects the joint pattern across this fortnight's wave of server-side code-injection and sandbox-escape CVEs: a language-runtime process that hosts a network listener (Node.js, Python/uvicorn/gunicorn, Java/Yamcs) spawns an OS interpreter or LOLBin within ~5 minutes of accepting an inbound HTTP/JSON-RPC request. The pattern is the common terminal step across the five vm2 sandbox escapes ('CVE-2026-47131 vm2 Sandbox Escape', 'CVE-2026-47137 vm2 nesting:true patch bypass', 'CVE-2026-47140 NodeVM builtin denylist bypass', 'CVE-2026-47208 vm2 Promise species sandbox breakout', 'CVE-2026-47210 vm2 JSPI .finally() species bypass'), the PraisonAI eval/exec chain ('CVE-2026-47391 PraisonAI unauthenticated A2A eval()', 'CVE-2026-47392 PraisonAI print.__self__ builtins leak', 'CVE-2026-47393 PraisonAI deploy --type api auth-disabled Flask'), and the Yamcs Janino server-side code injection ('CVE-2026-44632'). It spans the exploit → install kill-chain transition: a sandboxed evaluator inside the runtime is bypassed, runtime gains arbitrary code execution in-process, and the very first observable artefact is a child OS shell or downloader. Fires when the runtime is reachable from an external IP and produces a shell/curl/wget/certutil child within the correlation window; does NOT fire on developer workstations running `npm test`/`pytest` (no inbound public connection) nor on legitimate uvicorn worker forks (filtered by child filename), and does NOT fire on a runtime child-shell with no preceding inbound request.
+references:
+  - https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_LANGUAGE_RUNTIME_SERVER_NODE_PYTHON_JAVA_SPAWNS_OS.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.exploit
+  - attack.t1190
+  - attack.t1059
+  - attack.t1059_006
+  - attack.t1059_007
+  - attack.t1068
+  - attack.t1611
+  - attack.t1211
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'node.exe'
+      - 'node'
+      - 'python.exe'
+      - 'python'
+      - 'python3'
+      - 'java.exe'
+      - 'java'
+      - 'uvicorn'
+      - 'uvicorn.exe'
+      - 'gunicorn'
+      - 'yamcsd'
+      - 'yamcs'
+      - 'cmd.exe'
+      - 'powershell.exe'
+      - 'pwsh.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

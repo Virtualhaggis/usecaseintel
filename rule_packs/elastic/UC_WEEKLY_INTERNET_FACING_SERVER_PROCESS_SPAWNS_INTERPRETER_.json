@@ -1,0 +1,57 @@
+{
+  "name": "[WEEKLY] Internet-facing server process spawns interpreter then beacons to first-seen external host within 5 minutes",
+  "description": "Detects the post-exploitation chain in which a server-side process exposed to the internet (web-worker, edge appliance daemon, endpoint-management agent, IIS worker) spawns a scripting interpreter or LOLBin, and that child process \u2014 within a 5-minute window \u2014 initiates outbound traffic to an external host the organisation has not contacted in the prior 30 days. This fortnight the pattern dominates the briefing set: Microsoft's 'From edge appliance to enterprise compromise: Multi-stage Linux intrusion via F5 and Confluence' (2026-05-22) chains CVE-2025-33073 from edge to lateral, Arctic Wolf's 'Threat Actors Exploit Critical FortiClient EMS Flaw to Deploy Credential Stealer' (2026-05-28, CVE-2026-35616) abuses EmsService.exe to drop stealers, Talos's 'From PDB strings to MaaS: Tracking a commodity BadIIS ecosystem' (2026-05-19) places its loader under w3wp, and the LiquidJS SSTI advisory (CVE-2026-45618, 2026-05-27) hands attackers a node-driven RCE primitive \u2014 every one of these surfaces an interpreter child of a server parent followed almost immediately by attacker-infra callout. Spans exploit -> install -> c2 in a single signal. It fires when both the parent-child relation and a first-seen public destination hold inside the window; it will NOT fire on routine sysadmin shells against the same parent, scheduled patching/telemetry to long-established vendor endpoints (those clear the 30-day baseline), or interpreter spawns whose only egress is to internal/RFC1918 ranges.\n\nRationale: Each campaign this fortnight (F5/Confluence on Linux, FortiClient EMS, BadIIS, LiquidJS SSTI) ends the exploit stage with the same observable: a server-shaped parent process spawning an interpreter that immediately reaches attacker infrastructure. Joining the spawn to a per-process-GUID egress within a 5-minute window and anti-joining against a 30-day baseline of org-wide destinations isolates that joint signal without relying on any rotating hash, IP, or domain.",
+  "risk_score": 73,
+  "severity": "high",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "1h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "install",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1190",
+          "name": "Exploit Public-Facing Application",
+          "reference": "https://attack.mitre.org/techniques/T1190/"
+        },
+        {
+          "id": "T1059",
+          "name": "Command and Scripting Interpreter",
+          "reference": "https://attack.mitre.org/techniques/T1059/"
+        },
+        {
+          "id": "T1505.004",
+          "name": "Server Software Component: IIS Components",
+          "reference": "https://attack.mitre.org/techniques/T1505.004/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:alerting",
+    "install"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nlet Lookback = 7d;\nlet WindowSec = 300;\nlet Baseline = DeviceNetworkEvents\n    | where Timestamp between (ago(30d) .. ago(1d))\n    | where RemoteIPType == \"Public\" and isnotempty(RemoteUrl)\n    | summarize BaselineHosts = dcount(DeviceName) by RemoteUrl\n    | where BaselineHosts >= 3;     // 3 = empirical: drops one-off vendor blips while keeping novel infra\nlet ServerSpawns = DeviceProcessEvents\n    | where Timestamp > ago(Lookback)\n    | where InitiatingProcessFileName in~ (\"w3wp.exe\",\"httpd.exe\",\"httpd\",\"nginx.exe\",\"nginx\",\"java.exe\",\"java\",\"node.exe\",\"node\",\"tomcat.exe\",\"emsservice.exe\",\"fmsd\",\"jboss.exe\",\"confluence\",\"forticlient.exe\",\"f5-bigip.exe\")\n    | where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"bitsadmin.exe\",\"certutil.exe\",\"bash\",\"sh\",\"python.exe\",\"python\",\"python3\",\"perl\",\"curl.exe\",\"wget.exe\")\n    | where AccountName !endswith \"$\"           // exclude machine accounts\n    | where AccountName !in~ (\"system\",\"local service\",\"network service\")\n    | project SpawnTime = Timestamp, DeviceId, DeviceName, AccountName,\n              ParentImage = InitiatingProcessFileName,\n              ChildImage = FileName,\n              ChildCmd = ProcessCommandLine,\n              ChildPGUID = tostring(ProcessUniqueId);\nlet Egress = DeviceNetworkEvents\n    | where Timestamp > ago(Lookback)\n    | where RemoteIPType == \"Public\"\n    | project NetTime = Timestamp, DeviceId,\n              InitPGUID = tostring(InitiatingProcessId),\n              RemoteIP, RemoteUrl, RemotePort;\nServerSpawns\n| join kind=inner Egress on DeviceId, $left.ChildPGUID == $right.InitPGUID\n| extend DelaySec = datetime_diff('second', NetTime, SpawnTime)\n| where DelaySec between (0 .. WindowSec)\n| join kind=leftanti Baseline on RemoteUrl\n| project SpawnTime, NetTime, DelaySec, DeviceName, AccountName,\n          ParentImage, ChildImage, ChildCmd, RemoteIP, RemoteUrl, RemotePort\n| order by SpawnTime desc\n```",
+  "references": [
+    "https://clankerusecase.com/use_cases/install/UC_WEEKLY_INTERNET_FACING_SERVER_PROCESS_SPAWNS_INTERPRETER_.yml"
+  ],
+  "meta": {
+    "tier": "alerting",
+    "fp_rate_estimate": "low"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_LANGUAGE_RUNTIME_SERVER_NODE_PYTHON_JAVA_SPAWNS_OS')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Language-runtime server (node/python/java) spawns OS shell shortly after inbound request \u2014 eval / sandbox-escape exploitation chain",
+        "description": "Detects the joint pattern across this fortnight's wave of server-side code-injection and sandbox-escape CVEs: a language-runtime process that hosts a network listener (Node.js, Python/uvicorn/gunicorn, Java/Yamcs) spawns an OS interpreter or LOLBin within ~5 minutes of accepting an inbound HTTP/JSON-RPC request. The pattern is the common terminal step across the five vm2 sandbox escapes ('CVE-2026-47131 vm2 Sandbox Escape', 'CVE-2026-47137 vm2 nesting:true patch bypass', 'CVE-2026-47140 NodeVM builtin denylist bypass', 'CVE-2026-47208 vm2 Promise species sandbox breakout', 'CVE-2026-47210 vm2 JSPI .finally() species bypass'), the PraisonAI eval/exec chain ('CVE-2026-47391 PraisonAI unauthenticated A2A eval()', 'CVE-2026-47392 PraisonAI print.__self__ builtins leak', 'CVE-2026-47393 PraisonAI deploy --type api auth-disabled Flask'), and the Yamcs Janino server-side code injection ('CVE-2026-44632'). It spans the exploit \u2192 install kill-chain transition: a sandboxed evaluator inside the runtime is bypassed, runtime gains arbitrary code execution in-process, and the very first observable artefact is a child OS shell or downloader. Fires when the runtime is reachable from an external IP and produces a shell/curl/wget/certutil child within the correlation window; does NOT fire on developer workstations running `npm test`/`pytest` (no inbound public connection) nor on legitimate uvicorn worker forks (filtered by child filename), and does NOT fire on a runtime child-shell with no preceding inbound request.\n\nRationale: Each of the 12 advisories is its own ecosystem-specific vulnerability (Node vm2 escapes, Python PraisonAI eval/exec leaks, Java Janino injection) but they all collapse to the same final observable: a long-lived server-role runtime process gains in-process arbitrary code execution and is forced to spawn an OS interpreter or downloader it would never legitimately invoke. Requiring an inbound connection on the runtime's listener within 5 minutes of the shell spawn \u2014 instead of just flagging any runtime\u2192shell pair \u2014 strips out CI/test/dev noise and turns the catalog's per-CVE hunts into one alerting-grade signal that covers any future variant of this campaign.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let Lookback = 7d;\nlet WindowMin = 5m;\nlet ServerRuntimes = dynamic([\"node.exe\",\"node\",\"python.exe\",\"python\",\"python3\",\"java.exe\",\"java\",\"uvicorn.exe\",\"uvicorn\",\"gunicorn\",\"yamcsd\",\"yamcs\"]);\nlet ShellAndLolbins = dynamic([\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"sh\",\"bash\",\"dash\",\"zsh\",\"ash\",\"wmic.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"curl.exe\",\"curl\",\"wget.exe\",\"wget\",\"certutil.exe\",\"bitsadmin.exe\",\"nc\",\"ncat\",\"ncat.exe\"]);\nlet ServerPorts = dynamic([80,443,3000,5000,8000,8080,8443,8888,8090,5050,4242]);\nlet Inbound =\n    DeviceNetworkEvents\n    | where TimeGenerated > ago(Lookback)\n    | where ActionType in (\"InboundConnectionAccepted\",\"ListeningConnectionCreated\",\"ConnectionAcknowledged\")\n    | where InitiatingProcessFileName in~ ServerRuntimes\n    | where LocalPort in (ServerPorts) or RemoteIPType == \"Public\"\n    | project ConnTime = TimeGenerated, DeviceId, DeviceName,\n              LocalPort, RemoteIP, RemoteIPType,\n              RuntimePid = InitiatingProcessId,\n              RuntimeName = InitiatingProcessFileName,\n              RuntimeCmd = InitiatingProcessCommandLine;\nlet ShellSpawns =\n    DeviceProcessEvents\n    | where TimeGenerated > ago(Lookback)\n    | where InitiatingProcessFileName in~ ServerRuntimes\n    | where FileName in~ ShellAndLolbins\n    | where not (InitiatingProcessFileName in~ (\"uvicorn.exe\",\"uvicorn\",\"gunicorn\") and FileName in~ (\"python.exe\",\"python\",\"python3\"))\n    | where AccountName !endswith \"$\"\n    | where AccountName !in~ (\"system\",\"local service\",\"network service\")\n    | project ProcTime = TimeGenerated, DeviceId, DeviceName, AccountName,\n              RuntimePid = InitiatingProcessId,\n              RuntimeName = InitiatingProcessFileName,\n              RuntimeCmd = InitiatingProcessCommandLine,\n              ChildName = FileName, ChildCmd = ProcessCommandLine, ChildSha256 = SHA256;\nShellSpawns\n| join kind=inner Inbound on DeviceId, RuntimePid\n| where ProcTime between (ConnTime .. ConnTime + WindowMin)\n| extend DelaySec = datetime_diff('second', ProcTime, ConnTime)\n| summarize FirstConn = min(ConnTime), FirstSpawn = min(ProcTime),\n            MinDelaySec = min(DelaySec),\n            Children = make_set(ChildName, 10), SampleChildCmd = any(ChildCmd),\n            ChildHashes = make_set(ChildSha256, 10),\n            RemoteIPs = make_set(RemoteIP, 10), ListenPorts = make_set(LocalPort, 5),\n            SpawnCount = count()\n            by DeviceName, AccountName, RuntimeName, RuntimePid, RuntimeCmd\n| extend TimeGenerated = FirstSpawn\n| order by FirstSpawn desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1190",
+          "T1059",
+          "T1059.006",
+          "T1059.007",
+          "T1068",
+          "T1611",
+          "T1211"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_LANGUAGE_RUNTIME_SERVER_NODE_PYTHON_JAVA_SPAWNS_OS",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_LANGUAGE_RUNTIME_SERVER_NODE_PYTHON_JAVA_SPAWNS_OS.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

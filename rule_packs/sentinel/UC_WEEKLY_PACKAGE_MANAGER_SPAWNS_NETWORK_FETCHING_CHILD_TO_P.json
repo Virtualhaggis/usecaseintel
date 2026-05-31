@@ -1,0 +1,45 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_PACKAGE_MANAGER_SPAWNS_NETWORK_FETCHING_CHILD_TO_P')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Package manager spawns network-fetching child to public code-hosting within minutes of install",
+        "description": "Detects the joint pattern across this fortnight's wave of supply-chain compromises: a package manager process (npm, yarn, pnpm, pip, composer, or a `node`/`python` interpreter executing a freshly-installed module) is followed within ~5 minutes on the same host by a child or sibling fetcher process (curl, wget, node, python, bash, powershell) reaching out to a public code-hosting endpoint (github.com release/raw, gist.github.com, objects.githubusercontent.com) or a non-internal first-seen domain. This is the unifying tradecraft behind the mistralai 2.4.6 PyPI dropper, Microsoft's `durabletask` PyPI compromise (Mini Shai-Hulud), the AntV/@beproduct/nestjs-auth npm worm expansion, the `@cap-js/sqlite|postgres|db-service` credential-harvester (CVE-2026-46421), the Packagist GitHub-Releases binary fetcher, and the `mouse5212-super-formatter` Claude-AI exfil package. Kill-chain coverage: delivery (compromised registry version) \u2192 install/exploit (post/pre-install or import-time hook) \u2192 C2/actions (payload pull or token exfil to attacker-controlled GitHub asset or staging domain). It will fire when an `npm install`/`pip install`/`composer require` is immediately followed by a fetcher hitting a public code-hosting URL or a domain unseen in the 30d org baseline; it will NOT fire on routine `git clone`/`git fetch` (no package-manager parent) or on `npm install` against an internal mirror with no outbound fetcher spawn.\n\nRationale: Every article in scope chains the same three primitives \u2014 (1) a package-manager / interpreter process performs an install or import, (2) within seconds a fetcher process makes outbound, and (3) the outbound lands on either a public code-hosting endpoint (GitHub releases/raw/gists, the Packagist+mouse5212+Mini Shai-Hulud staging pattern) or a fresh attacker domain (mistralai 83.142.209.194 / durabletask check.git-service.com / @cap-js zero.masscan.cloud / @beproduct filev2.getsession.org). Binding the pkg-mgr parent to the fetcher child within a 5-minute window catches every variant while leaving routine git clones, mirror installs, and CDN browser traffic out of scope.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let LookbackHours = 24h;\nlet WindowSeconds = 300;\nlet PkgMgrs = dynamic([\"npm.exe\",\"npm\",\"npm-cli.js\",\"yarn.exe\",\"yarn\",\"pnpm.exe\",\"pnpm\",\"pip.exe\",\"pip\",\"pip3\",\"python.exe\",\"python\",\"python3\",\"composer\",\"composer.phar\",\"node.exe\",\"node\"]);\nlet Fetchers = dynamic([\"curl.exe\",\"curl\",\"wget.exe\",\"wget\",\"node.exe\",\"node\",\"python.exe\",\"python\",\"python3\",\"powershell.exe\",\"pwsh.exe\",\"sh\",\"bash\"]);\nlet CodeHostHosts = dynamic([\"github.com\",\"raw.githubusercontent.com\",\"gist.github.com\",\"objects.githubusercontent.com\",\"codeload.github.com\"]);\nlet Installs = DeviceProcessEvents\n    | where TimeGenerated > ago(LookbackHours)\n    | where AccountName !endswith \"$\"\n    | where (FileName in~ (PkgMgrs)) or (InitiatingProcessFileName in~ (PkgMgrs))\n    | where ProcessCommandLine has_any (\" install\",\" add \",\" ci \",\" require \",\"postinstall\",\"preinstall\",\"pip install\",\"-r requirements\",\"-c \\\"import\",\"composer require\",\"npm i \")\n    | project InstallTime = TimeGenerated, DeviceId, DeviceName, AccountName,\n              InstallProc = FileName, InstallParent = InitiatingProcessFileName,\n              InstallCmd = ProcessCommandLine;\nlet Fetches = DeviceNetworkEvents\n    | where TimeGenerated > ago(LookbackHours)\n    | where InitiatingProcessFileName in~ (Fetchers)\n    | where RemoteIPType == \"Public\"\n    | project FetchTime = TimeGenerated, DeviceId, DeviceName,\n              FetcherProc = InitiatingProcessFileName,\n              FetcherCmd = InitiatingProcessCommandLine,\n              RemoteUrl, RemoteIP, RemotePort;\nInstalls\n| join kind=inner Fetches on DeviceId\n| where FetchTime between (InstallTime .. InstallTime + WindowSeconds * 1s)\n| extend DelaySec = datetime_diff('second', FetchTime, InstallTime)\n| extend IsCodeHost = RemoteUrl has_any (CodeHostHosts)\n                   or RemoteUrl matches regex @\"(?i)/releases/download/|/raw/|/archive/refs/\"\n| where IsCodeHost\n     or RemoteUrl matches regex @\"(?i)\\.(workers\\.dev|trycloudflare\\.com|onrender\\.com|fly\\.dev|vercel\\.app|netlify\\.app|herokuapp\\.com|pages\\.dev|b-cdn\\.net)$\"\n| project InstallTime, FetchTime, DelaySec, DeviceName, AccountName,\n          InstallParent, InstallProc, InstallCmd,\n          FetcherProc, RemoteUrl, RemoteIP, RemotePort, IsCodeHost\n| order by InstallTime desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1195.002",
+          "T1204.002",
+          "T1105",
+          "T1059.006",
+          "T1059.007",
+          "T1059.004",
+          "T1071.001",
+          "T1567.001"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_PACKAGE_MANAGER_SPAWNS_NETWORK_FETCHING_CHILD_TO_P",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_MANAGER_SPAWNS_NETWORK_FETCHING_CHILD_TO_P.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

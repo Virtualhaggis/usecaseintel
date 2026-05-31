@@ -1,0 +1,45 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_DEVELOPER_PACKAGE_INSTALL_SPAWNING_SCRIPT_HOST_WIT')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Developer package install spawning script-host with non-registry C2 within 5 minutes",
+        "description": "Detects the cross-ecosystem supply-chain pattern in which a developer package manager (npm/pnpm/yarn, pip/uv/poetry, NuGet/dotnet, or a VS Code/Cursor extension install) executes a lifecycle hook (preinstall/postinstall, setup.py, .csproj install task, extension activation) that within seconds spawns a script host (node, python, powershell, bash, curl, wget) which then beacons to an internet destination that is NOT a known package registry or marketplace. This fortnight that exact chain drove the Mini Shai-Hulud/AntV npm wave (Snyk, 2026-05-18), the malicious mistralai 2.4.6 PyPI dropper (GHSA-wx9m-wx4f-4cmg), node-ipc credential thief (StepSecurity 2026-05-19), guardrails-ai 0.10.1 (CVE-2026-45758), @cap-js/* (CVE-2026-46421), the malicious VS Code extension that breached GitHub and TeamPCP's Megalodon CI/CD push (Aikido / The Hacker News), the CISA-KEV-added Nx Console and Daemon Tools Lite embedded-malicious-code CVEs (CVE-2026-48027, CVE-2026-8398), the Claude AI-targeting mouse5212-super-formatter npm (THN 2026-05-27), the Sicoob.Sdk NuGet credential stealer (THN 2026-05-29) and Microsoft's dependency-confusion npm campaign (MSRC 2026-05-30). The chain spans Delivery (registry pull) \u2192 Installation (lifecycle hook execution) \u2192 C2 (first call-home). It fires when the install\u2192egress delay is under 5 minutes AND the destination is outside an allow-list of registry/marketplace/GitHub hostnames; it will NOT fire on routine `npm install` traffic to registry.npmjs.org/pypi.org, on background telemetry from already-installed packages (no install-process ancestor), or on egress that pre-dates the install event.\n\nRationale: Every one of the 12 articles describes the same chained behaviour \u2014 a package or extension install whose own lifecycle hook reaches the internet \u2014 but each cites a different IOC set (mistralai 83.142.209.194, AntV m-kosche.com, node-ipc sh.azurestaticprovider.net, @cap-js zero.masscan.cloud, Nx Console check.git-service.com, Megalodon polymarketbot.polymarketdev.workers.dev, Sicoob oob.moika.tech, MSRC's cloudplatform-single-spa.io, etc.). Correlating the install-process ancestor with a script-host egress to a non-registry destination inside a 5-minute window catches the joint TTP without pinning to any single rotating IOC, and the registry/marketplace allow-list keeps the false-positive rate low on normal developer workflow.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let LookbackDays = 7d;\nlet WindowSec = 300;\nlet PkgMgr = dynamic([\"npm.exe\",\"npm\",\"pnpm.exe\",\"pnpm\",\"yarn.exe\",\"yarn\",\"pip.exe\",\"pip\",\"pip3.exe\",\"pip3\",\"uv.exe\",\"uv\",\"poetry.exe\",\"poetry\",\"nuget.exe\",\"dotnet.exe\",\"code.exe\",\"cursor.exe\"]);\nlet ScriptHosts = dynamic([\"node.exe\",\"node\",\"python.exe\",\"python\",\"python3.exe\",\"python3\",\"pwsh.exe\",\"powershell.exe\",\"bash\",\"sh\",\"dash\",\"curl.exe\",\"wget.exe\",\"cmd.exe\"]);\nlet RegistryAllow = dynamic([\"registry.npmjs.org\",\"pypi.org\",\"files.pythonhosted.org\",\"registry.yarnpkg.com\",\"api.nuget.org\",\"nuget.org\",\"marketplace.visualstudio.com\",\"open-vsx.org\",\"github.com\",\"raw.githubusercontent.com\",\"ghcr.io\",\"go.dev\",\"crates.io\",\"rubygems.org\"]);\nlet Installs = DeviceProcessEvents\n    | where TimeGenerated > ago(LookbackDays)\n    | where FileName in~ (PkgMgr)\n    | where ProcessCommandLine has_any (\"install\",\" add \",\"restore\",\"--install-extension\",\" ci \")\n    | where AccountName !endswith \"$\"\n    | project InstallTime = TimeGenerated, DeviceId, DeviceName, AccountName,\n              PkgMgr = FileName, PkgCmd = ProcessCommandLine;\nlet Egress = DeviceNetworkEvents\n    | where TimeGenerated > ago(LookbackDays)\n    | where RemoteIPType == \"Public\"\n    | where InitiatingProcessFileName in~ (ScriptHosts)\n         or InitiatingProcessParentFileName in~ (PkgMgr)\n    | extend HostOnly = tolower(tostring(split(RemoteUrl, \"/\")[0]))\n    | where not(HostOnly in~ (RegistryAllow))\n         and not(HostOnly endswith \".npmjs.org\")\n         and not(HostOnly endswith \".pypi.org\")\n         and not(HostOnly endswith \".pythonhosted.org\")\n         and not(HostOnly endswith \".yarnpkg.com\")\n         and not(HostOnly endswith \".nuget.org\")\n         and not(HostOnly endswith \".visualstudio.com\")\n         and not(HostOnly endswith \".github.com\")\n         and not(HostOnly endswith \".githubusercontent.com\")\n    | project EgressTime = TimeGenerated, DeviceId, DeviceName, AccountName,\n              ChildProc = InitiatingProcessFileName,\n              ChildCmd  = InitiatingProcessCommandLine,\n              ChildParent = InitiatingProcessParentFileName,\n              RemoteUrl, RemoteIP, RemotePort;\nInstalls\n| join kind=inner Egress on DeviceId, AccountName\n| where EgressTime between (InstallTime .. InstallTime + WindowSec * 1s)\n| extend DelaySec = datetime_diff('second', EgressTime, InstallTime)\n| summarize InstallTime = min(InstallTime),\n            EgressTime = min(EgressTime),\n            DelaySec   = min(DelaySec),\n            SampleRemoteUrl = any(RemoteUrl),\n            SampleRemoteIP  = any(RemoteIP),\n            SamplePkgCmd    = any(PkgCmd),\n            SampleChildCmd  = any(ChildCmd)\n         by DeviceName, AccountName, PkgMgr, ChildProc, ChildParent\n| extend TimeGenerated = EgressTime\n| order by TimeGenerated desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1195.002",
+          "T1059.007",
+          "T1059.006",
+          "T1059.001",
+          "T1105",
+          "T1071.001",
+          "T1204.002",
+          "T1546.016"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_DEVELOPER_PACKAGE_INSTALL_SPAWNING_SCRIPT_HOST_WIT",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/install/UC_WEEKLY_DEVELOPER_PACKAGE_INSTALL_SPAWNING_SCRIPT_HOST_WIT.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

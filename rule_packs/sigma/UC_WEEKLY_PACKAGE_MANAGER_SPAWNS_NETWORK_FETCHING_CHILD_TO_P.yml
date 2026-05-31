@@ -1,0 +1,44 @@
+title: [WEEKLY] Package manager spawns network-fetching child to public code-hosting within minutes of install
+id: UC_WEEKLY_PACKAGE_MANAGER_SPAWNS_NETWORK_FETCHING_CHILD_TO_P
+status: experimental
+description: Detects the joint pattern across this fortnight's wave of supply-chain compromises: a package manager process (npm, yarn, pnpm, pip, composer, or a `node`/`python` interpreter executing a freshly-installed module) is followed within ~5 minutes on the same host by a child or sibling fetcher process (curl, wget, node, python, bash, powershell) reaching out to a public code-hosting endpoint (github.com release/raw, gist.github.com, objects.githubusercontent.com) or a non-internal first-seen domain. This is the unifying tradecraft behind the mistralai 2.4.6 PyPI dropper, Microsoft's `durabletask` PyPI compromise (Mini Shai-Hulud), the AntV/@beproduct/nestjs-auth npm worm expansion, the `@cap-js/sqlite|postgres|db-service` credential-harvester (CVE-2026-46421), the Packagist GitHub-Releases binary fetcher, and the `mouse5212-super-formatter` Claude-AI exfil package. Kill-chain coverage: delivery (compromised registry version) → install/exploit (post/pre-install or import-time hook) → C2/actions (payload pull or token exfil to attacker-controlled GitHub asset or staging domain). It will fire when an `npm install`/`pip install`/`composer require` is immediately followed by a fetcher hitting a public code-hosting URL or a domain unseen in the 30d org baseline; it will NOT fire on routine `git clone`/`git fetch` (no package-manager parent) or on `npm install` against an internal mirror with no outbound fetcher spawn.
+references:
+  - https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_MANAGER_SPAWNS_NETWORK_FETCHING_CHILD_TO_P.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.install
+  - attack.t1195_002
+  - attack.t1204_002
+  - attack.t1105
+  - attack.t1059_006
+  - attack.t1059_007
+  - attack.t1059_004
+  - attack.t1071_001
+  - attack.t1567_001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'npm'
+      - 'npm.exe'
+      - 'npm-cli.js'
+      - 'yarn'
+      - 'yarn.exe'
+      - 'pnpm'
+      - 'pnpm.exe'
+      - 'pip'
+      - 'pip3'
+      - 'pip.exe'
+      - 'python'
+      - 'python3'
+      - 'python.exe'
+      - 'composer'
+      - 'composer.phar'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

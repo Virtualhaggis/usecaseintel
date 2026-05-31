@@ -1,0 +1,44 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_PACKAGE_MANAGER_LIFECYCLE_HOOK_SPAWNS_RUNTIME_WITH')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Package manager lifecycle hook spawns runtime with outbound egress to non-registry host within 5 minutes",
+        "description": "Detects the joint TTP that every May 2026 supply-chain campaign shares: a package manager (npm/yarn/pnpm, pip, cargo, nuget/dotnet, composer, gem) invokes a preinstall/postinstall lifecycle script that spawns a script-host or downloader child (node, python, sh/bash, powershell, bun, curl/wget, certutil/bitsadmin), and that child \u2014 or an immediate sibling \u2014 initiates an outbound connection to a host that is NOT a known package registry or VCS within ~5 minutes. This fortnight that chain is the engine of Mini Shai-Hulud's @antv burst, the node-ipc beaconing to sh.azurestaticprovider.net, the durabletask PyPI dropper calling git-service.com, TrapDoor's cross-ecosystem (npm/PyPI/Crates) credential theft, vpmdhaj typosquats exfiltrating to aab.sportsontheweb.net, and Microsoft's dependency-confusion recon to moika.tech / cloudplatform-single-spa.io / t-in-one.io (per Snyk 2026-05-18, StepSecurity 2026-05-19, Aikido 2026-05-19, Microsoft 2026-05-20, Unit 42 2026-05-21, THN 2026-05-23/25/27/29, Microsoft 2026-05-29/30). Kill-chain coverage spans delivery (compromised package pulled), install (lifecycle hook fires), and the first C2/exfil hop \u2014 the early-warning window before credential dumping happens. FIRES on developer / CI hosts when an `npm install`-class command produces a script-host child that immediately egresses to a non-registry public host. DOES NOT fire on plain `npm install` traffic to npmjs/yarnpkg/pypi/crates/nuget/rubygems/packagist registries or to github/gitlab/bitbucket VCS, nor on script-host child processes that produce no outbound public connection within the window.\n\nRationale: Every article in this fortnight's set describes the same execution shape \u2014 a tainted package on npm/PyPI/NuGet/Crates/Packagist whose preinstall/postinstall hook spawns a script-host or downloader that immediately phones home (Mini Shai-Hulud \u2192 t.m-kosche.com, node-ipc \u2192 sh.azurestaticprovider.net, durabletask \u2192 git-service.com, TrapDoor \u2192 ddjidd564.github.io, vpmdhaj \u2192 aab.sportsontheweb.net, dependency-confusion \u2192 moika.tech / cloudplatform-single-spa.io / t-in-one.io). Detecting the parent-child-egress triple within a 5-minute window catches the technique regardless of which registry, which package name, or which C2 host this week \u2014 and registry/VCS allow-listing prevents the obvious benign baseline (npm install pulling tarballs from registry.npmjs.org or codeload.github.com) from drowning the signal.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let LookbackHours = 24h;\nlet CorrelationWindowSec = 300;\nlet PkgMgrParents = dynamic([\"npm.exe\",\"npm-cli.js\",\"npm\",\"yarn.exe\",\"yarn\",\"pnpm.exe\",\"pnpm\",\"pip.exe\",\"pip\",\"pip3\",\"pip3.exe\",\"cargo.exe\",\"cargo\",\"nuget.exe\",\"nuget\",\"dotnet.exe\",\"dotnet\",\"composer\",\"composer.phar\",\"gem\",\"bundle\",\"node.exe\",\"node\"]);\nlet PkgMgrCmdHints = dynamic([\"npm install\",\"npm i \",\"npm ci\",\"yarn install\",\"yarn add\",\"pnpm install\",\"pnpm add\",\"pip install\",\"pip3 install\",\"cargo install\",\"nuget install\",\"dotnet add package\",\"dotnet restore\",\"composer install\",\"composer require\",\"gem install\",\"bundle install\"]);\nlet HookRuntimes = dynamic([\"node.exe\",\"node\",\"python.exe\",\"python\",\"python3\",\"python3.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"sh\",\"bash\",\"dash\",\"bun.exe\",\"bun\",\"curl.exe\",\"curl\",\"wget.exe\",\"wget\",\"certutil.exe\",\"bitsadmin.exe\"]);\nlet RegistryAllow = dynamic([\"registry.npmjs.org\",\"registry.yarnpkg.com\",\"pypi.org\",\"files.pythonhosted.org\",\"crates.io\",\"static.crates.io\",\"api.nuget.org\",\"nuget.org\",\"www.nuget.org\",\"rubygems.org\",\"packagist.org\",\"repo.packagist.org\",\"github.com\",\"raw.githubusercontent.com\",\"objects.githubusercontent.com\",\"codeload.github.com\",\"gitlab.com\",\"bitbucket.org\"]);\nlet HookSpawns =\n    DeviceProcessEvents\n    | where TimeGenerated > ago(LookbackHours)\n    | where (InitiatingProcessFileName in~ (PkgMgrParents))\n         or (InitiatingProcessCommandLine has_any (PkgMgrCmdHints))\n    | where FileName in~ (HookRuntimes)\n    | where AccountName !endswith \"$\"\n    | where AccountName !in~ (\"system\",\"local service\",\"network service\")\n    | project ProcTime = TimeGenerated, DeviceId, DeviceName, AccountName,\n              ParentImage = InitiatingProcessFolderPath,\n              ParentCmd   = InitiatingProcessCommandLine,\n              ChildImage  = FolderPath,\n              ChildCmd    = ProcessCommandLine,\n              ChildProc   = FileName,\n              ChildPid    = ProcessId;\nlet Egress =\n    DeviceNetworkEvents\n    | where TimeGenerated > ago(LookbackHours)\n    | where RemoteIPType == \"Public\"\n    | where ActionType in~ (\"ConnectionSuccess\",\"ConnectionAttempted\",\"ConnectionFound\",\"DnsConnectionInspected\")\n    | extend Host = tolower(coalesce(RemoteUrl, \"\"))\n    | where not(Host has_any (RegistryAllow))\n    | project NetTime = TimeGenerated, DeviceId, RemoteIP, RemoteUrl, RemotePort,\n              NetInitProc = InitiatingProcessFileName,\n              NetInitCmd  = InitiatingProcessCommandLine,\n              NetInitPid  = InitiatingProcessId;\nHookSpawns\n| join kind=inner Egress on DeviceId\n| where NetTime between (ProcTime .. ProcTime + CorrelationWindowSec * 1s)\n| extend DelaySec = datetime_diff('second', NetTime, ProcTime)\n| where (NetInitProc =~ ChildProc) or (NetInitPid == ChildPid) or (NetInitProc in~ (HookRuntimes))\n| summarize FirstSeen = min(ProcTime), LastEgress = max(NetTime),\n            EgressCount = count(),\n            DistinctDests = dcount(coalesce(RemoteUrl, tostring(RemoteIP))),\n            Destinations = make_set(coalesce(RemoteUrl, tostring(RemoteIP)), 25),\n            Ports = make_set(RemotePort, 10),\n            SampleParentCmd = any(ParentCmd),\n            SampleChildCmd  = any(ChildCmd),\n            MinDelaySec = min(DelaySec)\n          by DeviceName, AccountName, ParentImage, ChildImage, ChildProc\n| where DistinctDests >= 1\n| extend AccountEntity = AccountName, HostEntity = DeviceName\n| order by FirstSeen desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1195.002",
+          "T1546.016",
+          "T1059.007",
+          "T1059.006",
+          "T1059.001",
+          "T1071.001",
+          "T1204.002"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_PACKAGE_MANAGER_LIFECYCLE_HOOK_SPAWNS_RUNTIME_WITH",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "medium",
+          "source_url": "https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_MANAGER_LIFECYCLE_HOOK_SPAWNS_RUNTIME_WITH.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

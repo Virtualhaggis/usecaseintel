@@ -1,0 +1,45 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_PACKAGE_MANAGER_INSTALL_INTERPRETER_CHILD_NON_REGI')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Package-Manager Install -> Interpreter Child -> Non-Registry Egress Within 5 Minutes",
+        "description": "Detects the cross-stage skeleton common to every npm/PyPI/Composer/Cargo supply-chain compromise in the corpus: a package manager (npm/npx/yarn/pnpm/pip/uv/poetry/composer/cargo) spawns a script interpreter or downloader (node, python, sh/bash, powershell, curl/wget, certutil), and the same host then makes outbound HTTP/S to a destination NOT on the package-registry allowlist within ~5 minutes, optionally corroborated by reads of `.npmrc`, `.aws/credentials`, `.ssh/id_*`, `.env`, GitHub PATs and similar credential files. This pattern drove the May 2026 cluster including Mini Shai-Hulud (durabletask PyPI, @beproduct/nestjs-auth, @cap-js/*, node-ipc), GlassWorm VS Code/npm worm, TrapDoor (npm+PyPI+Crates), Laravel-Lang composer tag-rewrite (flipboxstudio.info), guardrails-ai 0.10.1 (CVE-2026-45758), and was the through-line of StepSecurity's '5 Supply Chain Attacks in 48 Hours' write-up and The Hacker News weekly recap. Kill-chain coverage: install (registry pull) -> execution (postinstall/setup.py/composer-script/build.rs) -> credential access (T1552.001) -> exfiltration over C2 (T1041/T1567). Fires when all three stages chain on the same host within the window; does NOT fire when an install completes without spawning an interpreter, when all egress stays inside the explicit registry/mirror allowlist, or when the interpreter is spawned by an IDE/CI orchestrator rather than the package-manager process itself.\n\nRationale: Every campaign in the corpus (Mini Shai-Hulud npm worm, GlassWorm, TrapDoor, Laravel-Lang Composer tag-rewrite, durabletask PyPI, @cap-js/* GHSA, node-ipc, guardrails-ai 0.10.1) follows the same skeleton: a registry install triggers an interpreter/downloader child that exfiltrates secrets to a non-registry destination within seconds. Correlating install -> interpreter-child -> non-registry-egress on the same host within a 5-minute window catches all of them without depending on the per-campaign C2 domains or hashes, which rotate weekly.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let LookbackHours = 24h;\nlet WindowSec = 300;\nlet PkgMgrs = dynamic([\"npm.exe\",\"npx.exe\",\"yarn.exe\",\"pnpm.exe\",\"pip.exe\",\"pip3.exe\",\"uv.exe\",\"poetry.exe\",\"composer.exe\",\"composer.phar\",\"cargo.exe\",\"npm\",\"npx\",\"yarn\",\"pnpm\",\"pip\",\"pip3\",\"uv\",\"poetry\",\"composer\",\"cargo\"]);\nlet ScriptHosts = dynamic([\"sh\",\"bash\",\"zsh\",\"dash\",\"node\",\"node.exe\",\"python\",\"python.exe\",\"python3\",\"python3.exe\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"curl\",\"curl.exe\",\"wget\",\"wget.exe\",\"certutil.exe\",\"bitsadmin.exe\"]);\nlet RegistryHosts = dynamic([\"registry.npmjs.org\",\"registry.yarnpkg.com\",\"registry.npmmirror.com\",\"pypi.org\",\"files.pythonhosted.org\",\"pypi.python.org\",\"crates.io\",\"static.crates.io\",\"index.crates.io\",\"packagist.org\",\"repo.packagist.org\",\"github.com\",\"codeload.github.com\",\"raw.githubusercontent.com\",\"objects.githubusercontent.com\",\"api.github.com\"]);\nlet InstallExec = DeviceProcessEvents\n    | where TimeGenerated > ago(LookbackHours)\n    | where AccountName !endswith \"$\"\n    | where InitiatingProcessFileName in~ PkgMgrs\n    | where FileName in~ ScriptHosts\n         or ProcessCommandLine has_any (\"curl \",\"wget \",\"Invoke-WebRequest\",\"DownloadString\",\"base64 -d\",\"atob(\",\"Buffer.from\",\"child_process\",\"os.system\",\"subprocess.\",\"/dev/tcp/\")\n    | project InstallTime = TimeGenerated, DeviceId, DeviceName, AccountName,\n              PkgMgr = InitiatingProcessFileName,\n              PkgMgrCmd = InitiatingProcessCommandLine,\n              ChildImage = FileName,\n              ChildCmd = ProcessCommandLine;\nlet Exfil = DeviceNetworkEvents\n    | where TimeGenerated > ago(LookbackHours)\n    | where RemoteIPType == \"Public\"\n    | where isnotempty(RemoteUrl) or isnotempty(RemoteIP)\n    | where not(RemoteUrl in~ (RegistryHosts))\n    | where not(RemoteUrl endswith \".npmjs.com\" or RemoteUrl endswith \".pythonhosted.org\" or RemoteUrl endswith \".crates.io\" or RemoteUrl endswith \".packagist.org\")\n    | project ExfilTime = TimeGenerated, DeviceId, RemoteUrl, RemoteIP, RemotePort;\nInstallExec\n| join kind=inner Exfil on DeviceId\n| where ExfilTime between (InstallTime .. InstallTime + WindowSec * 1s)\n| extend DelaySec = datetime_diff('second', ExfilTime, InstallTime)\n| summarize InstallTime = min(InstallTime),\n            ExfilTime = min(ExfilTime),\n            DelaySec = min(DelaySec),\n            RemoteUrls = make_set(RemoteUrl, 10),\n            RemoteIPs = make_set(RemoteIP, 10),\n            SampleChildCmd = any(ChildCmd),\n            SamplePkgMgrCmd = any(PkgMgrCmd)\n            by DeviceName, AccountName, PkgMgr, ChildImage\n| order by InstallTime desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1195.002",
+          "T1059.007",
+          "T1059.006",
+          "T1059.004",
+          "T1552.001",
+          "T1041",
+          "T1567",
+          "T1204.002"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_PACKAGE_MANAGER_INSTALL_INTERPRETER_CHILD_NON_REGI",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_MANAGER_INSTALL_INTERPRETER_CHILD_NON_REGI.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}
