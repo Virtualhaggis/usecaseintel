@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Build and deploy a Node.js security scanning API to Platformatic Cloud
 
-`UC_616_0` · phase: **exploit** · confidence: **High**
+`UC_1291_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

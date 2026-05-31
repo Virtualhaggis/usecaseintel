@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — How to secure JavaScript applications right from the CLI
 
-`UC_669_0` · phase: **exploit** · confidence: **High**
+`UC_1344_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

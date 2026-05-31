@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Egress to sidoraress json-bigint-extend gambling backdoor C2 infrastructure
 
-`UC_240_5` · phase: **c2** · confidence: **High**
+`UC_489_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ union isfuzzy=true
 
 ### [LLM] Installation of sidoraress malicious npm packages (json-bigint-extend/jsonfb/jsonfx)
 
-`UC_240_6` · phase: **install** · confidence: **High**
+`UC_489_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceProcessEvents
 
 ### [LLM] Inbound HTTP request bearing sidoraress backdoor x-operation operator tokens
 
-`UC_240_7` · phase: **c2** · confidence: **High**
+`UC_489_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -201,7 +201,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — npm backdoor lets hackers hijack gambling outcomes
 
-`UC_240_4` · phase: **exploit** · confidence: **High**
+`UC_489_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
