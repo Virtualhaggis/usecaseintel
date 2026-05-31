@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Node.js vs. Deno vs. Bun: Performance & JavaScript Runtime Comparison
 
-`UC_1375_0` · phase: **exploit** · confidence: **High**
+`UC_701_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

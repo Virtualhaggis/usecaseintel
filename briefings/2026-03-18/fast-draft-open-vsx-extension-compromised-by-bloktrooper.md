@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] VSCode/VSCodium spawning shell or curl to raw.githubusercontent.com/BlokTrooper
 
-`UC_412_7` · phase: **delivery** · confidence: **High**
+`UC_193_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound TCP beacon to BlokTrooper Socket.IO C2 195.201.104.53:6931/6936/6939
 
-`UC_412_8` · phase: **c2** · confidence: **High**
+`UC_193_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceNetworkEvents
 
 ### [LLM] VSCode-family host fetching from raw.githubusercontent.com/BlokTrooper/extension path
 
-`UC_412_9` · phase: **delivery** · confidence: **High**
+`UC_193_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceNetworkEvents
 
 ### [LLM] Four-way node.exe -e fanout spawned from VSCode shell descendants (BlokTrooper stage-2)
 
-`UC_412_10` · phase: **install** · confidence: **High**
+`UC_193_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceProcessEvents
 
 ### [LLM] Non-browser process copying Chrome/Edge/Brave Login Data, Web Data, or wallet extension LevelDB state
 
-`UC_412_11` · phase: **actions** · confidence: **High**
+`UC_193_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -305,7 +305,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — fast-draft Open VSX Extension Compromised by BlokTrooper
 
-`UC_412_6` · phase: **install** · confidence: **High**
+`UC_193_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

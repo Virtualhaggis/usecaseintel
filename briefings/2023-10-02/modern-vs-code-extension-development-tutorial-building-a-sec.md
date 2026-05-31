@@ -58,7 +58,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Modern VS Code extension development tutorial: Building a secure extension
 
-`UC_1360_1` · phase: **exploit** · confidence: **High**
+`UC_686_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

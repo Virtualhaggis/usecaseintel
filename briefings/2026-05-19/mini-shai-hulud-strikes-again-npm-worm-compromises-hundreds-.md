@@ -1,19 +1,20 @@
 # [CRIT] Mini Shai-Hulud strikes again: npm worm compromises hundreds of @antv packages
 
-**Source:** Aikido, StepSecurity
+**Source:** Aikido
 **Published:** 2026-05-19
 **Article:** https://www.aikido.dev/blog/mini-shai-hulud-antv-npm-supply-chain-attack
 
 ## Threat Profile
 
-Back to Blog Threat Intel Shai-Hulud: Here We Go Again. Mass npm Supply Chain Attack Hits the AntV Ecosystem A new wave of the Mini Shai-Hulud worm has compromised packages across Alibaba's AntV data visualization ecosystem, echarts-for-react, timeago.js, and dozens more. Stolen CI/CD secrets are being dumped to thousands of public GitHub repositories as the attack continues to spread. Sai Likhith View LinkedIn May 19, 2026
-Share on X Share on X Share on LinkedIn Share on Facebook Follow our RSS…
+Blog Vulnerabilities & Threats Mini Shai-Hulud strikes again: npm worm compromises hundreds of @antv packages Mini Shai-Hulud strikes again: npm worm compromises hundreds of @antv packages Written by Sooraj Shah Published on: May 19, 2026 Mini Shai-Hulud is back again.
+The npm supply chain campaign we have been tracking since April has launched another wave, this time compromising major packages in Alibaba's @antv suite along with echarts-for-react and timeago.js . Our malware team detected a la…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `t.m-kosche.com`
 - **SHA256:** `a68dd1e6a6e35ec3771e1f94fe796f55dfe65a2b94560516ff4ac189390dfa1c`
 - **SHA256:** `fb5c97557230a27460fdab01fafcfabeaa49590bafd5b6ef30501aa9e0a51142`
+- **SHA256:** `7c24b4d9a8f448832f3752d7f67dcdbf1b7f0f41e10bf633efa175e627144e8b`
 
 ## MITRE ATT&CK Techniques
 
@@ -46,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud C2 exfil to t.m-kosche.com disguised as OpenTelemetry collector
 
-`UC_177_10` · phase: **c2** · confidence: **High**
+`UC_100_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +67,7 @@ DeviceNetworkEvents
 
 ### [LLM] Mini Shai-Hulud npm worm payload by SHA256
 
-`UC_177_11` · phase: **install** · confidence: **High**
+`UC_100_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +88,7 @@ DeviceFileEvents
 
 ### [LLM] GitHub Actions Runner.Worker process-memory secret scraping via /proc
 
-`UC_177_12` · phase: **actions** · confidence: **Medium**
+`UC_100_12` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +109,7 @@ DeviceProcessEvents
 
 ### [LLM] Mini Shai-Hulud persistence hooks written into .vscode/ and .claude/ configs
 
-`UC_177_13` · phase: **install** · confidence: **Medium**
+`UC_100_13` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -390,14 +391,14 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mini Shai-Hulud strikes again: npm worm compromises hundreds of @antv packages
 
-`UC_177_9` · phase: **exploit** · confidence: **High**
+`UC_100_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 ``` Article-specific bespoke detection — Mini Shai-Hulud strikes again: npm worm compromises hundreds of @antv packages ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("timeago.js","canvas-nest.js","filesize.js","onfire.js","relationship.js","ribbon.js","slice.js","bun.exe","index.js"))
+    where (Processes.process_name IN ("timeago.js","canvas-nest.js","index.js","router_init.js","filesize.js","onfire.js","relationship.js","ribbon.js","slice.js"))
     by Processes.dest, Processes.user, Processes.process_name,
        Processes.process, Processes.parent_process_name, Processes.process_path
 | `drop_dm_object_name(Processes)`
@@ -406,7 +407,7 @@ DeviceProcessEvents
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_path="*/etc/rancher/k3s/k3s.yaml*" OR Filesystem.file_path="*/dev/null*" OR Filesystem.file_name IN ("timeago.js","canvas-nest.js","filesize.js","onfire.js","relationship.js","ribbon.js","slice.js","bun.exe","index.js"))
+      AND (Filesystem.file_name IN ("timeago.js","canvas-nest.js","index.js","router_init.js","filesize.js","onfire.js","relationship.js","ribbon.js","slice.js"))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
@@ -420,7 +421,7 @@ DeviceProcessEvents
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where (FileName in~ ("timeago.js", "canvas-nest.js", "filesize.js", "onfire.js", "relationship.js", "ribbon.js", "slice.js", "bun.exe", "index.js"))
+| where (FileName in~ ("timeago.js", "canvas-nest.js", "index.js", "router_init.js", "filesize.js", "onfire.js", "relationship.js", "ribbon.js", "slice.js"))
 | project Timestamp, DeviceName, AccountName, FileName,
           FolderPath, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine
@@ -430,7 +431,7 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified")
-| where (FolderPath has_any ("/etc/rancher/k3s/k3s.yaml", "/dev/null") or FileName in~ ("timeago.js", "canvas-nest.js", "filesize.js", "onfire.js", "relationship.js", "ribbon.js", "slice.js", "bun.exe", "index.js"))
+| where (FileName in~ ("timeago.js", "canvas-nest.js", "index.js", "router_init.js", "filesize.js", "onfire.js", "relationship.js", "ribbon.js", "slice.js"))
 | project Timestamp, DeviceName, AccountName, FolderPath,
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
@@ -445,7 +446,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
   - IP / domain IOC(s): `t.m-kosche.com`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `a68dd1e6a6e35ec3771e1f94fe796f55dfe65a2b94560516ff4ac189390dfa1c`, `fb5c97557230a27460fdab01fafcfabeaa49590bafd5b6ef30501aa9e0a51142`
+  - file hash IOC(s): `a68dd1e6a6e35ec3771e1f94fe796f55dfe65a2b94560516ff4ac189390dfa1c`, `fb5c97557230a27460fdab01fafcfabeaa49590bafd5b6ef30501aa9e0a51142`, `7c24b4d9a8f448832f3752d7f67dcdbf1b7f0f41e10bf633efa175e627144e8b`
 
 
 ## Why this matters

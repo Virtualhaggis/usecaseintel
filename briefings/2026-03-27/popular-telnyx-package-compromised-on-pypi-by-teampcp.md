@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Telnyx PyPI compromise: malicious telnyx 4.87.1 / 4.87.2 hash on disk
 
-`UC_378_9` · phase: **delivery** · confidence: **High**
+`UC_175_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceFileEvents
 
 ### [LLM] TeamPCP C2 egress to 83.142.209.203:8080 (telnyx WAV-stego dropper)
 
-`UC_378_10` · phase: **c2** · confidence: **High**
+`UC_175_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceNetworkEvents
 
 ### [LLM] TeamPCP WAV-stego payload drop (hangup.wav / ringtone.wav)
 
-`UC_378_11` · phase: **delivery** · confidence: **High**
+`UC_175_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ WavDrop
 
 ### [LLM] TeamPCP msbuild.exe persistence in user Startup folder
 
-`UC_378_12` · phase: **install** · confidence: **High**
+`UC_175_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +128,7 @@ DeviceFileEvents
 
 ### [LLM] TeamPCP Linux/Mac stdin-piped Python second stage (sys.executable -)
 
-`UC_378_13` · phase: **exploit** · confidence: **Medium**
+`UC_175_13` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,7 +155,7 @@ PyExecDash
 
 ### [LLM] TeamPCP tpcp.tar.gz exfil POST signature on egress proxy / WAF
 
-`UC_378_14` · phase: **actions** · confidence: **High**
+`UC_175_14` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -327,7 +327,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Popular telnyx package compromised on PyPI by TeamPCP
 
-`UC_378_8` · phase: **exploit** · confidence: **High**
+`UC_175_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

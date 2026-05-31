@@ -248,7 +248,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Ethical Hacking: Top Tools
 
-`UC_1439_5` · phase: **exploit** · confidence: **High**
+`UC_765_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
