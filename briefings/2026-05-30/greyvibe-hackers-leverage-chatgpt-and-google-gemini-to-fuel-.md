@@ -121,7 +121,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GREYVIBE C2 egress: connections to PhantomRelay/LegionRelay infrastructure
 
-`UC_6_12` · phase: **c2** · confidence: **High**
+`UC_7_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ DeviceNetworkEvents
 
 ### [LLM] GREYVIBE sample hashes (PhantomRelay/LegionRelay/DAYLIGHT/TEASOUP) on disk or executed
 
-`UC_6_13` · phase: **install** · confidence: **High**
+`UC_7_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -166,7 +166,7 @@ union
 
 ### [LLM] GREYVIBE fake-CAPTCHA ClickFix: browser/Run-dialog -> PowerShell with paste-execute payload
 
-`UC_6_14` · phase: **delivery** · confidence: **High**
+`UC_7_14` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -188,7 +188,7 @@ DeviceProcessEvents
 
 ### [LLM] LegionRelay/PhantomRelay PowerShell RAT collection: Telegram/WhatsApp/browser credential access
 
-`UC_6_15` · phase: **actions** · confidence: **Medium**
+`UC_7_15` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

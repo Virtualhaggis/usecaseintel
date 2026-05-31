@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ChatGPT share-link to openew[.]app navigation chain (LLMShare lure)
 
-`UC_19_7` · phase: **delivery** · confidence: **High**
+`UC_20_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceNetworkEvents
 
 ### [LLM] Browser download from openew[.]app or pinned LLMShare hosting IPs
 
-`UC_19_8` · phase: **delivery** · confidence: **High**
+`UC_20_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceFileEvents
 
 ### [LLM] Execution of LLMShare ChatGPT-installer SHA256 (Windows / macOS)
 
-`UC_19_9` · phase: **install** · confidence: **High**
+`UC_20_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceProcessEvents
 
 ### [LLM] LLMShare anti-VM discovery: WMI BIOS/Computer queries + HKLM\HARDWARE reads post-installer launch
 
-`UC_19_10` · phase: **exploit** · confidence: **Medium**
+`UC_20_10` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
