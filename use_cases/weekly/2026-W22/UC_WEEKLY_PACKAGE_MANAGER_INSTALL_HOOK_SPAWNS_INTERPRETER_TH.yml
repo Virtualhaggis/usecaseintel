@@ -1,0 +1,143 @@
+id: UC_WEEKLY_PACKAGE_MANAGER_INSTALL_HOOK_SPAWNS_INTERPRETER_TH
+title: "[WEEKLY] Package-manager install hook spawns interpreter that beacons to non-registry host within 120s"
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1195.002
+  name: Compromise Software Supply Chain
+- id: T1546.016
+  name: "Event Triggered Execution: Installer Packages"
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1059.006
+  name: "Command and Scripting Interpreter: Python"
+- id: T1071.001
+  name: "Application Layer Protocol: Web Protocols"
+- id: T1041
+  name: Exfiltration Over C2 Channel
+- id: T1552.001
+  name: "Unsecured Credentials: Credentials In Files"
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Network_Traffic.All_Traffic
+  - Network_Resolution.DNS
+description: |-
+  Detects the joint pattern across the May 2026 supply-chain wave (Mini Shai-Hulud / TeamPCP @antv compromise, Laravel-Lang Composer tag-rewrite, Sicoob.Sdk NuGet, vpmdhaj typosquat npm packages, dependency-confusion npm scopes, and Microsoft durabletask PyPI compromise): a developer-host or CI runner invokes a package manager (npm/yarn/pnpm/bun/composer/dotnet/pip), the install-time hook (preinstall/postinstall, composer scripts, nuget install.ps1, pip setup.py) spawns an interpreter (node/bun/python/php/powershell/bash), and that interpreter opens an outbound connection to a host that is NOT the official registry within ~120 seconds. The chain spans Delivery (T1195.002 supply-chain), Execution (T1059.001/004/006/007, T1546.016 installer-triggered), and C2/Exfil (T1071.001, T1041, T1567). Fires when a freshly-installed dependency reaches out to an attacker-controlled domain such as those rotated weekly by these actors (m-kosche.com, git-service.com, flipboxstudio.info, sportsontheweb.net, moika.tech, cloudplatform-single-spa.io, t-in-one.io). Does NOT fire when the same interpreters are launched outside an install context, or when the post-install network egress goes to a known registry / CDN allowlist (registry.npmjs.org, packagist.org, api.nuget.org, files.pythonhosted.org, github.com release CDN).
+  
+  Rationale: Every article in scope describes the same chain: a compromised package on a public registry, install-time scripts that hand control to a language runtime, and that runtime contacting an attacker-controlled host within seconds. Correlating package-manager → interpreter child → non-registry public egress on the same PID inside a 120s window catches all six campaigns (Mini Shai-Hulud npm, Laravel-Lang Composer, Sicoob NuGet, vpmdhaj typosquat, dependency-confusion scopes, durabletask PyPI) without depending on any single IOC, while excluding the legitimate registry fetches that dominate normal install traffic.
+defender_kql: |-
+  let Window = 120s;
+  let PkgMgrs = dynamic(["npm.exe","npm","npm-cli.js","yarn.exe","yarn","pnpm.exe","pnpm","bun.exe","bun","composer","composer.phar","dotnet.exe","dotnet","nuget.exe","pip","pip3","pip.exe","python.exe","python","python3"]);
+  let Interpreters = dynamic(["node.exe","node","bun.exe","bun","python.exe","python","python3","php.exe","php","powershell.exe","pwsh.exe","cmd.exe","bash","sh","curl.exe","curl","wget.exe","wget"]);
+  let RegistryAllow = dynamic(["registry.npmjs.org","registry.yarnpkg.com","packagist.org","repo.packagist.org","api.nuget.org","www.nuget.org","files.pythonhosted.org","pypi.org","objects.githubusercontent.com","codeload.github.com","github.com","raw.githubusercontent.com","deb.debian.org","security.ubuntu.com"]);
+  let KnownBadIOC = dynamic(["m-kosche.com","t.m-kosche.com","git-service.com","check.git-service.com","flipboxstudio.info","sportsontheweb.net","aab.sportsontheweb.net","moika.tech","oob.moika.tech","cloudplatform-single-spa.io","t-in-one.io","filev2.getsession.org"]);
+  let InstallSpawn = DeviceProcessEvents
+      | where Timestamp > ago(7d)
+      | where InitiatingProcessFileName in~ (PkgMgrs)
+      | where FileName in~ (Interpreters)
+      | where AccountName !endswith "$"
+      | project SpawnTime = Timestamp, DeviceId, DeviceName, AccountName,
+                InstallParentCmd = InitiatingProcessCommandLine,
+                InstallParent    = InitiatingProcessFileName,
+                InterpreterImage = FolderPath,
+                InterpreterCmd   = ProcessCommandLine,
+                InterpreterPid   = ProcessId,
+                InterpreterName  = FileName;
+  let NetEgress = DeviceNetworkEvents
+      | where Timestamp > ago(7d)
+      | where RemoteIPType == "Public"
+      | where isnotempty(RemoteUrl) or isnotempty(RemoteIP)
+      | extend Domain = tolower(tostring(RemoteUrl))
+      | where Domain !in~ (RegistryAllow)
+      | where not(Domain has_any (RegistryAllow))
+      | project NetTime = Timestamp, DeviceId, DeviceName,
+                EgressPid = InitiatingProcessId,
+                EgressImage = InitiatingProcessFileName,
+                RemoteUrl, RemoteIP, RemotePort;
+  InstallSpawn
+  | join kind=inner NetEgress on DeviceId, $left.InterpreterPid == $right.EgressPid
+  | where NetTime between (SpawnTime .. SpawnTime + Window)
+  | extend DelaySec = datetime_diff('second', NetTime, SpawnTime)
+  | extend IsKnownIOC = RemoteUrl has_any (KnownBadIOC)
+  | summarize SpawnTime = min(SpawnTime), FirstBeacon = min(NetTime),
+              Domains = make_set(RemoteUrl, 25),
+              IPs = make_set(RemoteIP, 25),
+              Ports = make_set(RemotePort, 10),
+              InstallParent = any(InstallParent),
+              InstallCmd = any(InstallParentCmd),
+              InterpCmd = any(InterpreterCmd),
+              MinDelaySec = min(DelaySec),
+              IocHit = max(toint(IsKnownIOC))
+              by DeviceName, AccountName, InterpreterName, InterpreterPid
+  | extend Severity = case(IocHit == 1, "High", "Medium")
+  | order by SpawnTime desc
+sentinel_kql: |-
+  let Window = 120s;
+  let PkgMgrs = dynamic(["npm.exe","npm","yarn.exe","yarn","pnpm.exe","pnpm","bun.exe","bun","composer","composer.phar","dotnet.exe","dotnet","nuget.exe","pip","pip3","pip.exe","python.exe","python","python3"]);
+  let Interpreters = dynamic(["node.exe","node","bun.exe","bun","python.exe","python","python3","php.exe","php","powershell.exe","pwsh.exe","cmd.exe","bash","sh","curl.exe","curl","wget.exe","wget"]);
+  let RegistryAllow = dynamic(["registry.npmjs.org","registry.yarnpkg.com","packagist.org","api.nuget.org","files.pythonhosted.org","pypi.org","codeload.github.com","github.com","objects.githubusercontent.com"]);
+  let KnownBadIOC = dynamic(["m-kosche.com","git-service.com","flipboxstudio.info","sportsontheweb.net","moika.tech","cloudplatform-single-spa.io","t-in-one.io"]);
+  let InstallSpawn = SecurityEvent
+      | where TimeGenerated > ago(7d)
+      | where EventID == 4688
+      | extend ParentFile = tostring(split(ParentProcessName, "\\")[-1])
+      | extend ChildFile  = tostring(split(NewProcessName, "\\")[-1])
+      | where tolower(ParentFile) in (PkgMgrs)
+      | where tolower(ChildFile) in (Interpreters)
+      | where Account !endswith "$"
+      | project SpawnTime = TimeGenerated, Computer, Account,
+                InstallParent = ParentFile, InstallParentCmd = ParentProcessName,
+                InterpreterImage = NewProcessName, InterpreterCmd = CommandLine,
+                InterpreterPid = NewProcessId;
+  let NetEgress = CommonSecurityLog
+      | where TimeGenerated > ago(7d)
+      | where DeviceAction !in~ ("deny","block")
+      | where isnotempty(DestinationHostName) or isnotempty(DestinationIP)
+      | extend Domain = tolower(DestinationHostName)
+      | where Domain !in~ (RegistryAllow)
+      | where not(Domain has_any (RegistryAllow))
+      | project NetTime = TimeGenerated,
+                Computer = SourceHostName,
+                RemoteUrl = DestinationHostName,
+                RemoteIP  = DestinationIP,
+                RemotePort = DestinationPort;
+  InstallSpawn
+  | join kind=inner NetEgress on Computer
+  | where NetTime between (SpawnTime .. SpawnTime + Window)
+  | extend DelaySec = datetime_diff('second', NetTime, SpawnTime)
+  | extend IsKnownIOC = RemoteUrl has_any (KnownBadIOC)
+  | summarize SpawnTime = min(SpawnTime), FirstBeacon = min(NetTime),
+              Domains = make_set(RemoteUrl, 25),
+              IPs = make_set(RemoteIP, 25),
+              InstallCmd = any(InstallParentCmd),
+              InterpCmd = any(InterpreterCmd),
+              IocHit = max(toint(IsKnownIOC))
+              by Computer, Account, InterpreterPid
+  | extend Severity = case(IocHit == 1, "High", "Medium")
+  | order by SpawnTime desc
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as proc_time values(Processes.process) as cmd values(Processes.process_path) as image values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("npm.exe","npm-cli.js","node.exe","yarn.exe","yarn","pnpm.exe","pnpm","bun.exe","bun","composer.phar","composer","php.exe","php","dotnet.exe","dotnet","nuget.exe","pip","pip3","pip.exe","python.exe","python","python3") Processes.process_name IN ("node.exe","node","bun.exe","bun","python.exe","python","python3","php.exe","php","powershell.exe","pwsh.exe","cmd.exe","bash","sh","curl.exe","curl","wget.exe","wget") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process_id
+  | `drop_dm_object_name("Processes")`
+  | rename process_id as install_pid
+  | join type=inner dest [
+      | tstats `summariesonly` count min(_time) as net_time values(All_Traffic.dest) as c2_dest values(All_Traffic.dest_ip) as c2_ip values(All_Traffic.app) as net_app from datamodel=Network_Traffic where All_Traffic.dest_port IN (80,443,53,8080,8443) NOT (All_Traffic.dest IN ("registry.npmjs.org","registry.yarnpkg.com","packagist.org","repo.packagist.org","api.nuget.org","www.nuget.org","files.pythonhosted.org","pypi.org","objects.githubusercontent.com","codeload.github.com","github.com","raw.githubusercontent.com")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.process_id host
+      | `drop_dm_object_name("All_Traffic")`
+      | rename src as dest process_id as install_pid
+  ]
+  | eval delay_sec = round((net_time - proc_time),0)
+  | where delay_sec >= 0 AND delay_sec <= 120
+  | where NOT match(c2_dest, "(?i)(npmjs|yarnpkg|packagist|nuget|pythonhosted|githubusercontent|github\.com|microsoft\.com|google\.com|amazonaws\.com)$")
+  | stats min(proc_time) as install_time min(net_time) as c2_time values(image) as binary values(parent_cmd) as install_cmd values(c2_dest) as c2_domain values(c2_ip) as c2_ip dc(c2_dest) as c2_count by dest user process_name parent_process_name
+  | where c2_count >= 1
+  | convert ctime(install_time) ctime(c2_time)
+  | `security_content_ctime(install_time)`
+datadog_query: |-
+  source:(windows.sysmon OR linux.auditd) @EventID:(1 OR EXECVE) @ParentImage:(*\\npm.exe OR *\\NPM.EXE OR *\\node.exe OR *\\Node.exe OR *\\yarn.exe OR *\\pnpm.exe OR *\\bun.exe OR *\\composer OR *\\composer.phar OR *\\php.exe OR *\\dotnet.exe OR *\\nuget.exe OR *\\pip.exe OR *\\pip3 OR *\\python.exe OR *\\python3 OR */npm OR */yarn OR */pnpm OR */bun OR */composer OR */php OR */dotnet OR */pip OR */pip3 OR */python OR */python3) @Image:(*\\node.exe OR *\\Node.exe OR *\\bun.exe OR *\\python.exe OR *\\python3 OR *\\php.exe OR *\\powershell.exe OR *\\pwsh.exe OR *\\cmd.exe OR *\\curl.exe OR *\\wget.exe OR */node OR */bun OR */python OR */python3 OR */php OR */bash OR */sh OR */curl OR */wget) -@CommandLine:(*registry.npmjs.org* OR *packagist.org* OR *api.nuget.org* OR *pythonhosted.org* OR *github.com*)

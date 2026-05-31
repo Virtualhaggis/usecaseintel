@@ -1,0 +1,100 @@
+id: UC_WEEKLY_INTERNET_FACING_SERVER_PROCESS_SPAWNS_INTERPRETER_
+title: "[WEEKLY] Internet-facing server process spawns interpreter then beacons to first-seen external host within 5 minutes"
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1059
+  name: Command and Scripting Interpreter
+- id: T1505.004
+  name: "Server Software Component: IIS Components"
+- id: T1071.001
+  name: "Application Layer Protocol: Web Protocols"
+- id: T1105
+  name: Ingress Tool Transfer
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Network_Traffic.All_Traffic
+description: |-
+  Detects the post-exploitation chain in which a server-side process exposed to the internet (web-worker, edge appliance daemon, endpoint-management agent, IIS worker) spawns a scripting interpreter or LOLBin, and that child process — within a 5-minute window — initiates outbound traffic to an external host the organisation has not contacted in the prior 30 days. This fortnight the pattern dominates the briefing set: Microsoft's 'From edge appliance to enterprise compromise: Multi-stage Linux intrusion via F5 and Confluence' (2026-05-22) chains CVE-2025-33073 from edge to lateral, Arctic Wolf's 'Threat Actors Exploit Critical FortiClient EMS Flaw to Deploy Credential Stealer' (2026-05-28, CVE-2026-35616) abuses EmsService.exe to drop stealers, Talos's 'From PDB strings to MaaS: Tracking a commodity BadIIS ecosystem' (2026-05-19) places its loader under w3wp, and the LiquidJS SSTI advisory (CVE-2026-45618, 2026-05-27) hands attackers a node-driven RCE primitive — every one of these surfaces an interpreter child of a server parent followed almost immediately by attacker-infra callout. Spans exploit -> install -> c2 in a single signal. It fires when both the parent-child relation and a first-seen public destination hold inside the window; it will NOT fire on routine sysadmin shells against the same parent, scheduled patching/telemetry to long-established vendor endpoints (those clear the 30-day baseline), or interpreter spawns whose only egress is to internal/RFC1918 ranges.
+  
+  Rationale: Each campaign this fortnight (F5/Confluence on Linux, FortiClient EMS, BadIIS, LiquidJS SSTI) ends the exploit stage with the same observable: a server-shaped parent process spawning an interpreter that immediately reaches attacker infrastructure. Joining the spawn to a per-process-GUID egress within a 5-minute window and anti-joining against a 30-day baseline of org-wide destinations isolates that joint signal without relying on any rotating hash, IP, or domain.
+defender_kql: |-
+  let Lookback = 7d;
+  let WindowSec = 300;
+  let Baseline = DeviceNetworkEvents
+      | where Timestamp between (ago(30d) .. ago(1d))
+      | where RemoteIPType == "Public" and isnotempty(RemoteUrl)
+      | summarize BaselineHosts = dcount(DeviceName) by RemoteUrl
+      | where BaselineHosts >= 3;     // 3 = empirical: drops one-off vendor blips while keeping novel infra
+  let ServerSpawns = DeviceProcessEvents
+      | where Timestamp > ago(Lookback)
+      | where InitiatingProcessFileName in~ ("w3wp.exe","httpd.exe","httpd","nginx.exe","nginx","java.exe","java","node.exe","node","tomcat.exe","emsservice.exe","fmsd","jboss.exe","confluence","forticlient.exe","f5-bigip.exe")
+      | where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","bash","sh","python.exe","python","python3","perl","curl.exe","wget.exe")
+      | where AccountName !endswith "$"           // exclude machine accounts
+      | where AccountName !in~ ("system","local service","network service")
+      | project SpawnTime = Timestamp, DeviceId, DeviceName, AccountName,
+                ParentImage = InitiatingProcessFileName,
+                ChildImage = FileName,
+                ChildCmd = ProcessCommandLine,
+                ChildPGUID = tostring(ProcessUniqueId);
+  let Egress = DeviceNetworkEvents
+      | where Timestamp > ago(Lookback)
+      | where RemoteIPType == "Public"
+      | project NetTime = Timestamp, DeviceId,
+                InitPGUID = tostring(InitiatingProcessId),
+                RemoteIP, RemoteUrl, RemotePort;
+  ServerSpawns
+  | join kind=inner Egress on DeviceId, $left.ChildPGUID == $right.InitPGUID
+  | extend DelaySec = datetime_diff('second', NetTime, SpawnTime)
+  | where DelaySec between (0 .. WindowSec)
+  | join kind=leftanti Baseline on RemoteUrl
+  | project SpawnTime, NetTime, DelaySec, DeviceName, AccountName,
+            ParentImage, ChildImage, ChildCmd, RemoteIP, RemoteUrl, RemotePort
+  | order by SpawnTime desc
+sentinel_kql: |-
+  let Lookback = 7d;
+  let WindowSec = 300;
+  let Baseline = DeviceNetworkEvents
+      | where TimeGenerated between (ago(30d) .. ago(1d))
+      | where RemoteIPType == "Public" and isnotempty(RemoteUrl)
+      | summarize BaselineHosts = dcount(DeviceName) by RemoteUrl
+      | where BaselineHosts >= 3;
+  let ServerSpawns = DeviceProcessEvents
+      | where TimeGenerated > ago(Lookback)
+      | where InitiatingProcessFileName in~ ("w3wp.exe","httpd.exe","httpd","nginx.exe","nginx","java.exe","java","node.exe","node","tomcat.exe","emsservice.exe","fmsd","jboss.exe","confluence","forticlient.exe","f5-bigip.exe")
+      | where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","bash","sh","python.exe","python","python3","perl","curl.exe","wget.exe")
+      | where AccountName !endswith "$"
+      | where AccountName !in~ ("system","local service","network service")
+      | project SpawnTime = TimeGenerated, DeviceId, DeviceName, AccountName,
+                ParentImage = InitiatingProcessFileName,
+                ChildImage = FileName,
+                ChildCmd = ProcessCommandLine,
+                ChildPGUID = tostring(ProcessUniqueId);
+  let Egress = DeviceNetworkEvents
+      | where TimeGenerated > ago(Lookback)
+      | where RemoteIPType == "Public"
+      | project NetTime = TimeGenerated, DeviceId,
+                InitPGUID = tostring(InitiatingProcessId),
+                RemoteIP, RemoteUrl, RemotePort;
+  ServerSpawns
+  | join kind=inner Egress on DeviceId, $left.ChildPGUID == $right.InitPGUID
+  | extend DelaySec = datetime_diff('second', NetTime, SpawnTime)
+  | where DelaySec between (0 .. WindowSec)
+  | join kind=leftanti Baseline on RemoteUrl
+  | project SpawnTime, NetTime, DelaySec, DeviceName, AccountName,
+            ParentImage, ChildImage, ChildCmd, RemoteIP, RemoteUrl, RemotePort
+  | order by SpawnTime desc
+splunk_spl: |-
+  | tstats summariesonly=true count min(_time) as proc_time from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("w3wp.exe","httpd.exe","httpd","nginx.exe","nginx","java.exe","java","node.exe","node","tomcat.exe","EmsService.exe","fmsd","jboss.exe","confluence","atlassian-confluence","forticlient.exe")) AND (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","bash","sh","python.exe","python","python3","perl","curl.exe","curl","wget.exe","wget")) by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_guid | `drop_dm_object_name("Processes")` | join type=inner host process_guid [ | tstats summariesonly=true min(_time) as net_time values(All_Traffic.dest_ip) as remote_ip values(All_Traffic.dest) as remote_host from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_category="external" by All_Traffic.src All_Traffic.process_guid | `drop_dm_object_name("All_Traffic")` | rename src as host ] | eval delay_sec = net_time - proc_time | where delay_sec>=0 AND delay_sec<=300 | join type=left remote_host [ | tstats summariesonly=true dc(All_Traffic.src) as baseline_hosts from datamodel=Network_Traffic.All_Traffic where earliest=-30d@d latest=-1d@d by All_Traffic.dest | rename All_Traffic.dest as remote_host ] | where isnull(baseline_hosts) OR baseline_hosts<3 | table proc_time net_time delay_sec host user parent_process_name process_name process remote_ip remote_host | sort - proc_time
+datadog_query: |-
+  source:windows.sysmon @EventID:1 @ParentImage:(*\\w3wp.exe OR *\\W3WP.EXE OR *\\httpd.exe OR *\\nginx.exe OR *\\java.exe OR *\\node.exe OR *\\tomcat.exe OR *\\EmsService.exe OR *\\emsservice.exe OR *\\fmsd OR *\\jboss.exe OR *\\confluence OR *\\forticlient.exe) @Image:(*\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\cmd.exe OR *\\mshta.exe OR *\\MSHTA.EXE OR *\\wscript.exe OR *\\cscript.exe OR *\\rundll32.exe OR *\\regsvr32.exe OR *\\bitsadmin.exe OR *\\certutil.exe OR *\\python.exe OR *\\curl.exe OR *\\wget.exe OR */bin/bash OR */bin/sh OR */usr/bin/python OR */usr/bin/python3 OR */usr/bin/curl OR */usr/bin/wget) -@User:(*$ OR SYSTEM OR LOCAL\ SERVICE OR NETWORK\ SERVICE)

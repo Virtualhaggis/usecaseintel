@@ -1,0 +1,128 @@
+id: UC_WEEKLY_PACKAGE_MANAGER_INSTALL_INTERPRETER_CHILD_NON_REGI
+title: "[WEEKLY] Package-Manager Install -> Interpreter Child -> Non-Registry Egress Within 5 Minutes"
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1195.002
+  name: Compromise Software Supply Chain
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1059.006
+  name: "Command and Scripting Interpreter: Python"
+- id: T1059.004
+  name: "Command and Scripting Interpreter: Unix Shell"
+- id: T1552.001
+  name: "Unsecured Credentials: Credentials In Files"
+- id: T1041
+  name: Exfiltration Over C2 Channel
+- id: T1567
+  name: Exfiltration Over Web Service
+- id: T1204.002
+  name: "User Execution: Malicious File"
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Endpoint.Filesystem
+  - Network_Traffic.All_Traffic
+  - Network_Resolution.DNS
+description: |-
+  Detects the cross-stage skeleton common to every npm/PyPI/Composer/Cargo supply-chain compromise in the corpus: a package manager (npm/npx/yarn/pnpm/pip/uv/poetry/composer/cargo) spawns a script interpreter or downloader (node, python, sh/bash, powershell, curl/wget, certutil), and the same host then makes outbound HTTP/S to a destination NOT on the package-registry allowlist within ~5 minutes, optionally corroborated by reads of `.npmrc`, `.aws/credentials`, `.ssh/id_*`, `.env`, GitHub PATs and similar credential files. This pattern drove the May 2026 cluster including Mini Shai-Hulud (durabletask PyPI, @beproduct/nestjs-auth, @cap-js/*, node-ipc), GlassWorm VS Code/npm worm, TrapDoor (npm+PyPI+Crates), Laravel-Lang composer tag-rewrite (flipboxstudio.info), guardrails-ai 0.10.1 (CVE-2026-45758), and was the through-line of StepSecurity's '5 Supply Chain Attacks in 48 Hours' write-up and The Hacker News weekly recap. Kill-chain coverage: install (registry pull) -> execution (postinstall/setup.py/composer-script/build.rs) -> credential access (T1552.001) -> exfiltration over C2 (T1041/T1567). Fires when all three stages chain on the same host within the window; does NOT fire when an install completes without spawning an interpreter, when all egress stays inside the explicit registry/mirror allowlist, or when the interpreter is spawned by an IDE/CI orchestrator rather than the package-manager process itself.
+  
+  Rationale: Every campaign in the corpus (Mini Shai-Hulud npm worm, GlassWorm, TrapDoor, Laravel-Lang Composer tag-rewrite, durabletask PyPI, @cap-js/* GHSA, node-ipc, guardrails-ai 0.10.1) follows the same skeleton: a registry install triggers an interpreter/downloader child that exfiltrates secrets to a non-registry destination within seconds. Correlating install -> interpreter-child -> non-registry-egress on the same host within a 5-minute window catches all of them without depending on the per-campaign C2 domains or hashes, which rotate weekly.
+defender_kql: |-
+  let LookbackHours = 24h;
+  let WindowSec = 300;
+  let PkgMgrs = dynamic(["npm.exe","npx.exe","yarn.exe","pnpm.exe","pip.exe","pip3.exe","uv.exe","poetry.exe","composer.exe","composer.phar","cargo.exe","npm","npx","yarn","pnpm","pip","pip3","uv","poetry","composer","cargo"]);
+  let ScriptHosts = dynamic(["sh","bash","zsh","dash","node","node.exe","python","python.exe","python3","python3.exe","powershell.exe","pwsh.exe","cmd.exe","curl","curl.exe","wget","wget.exe","certutil.exe","bitsadmin.exe"]);
+  let RegistryHosts = dynamic(["registry.npmjs.org","registry.yarnpkg.com","registry.npmmirror.com","pypi.org","files.pythonhosted.org","pypi.python.org","crates.io","static.crates.io","index.crates.io","packagist.org","repo.packagist.org","github.com","codeload.github.com","raw.githubusercontent.com","objects.githubusercontent.com","api.github.com"]);
+  let CredFileTokens = dynamic([".npmrc",".pypirc",".aws/credentials",".aws\\credentials",".aws/config",".ssh/id_",".ssh\\id_",".gitconfig",".docker/config.json",".docker\\config.json",".kube/config",".kube\\config",".env",".envrc","credentials.json","auth.json","gh_token","github_token"]);
+  let InstallExec = DeviceProcessEvents
+      | where Timestamp > ago(LookbackHours)
+      | where AccountName !endswith "$" and AccountName !in~ ("system","local service","network service")
+      | where InitiatingProcessFileName in~ PkgMgrs
+      | where FileName in~ ScriptHosts
+           or ProcessCommandLine has_any ("curl ","wget ","Invoke-WebRequest","DownloadString","base64 -d","atob(","Buffer.from","child_process","os.system","subprocess.","/dev/tcp/"," eval("," exec(")
+      | project InstallTime = Timestamp, DeviceId, DeviceName, AccountName,
+                PkgMgr = InitiatingProcessFileName,
+                PkgMgrCmd = InitiatingProcessCommandLine,
+                ChildImage = FileName,
+                ChildCmd = ProcessCommandLine;
+  let Exfil = DeviceNetworkEvents
+      | where Timestamp > ago(LookbackHours)
+      | where RemoteIPType == "Public"
+      | where isnotempty(RemoteUrl) or isnotempty(RemoteIP)
+      | where not(RemoteUrl in~ (RegistryHosts))
+      | where not(RemoteUrl endswith ".npmjs.com" or RemoteUrl endswith ".pythonhosted.org" or RemoteUrl endswith ".crates.io" or RemoteUrl endswith ".packagist.org")
+      | project ExfilTime = Timestamp, DeviceId, RemoteUrl, RemoteIP, RemotePort,
+                ExfilProcess = InitiatingProcessFileName;
+  let CredReads = DeviceFileEvents
+      | where Timestamp > ago(LookbackHours)
+      | where ActionType in ("FileOpened","FileCreated","FileModified")
+      | where FolderPath has_any (CredFileTokens) or FileName in~ (".npmrc",".pypirc",".env","credentials","auth.json")
+      | project CredTime = Timestamp, DeviceId,
+                CredFile = strcat(FolderPath, FileName),
+                CredReader = InitiatingProcessFileName;
+  InstallExec
+  | join kind=inner Exfil on DeviceId
+  | where ExfilTime between (InstallTime .. InstallTime + WindowSec * 1s)
+  | extend DelaySec = datetime_diff('second', ExfilTime, InstallTime)
+  | join kind=leftouter (CredReads) on DeviceId
+  | where isempty(CredTime) or CredTime between (InstallTime - 30s .. ExfilTime + 5s)
+  | summarize InstallTime = min(InstallTime),
+              ExfilTime = min(ExfilTime),
+              DelaySec = min(DelaySec),
+              CredFiles = make_set(CredFile, 25),
+              RemoteUrls = make_set(RemoteUrl, 10),
+              RemoteIPs = make_set(RemoteIP, 10),
+              SampleChildCmd = any(ChildCmd),
+              SamplePkgMgrCmd = any(PkgMgrCmd)
+              by DeviceName, AccountName, PkgMgr, ChildImage
+  | order by InstallTime desc
+sentinel_kql: |-
+  let LookbackHours = 24h;
+  let WindowSec = 300;
+  let PkgMgrs = dynamic(["npm.exe","npx.exe","yarn.exe","pnpm.exe","pip.exe","pip3.exe","uv.exe","poetry.exe","composer.exe","composer.phar","cargo.exe","npm","npx","yarn","pnpm","pip","pip3","uv","poetry","composer","cargo"]);
+  let ScriptHosts = dynamic(["sh","bash","zsh","dash","node","node.exe","python","python.exe","python3","python3.exe","powershell.exe","pwsh.exe","cmd.exe","curl","curl.exe","wget","wget.exe","certutil.exe","bitsadmin.exe"]);
+  let RegistryHosts = dynamic(["registry.npmjs.org","registry.yarnpkg.com","registry.npmmirror.com","pypi.org","files.pythonhosted.org","pypi.python.org","crates.io","static.crates.io","index.crates.io","packagist.org","repo.packagist.org","github.com","codeload.github.com","raw.githubusercontent.com","objects.githubusercontent.com","api.github.com"]);
+  let InstallExec = DeviceProcessEvents
+      | where TimeGenerated > ago(LookbackHours)
+      | where AccountName !endswith "$"
+      | where InitiatingProcessFileName in~ PkgMgrs
+      | where FileName in~ ScriptHosts
+           or ProcessCommandLine has_any ("curl ","wget ","Invoke-WebRequest","DownloadString","base64 -d","atob(","Buffer.from","child_process","os.system","subprocess.","/dev/tcp/")
+      | project InstallTime = TimeGenerated, DeviceId, DeviceName, AccountName,
+                PkgMgr = InitiatingProcessFileName,
+                PkgMgrCmd = InitiatingProcessCommandLine,
+                ChildImage = FileName,
+                ChildCmd = ProcessCommandLine;
+  let Exfil = DeviceNetworkEvents
+      | where TimeGenerated > ago(LookbackHours)
+      | where RemoteIPType == "Public"
+      | where isnotempty(RemoteUrl) or isnotempty(RemoteIP)
+      | where not(RemoteUrl in~ (RegistryHosts))
+      | where not(RemoteUrl endswith ".npmjs.com" or RemoteUrl endswith ".pythonhosted.org" or RemoteUrl endswith ".crates.io" or RemoteUrl endswith ".packagist.org")
+      | project ExfilTime = TimeGenerated, DeviceId, RemoteUrl, RemoteIP, RemotePort;
+  InstallExec
+  | join kind=inner Exfil on DeviceId
+  | where ExfilTime between (InstallTime .. InstallTime + WindowSec * 1s)
+  | extend DelaySec = datetime_diff('second', ExfilTime, InstallTime)
+  | summarize InstallTime = min(InstallTime),
+              ExfilTime = min(ExfilTime),
+              DelaySec = min(DelaySec),
+              RemoteUrls = make_set(RemoteUrl, 10),
+              RemoteIPs = make_set(RemoteIP, 10),
+              SampleChildCmd = any(ChildCmd),
+              SamplePkgMgrCmd = any(PkgMgrCmd)
+              by DeviceName, AccountName, PkgMgr, ChildImage
+  | order by InstallTime desc
+splunk_spl: |-
+  | tstats summariesonly=true count min(_time) as install_time values(Processes.process) as install_cmd values(Processes.parent_process_name) as pkg_mgr values(Processes.process_name) as child_proc from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("npm","npm.exe","npm.cmd","npx","npx.exe","yarn","yarn.exe","pnpm","pnpm.exe","pip","pip.exe","pip3","pip3.exe","uv","uv.exe","poetry","poetry.exe","composer","composer.exe","composer.phar","cargo","cargo.exe") AND (Processes.process_name IN ("sh","bash","zsh","dash","node","node.exe","python","python.exe","python3","python3.exe","powershell.exe","pwsh.exe","cmd.exe","curl","curl.exe","wget","wget.exe","certutil.exe","bitsadmin.exe") OR Processes.process IN ("*curl *","*wget *","*Invoke-WebRequest*","*DownloadString*","*base64 -d*","*atob(*","*Buffer.from*","*child_process*","*os.system*","*subprocess.*","*/dev/tcp/*","*exec(*","*eval(*")) by Processes.dest Processes.user | `drop_dm_object_name(Processes)` | join type=inner dest [ | tstats summariesonly=true min(_time) as exfil_time values(All_Traffic.dest) as exfil_dest values(All_Traffic.dest_ip) as exfil_ip values(All_Traffic.dest_port) as exfil_port from datamodel=Network_Traffic where All_Traffic.dest_port IN (80,443,8080,8443,4444,9001) AND NOT (All_Traffic.dest IN ("registry.npmjs.org","registry.yarnpkg.com","registry.npmmirror.com","pypi.org","files.pythonhosted.org","pypi.python.org","crates.io","static.crates.io","index.crates.io","packagist.org","repo.packagist.org","github.com","codeload.github.com","raw.githubusercontent.com","objects.githubusercontent.com","api.github.com") OR All_Traffic.dest LIKE "%.npmjs.com" OR All_Traffic.dest LIKE "%.pythonhosted.org" OR All_Traffic.dest LIKE "%.crates.io" OR All_Traffic.dest LIKE "%.packagist.org") by All_Traffic.src | rename All_Traffic.src as dest | `drop_dm_object_name(All_Traffic)` ] | where exfil_time >= install_time AND (exfil_time - install_time) <= 300 | eval delay_seconds = exfil_time - install_time | join type=left dest [ | tstats summariesonly=true values(Filesystem.file_path) as cred_files from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("*\\.npmrc","*/.npmrc","*\\.pypirc","*/.pypirc","*\\.aws\\credentials","*/.aws/credentials","*\\.ssh\\id_*","*/.ssh/id_*","*\\.gitconfig","*/.gitconfig","*\\.docker\\config.json","*/.docker/config.json","*\\.kube\\config","*/.kube/config","*\\.env","*/.env","*auth.json","*credentials.json")) by Filesystem.dest | rename Filesystem.dest as dest | `drop_dm_object_name(Filesystem)` ] | table install_time, exfil_time, delay_seconds, dest, user, pkg_mgr, child_proc, install_cmd, exfil_dest, exfil_ip, exfil_port, cred_files | sort - install_time
+datadog_query: |-
+  source:(windows.sysmon OR linux.auditd) (@EventID:1 OR @auditd.type:EXECVE) (@ParentImage:(*\\npm.exe OR *\\npm.cmd OR *\\npx.exe OR *\\yarn.exe OR *\\pnpm.exe OR *\\pip.exe OR *\\pip3.exe OR *\\uv.exe OR *\\poetry.exe OR *\\composer.exe OR *\\cargo.exe) OR @process.executable.path:(*/npm OR */npx OR */yarn OR */pnpm OR */pip OR */pip3 OR */uv OR */poetry OR */composer OR */cargo) OR @ParentCommandLine:(*npm\ install* OR *npm\ ci* OR *yarn\ install* OR *pnpm\ install* OR *pip\ install* OR *uv\ pip\ install* OR *poetry\ add* OR *composer\ install* OR *composer\ update* OR *cargo\ build* OR *cargo\ install*)) (@Image:(*\\sh OR *\\bash OR *\\node.exe OR *\\Node.exe OR *\\python.exe OR *\\Python.exe OR *\\python3.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\cmd.exe OR *\\curl.exe OR *\\wget.exe OR *\\certutil.exe OR *\\bitsadmin.exe) OR @process.name:(sh OR bash OR zsh OR dash OR node OR python OR python3 OR curl OR wget OR base64) OR @CommandLine:(*curl* OR *wget* OR *Invoke-WebRequest* OR *DownloadString* OR *base64* OR *child_process* OR *subprocess* OR *atob*) OR @process.command_line:(*curl* OR *wget* OR *base64* OR */dev/tcp/* OR *child_process* OR *subprocess*))

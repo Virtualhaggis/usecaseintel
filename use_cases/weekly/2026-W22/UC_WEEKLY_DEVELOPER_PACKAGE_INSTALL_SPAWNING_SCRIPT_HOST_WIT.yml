@@ -1,0 +1,135 @@
+id: UC_WEEKLY_DEVELOPER_PACKAGE_INSTALL_SPAWNING_SCRIPT_HOST_WIT
+title: "[WEEKLY] Developer package install spawning script-host with non-registry C2 within 5 minutes"
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1195.002
+  name: Compromise Software Supply Chain
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1059.006
+  name: "Command and Scripting Interpreter: Python"
+- id: T1059.001
+  name: "Command and Scripting Interpreter: PowerShell"
+- id: T1105
+  name: Ingress Tool Transfer
+- id: T1071.001
+  name: "Application Layer Protocol: Web Protocols"
+- id: T1204.002
+  name: "User Execution: Malicious File"
+- id: T1546.016
+  name: "Event Triggered Execution: Installer Packages"
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Network_Traffic.All_Traffic
+  - Network_Resolution.DNS
+description: |-
+  Detects the cross-ecosystem supply-chain pattern in which a developer package manager (npm/pnpm/yarn, pip/uv/poetry, NuGet/dotnet, or a VS Code/Cursor extension install) executes a lifecycle hook (preinstall/postinstall, setup.py, .csproj install task, extension activation) that within seconds spawns a script host (node, python, powershell, bash, curl, wget) which then beacons to an internet destination that is NOT a known package registry or marketplace. This fortnight that exact chain drove the Mini Shai-Hulud/AntV npm wave (Snyk, 2026-05-18), the malicious mistralai 2.4.6 PyPI dropper (GHSA-wx9m-wx4f-4cmg), node-ipc credential thief (StepSecurity 2026-05-19), guardrails-ai 0.10.1 (CVE-2026-45758), @cap-js/* (CVE-2026-46421), the malicious VS Code extension that breached GitHub and TeamPCP's Megalodon CI/CD push (Aikido / The Hacker News), the CISA-KEV-added Nx Console and Daemon Tools Lite embedded-malicious-code CVEs (CVE-2026-48027, CVE-2026-8398), the Claude AI-targeting mouse5212-super-formatter npm (THN 2026-05-27), the Sicoob.Sdk NuGet credential stealer (THN 2026-05-29) and Microsoft's dependency-confusion npm campaign (MSRC 2026-05-30). The chain spans Delivery (registry pull) → Installation (lifecycle hook execution) → C2 (first call-home). It fires when the install→egress delay is under 5 minutes AND the destination is outside an allow-list of registry/marketplace/GitHub hostnames; it will NOT fire on routine `npm install` traffic to registry.npmjs.org/pypi.org, on background telemetry from already-installed packages (no install-process ancestor), or on egress that pre-dates the install event.
+  
+  Rationale: Every one of the 12 articles describes the same chained behaviour — a package or extension install whose own lifecycle hook reaches the internet — but each cites a different IOC set (mistralai 83.142.209.194, AntV m-kosche.com, node-ipc sh.azurestaticprovider.net, @cap-js zero.masscan.cloud, Nx Console check.git-service.com, Megalodon polymarketbot.polymarketdev.workers.dev, Sicoob oob.moika.tech, MSRC's cloudplatform-single-spa.io, etc.). Correlating the install-process ancestor with a script-host egress to a non-registry destination inside a 5-minute window catches the joint TTP without pinning to any single rotating IOC, and the registry/marketplace allow-list keeps the false-positive rate low on normal developer workflow.
+defender_kql: |-
+  let LookbackDays = 7d;
+  let WindowSec = 300;
+  let PkgMgr = dynamic(["npm.exe","npm","pnpm.exe","pnpm","yarn.exe","yarn","pip.exe","pip","pip3.exe","pip3","uv.exe","uv","poetry.exe","poetry","nuget.exe","dotnet.exe","code.exe","cursor.exe"]);
+  let ScriptHosts = dynamic(["node.exe","node","python.exe","python","python3.exe","python3","pwsh.exe","powershell.exe","bash","sh","dash","curl.exe","wget.exe","cmd.exe"]);
+  let RegistryAllow = dynamic(["registry.npmjs.org","pypi.org","files.pythonhosted.org","registry.yarnpkg.com","api.nuget.org","nuget.org","marketplace.visualstudio.com","open-vsx.org","github.com","raw.githubusercontent.com","ghcr.io","go.dev","crates.io","rubygems.org"]);
+  let Installs = DeviceProcessEvents
+      | where Timestamp > ago(LookbackDays)
+      | where FileName in~ (PkgMgr)
+      | where ProcessCommandLine has_any ("install"," add ","restore","--install-extension"," ci ")
+      | where AccountName !endswith "$"
+      | project InstallTime = Timestamp, DeviceId, DeviceName, AccountName,
+                PkgMgr = FileName, PkgCmd = ProcessCommandLine;
+  let Egress = DeviceNetworkEvents
+      | where Timestamp > ago(LookbackDays)
+      | where RemoteIPType == "Public"
+      | where InitiatingProcessFileName in~ (ScriptHosts)
+           or InitiatingProcessParentFileName in~ (PkgMgr)
+      | extend HostOnly = tolower(tostring(split(RemoteUrl, "/")[0]))
+      | where not(HostOnly in~ (RegistryAllow))
+           and not(HostOnly endswith ".npmjs.org")
+           and not(HostOnly endswith ".pypi.org")
+           and not(HostOnly endswith ".pythonhosted.org")
+           and not(HostOnly endswith ".yarnpkg.com")
+           and not(HostOnly endswith ".nuget.org")
+           and not(HostOnly endswith ".visualstudio.com")
+           and not(HostOnly endswith ".github.com")
+           and not(HostOnly endswith ".githubusercontent.com")
+      | project EgressTime = Timestamp, DeviceId, DeviceName, AccountName,
+                ChildProc = InitiatingProcessFileName,
+                ChildCmd  = InitiatingProcessCommandLine,
+                ChildParent = InitiatingProcessParentFileName,
+                RemoteUrl, RemoteIP, RemotePort;
+  Installs
+  | join kind=inner Egress on DeviceId, AccountName
+  | where EgressTime between (InstallTime .. InstallTime + WindowSec * 1s)
+  | extend DelaySec = datetime_diff('second', EgressTime, InstallTime)
+  | summarize InstallTime = min(InstallTime),
+              EgressTime = min(EgressTime),
+              DelaySec   = min(DelaySec),
+              RemoteHits = dcount(strcat(RemoteIP,":",tostring(RemotePort))),
+              SampleRemoteUrl = any(RemoteUrl),
+              SampleRemoteIP  = any(RemoteIP),
+              SamplePkgCmd    = any(PkgCmd),
+              SampleChildCmd  = any(ChildCmd)
+           by DeviceName, AccountName, PkgMgr, ChildProc, ChildParent
+  | order by EgressTime desc
+sentinel_kql: |-
+  let LookbackDays = 7d;
+  let WindowSec = 300;
+  let PkgMgr = dynamic(["npm.exe","npm","pnpm.exe","pnpm","yarn.exe","yarn","pip.exe","pip","pip3.exe","pip3","uv.exe","uv","poetry.exe","poetry","nuget.exe","dotnet.exe","code.exe","cursor.exe"]);
+  let ScriptHosts = dynamic(["node.exe","node","python.exe","python","python3.exe","python3","pwsh.exe","powershell.exe","bash","sh","dash","curl.exe","wget.exe","cmd.exe"]);
+  let RegistryAllow = dynamic(["registry.npmjs.org","pypi.org","files.pythonhosted.org","registry.yarnpkg.com","api.nuget.org","nuget.org","marketplace.visualstudio.com","open-vsx.org","github.com","raw.githubusercontent.com","ghcr.io","go.dev","crates.io","rubygems.org"]);
+  let Installs = DeviceProcessEvents
+      | where TimeGenerated > ago(LookbackDays)
+      | where FileName in~ (PkgMgr)
+      | where ProcessCommandLine has_any ("install"," add ","restore","--install-extension"," ci ")
+      | where AccountName !endswith "$"
+      | project InstallTime = TimeGenerated, DeviceId, DeviceName, AccountName,
+                PkgMgr = FileName, PkgCmd = ProcessCommandLine;
+  let Egress = DeviceNetworkEvents
+      | where TimeGenerated > ago(LookbackDays)
+      | where RemoteIPType == "Public"
+      | where InitiatingProcessFileName in~ (ScriptHosts)
+           or InitiatingProcessParentFileName in~ (PkgMgr)
+      | extend HostOnly = tolower(tostring(split(RemoteUrl, "/")[0]))
+      | where not(HostOnly in~ (RegistryAllow))
+           and not(HostOnly endswith ".npmjs.org")
+           and not(HostOnly endswith ".pypi.org")
+           and not(HostOnly endswith ".pythonhosted.org")
+           and not(HostOnly endswith ".yarnpkg.com")
+           and not(HostOnly endswith ".nuget.org")
+           and not(HostOnly endswith ".visualstudio.com")
+           and not(HostOnly endswith ".github.com")
+           and not(HostOnly endswith ".githubusercontent.com")
+      | project EgressTime = TimeGenerated, DeviceId, DeviceName, AccountName,
+                ChildProc = InitiatingProcessFileName,
+                ChildCmd  = InitiatingProcessCommandLine,
+                ChildParent = InitiatingProcessParentFileName,
+                RemoteUrl, RemoteIP, RemotePort;
+  Installs
+  | join kind=inner Egress on DeviceId, AccountName
+  | where EgressTime between (InstallTime .. InstallTime + WindowSec * 1s)
+  | extend DelaySec = datetime_diff('second', EgressTime, InstallTime)
+  | summarize InstallTime = min(InstallTime),
+              EgressTime = min(EgressTime),
+              DelaySec   = min(DelaySec),
+              SampleRemoteUrl = any(RemoteUrl),
+              SampleRemoteIP  = any(RemoteIP),
+              SamplePkgCmd    = any(PkgCmd),
+              SampleChildCmd  = any(ChildCmd)
+           by DeviceName, AccountName, PkgMgr, ChildProc, ChildParent
+  | extend TimeGenerated = EgressTime
+  | order by TimeGenerated desc
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as _time values(Processes.process_name) as proc values(Processes.process) as cmd from datamodel=Endpoint.Processes where (Processes.process_name IN ("npm","npm.cmd","npm.exe","pnpm","pnpm.exe","yarn","yarn.exe","pip","pip3","pip.exe","pip3.exe","uv","uv.exe","poetry","poetry.exe","nuget.exe","dotnet.exe","code.exe","cursor.exe") AND (Processes.process="*install*" OR Processes.process="* add *" OR Processes.process="*restore*" OR Processes.process="*--install-extension*" OR Processes.process="* ci *")) by Processes.dest Processes.user | eval kind="install" | append [ | tstats `summariesonly` count min(_time) as _time values(All_Traffic.dest) as remote_dest values(All_Traffic.dest_ip) as remote_ip values(All_Traffic.dest_port) as remote_port from datamodel=Network_Traffic where (All_Traffic.app IN ("node.exe","node","python.exe","python","python3.exe","python3","pwsh.exe","powershell.exe","bash","sh","dash","curl.exe","wget.exe","cmd.exe") AND NOT (All_Traffic.dest IN ("registry.npmjs.org","pypi.org","files.pythonhosted.org","registry.yarnpkg.com","api.nuget.org","marketplace.visualstudio.com","open-vsx.org","github.com","raw.githubusercontent.com","ghcr.io","go.dev","crates.io","rubygems.org") OR All_Traffic.dest="*.npmjs.org" OR All_Traffic.dest="*.pypi.org" OR All_Traffic.dest="*.pythonhosted.org" OR All_Traffic.dest="*.yarnpkg.com" OR All_Traffic.dest="*.nuget.org" OR All_Traffic.dest="*.visualstudio.com" OR All_Traffic.dest="*.github.com" OR All_Traffic.dest="*.githubusercontent.com")) by All_Traffic.src All_Traffic.user | rename All_Traffic.src as dest All_Traffic.user as user | eval kind="egress" ] | sort 0 dest user _time | streamstats current=f window=10 last(_time) as prev_time last(kind) as prev_kind last(cmd) as prev_cmd last(proc) as prev_proc by dest user | where kind="egress" AND prev_kind="install" AND (_time - prev_time) <= 300 | eval delay_sec = (_time - prev_time) | `security_content_ctime(_time)` | table _time delay_sec dest user prev_proc prev_cmd remote_dest remote_ip remote_port
+datadog_query: |-
+  source:(windows.sysmon OR linux.auditd) @EventID:3 @ParentImage:(*\\npm.exe OR *\\NPM.exe OR *\\pnpm.exe OR *\\PNPM.exe OR *\\yarn.exe OR *\\YARN.exe OR *\\pip.exe OR *\\PIP.exe OR *\\pip3.exe OR *\\uv.exe OR *\\UV.exe OR *\\poetry.exe OR *\\nuget.exe OR *\\NuGet.exe OR *\\dotnet.exe OR *\\code.exe OR *\\Code.exe OR *\\cursor.exe OR */bin/npm OR */bin/pnpm OR */bin/yarn OR */bin/pip OR */bin/pip3 OR */bin/uv OR */bin/poetry OR */bin/nuget OR */bin/dotnet) @Image:(*\\node.exe OR *\\NODE.exe OR *\\python.exe OR *\\PYTHON.exe OR *\\python3.exe OR *\\pwsh.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\curl.exe OR *\\Curl.exe OR *\\wget.exe OR *\\cmd.exe OR */bin/node OR */bin/python OR */bin/python3 OR */bin/bash OR */bin/sh OR */bin/curl OR */bin/wget) -@DestinationHostname:(*.npmjs.org OR *.pypi.org OR *.pythonhosted.org OR *.yarnpkg.com OR *.nuget.org OR *.visualstudio.com OR *.github.com OR *.githubusercontent.com OR *.ghcr.io OR *.go.dev OR *.crates.io OR *.rubygems.org) -CIDR(@DestinationIp, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.0.0/16, 127.0.0.0/8)

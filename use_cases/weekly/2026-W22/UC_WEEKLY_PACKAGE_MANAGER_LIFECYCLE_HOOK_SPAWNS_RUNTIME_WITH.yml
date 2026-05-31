@@ -1,0 +1,139 @@
+id: UC_WEEKLY_PACKAGE_MANAGER_LIFECYCLE_HOOK_SPAWNS_RUNTIME_WITH
+title: "[WEEKLY] Package manager lifecycle hook spawns runtime with outbound egress to non-registry host within 5 minutes"
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: medium
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1195.002
+  name: "Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools"
+- id: T1546.016
+  name: "Event Triggered Execution: Installer Packages"
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1059.006
+  name: "Command and Scripting Interpreter: Python"
+- id: T1059.001
+  name: "Command and Scripting Interpreter: PowerShell"
+- id: T1071.001
+  name: "Application Layer Protocol: Web Protocols"
+- id: T1204.002
+  name: "User Execution: Malicious File"
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Network_Traffic.All_Traffic
+description: |-
+  Detects the joint TTP that every May 2026 supply-chain campaign shares: a package manager (npm/yarn/pnpm, pip, cargo, nuget/dotnet, composer, gem) invokes a preinstall/postinstall lifecycle script that spawns a script-host or downloader child (node, python, sh/bash, powershell, bun, curl/wget, certutil/bitsadmin), and that child — or an immediate sibling — initiates an outbound connection to a host that is NOT a known package registry or VCS within ~5 minutes. This fortnight that chain is the engine of Mini Shai-Hulud's @antv burst, the node-ipc beaconing to sh.azurestaticprovider.net, the durabletask PyPI dropper calling git-service.com, TrapDoor's cross-ecosystem (npm/PyPI/Crates) credential theft, vpmdhaj typosquats exfiltrating to aab.sportsontheweb.net, and Microsoft's dependency-confusion recon to moika.tech / cloudplatform-single-spa.io / t-in-one.io (per Snyk 2026-05-18, StepSecurity 2026-05-19, Aikido 2026-05-19, Microsoft 2026-05-20, Unit 42 2026-05-21, THN 2026-05-23/25/27/29, Microsoft 2026-05-29/30). Kill-chain coverage spans delivery (compromised package pulled), install (lifecycle hook fires), and the first C2/exfil hop — the early-warning window before credential dumping happens. FIRES on developer / CI hosts when an `npm install`-class command produces a script-host child that immediately egresses to a non-registry public host. DOES NOT fire on plain `npm install` traffic to npmjs/yarnpkg/pypi/crates/nuget/rubygems/packagist registries or to github/gitlab/bitbucket VCS, nor on script-host child processes that produce no outbound public connection within the window.
+  
+  Rationale: Every article in this fortnight's set describes the same execution shape — a tainted package on npm/PyPI/NuGet/Crates/Packagist whose preinstall/postinstall hook spawns a script-host or downloader that immediately phones home (Mini Shai-Hulud → t.m-kosche.com, node-ipc → sh.azurestaticprovider.net, durabletask → git-service.com, TrapDoor → ddjidd564.github.io, vpmdhaj → aab.sportsontheweb.net, dependency-confusion → moika.tech / cloudplatform-single-spa.io / t-in-one.io). Detecting the parent-child-egress triple within a 5-minute window catches the technique regardless of which registry, which package name, or which C2 host this week — and registry/VCS allow-listing prevents the obvious benign baseline (npm install pulling tarballs from registry.npmjs.org or codeload.github.com) from drowning the signal.
+defender_kql: |-
+  let LookbackHours = 24h;
+  let CorrelationWindowSec = 300;
+  let PkgMgrParents = dynamic(["npm.exe","npm-cli.js","npm","yarn.exe","yarn","pnpm.exe","pnpm","pip.exe","pip","pip3","pip3.exe","cargo.exe","cargo","nuget.exe","nuget","dotnet.exe","dotnet","composer","composer.phar","gem","bundle","node.exe","node"]);
+  let PkgMgrCmdHints = dynamic(["npm install","npm i ","npm ci","yarn install","yarn add","pnpm install","pnpm add","pip install","pip3 install","cargo install","nuget install","dotnet add package","dotnet restore","composer install","composer require","gem install","bundle install"]);
+  let HookRuntimes = dynamic(["node.exe","node","python.exe","python","python3","python3.exe","powershell.exe","pwsh.exe","cmd.exe","sh","bash","dash","bun.exe","bun","curl.exe","curl","wget.exe","wget","certutil.exe","bitsadmin.exe"]);
+  let RegistryAllow = dynamic(["registry.npmjs.org","registry.yarnpkg.com","pypi.org","files.pythonhosted.org","crates.io","static.crates.io","api.nuget.org","nuget.org","www.nuget.org","rubygems.org","packagist.org","repo.packagist.org","github.com","raw.githubusercontent.com","objects.githubusercontent.com","codeload.github.com","gitlab.com","bitbucket.org"]);
+  let HookSpawns =
+      DeviceProcessEvents
+      | where Timestamp > ago(LookbackHours)
+      | where (InitiatingProcessFileName in~ (PkgMgrParents))
+           or (InitiatingProcessCommandLine has_any (PkgMgrCmdHints))
+      | where FileName in~ (HookRuntimes)
+      | where AccountName !endswith "$"
+      | where AccountName !in~ ("system","local service","network service")
+      | project ProcTime = Timestamp, DeviceId, DeviceName, AccountName,
+                ParentImage = InitiatingProcessFolderPath,
+                ParentCmd   = InitiatingProcessCommandLine,
+                ChildImage  = FolderPath,
+                ChildCmd    = ProcessCommandLine,
+                ChildProc   = FileName,
+                ChildPid    = ProcessId;
+  let Egress =
+      DeviceNetworkEvents
+      | where Timestamp > ago(LookbackHours)
+      | where RemoteIPType == "Public"
+      | where ActionType in~ ("ConnectionSuccess","ConnectionAttempted","ConnectionFound","DnsConnectionInspected")
+      | extend Host = tolower(coalesce(RemoteUrl, ""))
+      | where Host == "" or not(RegistryAllow has_any (split(Host, ".")))
+      | where not(Host has_any (RegistryAllow))
+      | project NetTime = Timestamp, DeviceId, RemoteIP, RemoteUrl, RemotePort,
+                NetInitProc = InitiatingProcessFileName,
+                NetInitCmd  = InitiatingProcessCommandLine,
+                NetInitPid  = InitiatingProcessId;
+  HookSpawns
+  | join kind=inner Egress on DeviceId
+  | where NetTime between (ProcTime .. ProcTime + CorrelationWindowSec * 1s)
+  | extend DelaySec = datetime_diff('second', NetTime, ProcTime)
+  | where DelaySec >= 0 and DelaySec <= CorrelationWindowSec
+  | where (NetInitProc =~ ChildProc) or (NetInitPid == ChildPid) or (NetInitProc in~ (HookRuntimes))
+  | summarize FirstSeen = min(ProcTime), LastEgress = max(NetTime),
+              EgressCount = count(),
+              DistinctDests = dcount(coalesce(RemoteUrl, tostring(RemoteIP))),
+              Destinations = make_set(coalesce(RemoteUrl, tostring(RemoteIP)), 25),
+              Ports = make_set(RemotePort, 10),
+              SampleParentCmd = any(ParentCmd),
+              SampleChildCmd  = any(ChildCmd),
+              MinDelaySec = min(DelaySec)
+            by DeviceName, AccountName, ParentImage, ChildImage, ChildProc
+  | where DistinctDests >= 1
+  | order by FirstSeen desc
+sentinel_kql: |-
+  let LookbackHours = 24h;
+  let CorrelationWindowSec = 300;
+  let PkgMgrParents = dynamic(["npm.exe","npm-cli.js","npm","yarn.exe","yarn","pnpm.exe","pnpm","pip.exe","pip","pip3","pip3.exe","cargo.exe","cargo","nuget.exe","nuget","dotnet.exe","dotnet","composer","composer.phar","gem","bundle","node.exe","node"]);
+  let PkgMgrCmdHints = dynamic(["npm install","npm i ","npm ci","yarn install","yarn add","pnpm install","pnpm add","pip install","pip3 install","cargo install","nuget install","dotnet add package","dotnet restore","composer install","composer require","gem install","bundle install"]);
+  let HookRuntimes = dynamic(["node.exe","node","python.exe","python","python3","python3.exe","powershell.exe","pwsh.exe","cmd.exe","sh","bash","dash","bun.exe","bun","curl.exe","curl","wget.exe","wget","certutil.exe","bitsadmin.exe"]);
+  let RegistryAllow = dynamic(["registry.npmjs.org","registry.yarnpkg.com","pypi.org","files.pythonhosted.org","crates.io","static.crates.io","api.nuget.org","nuget.org","www.nuget.org","rubygems.org","packagist.org","repo.packagist.org","github.com","raw.githubusercontent.com","objects.githubusercontent.com","codeload.github.com","gitlab.com","bitbucket.org"]);
+  let HookSpawns =
+      DeviceProcessEvents
+      | where TimeGenerated > ago(LookbackHours)
+      | where (InitiatingProcessFileName in~ (PkgMgrParents))
+           or (InitiatingProcessCommandLine has_any (PkgMgrCmdHints))
+      | where FileName in~ (HookRuntimes)
+      | where AccountName !endswith "$"
+      | where AccountName !in~ ("system","local service","network service")
+      | project ProcTime = TimeGenerated, DeviceId, DeviceName, AccountName,
+                ParentImage = InitiatingProcessFolderPath,
+                ParentCmd   = InitiatingProcessCommandLine,
+                ChildImage  = FolderPath,
+                ChildCmd    = ProcessCommandLine,
+                ChildProc   = FileName,
+                ChildPid    = ProcessId;
+  let Egress =
+      DeviceNetworkEvents
+      | where TimeGenerated > ago(LookbackHours)
+      | where RemoteIPType == "Public"
+      | where ActionType in~ ("ConnectionSuccess","ConnectionAttempted","ConnectionFound","DnsConnectionInspected")
+      | extend Host = tolower(coalesce(RemoteUrl, ""))
+      | where not(Host has_any (RegistryAllow))
+      | project NetTime = TimeGenerated, DeviceId, RemoteIP, RemoteUrl, RemotePort,
+                NetInitProc = InitiatingProcessFileName,
+                NetInitCmd  = InitiatingProcessCommandLine,
+                NetInitPid  = InitiatingProcessId;
+  HookSpawns
+  | join kind=inner Egress on DeviceId
+  | where NetTime between (ProcTime .. ProcTime + CorrelationWindowSec * 1s)
+  | extend DelaySec = datetime_diff('second', NetTime, ProcTime)
+  | where (NetInitProc =~ ChildProc) or (NetInitPid == ChildPid) or (NetInitProc in~ (HookRuntimes))
+  | summarize FirstSeen = min(ProcTime), LastEgress = max(NetTime),
+              EgressCount = count(),
+              DistinctDests = dcount(coalesce(RemoteUrl, tostring(RemoteIP))),
+              Destinations = make_set(coalesce(RemoteUrl, tostring(RemoteIP)), 25),
+              Ports = make_set(RemotePort, 10),
+              SampleParentCmd = any(ParentCmd),
+              SampleChildCmd  = any(ChildCmd),
+              MinDelaySec = min(DelaySec)
+            by DeviceName, AccountName, ParentImage, ChildImage, ChildProc
+  | where DistinctDests >= 1
+  | extend AccountEntity = AccountName, HostEntity = DeviceName
+  | order by FirstSeen desc
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as proc_time from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("npm.exe","npm","npm-cli.js","yarn.exe","yarn","pnpm.exe","pnpm","pip.exe","pip","pip3","pip3.exe","cargo.exe","cargo","nuget.exe","nuget","dotnet.exe","dotnet","composer","composer.phar","gem","bundle") OR Processes.parent_process IN ("*npm install*","*npm i *","*yarn install*","*yarn add*","*pnpm install*","*pnpm add*","*pip install*","*cargo install*","*nuget install*","*dotnet add package*","*dotnet restore*","*composer install*","*composer require*","*gem install*","*bundle install*")) AND Processes.process_name IN ("node.exe","node","python.exe","python","python3","python3.exe","powershell.exe","pwsh.exe","cmd.exe","sh","bash","dash","bun.exe","bun","curl.exe","curl","wget.exe","wget","certutil.exe","bitsadmin.exe") AND Processes.user!="*$" AND Processes.user!="SYSTEM" by host Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_path Processes.process_id | `drop_dm_object_name("Processes")` | rename host as src, process_id as src_pid | join type=inner src [| tstats `summariesonly` count as conns min(_time) as net_time values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as net_proc from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_category!="internal" AND All_Traffic.action="allowed" AND NOT (All_Traffic.dest IN ("*registry.npmjs.org","*registry.yarnpkg.com","*pypi.org","*files.pythonhosted.org","*crates.io","*static.crates.io","*api.nuget.org","*nuget.org","*rubygems.org","*packagist.org","*repo.packagist.org","*github.com","*githubusercontent.com","*gitlab.com","*bitbucket.org","*objects.githubusercontent.com")) by All_Traffic.src | rename All_Traffic.src as src | `drop_dm_object_name("All_Traffic")`] | eval delta_sec=net_time-proc_time | where delta_sec>=0 AND delta_sec<=300 | stats min(proc_time) as firstTime max(net_time) as lastTime values(parent_process) as parent_cmd values(process) as child_cmd values(process_name) as child_proc values(dest) as remote_dests values(dest_port) as remote_ports dc(dest) as distinct_dests by src, user, parent_process_name | where distinct_dests>=1 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+datadog_query: |-
+  source:(windows.sysmon OR linux.auditd) (@EventID:1 OR @auditd.type:EXECVE) (@ParentImage:(*\\npm.exe OR *\\NPM.EXE OR *\\npm-cli.js OR *\\yarn.exe OR *\\YARN.EXE OR *\\pnpm.exe OR *\\PNPM.EXE OR *\\node.exe OR *\\NODE.EXE OR *\\pip.exe OR *\\PIP.EXE OR *\\pip3.exe OR *\\python.exe OR *\\PYTHON.EXE OR *\\python3.exe OR *\\cargo.exe OR *\\CARGO.EXE OR *\\nuget.exe OR *\\NUGET.EXE OR *\\dotnet.exe OR *\\DOTNET.EXE OR *\\composer.phar OR */bin/npm OR */bin/yarn OR */bin/pnpm OR */bin/node OR */bin/pip OR */bin/pip3 OR */bin/python OR */bin/python3 OR */bin/cargo OR */bin/nuget OR */bin/dotnet OR */bin/composer OR */bin/gem OR */bin/bundle OR */usr/local/bin/npm OR */usr/local/bin/yarn OR */usr/local/bin/pnpm OR */usr/local/bin/pip OR */usr/local/bin/pip3 OR */usr/local/bin/node OR */usr/local/bin/bun) OR @ParentCommandLine:(*"npm install"* OR *"npm i "* OR *"npm ci"* OR *"yarn install"* OR *"yarn add"* OR *"pnpm install"* OR *"pnpm add"* OR *"pip install"* OR *"pip3 install"* OR *"cargo install"* OR *"nuget install"* OR *"dotnet add package"* OR *"dotnet restore"* OR *"composer install"* OR *"composer require"* OR *"gem install"* OR *"bundle install"*)) @Image:(*\\node.exe OR *\\NODE.EXE OR *\\python.exe OR *\\PYTHON.EXE OR *\\python3.exe OR *\\powershell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\cmd.exe OR *\\bun.exe OR *\\BUN.EXE OR *\\curl.exe OR *\\CURL.EXE OR *\\wget.exe OR *\\certutil.exe OR *\\bitsadmin.exe OR */bin/node OR */bin/python OR */bin/python3 OR */bin/sh OR */bin/bash OR */bin/dash OR */bin/curl OR */bin/wget OR */bin/bun OR */usr/local/bin/bun OR */usr/bin/python OR */usr/bin/python3 OR */usr/bin/node) -@User:*$ -@User:SYSTEM -@user.name:root
