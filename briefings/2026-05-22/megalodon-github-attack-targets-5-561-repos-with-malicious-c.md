@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Megalodon CI/CD C2 beacon to 216.126.225.129:8443
 
-`UC_109_10` · phase: **c2** · confidence: **High**
+`UC_123_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceNetworkEvents
 
 ### [LLM] Polymarket npm wallet drainer egress to polymarketbot.polymarketdev.workers.dev
 
-`UC_109_11` · phase: **actions** · confidence: **High**
+`UC_123_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ union isfuzzy=true
 
 ### [LLM] Polymarket npm persistence: ~/.polybot/ directory written by node/npm
 
-`UC_109_12` · phase: **install** · confidence: **High**
+`UC_123_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceFileEvents
 
 ### [LLM] Megalodon CI runner: shell scraping /proc/*/environ for in-memory secrets
 
-`UC_109_13` · phase: **install** · confidence: **Medium**
+`UC_123_13` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

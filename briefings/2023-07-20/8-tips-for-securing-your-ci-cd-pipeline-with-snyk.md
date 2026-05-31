@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — 8 tips for securing your CI/CD pipeline with Snyk
 
-`UC_1391_0` · phase: **exploit** · confidence: **High**
+`UC_1405_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -145,7 +145,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Building an npm package compatible with ESM and CJS in 2024
 
-`UC_1235_2` · phase: **exploit** · confidence: **High**
+`UC_1249_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

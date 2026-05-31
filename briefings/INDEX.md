@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1241 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1248 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,13 +11,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-30
 - [greyvibe hackers leverage chatgpt and google gemini to fuel ](./2026-05-30/greyvibe-hackers-leverage-chatgpt-and-google-gemini-to-fuel-.md)
 - [malicious npm packages abuse dependency confusion to profile](./2026-05-30/malicious-npm-packages-abuse-dependency-confusion-to-profile.md)
+- [palo alto globalprotect vpn auth bypass flaw now exploited i](./2026-05-30/palo-alto-globalprotect-vpn-auth-bypass-flaw-now-exploited-i.md)
 - [pan os globalprotect authentication bypass cve 2026 0257 und](./2026-05-30/pan-os-globalprotect-authentication-bypass-cve-2026-0257-und.md)
 
 ## 2026-05-29
 - [attackers abuse trusted developer tooling to exfiltrate sour](./2026-05-29/attackers-abuse-trusted-developer-tooling-to-exfiltrate-sour.md)
 - [attackers use llm agent for post exploitation after marimo c](./2026-05-29/attackers-use-llm-agent-for-post-exploitation-after-marimo-c.md)
+- [charter communications data breach affects 4 9 million accou](./2026-05-29/charter-communications-data-breach-affects-4-9-million-accou.md)
 - [chatgphish vulnerability turns chatgpt web summaries into a ](./2026-05-29/chatgphish-vulnerability-turns-chatgpt-web-summaries-into-a-.md)
+- [chatgpt share links abused to host fake outage pages to deli](./2026-05-29/chatgpt-share-links-abused-to-host-fake-outage-pages-to-deli.md)
 - [cisa kev cve 2026 0257 palo alto networks pan os authenticat](./2026-05-29/cisa-kev-cve-2026-0257-palo-alto-networks-pan-os-authenticat.md)
+- [dutch govt disrupts malware botnet with 17 million infected ](./2026-05-29/dutch-govt-disrupts-malware-botnet-with-17-million-infected-.md)
 - [fix sca issues at scale in your terminal with snyk remediati](./2026-05-29/fix-sca-issues-at-scale-in-your-terminal-with-snyk-remediati.md)
 - [ghsa critical cve 2026 47131 vm2 has a sandbox escape issue](./2026-05-29/ghsa-critical-cve-2026-47131-vm2-has-a-sandbox-escape-issue.md)
 - [ghsa critical cve 2026 47137 vm2 has a cve 2023 37903 patch ](./2026-05-29/ghsa-critical-cve-2026-47137-vm2-has-a-cve-2023-37903-patch-.md)
@@ -42,8 +46,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-28
 - [2026 world cup discussing the world s biggest game s attack ](./2026-05-28/2026-world-cup-discussing-the-world-s-biggest-game-s-attack-.md)
+- [btmob android malware service generates custom phishing payl](./2026-05-28/btmob-android-malware-service-generates-custom-phishing-payl.md)
 - [critical gogs rce vulnerability lets any authenticated user ](./2026-05-28/critical-gogs-rce-vulnerability-lets-any-authenticated-user-.md)
 - [eset apt activity report q4 2025 q1 2026](./2026-05-28/eset-apt-activity-report-q4-2025-q1-2026.md)
+- [fbi warns of fake fifa websites running world cup fraud sche](./2026-05-28/fbi-warns-of-fake-fifa-websites-running-world-cup-fraud-sche.md)
+- [greyvibe hackers use chatgpt gemini to power cyberattacks](./2026-05-28/greyvibe-hackers-use-chatgpt-gemini-to-power-cyberattacks.md)
 - [jinx 0164 targets cryptocurrency firms with fake recruiter l](./2026-05-28/jinx-0164-targets-cryptocurrency-firms-with-fake-recruiter-l.md)
 - [less panic patching more precision](./2026-05-28/less-panic-patching-more-precision.md)
 - [microsoft slams public zero day disclosures amid github rese](./2026-05-28/microsoft-slams-public-zero-day-disclosures-amid-github-rese.md)

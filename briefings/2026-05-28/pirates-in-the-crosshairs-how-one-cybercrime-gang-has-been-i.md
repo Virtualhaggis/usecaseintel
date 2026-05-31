@@ -70,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] HLS Installer.874.exe DLL side-load from pirate-streaming ZIP lure
 
-`UC_52_8` · phase: **install** · confidence: **High**
+`UC_66_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceProcessEvents
 
 ### [LLM] SilentCryptoMiner-fork: Defender exclusions added for %USERPROFILE%, %PROGRAMDATA%, %WINDIR%, .exe, .dll
 
-`UC_52_9` · phase: **install** · confidence: **High**
+`UC_66_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceRegistryEvents
 
 ### [LLM] MSRT tampering: HKLM\Software\Policies\Microsoft\MRT DontOfferThroughWUAU = 1
 
-`UC_52_10` · phase: **install** · confidence: **High**
+`UC_66_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ union RegHit, FileHit
 
 ### [LLM] powercfg sleep/hibernate disable burst (4-command sequence)
 
-`UC_52_11` · phase: **install** · confidence: **High**
+`UC_66_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -173,7 +173,7 @@ DeviceProcessEvents
 
 ### [LLM] SilentCryptoMiner DNS tunneling to *.microsoft.com lookalike and known C2 .space domains
 
-`UC_52_12` · phase: **c2** · confidence: **High**
+`UC_66_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -418,7 +418,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pirates in the crosshairs: how one cybercrime gang has been infecting book, movi
 
-`UC_52_7` · phase: **exploit** · confidence: **High**
+`UC_66_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
