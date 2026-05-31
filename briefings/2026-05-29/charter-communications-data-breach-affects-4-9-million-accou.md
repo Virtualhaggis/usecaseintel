@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vishing-induced Entra ID sign-in from new location/IP after employee call
 
-`UC_42_3` · phase: **delivery** · confidence: **Medium**
+`UC_43_3` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ AADSignInEventsBeta
 
 ### [LLM] OAuth consent granted to look-alike Salesforce/Data-Loader app from compromised employee
 
-`UC_42_4` · phase: **install** · confidence: **High**
+`UC_43_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ CloudAppEvents
 
 ### [LLM] Salesforce Bulk/REST API mass-export volume burst from newly-consented app
 
-`UC_42_5` · phase: **actions** · confidence: **Medium**
+`UC_43_5` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ CloudAppEvents
 
 ### [LLM] ShinyHunters leak-site Charter URI checked from corporate browsing
 
-`UC_42_6` · phase: **c2** · confidence: **Low**
+`UC_43_6` · phase: **c2** · confidence: **Low**
 
 **Splunk SPL (CIM):**
 ```spl

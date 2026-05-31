@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] vpmdhaj typosquat npm package install via preinstall hook (node child of npm)
 
-`UC_48_12` · phase: **delivery** · confidence: **High**
+`UC_49_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceProcessEvents
 
 ### [LLM] payload.bin written under node_modules by node process
 
-`UC_48_13` · phase: **install** · confidence: **High**
+`UC_49_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceFileEvents
 
 ### [LLM] Outbound HTTP beacon to vpmdhaj C2 (aab.sportsontheweb.net)
 
-`UC_48_14` · phase: **c2** · confidence: **High**
+`UC_49_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ DeviceNetworkEvents
 
 ### [LLM] __DAEMONIZED=1 environment marker on spawned process
 
-`UC_48_15` · phase: **install** · confidence: **High**
+`UC_49_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +162,7 @@ DeviceProcessEvents
 
 ### [LLM] Cloud metadata service hit (IMDSv2 / ECS) from node process under node_modules
 
-`UC_48_16` · phase: **actions** · confidence: **High**
+`UC_49_16` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -186,7 +186,7 @@ DeviceNetworkEvents
 
 ### [LLM] Bun runtime download from github.com/oven-sh during npm install (Gen-2 loader)
 
-`UC_48_17` · phase: **delivery** · confidence: **Medium**
+`UC_49_17` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -548,7 +548,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Typosquatted npm packages used to steal cloud and CI/CD secrets
 
-`UC_48_11` · phase: **exploit** · confidence: **High**
+`UC_49_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

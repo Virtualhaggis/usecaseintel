@@ -63,7 +63,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Less panic patching, more precision
 
-`UC_54_2` · phase: **exploit** · confidence: **High**
+`UC_55_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

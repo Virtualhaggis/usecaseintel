@@ -82,7 +82,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Cryptojacking lure: ZIP download from gleeze.com / giize.com SEO+AI-poisoned utility sites
 
-`UC_83_15` · phase: **delivery** · confidence: **High**
+`UC_84_15` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceFileEvents
 
 ### [LLM] ScreenConnect masquerade: msiexec.exe installing rogue vcredist_x64.dll after autorun.dll sideload
 
-`UC_83_16` · phase: **install** · confidence: **High**
+`UC_84_16` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceProcessEvents
 
 ### [LLM] ScreenConnect client beaconing to attacker C2 193.42.11.108
 
-`UC_83_17` · phase: **c2** · confidence: **High**
+`UC_84_17` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceNetworkEvents
 
 ### [LLM] SimpleRunPE.exe / D3F4E2A1 implant adding Microsoft Defender exclusions via Add-MpPreference
 
-`UC_83_18` · phase: **install** · confidence: **Medium**
+`UC_84_18` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +159,7 @@ DeviceProcessEvents
 
 ### [LLM] Masqueraded vlc.exe launched via scheduled task with self-deleting PowerShell dropper
 
-`UC_83_19` · phase: **install** · confidence: **Medium**
+`UC_84_19` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -179,7 +179,7 @@ DeviceProcessEvents
 
 ### [LLM] GPU miner execution: gminer / lolMiner / SRBMiner-MULTI dropped at runtime
 
-`UC_83_20` · phase: **actions** · confidence: **High**
+`UC_84_20` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -565,7 +565,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — AI Chatbot Recommendations Redirect Users to Cryptojacking Malware Sites
 
-`UC_83_14` · phase: **exploit** · confidence: **High**
+`UC_84_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

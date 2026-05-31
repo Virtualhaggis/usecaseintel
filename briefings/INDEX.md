@@ -8,6 +8,9 @@ _1248 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-05-31
+- [dutch authorities dismantle botnet linked to 17 million infe](./2026-05-31/dutch-authorities-dismantle-botnet-linked-to-17-million-infe.md)
+
 ## 2026-05-30
 - [greyvibe hackers leverage chatgpt and google gemini to fuel ](./2026-05-30/greyvibe-hackers-leverage-chatgpt-and-google-gemini-to-fuel-.md)
 - [malicious npm packages abuse dependency confusion to profile](./2026-05-30/malicious-npm-packages-abuse-dependency-confusion-to-profile.md)
@@ -123,7 +126,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-21
 - [5 supply chain attacks in 48 hours why securing one layer is](./2026-05-21/5-supply-chain-attacks-in-48-hours-why-securing-one-layer-is.md)
-- [9 year old linux kernel flaw enables root command execution ](./2026-05-21/9-year-old-linux-kernel-flaw-enables-root-command-execution-.md)
 - [cisa kev cve 2025 34291 langflow origin validation error vul](./2026-05-21/cisa-kev-cve-2025-34291-langflow-origin-validation-error-vul.md)
 - [cisa kev cve 2026 34926 trend micro apex one on premise dire](./2026-05-21/cisa-kev-cve-2026-34926-trend-micro-apex-one-on-premise-dire.md)
 - [ghsa critical cve 2026 46614 fission router exposes fission ](./2026-05-21/ghsa-critical-cve-2026-46614-fission-router-exposes-fission-.md)
