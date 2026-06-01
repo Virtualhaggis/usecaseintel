@@ -8,6 +8,9 @@ _1249 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-06-01
+- [windows netlogon 0 click rce vulnerability now actively expl](./2026-06-01/windows-netlogon-0-click-rce-vulnerability-now-actively-expl.md)
+
 ## 2026-05-31
 - [dutch authorities dismantle botnet linked to 17 million infe](./2026-05-31/dutch-authorities-dismantle-botnet-linked-to-17-million-infe.md)
 - [wp maps pro bug exploited to create admin accounts on wordpr](./2026-05-31/wp-maps-pro-bug-exploited-to-create-admin-accounts-on-wordpr.md)
@@ -19,7 +22,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [pan os globalprotect authentication bypass cve 2026 0257 und](./2026-05-30/pan-os-globalprotect-authentication-bypass-cve-2026-0257-und.md)
 
 ## 2026-05-29
-- [attackers abuse trusted developer tooling to exfiltrate sour](./2026-05-29/attackers-abuse-trusted-developer-tooling-to-exfiltrate-sour.md)
 - [attackers use llm agent for post exploitation after marimo c](./2026-05-29/attackers-use-llm-agent-for-post-exploitation-after-marimo-c.md)
 - [charter communications data breach affects 4 9 million accou](./2026-05-29/charter-communications-data-breach-affects-4-9-million-accou.md)
 - [chatgphish vulnerability turns chatgpt web summaries into a ](./2026-05-29/chatgphish-vulnerability-turns-chatgpt-web-summaries-into-a-.md)
