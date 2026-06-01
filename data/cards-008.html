@@ -1,268 +1,3 @@
-<article class="card" id="art-225" data-art-slug="2026-05-13-ghsa-critical-cve-2026-45083-goobi-viewer-core-unauthenticat"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,sent,sigma,spl"
-  data-splunk-cats="application,web"
-  data-targets="azure,vcs"
-  data-uc-count="3" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-45083: Goobi viewer - Core: Unauthenticated Solr Streaming Expression Proxy Goobi viewer - Core: Unauthenticated Solr Streaming Expression Proxy CVE-2026-45083 T1190 [LLM] Goobi viewer unauthenticated Solr streaming-expression proxy access (CVE-2026-45083) [LLM] Destructive Solr streaming expression (update/delete/commit) via Goobi viewer proxy Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-05-13-ghsa-critical-cve-2026-45083-goobi-viewer-core-unauthenticat" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-2rgp-f66f-4499" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-45083: Goobi viewer - Core: Unauthenticated Solr Streaming Expression Proxy</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-05-13</span>
-    <span>3 use cases</span>
-    <span>1 technique</span>
-    <span>4 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Goobi viewer - Core: Unauthenticated Solr Streaming Expression Proxy</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-45083</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-225-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-225"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-225-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Goobi viewer unauthenticated Solr streaming-expression proxy access (CVE-2026-45083)</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Destructive Solr streaming expression (update/delete/commit) via Goobi viewer proxy</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="64a8ccb393" data-platforms="datadog,sent,sigma,spl" data-targets="azure,vcs" open>
-  <summary>
-    <span class="uc-title">[LLM] Goobi viewer unauthenticated Solr streaming-expression proxy access (CVE-2026-45083)</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="64a8ccb393" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects any HTTP request hitting the vulnerable Goobi viewer `/api/v[12]/index/stream` REST endpoint. The endpoint was removed in fix commit 326980f24c — on patched hosts this path should never appear in access logs; on unpatched hosts it should never be reachable from the public internet per the vendor&#x27;s Apache/Tomcat block-list workaround. Any hit is therefore either a missed-patch indicator or active exploitation.
-
-Rationale: Endpoint path `/api/v[12]/index/stream` is the exact regex from the advisory&#x27;s Apache httpd workaround block — no false-positive surface outside Goobi viewer. The fix removes the endpoint entirely, so any 2xx/3xx response is detection-grade. CIM Web datamodel + W3CIISLog + Sigma `webserver` category give cross-stack coverage; Defender XDR has no native HTTP request-path schema and is therefore omitted.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-2rgp-f66f-4499
-  • https://solr.apache.org/guide/solr/latest/query-guide/streaming-expressions.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Exploitation for Credential Access">T1212</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-225-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-225-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-225-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-225-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-225-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Goobi viewer CVE-2026-45083 — any access to the removed Solr streaming proxy
-let GoobiEndpointRegex = @&quot;(?i)/api/v[12]/index/stream&quot;;
-W3CIISLog
-| where TimeGenerated &gt; ago(7d)
-| where csUriStem matches regex GoobiEndpointRegex
-| where csMethod in~ (&quot;POST&quot;,&quot;GET&quot;)
-| where scStatus !startswith &quot;4&quot; and scStatus !startswith &quot;5&quot;   // exclude denied/error
-| project TimeGenerated, Computer, sSiteName, cIP, csUserName,
-          csMethod, csUriStem, csUriQuery, csUserAgent, scStatus, TimeTaken
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-225-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Goobi Viewer Solr Streaming Expression Proxy Access (CVE-2026-45083)
-id: 9d4e3f7a-1c2b-4f8a-bf3a-8d7a2e9b1c45
-description: Detects HTTP access to the Goobi viewer /api/v[12]/index/stream endpoint that proxies unauthenticated Solr streaming expressions. The endpoint was removed in fix commit 326980f24c; any successful access is either unpatched-host exposure or active exploitation per GHSA-2rgp-f66f-4499.
-references:
-    - https://github.com/advisories/GHSA-2rgp-f66f-4499
-    - https://solr.apache.org/guide/solr/latest/query-guide/streaming-expressions.html
-author: SOC Detection Engineering
-date: 2026/05/13
-tags:
-    - attack.initial_access
-    - attack.t1190
-    - cve.2026.45083
-logsource:
-    category: webserver
-detection:
-    selection_path:
-        cs-uri-stem|re|i: &#x27;/api/v[12]/index/stream&#x27;
-    selection_method:
-        cs-method:
-            - &#x27;POST&#x27;
-            - &#x27;GET&#x27;
-    filter_error:
-        sc-status|startswith:
-            - &#x27;4&#x27;
-            - &#x27;5&#x27;
-    condition: selection_path and selection_method and not filter_error
-falsepositives:
-    - Internal vulnerability scanners exercising the endpoint pre-patch
-    - Goobi viewer admin tooling accessing legacy versions prior to fix 326980f24c
-level: high</code></pre></div>
-    <div class="tab-content" id="art-225-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:iis OR source:azure.appservice_http_logs) (@http.url_details.path:*/api/v1/index/stream* OR @http.url_details.path:*/api/v2/index/stream*) @http.method:(POST OR GET) -@http.status_code:[400 TO 599]</code></pre></div>
-    <div class="tab-content" id="art-225-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-225-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-225-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-225-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.src) as src values(Web.user_agent) as user_agent values(Web.status) as status from datamodel=Web where Web.url=&quot;*/api/v1/index/stream*&quot; OR Web.url=&quot;*/api/v2/index/stream*&quot; by Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | where status&lt;400 | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-225-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.src) as src values(Web.user_agent) as user_agent values(Web.status) as status from datamodel=Web where Web.url=&quot;*/api/v1/index/stream*&quot; OR Web.url=&quot;*/api/v2/index/stream*&quot; by Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | where status&lt;400 | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="251ec7fb2c" data-platforms="datadog,sent,sigma,spl" data-targets="azure,vcs">
-  <summary>
-    <span class="uc-title">[LLM] Destructive Solr streaming expression (update/delete/commit) via Goobi viewer proxy</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="251ec7fb2c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Higher-fidelity follow-on to the endpoint-access detection — surfaces requests whose query string or body carries a destructive Solr streaming-expression function (`delete(`, `update(`, `commit(`). The advisory explicitly calls these out as enabling permanent index modification or full-collection deletion. Reads (`search(`) are intentionally excluded to keep the signal tight to integrity-impact exploitation.
-
-Rationale: Solr streaming expressions documented at solr.apache.org name `delete()`, `update()`, `commit()` as the integrity-impacting functions; the advisory explicitly cites `update()` and `delete()` as enabling field overwrite and full-collection deletion. Combining the article&#x27;s exact endpoint regex with these function names yields near-zero FP surface — there is no legitimate caller of this endpoint after the patch (it was removed). URL-encoded `%28` variants are included to defeat trivial obfuscation.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-2rgp-f66f-4499
-  • https://solr.apache.org/guide/solr/latest/query-guide/streaming-expressions.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Destruction">T1485</span> <span class="ind tech" title="Stored Data Manipulation">T1565.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-225-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-225-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-225-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-225-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-225-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// CVE-2026-45083 — destructive Solr streaming expression delivered to Goobi viewer
-let GoobiEndpointRegex = @&quot;(?i)/api/v[12]/index/stream&quot;;
-let DestructiveFunctions = dynamic([&quot;delete(&quot;, &quot;update(&quot;, &quot;commit(&quot;]);
-W3CIISLog
-| where TimeGenerated &gt; ago(7d)
-| where csUriStem matches regex GoobiEndpointRegex
-| where csUriQuery has_any (DestructiveFunctions)
-   or csUriQuery has &quot;delete%28&quot; or csUriQuery has &quot;update%28&quot; or csUriQuery has &quot;commit%28&quot;
-| project TimeGenerated, Computer, sSiteName, cIP, csUserName,
-          csMethod, csUriStem, csUriQuery, csUserAgent, scStatus, TimeTaken
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-225-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Destructive Solr Streaming Expression via Goobi Viewer (CVE-2026-45083)
-id: 3b8c1e2d-7f4a-49e6-9c1a-2f6b8d3a5e91
-description: Detects HTTP requests to Goobi viewer /api/v[12]/index/stream containing destructive Solr streaming-expression functions (delete(, update(, commit(). Per GHSA-2rgp-f66f-4499 these expressions can permanently alter or delete the entire Solr index without authentication.
-references:
-    - https://github.com/advisories/GHSA-2rgp-f66f-4499
-    - https://solr.apache.org/guide/solr/latest/query-guide/streaming-expressions.html
-author: SOC Detection Engineering
-date: 2026/05/13
-tags:
-    - attack.impact
-    - attack.t1485
-    - attack.t1565.001
-    - cve.2026.45083
-logsource:
-    category: webserver
-detection:
-    selection_path:
-        cs-uri-stem|re|i: &#x27;/api/v[12]/index/stream&#x27;
-    selection_payload:
-        cs-uri-query|contains:
-            - &#x27;delete(&#x27;
-            - &#x27;update(&#x27;
-            - &#x27;commit(&#x27;
-            - &#x27;delete%28&#x27;
-            - &#x27;update%28&#x27;
-            - &#x27;commit%28&#x27;
-    condition: selection_path and selection_payload
-falsepositives:
-    - Internal Goobi admin tooling performing legitimate re-index operations (rare; should originate from known admin hosts only)
-level: critical</code></pre></div>
-    <div class="tab-content" id="art-225-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:iis OR source:azure.appservice_http_logs) (@http.url_details.path:*/api/v1/index/stream* OR @http.url_details.path:*/api/v2/index/stream*) (@http.url:*delete\(* OR @http.url:*update\(* OR @http.url:*commit\(* OR @http.url:*delete%28* OR @http.url:*update%28* OR @http.url:*commit%28*)</code></pre></div>
-    <div class="tab-content" id="art-225-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-225-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-225-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-225-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.src) as src values(Web.user_agent) as user_agent values(Web.status) as status values(Web.uri_query) as uri_query from datamodel=Web where (Web.url=&quot;*/api/v1/index/stream*&quot; OR Web.url=&quot;*/api/v2/index/stream*&quot;) AND (Web.uri_query=&quot;*delete(*&quot; OR Web.uri_query=&quot;*update(*&quot; OR Web.uri_query=&quot;*commit(*&quot;) by Web.dest Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-225-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.src) as src values(Web.user_agent) as user_agent values(Web.status) as status values(Web.uri_query) as uri_query from datamodel=Web where (Web.url=&quot;*/api/v1/index/stream*&quot; OR Web.url=&quot;*/api/v2/index/stream*&quot;) AND (Web.uri_query=&quot;*delete(*&quot; OR Web.uri_query=&quot;*update(*&quot; OR Web.uri_query=&quot;*commit(*&quot;) by Web.dest Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-225-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-225-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-225-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-225-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-45083&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-225-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-45083&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-225-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-225-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-225-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-225-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-45083&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-225-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-45083&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-226" data-art-slug="2026-05-13-ghsa-critical-ghsa-vw82-7fv8-r6gp-obot-has-an-authorization-"
   data-phases="actions,c2,exploit,install" data-sev="crit"
   data-techs="T1190,T1528,T1539"
@@ -14564,6 +14299,505 @@ DeviceFileEvents
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_path=&quot;*/var/run/secrets/kubernetes.io/serviceaccount/*&quot; OR Filesystem.file_path=&quot;*/Library/LaunchAgents/com.user.gh-token-monitor.plist*&quot; OR Filesystem.file_path=&quot;*/dev/null*&quot; OR Filesystem.file_path=&quot;*/Library/Preferences/pnpm/rc*&quot; OR Filesystem.file_name IN (&quot;router_init.js&quot;,&quot;tanstack_runner.js&quot;,&quot;node.js&quot;,&quot;token-monitor.sh&quot;,&quot;router_runtime.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-264" data-art-slug="2026-05-09-ghsa-critical-ghsa-v6wj-c83f-v46x-profullstack-mcp-server-vu"
+  data-phases="actions,c2,delivery,exploit,install" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,sent,sigma,spl"
+  data-splunk-cats="endpoint,web"
+  data-targets="linux,vcs,windows"
+  data-uc-count="5" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] GHSA-v6wj-c83f-v46x: @profullstack/mcp-server vulnerable to OS Command Injection in domain_lookup Module @profullstack/mcp-server vulnerable to OS Command Injection in domain_lookup Module  T1190 [LLM] @profullstack/mcp-server tldx OS command injection — shell metachars in tldx process tree [LLM] Unauthenticated POST to @profullstack/mcp-server domain-lookup endpoints from non-loopback source Remote service execution — PsExec / SMB lateral movement RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-v6wj-c83f-v46x: @profullstack/mcp-server vulnerable to OS">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-05-09-ghsa-critical-ghsa-v6wj-c83f-v46x-profullstack-mcp-server-vu" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-v6wj-c83f-v46x" target="_blank" rel="noopener">[GHSA / CRITICAL] GHSA-v6wj-c83f-v46x: @profullstack/mcp-server vulnerable to OS Command Injection in domain_lookup Module</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-05-09</span>
+    <span>5 use cases</span>
+    <span>1 technique</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">@profullstack/mcp-server vulnerable to OS Command Injection in domain_lookup Module</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-264-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-264"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-264-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Unauthenticated POST to @profullstack/mcp-server domain-lookup endpoints from non-loopback source</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] @profullstack/mcp-server tldx OS command injection — shell metachars in tldx process tree · Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-v6wj-c83f-v46x: @profullstack/mcp-server vulnerable to OS</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Remote service execution — PsExec / SMB lateral movement</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="eaf0d7068e" data-platforms="datadog,def,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <summary>
+    <span class="uc-title">[LLM] @profullstack/mcp-server tldx OS command injection — shell metachars in tldx process tree</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="eaf0d7068e" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects exploitation of GHSA-v6wj-c83f-v46x (CWE-78) in @profullstack/mcp-server domain_lookup module. The vulnerable code path concatenates HTTP-body input into a shell string passed to execAsync, so any successful injection produces a /bin/sh-spawned `tldx` invocation whose command line contains shell metacharacters (`;`, `|`, `$(`, backtick, `&amp;&amp;`) that are never valid in RFC-1035 hostnames or keywords.
+
+Rationale: The advisory pinpoints buildTldxCommand() concatenating user input into a shell string passed to execAsync; the PoCs (`tldx example.com; echo final_check_poc &gt; /tmp/...; #` and `tldx safe x; echo final_bulk_poc ...; #`) prove the injected `tldx` cmdline literally carries `;` and redirection. Pivoting on `tldx` + shell metachars in the command line — under a node/npm/pnpm/yarn parent — is article-specific and extremely low FP because RFC-1035 hostnames/keywords cannot contain those characters. Affected commit hash 2e8ea913573610667ad54e31dba2e8198ebf7cf9 documented in the advisory.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-v6wj-c83f-v46x
+  • https://github.com/profullstack/mcp-server
+  • https://cwe.mitre.org/data/definitions/78.html
+  • https://attack.mitre.org/techniques/T1190/
+  • https://attack.mitre.org/techniques/T1059/004/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploitation for Client Execution">T1203</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-264-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-264-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-264-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-264-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-264-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-264-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// GHSA-v6wj-c83f-v46x — tldx command injection via @profullstack/mcp-server
+DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;node&quot;,&quot;npm&quot;,&quot;pnpm&quot;,&quot;yarn&quot;,&quot;npx&quot;)
+    or InitiatingProcessCommandLine has_any (&quot;mcp-server&quot;,&quot;domain_lookup&quot;,&quot;@profullstack/mcp-server&quot;)
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;tldx&quot;) or ProcessCommandLine has &quot;tldx&quot;
+| where ProcessCommandLine has &quot;tldx&quot;
+// shell metachars that RFC-1035 hostnames/keywords can never contain
+| where ProcessCommandLine matches regex @&quot;(?i)tldx[^\r\n]*[;|`&amp;&gt;&lt;]|tldx[^\r\n]*\$\(&quot;
+| project Timestamp, DeviceName, AccountName,
+          ParentProc = InitiatingProcessFileName,
+          ParentCmd  = InitiatingProcessCommandLine,
+          ChildProc  = FileName,
+          ChildCmd   = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-264-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// GHSA-v6wj-c83f-v46x — tldx command injection (ASIM ImProcessCreate covers MDE-Linux / Sysmon-Linux / auditd)
+ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ParentProcessName in~ (&quot;node&quot;,&quot;npm&quot;,&quot;pnpm&quot;,&quot;yarn&quot;,&quot;npx&quot;)
+    or ParentProcessCommandLine has_any (&quot;mcp-server&quot;,&quot;domain_lookup&quot;,&quot;@profullstack/mcp-server&quot;)
+| where TargetProcessName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;tldx&quot;) or TargetProcessCommandLine has &quot;tldx&quot;
+| where TargetProcessCommandLine has &quot;tldx&quot;
+| where TargetProcessCommandLine matches regex @&quot;(?i)tldx[^\r\n]*[;|`&amp;&gt;&lt;]|tldx[^\r\n]*\$\(&quot;
+| project TimeGenerated, DvcHostname, ActorUsername,
+          ParentProcessName, ParentProcessCommandLine,
+          TargetProcessName, TargetProcessCommandLine, SHA256
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-264-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: tldx OS Command Injection via @profullstack/mcp-server (GHSA-v6wj-c83f-v46x)
+id: 7e4a1d3a-2c5b-4a1f-9b8e-3d8f2c1a9b4c
+status: experimental
+description: Detects exploitation of CWE-78 in @profullstack/mcp-server domain_lookup module where attacker-supplied domains/keywords reach execAsync as a concatenated shell string. Any tldx invocation whose arguments contain shell metacharacters (;, |, $(, backtick, &amp;&amp;, redirections) is high-fidelity injection — RFC-1035 hostnames cannot legally contain them.
+references:
+    - https://github.com/advisories/GHSA-v6wj-c83f-v46x
+    - https://github.com/profullstack/mcp-server
+author: SOC Detection Engineering
+date: 2026/04/28
+tags:
+    - attack.t1190
+    - attack.t1059.004
+    - attack.initial_access
+    - attack.execution
+    - cwe.78
+logsource:
+    category: process_creation
+    product: linux
+detection:
+    selection_parent:
+        ParentImage|endswith:
+            - &#x27;/node&#x27;
+            - &#x27;/npm&#x27;
+            - &#x27;/pnpm&#x27;
+            - &#x27;/yarn&#x27;
+            - &#x27;/npx&#x27;
+    selection_tldx:
+        CommandLine|contains: &#x27;tldx &#x27;
+    selection_metachar:
+        CommandLine|contains:
+            - &#x27;tldx &#x27;
+        CommandLine|re: &#x27;tldx[^\r\n]*([;|`&amp;&gt;&lt;]|\$\()&#x27;
+    condition: (selection_parent or selection_tldx) and selection_metachar
+falsepositives:
+    - Operator running tldx by hand with shell piping (rare; review parent command line for @profullstack/mcp-server context)
+level: high</code></pre></div>
+    <div class="tab-content" id="art-264-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.auditd OR windows.sysmon OR linux.syslog) (@process.command_line:*tldx* OR @CommandLine:*tldx*) (@process.command_line:(*tldx*\;* OR *tldx*\|* OR *tldx*\&amp;\&amp;* OR *tldx*\`* OR *tldx*\$\(*) OR @CommandLine:(*tldx*\;* OR *tldx*\|* OR *tldx*\&amp;\&amp;* OR *tldx*\`* OR *tldx*\$\(*))</code></pre></div>
+    <div class="tab-content" id="art-264-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-264-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-264-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-264-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;node&quot;,&quot;node.exe&quot;,&quot;npm&quot;,&quot;pnpm&quot;,&quot;yarn&quot;) OR Processes.parent_process=&quot;*mcp-server*&quot; OR Processes.parent_process=&quot;*domain_lookup*&quot;) (Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;tldx&quot;) OR Processes.process=&quot;*tldx *&quot;) Processes.process=&quot;*tldx*&quot; (Processes.process=&quot;*tldx*;*&quot; OR Processes.process=&quot;*tldx*|*&quot; OR Processes.process=&quot;*tldx*$(*&quot; OR Processes.process=&quot;*tldx*`*&quot; OR Processes.process=&quot;*tldx*&amp;&amp;*&quot; OR Processes.process=&quot;*tldx*&gt;*&quot; OR Processes.process=&quot;*tldx*&lt;(*&quot;) by host Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-264-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;node&quot;,&quot;node.exe&quot;,&quot;npm&quot;,&quot;pnpm&quot;,&quot;yarn&quot;) OR Processes.parent_process=&quot;*mcp-server*&quot; OR Processes.parent_process=&quot;*domain_lookup*&quot;) (Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;tldx&quot;) OR Processes.process=&quot;*tldx *&quot;) Processes.process=&quot;*tldx*&quot; (Processes.process=&quot;*tldx*;*&quot; OR Processes.process=&quot;*tldx*|*&quot; OR Processes.process=&quot;*tldx*$(*&quot; OR Processes.process=&quot;*tldx*`*&quot; OR Processes.process=&quot;*tldx*&amp;&amp;*&quot; OR Processes.process=&quot;*tldx*&gt;*&quot; OR Processes.process=&quot;*tldx*&lt;(*&quot;) by host Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="7ebcf5878e" data-platforms="datadog,sent,sigma,spl" data-targets="vcs">
+  <summary>
+    <span class="uc-title">[LLM] Unauthenticated POST to @profullstack/mcp-server domain-lookup endpoints from non-loopback source</span>
+    <span class="uc-phase">Delivery</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="7ebcf5878e" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunting query for HTTP exposure of the two vulnerable endpoints (POST /domain-lookup/check, POST /domain-lookup/bulk) that the advisory says default to bind 0.0.0.0 with no global auth middleware. Any POST from a non-loopback / non-RFC-1918 source IP indicates the vulnerable surface is exposed and being probed — pair with 500-class responses or shell-metachar bodies for exploit-attempt fidelity.
+
+Rationale: Advisory pins exact URI paths POST /domain-lookup/check and POST /domain-lookup/bulk plus default bind 0.0.0.0 with no global auth — every external POST is article-specific exposure evidence. PoC also showed HTTP 500 responses when tldx is missing, which makes status-code pivots valuable for triage. Defender KQL is intentionally empty: DeviceNetworkEvents lacks HTTP-method/URI fidelity and Defender does not ingest WAF / reverse-proxy access logs.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-v6wj-c83f-v46x
+  • https://github.com/profullstack/mcp-server</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-264-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-264-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-264-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-264-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-264-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// GHSA-v6wj-c83f-v46x — non-loopback POST to @profullstack/mcp-server vulnerable endpoints (WAF/reverse-proxy via CEF)
+let vulnPaths = dynamic([&quot;/domain-lookup/check&quot;,&quot;/domain-lookup/bulk&quot;]);
+CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where RequestMethod =~ &quot;POST&quot;
+| where RequestURL has_any (vulnPaths)
+| where isnotempty(SourceIP)
+| where not(ipv4_is_private(SourceIP))
+    and not(SourceIP startswith &quot;127.&quot;)
+    and not(SourceIP startswith &quot;::1&quot;)
+| summarize Requests = count(),
+            FirstSeen = min(TimeGenerated),
+            LastSeen  = max(TimeGenerated),
+            StatusCodes = make_set(EventOutcome, 20),
+            UAs = make_set(RequestClientApplication, 10),
+            SampleURLs = make_set(RequestURL, 5)
+            by SourceIP, DestinationIP, DestinationPort, DeviceVendor, DeviceProduct
+| order by Requests desc</code></pre></div>
+    <div class="tab-content" id="art-264-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Unauthenticated POST to @profullstack/mcp-server domain-lookup endpoints (GHSA-v6wj-c83f-v46x)
+id: 1c2d4e6f-8a3b-4c5d-9e7f-0b1a2c3d4e5f
+status: experimental
+description: Detects HTTP POSTs to the two vulnerable endpoints (/domain-lookup/check, /domain-lookup/bulk) in @profullstack/mcp-server &lt;= 1.4.12. Server defaults bind to 0.0.0.0 with no auth middleware, so any external POST is a vulnerable-surface exposure.
+references:
+    - https://github.com/advisories/GHSA-v6wj-c83f-v46x
+author: SOC Detection Engineering
+date: 2026/04/28
+tags:
+    - attack.t1190
+    - attack.initial_access
+    - cwe.78
+logsource:
+    category: webserver
+detection:
+    selection:
+        cs-method: &#x27;POST&#x27;
+        cs-uri-stem|contains:
+            - &#x27;/domain-lookup/check&#x27;
+            - &#x27;/domain-lookup/bulk&#x27;
+    condition: selection
+falsepositives:
+    - Internal health-check or smoke-test traffic from CI / monitoring (review source IP)
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-264-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>@http.method:POST (@http.url_details.path:(*\/domain-lookup\/check* OR *\/domain-lookup\/bulk*) OR @http.url:(*\/domain-lookup\/check* OR *\/domain-lookup\/bulk*)) -CIDR(@network.client.ip, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8)</code></pre></div>
+    <div class="tab-content" id="art-264-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-264-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-264-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-264-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.status) as statuses values(Web.url) as urls values(Web.http_user_agent) as agents from datamodel=Web.Web where Web.http_method=POST (Web.url=&quot;*/domain-lookup/check*&quot; OR Web.url=&quot;*/domain-lookup/bulk*&quot; OR Web.uri_path=&quot;*/domain-lookup/check*&quot; OR Web.uri_path=&quot;*/domain-lookup/bulk*&quot;) by Web.src Web.dest Web.http_method Web.uri_path | `drop_dm_object_name(Web)` | where NOT (cidrmatch(&quot;127.0.0.0/8&quot;,src) OR cidrmatch(&quot;::1/128&quot;,src) OR cidrmatch(&quot;10.0.0.0/8&quot;,src) OR cidrmatch(&quot;172.16.0.0/12&quot;,src) OR cidrmatch(&quot;192.168.0.0/16&quot;,src)) | convert ctime(firstTime) ctime(lastTime) | sort - count</code></pre><pre class="spl-mode-body" id="art-264-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.status) as statuses values(Web.url) as urls values(Web.http_user_agent) as agents from datamodel=Web.Web where Web.http_method=POST (Web.url=&quot;*/domain-lookup/check*&quot; OR Web.url=&quot;*/domain-lookup/bulk*&quot; OR Web.uri_path=&quot;*/domain-lookup/check*&quot; OR Web.uri_path=&quot;*/domain-lookup/bulk*&quot;) by Web.src Web.dest Web.http_method Web.uri_path | `drop_dm_object_name(Web)` | where NOT (cidrmatch(&quot;127.0.0.0/8&quot;,src) OR cidrmatch(&quot;::1/128&quot;,src) OR cidrmatch(&quot;10.0.0.0/8&quot;,src) OR cidrmatch(&quot;172.16.0.0/12&quot;,src) OR cidrmatch(&quot;192.168.0.0/16&quot;,src)) | convert ctime(firstTime) ctime(lastTime) | sort - count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="4e3ef9d0b4" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Remote service execution — PsExec / SMB lateral movement</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="4e3ef9d0b4" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">psexec / paexec / smbexec / wmic /node — service install over SMB from remote host.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="SMB/Windows Admin Shares">T1021.002</span> <span class="ind tech" title="Service Execution">T1569.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-264-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-264-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-264-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-264-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-264-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where FileName in~ (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
+   or (FileName =~ &quot;wmic.exe&quot; and ProcessCommandLine has &quot;/node:&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
+</code></pre></div>
+    <div class="tab-content" id="art-264-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688            // process-create (audit-policy required)
+| where Account !endswith &quot;$&quot;
+| where NewProcessName endswith &quot;\psexec.exe&quot;
+   or NewProcessName endswith &quot;\psexesvc.exe&quot;
+   or NewProcessName endswith &quot;\paexec.exe&quot;
+   or (NewProcessName endswith &quot;\wmic.exe&quot; and CommandLine has &quot;/node:&quot;)
+| project TimeGenerated, Computer, Account, NewProcessName, CommandLine,
+          ParentProcessName
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-264-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: PsExec / SMB Lateral Movement Tooling Execution
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d03
+status: experimental
+description: |
+    PsExec, paexec, smbexec, csexec, remcom — admin-grade tooling that
+    pivots over SMB. Pair with `wmic /node:` for the full cluster.
+references:
+    - https://attack.mitre.org/techniques/T1021/002/
+    - https://attack.mitre.org/techniques/T1569/002/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1021.002
+    - attack.t1569.002
+    - attack.lateral-movement
+    - attack.execution
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_psexec:
+        Image|endswith:
+            - &#x27;\psexec.exe&#x27;
+            - &#x27;\psexec64.exe&#x27;
+            - &#x27;\psexesvc.exe&#x27;
+            - &#x27;\paexec.exe&#x27;
+            - &#x27;\csexec.exe&#x27;
+            - &#x27;\remcom.exe&#x27;
+            - &#x27;\smbexec.py&#x27;
+    selection_wmic_remote:
+        Image|endswith:
+            - &#x27;\wmic.exe&#x27;
+        CommandLine|contains:
+            - &#x27;/node:&#x27;
+    condition: selection_psexec or selection_wmic_remote
+falsepositives:
+    - Sysadmins running approved remote-management tooling — wrap with
+      a known-admin-host watchlist
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-264-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-264-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-264-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-264-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
+       OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-264-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
+       OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ace0fd1925" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ace0fd1925" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">ConnectWise / AnyDesk / TeamViewer / ScreenConnect / Atera installed outside IT change windows = common tradecraft for ransomware affiliates and IT-helpdesk impersonators.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Remote Access Software">T1219</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-264-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-264-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-264-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-264-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-264-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where FileName in~ (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
+        &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
+        &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;)
+   or FileName matches regex @&quot;(?i)kaseya.*\.exe&quot;
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-264-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where NewProcessName endswith &quot;\AnyDesk.exe&quot;
+   or NewProcessName endswith &quot;\TeamViewer.exe&quot;
+   or NewProcessName endswith &quot;\TeamViewer_Service.exe&quot;
+   or NewProcessName endswith &quot;\ScreenConnect.ClientService.exe&quot;
+   or NewProcessName endswith &quot;\ConnectWiseControl.ClientService.exe&quot;
+   or NewProcessName endswith &quot;\atera_agent.exe&quot;
+   or NewProcessName endswith &quot;\SplashtopStreamer.exe&quot;
+   or NewProcessName endswith &quot;\RustDesk.exe&quot;
+   or NewProcessName endswith &quot;\NinjaOne.exe&quot;
+| project TimeGenerated, Computer, Account, NewProcessName,
+          CommandLine, ParentProcessName
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-264-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Remote-Management (RMM) Tool Execution
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0c
+status: experimental
+description: |
+    AnyDesk / TeamViewer / ScreenConnect / Atera / Splashtop /
+    RustDesk — RMM tools attackers commonly install for hands-on-
+    keyboard access. Filter against the IT estate&#x27;s known tool.
+references:
+    - https://attack.mitre.org/techniques/T1219/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1219
+    - attack.command-and-control
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - &#x27;\AnyDesk.exe&#x27;
+            - &#x27;\TeamViewer.exe&#x27;
+            - &#x27;\TeamViewer_Service.exe&#x27;
+            - &#x27;\ScreenConnect.ClientService.exe&#x27;
+            - &#x27;\ConnectWiseControl.ClientService.exe&#x27;
+            - &#x27;\atera_agent.exe&#x27;
+            - &#x27;\SplashtopStreamer.exe&#x27;
+            - &#x27;\RustDesk.exe&#x27;
+            - &#x27;\NinjaOne.exe&#x27;
+    condition: selection
+falsepositives:
+    - IT-approved RMM in use across the estate. Maintain a known-IT-
+      tool exclusion list per environment.
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-264-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-264-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-264-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-264-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
+        &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
+        &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-264-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
+        &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
+        &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="fe54682690" data-platforms="def,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-v6wj-c83f-v46x: @profullstack/mcp-server vulnerable to OS</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="fe54682690" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-264-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-264-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-264-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-v6wj-c83f-v46x: @profullstack/mcp-server vulnerable to OS
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;index.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/tmp/verify-exports/final_check.txt&quot;, &quot;/tmp/verify-exports/final_bulk.txt&quot;) or FileName in~ (&quot;index.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-264-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-264-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-264-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-264-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-v6wj-c83f-v46x: @profullstack/mcp-server vulnerable to OS ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;index.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/tmp/verify-exports/final_check.txt*&quot; OR Filesystem.file_path=&quot;*/tmp/verify-exports/final_bulk.txt*&quot; OR Filesystem.file_name IN (&quot;index.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-264-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-v6wj-c83f-v46x: @profullstack/mcp-server vulnerable to OS ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;index.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/tmp/verify-exports/final_check.txt*&quot; OR Filesystem.file_path=&quot;*/tmp/verify-exports/final_bulk.txt*&quot; OR Filesystem.file_name IN (&quot;index.js&quot;))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
