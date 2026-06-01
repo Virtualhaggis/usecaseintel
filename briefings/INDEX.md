@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-01
+- [instagram meta ai vulnerability allegedly enables password r](./2026-06-01/instagram-meta-ai-vulnerability-allegedly-enables-password-r.md)
 - [windows netlogon 0 click rce vulnerability now actively expl](./2026-06-01/windows-netlogon-0-click-rce-vulnerability-now-actively-expl.md)
 
 ## 2026-05-31
@@ -41,7 +42,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47410 praisonai platform jwt signing ](./2026-05-29/ghsa-critical-cve-2026-47410-praisonai-platform-jwt-signing-.md)
 - [ghsa critical cve 2026 47416 praisonai platform any workspac](./2026-05-29/ghsa-critical-cve-2026-47416-praisonai-platform-any-workspac.md)
 - [how relay network adopted ai coding securely and built the f](./2026-05-29/how-relay-network-adopted-ai-coding-securely-and-built-the-f.md)
-- [jinx 0164 threat actor using linkedin social engineering to ](./2026-05-29/jinx-0164-threat-actor-using-linkedin-social-engineering-to-.md)
 - [kimsuky deploys httpspy expands arsenal with hellodoor and v](./2026-05-29/kimsuky-deploys-httpspy-expands-arsenal-with-hellodoor-and-v.md)
 - [malicious sicoob nuget steals banking credentials as npm pac](./2026-05-29/malicious-sicoob-nuget-steals-banking-credentials-as-npm-pac.md)
 - [microsoft is named a leader in the 2026 gartner magic quadra](./2026-05-29/microsoft-is-named-a-leader-in-the-2026-gartner-magic-quadra.md)
