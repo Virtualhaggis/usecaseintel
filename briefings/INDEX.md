@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1252 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,16 +9,22 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-01
+- [china aligned groups ramp up attacks dragon weave hits czech](./2026-06-01/china-aligned-groups-ramp-up-attacks-dragon-weave-hits-czech.md)
 - [containers on fire from container escapes to supply chain at](./2026-06-01/containers-on-fire-from-container-escapes-to-supply-chain-at.md)
 - [critical wp maps pro flaw actively exploited to create admin](./2026-06-01/critical-wp-maps-pro-flaw-actively-exploited-to-create-admin.md)
 - [famous chollima hackers target php developers using compromi](./2026-06-01/famous-chollima-hackers-target-php-developers-using-compromi.md)
+- [ghsa critical cve 2026 47413 praisonai platform any workspac](./2026-06-01/ghsa-critical-cve-2026-47413-praisonai-platform-any-workspac.md)
+- [ghsa critical cve 2026 47429 when vitest ui server is listen](./2026-06-01/ghsa-critical-cve-2026-47429-when-vitest-ui-server-is-listen.md)
 - [iran linked hackers destroy it backups and recovery systems ](./2026-06-01/iran-linked-hackers-destroy-it-backups-and-recovery-systems-.md)
 - [iranian hackers abuse appdomainmanager hijacking to evade ed](./2026-06-01/iranian-hackers-abuse-appdomainmanager-hijacking-to-evade-ed.md)
 - [microsoft tightens entra id password resets with new authent](./2026-06-01/microsoft-tightens-entra-id-password-resets-with-new-authent.md)
+- [multiple red hat cloud services npm packages compromised to ](./2026-06-01/multiple-red-hat-cloud-services-npm-packages-compromised-to-.md)
 - [multiple redhat cloud services npm packages compromised](./2026-06-01/multiple-redhat-cloud-services-npm-packages-compromised.md)
 - [new drivesurge threat actor uses clickfix and fake updates t](./2026-06-01/new-drivesurge-threat-actor-uses-clickfix-and-fake-updates-t.md)
 - [openai codex authentication tokens stolen in codexui android](./2026-06-01/openai-codex-authentication-tokens-stolen-in-codexui-android.md)
 - [sidecopy hackers deploy persistent xenorat malware to target](./2026-06-01/sidecopy-hackers-deploy-persistent-xenorat-malware-to-target.md)
+- [smartapesg campaign uses clickfix scripts to infect windows ](./2026-06-01/smartapesg-campaign-uses-clickfix-scripts-to-infect-windows-.md)
+- [weekly recap new linux flaw pan os exploit ai powered attack](./2026-06-01/weekly-recap-new-linux-flaw-pan-os-exploit-ai-powered-attack.md)
 
 ## 2026-05-31
 - [dutch authorities dismantle botnet linked to 17 million infe](./2026-05-31/dutch-authorities-dismantle-botnet-linked-to-17-million-infe.md)
@@ -31,7 +37,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-29
 - [attackers use llm agent for post exploitation after marimo c](./2026-05-29/attackers-use-llm-agent-for-post-exploitation-after-marimo-c.md)
-- [charter communications data breach affects 4 9 million accou](./2026-05-29/charter-communications-data-breach-affects-4-9-million-accou.md)
 - [chatgphish vulnerability turns chatgpt web summaries into a ](./2026-05-29/chatgphish-vulnerability-turns-chatgpt-web-summaries-into-a-.md)
 - [chatgpt share links abused to host fake outage pages to deli](./2026-05-29/chatgpt-share-links-abused-to-host-fake-outage-pages-to-deli.md)
 - [cisa kev cve 2026 0257 palo alto networks pan os authenticat](./2026-05-29/cisa-kev-cve-2026-0257-palo-alto-networks-pan-os-authenticat.md)
@@ -139,7 +144,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46703 boxlite path traversal vulnerab](./2026-05-21/ghsa-critical-cve-2026-46703-boxlite-path-traversal-vulnerab.md)
 - [ghsa critical ghsa q2f7 m237 v562 hulumi policies github oid](./2026-05-21/ghsa-critical-ghsa-q2f7-m237-v562-hulumi-policies-github-oid.md)
 - [securing the ai revolution how snyk and our partners are sca](./2026-05-21/securing-the-ai-revolution-how-snyk-and-our-partners-are-sca.md)
-- [showboat linux malware hits middle east telecom with socks5 ](./2026-05-21/showboat-linux-malware-hits-middle-east-telecom-with-socks5-.md)
 - [the art of being ungovernable](./2026-05-21/the-art-of-being-ungovernable.md)
 - [the npm threat landscape attack surface and mitigations upda](./2026-05-21/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 - [what s new in microsoft security may 2026](./2026-05-21/what-s-new-in-microsoft-security-may-2026.md)
@@ -237,16 +241,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 25244 webdriverio browserstack servic](./2026-05-11/ghsa-critical-cve-2026-25244-webdriverio-browserstack-servic.md)
 - [ghsa critical cve 2026 27478 unity catalog has a jwt issuer ](./2026-05-11/ghsa-critical-cve-2026-27478-unity-catalog-has-a-jwt-issuer-.md)
 - [ghsa critical cve 2026 43898 sandboxjs has a sandbox escape ](./2026-05-11/ghsa-critical-cve-2026-43898-sandboxjs-has-a-sandbox-escape-.md)
-- [ghsa critical cve 2026 44336 praisonai mcp tools call path t](./2026-05-11/ghsa-critical-cve-2026-44336-praisonai-mcp-tools-call-path-t.md)
 - [ghsa critical cve 2026 44477 cloudnativepg s metrics exporte](./2026-05-11/ghsa-critical-cve-2026-44477-cloudnativepg-s-metrics-exporte.md)
 - [ghsa critical cve 2026 44643 angular expressions remote code](./2026-05-11/ghsa-critical-cve-2026-44643-angular-expressions-remote-code.md)
 - [ghsa critical cve 2026 7813 pgadmin 4 server mode has an aut](./2026-05-11/ghsa-critical-cve-2026-7813-pgadmin-4-server-mode-has-an-aut.md)
 - [ghsa critical ghsa h29g c9cx c73q torrentpier has php serial](./2026-05-11/ghsa-critical-ghsa-h29g-c9cx-c73q-torrentpier-has-php-serial.md)
 - [inside ad cs escalation unpacking advanced misuse techniques](./2026-05-11/inside-ad-cs-escalation-unpacking-advanced-misuse-techniques.md)
 - [tanstack npm packages compromised inside the mini shai hulud](./2026-05-11/tanstack-npm-packages-compromised-inside-the-mini-shai-hulud.md)
-
-## 2026-05-09
-- [ghsa critical ghsa v6wj c83f v46x profullstack mcp server vu](./2026-05-09/ghsa-critical-ghsa-v6wj-c83f-v46x-profullstack-mcp-server-vu.md)
 
 ## 2026-05-08
 - [cisa kev cve 2026 42208 berriai litellm sql injection vulner](./2026-05-08/cisa-kev-cve-2026-42208-berriai-litellm-sql-injection-vulner.md)
@@ -671,9 +671,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-12-26
 - [mongobleed mongodb zlib vulnerability cve 2025 14847 and how](./2025-12-26/mongobleed-mongodb-zlib-vulnerability-cve-2025-14847-and-how.md)
-
-## 2025-12-25
-- [first sophisticated malware discovered on maven central via ](./2025-12-25/first-sophisticated-malware-discovered-on-maven-central-via-.md)
 
 ## 2025-12-22
 - [cisa kev cve 2023 52163 digiever ds 2105 pro missing authori](./2025-12-22/cisa-kev-cve-2023-52163-digiever-ds-2105-pro-missing-authori.md)

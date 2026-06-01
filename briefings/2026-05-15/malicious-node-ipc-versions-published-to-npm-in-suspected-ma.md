@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Outbound egress to node-ipc stealer infrastructure (azurestaticprovider[.]net / 37.16.75.69)
 
-`UC_196_4` · phase: **actions** · confidence: **High**
+`UC_200_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceNetworkEvents
 
 ### [LLM] DNS lookup for azurestaticprovider[.]net node-ipc exfil domain
 
-`UC_196_5` · phase: **c2** · confidence: **High**
+`UC_200_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceNetworkEvents
 
 ### [LLM] node-ipc stealer __ntw=1 environment marker in process command line
 
-`UC_196_6` · phase: **install** · confidence: **High**
+`UC_200_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceProcessEvents
 
 ### [LLM] Malicious node-ipc package landed on disk under node_modules
 
-`UC_196_7` · phase: **delivery** · confidence: **Medium**
+`UC_200_7` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceFileEvents
 
 ### [LLM] node.js process staging credential dump in nt-* temp directory
 
-`UC_196_8` · phase: **actions** · confidence: **Medium**
+`UC_200_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -208,7 +208,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious node-ipc versions published to npm in suspected maintainer account com
 
-`UC_196_3` · phase: **exploit** · confidence: **High**
+`UC_200_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

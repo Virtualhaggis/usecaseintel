@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Linux wget/curl fetching HackTool:Linux/MalPack.B from 206.189.27.39:8888
 
-`UC_124_9` · phase: **delivery** · confidence: **High**
+`UC_129_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### [LLM] Linux curl FTP fetch writing payload into /dev/shm (tmpfs staging)
 
-`UC_124_10` · phase: **install** · confidence: **High**
+`UC_129_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceProcessEvents
 
 ### [LLM] Confluence credential file access (server.xml / confluence.cfg.xml) by non-Confluence process
 
-`UC_124_11` · phase: **actions** · confidence: **High**
+`UC_129_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceProcessEvents
 
 ### [LLM] NetExec/nxc PetitPotam coerce_plus with marshalled-target SMB payload
 
-`UC_124_12` · phase: **exploit** · confidence: **High**
+`UC_129_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ DeviceProcessEvents
 
 ### [LLM] CVE-2025-33073 Reflective Kerberos Relay exploit script + dnstool DNS record injection
 
-`UC_124_13` · phase: **exploit** · confidence: **High**
+`UC_129_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +160,7 @@ DeviceProcessEvents
 
 ### [LLM] gowitness HTTP/HTTPS recon scan with Chrome SOCKS5 proxy on internal subnet
 
-`UC_124_14` · phase: **recon** · confidence: **Medium**
+`UC_129_14` · phase: **recon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -326,7 +326,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — From edge appliance to enterprise compromise: Multi-stage Linux intrusion via F5
 
-`UC_124_8` · phase: **exploit** · confidence: **High**
+`UC_129_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

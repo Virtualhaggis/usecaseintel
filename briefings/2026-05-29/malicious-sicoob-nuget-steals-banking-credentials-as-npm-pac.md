@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Sicoob.Sdk malicious NuGet package present on developer host (v2.0.0–2.0.4)
 
-`UC_52_8` · phase: **delivery** · confidence: **High**
+`UC_58_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceFileEvents
 
 ### [LLM] PFX certificate read by .NET process followed by HTTPS egress to fake-Sentry domain
 
-`UC_52_9` · phase: **actions** · confidence: **High**
+`UC_58_9` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ PfxReads
 
 ### [LLM] npm install lifecycle script reads AWS/Vault/CI credentials within minutes of package install
 
-`UC_52_10` · phase: **install** · confidence: **High**
+`UC_58_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ Installs
 
 ### [LLM] Outbound HTTPS or DNS to Sicoob/npm-cluster exfil domains (aab.sportsontheweb.net, oob.moika.tech)
 
-`UC_52_11` · phase: **c2** · confidence: **High**
+`UC_58_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,7 +164,7 @@ union
 
 ### [LLM] Installation of vpmdhaj-published npm credential-stealer packages (14 known names)
 
-`UC_52_12` · phase: **delivery** · confidence: **High**
+`UC_58_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
