@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,10 +9,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-01
+- [containers on fire from container escapes to supply chain at](./2026-06-01/containers-on-fire-from-container-escapes-to-supply-chain-at.md)
 - [critical wp maps pro flaw actively exploited to create admin](./2026-06-01/critical-wp-maps-pro-flaw-actively-exploited-to-create-admin.md)
 - [famous chollima hackers target php developers using compromi](./2026-06-01/famous-chollima-hackers-target-php-developers-using-compromi.md)
 - [instagram meta ai vulnerability allegedly enables password r](./2026-06-01/instagram-meta-ai-vulnerability-allegedly-enables-password-r.md)
+- [iran linked hackers destroy it backups and recovery systems ](./2026-06-01/iran-linked-hackers-destroy-it-backups-and-recovery-systems-.md)
 - [microsoft tightens entra id password resets with new authent](./2026-06-01/microsoft-tightens-entra-id-password-resets-with-new-authent.md)
+- [new drivesurge threat actor uses clickfix and fake updates t](./2026-06-01/new-drivesurge-threat-actor-uses-clickfix-and-fake-updates-t.md)
+- [openai codex authentication tokens stolen in codexui android](./2026-06-01/openai-codex-authentication-tokens-stolen-in-codexui-android.md)
 - [windows netlogon 0 click rce vulnerability now actively expl](./2026-06-01/windows-netlogon-0-click-rce-vulnerability-now-actively-expl.md)
 
 ## 2026-05-31
@@ -56,7 +60,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [btmob android malware service generates custom phishing payl](./2026-05-28/btmob-android-malware-service-generates-custom-phishing-payl.md)
 - [critical gogs rce vulnerability lets any authenticated user ](./2026-05-28/critical-gogs-rce-vulnerability-lets-any-authenticated-user-.md)
 - [eset apt activity report q4 2025 q1 2026](./2026-05-28/eset-apt-activity-report-q4-2025-q1-2026.md)
-- [fbi warns of fake fifa websites running world cup fraud sche](./2026-05-28/fbi-warns-of-fake-fifa-websites-running-world-cup-fraud-sche.md)
 - [greyvibe hackers use chatgpt gemini to power cyberattacks](./2026-05-28/greyvibe-hackers-use-chatgpt-gemini-to-power-cyberattacks.md)
 - [jinx 0164 targets cryptocurrency firms with fake recruiter l](./2026-05-28/jinx-0164-targets-cryptocurrency-firms-with-fake-recruiter-l.md)
 - [less panic patching more precision](./2026-05-28/less-panic-patching-more-precision.md)
