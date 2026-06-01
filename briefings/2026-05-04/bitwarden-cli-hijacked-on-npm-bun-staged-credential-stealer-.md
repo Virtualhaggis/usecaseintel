@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Bun runtime fetched from github.com/oven-sh/bun during npm install (Bitwarden CLI hijack)
 
-`UC_288_9` · phase: **delivery** · confidence: **High**
+`UC_287_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ BunDownload
 
 ### [LLM] TeamPCP @bitwarden/cli stealer exfil to audit.checkmarx.cx (94.154.172.43)
 
-`UC_288_10` · phase: **c2** · confidence: **High**
+`UC_287_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ union isfuzzy=true
 
 ### [LLM] Known-malicious bw_setup.js / bw1.js SHA256 dropped under @bitwarden/cli
 
-`UC_288_11` · phase: **install** · confidence: **High**
+`UC_287_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -351,7 +351,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Bitwarden CLI Hijacked on npm: Bun-Staged Credential Stealer Targets Developers,
 
-`UC_288_8` · phase: **exploit** · confidence: **High**
+`UC_287_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,8 +1,8 @@
-# [HIGH] Multiple redhat-cloud-services npm Packages compromised
+# [HIGH] Miasma Supply Chain Attack Compromises Red Hat npm Packages with Credential-Stealing Worm
 
-**Source:** StepSecurity
+**Source:** The Hacker News, Cyber Security News, StepSecurity
 **Published:** 2026-06-01
-**Article:** https://www.stepsecurity.io/blog/multiple-redhat-cloud-services-npm-packages-compromised
+**Article:** https://thehackernews.com/2026/06/miasma-supply-chain-attack-compromises.html
 
 ## Threat Profile
 
@@ -10,7 +10,10 @@ Back to Blog Threat Intel Multiple redhat-cloud-services npm Packages compromise
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **SHA256:** `ba2c6ddb3672bdd6a611e6850b4f700b52aed3dab2f1b3d5f8c839d4a157a709`
+- **MD5:** `4c26cf9791bce1bfd4b84eba80ce2754`
+- **MD5:** `ec514c074caf0ffdce6c66a0e95753d8`
+- **MD5:** `5b26508dc0f1075a7c0b4d8aa464487e`
 
 ## MITRE ATT&CK Techniques
 
@@ -23,14 +26,13 @@ Back to Blog Threat Intel Multiple redhat-cloud-services npm Packages compromise
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1059.007** — JavaScript
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1105** — Ingress Tool Transfer
-- **T1036.005** — Match Legitimate Name or Location
-- **T1003.007** — Proc Filesystem
-- **T1552.001** — Credentials In Files
-- **T1212** — Exploitation for Credential Access
 - **T1140** — Deobfuscate/Decode Files or Information
-- **T1620** — Reflective Code Loading
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
+- **T1528** — Steal Application Access Token
 
 ## Kill chain phases observed
 
@@ -38,110 +40,114 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] npm preinstall hook executing oversized node index.js from @redhat-cloud-services package
+### [LLM] npm preinstall executing oversized index.js from @redhat-cloud-services scope
 
-`UC_3_6` · phase: **install** · confidence: **High**
+`UC_1_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("npm","npm.exe","npm-cli.js","node","node.exe","yarn","pnpm") Processes.process_name IN ("node","node.exe") (Processes.process="*@redhat-cloud-services*index.js*" OR Processes.process="*node_modules/@redhat-cloud-services/*index.js*") by Processes.dest Processes.user Processes.process_id Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | join type=left dest process [| tstats `summariesonly` values(Filesystem.file_size) as file_size from datamodel=Endpoint.Filesystem where Filesystem.file_path="*@redhat-cloud-services*index.js" by Filesystem.dest Filesystem.file_path | `drop_dm_object_name(Filesystem)` | where file_size > 1048576] | `security_content_ctime(firstTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="npm*" OR Processes.parent_process_name="npm-cli.js" OR Processes.parent_process_name="yarn*" OR Processes.parent_process_name="pnpm*" Processes.process_name IN ("node.exe","node") (Processes.process="*node_modules/@redhat-cloud-services/*index.js*" OR Processes.process="*node_modules\\@redhat-cloud-services\\*index.js*") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | rename firstTime as firstTime_proc | join type=outer dest [| tstats `summariesonly` max(Filesystem.file_size) as IndexSize from datamodel=Endpoint.Filesystem where Filesystem.file_path="*node_modules*@redhat-cloud-services*index.js" by Filesystem.dest Filesystem.file_path | `drop_dm_object_name(Filesystem)`] | where IndexSize > 524288 OR isnull(IndexSize)
 ```
 
 **Defender KQL:**
 ```kql
-let SuspectPackages = dynamic(["@redhat-cloud-services/types","@redhat-cloud-services/frontend-components-utilities","@redhat-cloud-services/frontend-components","@redhat-cloud-services/rbac-client","@redhat-cloud-services/javascript-clients-shared","@redhat-cloud-services/frontend-components-config-utilities","@redhat-cloud-services/frontend-components-notifications","@redhat-cloud-services/tsc-transform-imports","@redhat-cloud-services/frontend-components-config","@redhat-cloud-services/eslint-config-redhat-cloud-services","@redhat-cloud-services/host-inventory-client","@redhat-cloud-services/rule-components","@redhat-cloud-services/notifications-client","@redhat-cloud-services/chrome","@redhat-cloud-services/hcc-pf-mcp"]);
+let LookbackDays = 14d;
+let ScopePath = @"node_modules\@redhat-cloud-services\";
+let ScopePathNix = "node_modules/@redhat-cloud-services/";
+let HeavyDrop = DeviceFileEvents
+    | where Timestamp > ago(LookbackDays)
+    | where (FolderPath has ScopePath or FolderPath has ScopePathNix)
+    | where FileName =~ "index.js"
+    | where FileSize > 524288
+    | project DropTime = Timestamp, DeviceId, DeviceName, FolderPath, FileSize, SHA256;
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("npm","npm.exe","node","node.exe","yarn","pnpm","npx","npm-cli.js")
-| where FileName in~ ("node","node.exe")
-| where ProcessCommandLine has "@redhat-cloud-services" and ProcessCommandLine has "index.js"
-| extend MatchedPackage = tostring(set_difference(SuspectPackages, dynamic([])))
-| join kind=leftouter (
-    DeviceFileEvents
-    | where Timestamp > ago(14d)
-    | where FolderPath has "@redhat-cloud-services" and FileName =~ "index.js"
-    | where FileSize > 1048576
-    | summarize MaxSize = max(FileSize) by DeviceId, FolderPath
-) on DeviceId
-| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, InitiatingProcessCommandLine, MaxSize, MatchedPackage
+| where Timestamp > ago(LookbackDays)
+| where InitiatingProcessFileName has_any ("npm","npm-cli.js","yarn","pnpm","npm.cmd","node.exe","node")
+| where FileName in~ ("node.exe","node")
+| where ProcessCommandLine has "index.js"
+| where ProcessCommandLine has "@redhat-cloud-services" or ProcessCommandLine has ScopePath or ProcessCommandLine has ScopePathNix
+| join kind=inner HeavyDrop on DeviceId
+| where DropTime between (Timestamp - 5m .. Timestamp + 5m)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, IndexPath = FolderPath1, IndexSize = FileSize, SHA256
 | order by Timestamp desc
 ```
 
-### [LLM] Bun runtime download to /tmp from a node process during npm install
+### [LLM] Node-driven Bun runtime download from oven-sh GitHub Releases during npm install
 
-`UC_3_7` · phase: **delivery** · confidence: **High**
+`UC_1_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.user) as user values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("node","node.exe","npm") (All_Traffic.url="*github.com/oven-sh/bun/releases*" OR All_Traffic.url="*bun-v1.3.13*" OR All_Traffic.dest="objects.githubusercontent.com") by All_Traffic.src All_Traffic.process_id | `drop_dm_object_name(All_Traffic)` | join type=left src [| tstats `summariesonly` values(Filesystem.file_path) as bun_path from datamodel=Endpoint.Filesystem where Filesystem.file_path="/tmp/*" (Filesystem.file_name="bun" OR Filesystem.file_name="bun.exe") by Filesystem.dest | rename Filesystem.dest as src] | `security_content_ctime(firstTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.process_name IN ("node.exe","node") (Web.url="*github.com/oven-sh/bun/releases*" OR Web.url="*objects.githubusercontent.com*bun-v1.3.13*" OR Web.url="*release-assets.githubusercontent.com*bun-v1.3.13*") by Web.dest Web.src Web.user Web.url Web.http_user_agent Web.process_name | `drop_dm_object_name(Web)` | join type=outer dest [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.file_path="/tmp/*bun*" Filesystem.file_name="bun" by Filesystem.dest Filesystem.file_path | `drop_dm_object_name(Filesystem)`]
 ```
 
 **Defender KQL:**
 ```kql
-let BunDownload = DeviceNetworkEvents
-    | where Timestamp > ago(14d)
-    | where InitiatingProcessFileName in~ ("node","node.exe","npm")
-    | where (RemoteUrl has "github.com/oven-sh/bun/releases" or RemoteUrl has "bun-v1.3.13" or RemoteUrl has "objects.githubusercontent.com")
-    | project Timestamp, DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP;
+let LookbackDays = 14d;
 let BunDrop = DeviceFileEvents
-    | where Timestamp > ago(14d)
-    | where ActionType == "FileCreated"
-    | where FolderPath startswith "/tmp/" or FolderPath startswith "/var/folders/"
-    | where FileName in~ ("bun","bun.exe")
-    | where InitiatingProcessFileName in~ ("node","node.exe","tar","unzip")
-    | project Timestamp, DeviceId, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine;
-BunDownload
+    | where Timestamp > ago(LookbackDays)
+    | where FolderPath startswith "/tmp/" or FolderPath has @"\Temp\"
+    | where FileName =~ "bun" or FileName =~ "bun.exe" or FileName endswith ".tar.gz" and FileName has "bun-v1.3.13"
+    | project DropTime = Timestamp, DeviceId, DropPath = FolderPath, DropFile = FileName, DropSHA256 = SHA256, DropInitiator = InitiatingProcessFileName, DropInitiatorCmd = InitiatingProcessCommandLine;
+DeviceNetworkEvents
+| where Timestamp > ago(LookbackDays)
+| where InitiatingProcessFileName in~ ("node.exe","node")
+| where RemoteUrl has_any ("github.com/oven-sh/bun","objects.githubusercontent.com","release-assets.githubusercontent.com")
+   and RemoteUrl has "bun-v1.3.13"
 | join kind=inner BunDrop on DeviceId
-| where Timestamp1 between (Timestamp .. Timestamp + 5m)
-| project Timestamp, DeviceName, RemoteUrl, RemoteIP, DropPath = strcat(FolderPath, FileName), InitiatingProcessCommandLine
+| where DropTime between (Timestamp - 2m .. Timestamp + 5m)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, DropPath, DropFile, DropSHA256
 | order by Timestamp desc
 ```
 
-### [LLM] Process reading /proc/<pid>/mem of GitHub Actions Runner.Worker (in-memory secret extraction)
+### [LLM] Stage-4 implant written to /tmp/p<random>.js and executed by freshly dropped Bun binary
 
-`UC_3_8` · phase: **actions** · confidence: **High**
+`UC_1_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as proc values(Filesystem.process_path) as proc_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.action="read" Filesystem.file_path="/proc/*/mem" Filesystem.process_name IN ("node","bun") by Filesystem.dest Filesystem.file_path Filesystem.process_id | `drop_dm_object_name(Filesystem)` | rex field=file_path "/proc/(?<target_pid>\d+)/mem" | `security_content_ctime(firstTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="bun" Processes.parent_process_name IN ("node","node.exe") (Processes.process="*/tmp/p*.js*" OR Processes.process_path="/tmp/*") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | regex process="/tmp/p[A-Za-z0-9]{4,}\.js"
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
-| where Timestamp > ago(14d)
-| where ActionType in ("FileOpened","FileAccessed","FileCreated")
-| where FolderPath startswith "/proc/" and FileName == "mem"
-| where InitiatingProcessFileName in~ ("node","bun")
-| extend TargetPid = extract(@"/proc/(\d+)/", 1, FolderPath)
-| join kind=leftouter (
-    DeviceProcessEvents
-    | where Timestamp > ago(14d)
-    | where FileName has_any ("Runner.Worker","Runner.Listener")
-    | project DeviceId, TargetPid = tostring(ProcessId), RunnerCmd = ProcessCommandLine, RunnerName = FileName
-) on DeviceId, TargetPid
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, TargetPid, RunnerName, RunnerCmd
-| order by Timestamp desc
-```
-
-### [LLM] Bun spawned from npm install context executing /tmp/p*.js implant
-
-`UC_3_9` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where (Processes.process_path="/tmp/*/bun" OR Processes.process_path="/tmp/*/bun.exe" OR Processes.process_name="bun") Processes.parent_process_name IN ("node","npm","node.exe") Processes.process="*/tmp/p*.js*" by Processes.dest Processes.user Processes.process_id Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
-```
-
-**Defender KQL:**
-```kql
+let LookbackDays = 14d;
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where (FolderPath startswith "/tmp/" and FileName in~ ("bun","bun.exe")) or (InitiatingProcessFolderPath startswith "/tmp/" and InitiatingProcessFileName in~ ("bun","bun.exe"))
-| where InitiatingProcessFileName in~ ("node","node.exe","npm","bun")
-| where ProcessCommandLine matches regex @"/tmp/p[A-Za-z0-9]+\.js"
-| project Timestamp, DeviceName, AccountName, FolderPath, FileName, ProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where Timestamp > ago(LookbackDays)
+| where FileName =~ "bun" or FileName =~ "bun.exe"
+| where FolderPath startswith "/tmp/" or FolderPath has @"\Temp\"
+| where InitiatingProcessFileName in~ ("node","node.exe")
+| where ProcessCommandLine matches regex @"/tmp/p[A-Za-z0-9]{3,}\.js"
+   or ProcessCommandLine matches regex @"\\Temp\\p[A-Za-z0-9]{3,}\.js"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
 | order by Timestamp desc
+```
+
+### [LLM] CI runner reading cloud-provider credential env files immediately after npm install
+
+`UC_1_10` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(Filesystem.file_path) as paths min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("node","node.exe","bun","bun.exe") (Filesystem.file_path="*/.aws/credentials" OR Filesystem.file_path="*/.aws/config" OR Filesystem.file_path="*/.config/gcloud/*" OR Filesystem.file_path="*/.azure/*" OR Filesystem.file_path="*/.kube/config" OR Filesystem.file_path="*/.npmrc" OR Filesystem.file_path="*/.circleci/config*" OR Filesystem.file_path="*/vault/token" OR Filesystem.file_path="*/.vault-token" OR Filesystem.file_path="*/RUNNER_TOKEN*" OR Filesystem.file_path="*/_temp/_runner_file_commands/*" OR Filesystem.file_path="*GITHUB_TOKEN*") by Filesystem.dest Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where mvcount(paths) >= 3
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let CredPaths = dynamic([".aws/credentials",".aws/config",".config/gcloud",".azure/",".kube/config",".npmrc",".circleci/config","vault/token",".vault-token","_runner_file_commands","actions/runner","RUNNER_TOKEN","GITHUB_TOKEN"]);
+DeviceFileEvents
+| where Timestamp > ago(LookbackDays)
+| where ActionType in ("FileAccessed","FileOpened","FileModified","FileCreated")
+| where InitiatingProcessFileName in~ ("node","node.exe","bun","bun.exe")
+| where FolderPath has_any (CredPaths) or FileName has_any (CredPaths)
+| summarize HitPaths = make_set(strcat(FolderPath, "/", FileName), 25),
+            DistinctTargets = dcount(strcat(FolderPath, FileName)),
+            FirstHit = min(Timestamp),
+            LastHit = max(Timestamp)
+            by DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where DistinctTargets >= 2
+| order by LastHit desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -345,13 +351,13 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — Multiple redhat-cloud-services npm Packages compromised
+### Article-specific behavioural hunt — Miasma Supply Chain Attack Compromises Red Hat npm Packages with Credential-Stea
 
-`UC_3_5` · phase: **exploit** · confidence: **High**
+`UC_1_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — Multiple redhat-cloud-services npm Packages compromised ```
+``` Article-specific bespoke detection — Miasma Supply Chain Attack Compromises Red Hat npm Packages with Credential-Stea ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN ("index.js"))
@@ -372,7 +378,7 @@ DeviceProcessEvents
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — Multiple redhat-cloud-services npm Packages compromised
+// Article-specific bespoke detection — Miasma Supply Chain Attack Compromises Red Hat npm Packages with Credential-Stea
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -394,7 +400,14 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `ba2c6ddb3672bdd6a611e6850b4f700b52aed3dab2f1b3d5f8c839d4a157a709`, `4c26cf9791bce1bfd4b84eba80ce2754`, `ec514c074caf0ffdce6c66a0e95753d8`, `5b26508dc0f1075a7c0b4d8aa464487e`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

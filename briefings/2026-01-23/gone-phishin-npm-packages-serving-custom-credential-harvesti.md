@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Aikido npm phishing: direct outbound connection to RackGenius C2 (163.123.236.118)
 
-`UC_564_11` · phase: **c2** · confidence: **High**
+`UC_563_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceNetworkEvents
 
 ### [LLM] Aikido npm phishing: DNS / web request to siemens-energy.icu or siemensergy.icu typosquats
 
-`UC_564_12` · phase: **delivery** · confidence: **High**
+`UC_563_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceNetworkEvents
 
 ### [LLM] Aikido campaign: jsDelivr CDN fetch of weaponised flockiali/opresc/prndn/oprnm/operni npm package
 
-`UC_564_13` · phase: **delivery** · confidence: **High**
+`UC_563_13` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceNetworkEvents
 
 ### [LLM] Aikido npm phishing: user clicked phishing URL hosting /DIVzTaSF credential capture
 
-`UC_564_14` · phase: **delivery** · confidence: **High**
+`UC_563_14` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ UrlClickEvents
 
 ### [LLM] Aikido npm phishing: inbound email containing jsDelivr link to flockiali/opresc/prndn/oprnm/operni
 
-`UC_564_15` · phase: **delivery** · confidence: **High**
+`UC_563_15` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -443,7 +443,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Gone Phishin': npm Packages Serving Custom Credential Harvesting Pages
 
-`UC_564_10` · phase: **exploit** · confidence: **High**
+`UC_563_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
