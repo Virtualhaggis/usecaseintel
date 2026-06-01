@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1248 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,7 +9,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-01
+- [critical wp maps pro flaw actively exploited to create admin](./2026-06-01/critical-wp-maps-pro-flaw-actively-exploited-to-create-admin.md)
+- [famous chollima hackers target php developers using compromi](./2026-06-01/famous-chollima-hackers-target-php-developers-using-compromi.md)
 - [instagram meta ai vulnerability allegedly enables password r](./2026-06-01/instagram-meta-ai-vulnerability-allegedly-enables-password-r.md)
+- [microsoft tightens entra id password resets with new authent](./2026-06-01/microsoft-tightens-entra-id-password-resets-with-new-authent.md)
 - [windows netlogon 0 click rce vulnerability now actively expl](./2026-06-01/windows-netlogon-0-click-rce-vulnerability-now-actively-expl.md)
 
 ## 2026-05-31
@@ -17,7 +20,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [wp maps pro bug exploited to create admin accounts on wordpr](./2026-05-31/wp-maps-pro-bug-exploited-to-create-admin-accounts-on-wordpr.md)
 
 ## 2026-05-30
-- [greyvibe hackers leverage chatgpt and google gemini to fuel ](./2026-05-30/greyvibe-hackers-leverage-chatgpt-and-google-gemini-to-fuel-.md)
 - [malicious npm packages abuse dependency confusion to profile](./2026-05-30/malicious-npm-packages-abuse-dependency-confusion-to-profile.md)
 - [palo alto globalprotect vpn auth bypass flaw now exploited i](./2026-05-30/palo-alto-globalprotect-vpn-auth-bypass-flaw-now-exploited-i.md)
 - [pan os globalprotect authentication bypass cve 2026 0257 und](./2026-05-30/pan-os-globalprotect-authentication-bypass-cve-2026-0257-und.md)

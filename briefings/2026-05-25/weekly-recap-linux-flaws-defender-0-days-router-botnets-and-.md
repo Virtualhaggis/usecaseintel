@@ -534,7 +534,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ⚡ Weekly Recap: Linux Flaws, Defender 0-Days, Router Botnets, and Supply Chain C
 
-`UC_103_15` · phase: **exploit** · confidence: **High**
+`UC_105_15` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

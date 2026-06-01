@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GlassWorm hardcoded C2 IP egress (45.32.150.251 / 217.69.3.152) for Stage-2 fetch and exfil
 
-`UC_412_14` · phase: **c2** · confidence: **High**
+`UC_413_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceNetworkEvents
 
 ### [LLM] GlassWorm Stage-3 RAT installation under %APPDATA%\QtCvyfVWKH\index.js
 
-`UC_412_15` · phase: **install** · confidence: **High**
+`UC_413_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceFileEvents
 
 ### [LLM] GlassWorm Stage-3a UpdateLedger Run-key persistence pointing at %TEMP%\SKuyzYcDD.exe
 
-`UC_412_16` · phase: **install** · confidence: **High**
+`UC_413_16` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceRegistryEvents
 
 ### [LLM] GlassWorm Solana blockchain dead-drop C2 lookup via public RPC endpoints from Node
 
-`UC_412_17` · phase: **c2** · confidence: **Medium**
+`UC_413_17` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ DeviceNetworkEvents
 
 ### [LLM] GlassWorm Stage-3a Ledger impersonator binary execution (SHA256 06fab21d / SKuyzYcDD.exe)
 
-`UC_412_18` · phase: **actions** · confidence: **High**
+`UC_413_18` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -537,7 +537,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GlassWorm Hides a RAT Inside a Malicious Chrome Extension
 
-`UC_412_13` · phase: **exploit** · confidence: **High**
+`UC_413_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
