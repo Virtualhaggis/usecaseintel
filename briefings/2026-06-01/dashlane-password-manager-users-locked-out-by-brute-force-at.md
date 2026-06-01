@@ -11,15 +11,9 @@ By Bill Toulas
 June 1, 2026
 02:17 PM
 0 
-
-
 Multiple Dashlane users have been locked out of their accounts following brute-force attacks that attempted logins from distant locations and unknown devices.
-
-
 In a statement to BleepingComputer, the password management service confirmed that the suspensions were part of an automated security response designed to protect against account hijacking.
-
-
-“We can confirm that certain Da…
+“We can confirm that certain Dashlane user …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -46,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Dashlane brute-force lockout / new-device verification emails to corporate mailboxes (May-Jun 2026 campaign)
 
-`UC_0_3` · phase: **actions** · confidence: **Medium**
+`UC_2_3` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

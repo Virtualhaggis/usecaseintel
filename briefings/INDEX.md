@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1251 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -21,6 +21,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ibm websphere server vulnerable to remote code execution att](./2026-06-01/ibm-websphere-server-vulnerable-to-remote-code-execution-att.md)
 - [iranian hackers abuse appdomainmanager hijacking to evade ed](./2026-06-01/iranian-hackers-abuse-appdomainmanager-hijacking-to-evade-ed.md)
 - [miasma supply chain attack compromises red hat npm packages ](./2026-06-01/miasma-supply-chain-attack-compromises-red-hat-npm-packages-.md)
+- [miasma supply chain attack malicious code found in redhat cl](./2026-06-01/miasma-supply-chain-attack-malicious-code-found-in-redhat-cl.md)
 - [openai codex authentication tokens stolen in codexui android](./2026-06-01/openai-codex-authentication-tokens-stolen-in-codexui-android.md)
 - [sidecopy hackers deploy persistent xenorat malware to target](./2026-06-01/sidecopy-hackers-deploy-persistent-xenorat-malware-to-target.md)
 - [smartapesg campaign uses clickfix scripts to infect windows ](./2026-06-01/smartapesg-campaign-uses-clickfix-scripts-to-infect-windows-.md)
@@ -41,7 +42,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [chatgphish vulnerability turns chatgpt web summaries into a ](./2026-05-29/chatgphish-vulnerability-turns-chatgpt-web-summaries-into-a-.md)
 - [chatgpt share links abused to host fake outage pages to deli](./2026-05-29/chatgpt-share-links-abused-to-host-fake-outage-pages-to-deli.md)
 - [cisa kev cve 2026 0257 palo alto networks pan os authenticat](./2026-05-29/cisa-kev-cve-2026-0257-palo-alto-networks-pan-os-authenticat.md)
-- [dutch govt disrupts malware botnet with 17 million infected ](./2026-05-29/dutch-govt-disrupts-malware-botnet-with-17-million-infected-.md)
 - [fix sca issues at scale in your terminal with snyk remediati](./2026-05-29/fix-sca-issues-at-scale-in-your-terminal-with-snyk-remediati.md)
 - [ghsa critical cve 2026 47131 vm2 has a sandbox escape issue](./2026-05-29/ghsa-critical-cve-2026-47131-vm2-has-a-sandbox-escape-issue.md)
 - [ghsa critical cve 2026 47137 vm2 has a cve 2023 37903 patch ](./2026-05-29/ghsa-critical-cve-2026-47137-vm2-has-a-cve-2023-37903-patch-.md)
@@ -669,9 +669,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-12-28
 - [shai hulud strikes again the golden path](./2025-12-28/shai-hulud-strikes-again-the-golden-path.md)
-
-## 2025-12-26
-- [mongobleed mongodb zlib vulnerability cve 2025 14847 and how](./2025-12-26/mongobleed-mongodb-zlib-vulnerability-cve-2025-14847-and-how.md)
 
 ## 2025-12-22
 - [cisa kev cve 2023 52163 digiever ds 2105 pro missing authori](./2025-12-22/cisa-kev-cve-2023-52163-digiever-ds-2105-pro-missing-authori.md)
@@ -2325,6 +2322,3 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2023-06-01
 - [a quick primer on ldap injection](./2023-06-01/a-quick-primer-on-ldap-injection.md)
 - [ethical hacking top tools](./2023-06-01/ethical-hacking-top-tools.md)
-
-## 2023-05-30
-- [snyk announces new slack integration](./2023-05-30/snyk-announces-new-slack-integration.md)
