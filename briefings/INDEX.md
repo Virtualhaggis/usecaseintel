@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1251 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -18,10 +18,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [dashlane password manager users locked out by brute force at](./2026-06-01/dashlane-password-manager-users-locked-out-by-brute-force-at.md)
 - [ghsa critical cve 2026 47413 praisonai platform any workspac](./2026-06-01/ghsa-critical-cve-2026-47413-praisonai-platform-any-workspac.md)
 - [ghsa critical cve 2026 47429 when vitest ui server is listen](./2026-06-01/ghsa-critical-cve-2026-47429-when-vitest-ui-server-is-listen.md)
+- [hackers hijack thousands of sites for clickfix and fakeupdat](./2026-06-01/hackers-hijack-thousands-of-sites-for-clickfix-and-fakeupdat.md)
 - [ibm websphere server vulnerable to remote code execution att](./2026-06-01/ibm-websphere-server-vulnerable-to-remote-code-execution-att.md)
 - [iranian hackers abuse appdomainmanager hijacking to evade ed](./2026-06-01/iranian-hackers-abuse-appdomainmanager-hijacking-to-evade-ed.md)
 - [miasma supply chain attack compromises red hat npm packages ](./2026-06-01/miasma-supply-chain-attack-compromises-red-hat-npm-packages-.md)
 - [miasma supply chain attack malicious code found in redhat cl](./2026-06-01/miasma-supply-chain-attack-malicious-code-found-in-redhat-cl.md)
+- [multiple red hat cloud services npm packages compromised to ](./2026-06-01/multiple-red-hat-cloud-services-npm-packages-compromised-to-.md)
 - [openai codex authentication tokens stolen in codexui android](./2026-06-01/openai-codex-authentication-tokens-stolen-in-codexui-android.md)
 - [sidecopy hackers deploy persistent xenorat malware to target](./2026-06-01/sidecopy-hackers-deploy-persistent-xenorat-malware-to-target.md)
 - [smartapesg campaign uses clickfix scripts to infect windows ](./2026-06-01/smartapesg-campaign-uses-clickfix-scripts-to-infect-windows-.md)
