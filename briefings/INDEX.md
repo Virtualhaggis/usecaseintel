@@ -9,22 +9,23 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-01
+- [android banking trojan overlayphantom abuses accessibility s](./2026-06-01/android-banking-trojan-overlayphantom-abuses-accessibility-s.md)
 - [china aligned groups ramp up attacks dragon weave hits czech](./2026-06-01/china-aligned-groups-ramp-up-attacks-dragon-weave-hits-czech.md)
+- [cisa kev cve 2024 21182 oracle weblogic server unspecified v](./2026-06-01/cisa-kev-cve-2024-21182-oracle-weblogic-server-unspecified-v.md)
 - [containers on fire from container escapes to supply chain at](./2026-06-01/containers-on-fire-from-container-escapes-to-supply-chain-at.md)
+- [critical magento cache plugin vulnerability enables remote c](./2026-06-01/critical-magento-cache-plugin-vulnerability-enables-remote-c.md)
 - [critical wp maps pro flaw actively exploited to create admin](./2026-06-01/critical-wp-maps-pro-flaw-actively-exploited-to-create-admin.md)
-- [famous chollima hackers target php developers using compromi](./2026-06-01/famous-chollima-hackers-target-php-developers-using-compromi.md)
 - [ghsa critical cve 2026 47413 praisonai platform any workspac](./2026-06-01/ghsa-critical-cve-2026-47413-praisonai-platform-any-workspac.md)
 - [ghsa critical cve 2026 47429 when vitest ui server is listen](./2026-06-01/ghsa-critical-cve-2026-47429-when-vitest-ui-server-is-listen.md)
-- [iran linked hackers destroy it backups and recovery systems ](./2026-06-01/iran-linked-hackers-destroy-it-backups-and-recovery-systems-.md)
+- [ibm websphere server vulnerable to remote code execution att](./2026-06-01/ibm-websphere-server-vulnerable-to-remote-code-execution-att.md)
 - [iranian hackers abuse appdomainmanager hijacking to evade ed](./2026-06-01/iranian-hackers-abuse-appdomainmanager-hijacking-to-evade-ed.md)
-- [microsoft tightens entra id password resets with new authent](./2026-06-01/microsoft-tightens-entra-id-password-resets-with-new-authent.md)
 - [multiple red hat cloud services npm packages compromised to ](./2026-06-01/multiple-red-hat-cloud-services-npm-packages-compromised-to-.md)
 - [multiple redhat cloud services npm packages compromised](./2026-06-01/multiple-redhat-cloud-services-npm-packages-compromised.md)
-- [new drivesurge threat actor uses clickfix and fake updates t](./2026-06-01/new-drivesurge-threat-actor-uses-clickfix-and-fake-updates-t.md)
 - [openai codex authentication tokens stolen in codexui android](./2026-06-01/openai-codex-authentication-tokens-stolen-in-codexui-android.md)
 - [sidecopy hackers deploy persistent xenorat malware to target](./2026-06-01/sidecopy-hackers-deploy-persistent-xenorat-malware-to-target.md)
 - [smartapesg campaign uses clickfix scripts to infect windows ](./2026-06-01/smartapesg-campaign-uses-clickfix-scripts-to-infect-windows-.md)
 - [weekly recap new linux flaw pan os exploit ai powered attack](./2026-06-01/weekly-recap-new-linux-flaw-pan-os-exploit-ai-powered-attack.md)
+- [wordpress malware campaign hides payloads in steam profiles](./2026-06-01/wordpress-malware-campaign-hides-payloads-in-steam-profiles.md)
 
 ## 2026-05-31
 - [dutch authorities dismantle botnet linked to 17 million infe](./2026-05-31/dutch-authorities-dismantle-botnet-linked-to-17-million-infe.md)
@@ -1818,7 +1819,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2024 4947 google chromium v8 type confusion vul](./2024-05-20/cisa-kev-cve-2024-4947-google-chromium-v8-type-confusion-vul.md)
 
 ## 2024-05-16
-- [cisa kev cve 2014 100005 d link dir 600 router cross site re](./2024-05-16/cisa-kev-cve-2014-100005-d-link-dir-600-router-cross-site-re.md)
 - [cisa kev cve 2021 40655 d link dir 605 router information di](./2024-05-16/cisa-kev-cve-2021-40655-d-link-dir-605-router-information-di.md)
 - [cisa kev cve 2024 4761 google chromium v8 out of bounds memo](./2024-05-16/cisa-kev-cve-2024-4761-google-chromium-v8-out-of-bounds-memo.md)
 
