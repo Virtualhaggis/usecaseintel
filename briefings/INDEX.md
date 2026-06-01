@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1249 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1248 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -46,7 +46,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [malicious sicoob nuget steals banking credentials as npm pac](./2026-05-29/malicious-sicoob-nuget-steals-banking-credentials-as-npm-pac.md)
 - [microsoft is named a leader in the 2026 gartner magic quadra](./2026-05-29/microsoft-is-named-a-leader-in-the-2026-gartner-magic-quadra.md)
 - [new russia linked greyvibe targets ukraine with ai powered c](./2026-05-29/new-russia-linked-greyvibe-targets-ukraine-with-ai-powered-c.md)
-- [ransomware uses system scheduled task to encrypt local drive](./2026-05-29/ransomware-uses-system-scheduled-task-to-encrypt-local-drive.md)
 - [typosquatted npm packages used to steal cloud and ci cd secr](./2026-05-29/typosquatted-npm-packages-used-to-steal-cloud-and-ci-cd-secr.md)
 - [what s in the container analyzing vulnerabilities risks and ](./2026-05-29/what-s-in-the-container-analyzing-vulnerabilities-risks-and-.md)
 

@@ -1,186 +1,3 @@
-<article class="card" id="art-136" data-art-slug="2026-05-21-ghsa-critical-cve-2026-46633-twig-php-code-injection-via-use"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
-  data-uc-count="2" data-llm-uc-count="1"
-  data-search="[GHSA / CRITICAL] CVE-2026-46633: Twig: PHP code injection via `{% use %}` template name Twig: PHP code injection via `{% use %}` template name CVE-2026-46633 T1190 [LLM] Vulnerable Twig package (CVE-2026-46633) installed (twig/twig &lt; 3.26.0) Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-05-21-ghsa-critical-cve-2026-46633-twig-php-code-injection-via-use" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-7p85-w9px-jpjp" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-46633: Twig: PHP code injection via `{% use %}` template name</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-05-21</span>
-    <span>2 use cases</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Twig: PHP code injection via `{% use %}` template name</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-46633</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-136-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-136"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-136-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Vulnerable Twig package (CVE-2026-46633) installed (twig/twig &lt; 3.26.0)</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="1e7fe5af84" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">[LLM] Vulnerable Twig package (CVE-2026-46633) installed (twig/twig &lt; 3.26.0)</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="1e7fe5af84" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Surface assets where Microsoft Defender TVM reports the Twig PHP templating library at a version vulnerable to CVE-2026-46633. Exploitation gives RCE via single-quote injection in a `{% use %}` template name; SecurityPolicy allows `{% use %}` even under sandbox, so any application that accepts attacker-influenced template names against twig/twig &lt; 3.26.0 is reachable. Prioritise patching to 3.26.0 or later.
-
-Rationale: Article is a vendor advisory: identifies the exact package (composer:twig/twig), fixed version (3.26.0), and CVE (CVE-2026-46633). The only high-fidelity, non-generic detection from this content is asset coverage — every other behaviour-based UC (PHP web server spawning shells, web-shell cache file writes) collapses into generic web-shell rules already shipped, which the prompt explicitly excludes.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-7p85-w9px-jpjp</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-136-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-136-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-136-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-136-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// CVE-2026-46633 — Twig {% use %} PHP code injection (vuln &lt; 3.26.0)
-DeviceTvmSoftwareVulnerabilities
-| where CveId == &quot;CVE-2026-46633&quot;
-    or (SoftwareName has &quot;twig&quot; and SoftwareVendor has &quot;twig&quot;)
-| join kind=leftouter (
-    DeviceTvmSoftwareInventory
-    | where SoftwareName has &quot;twig&quot; and SoftwareVendor has &quot;twig&quot;
-    | project DeviceId, InstalledVersion = SoftwareVersion
-) on DeviceId
-| project Timestamp, DeviceName, OSPlatform, OSVersion,
-          SoftwareVendor, SoftwareName, SoftwareVersion, InstalledVersion,
-          CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, RecommendedSecurityUpdateId
-| order by VulnerabilitySeverityLevel desc, DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-136-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// CVE-2026-46633 — Twig {% use %} PHP code injection (vuln &lt; 3.26.0)
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(7d)
-| where CveId == &quot;CVE-2026-46633&quot;
-    or (SoftwareName has &quot;twig&quot; and SoftwareVendor has &quot;twig&quot;)
-| summarize arg_max(TimeGenerated, *) by DeviceId, CveId, SoftwareName, SoftwareVersion
-| project TimeGenerated, DeviceName, OSPlatform, OSVersion,
-          SoftwareVendor, SoftwareName, SoftwareVersion,
-          CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel desc, DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-136-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-136-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-136-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-136-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Vulnerabilities where (Vulnerabilities.cve=&quot;CVE-2026-46633&quot; OR (Vulnerabilities.signature=&quot;twig/twig&quot; OR Vulnerabilities.signature=&quot;composer:twig/twig&quot; OR Vulnerabilities.signature=&quot;twig&quot;)) by Vulnerabilities.dest, Vulnerabilities.dest_category, Vulnerabilities.signature, Vulnerabilities.cve, Vulnerabilities.severity, Vulnerabilities.cvss
-| `drop_dm_object_name(Vulnerabilities)`
-| where isnotnull(dest)
-| convert ctime(firstTime) ctime(lastTime)
-| sort - cvss</code></pre><pre class="spl-mode-body" id="art-136-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Vulnerabilities where (Vulnerabilities.cve=&quot;CVE-2026-46633&quot; OR (Vulnerabilities.signature=&quot;twig/twig&quot; OR Vulnerabilities.signature=&quot;composer:twig/twig&quot; OR Vulnerabilities.signature=&quot;twig&quot;)) by Vulnerabilities.dest, Vulnerabilities.dest_category, Vulnerabilities.signature, Vulnerabilities.cve, Vulnerabilities.severity, Vulnerabilities.cvss
-| `drop_dm_object_name(Vulnerabilities)`
-| where isnotnull(dest)
-| convert ctime(firstTime) ctime(lastTime)
-| sort - cvss</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-136-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-136-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-136-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-136-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-46633&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-136-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-46633&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-136-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-136-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-136-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-136-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-46633&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-136-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-46633&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-137" data-art-slug="2026-05-21-ghsa-critical-ghsa-q2f7-m237-v562-hulumi-policies-github-oid"
   data-phases="actions,c2,exploit,install" data-sev="crit"
   data-techs=""
@@ -12635,6 +12452,350 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-165" data-art-slug="2026-05-19-ghsa-critical-cve-2026-46354-coder-pkcs-7-signature-bypass-i"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190,T1528"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,sent,sigma,spl"
+  data-splunk-cats="application,cloud"
+  data-targets="azure"
+  data-uc-count="5" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-46354: Coder: PKCS#7 signature bypass in Azure instance identity allows unauthenticated agent token theft Coder: PKCS#7 signature bypass in Azure instance identity allows unauthenticated agent token theft CVE-2026-46354 T1190 T1528 [LLM] Coder CVE-2026-46354 - Burst of azure-instance-identity POSTs (vmId enumeration / forged PKCS#7) [LLM] Coder CVE-2026-46354 - Agent token redemption: PKCS#7 POST followed by gitsshkey / external-auth GET [LLM] Coder CVE-2026-46354 - Inventory of vulnerable Coder v2 versions Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-05-19-ghsa-critical-cve-2026-46354-coder-pkcs-7-signature-bypass-i" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-6x44-w3xg-hqqf" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-46354: Coder: PKCS#7 signature bypass in Azure instance identity allows unauthenticated agent token theft</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-05-19</span>
+    <span>5 use cases</span>
+    <span>2 techniques</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Coder: PKCS#7 signature bypass in Azure instance identity allows unauthenticated agent token theft</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-46354</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-165-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-165"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-165-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Coder CVE-2026-46354 - Inventory of vulnerable Coder v2 versions · Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Coder CVE-2026-46354 - Burst of azure-instance-identity POSTs (vmId enumeration / forged PKCS#7)</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Coder CVE-2026-46354 - Agent token redemption: PKCS#7 POST followed by gitsshkey / external-auth GET · OAuth consent / suspicious app grant</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="193ce3db9a" data-platforms="datadog,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">[LLM] Coder CVE-2026-46354 - Burst of azure-instance-identity POSTs (vmId enumeration / forged PKCS#7)</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="193ce3db9a" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects multiple POST requests to the unauthenticated /api/v2/workspaceagents/azure-instance-identity endpoint from a single source within a short window — the signature of an attacker enumerating workspace vmId UUIDs to brute-force-redeem agent tokens via the forged PKCS#7 envelope flaw. A legitimate Coder workspace agent only registers once per VM lifetime, so &gt;=5 POSTs to this exact path from one source in 10 minutes is anomalous.
+
+Rationale: The endpoint path is uniquely identified in the advisory as the unauthenticated PKCS#7 verification entry point. Burst-from-one-source on this specific path is the visible HTTP-layer shape of vmId UUID enumeration described in the article. Cross-checked Coder&#x27;s public API docs at coder.com/docs/reference/api/agents to confirm the endpoint exists in legitimate v2 deployments. Defender Advanced Hunting has no native HTTP request log for self-hosted Coder, so defender_kql is intentionally empty. Falcon LogScale FDR does not ship application-layer HTTP request URLs from Coder, so falcon_logscale_query is also empty.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-6x44-w3xg-hqqf
+  • https://coder.com/docs/reference/api/agents
+  • https://github.com/coder/coder/pull/25286</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-165-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-165-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-165-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-165-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let WindowMin = 10m;
+let Threshold = 5;
+ImWebSession
+| where TimeGenerated &gt; ago(7d)
+| where HttpMethod == &quot;POST&quot;
+| where Url has &quot;/api/v2/workspaceagents/azure-instance-identity&quot;
+| summarize Attempts = count(),
+            Successes = countif(HttpStatusCode in (&quot;200&quot;,&quot;204&quot;)),
+            DistinctUserAgents = dcount(HttpRequestHeaderUserAgent),
+            FirstSeen = min(TimeGenerated),
+            LastSeen = max(TimeGenerated)
+            by SrcIpAddr, DstHostname, bin(TimeGenerated, WindowMin)
+| where Attempts &gt;= Threshold
+| order by Attempts desc</code></pre></div>
+    <div class="tab-content" id="art-165-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:(nginx OR apache OR cloudfront OR alb OR azure.appservices) @http.method:POST @http.url_details.path:&quot;/api/v2/workspaceagents/azure-instance-identity&quot;</code></pre></div>
+    <div class="tab-content" id="art-165-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-165-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-165-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-165-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count from datamodel=Web where Web.http_method=&quot;POST&quot; Web.uri_path=&quot;/api/v2/workspaceagents/azure-instance-identity&quot; by Web.src Web.dest Web.status _time span=10m | `drop_dm_object_name(Web)` | stats sum(count) as attempts, values(status) as observed_status, dc(_time) as distinct_buckets, min(_time) as firstTime, max(_time) as lastTime by src, dest | where attempts &gt;= 5 | convert ctime(firstTime) ctime(lastTime) | sort - attempts</code></pre><pre class="spl-mode-body" id="art-165-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where Web.http_method=&quot;POST&quot; Web.uri_path=&quot;/api/v2/workspaceagents/azure-instance-identity&quot; by Web.src Web.dest Web.status _time span=10m | `drop_dm_object_name(Web)` | stats sum(count) as attempts, values(status) as observed_status, dc(_time) as distinct_buckets, min(_time) as firstTime, max(_time) as lastTime by src, dest | where attempts &gt;= 5 | convert ctime(firstTime) ctime(lastTime) | sort - attempts</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="48b99efb82" data-platforms="datadog,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">[LLM] Coder CVE-2026-46354 - Agent token redemption: PKCS#7 POST followed by gitsshkey / external-auth GET</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="48b99efb82" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Correlates a POST to /api/v2/workspaceagents/azure-instance-identity with a GET to /workspaceagents/me/gitsshkey or /workspaceagents/me/external-auth from the same source IP within 30 minutes — the exact two-step attack flow the advisory documents (forge PKCS#7 envelope → use returned agent session token to pull Git SSH private key and OAuth credentials). This catches the credential-access stage even when a single vmId is targeted (UC1&#x27;s burst signal misses).
+
+Rationale: The advisory explicitly chains POST /azure-instance-identity (token issuance) to GET /me/gitsshkey and GET /me/external-auth (credential read) as the documented post-exploit steps. Same-source-IP join with a 30-minute window captures the attacker round-trip while remaining tight enough to drop unrelated traffic. Endpoints confirmed in Coder&#x27;s public API reference. Defender XDR lacks application HTTP logs for self-hosted Coder; Falcon FDR same — both left empty by design.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-6x44-w3xg-hqqf
+  • https://coder.com/docs/reference/api/agents
+  • https://coder.com/docs/admin/external-auth</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Unsecured Credentials: Private Keys">T1552.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-165-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-165-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-165-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-165-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let Lookback = 7d;
+let WindowSec = 1800;
+let Auth = ImWebSession
+    | where TimeGenerated &gt; ago(Lookback)
+    | where HttpMethod == &quot;POST&quot;
+    | where Url has &quot;/api/v2/workspaceagents/azure-instance-identity&quot;
+    | where HttpStatusCode in (&quot;200&quot;,&quot;204&quot;,&quot;&quot;)
+    | project AuthTime = TimeGenerated, SrcIpAddr, DstHostname, AuthUrl = Url, AuthUA = HttpRequestHeaderUserAgent;
+let Exfil = ImWebSession
+    | where TimeGenerated &gt; ago(Lookback)
+    | where HttpMethod == &quot;GET&quot;
+    | where Url has_any (&quot;/workspaceagents/me/gitsshkey&quot;, &quot;/workspaceagents/me/external-auth&quot;)
+    | where HttpStatusCode in (&quot;200&quot;,&quot;&quot;)
+    | project ExfilTime = TimeGenerated, SrcIpAddr, DstHostname, ExfilUrl = Url, ExfilUA = HttpRequestHeaderUserAgent;
+Auth
+| join kind=inner Exfil on SrcIpAddr, DstHostname
+| where ExfilTime between (AuthTime .. AuthTime + WindowSec * 1s)
+| extend DelaySec = datetime_diff(&#x27;second&#x27;, ExfilTime, AuthTime)
+| project AuthTime, ExfilTime, DelaySec, SrcIpAddr, DstHostname, AuthUrl, ExfilUrl, AuthUA, ExfilUA
+| order by AuthTime desc</code></pre></div>
+    <div class="tab-content" id="art-165-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:(nginx OR apache OR cloudfront OR alb OR azure.appservices) (@http.url_details.path:&quot;/api/v2/workspaceagents/azure-instance-identity&quot; OR @http.url_details.path:&quot;/api/v2/workspaceagents/me/gitsshkey&quot; OR @http.url_details.path:&quot;/api/v2/workspaceagents/me/external-auth&quot;)</code></pre></div>
+    <div class="tab-content" id="art-165-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-165-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-165-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-165-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count from datamodel=Web where Web.http_method IN (&quot;POST&quot;,&quot;GET&quot;) AND (Web.uri_path=&quot;/api/v2/workspaceagents/azure-instance-identity&quot; OR Web.uri_path=&quot;/api/v2/workspaceagents/me/gitsshkey&quot; OR Web.uri_path=&quot;/api/v2/workspaceagents/me/external-auth&quot;) by Web.src Web.dest Web.uri_path Web.http_method Web.status _time | `drop_dm_object_name(Web)` | eval event_type=case(http_method=&quot;POST&quot; AND uri_path=&quot;/api/v2/workspaceagents/azure-instance-identity&quot;,&quot;auth&quot;, uri_path IN (&quot;/api/v2/workspaceagents/me/gitsshkey&quot;,&quot;/api/v2/workspaceagents/me/external-auth&quot;),&quot;exfil&quot;) | stats min(eval(if(event_type=&quot;auth&quot;,_time,null()))) as first_auth max(eval(if(event_type=&quot;exfil&quot;,_time,null()))) as first_exfil values(uri_path) as endpoints_touched values(status) as status_codes count by src, dest | where isnotnull(first_auth) AND isnotnull(first_exfil) AND first_exfil &gt; first_auth AND (first_exfil - first_auth) &lt;= 1800 | eval delay_seconds = first_exfil - first_auth | convert ctime(first_auth) ctime(first_exfil) | sort - count</code></pre><pre class="spl-mode-body" id="art-165-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where Web.http_method IN (&quot;POST&quot;,&quot;GET&quot;) AND (Web.uri_path=&quot;/api/v2/workspaceagents/azure-instance-identity&quot; OR Web.uri_path=&quot;/api/v2/workspaceagents/me/gitsshkey&quot; OR Web.uri_path=&quot;/api/v2/workspaceagents/me/external-auth&quot;) by Web.src Web.dest Web.uri_path Web.http_method Web.status _time | `drop_dm_object_name(Web)` | eval event_type=case(http_method=&quot;POST&quot; AND uri_path=&quot;/api/v2/workspaceagents/azure-instance-identity&quot;,&quot;auth&quot;, uri_path IN (&quot;/api/v2/workspaceagents/me/gitsshkey&quot;,&quot;/api/v2/workspaceagents/me/external-auth&quot;),&quot;exfil&quot;) | stats min(eval(if(event_type=&quot;auth&quot;,_time,null()))) as first_auth max(eval(if(event_type=&quot;exfil&quot;,_time,null()))) as first_exfil values(uri_path) as endpoints_touched values(status) as status_codes count by src, dest | where isnotnull(first_auth) AND isnotnull(first_exfil) AND first_exfil &gt; first_auth AND (first_exfil - first_auth) &lt;= 1800 | eval delay_seconds = first_exfil - first_auth | convert ctime(first_auth) ctime(first_exfil) | sort - count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="8b80573372" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">[LLM] Coder CVE-2026-46354 - Inventory of vulnerable Coder v2 versions</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="8b80573372" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hygiene hunt: enumerate all hosts running an unpatched Coder v2 server using Defender TVM CVE data and surface those that are internet-facing first. The advisory lists six patched lines (v2.33.3 / v2.32.2 / v2.31.12 / v2.30.8 / v2.29.13 / v2.24.5); anything earlier on each line is exploitable without authentication. Pairs with UC1/UC2 to prioritise instances that need either immediate patching or a switch to token-based agent auth.
+
+Rationale: DeviceTvmSoftwareVulnerabilities is the canonical Defender table for CVE-based exposure tracking; pairing with DeviceInfo&#x27;s IsInternetFacing flag surfaces the highest-risk hosts first. The CVE ID and patched-version list come directly from the GHSA advisory body. Datadog logs and Falcon FDR don&#x27;t carry SBOM/CVE rollups in their standard log tables, so those fields are empty by design.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-6x44-w3xg-hqqf
+  • https://github.com/coder/coder/pull/25286</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-165-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-165-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-165-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-165-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where CveId == &quot;CVE-2026-46354&quot;
+| join kind=leftouter (
+    DeviceInfo
+    | summarize arg_max(Timestamp, PublicIP, IsInternetFacing, OSPlatform, MachineGroup) by DeviceId
+  ) on DeviceId
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate, VulnerabilitySeverityLevel, PublicIP, IsInternetFacing, OSPlatform, MachineGroup
+| order by IsInternetFacing desc, VulnerabilitySeverityLevel desc</code></pre></div>
+    <div class="tab-content" id="art-165-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId == &quot;CVE-2026-46354&quot;
+| join kind=leftouter (
+    DeviceInfo
+    | summarize arg_max(TimeGenerated, PublicIP, IsInternetFacing, OSPlatform, MachineGroup) by DeviceId
+  ) on DeviceId
+| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate, VulnerabilitySeverityLevel, PublicIP, IsInternetFacing, OSPlatform, MachineGroup
+| order by IsInternetFacing desc, VulnerabilitySeverityLevel desc</code></pre></div>
+    <div class="tab-content" id="art-165-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-165-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-165-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-165-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count, min(_time) as firstSeen, max(_time) as lastSeen from datamodel=Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-46354&quot; by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstSeen) ctime(lastSeen) | sort - lastSeen</code></pre><pre class="spl-mode-body" id="art-165-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, min(_time) as firstSeen, max(_time) as lastSeen from datamodel=Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-46354&quot; by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstSeen) ctime(lastSeen) | sort - lastSeen</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-165-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-165-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-165-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-165-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-46354&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-165-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-46354&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-165-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-165-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-165-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-165-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-46354&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-165-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-46354&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="e2349777f5" data-platforms="def,sent,sigma,spl" data-targets="azure">
+  <summary>
+    <span class="uc-title">OAuth consent / suspicious app grant</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="e2349777f5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Cloud identity abuse: app gets high-priv scopes, often via consent phishing.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Account Manipulation: Additional Cloud Credentials">T1098.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-165-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-165-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-165-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-165-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-165-uc4-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
+| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
+          ActivityObjects, IPAddress, UserAgent</code></pre></div>
+    <div class="tab-content" id="art-165-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
+AuditLogs
+| where TimeGenerated &gt; ago(7d)
+| where OperationName has &quot;Consent to application&quot;
+| where Result =~ &quot;success&quot;
+| extend AppName = tostring(parse_json(tostring(TargetResources))[0].displayName),
+         AppId   = tostring(parse_json(tostring(TargetResources))[0].id),
+         User    = tostring(parse_json(tostring(InitiatedBy)).user.userPrincipalName)
+| project TimeGenerated, OperationName, User, AppName, AppId, Result
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-165-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
+status: experimental
+description: |
+    User-driven consent to a third-party OAuth application — illicit-
+    consent attack precursor. Pair with first-time-seen-app heuristic
+    in your SIEM for higher fidelity.
+references:
+    - https://attack.mitre.org/techniques/T1528/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1528
+    - attack.persistence
+logsource:
+    product: azure
+    service: auditlogs
+detection:
+    selection:
+        OperationName: &#x27;Consent to application&#x27;
+        Result: &#x27;success&#x27;
+    condition: selection
+falsepositives:
+    - Legitimate first-time SaaS app onboarding
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-165-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-165-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-165-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-165-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Authentication.Authentication
+    where Authentication.action=&quot;success&quot;
+      AND Authentication.signature IN (
+        &quot;Consent to application&quot;,
+        &quot;Add app role assignment grant to user&quot;,
+        &quot;Add OAuth2PermissionGrant&quot;,
+        &quot;Add delegated permission grant&quot;)
+    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-165-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Authentication.Authentication
+    where Authentication.action=&quot;success&quot;
+      AND Authentication.signature IN (
+        &quot;Consent to application&quot;,
+        &quot;Add app role assignment grant to user&quot;,
+        &quot;Add OAuth2PermissionGrant&quot;,
+        &quot;Add delegated permission grant&quot;)
+    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+| `drop_dm_object_name(Authentication)`</code></pre></div></div>
   </div>
 </details></div>
 </article>
