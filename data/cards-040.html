@@ -1,253 +1,3 @@
-<article class="card" id="art-1166" data-art-slug="2024-08-13-cisa-kev-cve-2024-38107-microsoft-windows-power-dependency-c"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
-  data-sources="CISA KEV"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2024-38107 — Microsoft Windows Power Dependency Coordinator Privilege Escalation Vulnerability Microsoft Windows Kernel contains an unspecified vulnerability that allows for privilege escalation, enabling a local attacker to gain SYSTEM privileges. Successful exploitation of this vulnerability requires an attacker to win a race condition. Vendor: Microsoft, Product: Windows. Federal patch due: 2024-09-03. CVE-2024-38107  Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2024-08-13-cisa-kev-cve-2024-38107-microsoft-windows-power-dependency-c" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2024-38107 — Microsoft Windows Power Dependency Coordinator Privilege Escalation Vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
-  <div class="pubmeta">
-    <span>2024-08-13</span>
-    <span>1 use case</span>
-    <span>0 techniques</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Microsoft Windows Kernel contains an unspecified vulnerability that allows for privilege escalation, enabling a local attacker to gain SYSTEM privileges. Successful exploitation of this vulnerability requires an attacker to win a race condition. Vendor: Microsoft, Product: Windows. Federal patch due: 2024-09-03.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2024-38107</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-1166-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-1166"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-1166-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-1166-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1166-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1166-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-1166-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2024-38107&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-1166-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2024-38107&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-1166-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1166-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1166-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1166-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2024-38107&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-1166-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2024-38107&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-1167" data-art-slug="2024-08-13-cisa-kev-cve-2024-38193-microsoft-windows-ancillary-function"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
-  data-sources="CISA KEV"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2024-38193 — Microsoft Windows Ancillary Function Driver for WinSock Privilege Escalation Vulnerability Microsoft Windows Ancillary Function Driver for WinSock contains an unspecified vulnerability that allows for privilege escalation, enabling a local attacker to gain SYSTEM privileges. Vendor: Microsoft, Product: Windows. Federal patch due: 2024-09-03. CVE-2024-38193 CVE-2024-21338  Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2024-08-13-cisa-kev-cve-2024-38193-microsoft-windows-ancillary-function" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2024-38193 — Microsoft Windows Ancillary Function Driver for WinSock Privilege Escalation Vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
-  <div class="pubmeta">
-    <span>2024-08-13</span>
-    <span>1 use case</span>
-    <span>0 techniques</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Microsoft Windows Ancillary Function Driver for WinSock contains an unspecified vulnerability that allows for privilege escalation, enabling a local attacker to gain SYSTEM privileges. Vendor: Microsoft, Product: Windows. Federal patch due: 2024-09-03.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2024-38193</span> <span class="ind cve">CVE-2024-21338</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-1167-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-1167"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-1167-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-1167-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1167-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1167-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-1167-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2024-38193&quot;, &quot;CVE-2024-21338&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-1167-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2024-38193&quot;, &quot;CVE-2024-21338&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-1167-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1167-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1167-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1167-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2024-38193&quot;, &quot;CVE-2024-21338&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-1167-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2024-38193&quot;, &quot;CVE-2024-21338&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-1168" data-art-slug="2024-08-13-cisa-kev-cve-2024-38213-microsoft-windows-smartscreen-securi"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs=""
@@ -4005,6 +3755,558 @@ level: critical
         where DNS.query IN (&quot;&quot;)
         by DNS.src, DNS.query, DNS.answer
      | `drop_dm_object_name(DNS)`]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-1191" data-art-slug="2024-07-17-cisa-kev-cve-2024-34102-adobe-commerce-and-magento-open-sour"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="CISA KEV"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="application,network"
+  data-targets="windows"
+  data-uc-count="2" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2024-34102 — Adobe Commerce and Magento Open Source Improper Restriction of XML External Entity Reference (XXE) Vulnerability Adobe Commerce and Magento Open Source contain an improper restriction of XML external entity reference (XXE) vulnerability that allows for remote code execution. Vendor: Adobe, Product: Commerce and Magento Open Source. Federal patch due: 2024-08-07. CVE-2024-34102 CVE-2024-2961 T1190 Asset exposure — vulnerability matches article CVE(s) Network connections to article IPs / domains">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2024-07-17-cisa-kev-cve-2024-34102-adobe-commerce-and-magento-open-sour" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2024-34102 — Adobe Commerce and Magento Open Source Improper Restriction of XML External Entity Reference (XXE) Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2024-07-17</span>
+    <span>2 use cases</span>
+    <span>1 technique</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Adobe Commerce and Magento Open Source contain an improper restriction of XML external entity reference (XXE) vulnerability that allows for remote code execution. Vendor: Adobe, Product: Commerce and Magento Open Source. Federal patch due: 2024-08-07.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2024-34102</span> <span class="ind cve">CVE-2024-2961</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">cdnstatics.net</span> <span class="ind ">bingforce.org</span> <span class="ind ">bystats.io</span> <span class="ind ">easttrack.net</span> <span class="ind ">foptimize.net</span> <span class="ind ">gearplace.net</span> <span class="ind ">infiniboosts.com</span> <span class="ind ">quantunnquest.com</span> <span class="ind ">analytisgroup.com</span> <span class="ind ">analytisweb.com</span></div>
+<div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">157.230.230.193</span> <span class="ind ">185.175.225.116</span> <span class="ind ">15.204.207.175</span> <span class="ind ">217.182.199.126</span> <span class="ind ">89.110.84.168</span> <span class="ind ">106.14.40.200</span> <span class="ind ">104.36.229.32</span> <span class="ind ">141.98.81.24</span> <span class="ind ">141.98.82.3</span> <span class="ind ">146.190.165.100</span> <span class="ind ">159.223.136.255</span> <span class="ind ">172.104.28.240</span> <span class="ind ">173.255.242.28</span> <span class="ind ">184.31.15.39</span> <span class="ind ">184.31.15.70</span> <span class="ind ">185.193.126.86</span> <span class="ind ">193.233.128.167</span> <span class="ind ">193.233.129.150</span> <span class="ind ">193.233.130.84</span> <span class="ind ">193.233.216.201</span> <span class="ind ">193.233.217.12</span> <span class="ind ">31.134.11.12</span> <span class="ind ">31.134.11.69</span> <span class="ind ">31.134.13.106</span> <span class="ind ">37.9.41.91</span> <span class="ind ">37.9.42.158</span> <span class="ind ">85.239.43.38</span> <span class="ind ">91.92.243.104</span> <span class="ind ">91.92.247.205</span> <span class="ind ">92.112.184.102</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-1191-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-1191"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-1191-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Network connections to article IPs / domains</em></div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1191-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1191-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1191-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1191-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2024-34102&quot;, &quot;CVE-2024-2961&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-1191-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2024-34102&quot;, &quot;CVE-2024-2961&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-1191-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1191-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1191-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1191-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2024-34102&quot;, &quot;CVE-2024-2961&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-1191-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2024-34102&quot;, &quot;CVE-2024-2961&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Network connections to article IPs / domains</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1191-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1191-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1191-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1191-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1191-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIP in (&quot;157.230.230.193&quot;, &quot;185.175.225.116&quot;, &quot;15.204.207.175&quot;, &quot;217.182.199.126&quot;, &quot;89.110.84.168&quot;, &quot;106.14.40.200&quot;, &quot;104.36.229.32&quot;, &quot;141.98.81.24&quot;, &quot;141.98.82.3&quot;, &quot;146.190.165.100&quot;, &quot;159.223.136.255&quot;, &quot;172.104.28.240&quot;, &quot;173.255.242.28&quot;, &quot;184.31.15.39&quot;, &quot;184.31.15.70&quot;, &quot;185.193.126.86&quot;, &quot;193.233.128.167&quot;, &quot;193.233.129.150&quot;, &quot;193.233.130.84&quot;, &quot;193.233.216.201&quot;, &quot;193.233.217.12&quot;, &quot;31.134.11.12&quot;, &quot;31.134.11.69&quot;, &quot;31.134.13.106&quot;, &quot;37.9.41.91&quot;, &quot;37.9.42.158&quot;, &quot;85.239.43.38&quot;, &quot;91.92.243.104&quot;, &quot;91.92.247.205&quot;, &quot;92.112.184.102&quot;) or RemoteUrl has_any (&quot;cdnstatics.net&quot;, &quot;bingforce.org&quot;, &quot;bystats.io&quot;, &quot;easttrack.net&quot;, &quot;foptimize.net&quot;, &quot;gearplace.net&quot;, &quot;infiniboosts.com&quot;, &quot;quantunnquest.com&quot;, &quot;analytisgroup.com&quot;, &quot;analytisweb.com&quot;)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-1191-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;157.230.230.193&quot;, &quot;185.175.225.116&quot;, &quot;15.204.207.175&quot;, &quot;217.182.199.126&quot;, &quot;89.110.84.168&quot;, &quot;106.14.40.200&quot;, &quot;104.36.229.32&quot;, &quot;141.98.81.24&quot;, &quot;141.98.82.3&quot;, &quot;146.190.165.100&quot;, &quot;159.223.136.255&quot;, &quot;172.104.28.240&quot;, &quot;173.255.242.28&quot;, &quot;184.31.15.39&quot;, &quot;184.31.15.70&quot;, &quot;185.193.126.86&quot;, &quot;193.233.128.167&quot;, &quot;193.233.129.150&quot;, &quot;193.233.130.84&quot;, &quot;193.233.216.201&quot;, &quot;193.233.217.12&quot;, &quot;31.134.11.12&quot;, &quot;31.134.11.69&quot;, &quot;31.134.13.106&quot;, &quot;37.9.41.91&quot;, &quot;37.9.42.158&quot;, &quot;85.239.43.38&quot;, &quot;91.92.243.104&quot;, &quot;91.92.247.205&quot;, &quot;92.112.184.102&quot;]);
+let BadDomains = dynamic([&quot;cdnstatics.net&quot;, &quot;bingforce.org&quot;, &quot;bystats.io&quot;, &quot;easttrack.net&quot;, &quot;foptimize.net&quot;, &quot;gearplace.net&quot;, &quot;infiniboosts.com&quot;, &quot;quantunnquest.com&quot;, &quot;analytisgroup.com&quot;, &quot;analytisweb.com&quot;]);
+ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr in (BadIPs)
+   or Url has_any (BadDomains)
+| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-1191-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
+status: experimental
+description: |
+    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
+    article-specific destinations. For dynamic IOC management, use a
+    watchlist or external feed.
+references:
+    - https://attack.mitre.org/tactics/TA0011/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.command-and-control
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection_ip:
+        DestinationIp:
+            - &#x27;__IP_PLACEHOLDER_1__&#x27;
+            - &#x27;__IP_PLACEHOLDER_2__&#x27;
+    selection_domain:
+        DestinationHostname:
+            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
+            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
+    condition: selection_ip or selection_domain
+falsepositives:
+    - None on a true-positive IOC match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-1191-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1191-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1191-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1191-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;157.230.230.193&quot;, &quot;185.175.225.116&quot;, &quot;15.204.207.175&quot;, &quot;217.182.199.126&quot;, &quot;89.110.84.168&quot;, &quot;106.14.40.200&quot;, &quot;104.36.229.32&quot;, &quot;141.98.81.24&quot;, &quot;141.98.82.3&quot;, &quot;146.190.165.100&quot;, &quot;159.223.136.255&quot;, &quot;172.104.28.240&quot;, &quot;173.255.242.28&quot;, &quot;184.31.15.39&quot;, &quot;184.31.15.70&quot;, &quot;185.193.126.86&quot;, &quot;193.233.128.167&quot;, &quot;193.233.129.150&quot;, &quot;193.233.130.84&quot;, &quot;193.233.216.201&quot;, &quot;193.233.217.12&quot;, &quot;31.134.11.12&quot;, &quot;31.134.11.69&quot;, &quot;31.134.13.106&quot;, &quot;37.9.41.91&quot;, &quot;37.9.42.158&quot;, &quot;85.239.43.38&quot;, &quot;91.92.243.104&quot;, &quot;91.92.247.205&quot;, &quot;92.112.184.102&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats `summariesonly` count from datamodel=Web
+        where Web.dest IN (&quot;cdnstatics.net&quot;, &quot;bingforce.org&quot;, &quot;bystats.io&quot;, &quot;easttrack.net&quot;, &quot;foptimize.net&quot;, &quot;gearplace.net&quot;, &quot;infiniboosts.com&quot;, &quot;quantunnquest.com&quot;, &quot;analytisgroup.com&quot;, &quot;analytisweb.com&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;cdnstatics.net&quot;, &quot;bingforce.org&quot;, &quot;bystats.io&quot;, &quot;easttrack.net&quot;, &quot;foptimize.net&quot;, &quot;gearplace.net&quot;, &quot;infiniboosts.com&quot;, &quot;quantunnquest.com&quot;, &quot;analytisgroup.com&quot;, &quot;analytisweb.com&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-1191-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;157.230.230.193&quot;, &quot;185.175.225.116&quot;, &quot;15.204.207.175&quot;, &quot;217.182.199.126&quot;, &quot;89.110.84.168&quot;, &quot;106.14.40.200&quot;, &quot;104.36.229.32&quot;, &quot;141.98.81.24&quot;, &quot;141.98.82.3&quot;, &quot;146.190.165.100&quot;, &quot;159.223.136.255&quot;, &quot;172.104.28.240&quot;, &quot;173.255.242.28&quot;, &quot;184.31.15.39&quot;, &quot;184.31.15.70&quot;, &quot;185.193.126.86&quot;, &quot;193.233.128.167&quot;, &quot;193.233.129.150&quot;, &quot;193.233.130.84&quot;, &quot;193.233.216.201&quot;, &quot;193.233.217.12&quot;, &quot;31.134.11.12&quot;, &quot;31.134.11.69&quot;, &quot;31.134.13.106&quot;, &quot;37.9.41.91&quot;, &quot;37.9.42.158&quot;, &quot;85.239.43.38&quot;, &quot;91.92.243.104&quot;, &quot;91.92.247.205&quot;, &quot;92.112.184.102&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats summariesonly=false count from datamodel=Web
+        where Web.dest IN (&quot;cdnstatics.net&quot;, &quot;bingforce.org&quot;, &quot;bystats.io&quot;, &quot;easttrack.net&quot;, &quot;foptimize.net&quot;, &quot;gearplace.net&quot;, &quot;infiniboosts.com&quot;, &quot;quantunnquest.com&quot;, &quot;analytisgroup.com&quot;, &quot;analytisweb.com&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;cdnstatics.net&quot;, &quot;bingforce.org&quot;, &quot;bystats.io&quot;, &quot;easttrack.net&quot;, &quot;foptimize.net&quot;, &quot;gearplace.net&quot;, &quot;infiniboosts.com&quot;, &quot;quantunnquest.com&quot;, &quot;analytisgroup.com&quot;, &quot;analytisweb.com&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-1192" data-art-slug="2024-07-15-cisa-kev-cve-2024-36401-osgeo-geoserver-geotools-eval-inject"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="CISA KEV"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,network"
+  data-targets="windows"
+  data-uc-count="3" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2024-36401 — OSGeo GeoServer GeoTools Eval Injection Vulnerability OSGeo GeoServer GeoTools contains an improper neutralization of directives in dynamically evaluated code vulnerability due to unsafely evaluating property names as XPath expressions. This allows unauthenticated attackers to conduct remote code execution via specially crafted input. Vendor: OSGeo, Product: GeoServer. Federal patch due: 2024-08-05. CVE-2024-36401 CVE-2016-5195 T1190 Asset exposure — vulnerability matches article CVE(s) Network connections to article IPs / domains File hash IOCs — endpoint file/process match">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2024-07-15-cisa-kev-cve-2024-36401-osgeo-geoserver-geotools-eval-inject" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2024-36401 — OSGeo GeoServer GeoTools Eval Injection Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2024-07-15</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">OSGeo GeoServer GeoTools contains an improper neutralization of directives in dynamically evaluated code vulnerability due to unsafely evaluating property names as XPath expressions. This allows unauthenticated attackers to conduct remote code execution via specially crafted input. Vendor: OSGeo, Product: GeoServer. Federal patch due: 2024-08-05.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2024-36401</span> <span class="ind cve">CVE-2016-5195</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">secure.systemupdatecdn.de</span> <span class="ind ">bots.gxz.me</span> <span class="ind ">trcpay.xyz</span> <span class="ind ">1.download765.online</span> <span class="ind ">oss.17ww.vip</span> <span class="ind ">repositorylinux.com</span> <span class="ind ">sdfasdfsf.9527527.xyz</span> <span class="ind ">gsdasdfadfs.9527527.xyz</span> <span class="ind ">9527527.xyz</span></div>
+<div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">181.214.58.14</span> <span class="ind ">47.253.46.11</span> <span class="ind ">188.214.27.50</span> <span class="ind ">209.146.124.181</span> <span class="ind ">95.85.93.196</span> <span class="ind ">112.133.194.254</span></div>
+<div class="ind-group"><span class="ind-label">SHA256</span><span class="ind ">b80e9466b7bb4295…</span> <span class="ind ">d9e8b390f8e2e8a6…</span> <span class="ind ">79c9532fb6ef2742…</span> <span class="ind ">5cc7e35254347f70…</span> <span class="ind ">fabbb4611fb9df5d…</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-1192-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-1192"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-1192-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ File hash IOCs — endpoint file/process match</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Network connections to article IPs / domains</em></div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1192-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1192-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1192-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1192-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2024-36401&quot;, &quot;CVE-2016-5195&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-1192-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2024-36401&quot;, &quot;CVE-2016-5195&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-1192-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1192-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1192-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1192-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2024-36401&quot;, &quot;CVE-2016-5195&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-1192-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2024-36401&quot;, &quot;CVE-2016-5195&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Network connections to article IPs / domains</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1192-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1192-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1192-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1192-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1192-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIP in (&quot;181.214.58.14&quot;, &quot;47.253.46.11&quot;, &quot;188.214.27.50&quot;, &quot;209.146.124.181&quot;, &quot;95.85.93.196&quot;, &quot;112.133.194.254&quot;) or RemoteUrl has_any (&quot;secure.systemupdatecdn.de&quot;, &quot;bots.gxz.me&quot;, &quot;trcpay.xyz&quot;, &quot;1.download765.online&quot;, &quot;oss.17ww.vip&quot;, &quot;repositorylinux.com&quot;, &quot;sdfasdfsf.9527527.xyz&quot;, &quot;gsdasdfadfs.9527527.xyz&quot;, &quot;9527527.xyz&quot;)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-1192-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;181.214.58.14&quot;, &quot;47.253.46.11&quot;, &quot;188.214.27.50&quot;, &quot;209.146.124.181&quot;, &quot;95.85.93.196&quot;, &quot;112.133.194.254&quot;]);
+let BadDomains = dynamic([&quot;secure.systemupdatecdn.de&quot;, &quot;bots.gxz.me&quot;, &quot;trcpay.xyz&quot;, &quot;1.download765.online&quot;, &quot;oss.17ww.vip&quot;, &quot;repositorylinux.com&quot;, &quot;sdfasdfsf.9527527.xyz&quot;, &quot;gsdasdfadfs.9527527.xyz&quot;, &quot;9527527.xyz&quot;]);
+ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr in (BadIPs)
+   or Url has_any (BadDomains)
+| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-1192-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
+status: experimental
+description: |
+    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
+    article-specific destinations. For dynamic IOC management, use a
+    watchlist or external feed.
+references:
+    - https://attack.mitre.org/tactics/TA0011/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.command-and-control
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection_ip:
+        DestinationIp:
+            - &#x27;__IP_PLACEHOLDER_1__&#x27;
+            - &#x27;__IP_PLACEHOLDER_2__&#x27;
+    selection_domain:
+        DestinationHostname:
+            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
+            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
+    condition: selection_ip or selection_domain
+falsepositives:
+    - None on a true-positive IOC match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-1192-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1192-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1192-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1192-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;181.214.58.14&quot;, &quot;47.253.46.11&quot;, &quot;188.214.27.50&quot;, &quot;209.146.124.181&quot;, &quot;95.85.93.196&quot;, &quot;112.133.194.254&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats `summariesonly` count from datamodel=Web
+        where Web.dest IN (&quot;secure.systemupdatecdn.de&quot;, &quot;bots.gxz.me&quot;, &quot;trcpay.xyz&quot;, &quot;1.download765.online&quot;, &quot;oss.17ww.vip&quot;, &quot;repositorylinux.com&quot;, &quot;sdfasdfsf.9527527.xyz&quot;, &quot;gsdasdfadfs.9527527.xyz&quot;, &quot;9527527.xyz&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;secure.systemupdatecdn.de&quot;, &quot;bots.gxz.me&quot;, &quot;trcpay.xyz&quot;, &quot;1.download765.online&quot;, &quot;oss.17ww.vip&quot;, &quot;repositorylinux.com&quot;, &quot;sdfasdfsf.9527527.xyz&quot;, &quot;gsdasdfadfs.9527527.xyz&quot;, &quot;9527527.xyz&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-1192-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;181.214.58.14&quot;, &quot;47.253.46.11&quot;, &quot;188.214.27.50&quot;, &quot;209.146.124.181&quot;, &quot;95.85.93.196&quot;, &quot;112.133.194.254&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats summariesonly=false count from datamodel=Web
+        where Web.dest IN (&quot;secure.systemupdatecdn.de&quot;, &quot;bots.gxz.me&quot;, &quot;trcpay.xyz&quot;, &quot;1.download765.online&quot;, &quot;oss.17ww.vip&quot;, &quot;repositorylinux.com&quot;, &quot;sdfasdfsf.9527527.xyz&quot;, &quot;gsdasdfadfs.9527527.xyz&quot;, &quot;9527527.xyz&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;secure.systemupdatecdn.de&quot;, &quot;bots.gxz.me&quot;, &quot;trcpay.xyz&quot;, &quot;1.download765.online&quot;, &quot;oss.17ww.vip&quot;, &quot;repositorylinux.com&quot;, &quot;sdfasdfsf.9527527.xyz&quot;, &quot;gsdasdfadfs.9527527.xyz&quot;, &quot;9527527.xyz&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1192-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1192-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1192-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1192-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1192-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
+// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
+// (Initiating only) so column-projection has to differ per side.
+union
+    ( DeviceFileEvents
+        | where Timestamp &gt; ago(7d)
+        | where InitiatingProcessAccountName !endswith &quot;$&quot;
+        | where SHA256 in~ (&quot;b80e9466b7bb42959c29546b8c052e67fcaa0f591857617457d5d28348bd8860&quot;, &quot;d9e8b390f8e2e8a6c2308c723a6a812f59c055ecad4e9098a120e5c4c65d3905&quot;, &quot;79c9532fb6ef2742e207498bfe2b2ee09aa9773376ac0e56085083aab17b98be&quot;, &quot;5cc7e35254347f705422800bfb7fe29c6002e2537f6bac0ff996a720dfb5f48e&quot;, &quot;fabbb4611fb9df5d8f208d9353be0b73c3942fe78903da096cbfe2f47c9e3566&quot;, &quot;1588bee7db42495ba7e6e34d217e6b82c5ab93f27c1eea68435cbb9e7792f9be&quot;, &quot;e8b0f5a952f07c83c4d67809ac0715c7164d518323d8038542e84aab8456db43&quot;, &quot;3c73ebc7a85accc65c9ee5bf151f70b990e5a12f27a843ca21c0f9d9a10fd17d&quot;, &quot;9bf642a7e14f0a0b0a784f00a0d1cf590ac60ae5ae378d29d435519f4d9dbf2b&quot;, &quot;994b924b00fb56e12a6a987c4cdf65dd05a221c47b5fc0a7a2babf1f05c2ed38&quot;, &quot;c226744b40e8f5d2cf95b4fb2537ff00e222ecc2d24c5096ecfadb14b4a47f97&quot;, &quot;96cf27a66b629d2b19708c6887441a8422b40dc0e9e7c5c0f2212efe0b6b3323&quot;, &quot;b3a015b6650ec9800fa878ff9a5f732013806c8dcb0e7069515dae0dd380fda4&quot;, &quot;50b7e615b8cdc45486b6ed1c1c081c7a92c262edb84318fa864531dcab753f82&quot;, &quot;f7b97677b6387c1f02d429e98868bf6973a8dec14dfee2516a27e885d6b1c780&quot;, &quot;b60d7fb66caf103a04e81fb89dbb05111b4b0ef513f3769c8e0a8106ab01a075&quot;, &quot;a9e7b5284182d3881c865895ee6e0fb03273eec3dcbf4bfc82dd2b069245beae&quot;, &quot;c3101b0b74d76a95ba91b6cc4945657e928d2dac8fdf926ffbf09031d46e9186&quot;, &quot;b67ab1b9b66fdc2c4ed1689698a54a347c2bdd6eaff87039ae337675243670d8&quot;, &quot;83fb74bb852bbd722e6ebc4e249e49cb4bb4194493a26d62d4bfcdfca2998412&quot;, &quot;53994a35a57970dea48e97009f65ad045b69a83234b771b106446211376a6866&quot;, &quot;f3d3572ef96c9c59e137425ca6804e1b86b7f8b57210a3724d567017460774de&quot;, &quot;1af8e068aa7377f0055640af581a412aa9d7288c912a93dd0d739657af0079fb&quot;, &quot;addccd0ecb643251af2e79e878b19a8e9c8f1c87302e732ef057cdba821f4b30&quot;, &quot;d9dfe98b5fba09e17dbe29dfeb8deb7d777d4a3b0d670914691ed360b916116a&quot;, &quot;8d3440301bc94ed83cdafb69e4b0166d3a0020eb4f38e9fa159c2f13f14b2d29&quot;, &quot;a13a979f4ca57450528bb6cd7aa2bf47d2eea211053eb1a14b8c4a44fd661831&quot;, &quot;7194ec436231c2a383ffc7c75eef4f5b5a952c18fa176ffd0830667835a80533&quot;, &quot;20d97f144bf7b1662a13ac537715126b9b2f68eff46a4a09234743ae236f0177&quot;) or SHA1 in~ (&quot;b80e9466b7bb42959c29546b8c052e67fcaa0f591857617457d5d28348bd8860&quot;, &quot;d9e8b390f8e2e8a6c2308c723a6a812f59c055ecad4e9098a120e5c4c65d3905&quot;, &quot;79c9532fb6ef2742e207498bfe2b2ee09aa9773376ac0e56085083aab17b98be&quot;, &quot;5cc7e35254347f705422800bfb7fe29c6002e2537f6bac0ff996a720dfb5f48e&quot;, &quot;fabbb4611fb9df5d8f208d9353be0b73c3942fe78903da096cbfe2f47c9e3566&quot;, &quot;1588bee7db42495ba7e6e34d217e6b82c5ab93f27c1eea68435cbb9e7792f9be&quot;, &quot;e8b0f5a952f07c83c4d67809ac0715c7164d518323d8038542e84aab8456db43&quot;, &quot;3c73ebc7a85accc65c9ee5bf151f70b990e5a12f27a843ca21c0f9d9a10fd17d&quot;, &quot;9bf642a7e14f0a0b0a784f00a0d1cf590ac60ae5ae378d29d435519f4d9dbf2b&quot;, &quot;994b924b00fb56e12a6a987c4cdf65dd05a221c47b5fc0a7a2babf1f05c2ed38&quot;, &quot;c226744b40e8f5d2cf95b4fb2537ff00e222ecc2d24c5096ecfadb14b4a47f97&quot;, &quot;96cf27a66b629d2b19708c6887441a8422b40dc0e9e7c5c0f2212efe0b6b3323&quot;, &quot;b3a015b6650ec9800fa878ff9a5f732013806c8dcb0e7069515dae0dd380fda4&quot;, &quot;50b7e615b8cdc45486b6ed1c1c081c7a92c262edb84318fa864531dcab753f82&quot;, &quot;f7b97677b6387c1f02d429e98868bf6973a8dec14dfee2516a27e885d6b1c780&quot;, &quot;b60d7fb66caf103a04e81fb89dbb05111b4b0ef513f3769c8e0a8106ab01a075&quot;, &quot;a9e7b5284182d3881c865895ee6e0fb03273eec3dcbf4bfc82dd2b069245beae&quot;, &quot;c3101b0b74d76a95ba91b6cc4945657e928d2dac8fdf926ffbf09031d46e9186&quot;, &quot;b67ab1b9b66fdc2c4ed1689698a54a347c2bdd6eaff87039ae337675243670d8&quot;, &quot;83fb74bb852bbd722e6ebc4e249e49cb4bb4194493a26d62d4bfcdfca2998412&quot;, &quot;53994a35a57970dea48e97009f65ad045b69a83234b771b106446211376a6866&quot;, &quot;f3d3572ef96c9c59e137425ca6804e1b86b7f8b57210a3724d567017460774de&quot;, &quot;1af8e068aa7377f0055640af581a412aa9d7288c912a93dd0d739657af0079fb&quot;, &quot;addccd0ecb643251af2e79e878b19a8e9c8f1c87302e732ef057cdba821f4b30&quot;, &quot;d9dfe98b5fba09e17dbe29dfeb8deb7d777d4a3b0d670914691ed360b916116a&quot;, &quot;8d3440301bc94ed83cdafb69e4b0166d3a0020eb4f38e9fa159c2f13f14b2d29&quot;, &quot;a13a979f4ca57450528bb6cd7aa2bf47d2eea211053eb1a14b8c4a44fd661831&quot;, &quot;7194ec436231c2a383ffc7c75eef4f5b5a952c18fa176ffd0830667835a80533&quot;, &quot;20d97f144bf7b1662a13ac537715126b9b2f68eff46a4a09234743ae236f0177&quot;) or MD5 in~ (&quot;b80e9466b7bb42959c29546b8c052e67fcaa0f591857617457d5d28348bd8860&quot;, &quot;d9e8b390f8e2e8a6c2308c723a6a812f59c055ecad4e9098a120e5c4c65d3905&quot;, &quot;79c9532fb6ef2742e207498bfe2b2ee09aa9773376ac0e56085083aab17b98be&quot;, &quot;5cc7e35254347f705422800bfb7fe29c6002e2537f6bac0ff996a720dfb5f48e&quot;, &quot;fabbb4611fb9df5d8f208d9353be0b73c3942fe78903da096cbfe2f47c9e3566&quot;, &quot;1588bee7db42495ba7e6e34d217e6b82c5ab93f27c1eea68435cbb9e7792f9be&quot;, &quot;e8b0f5a952f07c83c4d67809ac0715c7164d518323d8038542e84aab8456db43&quot;, &quot;3c73ebc7a85accc65c9ee5bf151f70b990e5a12f27a843ca21c0f9d9a10fd17d&quot;, &quot;9bf642a7e14f0a0b0a784f00a0d1cf590ac60ae5ae378d29d435519f4d9dbf2b&quot;, &quot;994b924b00fb56e12a6a987c4cdf65dd05a221c47b5fc0a7a2babf1f05c2ed38&quot;, &quot;c226744b40e8f5d2cf95b4fb2537ff00e222ecc2d24c5096ecfadb14b4a47f97&quot;, &quot;96cf27a66b629d2b19708c6887441a8422b40dc0e9e7c5c0f2212efe0b6b3323&quot;, &quot;b3a015b6650ec9800fa878ff9a5f732013806c8dcb0e7069515dae0dd380fda4&quot;, &quot;50b7e615b8cdc45486b6ed1c1c081c7a92c262edb84318fa864531dcab753f82&quot;, &quot;f7b97677b6387c1f02d429e98868bf6973a8dec14dfee2516a27e885d6b1c780&quot;, &quot;b60d7fb66caf103a04e81fb89dbb05111b4b0ef513f3769c8e0a8106ab01a075&quot;, &quot;a9e7b5284182d3881c865895ee6e0fb03273eec3dcbf4bfc82dd2b069245beae&quot;, &quot;c3101b0b74d76a95ba91b6cc4945657e928d2dac8fdf926ffbf09031d46e9186&quot;, &quot;b67ab1b9b66fdc2c4ed1689698a54a347c2bdd6eaff87039ae337675243670d8&quot;, &quot;83fb74bb852bbd722e6ebc4e249e49cb4bb4194493a26d62d4bfcdfca2998412&quot;, &quot;53994a35a57970dea48e97009f65ad045b69a83234b771b106446211376a6866&quot;, &quot;f3d3572ef96c9c59e137425ca6804e1b86b7f8b57210a3724d567017460774de&quot;, &quot;1af8e068aa7377f0055640af581a412aa9d7288c912a93dd0d739657af0079fb&quot;, &quot;addccd0ecb643251af2e79e878b19a8e9c8f1c87302e732ef057cdba821f4b30&quot;, &quot;d9dfe98b5fba09e17dbe29dfeb8deb7d777d4a3b0d670914691ed360b916116a&quot;, &quot;8d3440301bc94ed83cdafb69e4b0166d3a0020eb4f38e9fa159c2f13f14b2d29&quot;, &quot;a13a979f4ca57450528bb6cd7aa2bf47d2eea211053eb1a14b8c4a44fd661831&quot;, &quot;7194ec436231c2a383ffc7c75eef4f5b5a952c18fa176ffd0830667835a80533&quot;, &quot;20d97f144bf7b1662a13ac537715126b9b2f68eff46a4a09234743ae236f0177&quot;)
+        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
+    ( DeviceProcessEvents
+        | where Timestamp &gt; ago(7d)
+        | where AccountName !endswith &quot;$&quot;
+        | where SHA256 in~ (&quot;b80e9466b7bb42959c29546b8c052e67fcaa0f591857617457d5d28348bd8860&quot;, &quot;d9e8b390f8e2e8a6c2308c723a6a812f59c055ecad4e9098a120e5c4c65d3905&quot;, &quot;79c9532fb6ef2742e207498bfe2b2ee09aa9773376ac0e56085083aab17b98be&quot;, &quot;5cc7e35254347f705422800bfb7fe29c6002e2537f6bac0ff996a720dfb5f48e&quot;, &quot;fabbb4611fb9df5d8f208d9353be0b73c3942fe78903da096cbfe2f47c9e3566&quot;, &quot;1588bee7db42495ba7e6e34d217e6b82c5ab93f27c1eea68435cbb9e7792f9be&quot;, &quot;e8b0f5a952f07c83c4d67809ac0715c7164d518323d8038542e84aab8456db43&quot;, &quot;3c73ebc7a85accc65c9ee5bf151f70b990e5a12f27a843ca21c0f9d9a10fd17d&quot;, &quot;9bf642a7e14f0a0b0a784f00a0d1cf590ac60ae5ae378d29d435519f4d9dbf2b&quot;, &quot;994b924b00fb56e12a6a987c4cdf65dd05a221c47b5fc0a7a2babf1f05c2ed38&quot;, &quot;c226744b40e8f5d2cf95b4fb2537ff00e222ecc2d24c5096ecfadb14b4a47f97&quot;, &quot;96cf27a66b629d2b19708c6887441a8422b40dc0e9e7c5c0f2212efe0b6b3323&quot;, &quot;b3a015b6650ec9800fa878ff9a5f732013806c8dcb0e7069515dae0dd380fda4&quot;, &quot;50b7e615b8cdc45486b6ed1c1c081c7a92c262edb84318fa864531dcab753f82&quot;, &quot;f7b97677b6387c1f02d429e98868bf6973a8dec14dfee2516a27e885d6b1c780&quot;, &quot;b60d7fb66caf103a04e81fb89dbb05111b4b0ef513f3769c8e0a8106ab01a075&quot;, &quot;a9e7b5284182d3881c865895ee6e0fb03273eec3dcbf4bfc82dd2b069245beae&quot;, &quot;c3101b0b74d76a95ba91b6cc4945657e928d2dac8fdf926ffbf09031d46e9186&quot;, &quot;b67ab1b9b66fdc2c4ed1689698a54a347c2bdd6eaff87039ae337675243670d8&quot;, &quot;83fb74bb852bbd722e6ebc4e249e49cb4bb4194493a26d62d4bfcdfca2998412&quot;, &quot;53994a35a57970dea48e97009f65ad045b69a83234b771b106446211376a6866&quot;, &quot;f3d3572ef96c9c59e137425ca6804e1b86b7f8b57210a3724d567017460774de&quot;, &quot;1af8e068aa7377f0055640af581a412aa9d7288c912a93dd0d739657af0079fb&quot;, &quot;addccd0ecb643251af2e79e878b19a8e9c8f1c87302e732ef057cdba821f4b30&quot;, &quot;d9dfe98b5fba09e17dbe29dfeb8deb7d777d4a3b0d670914691ed360b916116a&quot;, &quot;8d3440301bc94ed83cdafb69e4b0166d3a0020eb4f38e9fa159c2f13f14b2d29&quot;, &quot;a13a979f4ca57450528bb6cd7aa2bf47d2eea211053eb1a14b8c4a44fd661831&quot;, &quot;7194ec436231c2a383ffc7c75eef4f5b5a952c18fa176ffd0830667835a80533&quot;, &quot;20d97f144bf7b1662a13ac537715126b9b2f68eff46a4a09234743ae236f0177&quot;) or SHA1 in~ (&quot;b80e9466b7bb42959c29546b8c052e67fcaa0f591857617457d5d28348bd8860&quot;, &quot;d9e8b390f8e2e8a6c2308c723a6a812f59c055ecad4e9098a120e5c4c65d3905&quot;, &quot;79c9532fb6ef2742e207498bfe2b2ee09aa9773376ac0e56085083aab17b98be&quot;, &quot;5cc7e35254347f705422800bfb7fe29c6002e2537f6bac0ff996a720dfb5f48e&quot;, &quot;fabbb4611fb9df5d8f208d9353be0b73c3942fe78903da096cbfe2f47c9e3566&quot;, &quot;1588bee7db42495ba7e6e34d217e6b82c5ab93f27c1eea68435cbb9e7792f9be&quot;, &quot;e8b0f5a952f07c83c4d67809ac0715c7164d518323d8038542e84aab8456db43&quot;, &quot;3c73ebc7a85accc65c9ee5bf151f70b990e5a12f27a843ca21c0f9d9a10fd17d&quot;, &quot;9bf642a7e14f0a0b0a784f00a0d1cf590ac60ae5ae378d29d435519f4d9dbf2b&quot;, &quot;994b924b00fb56e12a6a987c4cdf65dd05a221c47b5fc0a7a2babf1f05c2ed38&quot;, &quot;c226744b40e8f5d2cf95b4fb2537ff00e222ecc2d24c5096ecfadb14b4a47f97&quot;, &quot;96cf27a66b629d2b19708c6887441a8422b40dc0e9e7c5c0f2212efe0b6b3323&quot;, &quot;b3a015b6650ec9800fa878ff9a5f732013806c8dcb0e7069515dae0dd380fda4&quot;, &quot;50b7e615b8cdc45486b6ed1c1c081c7a92c262edb84318fa864531dcab753f82&quot;, &quot;f7b97677b6387c1f02d429e98868bf6973a8dec14dfee2516a27e885d6b1c780&quot;, &quot;b60d7fb66caf103a04e81fb89dbb05111b4b0ef513f3769c8e0a8106ab01a075&quot;, &quot;a9e7b5284182d3881c865895ee6e0fb03273eec3dcbf4bfc82dd2b069245beae&quot;, &quot;c3101b0b74d76a95ba91b6cc4945657e928d2dac8fdf926ffbf09031d46e9186&quot;, &quot;b67ab1b9b66fdc2c4ed1689698a54a347c2bdd6eaff87039ae337675243670d8&quot;, &quot;83fb74bb852bbd722e6ebc4e249e49cb4bb4194493a26d62d4bfcdfca2998412&quot;, &quot;53994a35a57970dea48e97009f65ad045b69a83234b771b106446211376a6866&quot;, &quot;f3d3572ef96c9c59e137425ca6804e1b86b7f8b57210a3724d567017460774de&quot;, &quot;1af8e068aa7377f0055640af581a412aa9d7288c912a93dd0d739657af0079fb&quot;, &quot;addccd0ecb643251af2e79e878b19a8e9c8f1c87302e732ef057cdba821f4b30&quot;, &quot;d9dfe98b5fba09e17dbe29dfeb8deb7d777d4a3b0d670914691ed360b916116a&quot;, &quot;8d3440301bc94ed83cdafb69e4b0166d3a0020eb4f38e9fa159c2f13f14b2d29&quot;, &quot;a13a979f4ca57450528bb6cd7aa2bf47d2eea211053eb1a14b8c4a44fd661831&quot;, &quot;7194ec436231c2a383ffc7c75eef4f5b5a952c18fa176ffd0830667835a80533&quot;, &quot;20d97f144bf7b1662a13ac537715126b9b2f68eff46a4a09234743ae236f0177&quot;) or MD5 in~ (&quot;b80e9466b7bb42959c29546b8c052e67fcaa0f591857617457d5d28348bd8860&quot;, &quot;d9e8b390f8e2e8a6c2308c723a6a812f59c055ecad4e9098a120e5c4c65d3905&quot;, &quot;79c9532fb6ef2742e207498bfe2b2ee09aa9773376ac0e56085083aab17b98be&quot;, &quot;5cc7e35254347f705422800bfb7fe29c6002e2537f6bac0ff996a720dfb5f48e&quot;, &quot;fabbb4611fb9df5d8f208d9353be0b73c3942fe78903da096cbfe2f47c9e3566&quot;, &quot;1588bee7db42495ba7e6e34d217e6b82c5ab93f27c1eea68435cbb9e7792f9be&quot;, &quot;e8b0f5a952f07c83c4d67809ac0715c7164d518323d8038542e84aab8456db43&quot;, &quot;3c73ebc7a85accc65c9ee5bf151f70b990e5a12f27a843ca21c0f9d9a10fd17d&quot;, &quot;9bf642a7e14f0a0b0a784f00a0d1cf590ac60ae5ae378d29d435519f4d9dbf2b&quot;, &quot;994b924b00fb56e12a6a987c4cdf65dd05a221c47b5fc0a7a2babf1f05c2ed38&quot;, &quot;c226744b40e8f5d2cf95b4fb2537ff00e222ecc2d24c5096ecfadb14b4a47f97&quot;, &quot;96cf27a66b629d2b19708c6887441a8422b40dc0e9e7c5c0f2212efe0b6b3323&quot;, &quot;b3a015b6650ec9800fa878ff9a5f732013806c8dcb0e7069515dae0dd380fda4&quot;, &quot;50b7e615b8cdc45486b6ed1c1c081c7a92c262edb84318fa864531dcab753f82&quot;, &quot;f7b97677b6387c1f02d429e98868bf6973a8dec14dfee2516a27e885d6b1c780&quot;, &quot;b60d7fb66caf103a04e81fb89dbb05111b4b0ef513f3769c8e0a8106ab01a075&quot;, &quot;a9e7b5284182d3881c865895ee6e0fb03273eec3dcbf4bfc82dd2b069245beae&quot;, &quot;c3101b0b74d76a95ba91b6cc4945657e928d2dac8fdf926ffbf09031d46e9186&quot;, &quot;b67ab1b9b66fdc2c4ed1689698a54a347c2bdd6eaff87039ae337675243670d8&quot;, &quot;83fb74bb852bbd722e6ebc4e249e49cb4bb4194493a26d62d4bfcdfca2998412&quot;, &quot;53994a35a57970dea48e97009f65ad045b69a83234b771b106446211376a6866&quot;, &quot;f3d3572ef96c9c59e137425ca6804e1b86b7f8b57210a3724d567017460774de&quot;, &quot;1af8e068aa7377f0055640af581a412aa9d7288c912a93dd0d739657af0079fb&quot;, &quot;addccd0ecb643251af2e79e878b19a8e9c8f1c87302e732ef057cdba821f4b30&quot;, &quot;d9dfe98b5fba09e17dbe29dfeb8deb7d777d4a3b0d670914691ed360b916116a&quot;, &quot;8d3440301bc94ed83cdafb69e4b0166d3a0020eb4f38e9fa159c2f13f14b2d29&quot;, &quot;a13a979f4ca57450528bb6cd7aa2bf47d2eea211053eb1a14b8c4a44fd661831&quot;, &quot;7194ec436231c2a383ffc7c75eef4f5b5a952c18fa176ffd0830667835a80533&quot;, &quot;20d97f144bf7b1662a13ac537715126b9b2f68eff46a4a09234743ae236f0177&quot;)
+        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
+| order by Timestamp desc
+</code></pre></div>
+    <div class="tab-content" id="art-1192-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
+// Defender version so the engine can push hash predicates per-side.
+let BadHashes = dynamic([&quot;b80e9466b7bb42959c29546b8c052e67fcaa0f591857617457d5d28348bd8860&quot;, &quot;d9e8b390f8e2e8a6c2308c723a6a812f59c055ecad4e9098a120e5c4c65d3905&quot;, &quot;79c9532fb6ef2742e207498bfe2b2ee09aa9773376ac0e56085083aab17b98be&quot;, &quot;5cc7e35254347f705422800bfb7fe29c6002e2537f6bac0ff996a720dfb5f48e&quot;, &quot;fabbb4611fb9df5d8f208d9353be0b73c3942fe78903da096cbfe2f47c9e3566&quot;, &quot;1588bee7db42495ba7e6e34d217e6b82c5ab93f27c1eea68435cbb9e7792f9be&quot;, &quot;e8b0f5a952f07c83c4d67809ac0715c7164d518323d8038542e84aab8456db43&quot;, &quot;3c73ebc7a85accc65c9ee5bf151f70b990e5a12f27a843ca21c0f9d9a10fd17d&quot;, &quot;9bf642a7e14f0a0b0a784f00a0d1cf590ac60ae5ae378d29d435519f4d9dbf2b&quot;, &quot;994b924b00fb56e12a6a987c4cdf65dd05a221c47b5fc0a7a2babf1f05c2ed38&quot;, &quot;c226744b40e8f5d2cf95b4fb2537ff00e222ecc2d24c5096ecfadb14b4a47f97&quot;, &quot;96cf27a66b629d2b19708c6887441a8422b40dc0e9e7c5c0f2212efe0b6b3323&quot;, &quot;b3a015b6650ec9800fa878ff9a5f732013806c8dcb0e7069515dae0dd380fda4&quot;, &quot;50b7e615b8cdc45486b6ed1c1c081c7a92c262edb84318fa864531dcab753f82&quot;, &quot;f7b97677b6387c1f02d429e98868bf6973a8dec14dfee2516a27e885d6b1c780&quot;, &quot;b60d7fb66caf103a04e81fb89dbb05111b4b0ef513f3769c8e0a8106ab01a075&quot;, &quot;a9e7b5284182d3881c865895ee6e0fb03273eec3dcbf4bfc82dd2b069245beae&quot;, &quot;c3101b0b74d76a95ba91b6cc4945657e928d2dac8fdf926ffbf09031d46e9186&quot;, &quot;b67ab1b9b66fdc2c4ed1689698a54a347c2bdd6eaff87039ae337675243670d8&quot;, &quot;83fb74bb852bbd722e6ebc4e249e49cb4bb4194493a26d62d4bfcdfca2998412&quot;, &quot;53994a35a57970dea48e97009f65ad045b69a83234b771b106446211376a6866&quot;, &quot;f3d3572ef96c9c59e137425ca6804e1b86b7f8b57210a3724d567017460774de&quot;, &quot;1af8e068aa7377f0055640af581a412aa9d7288c912a93dd0d739657af0079fb&quot;, &quot;addccd0ecb643251af2e79e878b19a8e9c8f1c87302e732ef057cdba821f4b30&quot;, &quot;d9dfe98b5fba09e17dbe29dfeb8deb7d777d4a3b0d670914691ed360b916116a&quot;, &quot;8d3440301bc94ed83cdafb69e4b0166d3a0020eb4f38e9fa159c2f13f14b2d29&quot;, &quot;a13a979f4ca57450528bb6cd7aa2bf47d2eea211053eb1a14b8c4a44fd661831&quot;, &quot;7194ec436231c2a383ffc7c75eef4f5b5a952c18fa176ffd0830667835a80533&quot;, &quot;20d97f144bf7b1662a13ac537715126b9b2f68eff46a4a09234743ae236f0177&quot;]);
+union
+    ( ImFileEvent
+        | where TimeGenerated &gt; ago(7d)
+        | where ActorUsername !endswith &quot;$&quot;
+        | where TargetFileSHA256 in~ (BadHashes)
+           or TargetFileSHA1 in~ (BadHashes)
+           or TargetFileMD5 in~ (BadHashes)
+        | project TimeGenerated, DvcHostname, EventType,
+                  TargetFileName, TargetFilePath, TargetFileSHA256,
+                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
+    ( ImProcessCreate
+        | where TimeGenerated &gt; ago(7d)
+        | where ActorUsername !endswith &quot;$&quot;
+        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
+        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
+                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
+                  TargetFileSHA256 = SHA256,
+                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-1192-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
+status: experimental
+description: |
+    Replace `__HASH_LIST__` placeholder with article-specific SHA256
+    values. Use a watchlist or external indicator file for management
+    at scale.
+references:
+    - https://attack.mitre.org/techniques/T1027/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1027
+    - attack.defense-evasion
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Hashes|contains:
+            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
+    condition: selection
+falsepositives:
+    - None on a true-positive hash match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-1192-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1192-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1192-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1192-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (&quot;b80e9466b7bb42959c29546b8c052e67fcaa0f591857617457d5d28348bd8860&quot;, &quot;d9e8b390f8e2e8a6c2308c723a6a812f59c055ecad4e9098a120e5c4c65d3905&quot;, &quot;79c9532fb6ef2742e207498bfe2b2ee09aa9773376ac0e56085083aab17b98be&quot;, &quot;5cc7e35254347f705422800bfb7fe29c6002e2537f6bac0ff996a720dfb5f48e&quot;, &quot;fabbb4611fb9df5d8f208d9353be0b73c3942fe78903da096cbfe2f47c9e3566&quot;, &quot;1588bee7db42495ba7e6e34d217e6b82c5ab93f27c1eea68435cbb9e7792f9be&quot;, &quot;e8b0f5a952f07c83c4d67809ac0715c7164d518323d8038542e84aab8456db43&quot;, &quot;3c73ebc7a85accc65c9ee5bf151f70b990e5a12f27a843ca21c0f9d9a10fd17d&quot;, &quot;9bf642a7e14f0a0b0a784f00a0d1cf590ac60ae5ae378d29d435519f4d9dbf2b&quot;, &quot;994b924b00fb56e12a6a987c4cdf65dd05a221c47b5fc0a7a2babf1f05c2ed38&quot;, &quot;c226744b40e8f5d2cf95b4fb2537ff00e222ecc2d24c5096ecfadb14b4a47f97&quot;, &quot;96cf27a66b629d2b19708c6887441a8422b40dc0e9e7c5c0f2212efe0b6b3323&quot;, &quot;b3a015b6650ec9800fa878ff9a5f732013806c8dcb0e7069515dae0dd380fda4&quot;, &quot;50b7e615b8cdc45486b6ed1c1c081c7a92c262edb84318fa864531dcab753f82&quot;, &quot;f7b97677b6387c1f02d429e98868bf6973a8dec14dfee2516a27e885d6b1c780&quot;, &quot;b60d7fb66caf103a04e81fb89dbb05111b4b0ef513f3769c8e0a8106ab01a075&quot;, &quot;a9e7b5284182d3881c865895ee6e0fb03273eec3dcbf4bfc82dd2b069245beae&quot;, &quot;c3101b0b74d76a95ba91b6cc4945657e928d2dac8fdf926ffbf09031d46e9186&quot;, &quot;b67ab1b9b66fdc2c4ed1689698a54a347c2bdd6eaff87039ae337675243670d8&quot;, &quot;83fb74bb852bbd722e6ebc4e249e49cb4bb4194493a26d62d4bfcdfca2998412&quot;, &quot;53994a35a57970dea48e97009f65ad045b69a83234b771b106446211376a6866&quot;, &quot;f3d3572ef96c9c59e137425ca6804e1b86b7f8b57210a3724d567017460774de&quot;, &quot;1af8e068aa7377f0055640af581a412aa9d7288c912a93dd0d739657af0079fb&quot;, &quot;addccd0ecb643251af2e79e878b19a8e9c8f1c87302e732ef057cdba821f4b30&quot;, &quot;d9dfe98b5fba09e17dbe29dfeb8deb7d777d4a3b0d670914691ed360b916116a&quot;, &quot;8d3440301bc94ed83cdafb69e4b0166d3a0020eb4f38e9fa159c2f13f14b2d29&quot;, &quot;a13a979f4ca57450528bb6cd7aa2bf47d2eea211053eb1a14b8c4a44fd661831&quot;, &quot;7194ec436231c2a383ffc7c75eef4f5b5a952c18fa176ffd0830667835a80533&quot;, &quot;20d97f144bf7b1662a13ac537715126b9b2f68eff46a4a09234743ae236f0177&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| append
+    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
+        where Processes.process_hash IN (&quot;b80e9466b7bb42959c29546b8c052e67fcaa0f591857617457d5d28348bd8860&quot;, &quot;d9e8b390f8e2e8a6c2308c723a6a812f59c055ecad4e9098a120e5c4c65d3905&quot;, &quot;79c9532fb6ef2742e207498bfe2b2ee09aa9773376ac0e56085083aab17b98be&quot;, &quot;5cc7e35254347f705422800bfb7fe29c6002e2537f6bac0ff996a720dfb5f48e&quot;, &quot;fabbb4611fb9df5d8f208d9353be0b73c3942fe78903da096cbfe2f47c9e3566&quot;, &quot;1588bee7db42495ba7e6e34d217e6b82c5ab93f27c1eea68435cbb9e7792f9be&quot;, &quot;e8b0f5a952f07c83c4d67809ac0715c7164d518323d8038542e84aab8456db43&quot;, &quot;3c73ebc7a85accc65c9ee5bf151f70b990e5a12f27a843ca21c0f9d9a10fd17d&quot;, &quot;9bf642a7e14f0a0b0a784f00a0d1cf590ac60ae5ae378d29d435519f4d9dbf2b&quot;, &quot;994b924b00fb56e12a6a987c4cdf65dd05a221c47b5fc0a7a2babf1f05c2ed38&quot;, &quot;c226744b40e8f5d2cf95b4fb2537ff00e222ecc2d24c5096ecfadb14b4a47f97&quot;, &quot;96cf27a66b629d2b19708c6887441a8422b40dc0e9e7c5c0f2212efe0b6b3323&quot;, &quot;b3a015b6650ec9800fa878ff9a5f732013806c8dcb0e7069515dae0dd380fda4&quot;, &quot;50b7e615b8cdc45486b6ed1c1c081c7a92c262edb84318fa864531dcab753f82&quot;, &quot;f7b97677b6387c1f02d429e98868bf6973a8dec14dfee2516a27e885d6b1c780&quot;, &quot;b60d7fb66caf103a04e81fb89dbb05111b4b0ef513f3769c8e0a8106ab01a075&quot;, &quot;a9e7b5284182d3881c865895ee6e0fb03273eec3dcbf4bfc82dd2b069245beae&quot;, &quot;c3101b0b74d76a95ba91b6cc4945657e928d2dac8fdf926ffbf09031d46e9186&quot;, &quot;b67ab1b9b66fdc2c4ed1689698a54a347c2bdd6eaff87039ae337675243670d8&quot;, &quot;83fb74bb852bbd722e6ebc4e249e49cb4bb4194493a26d62d4bfcdfca2998412&quot;, &quot;53994a35a57970dea48e97009f65ad045b69a83234b771b106446211376a6866&quot;, &quot;f3d3572ef96c9c59e137425ca6804e1b86b7f8b57210a3724d567017460774de&quot;, &quot;1af8e068aa7377f0055640af581a412aa9d7288c912a93dd0d739657af0079fb&quot;, &quot;addccd0ecb643251af2e79e878b19a8e9c8f1c87302e732ef057cdba821f4b30&quot;, &quot;d9dfe98b5fba09e17dbe29dfeb8deb7d777d4a3b0d670914691ed360b916116a&quot;, &quot;8d3440301bc94ed83cdafb69e4b0166d3a0020eb4f38e9fa159c2f13f14b2d29&quot;, &quot;a13a979f4ca57450528bb6cd7aa2bf47d2eea211053eb1a14b8c4a44fd661831&quot;, &quot;7194ec436231c2a383ffc7c75eef4f5b5a952c18fa176ffd0830667835a80533&quot;, &quot;20d97f144bf7b1662a13ac537715126b9b2f68eff46a4a09234743ae236f0177&quot;)
+        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
+     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-1192-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (&quot;b80e9466b7bb42959c29546b8c052e67fcaa0f591857617457d5d28348bd8860&quot;, &quot;d9e8b390f8e2e8a6c2308c723a6a812f59c055ecad4e9098a120e5c4c65d3905&quot;, &quot;79c9532fb6ef2742e207498bfe2b2ee09aa9773376ac0e56085083aab17b98be&quot;, &quot;5cc7e35254347f705422800bfb7fe29c6002e2537f6bac0ff996a720dfb5f48e&quot;, &quot;fabbb4611fb9df5d8f208d9353be0b73c3942fe78903da096cbfe2f47c9e3566&quot;, &quot;1588bee7db42495ba7e6e34d217e6b82c5ab93f27c1eea68435cbb9e7792f9be&quot;, &quot;e8b0f5a952f07c83c4d67809ac0715c7164d518323d8038542e84aab8456db43&quot;, &quot;3c73ebc7a85accc65c9ee5bf151f70b990e5a12f27a843ca21c0f9d9a10fd17d&quot;, &quot;9bf642a7e14f0a0b0a784f00a0d1cf590ac60ae5ae378d29d435519f4d9dbf2b&quot;, &quot;994b924b00fb56e12a6a987c4cdf65dd05a221c47b5fc0a7a2babf1f05c2ed38&quot;, &quot;c226744b40e8f5d2cf95b4fb2537ff00e222ecc2d24c5096ecfadb14b4a47f97&quot;, &quot;96cf27a66b629d2b19708c6887441a8422b40dc0e9e7c5c0f2212efe0b6b3323&quot;, &quot;b3a015b6650ec9800fa878ff9a5f732013806c8dcb0e7069515dae0dd380fda4&quot;, &quot;50b7e615b8cdc45486b6ed1c1c081c7a92c262edb84318fa864531dcab753f82&quot;, &quot;f7b97677b6387c1f02d429e98868bf6973a8dec14dfee2516a27e885d6b1c780&quot;, &quot;b60d7fb66caf103a04e81fb89dbb05111b4b0ef513f3769c8e0a8106ab01a075&quot;, &quot;a9e7b5284182d3881c865895ee6e0fb03273eec3dcbf4bfc82dd2b069245beae&quot;, &quot;c3101b0b74d76a95ba91b6cc4945657e928d2dac8fdf926ffbf09031d46e9186&quot;, &quot;b67ab1b9b66fdc2c4ed1689698a54a347c2bdd6eaff87039ae337675243670d8&quot;, &quot;83fb74bb852bbd722e6ebc4e249e49cb4bb4194493a26d62d4bfcdfca2998412&quot;, &quot;53994a35a57970dea48e97009f65ad045b69a83234b771b106446211376a6866&quot;, &quot;f3d3572ef96c9c59e137425ca6804e1b86b7f8b57210a3724d567017460774de&quot;, &quot;1af8e068aa7377f0055640af581a412aa9d7288c912a93dd0d739657af0079fb&quot;, &quot;addccd0ecb643251af2e79e878b19a8e9c8f1c87302e732ef057cdba821f4b30&quot;, &quot;d9dfe98b5fba09e17dbe29dfeb8deb7d777d4a3b0d670914691ed360b916116a&quot;, &quot;8d3440301bc94ed83cdafb69e4b0166d3a0020eb4f38e9fa159c2f13f14b2d29&quot;, &quot;a13a979f4ca57450528bb6cd7aa2bf47d2eea211053eb1a14b8c4a44fd661831&quot;, &quot;7194ec436231c2a383ffc7c75eef4f5b5a952c18fa176ffd0830667835a80533&quot;, &quot;20d97f144bf7b1662a13ac537715126b9b2f68eff46a4a09234743ae236f0177&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| append
+    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
+        where Processes.process_hash IN (&quot;b80e9466b7bb42959c29546b8c052e67fcaa0f591857617457d5d28348bd8860&quot;, &quot;d9e8b390f8e2e8a6c2308c723a6a812f59c055ecad4e9098a120e5c4c65d3905&quot;, &quot;79c9532fb6ef2742e207498bfe2b2ee09aa9773376ac0e56085083aab17b98be&quot;, &quot;5cc7e35254347f705422800bfb7fe29c6002e2537f6bac0ff996a720dfb5f48e&quot;, &quot;fabbb4611fb9df5d8f208d9353be0b73c3942fe78903da096cbfe2f47c9e3566&quot;, &quot;1588bee7db42495ba7e6e34d217e6b82c5ab93f27c1eea68435cbb9e7792f9be&quot;, &quot;e8b0f5a952f07c83c4d67809ac0715c7164d518323d8038542e84aab8456db43&quot;, &quot;3c73ebc7a85accc65c9ee5bf151f70b990e5a12f27a843ca21c0f9d9a10fd17d&quot;, &quot;9bf642a7e14f0a0b0a784f00a0d1cf590ac60ae5ae378d29d435519f4d9dbf2b&quot;, &quot;994b924b00fb56e12a6a987c4cdf65dd05a221c47b5fc0a7a2babf1f05c2ed38&quot;, &quot;c226744b40e8f5d2cf95b4fb2537ff00e222ecc2d24c5096ecfadb14b4a47f97&quot;, &quot;96cf27a66b629d2b19708c6887441a8422b40dc0e9e7c5c0f2212efe0b6b3323&quot;, &quot;b3a015b6650ec9800fa878ff9a5f732013806c8dcb0e7069515dae0dd380fda4&quot;, &quot;50b7e615b8cdc45486b6ed1c1c081c7a92c262edb84318fa864531dcab753f82&quot;, &quot;f7b97677b6387c1f02d429e98868bf6973a8dec14dfee2516a27e885d6b1c780&quot;, &quot;b60d7fb66caf103a04e81fb89dbb05111b4b0ef513f3769c8e0a8106ab01a075&quot;, &quot;a9e7b5284182d3881c865895ee6e0fb03273eec3dcbf4bfc82dd2b069245beae&quot;, &quot;c3101b0b74d76a95ba91b6cc4945657e928d2dac8fdf926ffbf09031d46e9186&quot;, &quot;b67ab1b9b66fdc2c4ed1689698a54a347c2bdd6eaff87039ae337675243670d8&quot;, &quot;83fb74bb852bbd722e6ebc4e249e49cb4bb4194493a26d62d4bfcdfca2998412&quot;, &quot;53994a35a57970dea48e97009f65ad045b69a83234b771b106446211376a6866&quot;, &quot;f3d3572ef96c9c59e137425ca6804e1b86b7f8b57210a3724d567017460774de&quot;, &quot;1af8e068aa7377f0055640af581a412aa9d7288c912a93dd0d739657af0079fb&quot;, &quot;addccd0ecb643251af2e79e878b19a8e9c8f1c87302e732ef057cdba821f4b30&quot;, &quot;d9dfe98b5fba09e17dbe29dfeb8deb7d777d4a3b0d670914691ed360b916116a&quot;, &quot;8d3440301bc94ed83cdafb69e4b0166d3a0020eb4f38e9fa159c2f13f14b2d29&quot;, &quot;a13a979f4ca57450528bb6cd7aa2bf47d2eea211053eb1a14b8c4a44fd661831&quot;, &quot;7194ec436231c2a383ffc7c75eef4f5b5a952c18fa176ffd0830667835a80533&quot;, &quot;20d97f144bf7b1662a13ac537715126b9b2f68eff46a4a09234743ae236f0177&quot;)
+        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
+     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
   </div>
 </details></div>
 </article>

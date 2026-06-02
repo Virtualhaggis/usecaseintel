@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1251 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-02
 - [dashlane discloses brute force attack encrypted vaults of fe](./2026-06-02/dashlane-discloses-brute-force-attack-encrypted-vaults-of-fe.md)
+- [gamaredon apt hides malware in windows features and abuses c](./2026-06-02/gamaredon-apt-hides-malware-in-windows-features-and-abuses-c.md)
 - [hackers use meta s ai bot to reset passwords and hijack inst](./2026-06-02/hackers-use-meta-s-ai-bot-to-reset-passwords-and-hijack-inst.md)
 
 ## 2026-06-01
@@ -24,12 +25,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47429 when vitest ui server is listen](./2026-06-01/ghsa-critical-cve-2026-47429-when-vitest-ui-server-is-listen.md)
 - [hackers hijack thousands of sites for clickfix and fakeupdat](./2026-06-01/hackers-hijack-thousands-of-sites-for-clickfix-and-fakeupdat.md)
 - [ibm websphere server vulnerable to remote code execution att](./2026-06-01/ibm-websphere-server-vulnerable-to-remote-code-execution-att.md)
-- [iranian hackers abuse appdomainmanager hijacking to evade ed](./2026-06-01/iranian-hackers-abuse-appdomainmanager-hijacking-to-evade-ed.md)
 - [miasma supply chain attack compromises red hat npm packages ](./2026-06-01/miasma-supply-chain-attack-compromises-red-hat-npm-packages-.md)
 - [miasma supply chain attack malicious code found in redhat cl](./2026-06-01/miasma-supply-chain-attack-malicious-code-found-in-redhat-cl.md)
-- [multiple red hat cloud services npm packages compromised to ](./2026-06-01/multiple-red-hat-cloud-services-npm-packages-compromised-to-.md)
 - [openai codex authentication tokens stolen in codexui android](./2026-06-01/openai-codex-authentication-tokens-stolen-in-codexui-android.md)
-- [smartapesg campaign uses clickfix scripts to infect windows ](./2026-06-01/smartapesg-campaign-uses-clickfix-scripts-to-infect-windows-.md)
 - [weekly recap new linux flaw pan os exploit ai powered attack](./2026-06-01/weekly-recap-new-linux-flaw-pan-os-exploit-ai-powered-attack.md)
 - [wordpress malware campaign hides payloads in steam profiles](./2026-06-01/wordpress-malware-campaign-hides-payloads-in-steam-profiles.md)
 
