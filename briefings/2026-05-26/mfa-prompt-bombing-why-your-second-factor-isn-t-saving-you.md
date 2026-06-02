@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] MFA push fatigue: repeated MFA prompt denials followed by an approval
 
-`UC_111_8` · phase: **exploit** · confidence: **High**
+`UC_114_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ AADSignInEventsBeta
 
 ### [LLM] Rogue MFA / security-info device registration after suspicious sign-in (Entra persistence)
 
-`UC_111_9` · phase: **install** · confidence: **Medium**
+`UC_114_9` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

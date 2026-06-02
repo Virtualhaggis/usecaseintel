@@ -9,14 +9,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-02
+- [cisa flags two year old oracle flaw as actively exploited in](./2026-06-02/cisa-flags-two-year-old-oracle-flaw-as-actively-exploited-in.md)
 - [dashlane discloses brute force attack encrypted vaults of fe](./2026-06-02/dashlane-discloses-brute-force-attack-encrypted-vaults-of-fe.md)
-- [gamaredon apt hides malware in windows features and abuses c](./2026-06-02/gamaredon-apt-hides-malware-in-windows-features-and-abuses-c.md)
 - [google fixes one actively exploited android zero day 124 fla](./2026-06-02/google-fixes-one-actively-exploited-android-zero-day-124-fla.md)
 - [hackers deploy azureveil adaptix c2 agent via spearphishing ](./2026-06-02/hackers-deploy-azureveil-adaptix-c2-agent-via-spearphishing-.md)
 - [nimbus manticore apt abuses fake recruitment portal to deliv](./2026-06-02/nimbus-manticore-apt-abuses-fake-recruitment-portal-to-deliv.md)
 - [operation flutterbridge macos malvertising campaign spreads ](./2026-06-02/operation-flutterbridge-macos-malvertising-campaign-spreads-.md)
 - [pakistan linked sidecopy targets afghanistan finance ministr](./2026-06-02/pakistan-linked-sidecopy-targets-afghanistan-finance-ministr.md)
 - [phantompulse rat uses process injection and uac bypass to co](./2026-06-02/phantompulse-rat-uses-process-injection-and-uac-bypass-to-co.md)
+- [solyximmortal python malware steals browser passwords cookie](./2026-06-02/solyximmortal-python-malware-steals-browser-passwords-cookie.md)
+- [wardriving assessment across mexico preparing for the 2026 w](./2026-06-02/wardriving-assessment-across-mexico-preparing-for-the-2026-w.md)
 
 ## 2026-06-01
 - [china aligned groups ramp up attacks dragon weave hits czech](./2026-06-01/china-aligned-groups-ramp-up-attacks-dragon-weave-hits-czech.md)
@@ -128,7 +130,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [first vpn dismantled in global takedown over use by 25 ranso](./2026-05-22/first-vpn-dismantled-in-global-takedown-over-use-by-25-ranso.md)
 - [foul play fake fifa websites target soccer fans looking for ](./2026-05-22/foul-play-fake-fifa-websites-target-soccer-fans-looking-for-.md)
 - [from edge appliance to enterprise compromise multi stage lin](./2026-05-22/from-edge-appliance-to-enterprise-compromise-multi-stage-lin.md)
-- [ghostwriter targets ukraine government entities with prometh](./2026-05-22/ghostwriter-targets-ukraine-government-entities-with-prometh.md)
 - [ghsa critical cve 2026 46670 yeswiki unauthenticated sql inj](./2026-05-22/ghsa-critical-cve-2026-46670-yeswiki-unauthenticated-sql-inj.md)
 - [ghsa critical ghsa qqqm 5547 774x filebrowser quantum path t](./2026-05-22/ghsa-critical-ghsa-qqqm-5547-774x-filebrowser-quantum-path-t.md)
 - [megalodon mass github actions secret exfiltration across 5 5](./2026-05-22/megalodon-mass-github-actions-secret-exfiltration-across-5-5.md)
@@ -252,7 +253,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-08
 - [cisa kev cve 2026 42208 berriai litellm sql injection vulner](./2026-05-08/cisa-kev-cve-2026-42208-berriai-litellm-sql-injection-vulner.md)
-- [cve 2025 68670 discovering an rce vulnerability in xrdp](./2026-05-08/cve-2025-68670-discovering-an-rce-vulnerability-in-xrdp.md)
 
 ## 2026-05-07
 - [cisa kev cve 2026 6973 ivanti endpoint manager mobile epmm i](./2026-05-07/cisa-kev-cve-2026-6973-ivanti-endpoint-manager-mobile-epmm-i.md)
