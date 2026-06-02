@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Miasma supply chain attack: malicious code found in @redhat-cloud-services npm p
 
-`UC_38_3` · phase: **exploit** · confidence: **High**
+`UC_40_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

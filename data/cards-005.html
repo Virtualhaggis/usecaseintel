@@ -1,305 +1,3 @@
-<article class="card" id="art-140" data-art-slug="2026-05-22-ghsa-critical-cve-2026-46670-yeswiki-unauthenticated-sql-inj"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
-  data-techs=""
-  data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="vcs,windows"
-  data-uc-count="4" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-46670: YesWiki: Unauthenticated SQL Injection YesWiki: Unauthenticated SQL Injection CVE-2026-46670  [LLM] YesWiki Bazar form-import volumetric POST — CVE-2026-46670 blind SQLi extraction loop [LLM] Non-browser User-Agent against YesWiki Bazar form-import endpoint — CVE-2026-46670 exploit tooling Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-46670: YesWiki: Unauthenticated SQL Injection">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-05-22-ghsa-critical-cve-2026-46670-yeswiki-unauthenticated-sql-inj" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-jwvv-qr7q-cv8j" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-46670: YesWiki: Unauthenticated SQL Injection</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-05-22</span>
-    <span>4 use cases</span>
-    <span>0 techniques</span>
-    <span>4 kill-chain phases detected</span>
-  </div>
-  <p class="summary">YesWiki: Unauthenticated SQL Injection</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-46670</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-140-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-140"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-140-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] YesWiki Bazar form-import volumetric POST — CVE-2026-46670 blind SQLi extraction loop · [LLM] Non-browser User-Agent against YesWiki Bazar form-import endpoint — CVE-2026-46670 exploit tooling · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-46670: YesWiki: Unauthenticated SQL Injection</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="e60bd4f24d" data-platforms="sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">[LLM] YesWiki Bazar form-import volumetric POST — CVE-2026-46670 blind SQLi extraction loop</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e60bd4f24d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the byte-by-byte extraction loop used to exploit CVE-2026-46670 in YesWiki. The PoC drives one POST to /?BazaR&amp;vue=formulaire per character of the hex-encoded value being exfiltrated from yeswiki_users, producing dozens-to-hundreds of POSTs to a single URI from a single source IP in a short window — an unusual pattern for a wiki application.
-
-Rationale: Locks on the article&#x27;s exact request shape (POST + csUriQuery containing both &#x27;BazaR&#x27; and &#x27;vue=formulaire&#x27;) and the unavoidable property of the PoC: blind extraction requires N requests for N characters of the password hash, so a per-source-IP POST count &gt;=20 in 5 min to this single endpoint is a strong signal that something other than a human is wiki-ing.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-jwvv-qr7q-cv8j
-  • https://github.com/YesWiki/yeswiki/blob/1f485c049db030b94c047ec219e63534ac81142e/tools/bazar/services/FormManager.php#L258</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-140-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-140-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-140-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let WindowMinutes = 5m;
-let PostThreshold = 20;
-W3CIISLog
-| where TimeGenerated &gt; ago(7d)
-| where csMethod =~ &quot;POST&quot;
-| where csUriQuery has &quot;BazaR&quot; and csUriQuery has &quot;vue=formulaire&quot;
-| summarize Posts = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), UserAgents = make_set(csUserAgent, 5), Statuses = make_set(scStatus, 5), Stems = make_set(csUriStem, 3)
-          by cIP, sSiteName, bin(TimeGenerated, WindowMinutes)
-| where Posts &gt;= PostThreshold
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-140-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-140-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-140-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-140-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*BazaR*vue=formulaire*&quot; by Web.src, Web.dest, Web.url, Web.http_user_agent, _time span=5m | `drop_dm_object_name(Web)` | where count &gt;= 20 | sort 0 - count</code></pre><pre class="spl-mode-body" id="art-140-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*BazaR*vue=formulaire*&quot; by Web.src, Web.dest, Web.url, Web.http_user_agent, _time span=5m | `drop_dm_object_name(Web)` | where count &gt;= 20 | sort 0 - count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="b915af6852" data-platforms="sent,sigma,spl" data-targets="vcs">
-  <summary>
-    <span class="uc-title">[LLM] Non-browser User-Agent against YesWiki Bazar form-import endpoint — CVE-2026-46670 exploit tooling</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="b915af6852" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the PoC&#x27;s exploit fingerprint: a request to /?BazaR&amp;vue=formulaire from a scripting-language User-Agent (the published PoC uses Python-urllib/3.13). Real users post Bazar forms from a browser; a curl/python/PowerShell UA on this exact endpoint is high-signal for CVE-2026-46670 exploitation or reconnaissance.
-
-Rationale: The published PoC literally ships with User-Agent: Python-urllib/3.13 (from the Burp capture in the article body). The Bazar form-import endpoint is a low-traffic admin path on YesWiki; a scripting-language UA hitting it via POST is rarely benign and matches both the public PoC and copycat exploitation. Cross-checked against the GHSA advisory at github.com/advisories/GHSA-jwvv-qr7q-cv8j.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-jwvv-qr7q-cv8j</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Vulnerability Scanning">T1595.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-140-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-140-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-140-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-140-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
-| where TimeGenerated &gt; ago(7d)
-| where csMethod =~ &quot;POST&quot;
-| where csUriQuery has &quot;BazaR&quot; and csUriQuery has &quot;vue=formulaire&quot;
-| where csUserAgent has_any (&quot;Python-urllib&quot;,&quot;python-requests&quot;,&quot;curl/&quot;,&quot;Go-http-client&quot;,&quot;Java/&quot;,&quot;PowerShell&quot;,&quot;wget&quot;,&quot;libwww-perl&quot;)
-| summarize Hits = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), Statuses = make_set(scStatus, 5) by cIP, sSiteName, csUserAgent, csUriStem
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-140-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: YesWiki Bazar Form-Import Endpoint Hit From Scripting UA (CVE-2026-46670)
-id: 7a4d8c2e-3b1f-4d9a-8e5c-1f2a3b4c5d6e
-status: experimental
-description: Detects POST requests to the YesWiki Bazar form-import endpoint (/?BazaR&amp;vue=formulaire) from non-browser User-Agents. Targets the published PoC for CVE-2026-46670 unauthenticated SQL injection, which uses Python-urllib/3.13.
-references:
-  - https://github.com/advisories/GHSA-jwvv-qr7q-cv8j
-author: SOC Detection Engineering
-date: 2026/05/23
-tags:
-  - attack.initial_access
-  - attack.t1190
-  - attack.t1595.002
-logsource:
-  category: webserver
-detection:
-  selection_method:
-    cs-method: POST
-  selection_uri:
-    cs-uri-query|contains|all:
-      - &#x27;BazaR&#x27;
-      - &#x27;vue=formulaire&#x27;
-  selection_ua:
-    c-useragent|contains:
-      - &#x27;Python-urllib&#x27;
-      - &#x27;python-requests&#x27;
-      - &#x27;curl/&#x27;
-      - &#x27;Go-http-client&#x27;
-      - &#x27;Java/&#x27;
-      - &#x27;PowerShell&#x27;
-      - &#x27;wget&#x27;
-      - &#x27;libwww-perl&#x27;
-  condition: selection_method and selection_uri and selection_ua
-falsepositives:
-  - Site owner running an authenticated import script against their own wiki
-  - Internal pentest / red-team replay against staging
-level: high</code></pre></div>
-    <div class="tab-content" id="art-140-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-140-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-140-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-140-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*BazaR*vue=formulaire*&quot; (Web.http_user_agent=&quot;*Python-urllib*&quot; OR Web.http_user_agent=&quot;*python-requests*&quot; OR Web.http_user_agent=&quot;*curl/*&quot; OR Web.http_user_agent=&quot;*Go-http-client*&quot; OR Web.http_user_agent=&quot;*Java/*&quot; OR Web.http_user_agent=&quot;*PowerShell*&quot; OR Web.http_user_agent=&quot;*wget*&quot; OR Web.http_user_agent=&quot;*libwww-perl*&quot;) by Web.src, Web.dest, Web.url, Web.http_user_agent, _time | `drop_dm_object_name(Web)` | stats count, min(_time) as first_seen, max(_time) as last_seen by src, dest, http_user_agent | sort 0 - count</code></pre><pre class="spl-mode-body" id="art-140-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*BazaR*vue=formulaire*&quot; (Web.http_user_agent=&quot;*Python-urllib*&quot; OR Web.http_user_agent=&quot;*python-requests*&quot; OR Web.http_user_agent=&quot;*curl/*&quot; OR Web.http_user_agent=&quot;*Go-http-client*&quot; OR Web.http_user_agent=&quot;*Java/*&quot; OR Web.http_user_agent=&quot;*PowerShell*&quot; OR Web.http_user_agent=&quot;*wget*&quot; OR Web.http_user_agent=&quot;*libwww-perl*&quot;) by Web.src, Web.dest, Web.url, Web.http_user_agent, _time | `drop_dm_object_name(Web)` | stats count, min(_time) as first_seen, max(_time) as last_seen by src, dest, http_user_agent | sort 0 - count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-140-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-140-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-140-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-140-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-46670&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-140-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-46670&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-140-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-140-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-140-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-140-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-46670&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-140-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-46670&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="1097b62fe9" data-platforms="def,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-46670: YesWiki: Unauthenticated SQL Injection</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="1097b62fe9" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-140-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-140-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-140-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-46670: YesWiki: Unauthenticated SQL Injection
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;yeswiki_sqli_poc.py&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;yeswiki_sqli_poc.py&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-140-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-140-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-140-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-140-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-46670: YesWiki: Unauthenticated SQL Injection ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;yeswiki_sqli_poc.py&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;yeswiki_sqli_poc.py&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-140-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-46670: YesWiki: Unauthenticated SQL Injection ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;yeswiki_sqli_poc.py&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;yeswiki_sqli_poc.py&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-141" data-art-slug="2026-05-22-tracking-iranian-apt-screening-serpens-2026-espionage-campai"
   data-phases="actions,c2,delivery,exploit,install,recon,weapon" data-sev="crit"
   data-techs="T1027,T1053.005,T1059.003,T1176,T1190,T1204.002,T1555.003,T1566,T1574.002,T1649"
@@ -16839,4 +16537,129 @@ DeviceFileEvents
 <div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
   <div class="usecases"></div>
+</article>
+<article class="card" id="art-169" data-art-slug="2026-05-20-cisa-kev-cve-2008-4250-microsoft-windows-buffer-overflow-vul"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2008-4250 — Microsoft Windows Buffer Overflow Vulnerability Microsoft Windows contains a buffer overflow vulnerability in the Windows Server Service that allows remote attackers to execute arbitrary code via a crafted RPC request that triggers an overflow during path canonicalization. Vendor: Microsoft, Product: Windows. Federal patch due: 2026-06-03. CVE-2008-4250  Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-05-20-cisa-kev-cve-2008-4250-microsoft-windows-buffer-overflow-vul" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2008-4250 — Microsoft Windows Buffer Overflow Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2026-05-20</span>
+    <span>1 use case</span>
+    <span>0 techniques</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Microsoft Windows contains a buffer overflow vulnerability in the Windows Server Service that allows remote attackers to execute arbitrary code via a crafted RPC request that triggers an overflow during path canonicalization. Vendor: Microsoft, Product: Windows. Federal patch due: 2026-06-03.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2008-4250</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-169-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-169"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-169-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-169-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-169-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-169-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-169-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2008-4250&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-169-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2008-4250&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-169-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-169-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-169-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-169-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2008-4250&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-169-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2008-4250&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
 </article>

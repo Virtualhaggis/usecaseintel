@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1248 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1247 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,15 +9,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-02
+- [attackers abuse aws google cloud cloudflare and microsoft se](./2026-06-02/attackers-abuse-aws-google-cloud-cloudflare-and-microsoft-se.md)
 - [cisa flags palo alto networks pan os vulnerability as exploi](./2026-06-02/cisa-flags-palo-alto-networks-pan-os-vulnerability-as-exploi.md)
 - [cisa flags two year old oracle flaw as actively exploited in](./2026-06-02/cisa-flags-two-year-old-oracle-flaw-as-actively-exploited-in.md)
 - [dashlane discloses brute force attack encrypted vaults of fe](./2026-06-02/dashlane-discloses-brute-force-attack-encrypted-vaults-of-fe.md)
 - [google fixes one actively exploited android zero day 124 fla](./2026-06-02/google-fixes-one-actively-exploited-android-zero-day-124-fla.md)
-- [hackers use 34 malicious packages to steal cloud keys wallet](./2026-06-02/hackers-use-34-malicious-packages-to-steal-cloud-keys-wallet.md)
 - [mustang panda deploys plugx rat through multi stage lnk and ](./2026-06-02/mustang-panda-deploys-plugx-rat-through-multi-stage-lnk-and-.md)
 - [operation flutterbridge macos malvertising campaign spreads ](./2026-06-02/operation-flutterbridge-macos-malvertising-campaign-spreads-.md)
 - [pakistan linked sidecopy targets afghanistan finance ministr](./2026-06-02/pakistan-linked-sidecopy-targets-afghanistan-finance-ministr.md)
-- [solyximmortal python malware steals browser passwords cookie](./2026-06-02/solyximmortal-python-malware-steals-browser-passwords-cookie.md)
+- [red hat confirms supply chain compromise of redhat cloud ser](./2026-06-02/red-hat-confirms-supply-chain-compromise-of-redhat-cloud-ser.md)
+- [why the browser is now the front line for ai security](./2026-06-02/why-the-browser-is-now-the-front-line-for-ai-security.md)
 
 ## 2026-06-01
 - [china aligned groups ramp up attacks dragon weave hits czech](./2026-06-01/china-aligned-groups-ramp-up-attacks-dragon-weave-hits-czech.md)
@@ -36,11 +37,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-31
 - [dutch authorities dismantle botnet linked to 17 million infe](./2026-05-31/dutch-authorities-dismantle-botnet-linked-to-17-million-infe.md)
-- [wp maps pro bug exploited to create admin accounts on wordpr](./2026-05-31/wp-maps-pro-bug-exploited-to-create-admin-accounts-on-wordpr.md)
 
 ## 2026-05-30
 - [malicious npm packages abuse dependency confusion to profile](./2026-05-30/malicious-npm-packages-abuse-dependency-confusion-to-profile.md)
-- [palo alto globalprotect vpn auth bypass flaw now exploited i](./2026-05-30/palo-alto-globalprotect-vpn-auth-bypass-flaw-now-exploited-i.md)
 - [pan os globalprotect authentication bypass cve 2026 0257 und](./2026-05-30/pan-os-globalprotect-authentication-bypass-cve-2026-0257-und.md)
 
 ## 2026-05-29

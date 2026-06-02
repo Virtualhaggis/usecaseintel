@@ -1,808 +1,3 @@
-<article class="card" id="art-607" data-art-slug="2025-12-28-shai-hulud-strikes-again-the-golden-path"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
-  data-techs="T1027,T1190,T1555.003"
-  data-sources="Aikido"
-  data-platforms="datadog,def,sent,sigma,spl"
-  data-splunk-cats="endpoint,web"
-  data-targets="windows"
-  data-uc-count="8" data-llm-uc-count="3"
-  data-search="Shai Hulud strikes again - The golden path A new strain of Shai Hulud has been observed in the wild. Category: Vulnerabilities &amp; Threats  T1027 T1190 T1555.003 [LLM] Shai-Hulud 3.0 &#x27;Golden Path&#x27; worm filename created in node_modules [LLM] Outbound fetch to raw.githubusercontent.com for Shai-Hulud Golden Path exfil JSON paths [LLM] Compromised npm package @vietmoney/react-big-calendar installed under node_modules Crypto-wallet file/keystore access by non-wallet process Infostealer — non-browser process accessing browser cookie/login DBs PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — Shai Hulud strikes again - The golden path">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2025-12-28-shai-hulud-strikes-again-the-golden-path" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.aikido.dev/blog/shai-hulud-strikes-again---the-golden-path" target="_blank" rel="noopener">Shai Hulud strikes again - The golden path</a></h2>
-  <div class="source-badges"><span class="source-badge ">Aikido</span></div>
-  <div class="pubmeta">
-    <span>2025-12-28</span>
-    <span>8 use cases</span>
-    <span>3 techniques</span>
-    <span>6 kill-chain phases detected</span>
-  </div>
-  <p class="summary">A new strain of Shai Hulud has been observed in the wild. Category: Vulnerabilities &amp; Threats</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-607-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-607"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-607-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Compromised npm package @vietmoney/react-big-calendar installed under node_modules</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ PowerShell encoded / obfuscated command · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Shai Hulud strikes again - The golden path</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Shai-Hulud 3.0 &#x27;Golden Path&#x27; worm filename created in node_modules</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Outbound fetch to raw.githubusercontent.com for Shai-Hulud Golden Path exfil JSON paths</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Crypto-wallet file/keystore access by non-wallet process · Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="e2758d6bda" data-platforms="datadog,def,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">[LLM] Shai-Hulud 3.0 &#x27;Golden Path&#x27; worm filename created in node_modules</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e2758d6bda" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the new Shai-Hulud strain by detecting creation of its uniquely-named loader/payload files (bun_installer.js, environment_source.js) inside any node_modules tree on a developer workstation or CI runner. These names are specific to the December 2025 Golden Path variant and not used by legitimate packages.
-
-Rationale: Both filenames are explicitly called out in the Aikido article as new to the Golden Path strain (&#x27;The initial file is now called bun_installer.js&#x27; / &#x27;The main payload is called environment_source.js&#x27;). They are not used by any legitimate widely-distributed npm package, so a file-create inside node_modules with either name is near-zero-FP. Cross-checked against Snyk, The Hacker News and Ox Security write-ups which all reproduce the same two filenames.
-
-Cross-checked against:
-  • https://thehackernews.com/2025/12/researchers-spot-modified-shai-hulud.html
-  • https://snyk.io/blog/shai-hulud-3-0/
-  • https://www.ox.security/blog/shai-hulud-3-the-attack-continues/
-  • https://www.upwind.io/feed/shai-hulud-3-npm-supply-chain-worm</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-607-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-607-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-607-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-607-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-607-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-607-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType == &quot;FileCreated&quot;
-| where FileName in~ (&quot;bun_installer.js&quot;, &quot;environment_source.js&quot;)
-| where FolderPath has &quot;node_modules&quot;
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-607-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventType == &quot;FileCreated&quot;
-| where TargetFileName in~ (&quot;bun_installer.js&quot;, &quot;environment_source.js&quot;)
-| where TargetFilePath has &quot;node_modules&quot;
-| project TimeGenerated, DvcHostname, ActorUsername,
-          TargetFileName, TargetFilePath, TargetFileSHA256,
-          ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-607-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Shai-Hulud Golden Path worm filename created in node_modules
-id: 8a3f9b71-5d62-4f48-9d2e-3f1a7c4b6e21
-description: Detects file creation of Shai-Hulud 3.0 &#x27;Golden Path&#x27; worm artefacts (bun_installer.js, environment_source.js) inside a node_modules directory, as documented by Aikido in the @vietmoney/react-big-calendar compromise.
-references:
-  - https://www.aikido.dev/blog/shai-hulud-strikes-again---the-golden-path
-  - https://thehackernews.com/2025/12/researchers-spot-modified-shai-hulud.html
-  - https://snyk.io/blog/shai-hulud-3-0/
-author: SOC Detection Engineering
-date: 2026/05/13
-tags:
-  - attack.initial_access
-  - attack.t1195.002
-  - attack.execution
-  - attack.t1059.007
-logsource:
-  category: file_event
-  product: windows
-detection:
-  selection_name:
-    TargetFilename|endswith:
-      - &#x27;\bun_installer.js&#x27;
-      - &#x27;\environment_source.js&#x27;
-  selection_path:
-    TargetFilename|contains: &#x27;\node_modules\&#x27;
-  condition: selection_name and selection_path
-falsepositives:
-  - Highly unlikely; no legitimate npm package is known to ship files with these exact names.
-level: high</code></pre></div>
-    <div class="tab-content" id="art-607-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@TargetFilename:(*\\bun_installer.js OR *\\Bun_installer.js OR *\\BUN_INSTALLER.JS) OR @TargetFilename:(*\\environment_source.js OR *\\Environment_source.js OR *\\ENVIRONMENT_SOURCE.JS)) @TargetFilename:*\\node_modules\\*</code></pre></div>
-    <div class="tab-content" id="art-607-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-607-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-607-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-607-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_name=&quot;bun_installer.js&quot; OR Filesystem.file_name=&quot;environment_source.js&quot;) AND Filesystem.file_path=&quot;*node_modules*&quot; by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-607-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_name=&quot;bun_installer.js&quot; OR Filesystem.file_name=&quot;environment_source.js&quot;) AND Filesystem.file_path=&quot;*node_modules*&quot; by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="035ccaddb7" data-platforms="datadog,def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">[LLM] Outbound fetch to raw.githubusercontent.com for Shai-Hulud Golden Path exfil JSON paths</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="035ccaddb7" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the worm&#x27;s discovery/spread step: it queries raw.githubusercontent.com for the malware-specific JSON filenames it uses for exfiltrated data (c0nt3nts.json, c9nt3nts.json, 3nvir0nm3nt.json, cl0vd.json, pigS3cr3ts.json, actionsSecrets.json). The c0nt3nts.json fetch is doubly diagnostic — it&#x27;s the worm&#x27;s own bug where it fetches one name but saves another, so any successful or 404 GET for that path on the main branch is strongly indicative.
-
-Rationale: All six JSON filenames are quoted verbatim from the Aikido article (with the c0nt3nts.json/c9nt3nts.json typo bug being especially diagnostic — only this exact worm fetches a path it never writes). raw.githubusercontent.com is the canonical CDN for public GitHub repos, so these specific paths on /main/ collide with no benign developer activity. Corroborated against Snyk and Ox Security IOC bundles which reproduce the same exfil file naming scheme.
-
-Cross-checked against:
-  • https://snyk.io/blog/shai-hulud-3-0/
-  • https://www.ox.security/blog/shai-hulud-3-the-attack-continues/
-  • https://thehackernews.com/2025/12/researchers-spot-modified-shai-hulud.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exfiltration to Code Repository">T1567.001</span> <span class="ind tech" title="Web Service">T1102</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-607-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-607-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-607-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-607-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-607-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-607-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteUrl has &quot;raw.githubusercontent.com&quot;
-| where RemoteUrl has_any (&quot;/main/c0nt3nts.json&quot;,
-                          &quot;/main/c9nt3nts.json&quot;,
-                          &quot;/main/3nvir0nm3nt.json&quot;,
-                          &quot;/main/cl0vd.json&quot;,
-                          &quot;/main/pigS3cr3ts.json&quot;,
-                          &quot;/main/actionsSecrets.json&quot;)
-| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-607-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImWebSession
-| where TimeGenerated &gt; ago(7d)
-| where Url has &quot;raw.githubusercontent.com&quot;
-| where Url has_any (&quot;/main/c0nt3nts.json&quot;,
-                     &quot;/main/c9nt3nts.json&quot;,
-                     &quot;/main/3nvir0nm3nt.json&quot;,
-                     &quot;/main/cl0vd.json&quot;,
-                     &quot;/main/pigS3cr3ts.json&quot;,
-                     &quot;/main/actionsSecrets.json&quot;)
-| project TimeGenerated, DvcHostname, SrcIpAddr, SrcUsername,
-          Url, HttpMethod, HttpStatusCode,
-          HttpRequestHeaderUserAgent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-607-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Shai-Hulud Golden Path worm exfil/discovery URL fetched on raw.githubusercontent.com
-id: 4c1d2a98-7e35-4a6b-9f43-2b5d9c8a1e64
-description: Detects HTTP requests to raw.githubusercontent.com for the JSON filenames used by the Shai-Hulud 3.0 &#x27;Golden Path&#x27; strain to exfiltrate or discover stolen secrets (c0nt3nts.json, c9nt3nts.json, 3nvir0nm3nt.json, cl0vd.json, pigS3cr3ts.json, actionsSecrets.json).
-references:
-  - https://www.aikido.dev/blog/shai-hulud-strikes-again---the-golden-path
-  - https://snyk.io/blog/shai-hulud-3-0/
-  - https://www.ox.security/blog/shai-hulud-3-the-attack-continues/
-author: SOC Detection Engineering
-date: 2026/05/13
-tags:
-  - attack.exfiltration
-  - attack.t1567.001
-  - attack.command_and_control
-  - attack.t1102
-logsource:
-  category: proxy
-detection:
-  selection_host:
-    c-uri|contains: &#x27;raw.githubusercontent.com&#x27;
-  selection_path:
-    c-uri|endswith:
-      - &#x27;/main/c0nt3nts.json&#x27;
-      - &#x27;/main/c9nt3nts.json&#x27;
-      - &#x27;/main/3nvir0nm3nt.json&#x27;
-      - &#x27;/main/cl0vd.json&#x27;
-      - &#x27;/main/pigS3cr3ts.json&#x27;
-      - &#x27;/main/actionsSecrets.json&#x27;
-  condition: selection_host and selection_path
-falsepositives:
-  - Security researchers replaying the IOCs in a sandbox.
-level: high</code></pre></div>
-    <div class="tab-content" id="art-607-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:zscaler OR source:cloudflare OR source:bluecoat OR source:proxy) @http.url:(*raw.githubusercontent.com*c0nt3nts.json OR *raw.githubusercontent.com*c9nt3nts.json OR *raw.githubusercontent.com*3nvir0nm3nt.json OR *raw.githubusercontent.com*cl0vd.json OR *raw.githubusercontent.com*pigS3cr3ts.json OR *raw.githubusercontent.com*actionsSecrets.json)</code></pre></div>
-    <div class="tab-content" id="art-607-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-607-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-607-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-607-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*raw.githubusercontent.com*&quot; AND (Web.url=&quot;*/main/c0nt3nts.json&quot; OR Web.url=&quot;*/main/c9nt3nts.json&quot; OR Web.url=&quot;*/main/3nvir0nm3nt.json&quot; OR Web.url=&quot;*/main/cl0vd.json&quot; OR Web.url=&quot;*/main/pigS3cr3ts.json&quot; OR Web.url=&quot;*/main/actionsSecrets.json&quot;) by Web.dest Web.src Web.user Web.url Web.http_user_agent Web.process | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-607-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*raw.githubusercontent.com*&quot; AND (Web.url=&quot;*/main/c0nt3nts.json&quot; OR Web.url=&quot;*/main/c9nt3nts.json&quot; OR Web.url=&quot;*/main/3nvir0nm3nt.json&quot; OR Web.url=&quot;*/main/cl0vd.json&quot; OR Web.url=&quot;*/main/pigS3cr3ts.json&quot; OR Web.url=&quot;*/main/actionsSecrets.json&quot;) by Web.dest Web.src Web.user Web.url Web.http_user_agent Web.process | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="48c53dd1a8" data-platforms="datadog,def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">[LLM] Compromised npm package @vietmoney/react-big-calendar installed under node_modules</span>
-    <span class="uc-phase">Delivery</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="48c53dd1a8" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Direct IOC hit on the patient-zero compromised package for the Shai-Hulud Golden Path strain. Any file write under a node_modules\@vietmoney\react-big-calendar path means the trojanized v0.26.2 (or later) was resolved and unpacked by npm/yarn/pnpm/bun on the host.
-
-Rationale: Aikido explicitly names @vietmoney/react-big-calendar as the npm package that hosts the new Shai-Hulud strain; npm public registry data corroborates the package was untouched since March 2021 and suddenly bumped to 0.26.2 on Dec 28 2025. Matching on the literal scope+name within a node_modules path is essentially a hash-equivalent IOC for this campaign. Cross-checked against The Hacker News, Snyk and Ox Security write-ups which all confirm the same package identifier.
-
-Cross-checked against:
-  • https://thehackernews.com/2025/12/researchers-spot-modified-shai-hulud.html
-  • https://snyk.io/blog/shai-hulud-3-0/
-  • https://www.ox.security/blog/shai-hulud-3-the-attack-continues/
-  • https://www.upwind.io/feed/shai-hulud-3-npm-supply-chain-worm
-  • https://mondoo.com/blog/shai-hulud-strikes-back-with-v3-0-the-evolution-of-a-potent-and-persistent-npm-supply-chain-worm</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-607-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-607-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-607-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-607-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-607-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-607-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType == &quot;FileCreated&quot;
-| where FolderPath has &quot;node_modules&quot;
-| where FolderPath has &quot;@vietmoney&quot; and FolderPath has &quot;react-big-calendar&quot;
-| summarize FilesWritten = count(),
-            FirstWrite = min(Timestamp),
-            LastWrite = max(Timestamp),
-            SampleFiles = make_set(FileName, 25),
-            SamplePaths = make_set(FolderPath, 5)
-            by DeviceName, InitiatingProcessFileName,
-               InitiatingProcessAccountName
-| order by FirstWrite desc</code></pre></div>
-    <div class="tab-content" id="art-607-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(30d)
-| where EventType == &quot;FileCreated&quot;
-| where TargetFilePath has &quot;node_modules&quot;
-| where TargetFilePath has &quot;@vietmoney&quot; and TargetFilePath has &quot;react-big-calendar&quot;
-| summarize FilesWritten = count(),
-            FirstWrite = min(TimeGenerated),
-            LastWrite  = max(TimeGenerated),
-            SampleFiles = make_set(TargetFileName, 25)
-            by DvcHostname, ActorUsername, ActingProcessName
-| order by FirstWrite desc</code></pre></div>
-    <div class="tab-content" id="art-607-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Compromised npm package @vietmoney/react-big-calendar (Shai-Hulud Golden Path) extracted under node_modules
-id: 9b07c4d5-3a8e-4f12-bc77-1c5e6a09f3d8
-description: Detects file creation under a node_modules\@vietmoney\react-big-calendar path, indicating installation of the trojanized npm package used as patient-zero for the Shai-Hulud 3.0 &#x27;Golden Path&#x27; worm.
-references:
-  - https://www.npmjs.com/package/@vietmoney/react-big-calendar
-  - https://www.aikido.dev/blog/shai-hulud-strikes-again---the-golden-path
-  - https://thehackernews.com/2025/12/researchers-spot-modified-shai-hulud.html
-author: SOC Detection Engineering
-date: 2026/05/13
-tags:
-  - attack.initial_access
-  - attack.t1195.002
-logsource:
-  category: file_event
-  product: windows
-detection:
-  selection:
-    TargetFilename|contains|all:
-      - &#x27;\node_modules\&#x27;
-      - &#x27;@vietmoney&#x27;
-      - &#x27;react-big-calendar&#x27;
-  condition: selection
-falsepositives:
-  - Forensic / malware analysts intentionally retrieving the sample.
-level: high</code></pre></div>
-    <div class="tab-content" id="art-607-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:*\\node_modules\\* @TargetFilename:*@vietmoney* @TargetFilename:*react-big-calendar*</code></pre></div>
-    <div class="tab-content" id="art-607-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-607-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-607-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-607-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND Filesystem.file_path=&quot;*node_modules*@vietmoney*react-big-calendar*&quot; by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-607-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND Filesystem.file_path=&quot;*node_modules*@vietmoney*react-big-calendar*&quot; by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="673ab6c4b4" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Crypto-wallet file/keystore access by non-wallet process</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="673ab6c4b4" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Stealers / wallet drainers read keystore.json, MetaMask, Exodus, Atomic, Phantom data.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Local System">T1005</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-607-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-607-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-607-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-607-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-607-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where FolderPath has_any (@&quot;\Ethereum\keystore\&quot;, @&quot;\Bitcoin\&quot;, @&quot;\Exodus\&quot;, @&quot;\Electrum\wallets\&quot;, @&quot;\MetaMask\&quot;, @&quot;\Phantom\&quot;, @&quot;\Atomic\Local Storage\&quot;)
-| where InitiatingProcessFileName !in~ (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-</code></pre></div>
-    <div class="tab-content" id="art-607-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActorUsername !endswith &quot;$&quot;
-| where TargetFilePath has_any (@&quot;\Ethereum\keystore\&quot;, @&quot;\Bitcoin\&quot;,
-                                  @&quot;\Exodus\&quot;, @&quot;\Electrum\wallets\&quot;,
-                                  @&quot;\MetaMask\&quot;, @&quot;\Phantom\&quot;,
-                                  @&quot;\Atomic\Local Storage\&quot;)
-| where ActingProcessName !in~ (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,
-                                  &quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
-          TargetFilePath, TargetFileName, EventType
-</code></pre></div>
-    <div class="tab-content" id="art-607-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crypto-Wallet Keystore Access by Non-Wallet Process
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d02
-status: experimental
-description: |
-    Stealers / wallet drainers read keystore files from MetaMask,
-    Exodus, Atomic, Phantom, Bitcoin, Electrum, Ethereum-cli wallets.
-    Filtering out the legitimate wallet binaries leaves only attacker
-    activity.
-references:
-    - https://attack.mitre.org/techniques/T1005/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1005
-    - attack.collection
-logsource:
-    category: file_access
-    product: windows
-detection:
-    selection_path:
-        TargetFilename|contains:
-            - &#x27;\Ethereum\keystore\&#x27;
-            - &#x27;\Bitcoin\&#x27;
-            - &#x27;\Exodus\&#x27;
-            - &#x27;\Electrum\wallets\&#x27;
-            - &#x27;\MetaMask\&#x27;
-            - &#x27;\Phantom\&#x27;
-            - &#x27;\Atomic\Local Storage\&#x27;
-    filter_legit:
-        Image|endswith:
-            - &#x27;\MetaMask.exe&#x27;
-            - &#x27;\Exodus.exe&#x27;
-            - &#x27;\Atomic.exe&#x27;
-            - &#x27;\electrum.exe&#x27;
-            - &#x27;\Bitcoin.exe&#x27;
-            - &#x27;\Phantom.exe&#x27;
-    condition: selection_path and not filter_legit
-falsepositives:
-    - Backup software
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-607-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-607-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-607-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-607-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Ethereum\keystore\*&quot;
-        OR Filesystem.file_path=&quot;*\Bitcoin\wallet.dat&quot;
-        OR Filesystem.file_path=&quot;*\Exodus\exodus.wallet*&quot;
-        OR Filesystem.file_path=&quot;*\Electrum\wallets\*&quot;
-        OR Filesystem.file_path=&quot;*\MetaMask\*&quot;
-        OR Filesystem.file_path=&quot;*\Phantom\*&quot;
-        OR Filesystem.file_path=&quot;*\Atomic\Local Storage\*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-607-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Ethereum\keystore\*&quot;
-        OR Filesystem.file_path=&quot;*\Bitcoin\wallet.dat&quot;
-        OR Filesystem.file_path=&quot;*\Exodus\exodus.wallet*&quot;
-        OR Filesystem.file_path=&quot;*\Electrum\wallets\*&quot;
-        OR Filesystem.file_path=&quot;*\MetaMask\*&quot;
-        OR Filesystem.file_path=&quot;*\Phantom\*&quot;
-        OR Filesystem.file_path=&quot;*\Atomic\Local Storage\*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Infostealer — non-browser process accessing browser cookie/login DBs</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="6a7bf050fd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-607-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-607-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-607-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-607-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-607-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
-| where FileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-</code></pre></div>
-    <div class="tab-content" id="art-607-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
-ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActorUsername !endswith &quot;$&quot;
-| where TargetFilePath has_any (@&quot;\Google\Chrome\User Data\&quot;,
-                                  @&quot;\Microsoft\Edge\User Data\&quot;,
-                                  @&quot;\Mozilla\Firefox\Profiles\&quot;)
-| where TargetFileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-| where ActingProcessName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
-          TargetFilePath, TargetFileName, EventType
-</code></pre></div>
-    <div class="tab-content" id="art-607-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
-status: experimental
-description: |
-    Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies
-    SQLite databases from Chrome/Edge/Firefox profile directories. Any
-    non-browser process touching these files is a high-fidelity signal.
-references:
-    - https://attack.mitre.org/techniques/T1539/
-    - https://attack.mitre.org/techniques/T1555/003/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1539
-    - attack.t1555.003
-    - attack.credential-access
-logsource:
-    category: file_access
-    product: windows
-detection:
-    selection_path:
-        TargetFilename|contains:
-            - &#x27;\Google\Chrome\User Data\&#x27;
-            - &#x27;\Microsoft\Edge\User Data\&#x27;
-            - &#x27;\Mozilla\Firefox\Profiles\&#x27;
-    selection_file:
-        TargetFilename|endswith:
-            - &#x27;\Login Data&#x27;
-            - &#x27;\Cookies&#x27;
-            - &#x27;\logins.json&#x27;
-            - &#x27;\cookies.sqlite&#x27;
-    filter_browser:
-        Image|endswith:
-            - &#x27;\chrome.exe&#x27;
-            - &#x27;\msedge.exe&#x27;
-            - &#x27;\firefox.exe&#x27;
-            - &#x27;\brave.exe&#x27;
-            - &#x27;\opera.exe&#x27;
-    condition: selection_path and selection_file and not filter_browser
-falsepositives:
-    - Backup utilities reading user profile files
-    - Browser sync agents from non-stock vendors
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-607-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-607-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-607-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-607-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
-        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-607-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
-        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="27f9f5bb66" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">PowerShell encoded / obfuscated command</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="27f9f5bb66" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Encoded or obfuscated PowerShell — common across loaders, recon, and post-exploitation.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-607-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-607-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-607-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-607-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-607-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-| where ProcessCommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-607-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\pwsh.exe&quot;
-| where CommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
-| project TimeGenerated, Computer, Account, NewProcessName,
-          CommandLine, ParentProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-607-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d08
-status: experimental
-description: |
-    PowerShell launched with -EncodedCommand, base64 strings, hidden
-    window, no-profile, bypass policy, IEX / Invoke-Expression / Net
-    .WebClient.DownloadString — combinations indicating evasion.
-references:
-    - https://attack.mitre.org/techniques/T1059/001/
-    - https://attack.mitre.org/techniques/T1027/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1059.001
-    - attack.t1027
-    - attack.execution
-    - attack.defense-evasion
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_image:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-    selection_args:
-        CommandLine|contains:
-            - &#x27;-enc &#x27;
-            - &#x27;EncodedCommand&#x27;
-            - &#x27;FromBase64String&#x27;
-            - &#x27;Invoke-Expression&#x27;
-            - &#x27;IEX(&#x27;
-            - &#x27;DownloadString&#x27;
-            - &#x27;Net.WebClient&#x27;
-            - &#x27;-w hidden&#x27;
-            - &#x27;-WindowStyle Hidden&#x27;
-            - &#x27;-nop&#x27;
-            - &#x27;-NoProfile&#x27;
-            - &#x27;-ep bypass&#x27;
-            - &#x27;-ExecutionPolicy Bypass&#x27;
-    condition: selection_image and selection_args
-falsepositives:
-    - DevOps tooling that legitimately uses encoded command for
-      cross-shell escaping
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-607-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-607-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-607-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-607-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-      AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
-        OR Processes.process=&quot;*FromBase64String*&quot; OR Processes.process=&quot;*-nop*&quot;
-        OR Processes.process=&quot;*-w hidden*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
-        OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
-        OR Processes.process=&quot;*Net.WebClient*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-607-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-      AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
-        OR Processes.process=&quot;*FromBase64String*&quot; OR Processes.process=&quot;*-nop*&quot;
-        OR Processes.process=&quot;*-w hidden*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
-        OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
-        OR Processes.process=&quot;*Net.WebClient*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-607-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-607-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-607-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-607-uc6-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-607-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-607-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-607-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-607-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-607-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-607-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-607-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-607-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="0fe9f68aa6" data-platforms="def,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Shai Hulud strikes again - The golden path</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="0fe9f68aa6" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-607-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-607-uc7-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-607-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Shai Hulud strikes again - The golden path
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;bun_installer.js&quot;, &quot;environment_source.js&quot;, &quot;bun.exe&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;bun_installer.js&quot;, &quot;environment_source.js&quot;, &quot;bun.exe&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-607-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-607-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-607-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-607-uc7-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Shai Hulud strikes again - The golden path ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;bun_installer.js&quot;,&quot;environment_source.js&quot;,&quot;bun.exe&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;bun_installer.js&quot;,&quot;environment_source.js&quot;,&quot;bun.exe&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-607-uc7-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Shai Hulud strikes again - The golden path ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;bun_installer.js&quot;,&quot;environment_source.js&quot;,&quot;bun.exe&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;bun_installer.js&quot;,&quot;environment_source.js&quot;,&quot;bun.exe&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-609" data-art-slug="2025-12-22-revisiting-cve-2025-50165-a-critical-flaw-in-windows-imaging"
   data-phases="c2,delivery,exploit,install,recon" data-sev="high"
   data-techs="T1190,T1204.002"
@@ -8871,6 +8066,131 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-637-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2025-6218&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-638" data-art-slug="2025-12-09-cisa-kev-cve-2025-62221-microsoft-windows-use-after-free-vul"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2025-62221 — Microsoft Windows Use After Free Vulnerability Microsoft Windows Cloud Files Mini Filter Driver contains a use after free vulnerability that can allow an authorized attacker to elevate privileges locally. Vendor: Microsoft, Product: Windows. Federal patch due: 2025-12-30. CVE-2025-62221  Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2025-12-09-cisa-kev-cve-2025-62221-microsoft-windows-use-after-free-vul" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2025-62221 — Microsoft Windows Use After Free Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2025-12-09</span>
+    <span>1 use case</span>
+    <span>0 techniques</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Microsoft Windows Cloud Files Mini Filter Driver contains a use after free vulnerability that can allow an authorized attacker to elevate privileges locally. Vendor: Microsoft, Product: Windows. Federal patch due: 2025-12-30.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2025-62221</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-638-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-638"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-638-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-638-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-638-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-638-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-638-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2025-62221&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-638-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2025-62221&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-638-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-638-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-638-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-638-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2025-62221&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-638-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2025-62221&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
