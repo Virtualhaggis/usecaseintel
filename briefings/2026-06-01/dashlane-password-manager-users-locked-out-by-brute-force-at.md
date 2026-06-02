@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Dashlane brute-force lockout / new-device verification emails to corporate mailboxes (May-Jun 2026 campaign)
 
-`UC_10_3` · phase: **actions** · confidence: **Medium**
+`UC_13_3` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

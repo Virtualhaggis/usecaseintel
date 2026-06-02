@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1251 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,12 +9,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-02
+- [android 0 day vulnerability exploited in attacks to gain com](./2026-06-02/android-0-day-vulnerability-exploited-in-attacks-to-gain-com.md)
 - [dashlane discloses brute force attack encrypted vaults of fe](./2026-06-02/dashlane-discloses-brute-force-attack-encrypted-vaults-of-fe.md)
 - [gamaredon apt hides malware in windows features and abuses c](./2026-06-02/gamaredon-apt-hides-malware-in-windows-features-and-abuses-c.md)
 - [hackers use meta s ai bot to reset passwords and hijack inst](./2026-06-02/hackers-use-meta-s-ai-bot-to-reset-passwords-and-hijack-inst.md)
+- [nimbus manticore apt abuses fake recruitment portal to deliv](./2026-06-02/nimbus-manticore-apt-abuses-fake-recruitment-portal-to-deliv.md)
+- [phantompulse rat uses process injection and uac bypass to co](./2026-06-02/phantompulse-rat-uses-process-injection-and-uac-bypass-to-co.md)
 
 ## 2026-06-01
-- [android banking trojan overlayphantom abuses accessibility s](./2026-06-01/android-banking-trojan-overlayphantom-abuses-accessibility-s.md)
 - [china aligned groups ramp up attacks dragon weave hits czech](./2026-06-01/china-aligned-groups-ramp-up-attacks-dragon-weave-hits-czech.md)
 - [cisa kev cve 2024 21182 oracle weblogic server unspecified v](./2026-06-01/cisa-kev-cve-2024-21182-oracle-weblogic-server-unspecified-v.md)
 - [containers on fire from container escapes to supply chain at](./2026-06-01/containers-on-fire-from-container-escapes-to-supply-chain-at.md)
