@@ -1,737 +1,3 @@
-<article class="card" id="art-453" data-art-slug="2026-03-03-persistent-xss-rce-using-websockets-in-storybook-s-dev-serve"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
-  data-techs="T1190,T1195.002,T1555.003"
-  data-sources="Aikido"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint"
-  data-targets="linux,vcs,web-app,windows"
-  data-uc-count="7" data-llm-uc-count="2"
-  data-search="Persistent XSS/RCE using WebSockets in Storybook’s dev server CVE-2026-27148 exposes a WebSocket hijacking flaw in Storybook that can escalate into supply chain compromise. Learn the attack path, impact, and how to remediate. Category: Vulnerabilities &amp; Threats CVE-2026-27148 T1190 T1195.002 T1555.003 [LLM] Storybook WebSocket XSS/RCE — malicious .stories file written to src/stories (CVE-2026-27148) [LLM] Storybook portable-stories RCE — vitest/node spawning shell, recon or secret-grep child (CVE-2026-27148) Crypto-wallet file/keystore access by non-wallet process Infostealer — non-browser process accessing browser cookie/login DBs Asset exposure — vulnerability matches article CVE(s) Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — Persistent XSS/RCE using WebSockets in Storybook’s dev server">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-03-03-persistent-xss-rce-using-websockets-in-storybook-s-dev-serve" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.aikido.dev/blog/storybooks-websockets-attack" target="_blank" rel="noopener">Persistent XSS/RCE using WebSockets in Storybook’s dev server</a></h2>
-  <div class="source-badges"><span class="source-badge ">Aikido</span></div>
-  <div class="pubmeta">
-    <span>2026-03-03</span>
-    <span>7 use cases</span>
-    <span>3 techniques</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">CVE-2026-27148 exposes a WebSocket hijacking flaw in Storybook that can escalate into supply chain compromise. Learn the attack path, impact, and how to remediate. Category: Vulnerabilities &amp; Threats</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-27148</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-453-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-453"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-453-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Storybook portable-stories RCE — vitest/node spawning shell, recon or secret-grep child (CVE-2026-27148) · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Persistent XSS/RCE using WebSockets in Storybook’s dev server</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Storybook WebSocket XSS/RCE — malicious .stories file written to src/stories (CVE-2026-27148)</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Crypto-wallet file/keystore access by non-wallet process · Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="eae00e8ed3" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
-  <summary>
-    <span class="uc-title">[LLM] Storybook WebSocket XSS/RCE — malicious .stories file written to src/stories (CVE-2026-27148)</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="eae00e8ed3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects file-create events under src/stories whose filename contains JavaScript injection markers (&#x27;alert(&#x27;, &#x27;require(&#x27;, &#x27;child_process&#x27;, &#x27;;&#x27;, etc.). Exploitation of CVE-2026-27148 writes the attacker-controlled componentFilePath verbatim into the project tree, so the malicious payload is literally encoded in the on-disk filename of the new .stories.{ts,tsx,js,jsx} file.
-
-Rationale: The article documents that the attacker-supplied componentFilePath is interpolated into the import statement and persisted on disk with the JS-breaking characters embedded in the filename (e.g. &quot;Button&#x27;;alert(document.domain);var a=&#x27;.tsx&quot; and the RCE variant containing &quot;RCE_PROOF&quot; and &quot;child_process&quot;). Legitimate story filenames never contain &#x27;;, alert(, require(, child_process, execSync, or document.domain - they map 1:1 to JS identifier-safe component names - so the markers + .stories.* extension + src/stories path is a tight signature with minimal FP potential. Did not externally corroborate via WebFetch (permissions not granted); references to GHSA-mjf5-7g4m-gx5w cited from the article body.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span> <span class="ind tech" title="Compromise Software Dependencies and Development Tools">T1195.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-453-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-453-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-453-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-453-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-453-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-453-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-453-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;FileCreated&quot;, &quot;FileModified&quot;)
-| where FolderPath has @&quot;\src\stories&quot; or FolderPath contains &quot;/src/stories/&quot;
-| where FileName endswith &quot;.ts&quot; or FileName endswith &quot;.tsx&quot; or FileName endswith &quot;.js&quot; or FileName endswith &quot;.jsx&quot;
-| where FileName has_any (&quot;&#x27;;&quot;, &quot;alert(&quot;, &quot;require(&quot;, &quot;child_process&quot;, &quot;process.env&quot;, &quot;execSync&quot;, &quot;document.domain&quot;, &quot;RCE_PROOF&quot;)
-| where InitiatingProcessFolderPath !contains &quot;\\node_modules\\&quot; and InitiatingProcessFolderPath !contains &quot;/node_modules/&quot;
-| project Timestamp, DeviceName, FolderPath, FileName,
-          WriterProcess = InitiatingProcessFileName,
-          WriterCmd = InitiatingProcessCommandLine,
-          WriterParent = InitiatingProcessParentFileName,
-          AccountName = InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-453-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventType in (&quot;FileCreated&quot;, &quot;FileModified&quot;)
-| where TargetFilePath has @&quot;\src\stories&quot; or TargetFilePath contains &quot;/src/stories/&quot;
-| where TargetFileExtension in~ (&quot;ts&quot;,&quot;tsx&quot;,&quot;js&quot;,&quot;jsx&quot;)
-| where TargetFileName has_any (&quot;&#x27;;&quot;, &quot;alert(&quot;, &quot;require(&quot;, &quot;child_process&quot;, &quot;process.env&quot;, &quot;execSync&quot;, &quot;document.domain&quot;, &quot;RCE_PROOF&quot;)
-| where ActingProcessName !contains &quot;node_modules&quot;
-| project TimeGenerated, DvcHostname, TargetFilePath, TargetFileName,
-          ActingProcessName, ActingProcessCommandLine, ActorUsername
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-453-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Storybook WebSocket Injection - Malicious .stories File Write (CVE-2026-27148)
-id: 8c5e6a4d-2f1b-4c7e-9a3d-1b5e8f2c4d6a
-description: Detects creation of a Storybook .stories.{ts,tsx,js,jsx} file whose name contains JavaScript injection markers - the on-disk signature of CVE-2026-27148 exploitation. Storybook&#x27;s unauthenticated dev-server WebSocket writes attacker-controlled componentFilePath into the project tree, embedding the payload directly in the filename.
-references:
-  - https://www.aikido.dev/blog/storybooks-websockets-attack
-  - https://github.com/storybookjs/storybook/security/advisories/GHSA-mjf5-7g4m-gx5w
-  - https://nvd.nist.gov/vuln/detail/CVE-2026-27148
-author: Detection Engineering
-date: 2026/05/20
-tags:
-  - attack.initial_access
-  - attack.t1190
-  - attack.execution
-  - attack.t1059.007
-  - cve.2026.27148
-logsource:
-  category: file_event
-  product: windows
-detection:
-  selection_path:
-    TargetFilename|contains:
-      - &#x27;\src\stories\&#x27;
-      - &#x27;/src/stories/&#x27;
-  selection_ext:
-    TargetFilename|endswith:
-      - &#x27;.ts&#x27;
-      - &#x27;.tsx&#x27;
-      - &#x27;.js&#x27;
-      - &#x27;.jsx&#x27;
-  selection_markers:
-    TargetFilename|contains:
-      - &quot;&#x27;;&quot;
-      - &#x27;alert(&#x27;
-      - &#x27;require(&#x27;
-      - &#x27;child_process&#x27;
-      - &#x27;process.env&#x27;
-      - &#x27;execSync&#x27;
-      - &#x27;document.domain&#x27;
-      - &#x27;RCE_PROOF&#x27;
-  filter_node_modules:
-    TargetFilename|contains:
-      - &#x27;\node_modules\&#x27;
-      - &#x27;/node_modules/&#x27;
-  condition: selection_path and selection_ext and selection_markers and not filter_node_modules
-falsepositives:
-  - Penetration tests against the dev environment
-  - Security researcher reproducing the PoC on their own workstation
-level: high</code></pre></div>
-    <div class="tab-content" id="art-453-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.auditd) (@TargetFilename:(*\\src\\stories\\*.stories.ts OR *\\src\\stories\\*.stories.tsx OR *\\src\\stories\\*.stories.js OR *\\src\\stories\\*.stories.jsx) OR @file.path:(*/src/stories/*.stories.ts OR */src/stories/*.stories.tsx OR */src/stories/*.stories.js OR */src/stories/*.stories.jsx)) (@TargetFilename:(*&#x27;;* OR *alert\(* OR *require\(* OR *child_process* OR *process.env* OR *execSync* OR *document.domain* OR *RCE_PROOF*) OR @file.path:(*&#x27;;* OR *alert\(* OR *require\(* OR *child_process* OR *process.env* OR *execSync* OR *document.domain* OR *RCE_PROOF*)) -@TargetFilename:*node_modules*</code></pre></div>
-    <div class="tab-content" id="art-453-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| regex(&quot;(/|\\\\)src(/|\\\\)stories(/|\\\\)&quot;, field=TargetFileName)
-| TargetFileName=/\.stories\.(ts|tsx|js|jsx)$/i
-| regex(&quot;(&#x27;\\;|alert\\(|require\\(|child_process|process\\.env|execSync|document\\.domain|RCE_PROOF)&quot;, field=TargetFileName)
-| NOT regex(&quot;(/|\\\\)node_modules(/|\\\\)&quot;, field=TargetFileName)
-| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-453-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-453-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-453-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-453-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path=&quot;*\\src\\stories\\*&quot; OR Filesystem.file_path=&quot;*/src/stories/*&quot;) (Filesystem.file_name=&quot;*.stories.ts*&quot; OR Filesystem.file_name=&quot;*.stories.js*&quot; OR Filesystem.file_name=&quot;*.stories.tsx&quot; OR Filesystem.file_name=&quot;*.stories.jsx&quot;) (Filesystem.file_name=&quot;*&#x27;;*&quot; OR Filesystem.file_name=&quot;*alert(*&quot; OR Filesystem.file_name=&quot;*require(*&quot; OR Filesystem.file_name=&quot;*child_process*&quot; OR Filesystem.file_name=&quot;*process.env*&quot; OR Filesystem.file_name=&quot;*execSync*&quot; OR Filesystem.file_name=&quot;*document.domain*&quot; OR Filesystem.file_name=&quot;*RCE_PROOF*&quot;) by host Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-453-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path=&quot;*\\src\\stories\\*&quot; OR Filesystem.file_path=&quot;*/src/stories/*&quot;) (Filesystem.file_name=&quot;*.stories.ts*&quot; OR Filesystem.file_name=&quot;*.stories.js*&quot; OR Filesystem.file_name=&quot;*.stories.tsx&quot; OR Filesystem.file_name=&quot;*.stories.jsx&quot;) (Filesystem.file_name=&quot;*&#x27;;*&quot; OR Filesystem.file_name=&quot;*alert(*&quot; OR Filesystem.file_name=&quot;*require(*&quot; OR Filesystem.file_name=&quot;*child_process*&quot; OR Filesystem.file_name=&quot;*process.env*&quot; OR Filesystem.file_name=&quot;*execSync*&quot; OR Filesystem.file_name=&quot;*document.domain*&quot; OR Filesystem.file_name=&quot;*RCE_PROOF*&quot;) by host Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="500bd2720f" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">[LLM] Storybook portable-stories RCE — vitest/node spawning shell, recon or secret-grep child (CVE-2026-27148)</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="500bd2720f" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects vitest or node test runners (executing Storybook portable stories / composeStories) that spawn a shell, network tool, or process whose command line references credentials, child_process, or the article&#x27;s PoC marker &#x27;RCE_PROOF&#x27;. This is the server-side escalation path: an injected .stories file runs in Node context during testing and pivots to credential exfil or recon.
-
-Rationale: The article literally demonstrates the escalation: vitest running portable stories executes the injected story file in a Node context, with the PoC payload containing require(&#x27;child_process&#x27;).execSync(&#x27;id&#x27;) and printing &#x27;RCE_PROOF:&#x27;. Pairing vitest/node parent + storybook-related parent cmdline + child shell OR PoC-string cmdline gives a tight, deployable signature. Did not externally corroborate via WebFetch (permission not granted in this session).</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter">T1059</span> <span class="ind tech" title="Credentials In Files">T1552.001</span> <span class="ind tech" title="Compromise Software Dependencies and Development Tools">T1195.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-453-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-453-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-453-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-453-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-453-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-453-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-453-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;node&quot;,&quot;vitest.exe&quot;,&quot;vitest&quot;,&quot;npx.exe&quot;,&quot;npx&quot;,&quot;pnpm.exe&quot;,&quot;yarn.exe&quot;,&quot;npm.exe&quot;,&quot;npm&quot;)
-| where InitiatingProcessCommandLine has_any (&quot;vitest&quot;,&quot;@storybook&quot;,&quot;portable-stories&quot;,&quot;composeStories&quot;,&quot;storybook test&quot;)
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;zsh&quot;,&quot;dash&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;whoami.exe&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;hostname.exe&quot;,&quot;hostname&quot;,&quot;nslookup.exe&quot;)
-   or ProcessCommandLine has_any (&quot;RCE_PROOF&quot;,&quot;child_process&quot;,&quot;execSync&quot;,&quot;spawnSync&quot;,&quot;AWS_SECRET&quot;,&quot;AWS_ACCESS_KEY&quot;,&quot;GITHUB_TOKEN&quot;,&quot;NPM_TOKEN&quot;,&quot;/etc/passwd&quot;,&quot;~/.aws&quot;,&quot;~/.ssh&quot;,&quot;env | base64&quot;,&quot;env|base64&quot;)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessCommandLine !has &quot;playwright&quot; and InitiatingProcessCommandLine !has &quot;test-storybook&quot; and ProcessCommandLine !has &quot;node_modules\\.bin\\esbuild&quot;
-| project Timestamp, DeviceName, AccountName,
-          ParentProcess = InitiatingProcessFileName,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildProcess = FileName,
-          ChildCmd = ProcessCommandLine,
-          ChildHash = SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-453-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where ParentProcessName has_any (&quot;node&quot;,&quot;vitest&quot;,&quot;npx&quot;,&quot;pnpm&quot;,&quot;yarn&quot;,&quot;npm&quot;)
-| where ParentProcessCommandLine has_any (&quot;vitest&quot;,&quot;@storybook&quot;,&quot;portable-stories&quot;,&quot;composeStories&quot;,&quot;storybook test&quot;)
-| where TargetProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;zsh&quot;,&quot;dash&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;hostname&quot;,&quot;nslookup&quot;)
-   or TargetProcessCommandLine has_any (&quot;RCE_PROOF&quot;,&quot;child_process&quot;,&quot;execSync&quot;,&quot;spawnSync&quot;,&quot;AWS_SECRET&quot;,&quot;AWS_ACCESS_KEY&quot;,&quot;GITHUB_TOKEN&quot;,&quot;NPM_TOKEN&quot;,&quot;/etc/passwd&quot;,&quot;~/.aws&quot;,&quot;~/.ssh&quot;)
-| where ActorUsername !endswith &quot;$&quot;
-| where ParentProcessCommandLine !has &quot;playwright&quot; and ParentProcessCommandLine !has &quot;test-storybook&quot;
-| project TimeGenerated, DvcHostname, ActorUsername,
-          ParentProcessName, ParentProcessCommandLine,
-          TargetProcessName, TargetProcessCommandLine, SHA256
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-453-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Storybook Portable Stories RCE - Vitest/Node Spawning Recon or Secret Grep (CVE-2026-27148)
-id: 7a3f2e9c-4b8d-4f1e-a6c3-9d7e5f1a3b2c
-description: Detects vitest or node processes (running Storybook portable stories tests via composeStories) that spawn shells, network utilities, recon commands, or command lines containing credential keywords. Indicates server-side execution of an injected story file from CVE-2026-27148 exploitation reaching the testing tier of the supply chain.
-references:
-  - https://www.aikido.dev/blog/storybooks-websockets-attack
-  - https://github.com/storybookjs/storybook/security/advisories/GHSA-mjf5-7g4m-gx5w
-author: Detection Engineering
-date: 2026/05/20
-tags:
-  - attack.execution
-  - attack.t1059
-  - attack.credential_access
-  - attack.t1552.001
-  - cve.2026.27148
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  parent_image:
-    ParentImage|endswith:
-      - &#x27;\node.exe&#x27;
-      - &#x27;\vitest.exe&#x27;
-      - &#x27;\npx.cmd&#x27;
-      - &#x27;\npm.cmd&#x27;
-      - &#x27;\pnpm.cmd&#x27;
-      - &#x27;\yarn.cmd&#x27;
-  parent_cmd:
-    ParentCommandLine|contains:
-      - &#x27;vitest&#x27;
-      - &#x27;@storybook&#x27;
-      - &#x27;portable-stories&#x27;
-      - &#x27;composeStories&#x27;
-      - &#x27;storybook test&#x27;
-  child_image:
-    Image|endswith:
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;\pwsh.exe&#x27;
-      - &#x27;\bash.exe&#x27;
-      - &#x27;\curl.exe&#x27;
-      - &#x27;\wget.exe&#x27;
-      - &#x27;\whoami.exe&#x27;
-      - &#x27;\hostname.exe&#x27;
-      - &#x27;\nslookup.exe&#x27;
-  child_cmd:
-    CommandLine|contains:
-      - &#x27;RCE_PROOF&#x27;
-      - &#x27;child_process&#x27;
-      - &#x27;execSync&#x27;
-      - &#x27;spawnSync&#x27;
-      - &#x27;AWS_SECRET&#x27;
-      - &#x27;AWS_ACCESS_KEY&#x27;
-      - &#x27;GITHUB_TOKEN&#x27;
-      - &#x27;NPM_TOKEN&#x27;
-  filter_playwright:
-    ParentCommandLine|contains:
-      - &#x27;playwright&#x27;
-      - &#x27;test-storybook&#x27;
-  condition: parent_image and parent_cmd and (child_image or child_cmd) and not filter_playwright
-falsepositives:
-  - Storybook addons that legitimately shell out (visual regression with playwright/chromatic) - filtered above
-  - Custom test fixtures that intentionally use child_process for DB seeding
-level: high</code></pre></div>
-    <div class="tab-content" id="art-453-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.auditd) (@ParentImage:(*\\node.exe OR *\\vitest.exe OR *\\npx.cmd OR *\\pnpm.cmd OR *\\yarn.cmd) OR @process.parent.name:(node OR vitest OR npx OR pnpm OR yarn OR npm)) (@ParentCommandLine:(*vitest* OR *@storybook* OR *portable-stories* OR *composeStories* OR *storybook\ test*) OR @process.parent.command_line:(*vitest* OR *@storybook* OR *portable-stories* OR *composeStories*)) (@Image:(*\\cmd.exe OR *\\powershell.exe OR *\\pwsh.exe OR *\\bash.exe OR *\\curl.exe OR *\\wget.exe OR *\\whoami.exe OR *\\hostname.exe OR *\\nslookup.exe) OR @process.executable.path:(*/sh OR */bash OR */zsh OR */curl OR */wget OR */whoami OR */id) OR @CommandLine:(*RCE_PROOF* OR *child_process* OR *execSync* OR *spawnSync* OR *AWS_SECRET* OR *AWS_ACCESS_KEY* OR *GITHUB_TOKEN* OR *NPM_TOKEN*) OR @process.command_line:(*RCE_PROOF* OR *child_process* OR *AWS_SECRET* OR *GITHUB_TOKEN* OR *NPM_TOKEN*)) -@ParentCommandLine:*playwright* -@ParentCommandLine:*test-storybook*</code></pre></div>
-    <div class="tab-content" id="art-453-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ParentBaseFileName=/^(node|vitest|npx|pnpm|yarn|npm)(\.exe|\.cmd)?$/i
-| regex(&quot;(vitest|@storybook|portable-stories|composeStories|storybook\\s+test)&quot;, field=ParentCommandLine)
-| NOT regex(&quot;(playwright|test-storybook)&quot;, field=ParentCommandLine)
-| ( ImageFileName=/\\(cmd|powershell|pwsh|bash|sh|zsh|curl|wget|whoami|hostname|nslookup)(\.exe)?$/i
-    OR regex(&quot;(RCE_PROOF|child_process|execSync|spawnSync|AWS_SECRET|AWS_ACCESS_KEY|GITHUB_TOKEN|NPM_TOKEN|/etc/passwd|~/\\.aws|~/\\.ssh|env\\s*\\|\\s*base64)&quot;, field=CommandLine) )
-| groupBy([aid, ComputerName, ImageFileName, CommandLine, ParentBaseFileName, ParentCommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-453-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-453-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-453-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-453-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (node.exe,node,vitest.exe,vitest,npx.exe,npx,pnpm.exe,yarn.exe,npm.exe,npm)) (Processes.parent_process=&quot;*vitest*&quot; OR Processes.parent_process=&quot;*@storybook*&quot; OR Processes.parent_process=&quot;*portable-stories*&quot; OR Processes.parent_process=&quot;*composeStories*&quot; OR Processes.parent_process=&quot;*storybook test*&quot;) (Processes.process_name IN (cmd.exe,powershell.exe,pwsh.exe,sh,bash,zsh,dash,curl.exe,wget.exe,certutil.exe,bitsadmin.exe,whoami.exe,whoami,id,hostname.exe,hostname,nslookup.exe) OR Processes.process=&quot;*RCE_PROOF*&quot; OR Processes.process=&quot;*child_process*&quot; OR Processes.process=&quot;*execSync*&quot; OR Processes.process=&quot;*AWS_SECRET*&quot; OR Processes.process=&quot;*AWS_ACCESS_KEY*&quot; OR Processes.process=&quot;*GITHUB_TOKEN*&quot; OR Processes.process=&quot;*NPM_TOKEN*&quot; OR Processes.process=&quot;*/etc/passwd*&quot; OR Processes.process=&quot;*~/.aws*&quot; OR Processes.process=&quot;*~/.ssh*&quot;) by host Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-453-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (node.exe,node,vitest.exe,vitest,npx.exe,npx,pnpm.exe,yarn.exe,npm.exe,npm)) (Processes.parent_process=&quot;*vitest*&quot; OR Processes.parent_process=&quot;*@storybook*&quot; OR Processes.parent_process=&quot;*portable-stories*&quot; OR Processes.parent_process=&quot;*composeStories*&quot; OR Processes.parent_process=&quot;*storybook test*&quot;) (Processes.process_name IN (cmd.exe,powershell.exe,pwsh.exe,sh,bash,zsh,dash,curl.exe,wget.exe,certutil.exe,bitsadmin.exe,whoami.exe,whoami,id,hostname.exe,hostname,nslookup.exe) OR Processes.process=&quot;*RCE_PROOF*&quot; OR Processes.process=&quot;*child_process*&quot; OR Processes.process=&quot;*execSync*&quot; OR Processes.process=&quot;*AWS_SECRET*&quot; OR Processes.process=&quot;*AWS_ACCESS_KEY*&quot; OR Processes.process=&quot;*GITHUB_TOKEN*&quot; OR Processes.process=&quot;*NPM_TOKEN*&quot; OR Processes.process=&quot;*/etc/passwd*&quot; OR Processes.process=&quot;*~/.aws*&quot; OR Processes.process=&quot;*~/.ssh*&quot;) by host Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="673ab6c4b4" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Crypto-wallet file/keystore access by non-wallet process</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="673ab6c4b4" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Stealers / wallet drainers read keystore.json, MetaMask, Exodus, Atomic, Phantom data.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Local System">T1005</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-453-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-453-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-453-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-453-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-453-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where FolderPath has_any (@&quot;\Ethereum\keystore\&quot;, @&quot;\Bitcoin\&quot;, @&quot;\Exodus\&quot;, @&quot;\Electrum\wallets\&quot;, @&quot;\MetaMask\&quot;, @&quot;\Phantom\&quot;, @&quot;\Atomic\Local Storage\&quot;)
-| where InitiatingProcessFileName !in~ (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-</code></pre></div>
-    <div class="tab-content" id="art-453-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActorUsername !endswith &quot;$&quot;
-| where TargetFilePath has_any (@&quot;\Ethereum\keystore\&quot;, @&quot;\Bitcoin\&quot;,
-                                  @&quot;\Exodus\&quot;, @&quot;\Electrum\wallets\&quot;,
-                                  @&quot;\MetaMask\&quot;, @&quot;\Phantom\&quot;,
-                                  @&quot;\Atomic\Local Storage\&quot;)
-| where ActingProcessName !in~ (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,
-                                  &quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
-          TargetFilePath, TargetFileName, EventType
-</code></pre></div>
-    <div class="tab-content" id="art-453-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crypto-Wallet Keystore Access by Non-Wallet Process
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d02
-status: experimental
-description: |
-    Stealers / wallet drainers read keystore files from MetaMask,
-    Exodus, Atomic, Phantom, Bitcoin, Electrum, Ethereum-cli wallets.
-    Filtering out the legitimate wallet binaries leaves only attacker
-    activity.
-references:
-    - https://attack.mitre.org/techniques/T1005/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1005
-    - attack.collection
-logsource:
-    category: file_access
-    product: windows
-detection:
-    selection_path:
-        TargetFilename|contains:
-            - &#x27;\Ethereum\keystore\&#x27;
-            - &#x27;\Bitcoin\&#x27;
-            - &#x27;\Exodus\&#x27;
-            - &#x27;\Electrum\wallets\&#x27;
-            - &#x27;\MetaMask\&#x27;
-            - &#x27;\Phantom\&#x27;
-            - &#x27;\Atomic\Local Storage\&#x27;
-    filter_legit:
-        Image|endswith:
-            - &#x27;\MetaMask.exe&#x27;
-            - &#x27;\Exodus.exe&#x27;
-            - &#x27;\Atomic.exe&#x27;
-            - &#x27;\electrum.exe&#x27;
-            - &#x27;\Bitcoin.exe&#x27;
-            - &#x27;\Phantom.exe&#x27;
-    condition: selection_path and not filter_legit
-falsepositives:
-    - Backup software
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-453-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-453-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-453-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-453-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Ethereum\keystore\*&quot;
-        OR Filesystem.file_path=&quot;*\Bitcoin\wallet.dat&quot;
-        OR Filesystem.file_path=&quot;*\Exodus\exodus.wallet*&quot;
-        OR Filesystem.file_path=&quot;*\Electrum\wallets\*&quot;
-        OR Filesystem.file_path=&quot;*\MetaMask\*&quot;
-        OR Filesystem.file_path=&quot;*\Phantom\*&quot;
-        OR Filesystem.file_path=&quot;*\Atomic\Local Storage\*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-453-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Ethereum\keystore\*&quot;
-        OR Filesystem.file_path=&quot;*\Bitcoin\wallet.dat&quot;
-        OR Filesystem.file_path=&quot;*\Exodus\exodus.wallet*&quot;
-        OR Filesystem.file_path=&quot;*\Electrum\wallets\*&quot;
-        OR Filesystem.file_path=&quot;*\MetaMask\*&quot;
-        OR Filesystem.file_path=&quot;*\Phantom\*&quot;
-        OR Filesystem.file_path=&quot;*\Atomic\Local Storage\*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;MetaMask.exe&quot;,&quot;Exodus.exe&quot;,&quot;Atomic.exe&quot;,&quot;electrum.exe&quot;,&quot;Bitcoin.exe&quot;,&quot;Phantom.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Infostealer — non-browser process accessing browser cookie/login DBs</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="6a7bf050fd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-453-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-453-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-453-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-453-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-453-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
-| where FileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
-</code></pre></div>
-    <div class="tab-content" id="art-453-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
-ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActorUsername !endswith &quot;$&quot;
-| where TargetFilePath has_any (@&quot;\Google\Chrome\User Data\&quot;,
-                                  @&quot;\Microsoft\Edge\User Data\&quot;,
-                                  @&quot;\Mozilla\Firefox\Profiles\&quot;)
-| where TargetFileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
-| where ActingProcessName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
-          TargetFilePath, TargetFileName, EventType
-</code></pre></div>
-    <div class="tab-content" id="art-453-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
-status: experimental
-description: |
-    Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies
-    SQLite databases from Chrome/Edge/Firefox profile directories. Any
-    non-browser process touching these files is a high-fidelity signal.
-references:
-    - https://attack.mitre.org/techniques/T1539/
-    - https://attack.mitre.org/techniques/T1555/003/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1539
-    - attack.t1555.003
-    - attack.credential-access
-logsource:
-    category: file_access
-    product: windows
-detection:
-    selection_path:
-        TargetFilename|contains:
-            - &#x27;\Google\Chrome\User Data\&#x27;
-            - &#x27;\Microsoft\Edge\User Data\&#x27;
-            - &#x27;\Mozilla\Firefox\Profiles\&#x27;
-    selection_file:
-        TargetFilename|endswith:
-            - &#x27;\Login Data&#x27;
-            - &#x27;\Cookies&#x27;
-            - &#x27;\logins.json&#x27;
-            - &#x27;\cookies.sqlite&#x27;
-    filter_browser:
-        Image|endswith:
-            - &#x27;\chrome.exe&#x27;
-            - &#x27;\msedge.exe&#x27;
-            - &#x27;\firefox.exe&#x27;
-            - &#x27;\brave.exe&#x27;
-            - &#x27;\opera.exe&#x27;
-    condition: selection_path and selection_file and not filter_browser
-falsepositives:
-    - Backup utilities reading user profile files
-    - Browser sync agents from non-stock vendors
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-453-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-453-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-453-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-453-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
-        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-453-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
-        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
-        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
-      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
-    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-453-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-453-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-453-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-453-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-27148&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-453-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-27148&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-453-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-453-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-453-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-453-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-27148&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-453-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-27148&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-453-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-453-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-453-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-453-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-453-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-453-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-453-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-453-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-453-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-453-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-453-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-453-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="4af9d8031c" data-platforms="def,spl" data-targets="web-app,windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Persistent XSS/RCE using WebSockets in Storybook’s dev server</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="4af9d8031c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-453-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-453-uc6-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-453-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Persistent XSS/RCE using WebSockets in Storybook’s dev server
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-453-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-453-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-453-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-453-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Persistent XSS/RCE using WebSockets in Storybook’s dev server ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-453-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Persistent XSS/RCE using WebSockets in Storybook’s dev server ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-455" data-art-slug="2026-03-03-cisa-kev-cve-2026-22719-broadcom-vmware-aria-operations-comm"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -6953,6 +6219,251 @@ level: medium
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-488" data-art-slug="2026-02-17-securing-the-agent-skill-ecosystem-how-snyk-and-vercel-are-l"
+  data-phases="c2,delivery,exploit,install,recon" data-sev="med"
+  data-techs="T1190,T1195.002"
+  data-sources="Snyk"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="endpoint"
+  data-targets="windows"
+  data-uc-count="2" data-llm-uc-count="0"
+  data-search="Securing the Agent Skill Ecosystem: How Snyk and Vercel Are Locking Down the New Software Supply Chain Snyk has partnered with Vercel to secure the skills.sh ecosystem, integrating real-time security scanning to detect malicious payloads and prompt injections before they reach your machine. Discover how this partnership is locking down the future of agentic AI.  T1190 T1195.002 Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — Securing the Agent Skill Ecosystem: How Snyk and Vercel Are Locking Down the New">
+  <div class="sev-ribbon med">Medium</div>
+  <button class="share-btn card-share" data-share-art="2026-02-17-securing-the-agent-skill-ecosystem-how-snyk-and-vercel-are-l" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/snyk-vercel-securing-agent-skill-ecosystem/" target="_blank" rel="noopener">Securing the Agent Skill Ecosystem: How Snyk and Vercel Are Locking Down the New Software Supply Chain</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2026-02-17</span>
+    <span>2 use cases</span>
+    <span>2 techniques</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Snyk has partnered with Vercel to secure the skills.sh ecosystem, integrating real-time security scanning to detect malicious payloads and prompt injections before they reach your machine. Discover how this partnership is locking down the future of agentic AI.</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-488-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-488"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-488-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Securing the Agent Skill Ecosystem: How Snyk and Vercel Are Locking Down the New</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-488-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-488-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-488-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-488-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-488-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-488-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+// article (matching shape with the Defender query).
+SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where NewProcessName endswith &quot;\powershell.exe&quot;
+   or NewProcessName endswith &quot;\cmd.exe&quot;
+   or NewProcessName endswith &quot;\rundll32.exe&quot;
+   or NewProcessName endswith &quot;\regsvr32.exe&quot;
+   or NewProcessName endswith &quot;\mshta.exe&quot;
+   or NewProcessName endswith &quot;\wscript.exe&quot;
+   or NewProcessName endswith &quot;\cscript.exe&quot;
+   or NewProcessName endswith &quot;\wmic.exe&quot;
+   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
+| project TimeGenerated, Computer, Account, ParentProcessName,
+          NewProcessName, CommandLine
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-488-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
+status: experimental
+description: |
+    A signed vendor binary (in the article&#x27;s named-vendors list)
+    spawning script-host or LOLBin children. Strongest signal when
+    paired with a recent CVE / supply-chain advisory naming the same
+    vendor.
+references:
+    - https://attack.mitre.org/techniques/T1195/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1195
+    - attack.initial-access
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_child:
+        Image|endswith:
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+            - &#x27;\cmd.exe&#x27;
+            - &#x27;\rundll32.exe&#x27;
+            - &#x27;\regsvr32.exe&#x27;
+            - &#x27;\mshta.exe&#x27;
+            - &#x27;\wscript.exe&#x27;
+            - &#x27;\cscript.exe&#x27;
+            - &#x27;\wmic.exe&#x27;
+            - &#x27;\bitsadmin.exe&#x27;
+    selection_parent_vendor:
+        ParentImage|contains:
+            - &#x27;\Program Files\&#x27;
+            - &#x27;\Program Files (x86)\&#x27;
+    condition: selection_child and selection_parent_vendor
+falsepositives:
+    - Many — installers and updaters legitimately spawn children. Pin
+      the parent path to specific vendor binaries observed in the
+      article before alerting.
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-488-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-488-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-488-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-488-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-488-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="51107561b5" data-platforms="def,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — Securing the Agent Skill Ecosystem: How Snyk and Vercel Are Locking Down the New</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="51107561b5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-488-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-488-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-488-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Securing the Agent Skill Ecosystem: How Snyk and Vercel Are Locking Down the New
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;skills.sh&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;skills.sh&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-488-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-488-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-488-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-488-uc1-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Securing the Agent Skill Ecosystem: How Snyk and Vercel Are Locking Down the New ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;skills.sh&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;skills.sh&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-488-uc1-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Securing the Agent Skill Ecosystem: How Snyk and Vercel Are Locking Down the New ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;skills.sh&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;skills.sh&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
   </div>
 </details></div>
 </article>

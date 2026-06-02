@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1249 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1248 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,16 +9,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-02
+- [cisa flags palo alto networks pan os vulnerability as exploi](./2026-06-02/cisa-flags-palo-alto-networks-pan-os-vulnerability-as-exploi.md)
 - [cisa flags two year old oracle flaw as actively exploited in](./2026-06-02/cisa-flags-two-year-old-oracle-flaw-as-actively-exploited-in.md)
 - [dashlane discloses brute force attack encrypted vaults of fe](./2026-06-02/dashlane-discloses-brute-force-attack-encrypted-vaults-of-fe.md)
 - [google fixes one actively exploited android zero day 124 fla](./2026-06-02/google-fixes-one-actively-exploited-android-zero-day-124-fla.md)
-- [hackers deploy azureveil adaptix c2 agent via spearphishing ](./2026-06-02/hackers-deploy-azureveil-adaptix-c2-agent-via-spearphishing-.md)
-- [nimbus manticore apt abuses fake recruitment portal to deliv](./2026-06-02/nimbus-manticore-apt-abuses-fake-recruitment-portal-to-deliv.md)
+- [hackers use 34 malicious packages to steal cloud keys wallet](./2026-06-02/hackers-use-34-malicious-packages-to-steal-cloud-keys-wallet.md)
+- [mustang panda deploys plugx rat through multi stage lnk and ](./2026-06-02/mustang-panda-deploys-plugx-rat-through-multi-stage-lnk-and-.md)
 - [operation flutterbridge macos malvertising campaign spreads ](./2026-06-02/operation-flutterbridge-macos-malvertising-campaign-spreads-.md)
 - [pakistan linked sidecopy targets afghanistan finance ministr](./2026-06-02/pakistan-linked-sidecopy-targets-afghanistan-finance-ministr.md)
-- [phantompulse rat uses process injection and uac bypass to co](./2026-06-02/phantompulse-rat-uses-process-injection-and-uac-bypass-to-co.md)
 - [solyximmortal python malware steals browser passwords cookie](./2026-06-02/solyximmortal-python-malware-steals-browser-passwords-cookie.md)
-- [wardriving assessment across mexico preparing for the 2026 w](./2026-06-02/wardriving-assessment-across-mexico-preparing-for-the-2026-w.md)
 
 ## 2026-06-01
 - [china aligned groups ramp up attacks dragon weave hits czech](./2026-06-01/china-aligned-groups-ramp-up-attacks-dragon-weave-hits-czech.md)
