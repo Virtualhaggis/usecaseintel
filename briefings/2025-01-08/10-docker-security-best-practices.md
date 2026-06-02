@@ -83,7 +83,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 10 Docker Security Best Practices
 
-`UC_1023_2` · phase: **exploit** · confidence: **High**
+`UC_1022_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

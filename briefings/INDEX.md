@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1249 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-02
+- [ai built ransomware toolkit automates edr evasion ad discove](./2026-06-02/ai-built-ransomware-toolkit-automates-edr-evasion-ad-discove.md)
 - [attackers abuse aws google cloud cloudflare and microsoft se](./2026-06-02/attackers-abuse-aws-google-cloud-cloudflare-and-microsoft-se.md)
 - [cisa flags palo alto networks pan os vulnerability as exploi](./2026-06-02/cisa-flags-palo-alto-networks-pan-os-vulnerability-as-exploi.md)
 - [cisa flags two year old oracle flaw as actively exploited in](./2026-06-02/cisa-flags-two-year-old-oracle-flaw-as-actively-exploited-in.md)
@@ -17,10 +18,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [dashlane discloses brute force attack encrypted vaults of fe](./2026-06-02/dashlane-discloses-brute-force-attack-encrypted-vaults-of-fe.md)
 - [gamaredon exploits winrar to deliver gammaworm and gammastee](./2026-06-02/gamaredon-exploits-winrar-to-deliver-gammaworm-and-gammastee.md)
 - [google fixes one actively exploited android zero day 124 fla](./2026-06-02/google-fixes-one-actively-exploited-android-zero-day-124-fla.md)
+- [google june 2026 android update patches 124 flaws one active](./2026-06-02/google-june-2026-android-update-patches-124-flaws-one-active.md)
+- [laravel lang supply chain attack every tag across multiple c](./2026-06-02/laravel-lang-supply-chain-attack-every-tag-across-multiple-c.md)
 - [microsoft build 2026 securing code agents and models across ](./2026-06-02/microsoft-build-2026-securing-code-agents-and-models-across-.md)
+- [nx console vs code extension compromised](./2026-06-02/nx-console-vs-code-extension-compromised.md)
 - [operation flutterbridge macos malvertising campaign spreads ](./2026-06-02/operation-flutterbridge-macos-malvertising-campaign-spreads-.md)
-- [oracle weblogic cve 2024 21182 added to kev catalog after ac](./2026-06-02/oracle-weblogic-cve-2024-21182-added-to-kev-catalog-after-ac.md)
 - [pakistan linked sidecopy targets afghanistan finance ministr](./2026-06-02/pakistan-linked-sidecopy-targets-afghanistan-finance-ministr.md)
+- [protestware by open source maintainer to hinder agentic codi](./2026-06-02/protestware-by-open-source-maintainer-to-hinder-agentic-codi.md)
 - [red hat confirms supply chain compromise of redhat cloud ser](./2026-06-02/red-hat-confirms-supply-chain-compromise-of-redhat-cloud-ser.md)
 - [the npm threat landscape attack surface and mitigations upda](./2026-06-02/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 - [why the browser is now the front line for ai security](./2026-06-02/why-the-browser-is-now-the-front-line-for-ai-security.md)
@@ -123,8 +127,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46716 nezha monitoring rolemember can](./2026-05-23/ghsa-critical-cve-2026-46716-nezha-monitoring-rolemember-can.md)
 - [laravel lang php packages compromised to deliver cross platf](./2026-05-23/laravel-lang-php-packages-compromised-to-deliver-cross-platf.md)
 - [laravel lang supply chain advisory](./2026-05-23/laravel-lang-supply-chain-advisory.md)
-- [laravel lang supply chain attack every tag across multiple c](./2026-05-23/laravel-lang-supply-chain-attack-every-tag-across-multiple-c.md)
-- [litespeed cpanel plugin cve 2026 48172 exploited to run scri](./2026-05-23/litespeed-cpanel-plugin-cve-2026-48172-exploited-to-run-scri.md)
 - [npm adds 2fa gated publishing and package install controls a](./2026-05-23/npm-adds-2fa-gated-publishing-and-package-install-controls-a.md)
 - [supply chain attack targets laravel lang packages with crede](./2026-05-23/supply-chain-attack-targets-laravel-lang-packages-with-crede.md)
 
@@ -137,7 +139,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa qqqm 5547 774x filebrowser quantum path t](./2026-05-22/ghsa-critical-ghsa-qqqm-5547-774x-filebrowser-quantum-path-t.md)
 - [megalodon mass github actions secret exfiltration across 5 5](./2026-05-22/megalodon-mass-github-actions-secret-exfiltration-across-5-5.md)
 - [microsoft security success stories how st luke s and manpowe](./2026-05-22/microsoft-security-success-stories-how-st-luke-s-and-manpowe.md)
-- [nx console vs code extension compromised](./2026-05-22/nx-console-vs-code-extension-compromised.md)
 - [paved with intent roadtools and nation state tactics in the ](./2026-05-22/paved-with-intent-roadtools-and-nation-state-tactics-in-the-.md)
 - [tracking iranian apt screening serpens 2026 espionage campai](./2026-05-22/tracking-iranian-apt-screening-serpens-2026-espionage-campai.md)
 
@@ -145,7 +146,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [5 supply chain attacks in 48 hours why securing one layer is](./2026-05-21/5-supply-chain-attacks-in-48-hours-why-securing-one-layer-is.md)
 - [cisa kev cve 2025 34291 langflow origin validation error vul](./2026-05-21/cisa-kev-cve-2025-34291-langflow-origin-validation-error-vul.md)
 - [cisa kev cve 2026 34926 trend micro apex one on premise dire](./2026-05-21/cisa-kev-cve-2026-34926-trend-micro-apex-one-on-premise-dire.md)
-- [dev machine guard now scans extensions across every modern i](./2026-05-21/dev-machine-guard-now-scans-extensions-across-every-modern-i.md)
 - [ghsa critical cve 2026 46614 fission router exposes fission ](./2026-05-21/ghsa-critical-cve-2026-46614-fission-router-exposes-fission-.md)
 - [ghsa critical cve 2026 46633 twig php code injection via use](./2026-05-21/ghsa-critical-cve-2026-46633-twig-php-code-injection-via-use.md)
 - [ghsa critical cve 2026 46703 boxlite path traversal vulnerab](./2026-05-21/ghsa-critical-cve-2026-46703-boxlite-path-traversal-vulnerab.md)
@@ -2319,5 +2319,4 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ethical hacking techniques](./2023-06-05/ethical-hacking-techniques.md)
 
 ## 2023-06-01
-- [a quick primer on ldap injection](./2023-06-01/a-quick-primer-on-ldap-injection.md)
 - [ethical hacking top tools](./2023-06-01/ethical-hacking-top-tools.md)

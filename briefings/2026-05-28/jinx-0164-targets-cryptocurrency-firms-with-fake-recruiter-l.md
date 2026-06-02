@@ -100,7 +100,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] JINX-0164 C2 communication to fake driver-store infrastructure
 
-`UC_91_10` · phase: **c2** · confidence: **High**
+`UC_94_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceNetworkEvents
 
 ### [LLM] AUDIOFIX persistence: ChromeUpdater binary loaded via launchctl on macOS
 
-`UC_91_11` · phase: **install** · confidence: **High**
+`UC_94_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,7 +149,7 @@ union
 
 ### [LLM] JINX-0164 AUDIOFIX delivery: shell payload retrieved from driver-store family domain
 
-`UC_91_12` · phase: **delivery** · confidence: **High**
+`UC_94_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -168,7 +168,7 @@ DeviceProcessEvents
 
 ### [LLM] AUDIOFIX credential staging: Python parent invoking security/sqlite3/keychain extraction on macOS
 
-`UC_91_13` · phase: **actions** · confidence: **Medium**
+`UC_94_13` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -205,7 +205,7 @@ DeviceProcessEvents
 
 ### [LLM] Supply chain: install or runtime import of poisoned @velora-dex/sdk@9.4.1 (MiniRAT dropper)
 
-`UC_91_14` · phase: **delivery** · confidence: **High**
+`UC_94_14` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

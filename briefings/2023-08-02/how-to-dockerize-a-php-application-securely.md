@@ -63,7 +63,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — How to Dockerize a PHP application securely
 
-`UC_1403_1` · phase: **install** · confidence: **High**
+`UC_1402_1` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

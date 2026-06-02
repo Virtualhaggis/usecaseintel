@@ -1,38 +1,45 @@
-# [HIGH] Miasma Supply Chain Attack Compromises Red Hat npm Packages with Credential-Stealing Worm
+# [CRIT] Miasma Supply Chain Attack Compromises Red Hat npm Packages with Credential-Stealing Worm
 
-**Source:** The Hacker News, BleepingComputer, StepSecurity
+**Source:** The Hacker News, BleepingComputer
 **Published:** 2026-06-01
 **Article:** https://thehackernews.com/2026/06/miasma-supply-chain-attack-compromises.html
 
 ## Threat Profile
 
-Back to Blog Threat Intel Multiple redhat-cloud-services npm Packages compromised Several packages in the @redhat-cloud-services npm scope were found to carry malicious payloads that fire via a preinstall hook on every npm install. The affected versions span multiple packages across the RedHat Cloud Services frontend ecosystem. The payload is a sophisticated multi-stage credential harvester that targets GitHub Actions secrets, AWS, GCP, Azure, Kubernetes, HashiCorp Vault, npm tokens, and CircleC…
+Miasma Supply Chain Attack Compromises Red Hat npm Packages with Credential-Stealing Worm 
+ Ravie Lakshmanan  Jun 01, 2026 Supply Chain Attack / Software Security 
+A new Mini Shai-Hulud supply chain attack campaign, codenamed Miasma , has compromised @redhat-cloud-services packages to steal credentials and secrets from developer machines and deliver a self-propagating worm.
+"This is effectively a Mini Shai-Hulud campaign: it uses the same core tactics of install-time execution, credential harv…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **SHA256:** `ba2c6ddb3672bdd6a611e6850b4f700b52aed3dab2f1b3d5f8c839d4a157a709`
-- **MD5:** `4c26cf9791bce1bfd4b84eba80ce2754`
-- **MD5:** `ec514c074caf0ffdce6c66a0e95753d8`
-- **MD5:** `5b26508dc0f1075a7c0b4d8aa464487e`
+- **CVE:** `CVE-2026-45585`
+- **CVE:** `CVE-2026-31635`
+- **CVE:** `CVE-2026-42945`
+- **Domain (defanged):** `api.anthropic.com`
 
 ## MITRE ATT&CK Techniques
 
-- **T1071.001** — Web Protocols
-- **T1071.004** — DNS
+- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
+- **T1566.001** — Spearphishing Attachment
+- **T1204.002** — User Execution: Malicious File
+- **T1059.005** — Visual Basic
+- **T1218** — System Binary Proxy Execution
+- **T1528** — Steal Application Access Token
+- **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
-- **T1204.002** — User Execution: Malicious File
+- **T1071** — Application Layer Protocol
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1105** — Ingress Tool Transfer
 - **T1140** — Deobfuscate/Decode Files or Information
 - **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1552.001** — Unsecured Credentials: Credentials In Files
 - **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
-- **T1528** — Steal Application Access Token
 
 ## Kill chain phases observed
 
@@ -42,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] npm preinstall executing oversized index.js from @redhat-cloud-services scope
 
-`UC_28_7` · phase: **install** · confidence: **High**
+`UC_32_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +81,7 @@ DeviceProcessEvents
 
 ### [LLM] Node-driven Bun runtime download from oven-sh GitHub Releases during npm install
 
-`UC_28_8` · phase: **delivery** · confidence: **High**
+`UC_32_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +109,7 @@ DeviceNetworkEvents
 
 ### [LLM] Stage-4 implant written to /tmp/p<random>.js and executed by freshly dropped Bun binary
 
-`UC_28_9` · phase: **exploit** · confidence: **High**
+`UC_32_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +132,7 @@ DeviceProcessEvents
 
 ### [LLM] CI runner reading cloud-provider credential env files immediately after npm install
 
-`UC_28_10` · phase: **actions** · confidence: **Medium**
+`UC_32_13` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,41 +155,6 @@ DeviceFileEvents
             by DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine
 | where DistinctTargets >= 2
 | order by LastHit desc
-```
-
-### Beaconing — periodic outbound to small set of destinations
-
-`UC_BEACONING` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count > 30 AND sd_delta < 5 AND avg_delta>=30 AND avg_delta<=600
-| sort - count
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where RemoteIPType == "Public" and ActionType == "ConnectionSuccess"
-| project DeviceName, RemoteIP, RemotePort, Timestamp
-| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
-| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
-         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
-| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
-| extend delta_sec = datetime_diff('second', Timestamp, prev_ts)
-| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
-    by DeviceName, RemoteIP, RemotePort
-| where conn_count > 30 and avg_delta between (30.0 .. 600.0) and stdev_delta < 5.0
-| order by conn_count desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -270,6 +242,96 @@ DeviceProcessEvents
 | order by ClickTime desc
 ```
 
+### Email attachment opened from external sender
+
+`UC_PHISH_ATTACH` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count
+    from datamodel=Email.All_Email
+    where All_Email.file_name!="-"
+    by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
+| rename All_Email.recipient as user
+| join type=inner user
+    [| tstats `summariesonly` count
+        from datamodel=Endpoint.Processes
+        where Processes.parent_process_name IN ("OUTLOOK.EXE","winword.exe","excel.exe","powerpnt.exe")
+          AND Processes.process_name IN ("cmd.exe","powershell.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe")
+        by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+     | rename Processes.user as user]
+```
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let MalAttachments = EmailAttachmentInfo
+    | where Timestamp > ago(LookbackDays)
+    | where AccountName !endswith "$"
+    | project NetworkMessageId, RecipientEmailAddress,
+              AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
+DeviceProcessEvents
+| where Timestamp > ago(LookbackDays)
+| where InitiatingProcessFileName in~ ("OUTLOOK.EXE","winword.exe","excel.exe","powerpnt.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","wscript.exe","cscript.exe",
+                      "mshta.exe","rundll32.exe","regsvr32.exe")
+| join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256
+```
+
+### Office app spawning script/LOLBin child process
+
+`UC_OFFICE_CHILD` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
+      AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("winword.exe","excel.exe","powerpnt.exe","outlook.exe","onenote.exe","mspub.exe","visio.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","wmic.exe","bitsadmin.exe","certutil.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+```
+
+### OAuth consent / suspicious app grant
+
+`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Authentication.Authentication
+    where Authentication.action="success"
+      AND Authentication.signature IN (
+        "Consent to application",
+        "Add app role assignment grant to user",
+        "Add OAuth2PermissionGrant",
+        "Add delegated permission grant")
+    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
+| `drop_dm_object_name(Authentication)`
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
+| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
+          ActivityObjects, IPAddress, UserAgent
+```
+
 ### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
 
 `UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
@@ -353,27 +415,18 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Miasma Supply Chain Attack Compromises Red Hat npm Packages with Credential-Stea
 
-`UC_28_6` · phase: **exploit** · confidence: **High**
+`UC_32_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 ``` Article-specific bespoke detection — Miasma Supply Chain Attack Compromises Red Hat npm Packages with Credential-Stea ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("index.js"))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_name IN ("index.js"))
+      AND (Filesystem.file_path="*/etc/sudoers.d*")
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]
 ```
 
 **Defender KQL:**
@@ -381,19 +434,12 @@ DeviceProcessEvents
 // Article-specific bespoke detection — Miasma Supply Chain Attack Compromises Red Hat npm Packages with Credential-Stea
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName in~ ("index.js"))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
 
 // File-creation events for the named binaries / paths
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified")
-| where (FileName in~ ("index.js"))
+| where (FolderPath has_any ("/etc/sudoers.d"))
 | project Timestamp, DeviceName, AccountName, FolderPath,
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
@@ -404,10 +450,13 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `ba2c6ddb3672bdd6a611e6850b4f700b52aed3dab2f1b3d5f8c839d4a157a709`, `4c26cf9791bce1bfd4b84eba80ce2754`, `ec514c074caf0ffdce6c66a0e95753d8`, `5b26508dc0f1075a7c0b4d8aa464487e`
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-45585`, `CVE-2026-31635`, `CVE-2026-42945`
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `api.anthropic.com`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
