@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1249 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -23,6 +23,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft build 2026 securing code agents and models across ](./2026-06-02/microsoft-build-2026-securing-code-agents-and-models-across-.md)
 - [nx console vs code extension compromised](./2026-06-02/nx-console-vs-code-extension-compromised.md)
 - [operation flutterbridge macos malvertising campaign spreads ](./2026-06-02/operation-flutterbridge-macos-malvertising-campaign-spreads-.md)
+- [over 116 000 mincraft systems infected in weedhack malware c](./2026-06-02/over-116-000-mincraft-systems-infected-in-weedhack-malware-c.md)
 - [pakistan linked sidecopy targets afghanistan finance ministr](./2026-06-02/pakistan-linked-sidecopy-targets-afghanistan-finance-ministr.md)
 - [protestware by open source maintainer to hinder agentic codi](./2026-06-02/protestware-by-open-source-maintainer-to-hinder-agentic-codi.md)
 - [red hat confirms supply chain compromise of redhat cloud ser](./2026-06-02/red-hat-confirms-supply-chain-compromise-of-redhat-cloud-ser.md)
@@ -233,6 +234,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 31220 pysyft server side arbitrary py](./2026-05-12/ghsa-critical-cve-2026-31220-pysyft-server-side-arbitrary-py.md)
 - [ghsa critical cve 2026 31233 guardrails ai contains a code i](./2026-05-12/ghsa-critical-cve-2026-31233-guardrails-ai-contains-a-code-i.md)
 - [ghsa critical cve 2026 31234 horovod contains an insecure de](./2026-05-12/ghsa-critical-cve-2026-31234-horovod-contains-an-insecure-de.md)
+- [ghsa critical cve 2026 33117 security feature bypass vulnera](./2026-05-12/ghsa-critical-cve-2026-33117-security-feature-bypass-vulnera.md)
 - [ghsa critical cve 2026 42074 openclaude sandbox bypass via m](./2026-05-12/ghsa-critical-cve-2026-42074-openclaude-sandbox-bypass-via-m.md)
 - [ghsa critical cve 2026 43512 apache tomcat digest authentica](./2026-05-12/ghsa-critical-cve-2026-43512-apache-tomcat-digest-authentica.md)
 - [ghsa critical cve 2026 44593 esm sh legacy route path traver](./2026-05-12/ghsa-critical-cve-2026-44593-esm-sh-legacy-route-path-traver.md)
@@ -247,7 +249,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 25244 webdriverio browserstack servic](./2026-05-11/ghsa-critical-cve-2026-25244-webdriverio-browserstack-servic.md)
 - [ghsa critical cve 2026 27478 unity catalog has a jwt issuer ](./2026-05-11/ghsa-critical-cve-2026-27478-unity-catalog-has-a-jwt-issuer-.md)
 - [ghsa critical cve 2026 43898 sandboxjs has a sandbox escape ](./2026-05-11/ghsa-critical-cve-2026-43898-sandboxjs-has-a-sandbox-escape-.md)
-- [ghsa critical cve 2026 44477 cloudnativepg s metrics exporte](./2026-05-11/ghsa-critical-cve-2026-44477-cloudnativepg-s-metrics-exporte.md)
 - [ghsa critical cve 2026 44643 angular expressions remote code](./2026-05-11/ghsa-critical-cve-2026-44643-angular-expressions-remote-code.md)
 - [ghsa critical cve 2026 7813 pgadmin 4 server mode has an aut](./2026-05-11/ghsa-critical-cve-2026-7813-pgadmin-4-server-mode-has-an-aut.md)
 - [ghsa critical ghsa h29g c9cx c73q torrentpier has php serial](./2026-05-11/ghsa-critical-ghsa-h29g-c9cx-c73q-torrentpier-has-php-serial.md)

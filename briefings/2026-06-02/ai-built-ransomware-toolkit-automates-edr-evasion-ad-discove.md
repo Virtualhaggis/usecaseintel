@@ -11,12 +11,8 @@ By Bill Toulas
 June 2, 2026
 04:01 PM
 0 
-
-
 A threat actor is using an AI-built ransomware attack toolkit that automates Active Directory discovery and helps evade endpoint detection and response (EDR) solutions.
-
-
-Tool and payload development was assisted by Cursor and Claude Opus agents in various stages, including initial coding, analysis, and revisioning. Additionally, some agents were tasked with checking security research …
+Tool and payload development was assisted by Cursor and Claude Opus agents in various stages, including initial coding, analysis, and revisioning. Additionally, some agents were tasked with checking security research posts fo…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -46,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Telegram Bot API C2 channel used by AI-built ransomware toolkit (non-IM/non-browser egress)
 
-`UC_0_4` · phase: **c2** · confidence: **High**
+`UC_4_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +69,7 @@ DeviceNetworkEvents
 
 ### [LLM] First-time egress to *.workers.dev (Cloudflare Worker C2 redirector) from non-browser process
 
-`UC_0_5` · phase: **c2** · confidence: **Medium**
+`UC_4_5` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +100,7 @@ DeviceNetworkEvents
 
 ### [LLM] Payload staging in user 'Documents\test' folder — AI-built ransomware toolkit drop path
 
-`UC_0_6` · phase: **install** · confidence: **High**
+`UC_4_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

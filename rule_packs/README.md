@@ -1,6 +1,6 @@
 # Rule packs — auto-generated SIEM-native exports
 
-Generated: 2026-06-02T22:01:32Z
+Generated: 2026-06-02T23:50:30Z
 
 This directory contains per-platform versions of every internal use case
 in the catalogue. Drop-in for the named SIEM, but **always disabled by
