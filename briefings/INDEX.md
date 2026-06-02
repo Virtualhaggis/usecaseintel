@@ -8,6 +8,9 @@ _1253 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-06-02
+- [hackers use meta s ai bot to reset passwords and hijack inst](./2026-06-02/hackers-use-meta-s-ai-bot-to-reset-passwords-and-hijack-inst.md)
+
 ## 2026-06-01
 - [android banking trojan overlayphantom abuses accessibility s](./2026-06-01/android-banking-trojan-overlayphantom-abuses-accessibility-s.md)
 - [china aligned groups ramp up attacks dragon weave hits czech](./2026-06-01/china-aligned-groups-ramp-up-attacks-dragon-weave-hits-czech.md)
@@ -25,7 +28,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [miasma supply chain attack malicious code found in redhat cl](./2026-06-01/miasma-supply-chain-attack-malicious-code-found-in-redhat-cl.md)
 - [multiple red hat cloud services npm packages compromised to ](./2026-06-01/multiple-red-hat-cloud-services-npm-packages-compromised-to-.md)
 - [openai codex authentication tokens stolen in codexui android](./2026-06-01/openai-codex-authentication-tokens-stolen-in-codexui-android.md)
-- [sidecopy hackers deploy persistent xenorat malware to target](./2026-06-01/sidecopy-hackers-deploy-persistent-xenorat-malware-to-target.md)
 - [smartapesg campaign uses clickfix scripts to infect windows ](./2026-06-01/smartapesg-campaign-uses-clickfix-scripts-to-infect-windows-.md)
 - [weekly recap new linux flaw pan os exploit ai powered attack](./2026-06-01/weekly-recap-new-linux-flaw-pan-os-exploit-ai-powered-attack.md)
 - [wordpress malware campaign hides payloads in steam profiles](./2026-06-01/wordpress-malware-campaign-hides-payloads-in-steam-profiles.md)
