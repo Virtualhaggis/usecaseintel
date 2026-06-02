@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-02
+- [dashlane discloses brute force attack encrypted vaults of fe](./2026-06-02/dashlane-discloses-brute-force-attack-encrypted-vaults-of-fe.md)
 - [hackers use meta s ai bot to reset passwords and hijack inst](./2026-06-02/hackers-use-meta-s-ai-bot-to-reset-passwords-and-hijack-inst.md)
 
 ## 2026-06-01
@@ -131,7 +132,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghostwriter targets ukraine government entities with prometh](./2026-05-22/ghostwriter-targets-ukraine-government-entities-with-prometh.md)
 - [ghsa critical cve 2026 46670 yeswiki unauthenticated sql inj](./2026-05-22/ghsa-critical-cve-2026-46670-yeswiki-unauthenticated-sql-inj.md)
 - [ghsa critical ghsa qqqm 5547 774x filebrowser quantum path t](./2026-05-22/ghsa-critical-ghsa-qqqm-5547-774x-filebrowser-quantum-path-t.md)
-- [kimwolf ddos botnet operator arrested in canada over ddos fo](./2026-05-22/kimwolf-ddos-botnet-operator-arrested-in-canada-over-ddos-fo.md)
 - [making vulnerable drivers exploitable without hardware the b](./2026-05-22/making-vulnerable-drivers-exploitable-without-hardware-the-b.md)
 - [megalodon github attack targets 5 561 repos with malicious c](./2026-05-22/megalodon-github-attack-targets-5-561-repos-with-malicious-c.md)
 - [megalodon mass github actions secret exfiltration across 5 5](./2026-05-22/megalodon-mass-github-actions-secret-exfiltration-across-5-5.md)

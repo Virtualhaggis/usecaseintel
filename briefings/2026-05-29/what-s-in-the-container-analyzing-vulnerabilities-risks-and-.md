@@ -67,7 +67,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Web service in container spawning interactive shell (Redis/nginx RCE)
 
-`UC_62_4` · phase: **exploit** · confidence: **High**
+`UC_63_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### [LLM] Container privilege escalation via Looney Tunables, PwnKit, sudo chroot
 
-`UC_62_5` · phase: **exploit** · confidence: **High**
+`UC_63_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceProcessEvents
 
 ### [LLM] perfctl rootkit — /etc/ld.so.preload write or LD_PRELOAD on root daemon
 
-`UC_62_6` · phase: **install** · confidence: **High**
+`UC_63_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ union
 
 ### [LLM] Container default credential leak — PKP_DB_PASSWORD=changeMePlease and --secret
 
-`UC_62_7` · phase: **weapon** · confidence: **Medium**
+`UC_63_7` · phase: **weapon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,7 +155,7 @@ DeviceProcessEvents
 
 ### [LLM] Container-to-container horizontal scan — Dero miner self-propagation
 
-`UC_62_8` · phase: **actions** · confidence: **Medium**
+`UC_63_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -177,7 +177,7 @@ DeviceNetworkEvents
 
 ### [LLM] Container egress to cryptominer pool / Kinsing C2
 
-`UC_62_9` · phase: **c2** · confidence: **High**
+`UC_63_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -255,7 +255,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — What’s in the container? Analyzing vulnerabilities, risks and protection with Ka
 
-`UC_62_3` · phase: **install** · confidence: **High**
+`UC_63_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

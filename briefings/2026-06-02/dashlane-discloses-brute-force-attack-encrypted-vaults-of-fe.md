@@ -1,21 +1,19 @@
-# [HIGH] Dutch Authorities Dismantle Botnet Linked to 17 Million Infected Devices
+# [HIGH] Dashlane Discloses Brute-Force Attack, Encrypted Vaults of Fewer Than 20 Users Downloaded
 
 **Source:** The Hacker News
-**Published:** 2026-05-31
-**Article:** https://thehackernews.com/2026/05/dutch-authorities-dismantle-botnet.html
+**Published:** 2026-06-02
+**Article:** https://thehackernews.com/2026/06/dashlane-discloses-brute-force-attack.html
 
 ## Threat Profile
 
-Dutch Authorities Dismantle Botnet Linked to 17 Million Infected Devices 
- Ravie Lakshmanan  May 31, 2026 IoT Security / Network Security 
-Dutch authorities have announced the takedown of a botnet that enslaved millions of infected devices, including computers, tablets, smartphones, and IoT devices, to carry out malicious attacks.
-The bot network, per the Dutch Politie and the National Cyber Security Center (NCSC), consisted of at least 17 million infected devices. More than 200 servers locate…
+Dashlane Discloses Brute-Force Attack, Encrypted Vaults of Fewer Than 20 Users Downloaded 
+ Ravie Lakshmanan  Jun 02, 2026 Identity Security / Data Protection 
+Password manager Dashlane has disclosed that "fewer than" 20 users on the personal subscription plan had their encrypted vaults downloaded following a brute-force attack launched by an unknown party.
+On May 31, 2026, the company said an "external" threat actor launched a brute-force attack against certain Dashlane user accounts with the…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `asocks.com`
-- **Domain (defanged):** `lumiapps.io`
-- **Domain (defanged):** `bproxy.one`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
@@ -29,73 +27,12 @@ The bot network, per the Dutch Politie and the National Cyber Security Center (N
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
-- **T1071** — Application Layer Protocol
-- **T1189** — Drive-by Compromise
-- **T1090.002** — Proxy: External Proxy
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1583.003** — Acquire Infrastructure: Virtual Private Server
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] PROXYLIB SDK enrollment — first-time DNS lookup of lumiapps.io / asocks.com from a device
-
-`UC_34_6` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*lumiapps.io" OR DNS.query="*asocks.com" OR DNS.query="*bproxy.one") by DNS.src, DNS.src_host, DNS.query, DNS.process_name | `drop_dm_object_name(DNS)` | eval firstTimeStr=strftime(firstTime,"%Y-%m-%d %H:%M:%S") | eval lastTimeStr=strftime(lastTime,"%Y-%m-%d %H:%M:%S") | join type=left src [| tstats `summariesonly` count as baseline_count from datamodel=Network_Resolution.DNS where (DNS.query="*lumiapps.io" OR DNS.query="*asocks.com" OR DNS.query="*bproxy.one") earliest=-30d@d latest=-1d@d by DNS.src, DNS.query | `drop_dm_object_name(DNS)`] | where isnull(baseline_count) OR baseline_count=0 | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-let Targets = dynamic(["lumiapps.io", "asocks.com", "bproxy.one"]);
-let Baseline = DeviceNetworkEvents
-    | where Timestamp between (ago(30d) .. ago(1d))
-    | where RemoteUrl has_any (Targets)
-    | summarize by DeviceId, RemoteUrl;
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where RemoteUrl has_any (Targets)
-| join kind=leftanti Baseline on DeviceId, RemoteUrl
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceId, DeviceName, RemoteUrl, RemoteIP, RemotePort,
-          InitiatingProcessAccountName, InitiatingProcessFileName,
-          InitiatingProcessFolderPath, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### [LLM] PROXYLIB / Asocks proxyware — process-attributed beacon from non-browser binary
-
-`UC_34_7` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime sum(All_Traffic.bytes_out) as bytes_out values(All_Traffic.dest_port) as dest_ports from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host="*asocks.com" OR All_Traffic.dest_host="*lumiapps.io" OR All_Traffic.dest_host="*bproxy.one") by host, All_Traffic.src, All_Traffic.process_name, All_Traffic.process, All_Traffic.dest_host, All_Traffic.user | `drop_dm_object_name(All_Traffic)` | where NOT match(process_name, "(?i)(chrome|msedge|firefox|brave|iexplore|opera|safari|vivaldi)\.exe$") | eval firstTimeStr=strftime(firstTime,"%Y-%m-%d %H:%M:%S") | eval lastTimeStr=strftime(lastTime,"%Y-%m-%d %H:%M:%S") | sort - count
-```
-
-**Defender KQL:**
-```kql
-let Proxyware = dynamic(["asocks.com", "lumiapps.io", "bproxy.one"]);
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteUrl has_any (Proxyware)
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","iexplore.exe","opera.exe","safari.exe","vivaldi.exe")
-| where InitiatingProcessAccountName !endswith "$"
-| summarize ConnectionCount = count(),
-            FirstSeen = min(Timestamp),
-            LastSeen = max(Timestamp),
-            DistinctPorts = make_set(RemotePort, 10),
-            SampleCmd = any(InitiatingProcessCommandLine),
-            SampleHash = any(InitiatingProcessSHA256)
-    by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
-       InitiatingProcessFolderPath, RemoteUrl
-| order by ConnectionCount desc
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -296,14 +233,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `asocks.com`, `lumiapps.io`, `bproxy.one`
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 5 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
