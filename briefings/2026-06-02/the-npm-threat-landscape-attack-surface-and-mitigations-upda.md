@@ -1,7 +1,7 @@
-# [CRIT] The npm Threat Landscape: Attack Surface and Mitigations (Updated May 21)
+# [CRIT] The npm Threat Landscape: Attack Surface and Mitigations (Updated June 2)
 
-**Source:** Unit 42 (Palo Alto), StepSecurity
-**Published:** 2026-05-21
+**Source:** Unit 42 (Palo Alto)
+**Published:** 2026-06-02
 **Article:** https://unit42.paloaltonetworks.com/monitoring-npm-supply-chain-attacks/
 
 ## Threat Profile
@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] npm/node lifecycle script fetching Bun runtime from github.com/oven-sh/bun
 
-`UC_155_8` · phase: **install** · confidence: **High**
+`UC_4_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ union ProcHits, NetHits
 
 ### [LLM] C2 beacon to audit.checkmarx[.]cx /v1/telemetry (TeamPCP Shai-Hulud Third Coming)
 
-`UC_155_9` · phase: **c2** · confidence: **High**
+`UC_4_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ DeviceNetworkEvents
 
 ### [LLM] Malicious @bitwarden/cli payload artifacts on disk (bw_setup.js, bw1.js, Shai-Hulud markers)
 
-`UC_155_10` · phase: **install** · confidence: **High**
+`UC_4_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -392,13 +392,13 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — The npm Threat Landscape: Attack Surface and Mitigations (Updated May 21)
+### Article-specific behavioural hunt — The npm Threat Landscape: Attack Surface and Mitigations (Updated June 2)
 
-`UC_155_7` · phase: **exploit** · confidence: **High**
+`UC_4_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — The npm Threat Landscape: Attack Surface and Mitigations (Updated May 21) ```
+``` Article-specific bespoke detection — The npm Threat Landscape: Attack Surface and Mitigations (Updated June 2) ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN ("mcpaddon.js","bw_setup.js","node.js","bw1.js"))
@@ -419,7 +419,7 @@ DeviceProcessEvents
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — The npm Threat Landscape: Attack Surface and Mitigations (Updated May 21)
+// Article-specific bespoke detection — The npm Threat Landscape: Attack Surface and Mitigations (Updated June 2)
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents

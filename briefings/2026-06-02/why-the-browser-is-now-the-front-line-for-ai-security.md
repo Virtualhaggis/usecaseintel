@@ -11,13 +11,12 @@ Sponsored by Push Security
 June 2, 2026
 10:30 AM
 0 
-
-
-Security teams are staring at two AI problems at once. Adversaries are using AI to iterate on phishing kits, generate lures, and rotate infrastructure faster than blocklists can follow. Employees are adopting AI tools faster than security teams can review them, pasting sensitive data into LLMs, granting OAuth permissions to AI agents, and installing AI browser extensions that nobody ve…
+Security teams are staring at two AI problems at once. Adversaries are using AI to iterate on phishing kits, generate lures, and rotate infrastructure faster than blocklists can follow. Employees are adopting AI tools faster than security teams can review them, pasting sensitive data into LLMs, granting OAuth permissions to AI agents, and installing AI browser extensions that nobody vetted…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `openew.app`
+- **SHA256:** `de8c50e8ccd240ef9d10ec26c26eeb37a4d1cad7c1e0edf3bb6e5689ec2dde78`
 
 ## MITRE ATT&CK Techniques
 
@@ -34,6 +33,8 @@ Security teams are staring at two AI problems at once. Adversaries are using AI 
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
 - **T1566.002** — Phishing: Spearphishing Link
 - **T1078.004** — Valid Accounts: Cloud Accounts
 - **T1583.008** — Acquire Infrastructure: Malvertising
@@ -48,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] OAuth device-code flow sign-in to Entra ID (device code phishing — Doko/ShinyHunters/BlackFile PhaaS)
 
-`UC_7_7` · phase: **delivery** · confidence: **High**
+`UC_12_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +69,7 @@ AADSignInEventsBeta
 
 ### [LLM] LLMShare — malicious chatgpt.com/share/* link followed by browser-spawned LOLBin
 
-`UC_7_8` · phase: **delivery** · confidence: **Medium**
+`UC_12_10` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +98,7 @@ DeviceProcessEvents
 
 ### [LLM] Anomalous OAuth consent grant to AI / third-party SaaS application (Vercel/Salesloft pattern)
 
-`UC_7_9` · phase: **install** · confidence: **High**
+`UC_12_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -377,7 +378,17 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `openew.app`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `de8c50e8ccd240ef9d10ec26c26eeb37a4d1cad7c1e0edf3bb6e5689ec2dde78`
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

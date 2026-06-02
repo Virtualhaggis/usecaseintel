@@ -71,7 +71,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DriveSurge zTDS loader script injection (t.js?site=<id>) outbound
 
-`UC_21_5` · phase: **delivery** · confidence: **High**
+`UC_27_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceNetworkEvents
 
 ### [LLM] FakeUpdates 'Browser Update.exe' drop from ZIP in user-writable path
 
-`UC_21_6` · phase: **install** · confidence: **High**
+`UC_27_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceProcessEvents
 
 ### [LLM] ClickFix PowerShell pasted from browser-originated clipboard (Run dialog chain)
 
-`UC_21_7` · phase: **exploit** · confidence: **High**
+`UC_27_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceProcessEvents
 
 ### [LLM] DriveSurge campaign IP beaconing post-payload execution
 
-`UC_21_8` · phase: **c2** · confidence: **High**
+`UC_27_8` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +156,7 @@ DeviceNetworkEvents
 
 ### [LLM] macOS ClickFix clipboard-hijack: Terminal/osascript shell exec from browser context
 
-`UC_21_9` · phase: **exploit** · confidence: **Medium**
+`UC_27_9` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PROXYLIB SDK enrollment — first-time DNS lookup of lumiapps.io / asocks.com from a device
 
-`UC_42_6` · phase: **install** · confidence: **High**
+`UC_48_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceNetworkEvents
 
 ### [LLM] PROXYLIB / Asocks proxyware — process-attributed beacon from non-browser binary
 
-`UC_42_7` · phase: **c2** · confidence: **High**
+`UC_48_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

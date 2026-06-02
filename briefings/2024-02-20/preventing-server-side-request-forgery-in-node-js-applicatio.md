@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Preventing server-side request forgery in Node.js applications
 
-`UC_1277_0` · phase: **exploit** · confidence: **High**
+`UC_1280_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,8 +1,8 @@
-# [HIGH] Mini Shai Hulud: Compromised @antv npm packages enable CI/CD credential theft
+# [HIGH] Dev Machine Guard Now Supports Linux
 
-**Source:** Microsoft Security Blog, StepSecurity
+**Source:** StepSecurity
 **Published:** 2026-05-20
-**Article:** https://www.microsoft.com/en-us/security/blog/2026/05/20/mini-shai-hulud-compromised-antv-npm-packages-enable-ci-cd-credential-theft/
+**Article:** https://www.stepsecurity.io/blog/dev-machine-guard-now-supports-linux
 
 ## Threat Profile
 
@@ -11,12 +11,15 @@ Back to Blog Threat Intel Microsoft's durabletask PyPI Package Compromised in Su
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `160.119.64.3`
+- **IPv4 (defanged):** `83.142.209.194`
 - **Domain (defanged):** `check.git-service.com`
 - **Domain (defanged):** `git-service.com`
 - **Domain (defanged):** `t.m-kosche.com`
+- **Domain (defanged):** `m-kosche.com`
 - **SHA256:** `069ac1dc7f7649b76bc72a11ac700f373804bfd81dab7e561157b703999f44ce`
-- **SHA256:** `a68dd1e6a6e35ec3771e1f94fe796f55dfe65a2b94560516ff4ac189390dfa1c`
-- **SHA256:** `fb5c97557230a27460fdab01fafcfabeaa49590bafd5b6ef30501aa9e0a51142`
+- **SHA256:** `7d80b3ef74ad7992b93c31966962612e4e2ceb93e7727cdbd1d2a9af47d44ba8`
+- **SHA256:** `aeaf583e20347bf850e2fabdcd6f4982996ba023f8c2cd56bbd299cfd56516f5`
+- **SHA256:** `877ff2531a63393c4cb9c3c86908b62d9c4fc3db971bc231c48537faae6cb3ec`
 
 ## MITRE ATT&CK Techniques
 
@@ -31,141 +34,12 @@ Back to Blog Threat Intel Microsoft's durabletask PyPI Package Compromised in Su
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1105** — Ingress Tool Transfer
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1027.013** — Obfuscated Files or Information: Encrypted/Encoded File
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1555** — Credentials from Password Stores
-- **T1543.002** — Create or Modify System Process: Systemd Service
-- **T1546** — Event Triggered Execution
-- **T1106** — Native API
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] Mini Shai-Hulud durabletask dropper C2 callback to git-service.com
-
-`UC_161_8` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="160.119.64.3" OR All_Traffic.dest_host IN ("check.git-service.com","git-service.com","t.m-kosche.com") OR All_Traffic.url="*check.git-service.com/rope.pyz*") by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app All_Traffic.user
-| `drop_dm_object_name(All_Traffic)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteUrl has_any ("check.git-service.com","git-service.com","t.m-kosche.com") or RemoteIP == "160.119.64.3"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### [LLM] durabletask second-stage dropper: python3 executing /tmp/managed.pyz
-
-`UC_161_9` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process_id) as pids from datamodel=Endpoint.Processes where Processes.process_name IN ("python","python3","python3.14") Processes.process="*/tmp/managed.pyz*" by Processes.dest Processes.user Processes.process Processes.parent_process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName has "python"
-| where ProcessCommandLine has "/tmp/managed.pyz"
-| project Timestamp, DeviceName, AccountName, ProcessId, FileName, ProcessCommandLine, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### [LLM] gh CLI token enumeration via python parent (managed.pyz credential exfil)
-
-`UC_161_10` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="gh" (Processes.process="*auth token*" OR Processes.process="*auth status --show-token*") (Processes.parent_process_name IN ("python","python3","python3.14") OR Processes.parent_process="*/tmp/managed.pyz*") by Processes.dest Processes.user Processes.process Processes.parent_process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName == "gh"
-| where ProcessCommandLine has_any ("auth token","auth status --show-token")
-| where InitiatingProcessFileName has "python" or InitiatingProcessCommandLine has "/tmp/managed.pyz" or InitiatingProcessParentFileName has "python"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### [LLM] Fake pgsql-monitor.service systemd user persistence
-
-`UC_161_11` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*.config/systemd/user*" OR Filesystem.file_path="*/etc/systemd/system*" OR Filesystem.file_path="*/usr/lib/systemd/*") Filesystem.file_name="*pgsql-monitor*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-| append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*systemctl --user daemon-reload*" Processes.parent_process_name IN ("python","python3","python3.14") by Processes.dest Processes.user Processes.process Processes.parent_process | `drop_dm_object_name(Processes)`]
-```
-
-**Defender KQL:**
-```kql
-union isfuzzy=true
-(DeviceFileEvents
-  | where Timestamp > ago(7d)
-  | where FolderPath has_any (".config/systemd/user","/etc/systemd/system","/usr/lib/systemd")
-  | where FileName has "pgsql-monitor"
-  | project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
-(DeviceProcessEvents
-  | where Timestamp > ago(7d)
-  | where ProcessCommandLine has "systemctl" and ProcessCommandLine has "--user" and ProcessCommandLine has "daemon-reload"
-  | where InitiatingProcessFileName has "python" or InitiatingProcessCommandLine has "/tmp/managed.pyz"
-  | project Timestamp, DeviceName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName)
-| order by Timestamp desc
-```
-
-### [LLM] Single python parent fans out 3+ managed.pyz children within seconds
-
-`UC_161_12` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process_id) as child_pids from datamodel=Endpoint.Processes where Processes.process="*/tmp/managed.pyz*" by Processes.dest Processes.parent_process_id Processes.parent_process_name Processes.parent_process Processes.user
-| `drop_dm_object_name(Processes)`
-| where count >= 3
-| eval spawn_window_sec = lastTime - firstTime
-| where spawn_window_sec <= 60
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where ProcessCommandLine has "/tmp/managed.pyz"
-| summarize ChildCount = count(),
-            FirstChild = min(Timestamp),
-            LastChild = max(Timestamp),
-            ChildPIDs = make_set(ProcessId, 10),
-            SampleCmd = any(ProcessCommandLine)
-            by DeviceId, DeviceName, InitiatingProcessId, InitiatingProcessCommandLine, AccountName
-| extend SpawnWindowSec = datetime_diff('second', LastChild, FirstChild)
-| where ChildCount >= 3 and SpawnWindowSec <= 60
-| order by FirstChild desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -305,13 +179,13 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — Mini Shai Hulud: Compromised @antv npm packages enable CI/CD credential theft
+### Article-specific behavioural hunt — Dev Machine Guard Now Supports Linux
 
-`UC_161_7` · phase: **exploit** · confidence: **High**
+`UC_166_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — Mini Shai Hulud: Compromised @antv npm packages enable CI/CD credential theft ```
+``` Article-specific bespoke detection — Dev Machine Guard Now Supports Linux ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN ("__init__.py","task.py","roulette.py"))
@@ -332,7 +206,7 @@ DeviceProcessEvents
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — Mini Shai Hulud: Compromised @antv npm packages enable CI/CD credential theft
+// Article-specific bespoke detection — Dev Machine Guard Now Supports Linux
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -359,12 +233,12 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `160.119.64.3`, `check.git-service.com`, `git-service.com`, `t.m-kosche.com`
+  - IP / domain IOC(s): `160.119.64.3`, `83.142.209.194`, `check.git-service.com`, `git-service.com`, `t.m-kosche.com`, `m-kosche.com`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `069ac1dc7f7649b76bc72a11ac700f373804bfd81dab7e561157b703999f44ce`, `a68dd1e6a6e35ec3771e1f94fe796f55dfe65a2b94560516ff4ac189390dfa1c`, `fb5c97557230a27460fdab01fafcfabeaa49590bafd5b6ef30501aa9e0a51142`
+  - file hash IOC(s): `069ac1dc7f7649b76bc72a11ac700f373804bfd81dab7e561157b703999f44ce`, `7d80b3ef74ad7992b93c31966962612e4e2ceb93e7727cdbd1d2a9af47d44ba8`, `aeaf583e20347bf850e2fabdcd6f4982996ba023f8c2cd56bbd299cfd56516f5`, `877ff2531a63393c4cb9c3c86908b62d9c4fc3db971bc231c48537faae6cb3ec`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1247 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,13 +12,19 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [attackers abuse aws google cloud cloudflare and microsoft se](./2026-06-02/attackers-abuse-aws-google-cloud-cloudflare-and-microsoft-se.md)
 - [cisa flags palo alto networks pan os vulnerability as exploi](./2026-06-02/cisa-flags-palo-alto-networks-pan-os-vulnerability-as-exploi.md)
 - [cisa flags two year old oracle flaw as actively exploited in](./2026-06-02/cisa-flags-two-year-old-oracle-flaw-as-actively-exploited-in.md)
+- [cisa kev cve 2022 0492 linux kernel improper authentication ](./2026-06-02/cisa-kev-cve-2022-0492-linux-kernel-improper-authentication-.md)
+- [cisa kev cve 2025 48595 android framework integer overflow v](./2026-06-02/cisa-kev-cve-2025-48595-android-framework-integer-overflow-v.md)
 - [dashlane discloses brute force attack encrypted vaults of fe](./2026-06-02/dashlane-discloses-brute-force-attack-encrypted-vaults-of-fe.md)
+- [gamaredon exploits winrar to deliver gammaworm and gammastee](./2026-06-02/gamaredon-exploits-winrar-to-deliver-gammaworm-and-gammastee.md)
 - [google fixes one actively exploited android zero day 124 fla](./2026-06-02/google-fixes-one-actively-exploited-android-zero-day-124-fla.md)
-- [mustang panda deploys plugx rat through multi stage lnk and ](./2026-06-02/mustang-panda-deploys-plugx-rat-through-multi-stage-lnk-and-.md)
+- [microsoft build 2026 securing code agents and models across ](./2026-06-02/microsoft-build-2026-securing-code-agents-and-models-across-.md)
 - [operation flutterbridge macos malvertising campaign spreads ](./2026-06-02/operation-flutterbridge-macos-malvertising-campaign-spreads-.md)
+- [oracle weblogic cve 2024 21182 added to kev catalog after ac](./2026-06-02/oracle-weblogic-cve-2024-21182-added-to-kev-catalog-after-ac.md)
 - [pakistan linked sidecopy targets afghanistan finance ministr](./2026-06-02/pakistan-linked-sidecopy-targets-afghanistan-finance-ministr.md)
 - [red hat confirms supply chain compromise of redhat cloud ser](./2026-06-02/red-hat-confirms-supply-chain-compromise-of-redhat-cloud-ser.md)
+- [the npm threat landscape attack surface and mitigations upda](./2026-06-02/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 - [why the browser is now the front line for ai security](./2026-06-02/why-the-browser-is-now-the-front-line-for-ai-security.md)
+- [wordpress malware abuses steam community profiles for c2 ope](./2026-06-02/wordpress-malware-abuses-steam-community-profiles-for-c2-ope.md)
 
 ## 2026-06-01
 - [china aligned groups ramp up attacks dragon weave hits czech](./2026-06-01/china-aligned-groups-ramp-up-attacks-dragon-weave-hits-czech.md)
@@ -125,7 +131,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-22
 - [cisa kev cve 2026 9082 drupal core sql injection vulnerabili](./2026-05-22/cisa-kev-cve-2026-9082-drupal-core-sql-injection-vulnerabili.md)
 - [cloud atlas activity in the second half of 2025 and early 20](./2026-05-22/cloud-atlas-activity-in-the-second-half-of-2025-and-early-20.md)
-- [first vpn dismantled in global takedown over use by 25 ranso](./2026-05-22/first-vpn-dismantled-in-global-takedown-over-use-by-25-ranso.md)
 - [foul play fake fifa websites target soccer fans looking for ](./2026-05-22/foul-play-fake-fifa-websites-target-soccer-fans-looking-for-.md)
 - [from edge appliance to enterprise compromise multi stage lin](./2026-05-22/from-edge-appliance-to-enterprise-compromise-multi-stage-lin.md)
 - [ghsa critical cve 2026 46670 yeswiki unauthenticated sql inj](./2026-05-22/ghsa-critical-cve-2026-46670-yeswiki-unauthenticated-sql-inj.md)
@@ -140,13 +145,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [5 supply chain attacks in 48 hours why securing one layer is](./2026-05-21/5-supply-chain-attacks-in-48-hours-why-securing-one-layer-is.md)
 - [cisa kev cve 2025 34291 langflow origin validation error vul](./2026-05-21/cisa-kev-cve-2025-34291-langflow-origin-validation-error-vul.md)
 - [cisa kev cve 2026 34926 trend micro apex one on premise dire](./2026-05-21/cisa-kev-cve-2026-34926-trend-micro-apex-one-on-premise-dire.md)
+- [dev machine guard now scans extensions across every modern i](./2026-05-21/dev-machine-guard-now-scans-extensions-across-every-modern-i.md)
 - [ghsa critical cve 2026 46614 fission router exposes fission ](./2026-05-21/ghsa-critical-cve-2026-46614-fission-router-exposes-fission-.md)
 - [ghsa critical cve 2026 46633 twig php code injection via use](./2026-05-21/ghsa-critical-cve-2026-46633-twig-php-code-injection-via-use.md)
 - [ghsa critical cve 2026 46703 boxlite path traversal vulnerab](./2026-05-21/ghsa-critical-cve-2026-46703-boxlite-path-traversal-vulnerab.md)
 - [ghsa critical ghsa q2f7 m237 v562 hulumi policies github oid](./2026-05-21/ghsa-critical-ghsa-q2f7-m237-v562-hulumi-policies-github-oid.md)
 - [securing the ai revolution how snyk and our partners are sca](./2026-05-21/securing-the-ai-revolution-how-snyk-and-our-partners-are-sca.md)
 - [the art of being ungovernable](./2026-05-21/the-art-of-being-ungovernable.md)
-- [the npm threat landscape attack surface and mitigations upda](./2026-05-21/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 - [what s new in microsoft security may 2026](./2026-05-21/what-s-new-in-microsoft-security-may-2026.md)
 
 ## 2026-05-20
@@ -157,9 +162,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2010 0249 microsoft internet explorer use after](./2026-05-20/cisa-kev-cve-2010-0249-microsoft-internet-explorer-use-after.md)
 - [cisa kev cve 2026 41091 microsoft defender link following vu](./2026-05-20/cisa-kev-cve-2026-41091-microsoft-defender-link-following-vu.md)
 - [cisa kev cve 2026 45498 microsoft defender denial of service](./2026-05-20/cisa-kev-cve-2026-45498-microsoft-defender-denial-of-service.md)
+- [dev machine guard now supports linux](./2026-05-20/dev-machine-guard-now-supports-linux.md)
 - [ghsa critical cve 2026 46421 supply chain compromise via mal](./2026-05-20/ghsa-critical-cve-2026-46421-supply-chain-compromise-via-mal.md)
 - [github breached via a malicious vs code extension why develo](./2026-05-20/github-breached-via-a-malicious-vs-code-extension-why-develo.md)
-- [mini shai hulud compromised antv npm packages enable ci cd c](./2026-05-20/mini-shai-hulud-compromised-antv-npm-packages-enable-ci-cd-c.md)
 - [the wild west of vs code extensions and how a poisoned exten](./2026-05-20/the-wild-west-of-vs-code-extensions-and-how-a-poisoned-exten.md)
 - [tracking tamperedchef clusters via certificate and code reus](./2026-05-20/tracking-tamperedchef-clusters-via-certificate-and-code-reus.md)
 - [webworm new burrowing techniques](./2026-05-20/webworm-new-burrowing-techniques.md)
@@ -1812,10 +1817,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2024-05-20
 - [cisa kev cve 2023 43208 nextgen healthcare mirth connect des](./2024-05-20/cisa-kev-cve-2023-43208-nextgen-healthcare-mirth-connect-des.md)
 - [cisa kev cve 2024 4947 google chromium v8 type confusion vul](./2024-05-20/cisa-kev-cve-2024-4947-google-chromium-v8-type-confusion-vul.md)
-
-## 2024-05-16
-- [cisa kev cve 2021 40655 d link dir 605 router information di](./2024-05-16/cisa-kev-cve-2021-40655-d-link-dir-605-router-information-di.md)
-- [cisa kev cve 2024 4761 google chromium v8 out of bounds memo](./2024-05-16/cisa-kev-cve-2024-4761-google-chromium-v8-out-of-bounds-memo.md)
 
 ## 2024-05-15
 - [symmetric vs asymmetric encryption practical python examples](./2024-05-15/symmetric-vs-asymmetric-encryption-practical-python-examples.md)
