@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1249 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,24 +9,24 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-02
-- [android 0 day vulnerability exploited in attacks to gain com](./2026-06-02/android-0-day-vulnerability-exploited-in-attacks-to-gain-com.md)
 - [dashlane discloses brute force attack encrypted vaults of fe](./2026-06-02/dashlane-discloses-brute-force-attack-encrypted-vaults-of-fe.md)
 - [gamaredon apt hides malware in windows features and abuses c](./2026-06-02/gamaredon-apt-hides-malware-in-windows-features-and-abuses-c.md)
-- [hackers use meta s ai bot to reset passwords and hijack inst](./2026-06-02/hackers-use-meta-s-ai-bot-to-reset-passwords-and-hijack-inst.md)
+- [google fixes one actively exploited android zero day 124 fla](./2026-06-02/google-fixes-one-actively-exploited-android-zero-day-124-fla.md)
+- [hackers deploy azureveil adaptix c2 agent via spearphishing ](./2026-06-02/hackers-deploy-azureveil-adaptix-c2-agent-via-spearphishing-.md)
 - [nimbus manticore apt abuses fake recruitment portal to deliv](./2026-06-02/nimbus-manticore-apt-abuses-fake-recruitment-portal-to-deliv.md)
+- [operation flutterbridge macos malvertising campaign spreads ](./2026-06-02/operation-flutterbridge-macos-malvertising-campaign-spreads-.md)
+- [pakistan linked sidecopy targets afghanistan finance ministr](./2026-06-02/pakistan-linked-sidecopy-targets-afghanistan-finance-ministr.md)
 - [phantompulse rat uses process injection and uac bypass to co](./2026-06-02/phantompulse-rat-uses-process-injection-and-uac-bypass-to-co.md)
 
 ## 2026-06-01
 - [china aligned groups ramp up attacks dragon weave hits czech](./2026-06-01/china-aligned-groups-ramp-up-attacks-dragon-weave-hits-czech.md)
 - [cisa kev cve 2024 21182 oracle weblogic server unspecified v](./2026-06-01/cisa-kev-cve-2024-21182-oracle-weblogic-server-unspecified-v.md)
 - [containers on fire from container escapes to supply chain at](./2026-06-01/containers-on-fire-from-container-escapes-to-supply-chain-at.md)
-- [critical magento cache plugin vulnerability enables remote c](./2026-06-01/critical-magento-cache-plugin-vulnerability-enables-remote-c.md)
 - [critical wp maps pro flaw actively exploited to create admin](./2026-06-01/critical-wp-maps-pro-flaw-actively-exploited-to-create-admin.md)
 - [dashlane password manager users locked out by brute force at](./2026-06-01/dashlane-password-manager-users-locked-out-by-brute-force-at.md)
 - [ghsa critical cve 2026 47413 praisonai platform any workspac](./2026-06-01/ghsa-critical-cve-2026-47413-praisonai-platform-any-workspac.md)
 - [ghsa critical cve 2026 47429 when vitest ui server is listen](./2026-06-01/ghsa-critical-cve-2026-47429-when-vitest-ui-server-is-listen.md)
 - [hackers hijack thousands of sites for clickfix and fakeupdat](./2026-06-01/hackers-hijack-thousands-of-sites-for-clickfix-and-fakeupdat.md)
-- [ibm websphere server vulnerable to remote code execution att](./2026-06-01/ibm-websphere-server-vulnerable-to-remote-code-execution-att.md)
 - [miasma supply chain attack compromises red hat npm packages ](./2026-06-01/miasma-supply-chain-attack-compromises-red-hat-npm-packages-.md)
 - [miasma supply chain attack malicious code found in redhat cl](./2026-06-01/miasma-supply-chain-attack-malicious-code-found-in-redhat-cl.md)
 - [openai codex authentication tokens stolen in codexui android](./2026-06-01/openai-codex-authentication-tokens-stolen-in-codexui-android.md)
@@ -45,7 +45,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-29
 - [attackers use llm agent for post exploitation after marimo c](./2026-05-29/attackers-use-llm-agent-for-post-exploitation-after-marimo-c.md)
 - [chatgphish vulnerability turns chatgpt web summaries into a ](./2026-05-29/chatgphish-vulnerability-turns-chatgpt-web-summaries-into-a-.md)
-- [chatgpt share links abused to host fake outage pages to deli](./2026-05-29/chatgpt-share-links-abused-to-host-fake-outage-pages-to-deli.md)
 - [cisa kev cve 2026 0257 palo alto networks pan os authenticat](./2026-05-29/cisa-kev-cve-2026-0257-palo-alto-networks-pan-os-authenticat.md)
 - [fix sca issues at scale in your terminal with snyk remediati](./2026-05-29/fix-sca-issues-at-scale-in-your-terminal-with-snyk-remediati.md)
 - [ghsa critical cve 2026 47131 vm2 has a sandbox escape issue](./2026-05-29/ghsa-critical-cve-2026-47131-vm2-has-a-sandbox-escape-issue.md)
@@ -132,8 +131,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghostwriter targets ukraine government entities with prometh](./2026-05-22/ghostwriter-targets-ukraine-government-entities-with-prometh.md)
 - [ghsa critical cve 2026 46670 yeswiki unauthenticated sql inj](./2026-05-22/ghsa-critical-cve-2026-46670-yeswiki-unauthenticated-sql-inj.md)
 - [ghsa critical ghsa qqqm 5547 774x filebrowser quantum path t](./2026-05-22/ghsa-critical-ghsa-qqqm-5547-774x-filebrowser-quantum-path-t.md)
-- [making vulnerable drivers exploitable without hardware the b](./2026-05-22/making-vulnerable-drivers-exploitable-without-hardware-the-b.md)
-- [megalodon github attack targets 5 561 repos with malicious c](./2026-05-22/megalodon-github-attack-targets-5-561-repos-with-malicious-c.md)
 - [megalodon mass github actions secret exfiltration across 5 5](./2026-05-22/megalodon-mass-github-actions-secret-exfiltration-across-5-5.md)
 - [microsoft security success stories how st luke s and manpowe](./2026-05-22/microsoft-security-success-stories-how-st-luke-s-and-manpowe.md)
 - [nx console vs code extension compromised](./2026-05-22/nx-console-vs-code-extension-compromised.md)
@@ -314,7 +311,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [tgr sta 1030 new activity in central and south america](./2026-04-24/tgr-sta-1030-new-activity-in-central-and-south-america.md)
 
 ## 2026-04-23
-- [can ai attack the cloud lessons from building an autonomous ](./2026-04-23/can-ai-attack-the-cloud-lessons-from-building-an-autonomous-.md)
 - [cisa kev cve 2026 39987 marimo remote code execution vulnera](./2026-04-23/cisa-kev-cve-2026-39987-marimo-remote-code-execution-vulnera.md)
 - [fast16 mystery shadow brokers reference reveals high precisi](./2026-04-23/fast16-mystery-shadow-brokers-reference-reveals-high-precisi.md)
 - [frontier ai and the future of defense your top questions ans](./2026-04-23/frontier-ai-and-the-future-of-defense-your-top-questions-ans.md)
