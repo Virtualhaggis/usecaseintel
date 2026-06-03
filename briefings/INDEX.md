@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1249 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1247 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,7 +9,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-03
+- [argamal malware hidden in hentai games](./2026-06-03/argamal-malware-hidden-in-hentai-games.md)
 - [preinstall to persistence inside the red hat npm miasma cred](./2026-06-03/preinstall-to-persistence-inside-the-red-hat-npm-miasma-cred.md)
+- [vs code zero day lets hackers steal github tokens in one cli](./2026-06-03/vs-code-zero-day-lets-hackers-steal-github-tokens-in-one-cli.md)
+- [weedhack attacks minecraft users countloader hits 86k miners](./2026-06-03/weedhack-attacks-minecraft-users-countloader-hits-86k-miners.md)
 
 ## 2026-06-02
 - [ai built ransomware toolkit automates edr evasion ad discove](./2026-06-02/ai-built-ransomware-toolkit-automates-edr-evasion-ad-discove.md)
@@ -38,7 +41,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2024 21182 oracle weblogic server unspecified v](./2026-06-01/cisa-kev-cve-2024-21182-oracle-weblogic-server-unspecified-v.md)
 - [containers on fire from container escapes to supply chain at](./2026-06-01/containers-on-fire-from-container-escapes-to-supply-chain-at.md)
 - [critical wp maps pro flaw actively exploited to create admin](./2026-06-01/critical-wp-maps-pro-flaw-actively-exploited-to-create-admin.md)
-- [dashlane password manager users locked out by brute force at](./2026-06-01/dashlane-password-manager-users-locked-out-by-brute-force-at.md)
 - [ghsa critical cve 2026 47413 praisonai platform any workspac](./2026-06-01/ghsa-critical-cve-2026-47413-praisonai-platform-any-workspac.md)
 - [ghsa critical cve 2026 47429 when vitest ui server is listen](./2026-06-01/ghsa-critical-cve-2026-47429-when-vitest-ui-server-is-listen.md)
 - [hackers hijack thousands of sites for clickfix and fakeupdat](./2026-06-01/hackers-hijack-thousands-of-sites-for-clickfix-and-fakeupdat.md)
@@ -46,7 +48,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [miasma supply chain attack malicious code found in redhat cl](./2026-06-01/miasma-supply-chain-attack-malicious-code-found-in-redhat-cl.md)
 - [openai codex authentication tokens stolen in codexui android](./2026-06-01/openai-codex-authentication-tokens-stolen-in-codexui-android.md)
 - [weekly recap new linux flaw pan os exploit ai powered attack](./2026-06-01/weekly-recap-new-linux-flaw-pan-os-exploit-ai-powered-attack.md)
-- [wordpress malware campaign hides payloads in steam profiles](./2026-06-01/wordpress-malware-campaign-hides-payloads-in-steam-profiles.md)
 
 ## 2026-05-31
 - [dutch authorities dismantle botnet linked to 17 million infe](./2026-05-31/dutch-authorities-dismantle-botnet-linked-to-17-million-infe.md)
@@ -128,7 +129,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-23
 - [ghsa critical cve 2026 46716 nezha monitoring rolemember can](./2026-05-23/ghsa-critical-cve-2026-46716-nezha-monitoring-rolemember-can.md)
-- [laravel lang php packages compromised to deliver cross platf](./2026-05-23/laravel-lang-php-packages-compromised-to-deliver-cross-platf.md)
 - [laravel lang supply chain advisory](./2026-05-23/laravel-lang-supply-chain-advisory.md)
 - [npm adds 2fa gated publishing and package install controls a](./2026-05-23/npm-adds-2fa-gated-publishing-and-package-install-controls-a.md)
 - [supply chain attack targets laravel lang packages with crede](./2026-05-23/supply-chain-attack-targets-laravel-lang-packages-with-crede.md)
@@ -242,7 +242,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44650 sillytavern has a path traversa](./2026-05-12/ghsa-critical-cve-2026-44650-sillytavern-has-a-path-traversa.md)
 - [ghsa critical cve 2026 45087 dalfox server mode vulnerable t](./2026-05-12/ghsa-critical-cve-2026-45087-dalfox-server-mode-vulnerable-t.md)
 - [mini shai hulud is back npm worm hits over 160 packages incl](./2026-05-12/mini-shai-hulud-is-back-npm-worm-hits-over-160-packages-incl.md)
-- [state of ransomware in 2026](./2026-05-12/state-of-ransomware-in-2026.md)
 - [state sponsored actors better known as the friends you don t](./2026-05-12/state-sponsored-actors-better-known-as-the-friends-you-don-t.md)
 - [teampcp s mini shai hulud is back a self spreading supply ch](./2026-05-12/teampcp-s-mini-shai-hulud-is-back-a-self-spreading-supply-ch.md)
 
@@ -671,9 +670,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2025-12-29
 - [cisa kev cve 2025 14847 mongodb and mongodb server improper ](./2025-12-29/cisa-kev-cve-2025-14847-mongodb-and-mongodb-server-improper-.md)
 - [the holiday whisper shai hulud 3 0](./2025-12-29/the-holiday-whisper-shai-hulud-3-0.md)
-
-## 2025-12-28
-- [shai hulud strikes again the golden path](./2025-12-28/shai-hulud-strikes-again-the-golden-path.md)
 
 ## 2025-12-22
 - [cisa kev cve 2023 52163 digiever ds 2105 pro missing authori](./2025-12-22/cisa-kev-cve-2023-52163-digiever-ds-2105-pro-missing-authori.md)

@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] OAuth device-code flow sign-in to Entra ID (device code phishing — Doko/ShinyHunters/BlackFile PhaaS)
 
-`UC_22_9` · phase: **delivery** · confidence: **High**
+`UC_29_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ AADSignInEventsBeta
 
 ### [LLM] LLMShare — malicious chatgpt.com/share/* link followed by browser-spawned LOLBin
 
-`UC_22_10` · phase: **delivery** · confidence: **Medium**
+`UC_29_10` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### [LLM] Anomalous OAuth consent grant to AI / third-party SaaS application (Vercel/Salesloft pattern)
 
-`UC_22_11` · phase: **install** · confidence: **High**
+`UC_29_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

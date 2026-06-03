@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Identifying insecure C Code with Valgrind and fixing with Snyk Code
 
-`UC_1124_0` · phase: **install** · confidence: **High**
+`UC_1125_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -90,7 +90,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] BTMOB C2/phishing domain contact — arbsniper.com
 
-`UC_128_5` · phase: **c2** · confidence: **High**
+`UC_132_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceNetworkEvents
 
 ### [LLM] BTMOB Android RAT APK SHA256 sighting in file or email telemetry
 
-`UC_128_6` · phase: **delivery** · confidence: **High**
+`UC_132_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +184,7 @@ union isfuzzy=true
 
 ### [LLM] Egress to BTMOB hosted C2 cluster (LATAM/Hetzner IPs, Google CDN excluded)
 
-`UC_128_7` · phase: **c2** · confidence: **Medium**
+`UC_132_7` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
