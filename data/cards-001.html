@@ -21,7 +21,7 @@
   </div>
   <p class="summary">A large-scale malware campaign dubbed WeedHack is targeting Minecraft players and has infected more than 116,000 systems since January. [...]</p>
   <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
-<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">receiver.cy</span> <span class="ind ">weedhack.cy</span> <span class="ind ">whreceive.ru</span> <span class="ind ">whreceiver.ru</span> <span class="ind ">marsalek.cy</span> <span class="ind ">huehnchenfarm.ru</span> <span class="ind ">remotev2.whreceive.ru</span></div>
+<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">weedhack.cy</span> <span class="ind ">receiver.cy</span> <span class="ind ">whreceive.ru</span> <span class="ind ">whreceiver.ru</span> <span class="ind ">marsalek.cy</span> <span class="ind ">huehnchenfarm.ru</span> <span class="ind ">telemetrydata.to</span></div>
 <div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">45.141.119.34</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-03-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
@@ -590,11 +590,11 @@ level: high
     </div>
     <div class="tab-content active" id="art-03-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
-| where RemoteIP in (&quot;45.141.119.34&quot;) or RemoteUrl has_any (&quot;receiver.cy&quot;, &quot;weedhack.cy&quot;, &quot;whreceive.ru&quot;, &quot;whreceiver.ru&quot;, &quot;marsalek.cy&quot;, &quot;huehnchenfarm.ru&quot;, &quot;remotev2.whreceive.ru&quot;)
+| where RemoteIP in (&quot;45.141.119.34&quot;) or RemoteUrl has_any (&quot;weedhack.cy&quot;, &quot;receiver.cy&quot;, &quot;whreceive.ru&quot;, &quot;whreceiver.ru&quot;, &quot;marsalek.cy&quot;, &quot;huehnchenfarm.ru&quot;, &quot;telemetrydata.to&quot;)
 | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
     <div class="tab-content" id="art-03-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;45.141.119.34&quot;]);
-let BadDomains = dynamic([&quot;receiver.cy&quot;, &quot;weedhack.cy&quot;, &quot;whreceive.ru&quot;, &quot;whreceiver.ru&quot;, &quot;marsalek.cy&quot;, &quot;huehnchenfarm.ru&quot;, &quot;remotev2.whreceive.ru&quot;]);
+let BadDomains = dynamic([&quot;weedhack.cy&quot;, &quot;receiver.cy&quot;, &quot;whreceive.ru&quot;, &quot;whreceiver.ru&quot;, &quot;marsalek.cy&quot;, &quot;huehnchenfarm.ru&quot;, &quot;telemetrydata.to&quot;]);
 ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
 | where DstIpAddr in (BadIPs)
@@ -639,12 +639,12 @@ level: critical
 | `drop_dm_object_name(All_Traffic)`
 | append
     [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN (&quot;receiver.cy&quot;, &quot;weedhack.cy&quot;, &quot;whreceive.ru&quot;, &quot;whreceiver.ru&quot;, &quot;marsalek.cy&quot;, &quot;huehnchenfarm.ru&quot;, &quot;remotev2.whreceive.ru&quot;)
+        where Web.dest IN (&quot;weedhack.cy&quot;, &quot;receiver.cy&quot;, &quot;whreceive.ru&quot;, &quot;whreceiver.ru&quot;, &quot;marsalek.cy&quot;, &quot;huehnchenfarm.ru&quot;, &quot;telemetrydata.to&quot;)
         by Web.src, Web.dest, Web.url, Web.user
      | `drop_dm_object_name(Web)`]
 | append
     [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;receiver.cy&quot;, &quot;weedhack.cy&quot;, &quot;whreceive.ru&quot;, &quot;whreceiver.ru&quot;, &quot;marsalek.cy&quot;, &quot;huehnchenfarm.ru&quot;, &quot;remotev2.whreceive.ru&quot;)
+        where DNS.query IN (&quot;weedhack.cy&quot;, &quot;receiver.cy&quot;, &quot;whreceive.ru&quot;, &quot;whreceiver.ru&quot;, &quot;marsalek.cy&quot;, &quot;huehnchenfarm.ru&quot;, &quot;telemetrydata.to&quot;)
         by DNS.src, DNS.query, DNS.answer
      | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-03-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
@@ -653,12 +653,12 @@ level: critical
 | `drop_dm_object_name(All_Traffic)`
 | append
     [| tstats summariesonly=false count from datamodel=Web
-        where Web.dest IN (&quot;receiver.cy&quot;, &quot;weedhack.cy&quot;, &quot;whreceive.ru&quot;, &quot;whreceiver.ru&quot;, &quot;marsalek.cy&quot;, &quot;huehnchenfarm.ru&quot;, &quot;remotev2.whreceive.ru&quot;)
+        where Web.dest IN (&quot;weedhack.cy&quot;, &quot;receiver.cy&quot;, &quot;whreceive.ru&quot;, &quot;whreceiver.ru&quot;, &quot;marsalek.cy&quot;, &quot;huehnchenfarm.ru&quot;, &quot;telemetrydata.to&quot;)
         by Web.src, Web.dest, Web.url, Web.user
      | `drop_dm_object_name(Web)`]
 | append
     [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;receiver.cy&quot;, &quot;weedhack.cy&quot;, &quot;whreceive.ru&quot;, &quot;whreceiver.ru&quot;, &quot;marsalek.cy&quot;, &quot;huehnchenfarm.ru&quot;, &quot;remotev2.whreceive.ru&quot;)
+        where DNS.query IN (&quot;weedhack.cy&quot;, &quot;receiver.cy&quot;, &quot;whreceive.ru&quot;, &quot;whreceiver.ru&quot;, &quot;marsalek.cy&quot;, &quot;huehnchenfarm.ru&quot;, &quot;telemetrydata.to&quot;)
         by DNS.src, DNS.query, DNS.answer
      | `drop_dm_object_name(DNS)`]</code></pre></div></div>
   </div>
