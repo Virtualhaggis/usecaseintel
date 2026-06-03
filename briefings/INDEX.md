@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1249 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,7 +11,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-02
 - [ai built ransomware toolkit automates edr evasion ad discove](./2026-06-02/ai-built-ransomware-toolkit-automates-edr-evasion-ad-discove.md)
 - [attackers abuse aws google cloud cloudflare and microsoft se](./2026-06-02/attackers-abuse-aws-google-cloud-cloudflare-and-microsoft-se.md)
-- [cisa flags palo alto networks pan os vulnerability as exploi](./2026-06-02/cisa-flags-palo-alto-networks-pan-os-vulnerability-as-exploi.md)
 - [cisa flags two year old oracle flaw as actively exploited in](./2026-06-02/cisa-flags-two-year-old-oracle-flaw-as-actively-exploited-in.md)
 - [cisa kev cve 2022 0492 linux kernel improper authentication ](./2026-06-02/cisa-kev-cve-2022-0492-linux-kernel-improper-authentication-.md)
 - [cisa kev cve 2025 48595 android framework integer overflow v](./2026-06-02/cisa-kev-cve-2025-48595-android-framework-integer-overflow-v.md)
