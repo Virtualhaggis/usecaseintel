@@ -8,6 +8,9 @@ _1249 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-06-03
+- [preinstall to persistence inside the red hat npm miasma cred](./2026-06-03/preinstall-to-persistence-inside-the-red-hat-npm-miasma-cred.md)
+
 ## 2026-06-02
 - [ai built ransomware toolkit automates edr evasion ad discove](./2026-06-02/ai-built-ransomware-toolkit-automates-edr-evasion-ad-discove.md)
 - [attackers abuse aws google cloud cloudflare and microsoft se](./2026-06-02/attackers-abuse-aws-google-cloud-cloudflare-and-microsoft-se.md)
@@ -22,7 +25,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft build 2026 securing code agents and models across ](./2026-06-02/microsoft-build-2026-securing-code-agents-and-models-across-.md)
 - [nx console vs code extension compromised](./2026-06-02/nx-console-vs-code-extension-compromised.md)
 - [operation flutterbridge macos malvertising campaign spreads ](./2026-06-02/operation-flutterbridge-macos-malvertising-campaign-spreads-.md)
-- [over 116 000 mincraft systems infected in weedhack malware c](./2026-06-02/over-116-000-mincraft-systems-infected-in-weedhack-malware-c.md)
+- [over 116 000 minecraft systems infected in weedhack malware ](./2026-06-02/over-116-000-minecraft-systems-infected-in-weedhack-malware-.md)
 - [pakistan linked sidecopy targets afghanistan finance ministr](./2026-06-02/pakistan-linked-sidecopy-targets-afghanistan-finance-ministr.md)
 - [protestware by open source maintainer to hinder agentic codi](./2026-06-02/protestware-by-open-source-maintainer-to-hinder-agentic-codi.md)
 - [red hat confirms supply chain compromise of redhat cloud ser](./2026-06-02/red-hat-confirms-supply-chain-compromise-of-redhat-cloud-ser.md)
@@ -152,7 +155,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa q2f7 m237 v562 hulumi policies github oid](./2026-05-21/ghsa-critical-ghsa-q2f7-m237-v562-hulumi-policies-github-oid.md)
 - [securing the ai revolution how snyk and our partners are sca](./2026-05-21/securing-the-ai-revolution-how-snyk-and-our-partners-are-sca.md)
 - [the art of being ungovernable](./2026-05-21/the-art-of-being-ungovernable.md)
-- [what s new in microsoft security may 2026](./2026-05-21/what-s-new-in-microsoft-security-may-2026.md)
 
 ## 2026-05-20
 - [a day in the life of a strategy co op in snyk s boston offic](./2026-05-20/a-day-in-the-life-of-a-strategy-co-op-in-snyk-s-boston-offic.md)
