@@ -11,6 +11,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-03
 - [acer working to patch max severity zero days in wave 7 route](./2026-06-03/acer-working-to-patch-max-severity-zero-days-in-wave-7-route.md)
 - [argamal malware hidden in hentai games](./2026-06-03/argamal-malware-hidden-in-hentai-games.md)
+- [cisa kev cve 2026 45247 mirasvit full page cache warmer dese](./2026-06-03/cisa-kev-cve-2026-45247-mirasvit-full-page-cache-warmer-dese.md)
+- [cisa warns of active attacks exploiting android linux bugs](./2026-06-03/cisa-warns-of-active-attacks-exploiting-android-linux-bugs.md)
 - [hackers use fake purchase orders to deploy js monoglyphrat t](./2026-06-03/hackers-use-fake-purchase-orders-to-deploy-js-monoglyphrat-t.md)
 - [hackers use youtube and seo poisoning to spread weedhack min](./2026-06-03/hackers-use-youtube-and-seo-poisoning-to-spread-weedhack-min.md)
 - [hackers using ai tools to automate active directory attacks ](./2026-06-03/hackers-using-ai-tools-to-automate-active-directory-attacks-.md)
@@ -28,7 +30,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 48595 android framework integer overflow v](./2026-06-02/cisa-kev-cve-2025-48595-android-framework-integer-overflow-v.md)
 - [dashlane discloses brute force attack encrypted vaults of fe](./2026-06-02/dashlane-discloses-brute-force-attack-encrypted-vaults-of-fe.md)
 - [gamaredon exploits winrar to deliver gammaworm and gammastee](./2026-06-02/gamaredon-exploits-winrar-to-deliver-gammaworm-and-gammastee.md)
-- [google fixes one actively exploited android zero day 124 fla](./2026-06-02/google-fixes-one-actively-exploited-android-zero-day-124-fla.md)
 - [google june 2026 android update patches 124 flaws one active](./2026-06-02/google-june-2026-android-update-patches-124-flaws-one-active.md)
 - [laravel lang supply chain attack every tag across multiple c](./2026-06-02/laravel-lang-supply-chain-attack-every-tag-across-multiple-c.md)
 - [microsoft build 2026 securing code agents and models across ](./2026-06-02/microsoft-build-2026-securing-code-agents-and-models-across-.md)
@@ -1814,7 +1815,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [learning from cloud transformation as we move to ai](./2024-05-21/learning-from-cloud-transformation-as-we-move-to-ai.md)
 
 ## 2024-05-20
-- [cisa kev cve 2023 43208 nextgen healthcare mirth connect des](./2024-05-20/cisa-kev-cve-2023-43208-nextgen-healthcare-mirth-connect-des.md)
 - [cisa kev cve 2024 4947 google chromium v8 type confusion vul](./2024-05-20/cisa-kev-cve-2024-4947-google-chromium-v8-type-confusion-vul.md)
 
 ## 2024-05-15

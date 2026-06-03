@@ -11,23 +11,15 @@ Sponsored by Sprocket Security
 June 3, 2026
 10:02 AM
 0 
-
-
 In April, a single VPN vulnerability led to data breaches at more than seventy financial institutions running Marquis Software's infrastructure, according to American Banker's reporting on the incident. The patch existed. The institutions affected likely had recent penetration tests on file. Neither prevented the exposure from compounding across the portfolio.
-
-
-
-
-The math is…
+The math is straightfor…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2024-40766`
 - **Domain (defanged):** `bank.vendor.com`
 
 ## MITRE ATT&CK Techniques
 
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -195,13 +187,10 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2024-40766`
-
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
   - IP / domain IOC(s): `bank.vendor.com`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, IOCs present, 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 4 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

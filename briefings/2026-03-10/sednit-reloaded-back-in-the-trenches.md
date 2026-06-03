@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Sednit known-bad SHA-1 hash match: Xagent / SlimAgent / BeardShell binaries
 
-`UC_445_8` · phase: **install** · confidence: **High**
+`UC_446_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ union (DeviceProcessEvents | where Timestamp > ago(30d) | where SHA1 in~ (Sednit
 
 ### [LLM] SlimAgent / BeardShell DLL load with implant filename outside System32
 
-`UC_445_9` · phase: **install** · confidence: **High**
+`UC_446_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ union
 
 ### [LLM] BeardShell C2: outbound to Icedrive cloud-storage API as non-browser process
 
-`UC_445_10` · phase: **c2** · confidence: **High**
+`UC_446_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### [LLM] Covenant C2: outbound to Filen cloud-storage API as non-browser process
 
-`UC_445_11` · phase: **c2** · confidence: **High**
+`UC_446_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceNetworkEvents
 
 ### [LLM] Sednit COM-hijacking persistence via HKCU CLSID InprocServer32 to user-writable DLL
 
-`UC_445_12` · phase: **install** · confidence: **High**
+`UC_446_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +162,7 @@ DeviceRegistryEvents
 
 ### [LLM] SlimAgent keylogger HTML log artefact written to disk (Xagent-lineage colour scheme)
 
-`UC_445_13` · phase: **actions** · confidence: **Medium**
+`UC_446_13` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -426,7 +426,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Sednit reloaded: Back in the trenches
 
-`UC_445_7` · phase: **exploit** · confidence: **High**
+`UC_446_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

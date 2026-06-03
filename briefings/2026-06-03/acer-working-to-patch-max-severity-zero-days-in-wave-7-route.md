@@ -11,15 +11,9 @@ By Sergiu Gatlan
 June 3, 2026
 07:35 AM
 0 
-
-
 Acer confirmed that it's working to address two maximum-severity zero-day vulnerabilities affecting its Wave 7 mesh routers.
-
-
 According to a Friday security advisory , the two security flaws were reported by security researcher Gergo Pap and affect Wave 7 routers running firmware version T7c_GBL_1.01.000055 or earlier.
-
-
-The first zero-day, a broken access control vulnerability tra…
+The first zero-day, a broken access control vulnerability tracked as CVE-…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -42,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Acer Wave 7 unauthenticated acer_cgi.log credential disclosure (CVE-2026-49200)
 
-`UC_11_1` · phase: **exploit** · confidence: **High**
+`UC_13_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +57,7 @@ DeviceNetworkEvents
 
 ### [LLM] Acer Wave 7 upload.cgi backup tamper for persistent backdoor (CVE-2026-49201)
 
-`UC_11_2` · phase: **install** · confidence: **Medium**
+`UC_13_2` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

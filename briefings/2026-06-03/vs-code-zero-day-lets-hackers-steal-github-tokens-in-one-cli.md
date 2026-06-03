@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] VS Code (code.exe) outbound network egress to non-Microsoft/non-GitHub domain
 
-`UC_19_3` · phase: **c2** · confidence: **Medium**
+`UC_20_3` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### [LLM] VS Code extension file write within 120s of opening a .ipynb notebook (one-click install chain)
 
-`UC_19_4` · phase: **install** · confidence: **High**
+`UC_20_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceFileEvents
 
 ### [LLM] Mass GitHub private repository enumeration in short window (stolen OAuth token reuse)
 
-`UC_19_5` · phase: **actions** · confidence: **Medium**
+`UC_20_5` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

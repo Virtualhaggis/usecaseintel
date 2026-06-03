@@ -79,7 +79,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Nimbus Manticore AppDomainManager hijack — .exe.config dropped beside benign sig
 
-`UC_139_10` · phase: **install** · confidence: **Medium**
+`UC_140_10` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceFileEvents
 
 ### [LLM] Nimbus Manticore AppDomain hijack — signed .NET binary loads DLL from user-writable dir
 
-`UC_139_11` · phase: **exploit** · confidence: **Medium**
+`UC_140_11` · phase: **exploit** · confidence: **Medium**
 
 **Defender KQL:**
 ```kql
@@ -114,7 +114,7 @@ DeviceImageLoadEvents
 
 ### [LLM] Nimbus Manticore / MiniFast C2 beacon to campaign domains
 
-`UC_139_12` · phase: **c2** · confidence: **High**
+`UC_140_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceNetworkEvents
 
 ### [LLM] MiniFast / MiniJunk V2 payload execution by SHA256
 
-`UC_139_13` · phase: **install** · confidence: **High**
+`UC_140_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ union DeviceProcessEvents, DeviceFileEvents
 
 ### [LLM] Nimbus Manticore trojanized SQL Developer / Zoom installer download & execution
 
-`UC_139_14` · phase: **delivery** · confidence: **Medium**
+`UC_140_14` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
