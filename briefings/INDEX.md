@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1247 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1248 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -14,10 +14,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 45247 mirasvit full page cache warmer dese](./2026-06-03/cisa-kev-cve-2026-45247-mirasvit-full-page-cache-warmer-dese.md)
 - [cisa warns of active attacks exploiting android linux bugs](./2026-06-03/cisa-warns-of-active-attacks-exploiting-android-linux-bugs.md)
 - [hackers use fake purchase orders to deploy js monoglyphrat t](./2026-06-03/hackers-use-fake-purchase-orders-to-deploy-js-monoglyphrat-t.md)
-- [hackers use youtube and seo poisoning to spread weedhack min](./2026-06-03/hackers-use-youtube-and-seo-poisoning-to-spread-weedhack-min.md)
 - [hackers using ai tools to automate active directory attacks ](./2026-06-03/hackers-using-ai-tools-to-automate-active-directory-attacks-.md)
+- [hazybeacon camapign weaponizes amazon web services for steal](./2026-06-03/hazybeacon-camapign-weaponizes-amazon-web-services-for-steal.md)
+- [new http 2 bomb dos attack crashes web servers in under a mi](./2026-06-03/new-http-2-bomb-dos-attack-crashes-web-servers-in-under-a-mi.md)
 - [new http 2 bomb vulnerability allows remote dos on nginx apa](./2026-06-03/new-http-2-bomb-vulnerability-allows-remote-dos-on-nginx-apa.md)
 - [preinstall to persistence inside the red hat npm miasma cred](./2026-06-03/preinstall-to-persistence-inside-the-red-hat-npm-miasma-cred.md)
+- [the gentlemen ransomware group uses fortinet exploits ai and](./2026-06-03/the-gentlemen-ransomware-group-uses-fortinet-exploits-ai-and.md)
 - [the new security risks of the agentic development lifecycle](./2026-06-03/the-new-security-risks-of-the-agentic-development-lifecycle.md)
 - [vs code zero day lets hackers steal github tokens in one cli](./2026-06-03/vs-code-zero-day-lets-hackers-steal-github-tokens-in-one-cli.md)
 - [weedhack attacks minecraft users countloader hits 86k miners](./2026-06-03/weedhack-attacks-minecraft-users-countloader-hits-86k-miners.md)
@@ -25,7 +27,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-02
 - [ai built ransomware toolkit automates edr evasion ad discove](./2026-06-02/ai-built-ransomware-toolkit-automates-edr-evasion-ad-discove.md)
-- [cisa flags two year old oracle flaw as actively exploited in](./2026-06-02/cisa-flags-two-year-old-oracle-flaw-as-actively-exploited-in.md)
 - [cisa kev cve 2022 0492 linux kernel improper authentication ](./2026-06-02/cisa-kev-cve-2022-0492-linux-kernel-improper-authentication-.md)
 - [cisa kev cve 2025 48595 android framework integer overflow v](./2026-06-02/cisa-kev-cve-2025-48595-android-framework-integer-overflow-v.md)
 - [dashlane discloses brute force attack encrypted vaults of fe](./2026-06-02/dashlane-discloses-brute-force-attack-encrypted-vaults-of-fe.md)

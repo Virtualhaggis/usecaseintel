@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Telegram Bot API C2 channel used by AI-built ransomware toolkit (non-IM/non-browser egress)
 
-`UC_29_4` · phase: **c2** · confidence: **High**
+`UC_30_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceNetworkEvents
 
 ### [LLM] First-time egress to *.workers.dev (Cloudflare Worker C2 redirector) from non-browser process
 
-`UC_29_5` · phase: **c2** · confidence: **Medium**
+`UC_30_5` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceNetworkEvents
 
 ### [LLM] Payload staging in user 'Documents\test' folder — AI-built ransomware toolkit drop path
 
-`UC_29_6` · phase: **install** · confidence: **High**
+`UC_30_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
