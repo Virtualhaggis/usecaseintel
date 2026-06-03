@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud npm Worm C2 callback to Session Protocol CDN and masscan.cloud
 
-`UC_263_9` · phase: **c2** · confidence: **High**
+`UC_265_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ NetHits
 
 ### [LLM] TeamPCP Mini Shai-Hulud stealer payload hash match (SHA256/SHA1)
 
-`UC_263_10` · phase: **install** · confidence: **High**
+`UC_265_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ ProcHits | union FileHits, ImgHits
 
 ### [LLM] Mini Shai-Hulud router_init.js dropped at npm package root in node_modules
 
-`UC_263_11` · phase: **install** · confidence: **High**
+`UC_265_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceFileEvents
 
 ### [LLM] Mini Shai-Hulud dead-drop git commit authored as claude@users.noreply.github.com
 
-`UC_263_12` · phase: **actions** · confidence: **High**
+`UC_265_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,7 +163,7 @@ DeviceProcessEvents
 
 ### [LLM] Node/npm/Bun process enumerating cloud, wallet, AI, and messaging credential file paths
 
-`UC_263_13` · phase: **actions** · confidence: **Medium**
+`UC_265_13` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -342,7 +342,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TeamPCP's Mini Shai-Hulud Is Back: A Self-Spreading Supply Chain Attack Compromi
 
-`UC_263_8` · phase: **exploit** · confidence: **High**
+`UC_265_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

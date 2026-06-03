@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1245 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1247 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,12 +9,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-03
+- [acer working to patch max severity zero days in wave 7 route](./2026-06-03/acer-working-to-patch-max-severity-zero-days-in-wave-7-route.md)
 - [argamal malware hidden in hentai games](./2026-06-03/argamal-malware-hidden-in-hentai-games.md)
+- [hackers use fake purchase orders to deploy js monoglyphrat t](./2026-06-03/hackers-use-fake-purchase-orders-to-deploy-js-monoglyphrat-t.md)
 - [hackers use youtube and seo poisoning to spread weedhack min](./2026-06-03/hackers-use-youtube-and-seo-poisoning-to-spread-weedhack-min.md)
+- [hackers using ai tools to automate active directory attacks ](./2026-06-03/hackers-using-ai-tools-to-automate-active-directory-attacks-.md)
 - [new http 2 bomb vulnerability allows remote dos on nginx apa](./2026-06-03/new-http-2-bomb-vulnerability-allows-remote-dos-on-nginx-apa.md)
 - [preinstall to persistence inside the red hat npm miasma cred](./2026-06-03/preinstall-to-persistence-inside-the-red-hat-npm-miasma-cred.md)
+- [the new security risks of the agentic development lifecycle](./2026-06-03/the-new-security-risks-of-the-agentic-development-lifecycle.md)
 - [vs code zero day lets hackers steal github tokens in one cli](./2026-06-03/vs-code-zero-day-lets-hackers-steal-github-tokens-in-one-cli.md)
 - [weedhack attacks minecraft users countloader hits 86k miners](./2026-06-03/weedhack-attacks-minecraft-users-countloader-hits-86k-miners.md)
+- [what 345 days of untested exposure looks like at a bank](./2026-06-03/what-345-days-of-untested-exposure-looks-like-at-a-bank.md)
 
 ## 2026-06-02
 - [ai built ransomware toolkit automates edr evasion ad discove](./2026-06-02/ai-built-ransomware-toolkit-automates-edr-evasion-ad-discove.md)
@@ -35,7 +40,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [protestware by open source maintainer to hinder agentic codi](./2026-06-02/protestware-by-open-source-maintainer-to-hinder-agentic-codi.md)
 - [the npm threat landscape attack surface and mitigations upda](./2026-06-02/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 - [why the browser is now the front line for ai security](./2026-06-02/why-the-browser-is-now-the-front-line-for-ai-security.md)
-- [wordpress malware abuses steam community profiles for c2 ope](./2026-06-02/wordpress-malware-abuses-steam-community-profiles-for-c2-ope.md)
 
 ## 2026-06-01
 - [china aligned groups ramp up attacks dragon weave hits czech](./2026-06-01/china-aligned-groups-ramp-up-attacks-dragon-weave-hits-czech.md)
@@ -44,7 +48,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [critical wp maps pro flaw actively exploited to create admin](./2026-06-01/critical-wp-maps-pro-flaw-actively-exploited-to-create-admin.md)
 - [ghsa critical cve 2026 47413 praisonai platform any workspac](./2026-06-01/ghsa-critical-cve-2026-47413-praisonai-platform-any-workspac.md)
 - [ghsa critical cve 2026 47429 when vitest ui server is listen](./2026-06-01/ghsa-critical-cve-2026-47429-when-vitest-ui-server-is-listen.md)
-- [hackers hijack thousands of sites for clickfix and fakeupdat](./2026-06-01/hackers-hijack-thousands-of-sites-for-clickfix-and-fakeupdat.md)
 - [miasma supply chain attack compromises red hat npm packages ](./2026-06-01/miasma-supply-chain-attack-compromises-red-hat-npm-packages-.md)
 - [miasma supply chain attack malicious code found in redhat cl](./2026-06-01/miasma-supply-chain-attack-malicious-code-found-in-redhat-cl.md)
 - [openai codex authentication tokens stolen in codexui android](./2026-06-01/openai-codex-authentication-tokens-stolen-in-codexui-android.md)
@@ -2313,6 +2316,3 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2023-06-05
 - [a day in the life of an ethical hacker](./2023-06-05/a-day-in-the-life-of-an-ethical-hacker.md)
 - [ethical hacking techniques](./2023-06-05/ethical-hacking-techniques.md)
-
-## 2023-06-01
-- [ethical hacking top tools](./2023-06-01/ethical-hacking-top-tools.md)
