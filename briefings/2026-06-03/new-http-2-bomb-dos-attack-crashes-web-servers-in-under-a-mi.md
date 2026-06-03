@@ -11,15 +11,9 @@ By Bill Toulas
 June 3, 2026
 03:08 PM
 0 
-
-
 A new denial-of-service (DoS) attack dubbed HTTP/2 Bomb can be launched from a single machine to take down web servers within seconds.
-
-
 The technique works on default HTTP/2 configurations of major web servers, including NGINX, Apache HTTP Server, Microsoft IIS, Envoy, and Cloudflare Pingora.
-
-
-Discovered by OpenAI's Codex software agent under the guidance of researchers at offen…
+Discovered by OpenAI's Codex software agent under the guidance of researchers at offensive securit…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -40,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vulnerable HTTP/2 server inventory (CVE-2026-49975 — nginx/mod_http2/Envoy/IIS)
 
-`UC_0_1` · phase: **weapon** · confidence: **High**
+`UC_4_1` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +68,7 @@ union TvmHits, InventoryHits
 
 ### [LLM] HTTP/2 Bomb stall signature — long-hung HTTP/2 requests with near-zero response bytes
 
-`UC_0_2` · phase: **c2** · confidence: **Medium**
+`UC_4_2` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +98,7 @@ DeviceNetworkEvents
 
 ### [LLM] Web-tier worker crash / OOM storm following HTTP/2 Bomb memory exhaustion
 
-`UC_0_3` · phase: **actions** · confidence: **High**
+`UC_4_3` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

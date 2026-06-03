@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1248 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,16 +11,22 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-03
 - [acer working to patch max severity zero days in wave 7 route](./2026-06-03/acer-working-to-patch-max-severity-zero-days-in-wave-7-route.md)
 - [argamal malware hidden in hentai games](./2026-06-03/argamal-malware-hidden-in-hentai-games.md)
+- [autonomous ai tool finds 2 year old rce flaw in redis cve 20](./2026-06-03/autonomous-ai-tool-finds-2-year-old-rce-flaw-in-redis-cve-20.md)
+- [beyond the zero day see your network like an attacker webina](./2026-06-03/beyond-the-zero-day-see-your-network-like-an-attacker-webina.md)
 - [cisa kev cve 2026 45247 mirasvit full page cache warmer dese](./2026-06-03/cisa-kev-cve-2026-45247-mirasvit-full-page-cache-warmer-dese.md)
 - [cisa warns of active attacks exploiting android linux bugs](./2026-06-03/cisa-warns-of-active-attacks-exploiting-android-linux-bugs.md)
+- [cisa warns of cyberattacks targeting fuel tank monitoring sy](./2026-06-03/cisa-warns-of-cyberattacks-targeting-fuel-tank-monitoring-sy.md)
+- [ghsa critical cve 2026 44180 jupyter enterprise gateway cont](./2026-06-03/ghsa-critical-cve-2026-44180-jupyter-enterprise-gateway-cont.md)
+- [google doubleclick abused in new malspam campaign to deliver](./2026-06-03/google-doubleclick-abused-in-new-malspam-campaign-to-deliver.md)
 - [hackers use fake purchase orders to deploy js monoglyphrat t](./2026-06-03/hackers-use-fake-purchase-orders-to-deploy-js-monoglyphrat-t.md)
 - [hackers using ai tools to automate active directory attacks ](./2026-06-03/hackers-using-ai-tools-to-automate-active-directory-attacks-.md)
 - [hazybeacon camapign weaponizes amazon web services for steal](./2026-06-03/hazybeacon-camapign-weaponizes-amazon-web-services-for-steal.md)
 - [new http 2 bomb dos attack crashes web servers in under a mi](./2026-06-03/new-http-2-bomb-dos-attack-crashes-web-servers-in-under-a-mi.md)
-- [new http 2 bomb vulnerability allows remote dos on nginx apa](./2026-06-03/new-http-2-bomb-vulnerability-allows-remote-dos-on-nginx-apa.md)
 - [preinstall to persistence inside the red hat npm miasma cred](./2026-06-03/preinstall-to-persistence-inside-the-red-hat-npm-miasma-cred.md)
 - [the gentlemen ransomware group uses fortinet exploits ai and](./2026-06-03/the-gentlemen-ransomware-group-uses-fortinet-exploits-ai-and.md)
 - [the new security risks of the agentic development lifecycle](./2026-06-03/the-new-security-risks-of-the-agentic-development-lifecycle.md)
+- [the u s sanctions nobitex crypto exchange used by ransomware](./2026-06-03/the-u-s-sanctions-nobitex-crypto-exchange-used-by-ransomware.md)
+- [unpatched windows search uri vulnerability lets attackers st](./2026-06-03/unpatched-windows-search-uri-vulnerability-lets-attackers-st.md)
 - [vs code zero day lets hackers steal github tokens in one cli](./2026-06-03/vs-code-zero-day-lets-hackers-steal-github-tokens-in-one-cli.md)
 - [weedhack attacks minecraft users countloader hits 86k miners](./2026-06-03/weedhack-attacks-minecraft-users-countloader-hits-86k-miners.md)
 - [what 345 days of untested exposure looks like at a bank](./2026-06-03/what-345-days-of-untested-exposure-looks-like-at-a-bank.md)
@@ -41,7 +47,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [pakistan linked sidecopy targets afghanistan finance ministr](./2026-06-02/pakistan-linked-sidecopy-targets-afghanistan-finance-ministr.md)
 - [protestware by open source maintainer to hinder agentic codi](./2026-06-02/protestware-by-open-source-maintainer-to-hinder-agentic-codi.md)
 - [the npm threat landscape attack surface and mitigations upda](./2026-06-02/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
-- [why the browser is now the front line for ai security](./2026-06-02/why-the-browser-is-now-the-front-line-for-ai-security.md)
+- [why edr and proxy won t save you from supply chain malware](./2026-06-02/why-edr-and-proxy-won-t-save-you-from-supply-chain-malware.md)
 
 ## 2026-06-01
 - [china aligned groups ramp up attacks dragon weave hits czech](./2026-06-01/china-aligned-groups-ramp-up-attacks-dragon-weave-hits-czech.md)
@@ -122,14 +128,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [from poisoned search results to gpu mining a cryptojacking c](./2026-05-26/from-poisoned-search-results-to-gpu-mining-a-cryptojacking-c.md)
 - [ghsa critical cve 2026 33137 xwiki platform has an unauthent](./2026-05-26/ghsa-critical-cve-2026-33137-xwiki-platform-has-an-unauthent.md)
 - [iranian hackers deploy minifast and minijunk v2 via phishing](./2026-05-26/iranian-hackers-deploy-minifast-and-minijunk-v2-via-phishing.md)
-- [knowledgedeliver lms flaw exploited to deploy godzilla and c](./2026-05-26/knowledgedeliver-lms-flaw-exploited-to-deploy-godzilla-and-c.md)
 - [mfa prompt bombing why your second factor isn t saving you](./2026-05-26/mfa-prompt-bombing-why-your-second-factor-isn-t-saving-you.md)
 - [muddywater uses dll side loading in espionage campaign targe](./2026-05-26/muddywater-uses-dll-side-loading-in-espionage-campaign-targe.md)
 - [why developer machines are now the number one target for sup](./2026-05-26/why-developer-machines-are-now-the-number-one-target-for-sup.md)
-
-## 2026-05-25
-- [ghost cms cve 2026 26980 exploited to hijack 700 sites for c](./2026-05-25/ghost-cms-cve-2026-26980-exploited-to-hijack-700-sites-for-c.md)
-- [weekly recap linux flaws defender 0 days router botnets and ](./2026-05-25/weekly-recap-linux-flaws-defender-0-days-router-botnets-and-.md)
 
 ## 2026-05-23
 - [ghsa critical cve 2026 46716 nezha monitoring rolemember can](./2026-05-23/ghsa-critical-cve-2026-46716-nezha-monitoring-rolemember-can.md)
@@ -252,7 +253,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 25244 webdriverio browserstack servic](./2026-05-11/ghsa-critical-cve-2026-25244-webdriverio-browserstack-servic.md)
 - [ghsa critical cve 2026 27478 unity catalog has a jwt issuer ](./2026-05-11/ghsa-critical-cve-2026-27478-unity-catalog-has-a-jwt-issuer-.md)
 - [ghsa critical cve 2026 43898 sandboxjs has a sandbox escape ](./2026-05-11/ghsa-critical-cve-2026-43898-sandboxjs-has-a-sandbox-escape-.md)
-- [ghsa critical cve 2026 44643 angular expressions remote code](./2026-05-11/ghsa-critical-cve-2026-44643-angular-expressions-remote-code.md)
 - [ghsa critical cve 2026 7813 pgadmin 4 server mode has an aut](./2026-05-11/ghsa-critical-cve-2026-7813-pgadmin-4-server-mode-has-an-aut.md)
 - [ghsa critical ghsa h29g c9cx c73q torrentpier has php serial](./2026-05-11/ghsa-critical-ghsa-h29g-c9cx-c73q-torrentpier-has-php-serial.md)
 - [inside ad cs escalation unpacking advanced misuse techniques](./2026-05-11/inside-ad-cs-escalation-unpacking-advanced-misuse-techniques.md)

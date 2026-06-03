@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SideCopy LNK-via-ZIP spawning mshta.exe with remote HTA URL
 
-`UC_46_10` · phase: **delivery** · confidence: **High**
+`UC_51_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### [LLM] Xeno RAT staging — mshta/wscript fetching HTA from abimj.edu.af
 
-`UC_46_11` · phase: **delivery** · confidence: **High**
+`UC_51_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ proc
 
 ### [LLM] Xeno RAT Registry Run-key persistence impersonating Microsoft Edge
 
-`UC_46_12` · phase: **install** · confidence: **Medium**
+`UC_51_12` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceRegistryEvents
 
 ### [LLM] SideCopy Xeno RAT C2 egress to 185.235.137.106 / 103.132.98.224 / 103.132.98.226
 
-`UC_46_13` · phase: **c2** · confidence: **High**
+`UC_51_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceNetworkEvents
 
 ### [LLM] Known Xeno RAT 1.8.7 (Operation XENOFISCAL) hash execution or drop
 
-`UC_46_14` · phase: **install** · confidence: **High**
+`UC_51_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
