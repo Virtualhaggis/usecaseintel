@@ -53,7 +53,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Responding and remediating: Best practices for handling security alerts
 
-`UC_946_1` · phase: **exploit** · confidence: **High**
+`UC_945_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

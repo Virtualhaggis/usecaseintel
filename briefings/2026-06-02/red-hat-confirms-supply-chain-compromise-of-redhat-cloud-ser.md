@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Install of compromised @redhat-cloud-services npm package versions (Miasma)
 
-`UC_20_7` · phase: **install** · confidence: **High**
+`UC_21_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceProcessEvents
 
 ### [LLM] node process fetching bun-v1.3.13 from GitHub releases CDN to /tmp
 
-`UC_20_8` · phase: **install** · confidence: **High**
+`UC_21_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ NetHits
 
 ### [LLM] Bun runtime executing /tmp/p<random>.js spawned by node preinstall
 
-`UC_20_9` · phase: **install** · confidence: **High**
+`UC_21_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceProcessEvents
 
 ### [LLM] Known-malicious Miasma index.js dropped to node_modules (SHA1 IOC)
 
-`UC_20_10` · phase: **delivery** · confidence: **High**
+`UC_21_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -179,7 +179,7 @@ union isfuzzy=true
 
 ### [LLM] node process reading cloud / CI credential files during npm install
 
-`UC_20_11` · phase: **actions** · confidence: **Medium**
+`UC_21_11` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -414,7 +414,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Red Hat Confirms Supply Chain Compromise of @redhat-cloud-services npm Packages
 
-`UC_20_6` · phase: **exploit** · confidence: **High**
+`UC_21_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] tj-actions / reviewdog imposter-commit SHA referenced on CI/CD runner or developer host
 
-`UC_807_3` · phase: **delivery** · confidence: **High**
+`UC_806_3` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceProcessEvents
 
 ### [LLM] tj-actions memdump.py credential-dump payload fetched or executed on CI runner
 
-`UC_807_4` · phase: **actions** · confidence: **High**
+`UC_806_4` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ union ProcessHit, NetworkHit
 
 ### Article-specific behavioural hunt — The GitHub Warning Everyone Ignores: 'This Commit Does Not Belong to Any Branch'
 
-`UC_807_2` · phase: **exploit** · confidence: **High**
+`UC_806_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

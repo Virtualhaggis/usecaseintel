@@ -6,10 +6,10 @@
 
 ## Threat Profile
 
-Packagist Supply Chain Attack Infects 8 Packages Using GitHub-Hosted Linux Malware 
- Ravie Lakshmanan  May 23, 2026 Malware / DevSecOps 
-A new "coordinated" supply chain attack campaign has impacted eight packages on Packagist including malicious code designed to run a Linux binary retrieved from a GitHub Releases URL.
-"Although the affected packages were all Composer packages, the malicious code was not added to composer.json," Socket said . "Instead, it was inserted into package.json, target…
+npm Adds 2FA-Gated Publishing and Package Install Controls Against Supply Chain Attacks 
+ Ravie Lakshmanan  May 23, 2026 Software Supply Chain / DevSecOps 
+GitHub has rolled out new controls for npm to improve the security of the software supply chain, giving maintainers the ability to explicitly approve a release prior to the packages becoming publicly available for installation.
+Called staged publishing, the feature is now generally available on npm. It mandates that a human maintainer pass …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -23,7 +23,6 @@ A new "coordinated" supply chain attack campaign has impacted eight packages on 
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1204.002** — User Execution: Malicious File
 - **T1546.016** — Event Triggered Execution: Installer Packages
 - **T1204.003** — User Execution: Malicious Image
 - **T1105** — Ingress Tool Transfer
@@ -41,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Packagist supply chain: Composer/npm postinstall fetching parikhpreyash4 GitHub payload
 
-`UC_141_5` · phase: **install** · confidence: **High**
+`UC_141_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +60,7 @@ DeviceProcessEvents
 
 ### [LLM] Linux dotfile drop at /tmp/.sshd masquerading as OpenSSH daemon
 
-`UC_141_6` · phase: **install** · confidence: **High**
+`UC_141_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +79,7 @@ DeviceFileEvents
 
 ### [LLM] gvfsd-network binary executing from non-standard path (GNOME daemon masquerade)
 
-`UC_141_7` · phase: **c2** · confidence: **High**
+`UC_141_6` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +98,7 @@ DeviceProcessEvents
 
 ### [LLM] Build tooling spawning curl/wget with TLS verification disabled
 
-`UC_141_8` · phase: **install** · confidence: **Medium**
+`UC_141_7` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +119,7 @@ DeviceProcessEvents
 
 ### [LLM] Compromised Packagist Composer package vendor/ presence on hosts
 
-`UC_141_9` · phase: **delivery** · confidence: **High**
+`UC_141_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -256,40 +255,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — npm Adds 2FA-Gated Publishing and Package Install Controls Against Supply Chain
-
-`UC_141_4` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-``` Article-specific bespoke detection — npm Adds 2FA-Gated Publishing and Package Install Controls Against Supply Chain ```
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_path="*/tmp/.sshd*")
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-```
-
-**Defender KQL:**
-```kql
-// Article-specific bespoke detection — npm Adds 2FA-Gated Publishing and Package Install Controls Against Supply Chain
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where (FolderPath has_any ("/tmp/.sshd"))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
