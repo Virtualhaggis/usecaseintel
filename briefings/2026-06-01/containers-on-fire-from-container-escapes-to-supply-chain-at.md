@@ -68,7 +68,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TeamPCP Checkmarx KICS supply-chain stealer C2 callback (audit.checkmarx.cx / 94.154.172.43)
 
-`UC_50_7` · phase: **c2** · confidence: **High**
+`UC_54_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceNetworkEvents
 
 ### [LLM] Privileged container launch — docker run --privileged from non-CI parent
 
-`UC_50_8` · phase: **exploit** · confidence: **Medium**
+`UC_54_8` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceProcessEvents
 
 ### [LLM] Container escape via cgroups release_agent write (CVE-2022-0492)
 
-`UC_50_9` · phase: **exploit** · confidence: **High**
+`UC_54_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceFileEvents
 
 ### [LLM] runC binary modified outside package manager (CVE-2019-5736 / CVE-2024-21626)
 
-`UC_50_10` · phase: **install** · confidence: **High**
+`UC_54_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ DeviceFileEvents
 
 ### [LLM] Kubernetes API curl/wget with ServiceAccount token from container
 
-`UC_50_11` · phase: **actions** · confidence: **High**
+`UC_54_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -246,7 +246,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Containers on fire: from container escapes to supply chain attacks
 
-`UC_50_6` · phase: **install** · confidence: **High**
+`UC_54_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

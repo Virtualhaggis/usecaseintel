@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1248 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1245 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,14 +10,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-03
 - [argamal malware hidden in hentai games](./2026-06-03/argamal-malware-hidden-in-hentai-games.md)
+- [hackers use youtube and seo poisoning to spread weedhack min](./2026-06-03/hackers-use-youtube-and-seo-poisoning-to-spread-weedhack-min.md)
+- [new http 2 bomb vulnerability allows remote dos on nginx apa](./2026-06-03/new-http-2-bomb-vulnerability-allows-remote-dos-on-nginx-apa.md)
 - [preinstall to persistence inside the red hat npm miasma cred](./2026-06-03/preinstall-to-persistence-inside-the-red-hat-npm-miasma-cred.md)
-- [unpatched windows search uri vulnerability lets attackers st](./2026-06-03/unpatched-windows-search-uri-vulnerability-lets-attackers-st.md)
 - [vs code zero day lets hackers steal github tokens in one cli](./2026-06-03/vs-code-zero-day-lets-hackers-steal-github-tokens-in-one-cli.md)
 - [weedhack attacks minecraft users countloader hits 86k miners](./2026-06-03/weedhack-attacks-minecraft-users-countloader-hits-86k-miners.md)
 
 ## 2026-06-02
 - [ai built ransomware toolkit automates edr evasion ad discove](./2026-06-02/ai-built-ransomware-toolkit-automates-edr-evasion-ad-discove.md)
-- [attackers abuse aws google cloud cloudflare and microsoft se](./2026-06-02/attackers-abuse-aws-google-cloud-cloudflare-and-microsoft-se.md)
 - [cisa flags two year old oracle flaw as actively exploited in](./2026-06-02/cisa-flags-two-year-old-oracle-flaw-as-actively-exploited-in.md)
 - [cisa kev cve 2022 0492 linux kernel improper authentication ](./2026-06-02/cisa-kev-cve-2022-0492-linux-kernel-improper-authentication-.md)
 - [cisa kev cve 2025 48595 android framework integer overflow v](./2026-06-02/cisa-kev-cve-2025-48595-android-framework-integer-overflow-v.md)
@@ -27,12 +27,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [google june 2026 android update patches 124 flaws one active](./2026-06-02/google-june-2026-android-update-patches-124-flaws-one-active.md)
 - [laravel lang supply chain attack every tag across multiple c](./2026-06-02/laravel-lang-supply-chain-attack-every-tag-across-multiple-c.md)
 - [microsoft build 2026 securing code agents and models across ](./2026-06-02/microsoft-build-2026-securing-code-agents-and-models-across-.md)
+- [multiple redhat cloud services npm packages compromised](./2026-06-02/multiple-redhat-cloud-services-npm-packages-compromised.md)
 - [nx console vs code extension compromised](./2026-06-02/nx-console-vs-code-extension-compromised.md)
 - [operation flutterbridge macos malvertising campaign spreads ](./2026-06-02/operation-flutterbridge-macos-malvertising-campaign-spreads-.md)
 - [over 116 000 minecraft systems infected in weedhack malware ](./2026-06-02/over-116-000-minecraft-systems-infected-in-weedhack-malware-.md)
 - [pakistan linked sidecopy targets afghanistan finance ministr](./2026-06-02/pakistan-linked-sidecopy-targets-afghanistan-finance-ministr.md)
 - [protestware by open source maintainer to hinder agentic codi](./2026-06-02/protestware-by-open-source-maintainer-to-hinder-agentic-codi.md)
-- [red hat confirms supply chain compromise of redhat cloud ser](./2026-06-02/red-hat-confirms-supply-chain-compromise-of-redhat-cloud-ser.md)
 - [the npm threat landscape attack surface and mitigations upda](./2026-06-02/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 - [why the browser is now the front line for ai security](./2026-06-02/why-the-browser-is-now-the-front-line-for-ai-security.md)
 - [wordpress malware abuses steam community profiles for c2 ope](./2026-06-02/wordpress-malware-abuses-steam-community-profiles-for-c2-ope.md)
@@ -124,14 +124,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-25
 - [ghost cms cve 2026 26980 exploited to hijack 700 sites for c](./2026-05-25/ghost-cms-cve-2026-26980-exploited-to-hijack-700-sites-for-c.md)
-- [lazarus deploys remotepe memory only rat against financial a](./2026-05-25/lazarus-deploys-remotepe-memory-only-rat-against-financial-a.md)
-- [trapdoor supply chain attack spreads credential stealing mal](./2026-05-25/trapdoor-supply-chain-attack-spreads-credential-stealing-mal.md)
 - [weekly recap linux flaws defender 0 days router botnets and ](./2026-05-25/weekly-recap-linux-flaws-defender-0-days-router-botnets-and-.md)
 
 ## 2026-05-23
 - [ghsa critical cve 2026 46716 nezha monitoring rolemember can](./2026-05-23/ghsa-critical-cve-2026-46716-nezha-monitoring-rolemember-can.md)
 - [laravel lang supply chain advisory](./2026-05-23/laravel-lang-supply-chain-advisory.md)
-- [npm adds 2fa gated publishing and package install controls a](./2026-05-23/npm-adds-2fa-gated-publishing-and-package-install-controls-a.md)
 - [supply chain attack targets laravel lang packages with crede](./2026-05-23/supply-chain-attack-targets-laravel-lang-packages-with-crede.md)
 
 ## 2026-05-22

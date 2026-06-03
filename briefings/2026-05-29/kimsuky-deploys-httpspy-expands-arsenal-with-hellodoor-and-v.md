@@ -88,7 +88,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Kimsuky fake AhnLab/nProtect installer spawning regsvr32 with MemLoader.dll
 
-`UC_84_12` · phase: **install** · confidence: **High**
+`UC_88_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### [LLM] Fake Webex camera-fix JSE dropper (fix-camera.jse) via wscript / mTSTCv8.mdxm
 
-`UC_84_13` · phase: **delivery** · confidence: **High**
+`UC_88_13` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceProcessEvents
 
 ### [LLM] HTTPSpy loader-chain artifacts on disk (cacheMon.dat, engine.dat, spyInster.dll)
 
-`UC_84_14` · phase: **install** · confidence: **High**
+`UC_88_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceFileEvents
 
 ### [LLM] VS Code Remote Tunnel abuse for covert C2 (code tunnel)
 
-`UC_84_15` · phase: **c2** · confidence: **Medium**
+`UC_88_15` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -167,7 +167,7 @@ DeviceProcessEvents
 
 ### [LLM] AppleSeed GPKI directory enumeration / staging
 
-`UC_84_16` · phase: **actions** · confidence: **High**
+`UC_88_16` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -187,7 +187,7 @@ DeviceFileEvents
 
 ### [LLM] Kimsuky C2 callback to .r-e.kr / .o-r.kr / .n-e.kr dynamic-DNS infrastructure
 
-`UC_84_17` · phase: **c2** · confidence: **High**
+`UC_88_17` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -206,7 +206,7 @@ DeviceNetworkEvents
 
 ### [LLM] MemLoader scheduled-task persistence after regsvr32 DLL load
 
-`UC_84_18` · phase: **install** · confidence: **Medium**
+`UC_88_18` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -547,7 +547,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Kimsuky Deploys HTTPSpy, Expands Arsenal with HelloDoor and VS Code Tunnels
 
-`UC_84_11` · phase: **exploit** · confidence: **High**
+`UC_88_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

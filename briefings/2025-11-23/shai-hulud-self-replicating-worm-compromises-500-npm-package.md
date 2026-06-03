@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Outbound exfiltration to Shai-Hulud webhook.site/bb8ca5f6 C2 endpoint
 
-`UC_666_7` · phase: **c2** · confidence: **High**
+`UC_667_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceNetworkEvents
 
 ### [LLM] TruffleHog spawned by node/npm as postinstall — Shai-Hulud credential sweep
 
-`UC_666_8` · phase: **actions** · confidence: **High**
+`UC_667_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceProcessEvents
 
 ### [LLM] Shai-Hulud bundle.js dropped on disk (SHA256 + filename hunt)
 
-`UC_666_9` · phase: **install** · confidence: **High**
+`UC_667_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -354,7 +354,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Shai-Hulud: Self-Replicating Worm Compromises 500+ NPM Packages
 
-`UC_666_6` · phase: **exploit** · confidence: **High**
+`UC_667_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

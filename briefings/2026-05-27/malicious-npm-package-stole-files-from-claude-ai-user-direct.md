@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious npm package 'mouse5212-super-formatter' install / postinstall execution
 
-`UC_110_5` · phase: **install** · confidence: **High**
+`UC_114_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceProcessEvents
 
 ### [LLM] Node/npm postinstall recursively reading Claude /mnt/user-data artifacts
 
-`UC_110_6` · phase: **actions** · confidence: **Medium**
+`UC_114_6` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceFileEvents
 
 ### [LLM] Claude /mnt/user-data collection followed by node/npm egress to GitHub API
 
-`UC_110_7` · phase: **actions** · confidence: **High**
+`UC_114_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
