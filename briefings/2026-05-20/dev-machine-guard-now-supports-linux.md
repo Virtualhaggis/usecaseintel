@@ -181,7 +181,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Dev Machine Guard Now Supports Linux
 
-`UC_176_7` · phase: **exploit** · confidence: **High**
+`UC_177_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

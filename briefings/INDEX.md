@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1251 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,8 +10,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-04
 - [acer working to patch wave 7 router 0 day vulnerability](./2026-06-04/acer-working-to-patch-wave-7-router-0-day-vulnerability.md)
-- [binding gyp an npm supply chain attack that spreads like a w](./2026-06-04/binding-gyp-an-npm-supply-chain-attack-that-spreads-like-a-w.md)
-- [fake claude code installer via google sites deliver credenti](./2026-06-04/fake-claude-code-installer-via-google-sites-deliver-credenti.md)
+- [cisa adds exploited magento rce flaw cve 2026 45247 to kev c](./2026-06-04/cisa-adds-exploited-magento-rce-flaw-cve-2026-45247-to-kev-c.md)
+- [cisa warns of android framework integer overflow vulnerabili](./2026-06-04/cisa-warns-of-android-framework-integer-overflow-vulnerabili.md)
+- [fake claude code installer via google sites delivers credent](./2026-06-04/fake-claude-code-installer-via-google-sites-delivers-credent.md)
+- [hackers use fake chrome web store copyright notices to steal](./2026-06-04/hackers-use-fake-chrome-web-store-copyright-notices-to-steal.md)
+- [miasma npm supply chain attack self spreading worm via phant](./2026-06-04/miasma-npm-supply-chain-attack-self-spreading-worm-via-phant.md)
 
 ## 2026-06-03
 - [acer working to patch max severity zero days in wave 7 route](./2026-06-03/acer-working-to-patch-max-severity-zero-days-in-wave-7-route.md)
@@ -25,7 +28,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44181 jupyter enterprise gateway jinj](./2026-06-03/ghsa-critical-cve-2026-44181-jupyter-enterprise-gateway-jinj.md)
 - [ghsa critical cve 2026 44182 jupyter enterprise gateway kube](./2026-06-03/ghsa-critical-cve-2026-44182-jupyter-enterprise-gateway-kube.md)
 - [google doubleclick abused in new malspam campaign to deliver](./2026-06-03/google-doubleclick-abused-in-new-malspam-campaign-to-deliver.md)
-- [hackers use fake purchase orders to deploy js monoglyphrat t](./2026-06-03/hackers-use-fake-purchase-orders-to-deploy-js-monoglyphrat-t.md)
 - [hazybeacon camapign weaponizes amazon web services for steal](./2026-06-03/hazybeacon-camapign-weaponizes-amazon-web-services-for-steal.md)
 - [new http 2 bomb dos attack crashes web servers in under a mi](./2026-06-03/new-http-2-bomb-dos-attack-crashes-web-servers-in-under-a-mi.md)
 - [preinstall to persistence inside the red hat npm miasma cred](./2026-06-03/preinstall-to-persistence-inside-the-red-hat-npm-miasma-cred.md)

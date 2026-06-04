@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] npm preinstall hook executing oversized node index.js from @redhat-cloud-services package
 
-`UC_46_6` · phase: **install** · confidence: **High**
+`UC_48_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceProcessEvents
 
 ### [LLM] Bun runtime download to /tmp from a node process during npm install
 
-`UC_46_7` · phase: **delivery** · confidence: **High**
+`UC_48_7` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ BunDownload
 
 ### [LLM] Process reading /proc/<pid>/mem of GitHub Actions Runner.Worker (in-memory secret extraction)
 
-`UC_46_8` · phase: **actions** · confidence: **High**
+`UC_48_8` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceFileEvents
 
 ### [LLM] Bun spawned from npm install context executing /tmp/p*.js implant
 
-`UC_46_9` · phase: **install** · confidence: **High**
+`UC_48_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -347,7 +347,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Multiple redhat-cloud-services npm Packages compromised
 
-`UC_46_5` · phase: **exploit** · confidence: **High**
+`UC_48_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

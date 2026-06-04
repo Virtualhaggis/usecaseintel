@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Nx Console v18.95.0 Malicious Payload Bootstrap via Orphan Commit (npx github:nrwl/nx#558b09d7)
 
-`UC_48_6` · phase: **delivery** · confidence: **High**
+`UC_50_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### [LLM] Nx Console v18.95.0 Compromised VSIX / main.js / payload SHA-256 Hash Match
 
-`UC_48_7` · phase: **install** · confidence: **High**
+`UC_50_7` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ union isfuzzy=true
 
 ### [LLM] macOS LaunchAgent Persistence — com.user.kitty-monitor.plist (Nx Console Compromise)
 
-`UC_48_8` · phase: **install** · confidence: **High**
+`UC_50_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceFileEvents
 
 ### [LLM] Kitty cat.py Python Backdoor File Drop / Execution (Nx Console Compromise)
 
-`UC_48_9` · phase: **install** · confidence: **High**
+`UC_50_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ union
 
 ### [LLM] AWS IMDS (169.254.169.254) Hit from Developer / Non-EC2 Endpoint (Nx Console Credential Theft)
 
-`UC_48_10` · phase: **actions** · confidence: **Medium**
+`UC_50_10` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -286,7 +286,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Nx Console VS Code Extension Compromised
 
-`UC_48_5` · phase: **exploit** · confidence: **High**
+`UC_50_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

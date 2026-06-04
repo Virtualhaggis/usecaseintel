@@ -1,4 +1,4 @@
-# [CRIT] binding.gyp: An npm Supply Chain Attack That Spreads Like a Worm
+# [CRIT] Miasma npm Supply Chain Attack: Self-Spreading Worm via Phantom Gyp
 
 **Source:** StepSecurity
 **Published:** 2026-06-04
@@ -195,13 +195,13 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — binding.gyp: An npm Supply Chain Attack That Spreads Like a Worm
+### Article-specific behavioural hunt — Miasma npm Supply Chain Attack: Self-Spreading Worm via Phantom Gyp
 
-`UC_4_4` · phase: **exploit** · confidence: **High**
+`UC_2_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — binding.gyp: An npm Supply Chain Attack That Spreads Like a Worm ```
+``` Article-specific bespoke detection — Miasma npm Supply Chain Attack: Self-Spreading Worm via Phantom Gyp ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN ("index.js","node.js"))
@@ -222,7 +222,7 @@ DeviceProcessEvents
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — binding.gyp: An npm Supply Chain Attack That Spreads Like a Worm
+// Article-specific bespoke detection — Miasma npm Supply Chain Attack: Self-Spreading Worm via Phantom Gyp
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
