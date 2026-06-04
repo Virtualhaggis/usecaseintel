@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -14,8 +14,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisco patches cve 2026 20230 in unified cm as exploit code g](./2026-06-04/cisco-patches-cve-2026-20230-in-unified-cm-as-exploit-code-g.md)
 - [cisco warns of critical unified cm flaw with poc exploit cod](./2026-06-04/cisco-warns-of-critical-unified-cm-flaw-with-poc-exploit-cod.md)
 - [claude code github action flaw let one malicious issue hijac](./2026-06-04/claude-code-github-action-flaw-let-one-malicious-issue-hijac.md)
+- [dentaquest data breach exposed info of 2 6 million accounts](./2026-06-04/dentaquest-data-breach-exposed-info-of-2-6-million-accounts.md)
 - [fake sites mimicking open source tools rank high on google t](./2026-06-04/fake-sites-mimicking-open-source-tools-rank-high-on-google-t.md)
 - [fluttershell backdoor spreads to macos via malicious google ](./2026-06-04/fluttershell-backdoor-spreads-to-macos-via-malicious-google-.md)
+- [ghsa critical ghsa 8whc 2wmv ww35 wwbn avideo unauthenticate](./2026-06-04/ghsa-critical-ghsa-8whc-2wmv-ww35-wwbn-avideo-unauthenticate.md)
 - [hackers actively exploiting wordpress plugin vulnerability t](./2026-06-04/hackers-actively-exploiting-wordpress-plugin-vulnerability-t.md)
 - [hackers spied on a stock exchange executive s outlook mailbo](./2026-06-04/hackers-spied-on-a-stock-exchange-executive-s-outlook-mailbo.md)
 - [hypotheses telemetry and human judgment inside cisco talos t](./2026-06-04/hypotheses-telemetry-and-human-judgment-inside-cisco-talos-t.md)
@@ -25,6 +27,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [node gyp supply chain compromise a self propagating npm worm](./2026-06-04/node-gyp-supply-chain-compromise-a-self-propagating-npm-worm.md)
 - [payouts king ransomware evades edr with obfuscation and dire](./2026-06-04/payouts-king-ransomware-evades-edr-with-obfuscation-and-dire.md)
 - [proofpoint warns ta4922 deploys atlas rat romulusloader sile](./2026-06-04/proofpoint-warns-ta4922-deploys-atlas-rat-romulusloader-sile.md)
+- [reporting from vegas networking ai and good boys](./2026-06-04/reporting-from-vegas-networking-ai-and-good-boys.md)
 - [so you have an ai security budget now what](./2026-06-04/so-you-have-an-ai-security-budget-now-what.md)
 - [teams and google drive leveraged to compromise systems withi](./2026-06-04/teams-and-google-drive-leveraged-to-compromise-systems-withi.md)
 - [type level security the future of secure ai code generation](./2026-06-04/type-level-security-the-future-of-secure-ai-code-generation.md)
@@ -190,6 +193,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [actions cool issues helper github action compromised all tag](./2026-05-19/actions-cool-issues-helper-github-action-compromised-all-tag.md)
 - [active supply chain attack malicious node ipc versions publi](./2026-05-19/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
 - [from pdb strings to maas tracking a commodity badiis ecosyst](./2026-05-19/from-pdb-strings-to-maas-tracking-a-commodity-badiis-ecosyst.md)
+- [ghsa critical cve 2026 2587 glassfish s gadget handler is vu](./2026-05-19/ghsa-critical-cve-2026-2587-glassfish-s-gadget-handler-is-vu.md)
 - [ghsa critical cve 2026 2611 mlflow improper origin validatio](./2026-05-19/ghsa-critical-cve-2026-2611-mlflow-improper-origin-validatio.md)
 - [ghsa critical cve 2026 45568 rok python proxyshare can be us](./2026-05-19/ghsa-critical-cve-2026-45568-rok-python-proxyshare-can-be-us.md)
 - [ghsa critical cve 2026 45695 kopia rce via ssh proxycommand ](./2026-05-19/ghsa-critical-cve-2026-45695-kopia-rce-via-ssh-proxycommand-.md)
@@ -198,6 +202,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46339 9router unauthenticated remote ](./2026-05-19/ghsa-critical-cve-2026-46339-9router-unauthenticated-remote-.md)
 - [ghsa critical cve 2026 46354 coder pkcs 7 signature bypass i](./2026-05-19/ghsa-critical-cve-2026-46354-coder-pkcs-7-signature-bypass-i.md)
 - [ghsa critical cve 2026 46395 haxcms private key disclosure v](./2026-05-19/ghsa-critical-cve-2026-46395-haxcms-private-key-disclosure-v.md)
+- [ghsa critical cve 2026 47323 camel cxf and camel knative mes](./2026-05-19/ghsa-critical-cve-2026-47323-camel-cxf-and-camel-knative-mes.md)
 - [ghsa critical ghsa 27f5 xjrr q9ff malware in opensearch proj](./2026-05-19/ghsa-critical-ghsa-27f5-xjrr-q9ff-malware-in-opensearch-proj.md)
 - [microsoft s durabletask package on pypi compromised mini sha](./2026-05-19/microsoft-s-durabletask-package-on-pypi-compromised-mini-sha.md)
 - [mini shai hulud strikes again npm worm compromises hundreds ](./2026-05-19/mini-shai-hulud-strikes-again-npm-worm-compromises-hundreds-.md)
@@ -256,15 +261,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 43512 apache tomcat digest authentica](./2026-05-12/ghsa-critical-cve-2026-43512-apache-tomcat-digest-authentica.md)
 - [ghsa critical cve 2026 44593 esm sh legacy route path traver](./2026-05-12/ghsa-critical-cve-2026-44593-esm-sh-legacy-route-path-traver.md)
 - [ghsa critical cve 2026 44650 sillytavern has a path traversa](./2026-05-12/ghsa-critical-cve-2026-44650-sillytavern-has-a-path-traversa.md)
-- [ghsa critical cve 2026 45087 dalfox server mode vulnerable t](./2026-05-12/ghsa-critical-cve-2026-45087-dalfox-server-mode-vulnerable-t.md)
-- [mini shai hulud is back npm worm hits over 160 packages incl](./2026-05-12/mini-shai-hulud-is-back-npm-worm-hits-over-160-packages-incl.md)
 - [state sponsored actors better known as the friends you don t](./2026-05-12/state-sponsored-actors-better-known-as-the-friends-you-don-t.md)
 - [teampcp s mini shai hulud is back a self spreading supply ch](./2026-05-12/teampcp-s-mini-shai-hulud-is-back-a-self-spreading-supply-ch.md)
 
 ## 2026-05-11
-- [ghsa critical cve 2026 43898 sandboxjs has a sandbox escape ](./2026-05-11/ghsa-critical-cve-2026-43898-sandboxjs-has-a-sandbox-escape-.md)
-- [ghsa critical cve 2026 7813 pgadmin 4 server mode has an aut](./2026-05-11/ghsa-critical-cve-2026-7813-pgadmin-4-server-mode-has-an-aut.md)
 - [inside ad cs escalation unpacking advanced misuse techniques](./2026-05-11/inside-ad-cs-escalation-unpacking-advanced-misuse-techniques.md)
+- [mini shai hulud is back npm worm hits over 160 packages incl](./2026-05-11/mini-shai-hulud-is-back-npm-worm-hits-over-160-packages-incl.md)
 - [tanstack npm packages compromised inside the mini shai hulud](./2026-05-11/tanstack-npm-packages-compromised-inside-the-mini-shai-hulud.md)
 
 ## 2026-05-08
@@ -275,7 +277,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [fake call logs real payments how callphantom tricks android ](./2026-05-07/fake-call-logs-real-payments-how-callphantom-tricks-android-.md)
 - [pcpjack cloud worm evicts teampcp and steals credentials at ](./2026-05-07/pcpjack-cloud-worm-evicts-teampcp-and-steals-credentials-at-.md)
 - [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
-- [unplug your way to better code](./2026-05-07/unplug-your-way-to-better-code.md)
 
 ## 2026-05-06
 - [cisa kev cve 2026 0300 palo alto networks pan os out of boun](./2026-05-06/cisa-kev-cve-2026-0300-palo-alto-networks-pan-os-out-of-boun.md)

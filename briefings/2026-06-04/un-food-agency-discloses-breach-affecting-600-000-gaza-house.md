@@ -11,14 +11,9 @@ By Sergiu Gatlan
 June 4, 2026
 12:38 PM
 0 
-
-
 Image: Kaga Tau (CC BY-SA 4.0) 
-
 The United Nations' World Food Programme (WFP), the world's largest humanitarian organization, revealed over the weekend that its self-registration application (SRA) for Palestine was breached.
-
-
-The WFP disclosed the incident in a Sunday Telegram message , saying that the self-registration application used for assistance registration in Gaza had b…
+The WFP disclosed the incident in a Sunday Telegram message , saying that the self-registration application used for assistance registration in Gaza had been breach…
 
 ## Indicators of Compromise (high-fidelity only)
 
