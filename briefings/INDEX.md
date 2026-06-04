@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,14 +9,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-04
-- [china linked ta4922 expands phishing attacks to uk germany i](./2026-06-04/china-linked-ta4922-expands-phishing-attacks-to-uk-germany-i.md)
-- [cisa warns of android framework integer overflow vulnerabili](./2026-06-04/cisa-warns-of-android-framework-integer-overflow-vulnerabili.md)
+- [china linked ta4922 expands phishing attacks to u k germany ](./2026-06-04/china-linked-ta4922-expands-phishing-attacks-to-u-k-germany-.md)
+- [cisa warns of critical magento cache warmer rce flaw exploit](./2026-06-04/cisa-warns-of-critical-magento-cache-warmer-rce-flaw-exploit.md)
+- [cisco patches cve 2026 20230 in unified cm as exploit code g](./2026-06-04/cisco-patches-cve-2026-20230-in-unified-cm-as-exploit-code-g.md)
+- [cisco warns of critical unified cm flaw with poc exploit cod](./2026-06-04/cisco-warns-of-critical-unified-cm-flaw-with-poc-exploit-cod.md)
 - [claude code github action flaw let one malicious issue hijac](./2026-06-04/claude-code-github-action-flaw-let-one-malicious-issue-hijac.md)
 - [fake sites mimicking open source tools rank high on google t](./2026-06-04/fake-sites-mimicking-open-source-tools-rank-high-on-google-t.md)
 - [fluttershell backdoor spreads to macos via malicious google ](./2026-06-04/fluttershell-backdoor-spreads-to-macos-via-malicious-google-.md)
 - [hackers actively exploiting wordpress plugin vulnerability t](./2026-06-04/hackers-actively-exploiting-wordpress-plugin-vulnerability-t.md)
 - [hackers spied on a stock exchange executive s outlook mailbo](./2026-06-04/hackers-spied-on-a-stock-exchange-executive-s-outlook-mailbo.md)
-- [hackers use fake chrome web store copyright notices to steal](./2026-06-04/hackers-use-fake-chrome-web-store-copyright-notices-to-steal.md)
 - [hypotheses telemetry and human judgment inside cisco talos t](./2026-06-04/hypotheses-telemetry-and-human-judgment-inside-cisco-talos-t.md)
 - [kali365 phaas operation expands beyond microsoft 365 to targ](./2026-06-04/kali365-phaas-operation-expands-beyond-microsoft-365-to-targ.md)
 - [miasma npm supply chain attack self spreading worm via phant](./2026-06-04/miasma-npm-supply-chain-attack-self-spreading-worm-via-phant.md)
@@ -26,6 +27,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [proofpoint warns ta4922 deploys atlas rat romulusloader sile](./2026-06-04/proofpoint-warns-ta4922-deploys-atlas-rat-romulusloader-sile.md)
 - [so you have an ai security budget now what](./2026-06-04/so-you-have-an-ai-security-budget-now-what.md)
 - [teams and google drive leveraged to compromise systems withi](./2026-06-04/teams-and-google-drive-leveraged-to-compromise-systems-withi.md)
+- [type level security the future of secure ai code generation](./2026-06-04/type-level-security-the-future-of-secure-ai-code-generation.md)
+- [un food agency discloses breach affecting 600 000 gaza house](./2026-06-04/un-food-agency-discloses-breach-affecting-600-000-gaza-house.md)
 - [weaponized chatgpt download site delivers malware via sponso](./2026-06-04/weaponized-chatgpt-download-site-delivers-malware-via-sponso.md)
 
 ## 2026-06-03
@@ -45,7 +48,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the new security risks of the agentic development lifecycle](./2026-06-03/the-new-security-risks-of-the-agentic-development-lifecycle.md)
 - [u s sanctions nobitex crypto exchange used by iranian ransom](./2026-06-03/u-s-sanctions-nobitex-crypto-exchange-used-by-iranian-ransom.md)
 - [unpatched windows search uri vulnerability lets attackers st](./2026-06-03/unpatched-windows-search-uri-vulnerability-lets-attackers-st.md)
-- [vs code zero day lets hackers steal github tokens in one cli](./2026-06-03/vs-code-zero-day-lets-hackers-steal-github-tokens-in-one-cli.md)
 - [weedhack attacks minecraft users countloader hits 86k miners](./2026-06-03/weedhack-attacks-minecraft-users-countloader-hits-86k-miners.md)
 - [what 345 days of untested exposure looks like at a bank](./2026-06-03/what-345-days-of-untested-exposure-looks-like-at-a-bank.md)
 
@@ -121,7 +123,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [what mdm can t protect on developer machines and what to do ](./2026-05-28/what-mdm-can-t-protect-on-developer-machines-and-what-to-do-.md)
 
 ## 2026-05-27
-- [3 soc steps that shut down incident risks early](./2026-05-27/3-soc-steps-that-shut-down-incident-risks-early.md)
 - [cisa kev cve 2026 45321 tanstack unspecified vulnerability](./2026-05-27/cisa-kev-cve-2026-45321-tanstack-unspecified-vulnerability.md)
 - [cisa kev cve 2026 48027 nx console embedded malicious code v](./2026-05-27/cisa-kev-cve-2026-48027-nx-console-embedded-malicious-code-v.md)
 - [cisa kev cve 2026 8398 daemon tools lite embedded malicious ](./2026-05-27/cisa-kev-cve-2026-8398-daemon-tools-lite-embedded-malicious-.md)
@@ -130,7 +131,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 45618 liquidjs is vulnerable to remot](./2026-05-27/ghsa-critical-cve-2026-45618-liquidjs-is-vulnerable-to-remot.md)
 - [ghsa critical cve 2026 46562 yamcs vulnerable to remote code](./2026-05-27/ghsa-critical-cve-2026-46562-yamcs-vulnerable-to-remote-code.md)
 - [ghsa critical cve 2026 46621 yamcs vulnerable to authenticat](./2026-05-27/ghsa-critical-cve-2026-46621-yamcs-vulnerable-to-authenticat.md)
-- [glassworm malware takedown disrupts developer supply chain a](./2026-05-27/glassworm-malware-takedown-disrupts-developer-supply-chain-a.md)
 - [grandoreiro malware and btmob rat campaigns target windows a](./2026-05-27/grandoreiro-malware-and-btmob-rat-campaigns-target-windows-a.md)
 - [legitimate looking codex remote ui secretly steals your ai t](./2026-05-27/legitimate-looking-codex-remote-ui-secretly-steals-your-ai-t.md)
 - [malicious npm package stole files from claude ai user direct](./2026-05-27/malicious-npm-package-stole-files-from-claude-ai-user-direct.md)
@@ -2318,6 +2318,3 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [snyk welcomes enso enabling security leaders to scale their ](./2023-06-07/snyk-welcomes-enso-enabling-security-leaders-to-scale-their-.md)
 - [snyklaunch june 23 insights and deepcode ai enable faster fi](./2023-06-07/snyklaunch-june-23-insights-and-deepcode-ai-enable-faster-fi.md)
 - [what can you do with an enriched sbom a parlay quickstart gu](./2023-06-07/what-can-you-do-with-an-enriched-sbom-a-parlay-quickstart-gu.md)
-
-## 2023-06-06
-- [snyk scanning capabilities are now embedded in jira software](./2023-06-06/snyk-scanning-capabilities-are-now-embedded-in-jira-software.md)
