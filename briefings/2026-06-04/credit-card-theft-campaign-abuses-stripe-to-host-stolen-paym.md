@@ -11,15 +11,9 @@ By Bill Toulas
 June 4, 2026
 04:47 PM
 0 
-
-
 A new Magecart campaign is using Stripe's API infrastructure to host the credit card-stealing payload and the data exfiltrated from checkout pages.
-
-
 The entire malicious activity relies on Google Tag Manager and Stripe domains - googletagmanager.com and api.stripe.com - that are trusted implicitly by online stores.
-
-
-The new malware family was discovered by researchers at ecomm…
+The new malware family was discovered by researchers at ecommerce securit…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -42,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Magecart skimmer payload fetched from Stripe customer record cus_TfFjAAZQNOYENR
 
-`UC_4_1` · phase: **delivery** · confidence: **High**
+`UC_5_1` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +67,7 @@ union isfuzzy=true
 
 ### [LLM] Magecart skimmer payload fetched from Firestore project braintree-payment-app
 
-`UC_4_2` · phase: **delivery** · confidence: **High**
+`UC_5_2` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

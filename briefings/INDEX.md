@@ -32,6 +32,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [proofpoint warns ta4922 deploys atlas rat romulusloader sile](./2026-06-04/proofpoint-warns-ta4922-deploys-atlas-rat-romulusloader-sile.md)
 - [reporting from vegas networking ai and good boys](./2026-06-04/reporting-from-vegas-networking-ai-and-good-boys.md)
 - [so you have an ai security budget now what](./2026-06-04/so-you-have-an-ai-security-budget-now-what.md)
+- [stock exchange executive s outlook account targeted to exfil](./2026-06-04/stock-exchange-executive-s-outlook-account-targeted-to-exfil.md)
 - [type level security the future of secure ai code generation](./2026-06-04/type-level-security-the-future-of-secure-ai-code-generation.md)
 - [un food agency discloses breach affecting 600 000 gaza house](./2026-06-04/un-food-agency-discloses-breach-affecting-600-000-gaza-house.md)
 
@@ -52,7 +53,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [u s sanctions nobitex crypto exchange used by iranian ransom](./2026-06-03/u-s-sanctions-nobitex-crypto-exchange-used-by-iranian-ransom.md)
 - [unpatched windows search uri vulnerability lets attackers st](./2026-06-03/unpatched-windows-search-uri-vulnerability-lets-attackers-st.md)
 - [weedhack attacks minecraft users countloader hits 86k miners](./2026-06-03/weedhack-attacks-minecraft-users-countloader-hits-86k-miners.md)
-- [what 345 days of untested exposure looks like at a bank](./2026-06-03/what-345-days-of-untested-exposure-looks-like-at-a-bank.md)
 
 ## 2026-06-02
 - [cisa kev cve 2022 0492 linux kernel improper authentication ](./2026-06-02/cisa-kev-cve-2022-0492-linux-kernel-improper-authentication-.md)
