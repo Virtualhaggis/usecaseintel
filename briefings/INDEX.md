@@ -1,12 +1,15 @@
 # Briefings — full archive
 
-_1250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1251 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-06-04
+- [binding gyp an npm supply chain attack that spreads like a w](./2026-06-04/binding-gyp-an-npm-supply-chain-attack-that-spreads-like-a-w.md)
 
 ## 2026-06-03
 - [acer working to patch max severity zero days in wave 7 route](./2026-06-03/acer-working-to-patch-max-severity-zero-days-in-wave-7-route.md)
@@ -27,7 +30,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [preinstall to persistence inside the red hat npm miasma cred](./2026-06-03/preinstall-to-persistence-inside-the-red-hat-npm-miasma-cred.md)
 - [the gentlemen ransomware group uses fortinet exploits ai and](./2026-06-03/the-gentlemen-ransomware-group-uses-fortinet-exploits-ai-and.md)
 - [the new security risks of the agentic development lifecycle](./2026-06-03/the-new-security-risks-of-the-agentic-development-lifecycle.md)
-- [the u s sanctions nobitex crypto exchange used by ransomware](./2026-06-03/the-u-s-sanctions-nobitex-crypto-exchange-used-by-ransomware.md)
+- [u s sanctions nobitex crypto exchange used by iranian ransom](./2026-06-03/u-s-sanctions-nobitex-crypto-exchange-used-by-iranian-ransom.md)
 - [unpatched windows search uri vulnerability lets attackers st](./2026-06-03/unpatched-windows-search-uri-vulnerability-lets-attackers-st.md)
 - [vs code zero day lets hackers steal github tokens in one cli](./2026-06-03/vs-code-zero-day-lets-hackers-steal-github-tokens-in-one-cli.md)
 - [weedhack attacks minecraft users countloader hits 86k miners](./2026-06-03/weedhack-attacks-minecraft-users-countloader-hits-86k-miners.md)

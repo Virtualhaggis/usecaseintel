@@ -64,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] PlugX phishing lure — 'Meeting Invitation' email linking to gesecole.net ZIP
 
-`UC_472_8` · phase: **delivery** · confidence: **High**
+`UC_473_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ let LureSubjects = dynamic(["Meeting Invitation","Invitation_Letter","Invitation
 
 ### [LLM] Renamed MSBuild.exe executing inline .csproj from user-writable path
 
-`UC_472_9` · phase: **install** · confidence: **High**
+`UC_473_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceProcessEvents | where Timestamp > ago(7d) | where FileName =~ "msbuild.exe
 
 ### [LLM] PlugX DLL side-load — G DATA Avk.exe running from C:\Users\Public\GDatas\
 
-`UC_472_10` · phase: **install** · confidence: **High**
+`UC_473_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceProcessEvents | where Timestamp > ago(7d) | where FileName =~ "avk.exe" or
 
 ### [LLM] PlugX persistence — Run key 'G DATA' pointing to C:\Users\Public\GDatas\Avk.exe
 
-`UC_472_11` · phase: **install** · confidence: **High**
+`UC_473_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceRegistryEvents | where Timestamp > ago(30d) | where ActionType in ("Regist
 
 ### [LLM] PlugX C2 egress — connections to decoraat.net / decoorat.net / gesecole.net
 
-`UC_472_12` · phase: **c2** · confidence: **High**
+`UC_473_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -334,7 +334,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PlugX Meeting Invitation via MSBuild and GDATA
 
-`UC_472_7` · phase: **exploit** · confidence: **High**
+`UC_473_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
