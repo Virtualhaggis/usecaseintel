@@ -197,7 +197,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — binding.gyp: An npm Supply Chain Attack That Spreads Like a Worm
 
-`UC_1_4` · phase: **exploit** · confidence: **High**
+`UC_4_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

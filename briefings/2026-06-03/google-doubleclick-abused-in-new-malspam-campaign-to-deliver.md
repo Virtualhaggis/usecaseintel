@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] HTML attachment with meta-refresh redirect via Google DoubleClick to malspam landing
 
-`UC_14_10` · phase: **delivery** · confidence: **Medium**
+`UC_17_10` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ HtmlAttachments
 
 ### [LLM] ZIP-borne JavaScript loader spawning PowerShell from user Downloads
 
-`UC_14_11` · phase: **install** · confidence: **High**
+`UC_17_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceProcessEvents
 
 ### [LLM] PowerShell fetching DesckVB .NET loader from pastee.dev
 
-`UC_14_12` · phase: **c2** · confidence: **High**
+`UC_17_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceNetworkEvents
 
 ### [LLM] DesckVB Defender exclusion configuration via Add-MpPreference / WMIC
 
-`UC_14_13` · phase: **install** · confidence: **High**
+`UC_17_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -167,7 +167,7 @@ DeviceProcessEvents
 
 ### [LLM] DesckVB persistence via Run/RunOnce + Startup folder loader drop
 
-`UC_14_14` · phase: **install** · confidence: **Medium**
+`UC_17_14` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -213,7 +213,7 @@ RunKeys
 
 ### [LLM] DesckVB C2 raw TCP beacon to known infrastructure (IPs + DDNS + hostgator domain)
 
-`UC_14_15` · phase: **c2** · confidence: **High**
+`UC_17_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
