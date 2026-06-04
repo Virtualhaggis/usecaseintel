@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Unpatched Microsoft 365 Android apps below FlagLeft fix build 16.0.19822.20190
 
-`UC_12_6` · phase: **install** · confidence: **High**
+`UC_15_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceTvmSoftwareInventory
 
 ### [LLM] FOCI refresh-token sign-in from non-compliant Android device (FlagLeft post-theft replay)
 
-`UC_12_7` · phase: **actions** · confidence: **Medium**
+`UC_15_7` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ AADSignInEventsBeta
 
 ### [LLM] FOCI cross-app token chaining: one Android device authenticates to 3+ affected Office mobile apps
 
-`UC_12_8` · phase: **actions** · confidence: **Medium**
+`UC_15_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

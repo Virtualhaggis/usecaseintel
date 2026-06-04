@@ -13,10 +13,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [argamal malware hidden in hentai games](./2026-06-03/argamal-malware-hidden-in-hentai-games.md)
 - [autonomous ai tool finds 2 year old rce flaw in redis cve 20](./2026-06-03/autonomous-ai-tool-finds-2-year-old-rce-flaw-in-redis-cve-20.md)
 - [beyond the zero day see your network like an attacker webina](./2026-06-03/beyond-the-zero-day-see-your-network-like-an-attacker-webina.md)
+- [chinese hackers use new atlas rat malware in european cybera](./2026-06-03/chinese-hackers-use-new-atlas-rat-malware-in-european-cybera.md)
 - [cisa kev cve 2026 45247 mirasvit full page cache warmer dese](./2026-06-03/cisa-kev-cve-2026-45247-mirasvit-full-page-cache-warmer-dese.md)
 - [cisa warns of active attacks exploiting android linux bugs](./2026-06-03/cisa-warns-of-active-attacks-exploiting-android-linux-bugs.md)
-- [cisa warns of cyberattacks targeting fuel tank monitoring sy](./2026-06-03/cisa-warns-of-cyberattacks-targeting-fuel-tank-monitoring-sy.md)
 - [ghsa critical cve 2026 44180 jupyter enterprise gateway cont](./2026-06-03/ghsa-critical-cve-2026-44180-jupyter-enterprise-gateway-cont.md)
+- [ghsa critical cve 2026 44181 jupyter enterprise gateway jinj](./2026-06-03/ghsa-critical-cve-2026-44181-jupyter-enterprise-gateway-jinj.md)
+- [ghsa critical cve 2026 44182 jupyter enterprise gateway kube](./2026-06-03/ghsa-critical-cve-2026-44182-jupyter-enterprise-gateway-kube.md)
 - [google doubleclick abused in new malspam campaign to deliver](./2026-06-03/google-doubleclick-abused-in-new-malspam-campaign-to-deliver.md)
 - [hackers use fake purchase orders to deploy js monoglyphrat t](./2026-06-03/hackers-use-fake-purchase-orders-to-deploy-js-monoglyphrat-t.md)
 - [hackers using ai tools to automate active directory attacks ](./2026-06-03/hackers-using-ai-tools-to-automate-active-directory-attacks-.md)
@@ -250,11 +252,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [teampcp s mini shai hulud is back a self spreading supply ch](./2026-05-12/teampcp-s-mini-shai-hulud-is-back-a-self-spreading-supply-ch.md)
 
 ## 2026-05-11
-- [ghsa critical cve 2026 25244 webdriverio browserstack servic](./2026-05-11/ghsa-critical-cve-2026-25244-webdriverio-browserstack-servic.md)
 - [ghsa critical cve 2026 27478 unity catalog has a jwt issuer ](./2026-05-11/ghsa-critical-cve-2026-27478-unity-catalog-has-a-jwt-issuer-.md)
 - [ghsa critical cve 2026 43898 sandboxjs has a sandbox escape ](./2026-05-11/ghsa-critical-cve-2026-43898-sandboxjs-has-a-sandbox-escape-.md)
 - [ghsa critical cve 2026 7813 pgadmin 4 server mode has an aut](./2026-05-11/ghsa-critical-cve-2026-7813-pgadmin-4-server-mode-has-an-aut.md)
-- [ghsa critical ghsa h29g c9cx c73q torrentpier has php serial](./2026-05-11/ghsa-critical-ghsa-h29g-c9cx-c73q-torrentpier-has-php-serial.md)
 - [inside ad cs escalation unpacking advanced misuse techniques](./2026-05-11/inside-ad-cs-escalation-unpacking-advanced-misuse-techniques.md)
 - [tanstack npm packages compromised inside the mini shai hulud](./2026-05-11/tanstack-npm-packages-compromised-inside-the-mini-shai-hulud.md)
 

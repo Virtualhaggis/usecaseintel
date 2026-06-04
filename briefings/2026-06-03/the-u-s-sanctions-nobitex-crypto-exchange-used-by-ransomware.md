@@ -11,21 +11,15 @@ By Bill Toulas
 June 3, 2026
 04:31 PM
 0 
-
-
 The U.S. Treasury's Office of Foreign Assets Control (OFAC) has announced sanctions against Nobitex, Iran's largest cryptocurrency exchange, for facilitating payments related to terrorist activities.
-
-
 Nobitex is believed to have helped evade economic sanctions and also facilitated transactions linked to the Islamic Revolutionary Guard Corps (IRGC).
-
-
-Among the transactions, the U.S. a…
+Among the transactions, the U.S. authorities f…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `Nobitex.ir`
 - **Domain (defanged):** `Wallex.ir`
-- **Domain (defanged):** `Bitpin.ir`
+- **Domain (defanged):** `Bitcoin.ir`
 - **Domain (defanged):** `Rumzinex.com`
 
 ## MITRE ATT&CK Techniques
@@ -48,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Network egress to OFAC-sanctioned Iranian crypto exchanges (Nobitex, Wallex, Bitpin, Ramzinex)
 
-`UC_1_4` · phase: **c2** · confidence: **High**
+`UC_4_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +150,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `Nobitex.ir`, `Wallex.ir`, `Bitpin.ir`, `Rumzinex.com`
+  - IP / domain IOC(s): `Nobitex.ir`, `Wallex.ir`, `Bitcoin.ir`, `Rumzinex.com`
 
 
 ## Why this matters
