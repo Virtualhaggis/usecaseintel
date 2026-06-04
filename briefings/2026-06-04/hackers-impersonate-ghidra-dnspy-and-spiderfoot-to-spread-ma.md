@@ -1,28 +1,61 @@
-# [MED] Kali365 PhaaS Operation Expands Beyond Microsoft 365 to Target Okta and MAX Messenger
+# [MED] Hackers Impersonate Ghidra, dnSpy, and SpiderFoot to Spread Malware via Fake Download Sites
 
 **Source:** Cyber Security News
 **Published:** 2026-06-04
-**Article:** https://cybersecuritynews.com/kali365-phaas-operation-expands-beyond-microsoft-365/
+**Article:** https://cybersecuritynews.com/hackers-impersonate-ghidra-dnspy-and-spiderfoot/
 
 ## Threat Profile
 
-A new and fast-growing phishing operation is making waves in the cybersecurity world, and it is moving far beyond its original targets. Kali365, a phishing-as-a-service (PhaaS) platform first spotted in April 2026, was initially built to steal Microsoft 365 login tokens by tricking users into authorizing fake device login requests. Now it has grown into [&#8230;] The post Kali365 PhaaS Operation Expands Beyond Microsoft 365 to Target Okta and MAX Messenger appeared first on Cyber Security News .
+Hackers are creating convincing fake websites that impersonate popular security tools to trick users into downloading malware. Instead of obvious phishing pages, these sites look almost identical to real project portals, complete with professional designs and links pointing to actual GitHub repositories. The moment a user clicks the download button, something very different happens behind [&#8230;] The post Hackers Impersonate Ghidra, dnSpy, and SpiderFoot to Spread Malware via Fake Download Sit…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `172.67.156.83`
-- **IPv4 (defanged):** `104.21.32.229`
-- **Domain (defanged):** `panel.securehubcloud.com`
-- **Domain (defanged):** `api.securehubcloud.com`
-- **Domain (defanged):** `boss.securehubcloud.com`
-- **Domain (defanged):** `securehubcloud.com`
-- **Domain (defanged):** `greatness-marketing.top`
-- **Domain (defanged):** `open-box-rpps.jeff-1fd.workers.dev`
-- **Domain (defanged):** `data-form-o5pu.p-ntz8agp6.workers.dev`
-- **Domain (defanged):** `tk.mowell.tech`
-- **Domain (defanged):** `attachedfile.com`
-- **SHA1:** `6894a51278ec89118276c2dd2dc36e6f9ea2790a`
-- **MD5:** `febb622cd9eeb5c8860dcef4cbfd4b74`
+- **IPv4 (defanged):** `217.156.122.75`
+- **IPv4 (defanged):** `94.231.205.229`
+- **IPv4 (defanged):** `194.150.220.218`
+- **IPv4 (defanged):** `185.161.251.58`
+- **Domain (defanged):** `ghidralite.com`
+- **Domain (defanged):** `dnspy.org`
+- **Domain (defanged):** `ilspy.org`
+- **Domain (defanged):** `appfreshstart.com`
+- **Domain (defanged):** `appgetonline.com`
+- **Domain (defanged):** `webinnosetup.com`
+- **Domain (defanged):** `appmakingcenter.com`
+- **Domain (defanged):** `yourfastcrc.com`
+- **Domain (defanged):** `mobileversioncrc.com`
+- **Domain (defanged):** `webcrcprove.com`
+- **Domain (defanged):** `integritycrc.com`
+- **Domain (defanged):** `buccstanor.pics`
+- **Domain (defanged):** `baxe.pics`
+- **Domain (defanged):** `intem.lat`
+- **Domain (defanged):** `ropea.top`
+- **Domain (defanged):** `forestoaker.com`
+- **Domain (defanged):** `gluckcreek.online`
+- **Domain (defanged):** `kr.hugo-lapp.co`
+- **Domain (defanged):** `io.hugo-lapp.lat`
+- **Domain (defanged):** `cw.hugo-lapp.lat`
+- **Domain (defanged):** `st.hugo-lapp.lat`
+- **Domain (defanged):** `td.hugo-lapp.lat`
+- **Domain (defanged):** `fd.hugo-lapp.lat`
+- **Domain (defanged):** `ed.hugo-lapp.lat`
+- **Domain (defanged):** `flame-guard.cc`
+- **Domain (defanged):** `carlessclapped.com`
+- **Domain (defanged):** `cdn-1415.brightcanvas.digital`
+- **Domain (defanged):** `originaldownloads.info`
+- **Domain (defanged):** `getfluxfile.com`
+- **Domain (defanged):** `oundhertobeconsist.org`
+- **SHA256:** `598b023e56c45b19173e8f96c1c88036d732fec305cf6bf1b9cf4dbe304beb7f`
+- **SHA256:** `74091f5a8746a1c68d73e1fc1e4e1ff514632ee3f632a8b306f35dabae2d2b64`
+- **SHA256:** `15e6df0c95f2147952308e640d55270e9d097639eaebb34d4b352415f1c6bceb`
+- **SHA256:** `3bb92771e287aa0a8bdd8e5b5bb697427223eaefded3d9b64b5d5c32ad40f3c2`
+- **SHA256:** `cbad672d9bd06ce91ce465d049e50696fbaec9d209ca0ab1fd814d993d04bc9b`
+- **SHA256:** `4cdb1f7ac502289119f7f8256f00baaa994e6ecfb4000dcf5e1c46073508fcb3`
+- **SHA256:** `ce0888df5e28716432013a8ae002437bd3e993fbe8362c5ff9efbddabfe0ab77`
+- **SHA256:** `26f2abfc254a59c2386dd46dca16744f7147a0f0366cb6008e1d53219175f44c`
+- **SHA256:** `e6a1a428a7c09c9946f7c0179d89b263f442dc3208b5144a9146c200e4185bd6`
+- **SHA256:** `87361ba2bb412dcf49f8738f3b8b9b7dccb557ad2e76ea8d98ffa5b098ae3886`
+- **SHA256:** `39dc2327fe1e5a56ac5ad9dc02f0386cff3d83dcfdc558cacba42ebb9dcc5ec2`
+- **SHA256:** `2e842eab0c16ddd1a2ec4a56610adb58d115b65a1e08e9b67e7e375f8eed0873`
 
 ## MITRE ATT&CK Techniques
 
@@ -195,10 +228,10 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `172.67.156.83`, `104.21.32.229`, `panel.securehubcloud.com`, `api.securehubcloud.com`, `boss.securehubcloud.com`, `securehubcloud.com`, `greatness-marketing.top`, `open-box-rpps.jeff-1fd.workers.dev` _(+3 more)_
+  - IP / domain IOC(s): `217.156.122.75`, `94.231.205.229`, `194.150.220.218`, `185.161.251.58`, `ghidralite.com`, `dnspy.org`, `ilspy.org`, `appfreshstart.com` _(+26 more)_
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `6894a51278ec89118276c2dd2dc36e6f9ea2790a`, `febb622cd9eeb5c8860dcef4cbfd4b74`
+  - file hash IOC(s): `598b023e56c45b19173e8f96c1c88036d732fec305cf6bf1b9cf4dbe304beb7f`, `74091f5a8746a1c68d73e1fc1e4e1ff514632ee3f632a8b306f35dabae2d2b64`, `15e6df0c95f2147952308e640d55270e9d097639eaebb34d4b352415f1c6bceb`, `3bb92771e287aa0a8bdd8e5b5bb697427223eaefded3d9b64b5d5c32ad40f3c2`, `cbad672d9bd06ce91ce465d049e50696fbaec9d209ca0ab1fd814d993d04bc9b`, `4cdb1f7ac502289119f7f8256f00baaa994e6ecfb4000dcf5e1c46073508fcb3`, `ce0888df5e28716432013a8ae002437bd3e993fbe8362c5ff9efbddabfe0ab77`, `26f2abfc254a59c2386dd46dca16744f7147a0f0366cb6008e1d53219175f44c` _(+4 more)_
 
 
 ## Why this matters

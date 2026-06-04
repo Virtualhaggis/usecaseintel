@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1252 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -14,28 +14,28 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisco patches cve 2026 20230 in unified cm as exploit code g](./2026-06-04/cisco-patches-cve-2026-20230-in-unified-cm-as-exploit-code-g.md)
 - [cisco warns of critical unified cm flaw with poc exploit cod](./2026-06-04/cisco-warns-of-critical-unified-cm-flaw-with-poc-exploit-cod.md)
 - [claude code github action flaw let one malicious issue hijac](./2026-06-04/claude-code-github-action-flaw-let-one-malicious-issue-hijac.md)
+- [credit card theft campaign abuses stripe to host stolen paym](./2026-06-04/credit-card-theft-campaign-abuses-stripe-to-host-stolen-paym.md)
 - [dentaquest data breach exposed info of 2 6 million accounts](./2026-06-04/dentaquest-data-breach-exposed-info-of-2-6-million-accounts.md)
 - [fake sites mimicking open source tools rank high on google t](./2026-06-04/fake-sites-mimicking-open-source-tools-rank-high-on-google-t.md)
 - [fluttershell backdoor spreads to macos via malicious google ](./2026-06-04/fluttershell-backdoor-spreads-to-macos-via-malicious-google-.md)
+- [ghsa critical cve 2026 47708 mcp for stata command injection](./2026-06-04/ghsa-critical-cve-2026-47708-mcp-for-stata-command-injection.md)
 - [ghsa critical ghsa 8whc 2wmv ww35 wwbn avideo unauthenticate](./2026-06-04/ghsa-critical-ghsa-8whc-2wmv-ww35-wwbn-avideo-unauthenticate.md)
-- [hackers actively exploiting wordpress plugin vulnerability t](./2026-06-04/hackers-actively-exploiting-wordpress-plugin-vulnerability-t.md)
+- [ghsa critical ghsa jpvj wpmj h7rv supply chain compromise vi](./2026-06-04/ghsa-critical-ghsa-jpvj-wpmj-h7rv-supply-chain-compromise-vi.md)
+- [hackers impersonate ghidra dnspy and spiderfoot to spread ma](./2026-06-04/hackers-impersonate-ghidra-dnspy-and-spiderfoot-to-spread-ma.md)
 - [hackers spied on a stock exchange executive s outlook mailbo](./2026-06-04/hackers-spied-on-a-stock-exchange-executive-s-outlook-mailbo.md)
+- [hackers use fake claude code install page to deliver fileles](./2026-06-04/hackers-use-fake-claude-code-install-page-to-deliver-fileles.md)
+- [hackers use malicious ads to deliver fluttershell backdoor o](./2026-06-04/hackers-use-malicious-ads-to-deliver-fluttershell-backdoor-o.md)
 - [hypotheses telemetry and human judgment inside cisco talos t](./2026-06-04/hypotheses-telemetry-and-human-judgment-inside-cisco-talos-t.md)
-- [kali365 phaas operation expands beyond microsoft 365 to targ](./2026-06-04/kali365-phaas-operation-expands-beyond-microsoft-365-to-targ.md)
 - [miasma npm supply chain attack self spreading worm via phant](./2026-06-04/miasma-npm-supply-chain-attack-self-spreading-worm-via-phant.md)
 - [new ironworm malware hits 36 packages in npm supply chain at](./2026-06-04/new-ironworm-malware-hits-36-packages-in-npm-supply-chain-at.md)
 - [node gyp supply chain compromise a self propagating npm worm](./2026-06-04/node-gyp-supply-chain-compromise-a-self-propagating-npm-worm.md)
-- [payouts king ransomware evades edr with obfuscation and dire](./2026-06-04/payouts-king-ransomware-evades-edr-with-obfuscation-and-dire.md)
 - [proofpoint warns ta4922 deploys atlas rat romulusloader sile](./2026-06-04/proofpoint-warns-ta4922-deploys-atlas-rat-romulusloader-sile.md)
 - [reporting from vegas networking ai and good boys](./2026-06-04/reporting-from-vegas-networking-ai-and-good-boys.md)
 - [so you have an ai security budget now what](./2026-06-04/so-you-have-an-ai-security-budget-now-what.md)
-- [teams and google drive leveraged to compromise systems withi](./2026-06-04/teams-and-google-drive-leveraged-to-compromise-systems-withi.md)
 - [type level security the future of secure ai code generation](./2026-06-04/type-level-security-the-future-of-secure-ai-code-generation.md)
 - [un food agency discloses breach affecting 600 000 gaza house](./2026-06-04/un-food-agency-discloses-breach-affecting-600-000-gaza-house.md)
-- [weaponized chatgpt download site delivers malware via sponso](./2026-06-04/weaponized-chatgpt-download-site-delivers-malware-via-sponso.md)
 
 ## 2026-06-03
-- [acer working to patch max severity zero days in wave 7 route](./2026-06-03/acer-working-to-patch-max-severity-zero-days-in-wave-7-route.md)
 - [argamal malware hidden in hentai games](./2026-06-03/argamal-malware-hidden-in-hentai-games.md)
 - [autonomous ai tool finds 2 year old rce flaw in redis cve 20](./2026-06-03/autonomous-ai-tool-finds-2-year-old-rce-flaw-in-redis-cve-20.md)
 - [chinese hackers use new atlas rat malware in european cybera](./2026-06-03/chinese-hackers-use-new-atlas-rat-malware-in-european-cybera.md)
@@ -159,7 +159,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46670 yeswiki unauthenticated sql inj](./2026-05-22/ghsa-critical-cve-2026-46670-yeswiki-unauthenticated-sql-inj.md)
 - [ghsa critical ghsa qqqm 5547 774x filebrowser quantum path t](./2026-05-22/ghsa-critical-ghsa-qqqm-5547-774x-filebrowser-quantum-path-t.md)
 - [megalodon mass github actions secret exfiltration across 5 5](./2026-05-22/megalodon-mass-github-actions-secret-exfiltration-across-5-5.md)
-- [microsoft security success stories how st luke s and manpowe](./2026-05-22/microsoft-security-success-stories-how-st-luke-s-and-manpowe.md)
 - [paved with intent roadtools and nation state tactics in the ](./2026-05-22/paved-with-intent-roadtools-and-nation-state-tactics-in-the-.md)
 - [tracking iranian apt screening serpens 2026 espionage campai](./2026-05-22/tracking-iranian-apt-screening-serpens-2026-espionage-campai.md)
 
@@ -257,7 +256,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 31233 guardrails ai contains a code i](./2026-05-12/ghsa-critical-cve-2026-31233-guardrails-ai-contains-a-code-i.md)
 - [ghsa critical cve 2026 31234 horovod contains an insecure de](./2026-05-12/ghsa-critical-cve-2026-31234-horovod-contains-an-insecure-de.md)
 - [ghsa critical cve 2026 33117 security feature bypass vulnera](./2026-05-12/ghsa-critical-cve-2026-33117-security-feature-bypass-vulnera.md)
-- [ghsa critical cve 2026 42074 openclaude sandbox bypass via m](./2026-05-12/ghsa-critical-cve-2026-42074-openclaude-sandbox-bypass-via-m.md)
 - [ghsa critical cve 2026 43512 apache tomcat digest authentica](./2026-05-12/ghsa-critical-cve-2026-43512-apache-tomcat-digest-authentica.md)
 - [ghsa critical cve 2026 44593 esm sh legacy route path traver](./2026-05-12/ghsa-critical-cve-2026-44593-esm-sh-legacy-route-path-traver.md)
 - [ghsa critical cve 2026 44650 sillytavern has a path traversa](./2026-05-12/ghsa-critical-cve-2026-44650-sillytavern-has-a-path-traversa.md)

@@ -11,19 +11,13 @@ By Bill Toulas
 June 4, 2026
 02:36 PM
 0 
-
-
 A data breach at the dental benefits administrator DentaQuest has reportedly exposed the sensitive data of 2.6 million accounts.
-
-
 The security incident came to light last month, when the infamous extortion group ShinyHunters listed the company on its data leak site and claimed to have stolen more than 234 GB of data.
-
-
-Following what the threat actor describes as a failure to reach an a…
+Following what the threat actor describes as a failure to reach an agreement wit…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **SHA256:** `db30_3e1`
 
 ## MITRE ATT&CK Techniques
 
@@ -34,6 +28,7 @@ Following what the threat actor describes as a failure to reach an a…
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
+- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
@@ -189,7 +184,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `db30_3e1`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 4 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
