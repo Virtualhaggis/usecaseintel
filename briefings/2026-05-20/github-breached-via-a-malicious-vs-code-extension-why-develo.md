@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DNS / Network egress to TeamPCP Nx Console C2 domain check.git-service.com
 
-`UC_181_4` · phase: **c2** · confidence: **High**
+`UC_184_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ union
 
 ### [LLM] TeamPCP Nx Console payload SHA256 hash match on developer endpoints
 
-`UC_181_5` · phase: **install** · confidence: **High**
+`UC_184_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ union
 
 ### [LLM] VS Code child process fetching payload from nrwl/nx orphan commit (Nx Console v18.95.0 dropper)
 
-`UC_181_6` · phase: **install** · confidence: **High**
+`UC_184_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceProcessEvents
 
 ### [LLM] Burst credential-file harvest by VS Code / node process (Nx Console stealer behaviour)
 
-`UC_181_7` · phase: **actions** · confidence: **Medium**
+`UC_184_7` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -173,7 +173,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — GitHub breached via a malicious VS Code extension: why developer devices are the
 
-`UC_181_3` · phase: **exploit** · confidence: **High**
+`UC_184_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

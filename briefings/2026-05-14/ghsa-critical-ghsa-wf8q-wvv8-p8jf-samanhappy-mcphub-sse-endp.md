@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] MCPHub SSE endpoint accessed with arbitrary username in URL path (CVE-2025/GHSA-wf8q-wvv8-p8jf hunt)
 
-`UC_226_0` · phase: **exploit** · confidence: **Medium**
+`UC_229_0` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] MCPHub identity spoofing — admin-themed username in /<user>/sse path
 
-`UC_226_1` · phase: **exploit** · confidence: **High**
+`UC_229_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] MCPHub SSE user-segment fan-out — single source spawning sessions under multiple usernames
 
-`UC_226_2` · phase: **recon** · confidence: **High**
+`UC_229_2` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] MCPHub tool execution via spoofed identity — POST to /<user>/messages with JSON-RPC body
 
-`UC_226_3` · phase: **actions** · confidence: **High**
+`UC_229_3` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

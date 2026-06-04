@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,17 +10,27 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-04
 - [acer working to patch wave 7 router 0 day vulnerability](./2026-06-04/acer-working-to-patch-wave-7-router-0-day-vulnerability.md)
-- [cisa adds exploited magento rce flaw cve 2026 45247 to kev c](./2026-06-04/cisa-adds-exploited-magento-rce-flaw-cve-2026-45247-to-kev-c.md)
+- [china linked ta4922 expands phishing attacks to uk germany i](./2026-06-04/china-linked-ta4922-expands-phishing-attacks-to-uk-germany-i.md)
 - [cisa warns of android framework integer overflow vulnerabili](./2026-06-04/cisa-warns-of-android-framework-integer-overflow-vulnerabili.md)
+- [cisco warns of critical unified cm flaw with poc exploit cod](./2026-06-04/cisco-warns-of-critical-unified-cm-flaw-with-poc-exploit-cod.md)
 - [fake claude code installer via google sites delivers credent](./2026-06-04/fake-claude-code-installer-via-google-sites-delivers-credent.md)
+- [fake sites mimicking open source tools rank high on google t](./2026-06-04/fake-sites-mimicking-open-source-tools-rank-high-on-google-t.md)
+- [fluttershell backdoor spreads to macos via malicious google ](./2026-06-04/fluttershell-backdoor-spreads-to-macos-via-malicious-google-.md)
+- [hackers abusing microsoft teams and google drive to deploy r](./2026-06-04/hackers-abusing-microsoft-teams-and-google-drive-to-deploy-r.md)
+- [hackers actively exploiting wordpress plugin vulnerability t](./2026-06-04/hackers-actively-exploiting-wordpress-plugin-vulnerability-t.md)
+- [hackers spied on a stock exchange executive s outlook mailbo](./2026-06-04/hackers-spied-on-a-stock-exchange-executive-s-outlook-mailbo.md)
 - [hackers use fake chrome web store copyright notices to steal](./2026-06-04/hackers-use-fake-chrome-web-store-copyright-notices-to-steal.md)
+- [hypotheses telemetry and human judgment inside cisco talos t](./2026-06-04/hypotheses-telemetry-and-human-judgment-inside-cisco-talos-t.md)
+- [kali365 phaas operation expands beyond microsoft 365 to targ](./2026-06-04/kali365-phaas-operation-expands-beyond-microsoft-365-to-targ.md)
 - [miasma npm supply chain attack self spreading worm via phant](./2026-06-04/miasma-npm-supply-chain-attack-self-spreading-worm-via-phant.md)
+- [node gyp supply chain compromise a self propagating npm worm](./2026-06-04/node-gyp-supply-chain-compromise-a-self-propagating-npm-worm.md)
+- [payouts king ransomware evades edr with obfuscation and dire](./2026-06-04/payouts-king-ransomware-evades-edr-with-obfuscation-and-dire.md)
+- [so you have an ai security budget now what](./2026-06-04/so-you-have-an-ai-security-budget-now-what.md)
 
 ## 2026-06-03
 - [acer working to patch max severity zero days in wave 7 route](./2026-06-03/acer-working-to-patch-max-severity-zero-days-in-wave-7-route.md)
 - [argamal malware hidden in hentai games](./2026-06-03/argamal-malware-hidden-in-hentai-games.md)
 - [autonomous ai tool finds 2 year old rce flaw in redis cve 20](./2026-06-03/autonomous-ai-tool-finds-2-year-old-rce-flaw-in-redis-cve-20.md)
-- [beyond the zero day see your network like an attacker webina](./2026-06-03/beyond-the-zero-day-see-your-network-like-an-attacker-webina.md)
 - [chinese hackers use new atlas rat malware in european cybera](./2026-06-03/chinese-hackers-use-new-atlas-rat-malware-in-european-cybera.md)
 - [cisa kev cve 2026 45247 mirasvit full page cache warmer dese](./2026-06-03/cisa-kev-cve-2026-45247-mirasvit-full-page-cache-warmer-dese.md)
 - [cisa warns of active attacks exploiting android linux bugs](./2026-06-03/cisa-warns-of-active-attacks-exploiting-android-linux-bugs.md)
@@ -28,10 +38,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44181 jupyter enterprise gateway jinj](./2026-06-03/ghsa-critical-cve-2026-44181-jupyter-enterprise-gateway-jinj.md)
 - [ghsa critical cve 2026 44182 jupyter enterprise gateway kube](./2026-06-03/ghsa-critical-cve-2026-44182-jupyter-enterprise-gateway-kube.md)
 - [google doubleclick abused in new malspam campaign to deliver](./2026-06-03/google-doubleclick-abused-in-new-malspam-campaign-to-deliver.md)
-- [hazybeacon camapign weaponizes amazon web services for steal](./2026-06-03/hazybeacon-camapign-weaponizes-amazon-web-services-for-steal.md)
 - [new http 2 bomb dos attack crashes web servers in under a mi](./2026-06-03/new-http-2-bomb-dos-attack-crashes-web-servers-in-under-a-mi.md)
+- [one click github dev attack lets attackers steal full github](./2026-06-03/one-click-github-dev-attack-lets-attackers-steal-full-github.md)
 - [preinstall to persistence inside the red hat npm miasma cred](./2026-06-03/preinstall-to-persistence-inside-the-red-hat-npm-miasma-cred.md)
-- [the gentlemen ransomware group uses fortinet exploits ai and](./2026-06-03/the-gentlemen-ransomware-group-uses-fortinet-exploits-ai-and.md)
 - [the new security risks of the agentic development lifecycle](./2026-06-03/the-new-security-risks-of-the-agentic-development-lifecycle.md)
 - [u s sanctions nobitex crypto exchange used by iranian ransom](./2026-06-03/u-s-sanctions-nobitex-crypto-exchange-used-by-iranian-ransom.md)
 - [unpatched windows search uri vulnerability lets attackers st](./2026-06-03/unpatched-windows-search-uri-vulnerability-lets-attackers-st.md)
@@ -40,7 +49,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [what 345 days of untested exposure looks like at a bank](./2026-06-03/what-345-days-of-untested-exposure-looks-like-at-a-bank.md)
 
 ## 2026-06-02
-- [ai built ransomware toolkit automates edr evasion ad discove](./2026-06-02/ai-built-ransomware-toolkit-automates-edr-evasion-ad-discove.md)
 - [cisa kev cve 2022 0492 linux kernel improper authentication ](./2026-06-02/cisa-kev-cve-2022-0492-linux-kernel-improper-authentication-.md)
 - [cisa kev cve 2025 48595 android framework integer overflow v](./2026-06-02/cisa-kev-cve-2025-48595-android-framework-integer-overflow-v.md)
 - [dashlane discloses brute force attack encrypted vaults of fe](./2026-06-02/dashlane-discloses-brute-force-attack-encrypted-vaults-of-fe.md)
@@ -51,7 +59,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [multiple redhat cloud services npm packages compromised](./2026-06-02/multiple-redhat-cloud-services-npm-packages-compromised.md)
 - [nx console vs code extension compromised](./2026-06-02/nx-console-vs-code-extension-compromised.md)
 - [operation flutterbridge macos malvertising campaign spreads ](./2026-06-02/operation-flutterbridge-macos-malvertising-campaign-spreads-.md)
-- [over 116 000 minecraft systems infected in weedhack malware ](./2026-06-02/over-116-000-minecraft-systems-infected-in-weedhack-malware-.md)
 - [pakistan linked sidecopy targets afghanistan finance ministr](./2026-06-02/pakistan-linked-sidecopy-targets-afghanistan-finance-ministr.md)
 - [protestware by open source maintainer to hinder agentic codi](./2026-06-02/protestware-by-open-source-maintainer-to-hinder-agentic-codi.md)
 - [the npm threat landscape attack surface and mitigations upda](./2026-06-02/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
@@ -135,8 +142,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 48172 litespeed cpanel plugin privilege es](./2026-05-26/cisa-kev-cve-2026-48172-litespeed-cpanel-plugin-privilege-es.md)
 - [from poisoned search results to gpu mining a cryptojacking c](./2026-05-26/from-poisoned-search-results-to-gpu-mining-a-cryptojacking-c.md)
 - [ghsa critical cve 2026 33137 xwiki platform has an unauthent](./2026-05-26/ghsa-critical-cve-2026-33137-xwiki-platform-has-an-unauthent.md)
-- [mfa prompt bombing why your second factor isn t saving you](./2026-05-26/mfa-prompt-bombing-why-your-second-factor-isn-t-saving-you.md)
-- [muddywater uses dll side loading in espionage campaign targe](./2026-05-26/muddywater-uses-dll-side-loading-in-espionage-campaign-targe.md)
 - [why developer machines are now the number one target for sup](./2026-05-26/why-developer-machines-are-now-the-number-one-target-for-sup.md)
 
 ## 2026-05-23
@@ -281,7 +286,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [a rigged game scarcruft compromises gaming platform in a sup](./2026-05-05/a-rigged-game-scarcruft-compromises-gaming-platform-in-a-sup.md)
 - [copy fail what you need to know about the most severe linux ](./2026-05-05/copy-fail-what-you-need-to-know-about-the-most-severe-linux-.md)
 - [security metamorphosis a mythos ready architecture checklist](./2026-05-05/security-metamorphosis-a-mythos-ready-architecture-checklist.md)
-- [uat 8302 and its box full of malware](./2026-05-05/uat-8302-and-its-box-full-of-malware.md)
 
 ## 2026-05-04
 - [bitwarden cli hijacked on npm bun staged credential stealer ](./2026-05-04/bitwarden-cli-hijacked-on-npm-bun-staged-credential-stealer-.md)
@@ -2318,7 +2322,3 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2023-06-06
 - [snyk scanning capabilities are now embedded in jira software](./2023-06-06/snyk-scanning-capabilities-are-now-embedded-in-jira-software.md)
-
-## 2023-06-05
-- [a day in the life of an ethical hacker](./2023-06-05/a-day-in-the-life-of-an-ethical-hacker.md)
-- [ethical hacking techniques](./2023-06-05/ethical-hacking-techniques.md)
