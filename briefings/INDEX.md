@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,23 +9,24 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-04
-- [acer working to patch wave 7 router 0 day vulnerability](./2026-06-04/acer-working-to-patch-wave-7-router-0-day-vulnerability.md)
 - [china linked ta4922 expands phishing attacks to uk germany i](./2026-06-04/china-linked-ta4922-expands-phishing-attacks-to-uk-germany-i.md)
 - [cisa warns of android framework integer overflow vulnerabili](./2026-06-04/cisa-warns-of-android-framework-integer-overflow-vulnerabili.md)
-- [cisco warns of critical unified cm flaw with poc exploit cod](./2026-06-04/cisco-warns-of-critical-unified-cm-flaw-with-poc-exploit-cod.md)
-- [fake claude code installer via google sites delivers credent](./2026-06-04/fake-claude-code-installer-via-google-sites-delivers-credent.md)
+- [claude code github action flaw let one malicious issue hijac](./2026-06-04/claude-code-github-action-flaw-let-one-malicious-issue-hijac.md)
 - [fake sites mimicking open source tools rank high on google t](./2026-06-04/fake-sites-mimicking-open-source-tools-rank-high-on-google-t.md)
 - [fluttershell backdoor spreads to macos via malicious google ](./2026-06-04/fluttershell-backdoor-spreads-to-macos-via-malicious-google-.md)
-- [hackers abusing microsoft teams and google drive to deploy r](./2026-06-04/hackers-abusing-microsoft-teams-and-google-drive-to-deploy-r.md)
 - [hackers actively exploiting wordpress plugin vulnerability t](./2026-06-04/hackers-actively-exploiting-wordpress-plugin-vulnerability-t.md)
 - [hackers spied on a stock exchange executive s outlook mailbo](./2026-06-04/hackers-spied-on-a-stock-exchange-executive-s-outlook-mailbo.md)
 - [hackers use fake chrome web store copyright notices to steal](./2026-06-04/hackers-use-fake-chrome-web-store-copyright-notices-to-steal.md)
 - [hypotheses telemetry and human judgment inside cisco talos t](./2026-06-04/hypotheses-telemetry-and-human-judgment-inside-cisco-talos-t.md)
 - [kali365 phaas operation expands beyond microsoft 365 to targ](./2026-06-04/kali365-phaas-operation-expands-beyond-microsoft-365-to-targ.md)
 - [miasma npm supply chain attack self spreading worm via phant](./2026-06-04/miasma-npm-supply-chain-attack-self-spreading-worm-via-phant.md)
+- [new ironworm malware hits 36 packages in npm supply chain at](./2026-06-04/new-ironworm-malware-hits-36-packages-in-npm-supply-chain-at.md)
 - [node gyp supply chain compromise a self propagating npm worm](./2026-06-04/node-gyp-supply-chain-compromise-a-self-propagating-npm-worm.md)
 - [payouts king ransomware evades edr with obfuscation and dire](./2026-06-04/payouts-king-ransomware-evades-edr-with-obfuscation-and-dire.md)
+- [proofpoint warns ta4922 deploys atlas rat romulusloader sile](./2026-06-04/proofpoint-warns-ta4922-deploys-atlas-rat-romulusloader-sile.md)
 - [so you have an ai security budget now what](./2026-06-04/so-you-have-an-ai-security-budget-now-what.md)
+- [teams and google drive leveraged to compromise systems withi](./2026-06-04/teams-and-google-drive-leveraged-to-compromise-systems-withi.md)
+- [weaponized chatgpt download site delivers malware via sponso](./2026-06-04/weaponized-chatgpt-download-site-delivers-malware-via-sponso.md)
 
 ## 2026-06-03
 - [acer working to patch max severity zero days in wave 7 route](./2026-06-03/acer-working-to-patch-max-severity-zero-days-in-wave-7-route.md)
@@ -121,7 +122,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-27
 - [3 soc steps that shut down incident risks early](./2026-05-27/3-soc-steps-that-shut-down-incident-risks-early.md)
-- [ai chatbot recommendations redirect users to cryptojacking m](./2026-05-27/ai-chatbot-recommendations-redirect-users-to-cryptojacking-m.md)
 - [cisa kev cve 2026 45321 tanstack unspecified vulnerability](./2026-05-27/cisa-kev-cve-2026-45321-tanstack-unspecified-vulnerability.md)
 - [cisa kev cve 2026 48027 nx console embedded malicious code v](./2026-05-27/cisa-kev-cve-2026-48027-nx-console-embedded-malicious-code-v.md)
 - [cisa kev cve 2026 8398 daemon tools lite embedded malicious ](./2026-05-27/cisa-kev-cve-2026-8398-daemon-tools-lite-embedded-malicious-.md)
@@ -130,7 +130,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 45618 liquidjs is vulnerable to remot](./2026-05-27/ghsa-critical-cve-2026-45618-liquidjs-is-vulnerable-to-remot.md)
 - [ghsa critical cve 2026 46562 yamcs vulnerable to remote code](./2026-05-27/ghsa-critical-cve-2026-46562-yamcs-vulnerable-to-remote-code.md)
 - [ghsa critical cve 2026 46621 yamcs vulnerable to authenticat](./2026-05-27/ghsa-critical-cve-2026-46621-yamcs-vulnerable-to-authenticat.md)
-- [gitea vulnerability exposes private container images without](./2026-05-27/gitea-vulnerability-exposes-private-container-images-without.md)
 - [glassworm malware takedown disrupts developer supply chain a](./2026-05-27/glassworm-malware-takedown-disrupts-developer-supply-chain-a.md)
 - [grandoreiro malware and btmob rat campaigns target windows a](./2026-05-27/grandoreiro-malware-and-btmob-rat-campaigns-target-windows-a.md)
 - [legitimate looking codex remote ui secretly steals your ai t](./2026-05-27/legitimate-looking-codex-remote-ui-secretly-steals-your-ai-t.md)
@@ -191,6 +190,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [actions cool issues helper github action compromised all tag](./2026-05-19/actions-cool-issues-helper-github-action-compromised-all-tag.md)
 - [active supply chain attack malicious node ipc versions publi](./2026-05-19/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
 - [from pdb strings to maas tracking a commodity badiis ecosyst](./2026-05-19/from-pdb-strings-to-maas-tracking-a-commodity-badiis-ecosyst.md)
+- [ghsa critical cve 2026 2611 mlflow improper origin validatio](./2026-05-19/ghsa-critical-cve-2026-2611-mlflow-improper-origin-validatio.md)
 - [ghsa critical cve 2026 45568 rok python proxyshare can be us](./2026-05-19/ghsa-critical-cve-2026-45568-rok-python-proxyshare-can-be-us.md)
 - [ghsa critical cve 2026 45695 kopia rce via ssh proxycommand ](./2026-05-19/ghsa-critical-cve-2026-45695-kopia-rce-via-ssh-proxycommand-.md)
 - [ghsa critical cve 2026 45721 algernon handler lua discovery ](./2026-05-19/ghsa-critical-cve-2026-45721-algernon-handler-lua-discovery-.md)
@@ -262,7 +262,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [teampcp s mini shai hulud is back a self spreading supply ch](./2026-05-12/teampcp-s-mini-shai-hulud-is-back-a-self-spreading-supply-ch.md)
 
 ## 2026-05-11
-- [ghsa critical cve 2026 27478 unity catalog has a jwt issuer ](./2026-05-11/ghsa-critical-cve-2026-27478-unity-catalog-has-a-jwt-issuer-.md)
 - [ghsa critical cve 2026 43898 sandboxjs has a sandbox escape ](./2026-05-11/ghsa-critical-cve-2026-43898-sandboxjs-has-a-sandbox-escape-.md)
 - [ghsa critical cve 2026 7813 pgadmin 4 server mode has an aut](./2026-05-11/ghsa-critical-cve-2026-7813-pgadmin-4-server-mode-has-an-aut.md)
 - [inside ad cs escalation unpacking advanced misuse techniques](./2026-05-11/inside-ad-cs-escalation-unpacking-advanced-misuse-techniques.md)

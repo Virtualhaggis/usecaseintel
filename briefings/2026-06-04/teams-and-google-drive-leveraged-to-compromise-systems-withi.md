@@ -1,4 +1,4 @@
-# [MED] Hackers Abusing Microsoft Teams and Google Drive to Deploy Remote Access Malware
+# [MED] Teams and Google Drive Leveraged to Compromise Systems Within 20 Minutes
 
 **Source:** Cyber Security News
 **Published:** 2026-06-04
@@ -6,12 +6,18 @@
 
 ## Threat Profile
 
-Hackers are increasingly abusing trusted enterprise platforms such as Microsoft Teams and Google Drive to deploy stealthy remote access malware, with a newly observed campaign leveraging social engineering and cloud-based command-and-control to evade detection. In early April 2026, eSentire’s Threat Response Unit (TRU) identified a targeted intrusion against a legal sector organization in which attackers [&#8230;] The post Hackers Abusing Microsoft Teams and Google Drive to Deploy Remote Access …
+Hackers are increasingly abusing trusted enterprise platforms such as Microsoft Teams and Google Drive to deploy stealthy remote access malware, with a newly observed campaign leveraging social engineering and cloud-based command-and-control to evade detection. In early April 2026, eSentire’s Threat Response Unit (TRU) identified a targeted intrusion against a legal sector organization in which attackers [&#8230;] The post Teams and Google Drive Leveraged to Compromise Systems Within 20 Minutes …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `mintyfreshwave.com`
-- **Domain (defanged):** `arellano.pe`
+- **Domain (defanged):** `system-clean.top`
+- **Domain (defanged):** `helpdock.top`
+- **Domain (defanged):** `info-secure.top`
+- **Domain (defanged):** `scanseq.top`
+- **SHA256:** `9e5b1e10ad6904d3f5b48d38470cd57263974640a27d13cf793ef026d3d6b886`
+- **SHA256:** `91e523a46f3bb860ac2e5800b7e1ec89d75a2408410b9cd25eebc17c8d7a92bc`
+- **SHA256:** `99813f3d0625e880158c68039c0e2fbf488db0be3db77cd1ce6d382644193f0e`
+- **SHA256:** `295c950c8a7c22060ebf2d2013da7009dbead28d0589ca03c93c78811e31d37c`
 
 ## MITRE ATT&CK Techniques
 
@@ -21,6 +27,7 @@ Hackers are increasingly abusing trusted enterprise platforms such as Microsoft 
 - **T1566.004** — Phishing: Spearphishing Voice
 - **T1566** — Phishing
 - **T1219** — Remote Access Software
+- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
@@ -121,9 +128,12 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `mintyfreshwave.com`, `arellano.pe`
+  - IP / domain IOC(s): `system-clean.top`, `helpdock.top`, `info-secure.top`, `scanseq.top`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `9e5b1e10ad6904d3f5b48d38470cd57263974640a27d13cf793ef026d3d6b886`, `91e523a46f3bb860ac2e5800b7e1ec89d75a2408410b9cd25eebc17c8d7a92bc`, `99813f3d0625e880158c68039c0e2fbf488db0be3db77cd1ce6d382644193f0e`, `295c950c8a7c22060ebf2d2013da7009dbead28d0589ca03c93c78811e31d37c`
 
 
 ## Why this matters
 
-Severity classified as **MED** based on: IOCs present, 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: IOCs present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

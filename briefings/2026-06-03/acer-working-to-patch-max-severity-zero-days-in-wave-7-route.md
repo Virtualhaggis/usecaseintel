@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Acer Wave 7 unauthenticated acer_cgi.log credential disclosure (CVE-2026-49200)
 
-`UC_35_1` · phase: **exploit** · confidence: **High**
+`UC_40_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceNetworkEvents
 
 ### [LLM] Acer Wave 7 upload.cgi backup tamper for persistent backdoor (CVE-2026-49201)
 
-`UC_35_2` · phase: **install** · confidence: **Medium**
+`UC_40_2` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
