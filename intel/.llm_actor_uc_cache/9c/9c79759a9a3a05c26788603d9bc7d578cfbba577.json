@@ -1,0 +1,237 @@
+{
+  "name": "Cl0p",
+  "ucs": [
+    {
+      "title": "[LLM] Cl0p MOVEit/GoAnywhere/Accellion zero-day webshell drop (LEMURLOOT/DEWMODE) via IIS w3wp.exe",
+      "description": "Hunts Cl0p's signature managed-file-transfer (MFT) exploitation chain \u2014 SQL-injection against MOVEit Transfer, GoAnywhere MFT, or Accellion FTA \u2014 landing an ASPX/JSP webshell (LEMURLOOT a.k.a. human2.aspx, DEWMODE, or LEMURLOOT-style) written by the web service identity. This is the exact tradecraft that drove Cl0p's 2021 (Accellion), 2023-Feb (GoAnywhere CVE-2023-0669) and 2023-May (MOVEit CVE-2023-34362) mass-exploitation waves.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1190",
+        "T1505.003",
+        "T1059.003",
+        "T1005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_name IN (\"human2.aspx\",\"_human2.aspx\",\"App_Web_*.dll\",\"error_page.jsp\",\"OkHttpClient.aspx\") OR Filesystem.file_path IN (\"*\\\\MOVEitTransfer\\\\wwwroot\\\\*\",\"*\\\\GoAnywhere\\\\userdata\\\\webcontent\\\\*\",\"*/var/opt/cdrive/*\")) (Filesystem.process_name IN (\"w3wp.exe\",\"java.exe\",\"tomcat*.exe\",\"httpd\",\"nginx\") OR Filesystem.user IN (\"NT AUTHORITY\\\\NETWORK SERVICE\",\"IIS APPPOOL*\",\"tomcat\",\"goanywhere\")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.user | `drop_dm_object_name(\"Filesystem\")` | rename dest as host | join type=outer host [| tstats summariesonly=t count as child_proc_count values(Processes.process) as child_cmd values(Processes.process_name) as child_proc from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"w3wp.exe\",\"java.exe\",\"tomcat*.exe\") Processes.process_name IN (\"cmd.exe\",\"powershell.exe\",\"net.exe\",\"net1.exe\",\"whoami.exe\",\"systeminfo.exe\",\"sqlcmd.exe\",\"bcp.exe\",\"7z.exe\",\"certutil.exe\") by Processes.dest | `drop_dm_object_name(\"Processes\")` | rename dest as host] | where isnotnull(file_name) | `security_content_ctime(firstTime)` | sort - firstTime",
+      "kql": "let LookbackDays = 7d;\nlet MFTPaths = dynamic([@\"\\MOVEitTransfer\\wwwroot\\\", @\"\\GoAnywhere\\userdata\\webcontent\\\", \"/var/opt/cdrive/\", @\"\\inetpub\\wwwroot\\\"]);\nlet WebshellNames = dynamic([\"human2.aspx\",\"_human2.aspx\",\"error_page.jsp\",\"OkHttpClient.aspx\",\"LemurLoot.aspx\"]);\nlet WebshellWrites = DeviceFileEvents\n    | where Timestamp > ago(LookbackDays)\n    | where ActionType in (\"FileCreated\",\"FileRenamed\",\"FileModified\")\n    | where InitiatingProcessFileName in~ (\"w3wp.exe\",\"java.exe\",\"tomcat9.exe\",\"tomcat10.exe\")\n    | where (FileName in~ (WebshellNames))\n         or (FolderPath has_any (MFTPaths) and FileName endswith \".aspx\")\n         or (FolderPath has_any (MFTPaths) and FileName endswith \".jsp\")\n         or (FolderPath has_any (MFTPaths) and FileName matches regex @\"App_Web_[a-z0-9]{8,}\\.dll\")\n    | where InitiatingProcessAccountName !endswith \"$\"\n    | project Timestamp, DeviceName, FileName, FolderPath, SHA256,\n              InitiatingProcessFileName, InitiatingProcessAccountName, InitiatingProcessCommandLine;\nlet HandsOnKeyboard = DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where InitiatingProcessFileName in~ (\"w3wp.exe\",\"java.exe\",\"tomcat9.exe\",\"tomcat10.exe\")\n    | where FileName in~ (\"cmd.exe\",\"powershell.exe\",\"net.exe\",\"net1.exe\",\"whoami.exe\",\"systeminfo.exe\",\"sqlcmd.exe\",\"bcp.exe\",\"7z.exe\",\"certutil.exe\",\"nltest.exe\")\n    | project ChildTime = Timestamp, DeviceName, ChildImage = FileName, ChildCmd = ProcessCommandLine, ParentImage = InitiatingProcessFileName;\nWebshellWrites\n| join kind=leftouter HandsOnKeyboard on DeviceName\n| where isnull(ChildTime) or (ChildTime between (Timestamp .. Timestamp + 24h))\n| project Timestamp, DeviceName, FileName, FolderPath, SHA256,\n          InitiatingProcessFileName, InitiatingProcessAccountName,\n          InitiatingProcessCommandLine, ChildTime, ChildImage, ChildCmd\n| order by Timestamp desc",
+      "sentinel_kql": "let LookbackDays = 7d;\nlet WebshellNames = dynamic([\"human2.aspx\",\"_human2.aspx\",\"error_page.jsp\",\"OkHttpClient.aspx\",\"LemurLoot.aspx\"]);\nlet MFTPaths = dynamic([@\"\\MOVEitTransfer\\wwwroot\\\", @\"\\GoAnywhere\\userdata\\webcontent\\\", \"/var/opt/cdrive/\"]);\nlet FileDrops = ImFileEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventType =~ \"FileCreated\"\n    | where ActingProcessName has_any (\"w3wp.exe\",\"java.exe\",\"tomcat9.exe\",\"tomcat10.exe\")\n    | where TargetFileName in~ (WebshellNames)\n         or (TargetFilePath has_any (MFTPaths) and (TargetFileExtension =~ \"aspx\" or TargetFileExtension =~ \"jsp\"))\n         or (TargetFilePath has_any (MFTPaths) and TargetFileName matches regex @\"App_Web_[a-z0-9]{8,}\\.dll\")\n    | project FileTime = TimeGenerated, DvcHostname, TargetFileName, TargetFilePath, TargetFileSHA256, ActingProcessName, ActorUsername, ActingProcessCommandLine;\nlet WebProcs = ImProcessCreate\n    | where TimeGenerated > ago(LookbackDays)\n    | where ParentProcessName has_any (\"w3wp.exe\",\"java.exe\",\"tomcat9.exe\",\"tomcat10.exe\")\n    | where TargetProcessName has_any (\"cmd.exe\",\"powershell.exe\",\"net.exe\",\"net1.exe\",\"whoami.exe\",\"systeminfo.exe\",\"sqlcmd.exe\",\"bcp.exe\",\"7z.exe\",\"certutil.exe\",\"nltest.exe\")\n    | project ChildTime = TimeGenerated, DvcHostname, TargetProcessName, TargetProcessCommandLine, ParentProcessName;\nFileDrops\n| join kind=leftouter WebProcs on DvcHostname\n| where isnull(ChildTime) or (ChildTime between (FileTime .. FileTime + 24h))\n| project TimeGenerated = FileTime, DvcHostname, TargetFileName, TargetFilePath, TargetFileSHA256,\n          ActingProcessName, ActorUsername, ActingProcessCommandLine,\n          ChildTime, TargetProcessName, TargetProcessCommandLine\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Cl0p LEMURLOOT / DEWMODE Webshell Drop by MFT Web Service\nid: 8a4f1c7e-2a3e-4b5d-9c1f-1f0c11a0c0e1\nstatus: experimental\ndescription: Detects creation of LEMURLOOT (human2.aspx / App_Web_*.dll), DEWMODE, or GoAnywhere webshells by the IIS/Tomcat/Java service account in MOVEit, GoAnywhere or Accellion MFT directories \u2014 Cl0p / FIN11 / TA505 tradecraft from CVE-2023-34362, CVE-2023-0669 and the 2021 Accellion FTA campaign.\nreferences:\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-158a\n  - https://www.mandiant.com/resources/blog/zero-day-moveit-data-theft\n  - https://attack.mitre.org/groups/G0092/\nauthor: SOC Detection Engineering\ndate: 2026/06/05\ntags:\n  - attack.initial_access\n  - attack.persistence\n  - attack.t1190\n  - attack.t1505.003\nlogsource:\n  product: windows\n  category: file_event\ndetection:\n  selection_process:\n    Image|endswith:\n      - '\\w3wp.exe'\n      - '\\java.exe'\n      - '\\tomcat9.exe'\n      - '\\tomcat10.exe'\n  selection_webshell_name:\n    TargetFilename|endswith:\n      - '\\human2.aspx'\n      - '\\_human2.aspx'\n      - '\\error_page.jsp'\n      - '\\OkHttpClient.aspx'\n      - '\\LemurLoot.aspx'\n  selection_mft_path:\n    TargetFilename|contains:\n      - '\\MOVEitTransfer\\wwwroot\\'\n      - '\\GoAnywhere\\userdata\\webcontent\\'\n      - '\\Accellion\\'\n    TargetFilename|endswith:\n      - '.aspx'\n      - '.jsp'\n      - '.ashx'\n  selection_lemurloot_dll:\n    TargetFilename|re: 'App_Web_[a-z0-9]{8,}\\.dll'\n  condition: selection_process and (selection_webshell_name or selection_mft_path or selection_lemurloot_dll)\nfalsepositives:\n  - Legitimate MOVEit / GoAnywhere installer or patch run (Progress / Fortra MSP)\n  - Internal webapp deploy pipelines writing into wwwroot\nlevel: critical",
+      "datadog_query": "(source:windows.sysmon @EventID:11 @Image:(*\\w3wp.exe OR *\\W3WP.EXE OR *\\java.exe OR *\\JAVA.EXE OR *\\tomcat9.exe OR *\\tomcat10.exe) AND (@TargetFilename:(*\\human2.aspx OR *\\HUMAN2.ASPX OR *\\_human2.aspx OR *\\error_page.jsp OR *\\OkHttpClient.aspx OR *\\LemurLoot.aspx) OR (@TargetFilename:(*\\MOVEitTransfer\\wwwroot\\* OR *\\GoAnywhere\\userdata\\webcontent\\* OR *\\Accellion\\*) AND @TargetFilename:(*.aspx OR *.ASPX OR *.jsp OR *.JSP OR *.ashx)) OR @TargetFilename:/App_Web_[a-z0-9]{8,}\\.dll/))",
+      "falcon_logscale_query": "#event_simpleName=FileWritten (ContextImageFileName=/\\\\(w3wp|java|tomcat9|tomcat10)\\.exe$/i OR ContextImageFileName=/\\/(java|httpd|nginx|tomcat)/i) | (TargetFileName=/\\\\(human2|_human2|OkHttpClient|LemurLoot)\\.aspx$/i OR TargetFileName=/\\\\error_page\\.jsp$/i OR (regex(\"(MOVEitTransfer\\\\\\\\wwwroot|GoAnywhere\\\\\\\\userdata\\\\\\\\webcontent|Accellion|/var/opt/cdrive/)\", field=TargetFileName) AND TargetFileName=/\\.(aspx|jsp|ashx)$/i) OR TargetFileName=/App_Web_[a-z0-9]{8,}\\.dll$/i) | groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=[count(), min(@timestamp, as=FirstSeen), max(@timestamp, as=LastSeen)]) | sort(FirstSeen, order=desc)",
+      "cloudwatch_query": "",
+      "rationale": "Specifically encodes Cl0p's (GRACEFUL SPIDER / FIN11 / TA505) signature MFT zero-day playbook: SQL-injection into MOVEit / GoAnywhere / Accellion FTA followed by a webshell dropped by the web-app service identity into the MFT install directory. The filenames `human2.aspx`, the `App_Web_*.dll` LEMURLOOT compiled assembly, GoAnywhere's `OkHttpClient.aspx` and Accellion's `error_page.jsp` (DEWMODE) a"
+    },
+    {
+      "title": "[LLM] Cl0p MFT exfiltration \u2014 sqlcmd/bcp dump to archive followed by HTTPS upload to anonymous file host",
+      "description": "Hunts the post-exploitation 'data theft' half of Cl0p's MFT campaigns: the webshell (LEMURLOOT/DEWMODE) reads MFT metadata from the backing SQL DB, the operator dumps it via sqlcmd/bcp, 7-Zips it, and exfils to anonymous file hosts (mega.nz, anonfiles, dropmefiles, transfer[.]sh) or to Cl0p's own clearnet leak/exfil hosts. This is the distinctive 'steal-not-encrypt' phase Cl0p pivoted to in 2021+.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1005",
+        "T1560",
+        "T1567.002",
+        "T1041"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN (\"sqlcmd.exe\",\"bcp.exe\",\"7z.exe\",\"7za.exe\",\"WinRAR.exe\",\"Rar.exe\") (Processes.parent_process_name IN (\"w3wp.exe\",\"cmd.exe\",\"powershell.exe\",\"java.exe\") OR Processes.process IN (\"*MOVEit*\",\"*GoAnywhere*\",\"*moveitsvc*\",\"*-Q*select*\",\"*queryout*\")) by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(\"Processes\")` | rename dest as host | join type=inner host [| tstats summariesonly=t count as egress_count values(All_Traffic.dest) as dest_host values(All_Traffic.dest_ip) as dest_ip sum(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN (\"*mega.nz\",\"*mega.co.nz\",\"*anonfiles.com\",\"*transfer.sh\",\"*dropmefiles.com\",\"*temp.sh\",\"*gofile.io\",\"*sendspace.com\",\"*file.io\",\"*ufile.io\",\"*clop-leaks.com\") OR All_Traffic.dest_port=443 by All_Traffic.src | `drop_dm_object_name(\"All_Traffic\")` | rename src as host | where bytes_out > 10485760] | `security_content_ctime(firstTime)` | sort - firstTime",
+      "kql": "let LookbackDays = 7d;\nlet ExfilHosts = dynamic([\"mega.nz\",\"mega.co.nz\",\"anonfiles.com\",\"transfer.sh\",\"dropmefiles.com\",\"temp.sh\",\"gofile.io\",\"sendspace.com\",\"file.io\",\"ufile.io\",\"bayfiles.com\"]);\nlet DbDump = DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where FileName in~ (\"sqlcmd.exe\",\"bcp.exe\")\n    | where (ProcessCommandLine has_any (\"MOVEit\",\"moveitsvc\",\"GoAnywhere\",\"files\",\"queryout\",\"-Q select\",\"-Q \\\"select\"))\n         or (InitiatingProcessFileName in~ (\"w3wp.exe\",\"java.exe\",\"cmd.exe\",\"powershell.exe\")\n             and InitiatingProcessParentFileName in~ (\"w3wp.exe\",\"java.exe\",\"services.exe\"))\n    | project DumpTime = Timestamp, DeviceName, AccountName, DumpCmd = ProcessCommandLine, InitiatingProcessFileName;\nlet Archive = DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where FileName in~ (\"7z.exe\",\"7za.exe\",\"WinRAR.exe\",\"Rar.exe\")\n    | where ProcessCommandLine has_any (\" a \",\" -p\",\".7z\",\".rar\",\".zip\")\n    | project ArcTime = Timestamp, DeviceName, ArcCmd = ProcessCommandLine, ArcAccount = AccountName;\nlet Egress = DeviceNetworkEvents\n    | where Timestamp > ago(LookbackDays)\n    | where RemoteUrl has_any (ExfilHosts) or RemoteIPType == \"Public\"\n    | where InitiatingProcessFileName in~ (\"powershell.exe\",\"pwsh.exe\",\"curl.exe\",\"wget.exe\",\"rclone.exe\",\"megacmd.exe\",\"MEGAclient.exe\",\"MEGAcmdServer.exe\",\"w3wp.exe\",\"java.exe\")\n         or RemoteUrl has_any (ExfilHosts)\n    | project EgressTime = Timestamp, DeviceName, RemoteUrl, RemoteIP, EgressProc = InitiatingProcessFileName, EgressCmd = InitiatingProcessCommandLine;\nDbDump\n| join kind=inner Archive on DeviceName\n| where ArcTime between (DumpTime .. DumpTime + 6h)\n| join kind=inner Egress on DeviceName\n| where EgressTime between (ArcTime .. ArcTime + 12h)\n| project DumpTime, ArcTime, EgressTime, DeviceName, AccountName,\n          DumpCmd, ArcCmd, EgressProc, EgressCmd, RemoteUrl, RemoteIP\n| order by DumpTime desc",
+      "sentinel_kql": "let LookbackDays = 7d;\nlet ExfilHosts = dynamic([\"mega.nz\",\"mega.co.nz\",\"anonfiles.com\",\"transfer.sh\",\"dropmefiles.com\",\"temp.sh\",\"gofile.io\",\"sendspace.com\",\"file.io\",\"ufile.io\",\"bayfiles.com\"]);\nlet DbDump = ImProcessCreate\n    | where TimeGenerated > ago(LookbackDays)\n    | where TargetProcessName has_any (\"sqlcmd.exe\",\"bcp.exe\")\n    | where TargetProcessCommandLine has_any (\"MOVEit\",\"GoAnywhere\",\"moveitsvc\",\"queryout\",\"-Q select\",\"-Q \\\"select\")\n         or ParentProcessName has_any (\"w3wp.exe\",\"java.exe\",\"cmd.exe\",\"powershell.exe\")\n    | project DumpTime = TimeGenerated, DvcHostname, ActorUsername, DumpCmd = TargetProcessCommandLine, ParentProcessName;\nlet Archive = ImProcessCreate\n    | where TimeGenerated > ago(LookbackDays)\n    | where TargetProcessName has_any (\"7z.exe\",\"7za.exe\",\"WinRAR.exe\",\"Rar.exe\")\n    | where TargetProcessCommandLine has_any (\" a \",\" -p\",\".7z\",\".rar\",\".zip\")\n    | project ArcTime = TimeGenerated, DvcHostname, ArcCmd = TargetProcessCommandLine;\nlet Egress = ImNetworkSession\n    | where TimeGenerated > ago(LookbackDays)\n    | where DstHostname has_any (ExfilHosts) or Url has_any (ExfilHosts)\n    | project EgressTime = TimeGenerated, DvcHostname, DstHostname, DstIpAddr, Url, NetworkBytes;\nDbDump\n| join kind=inner Archive on DvcHostname\n| where ArcTime between (DumpTime .. DumpTime + 6h)\n| join kind=inner Egress on DvcHostname\n| where EgressTime between (ArcTime .. ArcTime + 12h)\n| project TimeGenerated = DumpTime, DvcHostname, ActorUsername, DumpCmd, ArcCmd, DstHostname, DstIpAddr, Url, NetworkBytes\n| order by TimeGenerated desc",
+      "sigma_yaml": "",
+      "datadog_query": "(source:(windows.sysmon OR windows.security) AND ((@EventID:(1 OR 4688) AND @Image:(*\\sqlcmd.exe OR *\\SQLCMD.EXE OR *\\bcp.exe OR *\\BCP.EXE) AND @CommandLine:(*MOVEit* OR *GoAnywhere* OR *moveitsvc* OR *queryout* OR *\"-Q select\"* OR *\"-Q \\\"select\"*)) OR (@EventID:(1 OR 4688) AND @ParentImage:(*\\w3wp.exe OR *\\java.exe OR *\\tomcat9.exe) AND @Image:(*\\7z.exe OR *\\7Z.EXE OR *\\WinRAR.exe OR *\\rar.exe)) OR (@EventID:3 AND @Image:(*\\rclone.exe OR *\\megacmd.exe OR *\\MEGAclient.exe OR *\\curl.exe OR *\\powershell.exe) AND @DestinationHostname:(*.mega.nz OR *.anonfiles.com OR *.transfer.sh OR *.gofile.io OR *.dropmefiles.com OR *.file.io OR *.ufile.io OR *.sendspace.com))))",
+      "falcon_logscale_query": "(#event_simpleName=ProcessRollup2 OR #event_simpleName=DnsRequest OR #event_simpleName=NetworkConnectIP4) | case { #event_simpleName=ProcessRollup2 ImageFileName=/\\\\(sqlcmd|bcp)\\.exe$/i regex(\"(MOVEit|GoAnywhere|moveitsvc|queryout|-Q\\\\s+[\\\"']?select)\", field=CommandLine, flags=\"i\") | stage:=\"dump\"; #event_simpleName=ProcessRollup2 ImageFileName=/\\\\(7z|7za|WinRAR|Rar)\\.exe$/i ParentBaseFileName=/(w3wp|java|cmd|powershell)\\.exe$/i regex(\"\\\\s+a\\\\s+|\\\\.(7z|rar|zip)\", field=CommandLine, flags=\"i\") | stage:=\"archive\"; #event_simpleName=DnsRequest DomainName=/(mega\\.(nz|co\\.nz)|anonfiles\\.com|transfer\\.sh|gofile\\.io|dropmefiles\\.com|file\\.io|ufile\\.io|sendspace\\.com|bayfiles\\.com)$/i | stage:=\"egress\"; * | stage:=\"other\" } | stage!=\"other\" | groupBy([aid, ComputerName], function=[collect([stage]), count(), min(@timestamp, as=FirstSeen), max(@timestamp, as=LastSeen)]) | array:contains(\"stage\", value=\"dump\") AND array:contains(\"stage\", value=\"egress\") | sort(LastSeen, order=desc)",
+      "cloudwatch_query": "",
+      "rationale": "Cl0p / TA505 / FIN11 pivoted away from pure ransomware to data-theft-and-extortion in 2021 and after the Babuk source leak, leans heavily on this exact sequence: webshell -> sqlcmd/bcp dumping the MOVEit / GoAnywhere SQL backend -> 7-Zip/WinRAR archive -> egress over HTTPS to anonymous file hosts (Mandiant and CISA AA23-158A explicitly cite MEGA, anonfiles and Cl0p clearnet hosts). Chaining the th",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "WinRAR",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`WinRAR` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Rar",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Rar` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Public",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Public` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "MEGAclient",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`MEGAclient` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "MEGAcmdServer",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`MEGAcmdServer` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemoteUrl",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteUrl` is not a column of DeviceProcessEvents; it does exist on DeviceNetworkEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemoteIP",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceLogonEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteIP` is not a column of DeviceProcessEvents; it does exist on DeviceNetworkEvents, DeviceLogonEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Archive",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Archive` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ArcTime",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ArcTime` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "DumpTime",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`DumpTime` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Egress",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Egress` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "DumpCmd",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`DumpCmd` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "ArcCmd",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`ArcCmd` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "WinRAR",
+          "tables_in_scope": [
+            "ImNetworkSession",
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`WinRAR` is not a canonical column of ImNetworkSession, ImProcessCreate."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Rar",
+          "tables_in_scope": [
+            "ImNetworkSession",
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`Rar` is not a canonical column of ImNetworkSession, ImProcessCreate."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Archive",
+          "tables_in_scope": [
+            "ImNetworkSession",
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`Archive` is not a canonical column of ImNetworkSession, ImProcessCreate."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "DumpTime",
+          "tables_in_scope": [
+            "ImNetworkSession",
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`DumpTime` is not a canonical column of ImNetworkSession, ImProcessCreate."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "DumpCmd",
+          "tables_in_scope": [
+            "ImNetworkSession",
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`DumpCmd` is not a canonical column of ImNetworkSession, ImProcessCreate."
+        }
+      ]
+    }
+  ]
+}

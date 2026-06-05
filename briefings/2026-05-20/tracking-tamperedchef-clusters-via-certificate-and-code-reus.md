@@ -73,7 +73,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TamperedChef shell-company code-signing certificate execution (CL-UNK-1090)
 
-`UC_191_9` · phase: **install** · confidence: **High**
+`UC_192_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### [LLM] TamperedChef C2 / distribution callback to appsuites.ai and sibling domains
 
-`UC_191_10` · phase: **c2** · confidence: **High**
+`UC_192_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +128,7 @@ union NetHits, DnsHits
 
 ### [LLM] TamperedChef trojanized-app activation via --cm / --enableupdate / --fullupdate flags
 
-`UC_191_11` · phase: **install** · confidence: **High**
+`UC_192_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ DeviceProcessEvents
 
 ### [LLM] TamperedChef scheduled-task persistence via task.xml + obfuscated JS (appsuite-print.js)
 
-`UC_191_12` · phase: **install** · confidence: **High**
+`UC_192_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -452,7 +452,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Tracking TamperedChef Clusters via Certificate and Code Reuse
 
-`UC_191_8` · phase: **exploit** · confidence: **High**
+`UC_192_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

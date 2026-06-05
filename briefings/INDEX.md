@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1252 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,15 +10,19 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-05
 - [android spyware asin targets arabic users via fake news pdf ](./2026-06-05/android-spyware-asin-targets-arabic-users-via-fake-news-pdf-.md)
+- [chinese apt deploys new malware to keep access to hacked net](./2026-06-05/chinese-apt-deploys-new-malware-to-keep-access-to-hacked-net.md)
 - [chinese apt verdantbamboo uses brickstorm malware to comprom](./2026-06-05/chinese-apt-verdantbamboo-uses-brickstorm-malware-to-comprom.md)
+- [cisa hackers now exploit solarwinds serv u flaw to crash ser](./2026-06-05/cisa-hackers-now-exploit-solarwinds-serv-u-flaw-to-crash-ser.md)
+- [cisa kev cve 2026 28318 solarwinds serv u uncontrolled resou](./2026-06-05/cisa-kev-cve-2026-28318-solarwinds-serv-u-uncontrolled-resou.md)
 - [cisco warns of unpatched sd wan zero day exploited in attack](./2026-06-05/cisco-warns-of-unpatched-sd-wan-zero-day-exploited-in-attack.md)
 - [fifa world cup 2026 scams are already live fake sites bankin](./2026-06-05/fifa-world-cup-2026-scams-are-already-live-fake-sites-bankin.md)
 - [ghsa critical cve 2026 47668 dbgate unauthenticated remote c](./2026-06-05/ghsa-critical-cve-2026-47668-dbgate-unauthenticated-remote-c.md)
 - [ghsa critical cve 2026 47669 dbgate zip slip in archive unzi](./2026-06-05/ghsa-critical-cve-2026-47669-dbgate-zip-slip-in-archive-unzi.md)
 - [ghsa critical cve 2026 47670 authenticated remote code execu](./2026-06-05/ghsa-critical-cve-2026-47670-authenticated-remote-code-execu.md)
+- [ghsa critical cve 2026 47731 nasa ammos instrument toolkit p](./2026-06-05/ghsa-critical-cve-2026-47731-nasa-ammos-instrument-toolkit-p.md)
 - [hackers exploit critical everest forms pro wordpress plugin ](./2026-06-05/hackers-exploit-critical-everest-forms-pro-wordpress-plugin-.md)
+- [ironworm and new miasma worm variant hit npm in supply chain](./2026-06-05/ironworm-and-new-miasma-worm-variant-hit-npm-in-supply-chain.md)
 - [malicious browser add ons target chatgpt claude copilot gemi](./2026-06-05/malicious-browser-add-ons-target-chatgpt-claude-copilot-gemi.md)
-- [microsoft s durabletask pypi package compromised in supply c](./2026-06-05/microsoft-s-durabletask-pypi-package-compromised-in-supply-c.md)
 - [new shub stealer variant malware targets chrome firefox brav](./2026-06-05/new-shub-stealer-variant-malware-targets-chrome-firefox-brav.md)
 - [new threat cluster op 512 targets microsoft iis servers with](./2026-06-05/new-threat-cluster-op-512-targets-microsoft-iis-servers-with.md)
 - [pcpjack hijacks 230 aws google cloud and azure servers for c](./2026-06-05/pcpjack-hijacks-230-aws-google-cloud-and-azure-servers-for-c.md)
@@ -28,7 +32,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-04
 - [china linked ta4922 expands phishing attacks to u k germany ](./2026-06-04/china-linked-ta4922-expands-phishing-attacks-to-u-k-germany-.md)
 - [cisco patches cve 2026 20230 in unified cm as exploit code g](./2026-06-04/cisco-patches-cve-2026-20230-in-unified-cm-as-exploit-code-g.md)
-- [cisco warns of critical unified cm flaw with poc exploit cod](./2026-06-04/cisco-warns-of-critical-unified-cm-flaw-with-poc-exploit-cod.md)
 - [claude code github action flaw let one malicious issue hijac](./2026-06-04/claude-code-github-action-flaw-let-one-malicious-issue-hijac.md)
 - [credit card theft campaign abuses stripe to host stolen paym](./2026-06-04/credit-card-theft-campaign-abuses-stripe-to-host-stolen-paym.md)
 - [dentaquest data breach exposed info of 2 6 million accounts](./2026-06-04/dentaquest-data-breach-exposed-info-of-2-6-million-accounts.md)
@@ -50,7 +53,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-03
 - [argamal malware hidden in hentai games](./2026-06-03/argamal-malware-hidden-in-hentai-games.md)
 - [autonomous ai tool finds 2 year old rce flaw in redis cve 20](./2026-06-03/autonomous-ai-tool-finds-2-year-old-rce-flaw-in-redis-cve-20.md)
-- [chinese hackers use new atlas rat malware in european cybera](./2026-06-03/chinese-hackers-use-new-atlas-rat-malware-in-european-cybera.md)
 - [cisa kev cve 2026 45247 mirasvit full page cache warmer dese](./2026-06-03/cisa-kev-cve-2026-45247-mirasvit-full-page-cache-warmer-dese.md)
 - [ghsa critical cve 2026 44180 jupyter enterprise gateway cont](./2026-06-03/ghsa-critical-cve-2026-44180-jupyter-enterprise-gateway-cont.md)
 - [ghsa critical cve 2026 44181 jupyter enterprise gateway jinj](./2026-06-03/ghsa-critical-cve-2026-44181-jupyter-enterprise-gateway-jinj.md)
@@ -59,7 +61,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [one click github dev attack lets attackers steal full github](./2026-06-03/one-click-github-dev-attack-lets-attackers-steal-full-github.md)
 - [preinstall to persistence inside the red hat npm miasma cred](./2026-06-03/preinstall-to-persistence-inside-the-red-hat-npm-miasma-cred.md)
 - [the new security risks of the agentic development lifecycle](./2026-06-03/the-new-security-risks-of-the-agentic-development-lifecycle.md)
-- [u s sanctions nobitex crypto exchange used by iranian ransom](./2026-06-03/u-s-sanctions-nobitex-crypto-exchange-used-by-iranian-ransom.md)
 - [unpatched windows search uri vulnerability lets attackers st](./2026-06-03/unpatched-windows-search-uri-vulnerability-lets-attackers-st.md)
 - [weedhack attacks minecraft users countloader hits 86k miners](./2026-06-03/weedhack-attacks-minecraft-users-countloader-hits-86k-miners.md)
 
@@ -127,7 +128,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [critical gogs rce vulnerability lets any authenticated user ](./2026-05-28/critical-gogs-rce-vulnerability-lets-any-authenticated-user-.md)
 - [eset apt activity report q4 2025 q1 2026](./2026-05-28/eset-apt-activity-report-q4-2025-q1-2026.md)
 - [less panic patching more precision](./2026-05-28/less-panic-patching-more-precision.md)
-- [microsoft slams public zero day disclosures amid github rese](./2026-05-28/microsoft-slams-public-zero-day-disclosures-amid-github-rese.md)
 - [pirates in the crosshairs how one cybercrime gang has been i](./2026-05-28/pirates-in-the-crosshairs-how-one-cybercrime-gang-has-been-i.md)
 - [the gentlemen ransomware dissecting a self propagating go en](./2026-05-28/the-gentlemen-ransomware-dissecting-a-self-propagating-go-en.md)
 - [threat actors exploit critical forticlient ems flaw to deplo](./2026-05-28/threat-actors-exploit-critical-forticlient-ems-flaw-to-deplo.md)
@@ -258,7 +258,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-12
 - [ghsa critical cve 2026 31233 guardrails ai contains a code i](./2026-05-12/ghsa-critical-cve-2026-31233-guardrails-ai-contains-a-code-i.md)
-- [ghsa critical cve 2026 31234 horovod contains an insecure de](./2026-05-12/ghsa-critical-cve-2026-31234-horovod-contains-an-insecure-de.md)
 - [ghsa critical cve 2026 33117 security feature bypass vulnera](./2026-05-12/ghsa-critical-cve-2026-33117-security-feature-bypass-vulnera.md)
 - [ghsa critical cve 2026 44593 esm sh legacy route path traver](./2026-05-12/ghsa-critical-cve-2026-44593-esm-sh-legacy-route-path-traver.md)
 - [ghsa critical cve 2026 44650 sillytavern has a path traversa](./2026-05-12/ghsa-critical-cve-2026-44650-sillytavern-has-a-path-traversa.md)
@@ -1823,9 +1822,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2024-05-21
 - [how to secure python flask applications](./2024-05-21/how-to-secure-python-flask-applications.md)
 - [learning from cloud transformation as we move to ai](./2024-05-21/learning-from-cloud-transformation-as-we-move-to-ai.md)
-
-## 2024-05-20
-- [cisa kev cve 2024 4947 google chromium v8 type confusion vul](./2024-05-20/cisa-kev-cve-2024-4947-google-chromium-v8-type-confusion-vul.md)
 
 ## 2024-05-15
 - [symmetric vs asymmetric encryption practical python examples](./2024-05-15/symmetric-vs-asymmetric-encryption-practical-python-examples.md)

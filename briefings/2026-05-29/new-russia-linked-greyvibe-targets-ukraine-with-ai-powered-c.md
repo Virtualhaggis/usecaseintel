@@ -125,7 +125,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GREYVIBE ClickFix fake Zoom/LAPAS CAPTCHA paste into Win+R then PowerShell
 
-`UC_123_11` · phase: **delivery** · confidence: **High**
+`UC_125_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ DeviceProcessEvents
 
 ### [LLM] GREYVIBE PhantomMail Google Drive / 4sync archive lure delivered via email
 
-`UC_123_12` · phase: **delivery** · confidence: **Medium**
+`UC_125_12` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -177,7 +177,7 @@ DeviceProcessEvents
 
 ### [LLM] GREYVIBE PhantomRelayV1 watchdog persistence via Run key or scheduled task
 
-`UC_123_13` · phase: **install** · confidence: **Medium**
+`UC_125_13` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -207,7 +207,7 @@ RunKeyPersist
 
 ### [LLM] GREYVIBE LegionRelay browser, Telegram and WhatsApp data harvest
 
-`UC_123_14` · phase: **actions** · confidence: **High**
+`UC_125_14` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -231,7 +231,7 @@ DeviceFileEvents
 
 ### [LLM] GREYVIBE DroneLink WireGuard tunnel install on user workstation
 
-`UC_123_15` · phase: **c2** · confidence: **High**
+`UC_125_15` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -257,7 +257,7 @@ union WgProcs, WgFiles
 
 ### [LLM] GREYVIBE network egress to known C2 IP infrastructure
 
-`UC_123_16` · phase: **c2** · confidence: **High**
+`UC_125_16` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -280,7 +280,7 @@ DeviceNetworkEvents
 
 ### [LLM] GREYVIBE LegionRelay RDP enablement and outbound 3389 from user endpoint
 
-`UC_123_17` · phase: **c2** · confidence: **High**
+`UC_125_17` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -307,7 +307,7 @@ RdpEnable
 
 ### [LLM] GREYVIBE princess-club and Zoom/LAPAS lookalike domain access
 
-`UC_123_18` · phase: **recon** · confidence: **High**
+`UC_125_18` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -332,7 +332,7 @@ NetHits
 
 ### [LLM] GREYVIBE XMRig miner deployment on LegionRelay-infected host
 
-`UC_123_19` · phase: **actions** · confidence: **High**
+`UC_125_19` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

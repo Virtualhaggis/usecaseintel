@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] LNK-spawned PowerShell extracts RuntimeBroker_update.exe from DAT file (Dragon Weave)
 
-`UC_95_10` · phase: **delivery** · confidence: **High**
+`UC_97_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### [LLM] RuntimeBroker_update.exe masquerading binary execution (Dragon Weave / RUSTCLOAK loader)
 
-`UC_95_11` · phase: **install** · confidence: **High**
+`UC_97_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceProcessEvents
 
 ### [LLM] UnityPlayer.dll side-loaded by RuntimeBroker_update.exe (RUSTCLOAK)
 
-`UC_95_12` · phase: **install** · confidence: **High**
+`UC_97_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceImageLoadEvents
 
 ### [LLM] AZUREVEIL AdaptixC2 dead-drop to Azure Blob Storage from atypical process
 
-`UC_95_13` · phase: **c2** · confidence: **Medium**
+`UC_97_13` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceNetworkEvents
 
 ### [LLM] Operation Dragon Weave SHA256 IOC match (RUSTCLOAK/AZUREVEIL/RuntimeBroker_update)
 
-`UC_95_14` · phase: **install** · confidence: **High**
+`UC_97_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -469,7 +469,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — China-Aligned Groups Ramp Up Attacks: Dragon Weave Hits Czech Republic & Taiwan
 
-`UC_95_9` · phase: **exploit** · confidence: **High**
+`UC_97_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
