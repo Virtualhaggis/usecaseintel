@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Vulnerable HTTP/2 server inventory (CVE-2026-49975 — nginx/mod_http2/Envoy/IIS)
 
-`UC_46_1` · phase: **weapon** · confidence: **High**
+`UC_48_1` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ union TvmHits, InventoryHits
 
 ### [LLM] HTTP/2 Bomb stall signature — long-hung HTTP/2 requests with near-zero response bytes
 
-`UC_46_2` · phase: **c2** · confidence: **Medium**
+`UC_48_2` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceNetworkEvents
 
 ### [LLM] Web-tier worker crash / OOM storm following HTTP/2 Bomb memory exhaustion
 
-`UC_46_3` · phase: **actions** · confidence: **High**
+`UC_48_3` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

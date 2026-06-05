@@ -58,7 +58,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — How to protect Node.js apps from CSRF attacks
 
-`UC_1358_1` · phase: **exploit** · confidence: **High**
+`UC_1349_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

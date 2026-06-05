@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] npm preinstall executing oversized index.js from @redhat-cloud-services scope
 
-`UC_79_10` · phase: **install** · confidence: **High**
+`UC_78_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### [LLM] Node-driven Bun runtime download from oven-sh GitHub Releases during npm install
 
-`UC_79_11` · phase: **delivery** · confidence: **High**
+`UC_78_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceNetworkEvents
 
 ### [LLM] Stage-4 implant written to /tmp/p<random>.js and executed by freshly dropped Bun binary
 
-`UC_79_12` · phase: **exploit** · confidence: **High**
+`UC_78_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceProcessEvents
 
 ### [LLM] CI runner reading cloud-provider credential env files immediately after npm install
 
-`UC_79_13` · phase: **actions** · confidence: **Medium**
+`UC_78_13` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -415,7 +415,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Miasma Supply Chain Attack Compromises Red Hat npm Packages with Credential-Stea
 
-`UC_79_9` · phase: **install** · confidence: **High**
+`UC_78_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

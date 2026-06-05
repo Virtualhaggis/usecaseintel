@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Outbound contact to fake open-source tool / TDS / CloudFront staging domains
 
-`UC_33_10` · phase: **delivery** · confidence: **High**
+`UC_35_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceNetworkEvents
 
 ### [LLM] Browser-spawned executable/installer drop within 5 min of TDS site contact
 
-`UC_33_11` · phase: **delivery** · confidence: **High**
+`UC_35_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceFileEvents
 
 ### [LLM] SessionGate final-stage rundll32 spawning cmd.exe to fetch and silently execute next-stage payload
 
-`UC_33_12` · phase: **install** · confidence: **High**
+`UC_35_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +133,7 @@ DeviceProcessEvents
 
 ### [LLM] Remus/Lumma Stealer browser-credential and crypto-wallet directory enumeration
 
-`UC_33_13` · phase: **actions** · confidence: **Medium**
+`UC_35_13` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +160,7 @@ DeviceFileEvents
 
 ### [LLM] AnimateClipper ClickFix paste-to-run via explorer.exe spawning mshta/powershell/cmd
 
-`UC_33_14` · phase: **exploit** · confidence: **High**
+`UC_35_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

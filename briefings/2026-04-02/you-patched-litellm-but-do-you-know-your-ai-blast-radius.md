@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Compromised litellm 1.82.7 / 1.82.8 PyPI install (TeamPCP supply-chain)
 
-`UC_388_2` · phase: **install** · confidence: **High**
+`UC_379_2` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceProcessEvents
 
 ### [LLM] litellm_init.pth Python autoload persistence drop
 
-`UC_388_3` · phase: **install** · confidence: **High**
+`UC_379_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceFileEvents
 
 ### [LLM] WAV-disguised stager pull from TeamPCP loader 83.142.209.203:8080
 
-`UC_388_4` · phase: **delivery** · confidence: **High**
+`UC_379_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceNetworkEvents
 
 ### [LLM] TeamPCP C2 / exfil egress to models.litellm.cloud, checkmarx.zone and AS205759 nodes
 
-`UC_388_5` · phase: **c2** · confidence: **High**
+`UC_379_5` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceNetworkEvents
 
 ### [LLM] Linux user-systemd sysmon persistence drop (~/.config/sysmon/sysmon.py + sysmon.service)
 
-`UC_388_6` · phase: **install** · confidence: **High**
+`UC_379_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,7 +163,7 @@ DeviceFileEvents
 
 ### [LLM] Kubernetes privileged-pod DaemonSet fan-out from compromised LiteLLM workload
 
-`UC_388_7` · phase: **actions** · confidence: **Medium**
+`UC_379_7` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

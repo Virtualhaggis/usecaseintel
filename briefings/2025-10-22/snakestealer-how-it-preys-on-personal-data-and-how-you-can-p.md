@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] SnakeStealer Telegram Bot Exfiltration via api.telegram.org from Non-Telegram Process
 
-`UC_720_4` · phase: **c2** · confidence: **High**
+`UC_711_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceNetworkEvents
 
 ### [LLM] SnakeStealer SMTP Credential Exfiltration to Public Webmail Relays from Non-Mail Client
 
-`UC_720_5` · phase: **actions** · confidence: **High**
+`UC_711_5` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceNetworkEvents
 
 ### [LLM] SnakeStealer Startup-Folder Persistence (ageless.vbs / .exe drop in Programs\Startup)
 
-`UC_720_6` · phase: **install** · confidence: **High**
+`UC_711_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceFileEvents
 
 ### [LLM] SnakeStealer Wi-Fi Credential Harvest via netsh wlan show profile key=clear
 
-`UC_720_7` · phase: **actions** · confidence: **High**
+`UC_711_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

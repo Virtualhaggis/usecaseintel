@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] WinRAR CVE-2025-8088 path traversal — payload dropped to user Startup folder
 
-`UC_698_3` · phase: **install** · confidence: **High**
+`UC_689_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceFileEvents
 
 ### [LLM] ESET-impersonating typosquat domain contact (InedibleOchotense / Kalambur delivery)
 
-`UC_698_4` · phase: **delivery** · confidence: **High**
+`UC_689_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceNetworkEvents
 
 ### [LLM] Execution / write of ESET APT Q2-Q3 2025 known-bad SHA256 payload
 
-`UC_698_5` · phase: **install** · confidence: **High**
+`UC_689_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] rundll32.exe loading node-gyp.dll dropped by Scavenger-infected npm postinstall (CVE-2025-54313)
 
-`UC_827_8` · phase: **install** · confidence: **High**
+`UC_818_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### [LLM] Scavenger Stealer C2 beacon to corroborated infrastructure (datahog.su / datalytica.su / smartscreen-api.com)
 
-`UC_827_9` · phase: **c2** · confidence: **High**
+`UC_818_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceNetworkEvents
 
 ### [LLM] npm registry typosquat npnjs.com — DNS / URL click (eslint-config-prettier maintainer phishing kit)
 
-`UC_827_10` · phase: **delivery** · confidence: **High**
+`UC_818_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ union isfuzzy=true
 
 ### [LLM] Scavenger Loader DLL (node-gyp.dll) written inside node_modules of CVE-2025-54313 packages
 
-`UC_827_11` · phase: **delivery** · confidence: **High**
+`UC_818_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,7 +164,7 @@ DeviceFileEvents
 
 ### [LLM] Scavenger Stealer sandbox-evasion marker file %TEMP%\SCVNGR_VM created
 
-`UC_827_12` · phase: **install** · confidence: **High**
+`UC_818_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
