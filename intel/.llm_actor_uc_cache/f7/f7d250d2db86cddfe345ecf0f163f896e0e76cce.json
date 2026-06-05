@@ -1,0 +1,106 @@
+{
+  "name": "APT37",
+  "ucs": [
+    {
+      "title": "[LLM] APT37 (ScarCruft) ROKRAT cloud-API C2 \u2014 non-browser egress to pCloud / Dropbox / Yandex / Box",
+      "description": "Hunts ROKRAT / Dolphin / BLUELIGHT C2 and exfiltration where ScarCruft tunnels command-and-control and stolen documents through legitimate consumer cloud-storage APIs. Catches the highly characteristic ScarCruft pattern of a non-browser, non-native-sync process talking directly to api.pcloud.com / content.dropboxapi.com / cloud-api.yandex.net / api.box.com.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1102",
+        "T1102.002",
+        "T1071.001",
+        "T1567.002",
+        "T1041"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_domain IN (\"api.pcloud.com\",\"eapi.pcloud.com\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"cloud-api.yandex.net\",\"downloader.disk.yandex.ru\",\"api.box.com\",\"upload.box.com\") OR All_Traffic.url IN (\"*api.pcloud.com*\",\"*content.dropboxapi.com*\",\"*cloud-api.yandex.net*\",\"*api.box.com*\")) AND NOT (All_Traffic.process_name IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\"Dropbox.exe\",\"DropboxUpdate.exe\",\"Yandex.Disk.exe\",\"Box.exe\",\"BoxDrive.exe\",\"OneDrive.exe\",\"explorer.exe\")) by host All_Traffic.src All_Traffic.user All_Traffic.process_name All_Traffic.process_path All_Traffic.dest All_Traffic.dest_domain All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | rename process_name as initiating_process, dest_domain as remote_domain | convert ctime(firstTime) ctime(lastTime) | sort - lastTime",
+      "kql": "// APT37 / ScarCruft \u2014 ROKRAT family C2 over legitimate cloud-storage APIs\nlet CloudApiHosts = dynamic([\"api.pcloud.com\",\"eapi.pcloud.com\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"cloud-api.yandex.net\",\"downloader.disk.yandex.ru\",\"webdav.yandex.ru\",\"api.box.com\",\"upload.box.com\"]);\nlet KnownClients = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\"safari.exe\",\"dropbox.exe\",\"dropboxupdate.exe\",\"yandex.disk.exe\",\"yandexdisk.exe\",\"box.exe\",\"boxdrive.exe\",\"onedrive.exe\",\"explorer.exe\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where (RemoteUrl has_any (CloudApiHosts))\n     or (RemoteUrl matches regex @\"(?i)(^|\\.)(pcloud|dropboxapi|cloud-api\\.yandex|box)\\.(com|net|ru)$\")\n| where InitiatingProcessFileName !in~ (KnownClients)\n| where InitiatingProcessAccountName !endswith \"$\"\n| where InitiatingProcessAccountName !in~ (\"system\",\"local service\",\"network service\")\n| extend DropPath = tolower(InitiatingProcessFolderPath)\n| extend Suspicious = DropPath has_any (\"\\\\appdata\\\\local\\\\temp\\\\\",\"\\\\appdata\\\\roaming\\\\\",\"\\\\users\\\\public\\\\\",\"\\\\programdata\\\\\",\"\\\\downloads\\\\\")\n| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Hits = count(),\n            SampleCmd = any(InitiatingProcessCommandLine), SampleHash = any(InitiatingProcessSHA256)\n          by DeviceName, AccountName = InitiatingProcessAccountName, InitiatingProcessFileName,\n             InitiatingProcessFolderPath, RemoteUrl, Suspicious\n| order by Suspicious desc, FirstSeen desc",
+      "sentinel_kql": "// APT37 / ScarCruft \u2014 ROKRAT C2 to consumer cloud-storage APIs (ASIM network telemetry)\nlet CloudApiHosts = dynamic([\"api.pcloud.com\",\"eapi.pcloud.com\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"cloud-api.yandex.net\",\"downloader.disk.yandex.ru\",\"webdav.yandex.ru\",\"api.box.com\",\"upload.box.com\"]);\nImWebSession\n| where TimeGenerated > ago(7d)\n| where (HttpHostName has_any (CloudApiHosts))\n     or (Url matches regex @\"(?i)//(api|eapi|content|upload|cloud-api|downloader|webdav)\\.(pcloud|dropboxapi|yandex|box)\\.(com|net|ru)/\")\n| where isnotempty(SrcHostname)\n| where not(HttpRequestHeaderUserAgent has_any (\"Dropbox\",\"YandexDisk\",\"Box \",\"OneDrive\",\"Mozilla/5.0\")) or HttpRequestHeaderUserAgent matches regex @\"(?i)(python|powershell|winhttp|wininet|libcurl|go-http|okhttp)\"\n| summarize FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), Hits = count(),\n            UA = any(HttpRequestHeaderUserAgent), SampleUrl = any(Url)\n          by SrcHostname, SrcIpAddr, SrcUsername, HttpHostName, DstIpAddr\n| order by FirstSeen desc",
+      "sigma_yaml": "",
+      "datadog_query": "source:windows.sysmon @EventID:3 (@DestinationHostname:(*api.pcloud.com OR *eapi.pcloud.com OR *content.dropboxapi.com OR *api.dropboxapi.com OR *cloud-api.yandex.net OR *downloader.disk.yandex.ru OR *webdav.yandex.ru OR *api.box.com OR *upload.box.com)) AND -@Image:(*\\\\chrome.exe OR *\\\\Chrome.exe OR *\\\\msedge.exe OR *\\\\MsEdge.exe OR *\\\\firefox.exe OR *\\\\Firefox.exe OR *\\\\brave.exe OR *\\\\opera.exe OR *\\\\iexplore.exe OR *\\\\IEXPLORE.EXE OR *\\\\Dropbox.exe OR *\\\\dropbox.exe OR *\\\\DropboxUpdate.exe OR *\\\\Yandex.Disk.exe OR *\\\\YandexDisk.exe OR *\\\\Box.exe OR *\\\\BoxDrive.exe OR *\\\\OneDrive.exe OR *\\\\OneDrive.EXE OR *\\\\explorer.exe OR *\\\\Explorer.EXE)",
+      "falcon_logscale_query": "#event_simpleName=DnsRequest DomainName=/(^|\\.)(pcloud|dropboxapi|cloud-api\\.yandex|disk\\.yandex|box)\\.(com|net|ru)$/i\n| NOT ContextImageFileName=/\\\\(chrome|msedge|firefox|brave|opera|iexplore|safari|Dropbox|DropboxUpdate|Yandex\\.Disk|YandexDisk|Box|BoxDrive|OneDrive|explorer)\\.exe$/i\n| join({#event_simpleName=NetworkConnectIP4 RemotePort=443}, field=[aid, ContextProcessId], include=[RemoteAddressIP4, RemotePort])\n| groupBy([aid, ComputerName, UserName, ContextImageFileName, DomainName, RemoteAddressIP4], function=count())\n| _count > 0",
+      "cloudwatch_query": "",
+      "rationale": "ScarCruft / APT37 has built a multi-year-stable family of implants (ROKRAT, CloudMensis, Dolphin, BLUELIGHT, GOLDBACKDOOR) that uniquely abuse pCloud, Dropbox, Yandex Disk and Box REST endpoints as their primary C2 and exfil channel \u2014 documented by Talos, Kaspersky, ESET and Volexity. Browsers and the official sync clients connect to *sync* hostnames; the API hostnames in this rule (api./content./",
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Dropbox",
+          "tables_in_scope": [
+            "ImWebSession"
+          ],
+          "suggestion": null,
+          "message": "`Dropbox` is not a canonical column of ImWebSession."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "YandexDisk",
+          "tables_in_scope": [
+            "ImWebSession"
+          ],
+          "suggestion": null,
+          "message": "`YandexDisk` is not a canonical column of ImWebSession."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Box",
+          "tables_in_scope": [
+            "ImWebSession"
+          ],
+          "suggestion": null,
+          "message": "`Box` is not a canonical column of ImWebSession."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "OneDrive",
+          "tables_in_scope": [
+            "ImWebSession"
+          ],
+          "suggestion": null,
+          "message": "`OneDrive` is not a canonical column of ImWebSession."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Mozilla",
+          "tables_in_scope": [
+            "ImWebSession"
+          ],
+          "suggestion": null,
+          "message": "`Mozilla` is not a canonical column of ImWebSession."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] APT37 (ScarCruft / Reaper / InkySquid) double-extension LNK lure spawning PowerShell / mshta carving an embedded payload",
+      "description": "Hunts ScarCruft's signature LNK-based initial access where a weaponised .lnk (often masquerading as .pdf.lnk / .hwp.lnk / .docx.lnk targeting Korean-affairs themes) launched from Explorer spawns PowerShell, mshta, or a script host whose command line carves an embedded payload out of the LNK itself via Get-Content / ReadAllBytes / FromBase64String / Substring. This is the delivery chain observed in 2022\u20132024 ROKRAT / GOLDBACKDOOR / Chinotto campaigns.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1204.002",
+        "T1059.001",
+        "T1059.005",
+        "T1036.005",
+        "T1027",
+        "T1140",
+        "T1027.013"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=\"explorer.exe\" AND Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"cmd.exe\",\"rundll32.exe\",\"regsvr32.exe\") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | where match(process,\"(?i)\\.lnk\") OR match(process,\"(?i)(FromBase64String|-EncodedCommand|-enc\\s|Get-Content|\\[System\\.IO\\.File\\]|\\[Convert\\]::|ReadAllBytes|StreamReader|::Substring|Add-MpPreference)\") | where match(process,\"(?i)(Users\\\\\\\\[^\\\\\\\\]+\\\\\\\\(Downloads|Desktop|Documents)|\\\\\\\\Temp\\\\\\\\|\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp|\\\\\\\\Public\\\\\\\\)\") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime",
+      "kql": "// APT37 / ScarCruft \u2014 LNK lure \u2192 script-host carving embedded payload from %TEMP%/Downloads\nDeviceProcessEvents\n| where Timestamp > ago(30d)\n| where InitiatingProcessFileName =~ \"explorer.exe\"\n| where FileName in~ (\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"cmd.exe\",\"rundll32.exe\",\"regsvr32.exe\")\n| where AccountName !endswith \"$\"\n| extend Cmd = tolower(ProcessCommandLine)\n| where Cmd matches regex @\"\\.lnk\\b\"\n     or Cmd has_any (\"frombase64string\",\"-encodedcommand\",\"-enc \",\" -ec \",\"get-content\",\"[system.io.file]\",\"[convert]::\",\"readallbytes\",\"streamreader\",\"::substring\",\"add-mppreference\",\"set-mppreference\")\n| where Cmd matches regex @\"(?i)(users\\\\[^\\\\]+\\\\(downloads|desktop|documents)|\\\\temp\\\\|\\\\appdata\\\\local\\\\temp|\\\\public\\\\|\\\\programdata\\\\)\"\n| join kind=leftouter (\n    DeviceFileEvents\n    | where Timestamp > ago(30d)\n    | where FileName endswith \".lnk\"\n    | where FolderPath matches regex @\"(?i)(users\\\\[^\\\\]+\\\\(downloads|desktop|documents)|\\\\temp\\\\|\\\\appdata\\\\local\\\\temp|\\\\public\\\\)\"\n    | where FileSize > 500000     // ScarCruft LNK lures embed multi-MB payloads \u2014 pure shortcuts are <2KB\n    | project DeviceId, LnkPath = FolderPath, LnkName = FileName, LnkSize = FileSize, LnkSeen = Timestamp\n) on DeviceId\n| where isnull(LnkSeen) or (Timestamp between (LnkSeen .. LnkSeen + 10m))\n| project Timestamp, DeviceName, AccountName,\n          Parent = InitiatingProcessFolderPath,\n          Child = FolderPath, ChildName = FileName,\n          CmdLine = ProcessCommandLine,\n          SHA256, LnkName, LnkPath, LnkSize\n| order by Timestamp desc",
+      "sentinel_kql": "// APT37 / ScarCruft \u2014 LNK lure (explorer-spawned) script-host carving embedded payload\nSecurityEvent\n| where TimeGenerated > ago(30d)\n| where EventID == 4688\n| where ParentProcessName endswith \"\\\\explorer.exe\"\n| where NewProcessName endswith_cs \"\\\\powershell.exe\" or NewProcessName endswith_cs \"\\\\pwsh.exe\"\n     or NewProcessName endswith_cs \"\\\\mshta.exe\"     or NewProcessName endswith_cs \"\\\\wscript.exe\"\n     or NewProcessName endswith_cs \"\\\\cscript.exe\"   or NewProcessName endswith_cs \"\\\\cmd.exe\"\n     or NewProcessName endswith_cs \"\\\\rundll32.exe\"  or NewProcessName endswith_cs \"\\\\regsvr32.exe\"\n| where SubjectUserName !endswith \"$\"\n| extend Cmd = tolower(CommandLine)\n| where Cmd matches regex @\"\\.lnk\\b\"\n     or Cmd has_any (\"frombase64string\",\"-encodedcommand\",\"-enc \",\" -ec \",\"get-content\",\"[system.io.file]\",\"[convert]::\",\"readallbytes\",\"streamreader\",\"::substring\")\n| where Cmd matches regex @\"(?i)(users\\\\[^\\\\]+\\\\(downloads|desktop|documents)|\\\\temp\\\\|\\\\appdata\\\\local\\\\temp|\\\\public\\\\|\\\\programdata\\\\)\"\n| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine, ProcessId\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT37 ScarCruft LNK Lure Carving Embedded Payload\nid: e6a5c4b9-3d71-4f4e-8aa7-4b8a23cd7f51\nstatus: experimental\ndescription: Detects ScarCruft / APT37 LNK-based delivery where Explorer launches a script host that reads the LNK and carves an embedded payload from %TEMP% / Downloads / Public.\nreferences:\n  - https://attack.mitre.org/groups/G0067/\n  - https://blog.talosintelligence.com/rokrat-analysis/\n  - https://www.mandiant.com/resources/blog/apt37-overview\nauthor: SOC Detection Engineering\ndate: 2026/06/05\ntags:\n  - attack.initial_access\n  - attack.execution\n  - attack.t1204.002\n  - attack.t1059.001\n  - attack.g0067\nlogsource:\n  product: windows\n  category: process_creation\ndetection:\n  parent:\n    ParentImage|endswith: '\\explorer.exe'\n  child_image:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\mshta.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\cmd.exe'\n      - '\\rundll32.exe'\n      - '\\regsvr32.exe'\n  carve_signals:\n    CommandLine|contains:\n      - '.lnk'\n      - 'FromBase64String'\n      - '-EncodedCommand'\n      - 'Get-Content'\n      - '[System.IO.File]'\n      - '[Convert]::'\n      - 'ReadAllBytes'\n      - 'StreamReader'\n      - '::Substring'\n  staging_path:\n    CommandLine|contains:\n      - '\\Downloads\\'\n      - '\\Desktop\\'\n      - '\\AppData\\Local\\Temp\\'\n      - '\\Public\\'\n      - '\\ProgramData\\'\n  condition: parent and child_image and carve_signals and staging_path\nfalsepositives:\n  - Legitimate admin scripts launched from Explorer that read LNK metadata (rare)\n  - Software installers that briefly read shortcuts under user staging folders\nlevel: high\n",
+      "datadog_query": "source:windows.sysmon @EventID:1 @ParentImage:(*\\\\explorer.exe OR *\\\\Explorer.exe OR *\\\\EXPLORER.EXE) AND @Image:(*\\\\powershell.exe OR *\\\\PowerShell.exe OR *\\\\POWERSHELL.EXE OR *\\\\pwsh.exe OR *\\\\mshta.exe OR *\\\\MSHTA.EXE OR *\\\\wscript.exe OR *\\\\WScript.exe OR *\\\\WSCRIPT.EXE OR *\\\\cscript.exe OR *\\\\CScript.exe OR *\\\\cmd.exe OR *\\\\Cmd.exe OR *\\\\rundll32.exe OR *\\\\RunDLL32.exe OR *\\\\regsvr32.exe OR *\\\\RegSvr32.exe) AND @CommandLine:(*.lnk* OR *FromBase64String* OR *-EncodedCommand* OR *-enc\\ * OR *Get-Content* OR *ReadAllBytes* OR *System.IO.File* OR *Convert\\]::* OR *::Substring* OR *StreamReader*) AND @CommandLine:(*\\\\Downloads\\\\* OR *\\\\Desktop\\\\* OR *\\\\AppData\\\\Local\\\\Temp* OR *\\\\AppData\\\\Roaming* OR *\\\\Public\\\\* OR *\\\\ProgramData\\\\* OR *\\\\Temp\\\\*)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ParentBaseFileName=/^explorer\\.exe$/i ImageFileName=/\\\\(powershell|pwsh|mshta|wscript|cscript|cmd|rundll32|regsvr32)\\.exe$/i\n| regex(\"(?i)(\\\\.lnk\\\\b|FromBase64String|-EncodedCommand|-enc\\\\s|Get-Content|System\\\\.IO\\\\.File|Convert\\\\]::|ReadAllBytes|StreamReader|::Substring)\", field=CommandLine)\n| regex(\"(?i)(Users\\\\\\\\[^\\\\\\\\]+\\\\\\\\(Downloads|Desktop|Documents)|\\\\\\\\Temp\\\\\\\\|\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp|\\\\\\\\Public\\\\\\\\|\\\\\\\\ProgramData\\\\\\\\)\", field=CommandLine)\n| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine, SHA256HashData], function=count())",
+      "cloudwatch_query": "",
+      "rationale": "Since 2022 ScarCruft has standardised on oversized (~1\u201310 MB) double-extension LNK files (e.g. *.pdf.lnk / *.hwp.lnk) themed around North Korean defectors, ROK foreign-affairs, or military topics \u2014 documented in ROKRAT, GOLDBACKDOOR, Chinotto and M2RAT reports by Talos, Mandiant, ESET, Kaspersky and ASEC. The chain is consistent: Explorer launches the LNK \u2192 a script host (most often powershell.exe"
+    }
+  ]
+}

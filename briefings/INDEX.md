@@ -13,8 +13,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisco warns of unpatched sd wan zero day exploited in attack](./2026-06-05/cisco-warns-of-unpatched-sd-wan-zero-day-exploited-in-attack.md)
 - [fifa world cup 2026 scams are already live fake sites bankin](./2026-06-05/fifa-world-cup-2026-scams-are-already-live-fake-sites-bankin.md)
 - [hackers exploit critical everest forms pro wordpress plugin ](./2026-06-05/hackers-exploit-critical-everest-forms-pro-wordpress-plugin-.md)
+- [malicious browser add ons target chatgpt claude copilot gemi](./2026-06-05/malicious-browser-add-ons-target-chatgpt-claude-copilot-gemi.md)
+- [new shub stealer variant malware targets chrome firefox brav](./2026-06-05/new-shub-stealer-variant-malware-targets-chrome-firefox-brav.md)
 - [new threat cluster op 512 targets microsoft iis servers with](./2026-06-05/new-threat-cluster-op-512-targets-microsoft-iis-servers-with.md)
 - [pcpjack hijacks 230 aws google cloud and azure servers for c](./2026-06-05/pcpjack-hijacks-230-aws-google-cloud-and-azure-servers-for-c.md)
+- [threat brief active exploitation of pan os cve 2026 0257](./2026-06-05/threat-brief-active-exploitation-of-pan-os-cve-2026-0257.md)
 - [vect 2 0 ransomware can damage files its own decryptor canno](./2026-06-05/vect-2-0-ransomware-can-damage-files-its-own-decryptor-canno.md)
 
 ## 2026-06-04
@@ -29,7 +32,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47708 mcp for stata command injection](./2026-06-04/ghsa-critical-cve-2026-47708-mcp-for-stata-command-injection.md)
 - [ghsa critical ghsa 8whc 2wmv ww35 wwbn avideo unauthenticate](./2026-06-04/ghsa-critical-ghsa-8whc-2wmv-ww35-wwbn-avideo-unauthenticate.md)
 - [ghsa critical ghsa jpvj wpmj h7rv supply chain compromise vi](./2026-06-04/ghsa-critical-ghsa-jpvj-wpmj-h7rv-supply-chain-compromise-vi.md)
-- [hackers impersonate ghidra dnspy and spiderfoot to spread ma](./2026-06-04/hackers-impersonate-ghidra-dnspy-and-spiderfoot-to-spread-ma.md)
 - [hackers spied on a stock exchange executive s outlook mailbo](./2026-06-04/hackers-spied-on-a-stock-exchange-executive-s-outlook-mailbo.md)
 - [hypotheses telemetry and human judgment inside cisco talos t](./2026-06-04/hypotheses-telemetry-and-human-judgment-inside-cisco-talos-t.md)
 - [miasma npm supply chain attack self spreading worm via phant](./2026-06-04/miasma-npm-supply-chain-attack-self-spreading-worm-via-phant.md)
@@ -49,7 +51,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44181 jupyter enterprise gateway jinj](./2026-06-03/ghsa-critical-cve-2026-44181-jupyter-enterprise-gateway-jinj.md)
 - [ghsa critical cve 2026 44182 jupyter enterprise gateway kube](./2026-06-03/ghsa-critical-cve-2026-44182-jupyter-enterprise-gateway-kube.md)
 - [google doubleclick abused in new malspam campaign to deliver](./2026-06-03/google-doubleclick-abused-in-new-malspam-campaign-to-deliver.md)
-- [new http 2 bomb dos attack crashes web servers in under a mi](./2026-06-03/new-http-2-bomb-dos-attack-crashes-web-servers-in-under-a-mi.md)
 - [one click github dev attack lets attackers steal full github](./2026-06-03/one-click-github-dev-attack-lets-attackers-steal-full-github.md)
 - [preinstall to persistence inside the red hat npm miasma cred](./2026-06-03/preinstall-to-persistence-inside-the-red-hat-npm-miasma-cred.md)
 - [the new security risks of the agentic development lifecycle](./2026-06-03/the-new-security-risks-of-the-agentic-development-lifecycle.md)
@@ -327,7 +328,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-04-23
 - [cisa kev cve 2026 39987 marimo remote code execution vulnera](./2026-04-23/cisa-kev-cve-2026-39987-marimo-remote-code-execution-vulnera.md)
 - [fast16 mystery shadow brokers reference reveals high precisi](./2026-04-23/fast16-mystery-shadow-brokers-reference-reveals-high-precisi.md)
-- [frontier ai and the future of defense your top questions ans](./2026-04-23/frontier-ai-and-the-future-of-defense-your-top-questions-ans.md)
 - [gopherwhisper a burrow full of malware](./2026-04-23/gopherwhisper-a-burrow-full-of-malware.md)
 - [hardcoding security into every commit the future of snyk sec](./2026-04-23/hardcoding-security-into-every-commit-the-future-of-snyk-sec.md)
 - [is shai hulud back compromised bitwarden cli contains a self](./2026-04-23/is-shai-hulud-back-compromised-bitwarden-cli-contains-a-self.md)
