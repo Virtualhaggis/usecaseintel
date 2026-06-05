@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Network egress to OFAC-sanctioned Iranian crypto exchanges (Nobitex, Wallex, Bitpin, Ramzinex)
 
-`UC_46_4` · phase: **c2** · confidence: **High**
+`UC_48_4` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

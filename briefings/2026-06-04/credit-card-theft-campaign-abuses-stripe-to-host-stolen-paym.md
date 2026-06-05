@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Magecart skimmer payload fetched from Stripe customer record cus_TfFjAAZQNOYENR
 
-`UC_15_1` · phase: **delivery** · confidence: **High**
+`UC_18_1` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ union isfuzzy=true
 
 ### [LLM] Magecart skimmer payload fetched from Firestore project braintree-payment-app
 
-`UC_15_2` · phase: **delivery** · confidence: **High**
+`UC_18_2` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

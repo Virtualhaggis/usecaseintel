@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Self-hosted GitHub Actions runner reads /proc/<pid>/environ (Claude Code prompt-injection cred-theft)
 
-`UC_26_5` · phase: **install** · confidence: **High**
+`UC_28_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### [LLM] Self-hosted Actions runner egress to non-allowlisted host during claude-code-action execution
 
-`UC_26_6` · phase: **c2** · confidence: **Medium**
+`UC_28_6` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
