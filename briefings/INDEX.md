@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -20,14 +20,18 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47669 dbgate zip slip in archive unzi](./2026-06-05/ghsa-critical-cve-2026-47669-dbgate-zip-slip-in-archive-unzi.md)
 - [ghsa critical cve 2026 47670 authenticated remote code execu](./2026-06-05/ghsa-critical-cve-2026-47670-authenticated-remote-code-execu.md)
 - [ghsa critical cve 2026 47731 nasa ammos instrument toolkit p](./2026-06-05/ghsa-critical-cve-2026-47731-nasa-ammos-instrument-toolkit-p.md)
+- [ghsa critical cve 2026 47744 shopper authorization bypass an](./2026-06-05/ghsa-critical-cve-2026-47744-shopper-authorization-bypass-an.md)
 - [hackers exploit critical everest forms pro wordpress plugin ](./2026-06-05/hackers-exploit-critical-everest-forms-pro-wordpress-plugin-.md)
+- [hackers publish malicious python package mimicking legitimat](./2026-06-05/hackers-publish-malicious-python-package-mimicking-legitimat.md)
+- [hola browser for windows delivery pipeline compromised to de](./2026-06-05/hola-browser-for-windows-delivery-pipeline-compromised-to-de.md)
 - [ironworm and new miasma worm variant hit npm in supply chain](./2026-06-05/ironworm-and-new-miasma-worm-variant-hit-npm-in-supply-chain.md)
 - [malicious browser add ons target chatgpt claude copilot gemi](./2026-06-05/malicious-browser-add-ons-target-chatgpt-claude-copilot-gemi.md)
+- [new gafgyt variant targets multiple linux architectures with](./2026-06-05/new-gafgyt-variant-targets-multiple-linux-architectures-with.md)
+- [new magecart attack turns stripe into a malware command serv](./2026-06-05/new-magecart-attack-turns-stripe-into-a-malware-command-serv.md)
 - [new shub stealer variant malware targets chrome firefox brav](./2026-06-05/new-shub-stealer-variant-malware-targets-chrome-firefox-brav.md)
 - [new threat cluster op 512 targets microsoft iis servers with](./2026-06-05/new-threat-cluster-op-512-targets-microsoft-iis-servers-with.md)
 - [pcpjack hijacks 230 aws google cloud and azure servers for c](./2026-06-05/pcpjack-hijacks-230-aws-google-cloud-and-azure-servers-for-c.md)
 - [securing ci cd in an agentic world claude code github action](./2026-06-05/securing-ci-cd-in-an-agentic-world-claude-code-github-action.md)
-- [vect 2 0 ransomware can damage files its own decryptor canno](./2026-06-05/vect-2-0-ransomware-can-damage-files-its-own-decryptor-canno.md)
 
 ## 2026-06-04
 - [china linked ta4922 expands phishing attacks to u k germany ](./2026-06-04/china-linked-ta4922-expands-phishing-attacks-to-u-k-germany-.md)
@@ -257,7 +261,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa vw82 7fv8 r6gp obot has an authorization ](./2026-05-13/ghsa-critical-ghsa-vw82-7fv8-r6gp-obot-has-an-authorization-.md)
 
 ## 2026-05-12
-- [ghsa critical cve 2026 31233 guardrails ai contains a code i](./2026-05-12/ghsa-critical-cve-2026-31233-guardrails-ai-contains-a-code-i.md)
 - [ghsa critical cve 2026 33117 security feature bypass vulnera](./2026-05-12/ghsa-critical-cve-2026-33117-security-feature-bypass-vulnera.md)
 - [ghsa critical cve 2026 44593 esm sh legacy route path traver](./2026-05-12/ghsa-critical-cve-2026-44593-esm-sh-legacy-route-path-traver.md)
 - [ghsa critical cve 2026 44650 sillytavern has a path traversa](./2026-05-12/ghsa-critical-cve-2026-44650-sillytavern-has-a-path-traversa.md)

@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] EchoCreep Discord API beacon from non-browser process (Webworm 2025)
 
-`UC_195_10` · phase: **c2** · confidence: **High**
+`UC_197_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceNetworkEvents
 
 ### [LLM] GraphWorm OneDrive /createUploadSession C2 from non-Office process
 
-`UC_195_11` · phase: **c2** · confidence: **High**
+`UC_197_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### [LLM] WormFrp / Webworm Amazon S3 staging bucket access (wamanharipethe / whpjewellers)
 
-`UC_195_12` · phase: **actions** · confidence: **High**
+`UC_197_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceEvents
 
 ### [LLM] Webworm 2025 IOC match — known C2 IPs (Vultr/IT7) and file hashes
 
-`UC_195_13` · phase: **c2** · confidence: **High**
+`UC_197_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -346,7 +346,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Webworm: New burrowing techniques
 
-`UC_195_9` · phase: **exploit** · confidence: **High**
+`UC_197_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
