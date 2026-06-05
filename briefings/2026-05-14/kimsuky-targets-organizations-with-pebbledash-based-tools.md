@@ -1,24 +1,50 @@
-# [CRIT] Grandoreiro Malware and BTMOB RAT Campaigns Target Windows and Android Users
+# [CRIT] Kimsuky targets organizations with PebbleDash-based tools
 
-**Source:** The Hacker News
-**Published:** 2026-05-27
-**Article:** https://thehackernews.com/2026/05/grandoreiro-malware-and-btmob-rat.html
+**Source:** Securelist (Kaspersky)
+**Published:** 2026-05-14
+**Article:** https://securelist.com/kimsuky-appleseed-pebbledash-campaigns/119785/
 
 ## Threat Profile
 
-Grandoreiro Malware and BTMOB RAT Campaigns Target Windows and Android Users 
- Ravie Lakshmanan  May 27, 2026 Financial Fraud / Malware 
-Latin America and Europe become the target of two banking trojan campaigns that are designed to infect Windows and Android devices with Grandoreiro and BTMOB malware, respectively.
-That's according to new findings from WatchGuard and ESET, which have observed the two malware families being used to single out companies in Spain, Portugal, and Mexico, as well a…
+Table of Contents
+Executive summary 
+Background 
+Initial access 
+Deployed malware 
+HelloDoor: first Rust-based PebbleDash variant 
+httpMalice: latest backdoor variant of PebbleDash 
+MemLoad downloads httpTroy 
+AppleSeed 
+HappyDoor 
+Post-exploitation 
+VSCode (launched by the JSE dropper) 
+VSCode (launched by VSCode installer) 
+DWAgent 
+Infrastructure 
+Victims 
+Attribution 
+Conclusion 
+Indicators of compromise 
+File hashes 
+Domains and IPs 
+Authors
+Sojun Ryu 
+Over the past few months, we have cond…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `female-disorder-beta-metropolitan.trycloudflare.com`
+- **MD5:** `995a0a49ae4b244928b3f67e2bfd7a6e`
+- **MD5:** `52f1ff082e981cbdfd1f045c6021c63f`
+- **MD5:** `65fc9f06de5603e2c1af9b4f288bb22c`
+- **MD5:** `8e15c4d4f71bdd9dbc48cd2cabc87806`
+- **MD5:** `8983ffa6da23e0b99ccc58c17b9788c7`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -26,16 +52,24 @@ That's according to new findings from WatchGuard and ESET, which have observed t
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1528** — Steal Application Access Token
-- **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1053.005** — Scheduled Task
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
-- **T1195.002** — Compromise Software Supply Chain
-- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
-- **T1566.002** — Phishing: Spearphishing Link
+- **T1486** — Data Encrypted for Impact
+- **T1003.001** — LSASS Memory
+- **T1003** — OS Credential Dumping
+- **T1021.002** — SMB/Windows Admin Shares
+- **T1569.002** — Service Execution
+- **T1053.005** — Persistence (article-specific)
+- **T1547.001** — Persistence (article-specific)
+- **T1547.001** — Registry Run Keys / Startup Folder
+- **T1218.010** — System Binary Proxy Execution: Regsvr32
+- **T1543.003** — Create or Modify System Process: Windows Service
+- **T1218.011** — System Binary Proxy Execution: Rundll32
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
 - **T1059.005** — Command and Scripting Interpreter: Visual Basic
-- **T1572** — Protocol Tunneling
-- **T1095** — Non-Application Layer Protocol
+- **T1140** — Deobfuscate/Decode Files or Information
+- **T1564.003** — Hide Artifacts: Hidden Window
 
 ## Kill chain phases observed
 
@@ -43,73 +77,102 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Grandoreiro DLL side-load via trojanized open-source library DLLs
+### [LLM] Kimsuky HelloDoor 'tdll' Run-key persistence with regsvr32 loader
 
-`UC_139_9` · phase: **install** · confidence: **Medium**
+`UC_256_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("mingwm10.dll","libwebp.dll","libffi-6.dll","libpng15.dll")) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where match(file_path, "(?i)\\\\(Users|AppData|Temp|Downloads|Public|ProgramData)\\\\") AND NOT match(file_path, "(?i)\\\\Program Files") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\tdll" Registry.registry_value_data="*regsvr32*" Registry.registry_value_data="*/s*" by host Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name Registry.process_path
+| `drop_dm_object_name(Registry)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceImageLoadEvents
-| where Timestamp > ago(14d)
-| where FileName in~ ("mingwm10.dll","libwebp.dll","libffi-6.dll","libpng15.dll")
-| where FolderPath has_any (@"\Users\", @"\AppData\", @"\Temp\", @"\Downloads\", @"\Public\", @"\ProgramData\")
-| where FolderPath !startswith @"C:\Program Files" and FolderPath !startswith @"C:\Windows"
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
+DeviceRegistryEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has @"\Software\Microsoft\Windows\CurrentVersion\Run"
+| where RegistryValueName =~ "tdll"
+| where RegistryValueData has "regsvr32" and RegistryValueData has "/s"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RegistryKey, RegistryValueName, RegistryValueData
 | order by Timestamp desc
 ```
 
-### [LLM] Grandoreiro Mediafire VBScript dropper spawning executable
+### [LLM] Kimsuky httpMalice persistence: 'Everything 1.9a-/1.8a-' Run-key or CacheDB service install
 
-`UC_139_10` · phase: **delivery** · confidence: **Medium**
+`UC_256_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("wscript.exe","cscript.exe") Processes.process_name="*.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | where match(process_path, "(?i)\\\\(Users|AppData|Temp|Downloads|Public)\\\\") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\CurrentVersion\\Run*" (Registry.registry_value_name="Everything 1.9a-*" OR Registry.registry_value_name="Everything 1.8a-*") by host Registry.user Registry.registry_value_name Registry.registry_value_data
+| `drop_dm_object_name(Registry)`
+| eval signal="httpMalice Run key (Everything 1.9a-/1.8a-)"
+| append [
+    | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Services where Services.service_name="CacheDB" Services.service_path="*rundll32*,load*" by host Services.service_name Services.service_path Services.start_mode
+    | `drop_dm_object_name(Services)`
+    | eval signal="httpMalice CacheDB service install"
+  ]
 ```
 
 **Defender KQL:**
 ```kql
-let drops = DeviceFileEvents
-| where Timestamp > ago(14d)
-| where FileOriginUrl has "mediafire.com" or FileOriginReferrerUrl has "mediafire.com"
-| where FileName endswith ".zip" or FileName endswith ".vbs" or FileName endswith ".js"
-| project DeviceId, DroppedFile = FileName, FileOriginUrl, DropTime = Timestamp;
+union
+(DeviceRegistryEvents
+  | where Timestamp > ago(7d)
+  | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+  | where RegistryKey has @"\Software\Microsoft\Windows\CurrentVersion\Run"
+  | where RegistryValueName matches regex @"(?i)^Everything 1\.[89]a-\d+$"
+  | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
+            Signal = "httpMalice RunKey (Everything 1.9a-/1.8a-)",
+            Detail = strcat(RegistryValueName, " => ", RegistryValueData)),
+(DeviceEvents
+  | where Timestamp > ago(7d)
+  | where ActionType == "ServiceInstalled"
+  | extend AF = parse_json(AdditionalFields)
+  | extend SvcName = tostring(AF.ServiceName), SvcImage = tostring(AF.ServiceFileName)
+  | where SvcName =~ "CacheDB"
+  | where SvcImage has "rundll32" and SvcImage has ",load"
+  | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
+            Signal = "httpMalice CacheDB service install",
+            Detail = SvcImage)
+| order by Timestamp desc
+```
+
+### [LLM] Kimsuky JSE dropper: wscript -> powershell hidden + certutil -decode chain
+
+`UC_256_15` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="powershell.exe" Processes.process="*windowstyle*hidden*" Processes.process="*certutil*-decode*" by host Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| where match(parent_process_name, "(?i)wscript\.exe|cscript\.exe|explorer\.exe")
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe")
-| where FileName endswith ".exe"
-| where FolderPath has_any (@"\Users\", @"\AppData\", @"\Temp\", @"\Downloads\", @"\Public\")
-| where AccountName !endswith "$"
-| join kind=inner drops on DeviceId
-| where Timestamp between (DropTime .. DropTime + 1h)
-| project DropTime, ExecTime = Timestamp, DeviceName, AccountName, DroppedFile, FileOriginUrl, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
-| order by ExecTime desc
-```
-
-### [LLM] Grandoreiro WebRTC/STUN C2 from non-conferencing process
-
-`UC_139_11` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port IN (3478,3479,5349,5350)) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | search NOT process_name IN ("teams.exe","ms-teams.exe","zoom.exe","chrome.exe","msedge.exe","firefox.exe","slack.exe","webex.exe","skype.exe","discord.exe","outlook.exe","brave.exe","opera.exe") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where RemotePort in (3478, 3479, 5349, 5350)
-| where InitiatingProcessFileName !in~ ("teams.exe","ms-teams.exe","msteams.exe","zoom.exe","chrome.exe","msedge.exe","firefox.exe","slack.exe","webex.exe","skype.exe","discord.exe","whatsapp.exe","outlook.exe","brave.exe","opera.exe")
-| where InitiatingProcessFolderPath has_any (@"\Users\", @"\AppData\", @"\Temp\", @"\ProgramData\", @"\Public\")
-| where InitiatingProcessAccountName !endswith "$"
-| summarize Connections = count(), DistinctDest = dcount(RemoteIP), SampleCmd = any(InitiatingProcessCommandLine) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemotePort
-| order by Connections desc
+| where Timestamp > ago(7d)
+| where FileName =~ "powershell.exe"
+| where ProcessCommandLine has "windowstyle" and ProcessCommandLine has "hidden"
+| where ProcessCommandLine has "certutil" and ProcessCommandLine has "-decode"
+| where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe","explorer.exe","cmd.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
+| join kind=leftouter (
+    DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where FileName in~ ("regsvr32.exe","rundll32.exe")
+    | where InitiatingProcessFileName =~ "powershell.exe"
+    | where FolderPath has @"C:\ProgramData" or ProcessCommandLine has @"C:\ProgramData"
+    | project FollowOnTime = Timestamp, DeviceName, FollowOnCmd = ProcessCommandLine, FollowOnFile = FileName
+  ) on DeviceName
+| where isnull(FollowOnTime) or FollowOnTime between (Timestamp .. Timestamp + 5m)
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -295,31 +358,32 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### OAuth consent / suspicious app grant
+### Scheduled task created with suspicious image / encoded args
 
-`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
+`UC_SCHEDULED_TASK` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action="success"
-      AND Authentication.signature IN (
-        "Consent to application",
-        "Add app role assignment grant to user",
-        "Add OAuth2PermissionGrant",
-        "Add delegated permission grant")
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`
+    from datamodel=Endpoint.Processes
+    where Processes.process_name="schtasks.exe" AND Processes.process="*/create*"
+      AND (Processes.process="*powershell*" OR Processes.process="*cmd.exe*"
+        OR Processes.process="*rundll32*" OR Processes.process="*-enc*"
+        OR Processes.process="*FromBase64*" OR Processes.process="*\Users\Public*"
+        OR Processes.process="*\AppData\*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
-CloudAppEvents
+DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
-| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-          ActivityObjects, IPAddress, UserAgent
+| where AccountName !endswith "$"
+| where FileName =~ "schtasks.exe"
+| where ProcessCommandLine has "/create"
+| where ProcessCommandLine has_any ("powershell","cmd.exe","rundll32","-enc","FromBase64","\Users\Public","\AppData\")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName
 ```
 
 ### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
@@ -379,17 +443,76 @@ DeviceProcessEvents
           InitiatingProcessFileName, InitiatingProcessCommandLine
 ```
 
-### Trusted vendor binary / installer launching unusual children
+### Ransomware-style mass file rename / extension change
 
-`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
+`UC_RANSOM_ENCRYPT` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN ("modified","renamed")
+    by Filesystem.dest, Filesystem.user, _time span=1m
+| `drop_dm_object_name(Filesystem)`
+| where files > 200
+| sort - files
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(1d)
+| where InitiatingProcessAccountName !endswith "$"
+| where ActionType in ("FileRenamed","FileModified")
+| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
+| where files > 200    // empirical: > 200 unique-file renames in 1m by one account on one host
+                       //            is well above the P99 of legitimate bulk-tooling
+| order by files desc
+```
+
+### LSASS process access / dump (credential theft)
+
+`UC_LSASS` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
-      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+    where (Processes.process="*lsass*" OR Processes.process="*sekurlsa*"
+        OR Processes.process="*MiniDump*" OR Processes.process="*comsvcs.dll*MiniDump*"
+        OR Processes.process="*procdump*lsass*")
+       OR (Processes.process_name="rundll32.exe" AND Processes.process="*comsvcs*MiniDump*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where ActionType == "OpenProcessApiCall"
+| where FileName =~ "lsass.exe"
+| where InitiatingProcessFileName !in~ ("MsSense.exe","MsMpEng.exe","csrss.exe",
+                                          "svchost.exe","wininit.exe","services.exe",
+                                          "lsm.exe","SearchProtocolHost.exe")
+| project Timestamp, DeviceName, ActionType, FileName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, AccountName
+| order by Timestamp desc
+```
+
+### Remote service execution — PsExec / SMB lateral movement
+
+`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
 | `drop_dm_object_name(Processes)`
 ```
 
@@ -398,21 +521,22 @@ DeviceProcessEvents
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
-| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
+| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
+   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
-### Article-specific behavioural hunt — Grandoreiro Malware and BTMOB RAT Campaigns Target Windows and Android Users
+### Article-specific behavioural hunt — Kimsuky targets organizations with PebbleDash-based tools
 
-`UC_139_8` · phase: **exploit** · confidence: **High**
+`UC_256_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — Grandoreiro Malware and BTMOB RAT Campaigns Target Windows and Android Users ```
+``` Article-specific bespoke detection — Kimsuky targets organizations with PebbleDash-based tools ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("mingwm10.dll","libwebp.dll","libffi-6.dll","libpng15.dll"))
+    where (Processes.process_name IN (".hwp.jse","hwpx.jse",".hwpx.jse","security_20260126.scr","pdf.jse","hyun-jung.pdf.jse","memloader.dll","unrar.exe","dwagsvc.exe","secu.scr","xipbkmaw.exe") OR Processes.process="*-WindowStyle Hidden*" OR Processes.process_path="*C:\programdata\unrar.exe*" OR Processes.process_path="*C:\programdata\1.zip*")
     by Processes.dest, Processes.user, Processes.process_name,
        Processes.process, Processes.parent_process_name, Processes.process_path
 | `drop_dm_object_name(Processes)`
@@ -421,7 +545,7 @@ DeviceProcessEvents
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_name IN ("mingwm10.dll","libwebp.dll","libffi-6.dll","libpng15.dll"))
+      AND (Filesystem.file_path="*C:\programdata\unrar.exe*" OR Filesystem.file_path="*C:\programdata\1.zip*" OR Filesystem.file_name IN (".hwp.jse","hwpx.jse",".hwpx.jse","security_20260126.scr","pdf.jse","hyun-jung.pdf.jse","memloader.dll","unrar.exe","dwagsvc.exe","secu.scr","xipbkmaw.exe"))
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
@@ -430,12 +554,12 @@ DeviceProcessEvents
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — Grandoreiro Malware and BTMOB RAT Campaigns Target Windows and Android Users
+// Article-specific bespoke detection — Kimsuky targets organizations with PebbleDash-based tools
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where (FileName in~ ("mingwm10.dll", "libwebp.dll", "libffi-6.dll", "libpng15.dll"))
+| where (FileName in~ (".hwp.jse", "hwpx.jse", ".hwpx.jse", "security_20260126.scr", "pdf.jse", "hyun-jung.pdf.jse", "memloader.dll", "unrar.exe", "dwagsvc.exe", "secu.scr", "xipbkmaw.exe") or ProcessCommandLine has_any ("-WindowStyle Hidden") or FolderPath has_any ("C:\programdata\unrar.exe", "C:\programdata\1.zip"))
 | project Timestamp, DeviceName, AccountName, FileName,
           FolderPath, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine
@@ -445,14 +569,24 @@ DeviceProcessEvents
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified")
-| where (FileName in~ ("mingwm10.dll", "libwebp.dll", "libffi-6.dll", "libpng15.dll"))
+| where (FolderPath has_any ("C:\programdata\unrar.exe", "C:\programdata\1.zip") or FileName in~ (".hwp.jse", "hwpx.jse", ".hwpx.jse", "security_20260126.scr", "pdf.jse", "hyun-jung.pdf.jse", "memloader.dll", "unrar.exe", "dwagsvc.exe", "secu.scr", "xipbkmaw.exe"))
 | project Timestamp, DeviceName, AccountName, FolderPath,
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `female-disorder-beta-metropolitan.trycloudflare.com`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `995a0a49ae4b244928b3f67e2bfd7a6e`, `52f1ff082e981cbdfd1f045c6021c63f`, `65fc9f06de5603e2c1af9b4f288bb22c`, `8e15c4d4f71bdd9dbc48cd2cabc87806`, `8983ffa6da23e0b99ccc58c17b9788c7`
+
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
