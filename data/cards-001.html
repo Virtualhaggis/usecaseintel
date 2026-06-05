@@ -2,11 +2,11 @@
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1021.001,T1027,T1190,T1195.002,T1528,T1555.003,T1566"
   data-sources="The Hacker News"
-  data-platforms="def,sent,sigma,spl"
+  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,endpoint,network,web"
-  data-targets="azure,m365,windows"
-  data-uc-count="10" data-llm-uc-count="0"
-  data-search="Hackers Exploit Critical Everest Forms Pro WordPress Plugin Flaw to Take Over Sites Threat actors are actively exploiting a critical security flaw in Everest Forms Pro, a WordPress plugin with about 4,000 active installations, to execute arbitrary code, leading to a complete site compromise. The vulnerability in question is CVE-2026-3300 (CVSS score: 9.8), a remote code execution bug impacting all versions of the plugin up to, and including, 1.9.12. A patch for the flaw was CVE-2026-3300 T1021.001 T1027 T1190 T1195.002 T1528 T1555.003 T1566 Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process OAuth consent / suspicious app grant PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — Hackers Exploit Critical Everest Forms Pro WordPress Plugin Flaw to Take Over Si">
+  data-targets="azure,linux,m365,windows"
+  data-uc-count="14" data-llm-uc-count="4"
+  data-search="Hackers Exploit Critical Everest Forms Pro WordPress Plugin Flaw to Take Over Sites Threat actors are actively exploiting a critical security flaw in Everest Forms Pro, a WordPress plugin with about 4,000 active installations, to execute arbitrary code, leading to a complete site compromise. The vulnerability in question is CVE-2026-3300 (CVSS score: 9.8), a remote code execution bug impacting all versions of the plugin up to, and including, 1.9.12. A patch for the flaw was CVE-2026-3300 T1021.001 T1027 T1190 T1195.002 T1528 T1555.003 T1566 [LLM] Everest Forms Pro RCE exploit attempt from named source IPs [LLM] Everest Forms Pro Calculation Addon PHP injection payload in form submission [LLM] WordPress rogue &#x27;diksimarina&#x27; admin account creation request [LLM] WordPress PHP worker spawning shell or download utility post-RCE Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process OAuth consent / suspicious app grant PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — Hackers Exploit Critical Everest Forms Pro WordPress Plugin Flaw to Take Over Si">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-05-hackers-exploit-critical-everest-forms-pro-wordpress-plugin-" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -15,9 +15,9 @@
   <div class="source-badges"><span class="source-badge thn">The Hacker News</span></div>
   <div class="pubmeta">
     <span>2026-06-05</span>
-    <span>10 use cases</span>
+    <span>14 use cases</span>
     <span>7 techniques</span>
-    <span>5 kill-chain phases detected</span>
+    <span>6 kill-chain phases detected</span>
   </div>
   <p class="summary">Threat actors are actively exploiting a critical security flaw in Everest Forms Pro, a WordPress plugin with about 4,000 active installations, to execute arbitrary code, leading to a complete site compromise. The vulnerability in question is CVE-2026-3300 (CVSS score: 9.8), a remote code execution bug impacting all versions of the plugin up to, and including, 1.9.12. A patch for the flaw was</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-3300</span></div>
@@ -49,10 +49,10 @@
   <div class="name">Exploitation</div>
   <div class="marker">Detected</div>
 </div>
-<div class="kc-cell inferred">
+<div class="kc-cell hit">
   <div class="num">Phase 5</div>
   <div class="name">Installation</div>
-  <div class="marker">Likely</div>
+  <div class="marker">Detected</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 6</div>
@@ -66,13 +66,401 @@
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Office app spawning script/LOLBin child process · PowerShell encoded / obfuscated command · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Hackers Exploit Critical Everest Forms Pro WordPress Plugin Flaw to Take Over Si</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Everest Forms Pro RCE exploit attempt from named source IPs · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Everest Forms Pro Calculation Addon PHP injection payload in form submission · Office app spawning script/LOLBin child process · PowerShell encoded / obfuscated command · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Hackers Exploit Critical Everest Forms Pro WordPress Plugin Flaw to Take Over Si</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] WordPress rogue &#x27;diksimarina&#x27; admin account creation request · [LLM] WordPress PHP worker spawning shell or download utility post-RCE</em></div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ OAuth consent / suspicious app grant</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="83dbf96c40" data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">[LLM] Everest Forms Pro RCE exploit attempt from named source IPs</span>
+    <span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="83dbf96c40" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts inbound HTTP requests to vulnerable WordPress sites from the four IPv4 sources Wordfence attributed to the CVE-2026-3300 exploitation campaign. Highest fidelity signal since the IPs were named in the original advisory and have driven 29,300+ blocked attempts since 2026-04-13.
+
+Rationale: Wordfence&#x27;s named source IPs are the highest-confidence pivot in the article. Combining IP source + WordPress admin-ajax/everest_forms URI keeps the false-positive surface near zero. Cross-checked with Wordfence&#x27;s advisory and abuse.ch ThreatFox for IP reputation.
+
+Cross-checked against:
+  • https://www.wordfence.com/blog/
+  • https://attack.mitre.org/techniques/T1190/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Content Injection">T1659</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-00-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-00-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-00-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-00-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-00-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-00-uc0-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-00-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-00-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where RemoteIP in (&quot;202.56.2.126&quot;,&quot;209.146.60.26&quot;,&quot;15.235.166.18&quot;,&quot;185.78.165.153&quot;)
+| where InitiatingProcessFileName in~ (&quot;w3wp.exe&quot;,&quot;httpd.exe&quot;,&quot;nginx.exe&quot;,&quot;php-cgi.exe&quot;,&quot;php-fpm.exe&quot;)
+   or RemotePort in (80, 443, 8080, 8443)
+| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-00-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
+(W3CIISLog
+| where TimeGenerated &gt; ago(30d)
+| where cIP in (&quot;202.56.2.126&quot;,&quot;209.146.60.26&quot;,&quot;15.235.166.18&quot;,&quot;185.78.165.153&quot;)
+| where csUriStem has_any (&quot;admin-ajax.php&quot;,&quot;everest_forms&quot;,&quot;wp-json&quot;)
+| project TimeGenerated, Computer, cIP, csMethod, csUriStem, csUriQuery, csUserAgent, scStatus),
+(CommonSecurityLog
+| where TimeGenerated &gt; ago(30d)
+| where SourceIP in (&quot;202.56.2.126&quot;,&quot;209.146.60.26&quot;,&quot;15.235.166.18&quot;,&quot;185.78.165.153&quot;)
+| where RequestURL has_any (&quot;admin-ajax.php&quot;,&quot;everest_forms&quot;,&quot;wp-json&quot;)
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, RequestMethod, RequestURL, RequestClientApplication, Message, DeviceAction)
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-00-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Everest Forms Pro CVE-2026-3300 Exploit Source IP Hit
+id: 7e83f4b2-9a18-4a16-8d4a-2c7f1c8a3d11
+status: experimental
+description: Detects inbound HTTP traffic from Wordfence-named CVE-2026-3300 exploitation source IPs targeting WordPress admin-ajax/Everest Forms endpoints.
+references:
+  - https://thehackernews.com/2026/06/hackers-exploit-critical-everest-forms.html
+author: SOC Detection Engineering
+date: 2026/06/05
+tags:
+  - attack.t1190
+  - attack.initial_access
+logsource:
+  category: webserver
+detection:
+  selection:
+    c-ip:
+      - &#x27;202.56.2.126&#x27;
+      - &#x27;209.146.60.26&#x27;
+      - &#x27;15.235.166.18&#x27;
+      - &#x27;185.78.165.153&#x27;
+    cs-uri-stem|contains:
+      - &#x27;admin-ajax.php&#x27;
+      - &#x27;everest_forms&#x27;
+      - &#x27;wp-json&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-00-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.iis OR source:nginx OR source:apache OR source:cloudflare) (@network.client.ip:202.56.2.126 OR @network.client.ip:209.146.60.26 OR @network.client.ip:15.235.166.18 OR @network.client.ip:185.78.165.153) (@http.url:*admin-ajax.php* OR @http.url:*everest_forms* OR @http.url:*wp-json*)</code></pre></div>
+    <div class="tab-content" id="art-00-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=/^(202\.56\.2\.126|209\.146\.60\.26|15\.235\.166\.18|185\.78\.165\.153)$/
+| ContextImageFileName=/(php-fpm|httpd|apache2|nginx|w3wp)/i
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-00-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
+fields @timestamp, srcAddr, dstAddr, srcPort, dstPort, protocol, action, bytes
+| filter srcAddr in [&quot;202.56.2.126&quot;,&quot;209.146.60.26&quot;,&quot;15.235.166.18&quot;,&quot;185.78.165.153&quot;]
+      and dstPort in [80, 443, 8080, 8443]
+      and action = &quot;ACCEPT&quot;
+| stats count(*) as hits, sum(bytes) as totalBytes by srcAddr, dstAddr, dstPort
+| sort hits desc</code></pre></div>
+    <div class="tab-content" id="art-00-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as method values(Web.http_user_agent) as ua values(Web.status) as status values(Web.dest) as dest from datamodel=Web.Web where Web.src_ip IN (&quot;202.56.2.126&quot;,&quot;209.146.60.26&quot;,&quot;15.235.166.18&quot;,&quot;185.78.165.153&quot;) AND (Web.url=&quot;*admin-ajax.php*&quot; OR Web.url=&quot;*everest_forms*&quot; OR Web.url=&quot;*wp-json*everest*&quot;) by Web.src_ip Web.dest Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-00-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as method values(Web.http_user_agent) as ua values(Web.status) as status values(Web.dest) as dest from datamodel=Web.Web where Web.src_ip IN (&quot;202.56.2.126&quot;,&quot;209.146.60.26&quot;,&quot;15.235.166.18&quot;,&quot;185.78.165.153&quot;) AND (Web.url=&quot;*admin-ajax.php*&quot; OR Web.url=&quot;*everest_forms*&quot; OR Web.url=&quot;*wp-json*everest*&quot;) by Web.src_ip Web.dest Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="97545bd4c7" data-platforms="datadog,def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">[LLM] Everest Forms Pro Calculation Addon PHP injection payload in form submission</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="97545bd4c7" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts POST bodies to WordPress endpoints containing PHP code-context characters that escape sanitize_text_field() and reach eval() in process_filter(). Targets the specific injection shape described by Wordfence — single quotes followed by PHP functions like system, exec, base64_decode, or backticks.
+
+Rationale: Wordfence quotes the bug as &#x27;concatenating user-submitted form field values into a PHP code string without proper escaping before passing it to eval()&#x27; — the discriminating signal is PHP-function tokens (system, exec, base64_decode, shell_exec, assert) plus single-quote-break characters in a POST to admin-ajax/everest_forms. Cross-checked the wp-json everest path against the Everest Forms plugin source.
+
+Cross-checked against:
+  • https://www.wordfence.com/blog/
+  • https://attack.mitre.org/techniques/T1190/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-00-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-00-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-00-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-00-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-00-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-00-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where InitiatingProcessFileName in~ (&quot;w3wp.exe&quot;,&quot;httpd.exe&quot;,&quot;nginx.exe&quot;,&quot;php-fpm.exe&quot;)
+| where RemoteUrl has_any (&quot;admin-ajax.php&quot;,&quot;everest_forms&quot;)
+| where AdditionalFields has_any (&quot;system(&quot;,&quot;exec(&quot;,&quot;passthru(&quot;,&quot;base64_decode&quot;,&quot;shell_exec&quot;,&quot;assert(&quot;,&quot;&#x27;.system&quot;)
+| project Timestamp, DeviceName, RemoteIP, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, AdditionalFields
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-00-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
+(W3CIISLog
+| where TimeGenerated &gt; ago(30d)
+| where csMethod == &quot;POST&quot;
+| where csUriStem has_any (&quot;admin-ajax.php&quot;,&quot;everest_forms&quot;,&quot;wp-json&quot;)
+| where csUriQuery has_any (&quot;system(&quot;,&quot;exec(&quot;,&quot;passthru(&quot;,&quot;base64_decode&quot;,&quot;shell_exec&quot;,&quot;assert(&quot;,&quot;%27.system&quot;,&quot;%27%2Bsystem&quot;,&quot;`&quot;,&quot;%60&quot;)
+| project TimeGenerated, Computer, cIP, csMethod, csUriStem, csUriQuery, csUserAgent, scStatus),
+(CommonSecurityLog
+| where TimeGenerated &gt; ago(30d)
+| where RequestMethod =~ &quot;POST&quot;
+| where RequestURL has_any (&quot;admin-ajax.php&quot;,&quot;everest_forms&quot;,&quot;wp-json&quot;)
+| where Message has_any (&quot;system(&quot;,&quot;exec(&quot;,&quot;passthru(&quot;,&quot;base64_decode&quot;,&quot;shell_exec&quot;,&quot;assert(&quot;,&quot;&#x27;.system&quot;,&quot;&#x27;+system&quot;)
+   or RequestCookies has_any (&quot;system(&quot;,&quot;base64_decode&quot;)
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, RequestMethod, RequestURL, RequestClientApplication, Message),
+(AppServiceHTTPLogs
+| where TimeGenerated &gt; ago(30d)
+| where CsMethod == &quot;POST&quot;
+| where CsUriStem has_any (&quot;admin-ajax.php&quot;,&quot;everest_forms&quot;)
+| where CsUriQuery has_any (&quot;system(&quot;,&quot;exec(&quot;,&quot;base64_decode&quot;,&quot;shell_exec&quot;,&quot;&#x27;.system&quot;)
+| project TimeGenerated, CsHost, CIp, CsMethod, CsUriStem, CsUriQuery, UserAgent, ScStatus)
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-00-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Everest Forms Pro Calculation Addon PHP Code Injection
+id: 4c1a7e8b-2d63-4f0a-91b1-9b2c8e7f4a55
+status: experimental
+description: Detects POST requests to Everest Forms Pro endpoints containing PHP code-context characters (single quote followed by PHP functions like system/exec/base64_decode) consistent with CVE-2026-3300 process_filter() eval() injection.
+references:
+  - https://thehackernews.com/2026/06/hackers-exploit-critical-everest-forms.html
+author: SOC Detection Engineering
+date: 2026/06/05
+tags:
+  - attack.t1190
+  - attack.t1059.004
+  - attack.execution
+logsource:
+  category: webserver
+detection:
+  selection_endpoint:
+    cs-method: &#x27;POST&#x27;
+    cs-uri-stem|contains:
+      - &#x27;admin-ajax.php&#x27;
+      - &#x27;everest_forms&#x27;
+      - &#x27;wp-json&#x27;
+  selection_payload:
+    cs-uri-query|contains:
+      - &#x27;system(&#x27;
+      - &#x27;exec(&#x27;
+      - &#x27;passthru(&#x27;
+      - &#x27;base64_decode&#x27;
+      - &#x27;shell_exec&#x27;
+      - &#x27;assert(&#x27;
+      - &quot;&#x27;.system&quot;
+      - &quot;&#x27;+system&quot;
+  condition: selection_endpoint and selection_payload
+level: high</code></pre></div>
+    <div class="tab-content" id="art-00-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:windows.iis OR source:cloudflare) @http.method:POST (@http.url:*admin-ajax.php* OR @http.url:*everest_forms* OR @http.url:*wp-json*) (@http.url_details.queryString:*system(* OR @http.url_details.queryString:*exec(* OR @http.url_details.queryString:*base64_decode* OR @http.url_details.queryString:*shell_exec* OR @http.url_details.queryString:*assert(*)</code></pre></div>
+    <div class="tab-content" id="art-00-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as ua values(Web.src_ip) as src values(Web.url) as url from datamodel=Web.Web where (Web.url=&quot;*admin-ajax.php*&quot; OR Web.url=&quot;*everest_forms*&quot; OR Web.url=&quot;*wp-json*everest*&quot;) AND Web.http_method=&quot;POST&quot; AND (Web.url=&quot;*system(*&quot; OR Web.url=&quot;*exec(*&quot; OR Web.url=&quot;*passthru(*&quot; OR Web.url=&quot;*base64_decode*&quot; OR Web.url=&quot;*eval(*&quot; OR Web.url=&quot;*assert(*&quot; OR Web.url=&quot;*shell_exec*&quot; OR Web.url=&quot;*%27%2B*&quot; OR Web.url=&quot;*%27.system*&quot;) by Web.src_ip Web.dest Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-00-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as ua values(Web.src_ip) as src values(Web.url) as url from datamodel=Web.Web where (Web.url=&quot;*admin-ajax.php*&quot; OR Web.url=&quot;*everest_forms*&quot; OR Web.url=&quot;*wp-json*everest*&quot;) AND Web.http_method=&quot;POST&quot; AND (Web.url=&quot;*system(*&quot; OR Web.url=&quot;*exec(*&quot; OR Web.url=&quot;*passthru(*&quot; OR Web.url=&quot;*base64_decode*&quot; OR Web.url=&quot;*eval(*&quot; OR Web.url=&quot;*assert(*&quot; OR Web.url=&quot;*shell_exec*&quot; OR Web.url=&quot;*%27%2B*&quot; OR Web.url=&quot;*%27.system*&quot;) by Web.src_ip Web.dest Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="6198152a01" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">[LLM] WordPress rogue &#x27;diksimarina&#x27; admin account creation request</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="6198152a01" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the specific payload Wordfence saw most commonly in CVE-2026-3300 exploitation: creation of a WordPress administrator account named &#x27;diksimarina&#x27; with email &#x27;diksimarina@gmail.com&#x27;. Hardcoded IOCs from the original advisory.
+
+Rationale: &#x27;diksimarina&#x27; and &#x27;diksimarina@gmail.com&#x27; are verbatim IOCs from Wordfence&#x27;s report cited in the article — extremely high-fidelity strings unlikely to appear organically in benign traffic. Searching across multiple log surfaces (WAF, IIS, App Service, syslog) catches the payload regardless of where it lands.
+
+Cross-checked against:
+  • https://www.wordfence.com/blog/
+  • https://attack.mitre.org/techniques/T1136/001/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Create Account: Local Account">T1136.001</span> <span class="ind tech" title="Valid Accounts: Local Accounts">T1078.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span> <span class="ind">Change.Account_Management</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-00-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-00-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-00-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-00-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-00-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-00-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-00-uc2-kql"><pre><button class="copy-btn">COPY</button><code>union
+(DeviceNetworkEvents
+| where Timestamp &gt; ago(60d)
+| where InitiatingProcessFileName in~ (&quot;w3wp.exe&quot;,&quot;httpd.exe&quot;,&quot;nginx.exe&quot;,&quot;php-fpm.exe&quot;,&quot;php-cgi.exe&quot;)
+| where AdditionalFields has_any (&quot;diksimarina&quot;,&quot;diksimarina@gmail.com&quot;)
+| project Timestamp, DeviceName, RemoteIP, RemoteUrl, InitiatingProcessFileName, AdditionalFields),
+(DeviceFileEvents
+| where Timestamp &gt; ago(60d)
+| where FolderPath has_any (&quot;wp-content&quot;,&quot;wp-admin&quot;,&quot;wp-includes&quot;)
+| where FileName endswith &quot;.php&quot;
+| where InitiatingProcessFileName in~ (&quot;w3wp.exe&quot;,&quot;httpd.exe&quot;,&quot;nginx.exe&quot;,&quot;php-fpm.exe&quot;,&quot;php-cgi.exe&quot;)
+| project Timestamp, DeviceName, FolderPath, FileName, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine)
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-00-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
+(W3CIISLog
+| where TimeGenerated &gt; ago(60d)
+| where csMethod == &quot;POST&quot;
+| where csUriStem has_any (&quot;admin-ajax.php&quot;,&quot;everest_forms&quot;,&quot;wp-json&quot;,&quot;wp-login.php&quot;,&quot;user-new.php&quot;)
+| where csUriQuery has_any (&quot;diksimarina&quot;,&quot;diksimarina%40gmail.com&quot;,&quot;diksimarina@gmail.com&quot;)
+| project TimeGenerated, Computer, cIP, csMethod, csUriStem, csUriQuery, csUserAgent, scStatus),
+(CommonSecurityLog
+| where TimeGenerated &gt; ago(60d)
+| where RequestURL has_any (&quot;admin-ajax.php&quot;,&quot;everest_forms&quot;,&quot;wp-json&quot;)
+   or DeviceProduct has &quot;WAF&quot;
+| where Message has_any (&quot;diksimarina&quot;,&quot;diksimarina@gmail.com&quot;)
+   or RequestURL has &quot;diksimarina&quot;
+   or RequestCookies has &quot;diksimarina&quot;
+   or DeviceCustomString1 has &quot;diksimarina&quot;
+   or DeviceCustomString2 has &quot;diksimarina&quot;
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, RequestMethod, RequestURL, Message, DeviceAction),
+(AppServiceHTTPLogs
+| where TimeGenerated &gt; ago(60d)
+| where CsUriQuery has_any (&quot;diksimarina&quot;,&quot;diksimarina%40gmail.com&quot;)
+   or CsUriStem has &quot;diksimarina&quot;
+| project TimeGenerated, CsHost, CIp, CsMethod, CsUriStem, CsUriQuery, UserAgent, ScStatus),
+(Syslog
+| where TimeGenerated &gt; ago(60d)
+| where SyslogMessage has_any (&quot;diksimarina&quot;,&quot;diksimarina@gmail.com&quot;)
+| project TimeGenerated, Computer, HostIP, ProcessName, SyslogMessage)
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-00-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: WordPress Rogue diksimarina Admin Account IOC
+id: a3b8f2d5-7c1e-49b6-bd23-5e1f8b4c7d22
+status: experimental
+description: Detects HTTP requests, WAF events, or syslog entries referencing the diksimarina/diksimarina@gmail.com IOC associated with CVE-2026-3300 mass-exploitation of Everest Forms Pro.
+references:
+  - https://thehackernews.com/2026/06/hackers-exploit-critical-everest-forms.html
+author: SOC Detection Engineering
+date: 2026/06/05
+tags:
+  - attack.t1136.001
+  - attack.persistence
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-uri-query|contains:
+      - &#x27;diksimarina&#x27;
+      - &#x27;diksimarina@gmail.com&#x27;
+      - &#x27;diksimarina%40gmail.com&#x27;
+  condition: selection
+level: critical</code></pre></div>
+    <div class="tab-content" id="art-00-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:windows.iis OR source:cloudflare OR source:linux.syslog) (@http.url:*diksimarina* OR @http.url_details.queryString:*diksimarina* OR @http.useragent:*diksimarina* OR diksimarina OR &quot;diksimarina@gmail.com&quot;)</code></pre></div>
+    <div class="tab-content" id="art-00-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten ContextImageFileName=/(php-fpm|httpd|apache2|nginx|w3wp)/i
+| TargetFileName=/(wp-content|wp-admin|wp-includes)/i AND TargetFileName=/\.php$/i
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-00-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.src_ip) as src values(Web.url) as url values(Web.http_user_agent) as ua values(Web.dest) as dest from datamodel=Web.Web where Web.http_method=&quot;POST&quot; AND (Web.url=&quot;*diksimarina*&quot; OR Web.url=&quot;*diksimarina%40gmail.com*&quot; OR Web.url=&quot;*diksimarina@gmail.com*&quot;) by Web.src_ip Web.dest Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-00-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.src_ip) as src values(Web.url) as url values(Web.http_user_agent) as ua values(Web.dest) as dest from datamodel=Web.Web where Web.http_method=&quot;POST&quot; AND (Web.url=&quot;*diksimarina*&quot; OR Web.url=&quot;*diksimarina%40gmail.com*&quot; OR Web.url=&quot;*diksimarina@gmail.com*&quot;) by Web.src_ip Web.dest Web.url | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="25ae3fb998" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">[LLM] WordPress PHP worker spawning shell or download utility post-RCE</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="25ae3fb998" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the post-exploit behaviour where the PHP/Apache/Nginx worker process spawns sh, bash, wget, curl, python, perl, or nc — the natural follow-on after process_filter() eval() succeeds and the attacker drops a webshell or pulls a second-stage payload.
+
+Rationale: The article&#x27;s kill-chain note explicitly cites &#x27;PHP/Apache/Nginx worker processes spawning unusual children (sh, curl, wget)&#x27; as the execution-phase pivot. Pairing the parent web-tier binary with download/shell child binaries follows the BluRaven process-tree pattern and avoids the anti-bare-process-execution smell.
+
+Cross-checked against:
+  • https://attack.mitre.org/techniques/T1059/004/
+  • https://attack.mitre.org/techniques/T1505/003/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-00-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-00-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-00-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-00-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-00-uc3-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-00-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-00-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where InitiatingProcessFileName in~ (&quot;php-fpm&quot;,&quot;php-fpm7.4&quot;,&quot;php-fpm8.0&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;w3wp.exe&quot;,&quot;php-cgi.exe&quot;,&quot;php.exe&quot;)
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;wget&quot;,&quot;curl&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-00-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
+(ImProcessCreate
+| where TimeGenerated &gt; ago(30d)
+| where ParentProcessName has_any (&quot;php-fpm&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;w3wp.exe&quot;,&quot;php-cgi.exe&quot;,&quot;php.exe&quot;)
+| where ActingProcessName has_any (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;wget&quot;,&quot;curl&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;certutil.exe&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine),
+(SecurityEvent
+| where TimeGenerated &gt; ago(30d)
+| where EventID == 4688
+| where ParentProcessName has_any (&quot;php-cgi.exe&quot;,&quot;php.exe&quot;,&quot;w3wp.exe&quot;,&quot;httpd.exe&quot;,&quot;nginx.exe&quot;)
+| where NewProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;)
+| project TimeGenerated, Computer, Account, ParentProcessName, NewProcessName, CommandLine),
+(Syslog
+| where TimeGenerated &gt; ago(30d)
+| where Facility =~ &quot;authpriv&quot; or ProcessName has_any (&quot;audit&quot;,&quot;auditd&quot;)
+| where SyslogMessage has_any (&quot;php-fpm&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;httpd&quot;)
+| where SyslogMessage has_any (&quot;/bin/sh&quot;,&quot;/bin/bash&quot;,&quot;/usr/bin/wget&quot;,&quot;/usr/bin/curl&quot;,&quot;/usr/bin/python&quot;,&quot;/usr/bin/perl&quot;,&quot;/usr/bin/nc&quot;)
+| project TimeGenerated, Computer, HostIP, ProcessName, SyslogMessage)
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-00-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: WordPress PHP Worker Spawning Shell or Download Utility
+id: 6f4e8b3a-1c92-4d57-8a4b-3b7e2c1d9e44
+status: experimental
+description: Detects PHP/Apache/Nginx worker processes spawning unix shells, curl/wget, python/perl, or nc - high-confidence post-RCE indicator on WordPress hosts following CVE-2026-3300 or similar PHP eval() exploitation.
+references:
+  - https://thehackernews.com/2026/06/hackers-exploit-critical-everest-forms.html
+author: SOC Detection Engineering
+date: 2026/06/05
+tags:
+  - attack.t1059.004
+  - attack.t1505.003
+  - attack.t1105
+  - attack.execution
+  - attack.persistence
+logsource:
+  category: process_creation
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - &#x27;/php-fpm&#x27;
+      - &#x27;/php-fpm7.4&#x27;
+      - &#x27;/php-fpm8.0&#x27;
+      - &#x27;/php-fpm8.1&#x27;
+      - &#x27;/php-fpm8.2&#x27;
+      - &#x27;/httpd&#x27;
+      - &#x27;/apache2&#x27;
+      - &#x27;/nginx&#x27;
+      - &#x27;\w3wp.exe&#x27;
+      - &#x27;\php-cgi.exe&#x27;
+      - &#x27;\php.exe&#x27;
+  selection_child:
+    Image|endswith:
+      - &#x27;/sh&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/wget&#x27;
+      - &#x27;/curl&#x27;
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
+      - &#x27;/perl&#x27;
+      - &#x27;/nc&#x27;
+      - &#x27;/ncat&#x27;
+      - &#x27;/socat&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\certutil.exe&#x27;
+      - &#x27;\bitsadmin.exe&#x27;
+  condition: selection_parent and selection_child
+level: high</code></pre></div>
+    <div class="tab-content" id="art-00-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon OR source:linux.auditd) (@ParentImage:(*\php-cgi.exe OR *\php.exe OR *\w3wp.exe OR *\httpd.exe OR *\nginx.exe) OR @process.parent.executable.path:(*/php-fpm* OR */httpd OR */apache2 OR */nginx)) (@Image:(*\cmd.exe OR *\powershell.exe OR *\certutil.exe OR *\bitsadmin.exe OR *\curl.exe OR *\wget.exe) OR @process.executable.path:(*/sh OR */bash OR */wget OR */curl OR */python* OR */perl OR */nc OR */ncat OR */socat))</code></pre></div>
+    <div class="tab-content" id="art-00-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(php-fpm|php-cgi|php|httpd|apache2|nginx|w3wp)/i
+| ImageFileName=/(\/sh|\/bash|\/dash|\/wget|\/curl|\/python3?|\/perl|\/nc|\/ncat|\/socat|\\cmd\.exe|\\powershell\.exe|\\certutil\.exe|\\bitsadmin\.exe)$/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())
+| sort(count, order=desc)</code></pre></div>
+    <div class="tab-content" id="art-00-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process) as pcmd values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php-fpm7.4&quot;,&quot;php-fpm8.0&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;w3wp.exe&quot;,&quot;php-cgi.exe&quot;,&quot;php.exe&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;wget&quot;,&quot;curl&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;certutil.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-00-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process) as pcmd values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php-fpm7.4&quot;,&quot;php-fpm8.0&quot;,&quot;php-fpm8.1&quot;,&quot;php-fpm8.2&quot;,&quot;httpd&quot;,&quot;apache2&quot;,&quot;nginx&quot;,&quot;w3wp.exe&quot;,&quot;php-cgi.exe&quot;,&quot;php.exe&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;wget&quot;,&quot;curl&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;certutil.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
   <summary>
     <span class="uc-title">Beaconing — periodic outbound to small set of destinations</span>
     <span class="uc-phase">Command &amp; Control</span>
@@ -86,11 +474,11 @@
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Web Protocols">T1071.001</span> <span class="ind tech" title="DNS">T1071.004</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-00-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-00-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-00-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-00-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-00-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-00-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-00-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-00-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(1d)
 | where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
 | project DeviceName, RemoteIP, RemotePort, Timestamp
@@ -103,7 +491,7 @@
     by DeviceName, RemoteIP, RemotePort
 | where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
 | order by conn_count desc</code></pre></div>
-    <div class="tab-content" id="art-00-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+    <div class="tab-content" id="art-00-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(2h)
 | where DvcAction != &quot;Block&quot;
 | where ipv4_is_private(DstIpAddr) == false
@@ -113,7 +501,7 @@
 | where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
 | order by ConnCount desc
 </code></pre></div>
-    <div class="tab-content" id="art-00-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    <div class="tab-content" id="art-00-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -122,7 +510,7 @@
 | eval delta = _time - prev_time
 | stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
 | where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre><pre class="spl-mode-body" id="art-00-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
+| sort - count</code></pre><pre class="spl-mode-body" id="art-00-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -148,17 +536,17 @@
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-00-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-00-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-00-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-00-uc1-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-00-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-00-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-00-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-00-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-00-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-00-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
 | where RemoteIP in (&quot;202.56.2.126&quot;, &quot;209.146.60.26&quot;, &quot;15.235.166.18&quot;, &quot;185.78.165.153&quot;) or RemoteUrl has_any (&quot;&quot;)
 | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-00-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;202.56.2.126&quot;, &quot;209.146.60.26&quot;, &quot;15.235.166.18&quot;, &quot;185.78.165.153&quot;]);
+    <div class="tab-content" id="art-00-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;202.56.2.126&quot;, &quot;209.146.60.26&quot;, &quot;15.235.166.18&quot;, &quot;185.78.165.153&quot;]);
 let BadDomains = dynamic([&quot;&quot;]);
 ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
@@ -167,7 +555,7 @@ ImNetworkSession
 | project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-00-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+    <div class="tab-content" id="art-00-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
 status: experimental
 description: |
@@ -197,7 +585,7 @@ falsepositives:
     - None on a true-positive IOC match
 level: critical
 </code></pre></div>
-    <div class="tab-content" id="art-00-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-00-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;202.56.2.126&quot;, &quot;209.146.60.26&quot;, &quot;15.235.166.18&quot;, &quot;185.78.165.153&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -211,7 +599,7 @@ level: critical
     [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
         where DNS.query IN (&quot;&quot;)
         by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-00-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-00-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;202.56.2.126&quot;, &quot;209.146.60.26&quot;, &quot;15.235.166.18&quot;, &quot;185.78.165.153&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -242,11 +630,11 @@ level: critical
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-00-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-00-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-00-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-00-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-00-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-00-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-00-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-00-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -255,7 +643,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-00-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-00-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -267,12 +655,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-00-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-00-uc6-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-3300&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-00-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-00-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-3300&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -303,11 +691,11 @@ for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Link">T1566.002</span> <span class="ind tech" title="User Execution: Malicious Link">T1204.001</span> <span class="ind tech" title="PowerShell">T1059.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-00-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-00-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-00-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-00-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-00-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-00-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-00-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+    <div class="tab-content active" id="art-00-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
 // Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
 // never spawn a non-browser child process, so the join eliminates the
 // 99% of noise that makes a raw click query unactionable.
@@ -347,7 +735,7 @@ DeviceProcessEvents
           Subject, Url, UrlDomain, ActionType,
           FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-00-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+    <div class="tab-content" id="art-00-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
 // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
 // non-browser child process. Lower fidelity than the Defender version.
 let LookbackDays = 7d;
@@ -372,7 +760,7 @@ SecurityEvent
           NewProcessName, CommandLine, Sender, Subject
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-00-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+    <div class="tab-content" id="art-00-uc7-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc7-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats `summariesonly` earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -404,7 +792,7 @@ SecurityEvent
 | where delta_sec &gt;= 0 AND delta_sec &lt;= 60
 | table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
         clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-00-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-00-uc7-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats summariesonly=false earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -453,11 +841,11 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Attachment">T1566.001</span> <span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailAttachmentInfo</span> <span class="ind">DeviceProcessEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-00-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-00-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-00-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-00-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-00-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-00-uc8-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-00-uc4-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+    <div class="tab-content active" id="art-00-uc8-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp &gt; ago(LookbackDays)
     | where AccountName !endswith &quot;$&quot;
@@ -471,7 +859,7 @@ DeviceProcessEvents
 | join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
           InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256</code></pre></div>
-    <div class="tab-content" id="art-00-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
+    <div class="tab-content" id="art-00-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
 // OfficeActivity Send/Receive activity + correlate to host process spawn.
 let LookbackDays = 7d;
 let MailWithAttach = OfficeActivity
@@ -494,7 +882,7 @@ SecurityEvent
           ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-00-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
+    <div class="tab-content" id="art-00-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -505,7 +893,7 @@ SecurityEvent
         where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
           AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
         by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-00-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
+     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-00-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -533,18 +921,18 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Visual Basic">T1059.005</span> <span class="ind tech" title="System Binary Proxy Execution">T1218</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-00-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-00-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-00-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-00-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-00-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-00-uc9-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-00-uc9-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-00-uc9-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-00-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-00-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
 | where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-00-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-00-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -567,7 +955,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-00-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
+    <div class="tab-content" id="art-00-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
 status: experimental
 description: |
@@ -611,13 +999,13 @@ falsepositives:
     - Legitimate automation macros in trusted internal documents
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-00-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-00-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-00-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-00-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
@@ -640,17 +1028,17 @@ level: high
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Account Manipulation: Additional Cloud Credentials">T1098.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-00-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-00-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-00-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-00-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-00-uc10-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-00-uc10-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-00-uc10-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-00-uc10-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-00-uc6-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+    <div class="tab-content active" id="art-00-uc10-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
 | where Timestamp &gt; ago(7d)
 | where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
 | project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
           ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-00-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
+    <div class="tab-content" id="art-00-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
 AuditLogs
 | where TimeGenerated &gt; ago(7d)
 | where OperationName has &quot;Consent to application&quot;
@@ -661,7 +1049,7 @@ AuditLogs
 | project TimeGenerated, OperationName, User, AppName, AppId, Result
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-00-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
+    <div class="tab-content" id="art-00-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
 status: experimental
 description: |
@@ -687,7 +1075,7 @@ falsepositives:
     - Legitimate first-time SaaS app onboarding
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-00-uc6-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-00-uc10-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -696,7 +1084,7 @@ level: medium
         &quot;Add OAuth2PermissionGrant&quot;,
         &quot;Add delegated permission grant&quot;)
     by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-00-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-00-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -722,19 +1110,19 @@ level: medium
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-00-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-00-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-00-uc7-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-00-uc7-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-00-uc11-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-00-uc11-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-00-uc11-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-00-uc11-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-00-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-00-uc11-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-00-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-00-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -745,7 +1133,7 @@ level: medium
           CommandLine, ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-00-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
+    <div class="tab-content" id="art-00-uc11-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d08
 status: experimental
 description: |
@@ -791,7 +1179,7 @@ falsepositives:
       cross-shell escaping
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-00-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-00-uc11-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc11-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
       AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
@@ -800,7 +1188,7 @@ level: high
         OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*Net.WebClient*&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-00-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-00-uc11-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
       AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
@@ -826,18 +1214,18 @@ level: high
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-00-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-00-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-00-uc8-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-00-uc8-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-00-uc12-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-00-uc12-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-00-uc12-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-00-uc12-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-00-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-00-uc12-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-00-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+    <div class="tab-content" id="art-00-uc12-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
 // article (matching shape with the Defender query).
 SecurityEvent
 | where TimeGenerated &gt; ago(7d)
@@ -857,7 +1245,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-00-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+    <div class="tab-content" id="art-00-uc12-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
 status: experimental
 description: |
@@ -899,12 +1287,12 @@ falsepositives:
       article before alerting.
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-00-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-00-uc12-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc12-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc12-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc12-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-00-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-00-uc12-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
@@ -926,10 +1314,10 @@ level: medium
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-00-uc9-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-00-uc9-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-00-uc13-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-00-uc13-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-00-uc9-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Hackers Exploit Critical Everest Forms Pro WordPress Plugin Flaw to Take Over Si
+    <div class="tab-content active" id="art-00-uc13-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Hackers Exploit Critical Everest Forms Pro WordPress Plugin Flaw to Take Over Si
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -949,7 +1337,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-00-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc9-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Hackers Exploit Critical Everest Forms Pro WordPress Plugin Flaw to Take Over Si ```
+    <div class="tab-content" id="art-00-uc13-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-00-uc13-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-00-uc13-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-00-uc13-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Hackers Exploit Critical Everest Forms Pro WordPress Plugin Flaw to Take Over Si ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;medusa.js&quot;))
@@ -965,7 +1353,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-00-uc9-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Hackers Exploit Critical Everest Forms Pro WordPress Plugin Flaw to Take Over Si ```
+]</code></pre><pre class="spl-mode-body" id="art-00-uc13-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Hackers Exploit Critical Everest Forms Pro WordPress Plugin Flaw to Take Over Si ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;medusa.js&quot;))
