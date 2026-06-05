@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1251 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1250 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,7 +10,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-04
 - [china linked ta4922 expands phishing attacks to u k germany ](./2026-06-04/china-linked-ta4922-expands-phishing-attacks-to-u-k-germany-.md)
-- [cisa warns of critical magento cache warmer rce flaw exploit](./2026-06-04/cisa-warns-of-critical-magento-cache-warmer-rce-flaw-exploit.md)
 - [cisco patches cve 2026 20230 in unified cm as exploit code g](./2026-06-04/cisco-patches-cve-2026-20230-in-unified-cm-as-exploit-code-g.md)
 - [cisco warns of critical unified cm flaw with poc exploit cod](./2026-06-04/cisco-warns-of-critical-unified-cm-flaw-with-poc-exploit-cod.md)
 - [claude code github action flaw let one malicious issue hijac](./2026-06-04/claude-code-github-action-flaw-let-one-malicious-issue-hijac.md)
