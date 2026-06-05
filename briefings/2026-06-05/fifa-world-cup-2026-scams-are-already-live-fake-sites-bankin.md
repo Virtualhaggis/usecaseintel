@@ -99,7 +99,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] GHOST STADIUM FIFA lookalike domain resolution (fifa.bio/.center/.gold/.red/.sale/.shopping/.show/.ski)
 
-`UC_12_10` · phase: **delivery** · confidence: **High**
+`UC_17_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceNetworkEvents
 
 ### [LLM] GHOST STADIUM phishing kit / Android trojan C2 IP egress (8 specific hosts)
 
-`UC_12_11` · phase: **c2** · confidence: **High**
+`UC_17_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceNetworkEvents
 
 ### [LLM] Massiv / Perseus (Cerberus-derived) Android banking trojan APK hash on managed endpoint
 
-`UC_12_12` · phase: **install** · confidence: **High**
+`UC_17_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +160,7 @@ DeviceFileEvents
 
 ### [LLM] GHOST STADIUM PingIdentity SSO clone: external referrer hot-linking fifa.com static assets
 
-`UC_12_13` · phase: **delivery** · confidence: **Medium**
+`UC_17_13` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,8 +1,8 @@
-# [CRIT] Threat Brief: Active Exploitation of PAN-OS CVE-2026-0257
+# [CRIT] Android Spyware Asin Targets Arabic Users via Fake News, PDF and War Map Apps
 
-**Source:** Unit 42 (Palo Alto)
+**Source:** The Hacker News, Unit 42 (Palo Alto)
 **Published:** 2026-06-05
-**Article:** https://unit42.paloaltonetworks.com/active-exploitation-of-pan-os-cve-2026-0257/
+**Article:** https://thehackernews.com/2026/06/android-spyware-asin-targets-arabic.html
 
 ## Threat Profile
 
@@ -34,6 +34,8 @@ Palo Alto Networks Unit 42 has observed active exploitation of PAN-OS vulnerabil
 - **IPv4 (defanged):** `185.195.232.139`
 - **IPv4 (defanged):** `198.12.106.60`
 - **IPv4 (defanged):** `202.144.192.47`
+- **IPv4 (defanged):** `209.99.191.137`
+- **IPv4 (defanged):** `79.130.26.202`
 
 ## MITRE ATT&CK Techniques
 
@@ -48,7 +50,6 @@ Palo Alto Networks Unit 42 has observed active exploitation of PAN-OS vulnerabil
 - **T1219** — Remote Access Software
 - **T1133** — External Remote Services
 - **T1078** — Valid Accounts
-- **T1556** — Modify Authentication Process
 
 ## Kill chain phases observed
 
@@ -56,72 +57,64 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] GlobalProtect successful login from CVE-2026-0257 pre-PoC exploitation IPs
+### [LLM] PAN-OS CVE-2026-0257 GlobalProtect login from Unit 42 IOC IPs
 
-`UC_2_6` · phase: **exploit** · confidence: **High**
+`UC_5_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where Network_Traffic.All_Traffic.app="panos-global-protect" Network_Traffic.All_Traffic.action="allowed" Network_Traffic.All_Traffic.src IN ("23.128.228.6","104.207.144.154","146.19.216.119","146.19.216.120","146.19.216.125","179.43.172.213","185.195.232.139","198.12.106.60","202.144.192.47") by Network_Traffic.All_Traffic.src Network_Traffic.All_Traffic.dest Network_Traffic.All_Traffic.user Network_Traffic.All_Traffic.dest_port
-| `drop_dm_object_name("Network_Traffic.All_Traffic")`
-| convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.user) as user values(Authentication.dest) as dest values(Authentication.action) as action from datamodel=Authentication where Authentication.app="globalprotect" Authentication.action="success" Authentication.src IN ("23.128.228.6","104.207.144.154","146.19.216.119","146.19.216.120","146.19.216.125","179.43.172.213","185.195.232.139","198.12.106.60","202.144.192.47") by Authentication.src Authentication.user Authentication.dest | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
+// Defender XDR has no native PAN-OS GP telemetry — see sentinel_kql for the CommonSecurityLog hunt.
+// If GP logs are normalised via MDE custom connector to DeviceNetworkEvents, fall back to RemoteIP IOC match:
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP in ("23.128.228.6","104.207.144.154","146.19.216.119","146.19.216.120","146.19.216.125","179.43.172.213","185.195.232.139","198.12.106.60","202.144.192.47")
-   or LocalIP in ("23.128.228.6","104.207.144.154","146.19.216.119","146.19.216.120","146.19.216.125","179.43.172.213","185.195.232.139","198.12.106.60","202.144.192.47")
-| project Timestamp, DeviceName, ActionType, LocalIP, LocalPort, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalPort
 ```
 
-### [LLM] GlobalProtect connection with PoC-spoofed host-ID, MAC, or device name
+### [LLM] PAN-OS GlobalProtect login with CVE-2026-0257 PoC hard-coded host-id / device-name
 
-`UC_2_7` · phase: **exploit** · confidence: **High**
+`UC_5_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-`pan_globalprotect` (event_id="gateway-connected" OR event_id="GlobalProtect connected" OR log_subtype="gateway-connect")
-    (host_id="aa:bb:cc:dd:ee:ff" OR host_id="00:11:22:33:44:55" OR machine_name="WINDOWS-LAPTOP-001" OR machine_name="DESKTOP-GP01" OR machine_name="GP-CLIENT" OR src_host="WINDOWS-LAPTOP-001" OR src_host="DESKTOP-GP01" OR src_host="GP-CLIENT")
-| stats earliest(_time) as firstTime latest(_time) as lastTime values(src_ip) as src_ips values(src_user) as users values(host_id) as host_ids values(machine_name) as machines count by src_user
-| convert ctime(firstTime) ctime(lastTime)
-| where count >= 1
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.user) as user values(Authentication.src) as src values(Authentication.dest) as dest from datamodel=Authentication where Authentication.app="globalprotect" Authentication.action="success" (Authentication.src_nt_host IN ("WINDOWS-LAPTOP-001","DESKTOP-GP01","GP-CLIENT") OR Authentication.host_id IN ("aa:bb:cc:dd:ee:ff","00:11:22:33:44:55")) by Authentication.src_nt_host Authentication.host_id Authentication.user Authentication.src | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceInfo
+// PAN-OS GP host-id/device-name values do not flow into Defender XDR tables natively.
+// If GP logs are ingested via custom MDE connector into AdditionalFields, this is the shape:
+DeviceEvents
 | where Timestamp > ago(30d)
-| summarize LastSeen = max(Timestamp), DeviceCount = dcount(DeviceId) by DeviceName
-| where DeviceName in~ ("WINDOWS-LAPTOP-001","DESKTOP-GP01","GP-CLIENT")
-| project DeviceName, LastSeen, DeviceCount
+| where ActionType has "GlobalProtect"
+| where AdditionalFields has_any ("aa:bb:cc:dd:ee:ff","00:11:22:33:44:55","WINDOWS-LAPTOP-001","DESKTOP-GP01","GP-CLIENT")
+| project Timestamp, DeviceName, ActionType, RemoteIP, AccountName, AdditionalFields
 ```
 
-### [LLM] GlobalProtect connection with PoC client fingerprint: Win10 Pro 64-bit + empty d
+### [LLM] PAN-OS GlobalProtect login matching CVE-2026-0257 PoC client fingerprint
 
-`UC_2_8` · phase: **exploit** · confidence: **Medium**
+`UC_5_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-`pan_globalprotect` (event_id="gateway-connected" OR event_id="GlobalProtect connected" OR log_subtype="gateway-connect")
-    endpoint_os_version="Microsoft Windows 10 Pro 64-bit"
-    (source_user_info.domain="" OR NOT source_user_info.domain=*)
-| stats earliest(_time) as firstTime latest(_time) as lastTime values(src_ip) as src_ips values(host_id) as host_ids values(machine_name) as machines count by src_user endpoint_os_version
-| convert ctime(firstTime) ctime(lastTime)
-| where count >= 1
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.user) as user values(Authentication.src) as src from datamodel=Authentication where Authentication.app="globalprotect" Authentication.action="success" Authentication.endpoint_os_version="Microsoft Windows 10 Pro 64-bit" (Authentication.user_domain="" OR Authentication.user_domain="-" OR NOT Authentication.user_domain="*") by Authentication.user Authentication.src Authentication.endpoint_os_version | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceInfo
-| where Timestamp > ago(7d)
-| where OSPlatform =~ "Windows10" and OSVersion has "Pro"
-| where isempty(LoggedOnUsers) or LoggedOnUsers !has "domain"
-| summarize LastSeen = max(Timestamp) by DeviceId, DeviceName, OSPlatform, OSVersion, JoinType
-| where JoinType !in~ ("AzureAD","Hybrid","Domain")
-| project LastSeen, DeviceName, OSPlatform, OSVersion, JoinType
+// PAN-OS GP client-info strings do not flow into Defender XDR natively.
+// Where GP logs are ingested via a custom MDE connector, the substring lives in AdditionalFields:
+DeviceEvents
+| where Timestamp > ago(30d)
+| where ActionType has "GlobalProtect"
+| where AdditionalFields has "Microsoft Windows 10 Pro 64-bit"
+| where AdditionalFields has_any ("source_user_info.domain=\"\"","source_user_info.domain=null","\"domain\":\"\"")
+| project Timestamp, DeviceName, ActionType, RemoteIP, AccountName, AdditionalFields
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -245,7 +238,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `23.128.228.6`, `104.207.144.154`, `146.19.216.119`, `146.19.216.120`, `146.19.216.125`, `179.43.172.213`, `185.195.232.139`, `198.12.106.60` _(+1 more)_
+  - IP / domain IOC(s): `23.128.228.6`, `104.207.144.154`, `146.19.216.119`, `146.19.216.120`, `146.19.216.125`, `179.43.172.213`, `185.195.232.139`, `198.12.106.60` _(+3 more)_
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2026-0257`
@@ -253,4 +246,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
