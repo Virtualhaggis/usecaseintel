@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Installation of compromised Microsoft durabletask PyPI versions 1.4.1-1.4.3
 
-`UC_1_8` · phase: **delivery** · confidence: **High**
+`UC_2_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### [LLM] Python urlretrieve download of rope.pyz from check.git-service.com to /tmp/managed.pyz
 
-`UC_1_9` · phase: **install** · confidence: **High**
+`UC_2_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ union Net, Drop
 
 ### [LLM] python3 import durabletask spawning detached /tmp/managed.pyz collector swarm
 
-`UC_1_10` · phase: **install** · confidence: **High**
+`UC_2_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceProcessEvents
 
 ### [LLM] Fake pgsql-monitor.service persistence via systemctl --user daemon-reload from python parent
 
-`UC_1_11` · phase: **install** · confidence: **High**
+`UC_2_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +154,7 @@ union Procs, Files
 
 ### [LLM] GPG batch passphrase 'anon' + gh auth token credential harvesting from python parent
 
-`UC_1_12` · phase: **actions** · confidence: **High**
+`UC_2_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -174,7 +174,7 @@ DeviceProcessEvents
 
 ### [LLM] DNS / connection to TeamPCP secondary C2 m-kosche.com
 
-`UC_1_13` · phase: **c2** · confidence: **High**
+`UC_2_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -194,7 +194,7 @@ DeviceNetworkEvents
 
 ### [LLM] AWS SSM SendCommand / kubectl exec lateral movement from compromised CI runtime
 
-`UC_1_14` · phase: **actions** · confidence: **Medium**
+`UC_2_14` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -352,7 +352,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — IronWorm and New Miasma Worm Variant Hit npm in Supply Chain Attacks
 
-`UC_1_7` · phase: **exploit** · confidence: **High**
+`UC_2_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
