@@ -1,129 +1,3 @@
-<article class="card" id="art-227" data-art-slug="2026-05-18-ghsa-critical-cve-2026-7301-sglang-multimodal-scheduler-dese"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="[GHSA / CRITICAL] CVE-2026-7301: SGLanG: Multimodal scheduler deserializes untrusted pickle data on 0.0.0.0 ROUTER socket SGLanG: Multimodal scheduler deserializes untrusted pickle data on 0.0.0.0 ROUTER socket CVE-2026-7301 T1190 Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-05-18-ghsa-critical-cve-2026-7301-sglang-multimodal-scheduler-dese" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-gwv6-pq6m-p3rq" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-7301: SGLanG: Multimodal scheduler deserializes untrusted pickle data on 0.0.0.0 ROUTER socket</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-05-18</span>
-    <span>1 use case</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">SGLanG: Multimodal scheduler deserializes untrusted pickle data on 0.0.0.0 ROUTER socket</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-7301</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-227-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-227"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-227-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-227-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-227-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-227-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-227-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-7301&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-227-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-7301&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-227-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-227-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-227-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-227-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-7301&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-227-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-7301&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-228" data-art-slug="2026-05-18-ghsa-critical-cve-2026-7304-sglang-unauthenticated-rce-via-e"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -13491,6 +13365,266 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-259-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-20182&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-260" data-art-slug="2026-05-13-ghsa-critical-cve-2026-22599-strapi-vulnerable-to-sql-inject"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="application,cloud,web"
+  data-targets="vcs"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-22599: Strapi Vulnerable to SQL Injection in Content Type Builder Strapi Vulnerable to SQL Injection in Content Type Builder CVE-2026-22599 T1190 [LLM] Strapi Content-Type Builder Write API Reached in Production (CVE-2026-22599) [LLM] Strapi Content-Type Builder Write Followed by Server-Side Error (CVE-2026-22599 DoS / migration crash) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-05-13-ghsa-critical-cve-2026-22599-strapi-vulnerable-to-sql-inject" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-3xcq-8mjw-h6mx" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-22599: Strapi Vulnerable to SQL Injection in Content Type Builder</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-05-13</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Strapi Vulnerable to SQL Injection in Content Type Builder</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-22599</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-260-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-260"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-260-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Strapi Content-Type Builder Write API Reached in Production (CVE-2026-22599) · [LLM] Strapi Content-Type Builder Write Followed by Server-Side Error (CVE-2026-22599 DoS / migration crash)</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="b8b097b15b" data-platforms="sent,sigma,spl" data-targets="vcs" open>
+  <summary>
+    <span class="uc-title">[LLM] Strapi Content-Type Builder Write API Reached in Production (CVE-2026-22599)</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="b8b097b15b" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects POST/PUT to Strapi&#x27;s Content-Type Builder write endpoint from a non-internal source. Per the patch (v5.33.2 / v4.26.1) these endpoints are disabled outside dev mode and return 404 — any successful POST/PUT in production indicates an unpatched instance under active exploitation or pre-patch admin misuse, both worth alerting on.
+
+Rationale: Anchored to the article&#x27;s primary IOC — the literal endpoint path `/content-type-builder/content-types` and the (POST|PUT) verb regex. The patch behavior (404 in production) is what makes any such request high-signal: the article explicitly states the patch &#x27;returns 404 for requests against /content-type-builder/content-types... removing the network-reachable attack surface entirely&#x27;. Splunk filters out RFC1918/loopback to focus on internet-reachable instances; Sentinel uses ImWebSession + not(ipv4_is_private) for the same effect. Defender Advanced Hunting has no native web access-log table, so defender_kql is empty (this telemetry lives in W3CIISLog / WAF logs, not DeviceProcessEvents).</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-260-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-260-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-260-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-260-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Strapi Content-Type Builder endpoint should return 404 in production (v5.33.2+/v4.26.1+)
+// Any POST/PUT reaching it from a non-internal source = exploit attempt or unpatched instance
+ImWebSession
+| where TimeGenerated &gt; ago(1d)
+| where HttpMethod in (&quot;POST&quot;,&quot;PUT&quot;)
+| where Url contains &quot;/content-type-builder/content-types&quot;
+| where isnotempty(SrcIpAddr)
+| where not(ipv4_is_private(SrcIpAddr))
+| where not(SrcIpAddr startswith &quot;127.&quot;)
+| project TimeGenerated, SrcIpAddr, DstHostname, HttpMethod, Url, HttpStatusCode, HttpRequestHeaderUserAgent, HttpRequestHeaderReferer
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-260-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Strapi Content-Type Builder Write API Reached (CVE-2026-22599)
+id: 5b6a1d8e-9c44-4f1c-86d2-2c0a3f7e44a1
+description: Detects POST or PUT requests to Strapi Content-Type Builder content-types endpoints. Production deployments running the patched version (v5.33.2 / v4.26.1) return 404 for these paths; any successful request indicates either an unpatched instance under exploitation for the defaultTo isRaw SQL injection (CVE-2026-22599) or admin misuse from outside a development environment.
+references:
+    - https://github.com/advisories/GHSA-3xcq-8mjw-h6mx
+author: SOC Detection Engineering
+date: 2026/05/14
+tags:
+    - attack.t1190
+    - attack.initial-access
+    - cve.2026.22599
+logsource:
+    category: webserver
+detection:
+    selection:
+        cs-method:
+            - POST
+            - PUT
+        cs-uri-stem|startswith: &#x27;/content-type-builder/content-types&#x27;
+    condition: selection
+falsepositives:
+    - Development environments where the Content-Type Builder is intentionally exposed
+    - Internal admin traffic from the Strapi admin UI on a dev host
+level: high</code></pre></div>
+    <div class="tab-content" id="art-260-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-260-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-260-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-260-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.user_agent) as user_agent values(Web.status) as statuses from datamodel=Web where Web.http_method IN (&quot;POST&quot;,&quot;PUT&quot;) Web.url=&quot;*/content-type-builder/content-types*&quot; by Web.src, Web.dest, Web.url, Web.http_method
+| `drop_dm_object_name(Web)`
+| where NOT cidrmatch(&quot;10.0.0.0/8&quot;,src) AND NOT cidrmatch(&quot;172.16.0.0/12&quot;,src) AND NOT cidrmatch(&quot;192.168.0.0/16&quot;,src) AND NOT cidrmatch(&quot;127.0.0.0/8&quot;,src)
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-260-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.user_agent) as user_agent values(Web.status) as statuses from datamodel=Web where Web.http_method IN (&quot;POST&quot;,&quot;PUT&quot;) Web.url=&quot;*/content-type-builder/content-types*&quot; by Web.src, Web.dest, Web.url, Web.http_method
+| `drop_dm_object_name(Web)`
+| where NOT cidrmatch(&quot;10.0.0.0/8&quot;,src) AND NOT cidrmatch(&quot;172.16.0.0/12&quot;,src) AND NOT cidrmatch(&quot;192.168.0.0/16&quot;,src) AND NOT cidrmatch(&quot;127.0.0.0/8&quot;,src)
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="613c59d976" data-platforms="sent,sigma,spl" data-targets="vcs">
+  <summary>
+    <span class="uc-title">[LLM] Strapi Content-Type Builder Write Followed by Server-Side Error (CVE-2026-22599 DoS / migration crash)</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="613c59d976" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects POST/PUT to the Strapi Content-Type Builder content-types endpoint that returns a 5xx status — the article&#x27;s explicit IOC for exploitation is &#x27;Strapi server crashes immediately following a content-type creation or update, observed as the Node process exiting during the schema-migration step&#x27;. A 502/503/504 (upstream Strapi unreachable) or 500 from the Strapi node itself, gated to this specific URI, is a high-fidelity DoS / migration-error signal for the isRaw raw() injection.
+
+Rationale: Uses the article&#x27;s explicit behavioural IOC — &#x27;Strapi server crashes immediately following a content-type creation or update, observed as the Node process exiting during the schema-migration step&#x27;. A failed migration manifests as a 5xx on the same HTTP transaction (500 from Strapi itself, 502/503/504 from the upstream reverse proxy after node exits), so a single-event filter on (POST|PUT) + /content-type-builder/ + status≥500 is high-fidelity and Sigma-compatible. Datadog query left empty because the standard log sources listed (cloudtrail, azure.*, windows.*, linux.*, gcp.audit, kubernetes.audit, okta) do not include a generic web-access source — this telemetry would arrive at Datadog via a custom nginx/apache source not enumerated in the schema reference. Defender has no native web-access-log table.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Endpoint Denial of Service: Application or System Exploitation">T1499.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-260-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-260-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-260-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-260-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Schema-migration crash signature for CVE-2026-22599: 5xx response to a Content-Type Builder write
+// Mirrors article IOC: &#x27;Node process exiting during the schema-migration step&#x27;
+ImWebSession
+| where TimeGenerated &gt; ago(1d)
+| where HttpMethod in (&quot;POST&quot;,&quot;PUT&quot;)
+| where Url contains &quot;/content-type-builder/&quot;
+| where HttpStatusCode between (500 .. 599)
+| project TimeGenerated, SrcIpAddr, DstHostname, HttpMethod, Url, HttpStatusCode, HttpRequestHeaderUserAgent
+| summarize Hits = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), DistinctUrls = make_set(Url, 25), Statuses = make_set(HttpStatusCode, 10) by SrcIpAddr, DstHostname, HttpMethod
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-260-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Strapi Content-Type Builder Write Resulting in Server Error (CVE-2026-22599)
+id: 7e3d4c19-2a8b-4d5f-9eaf-c1234bd5a902
+description: Detects POST or PUT requests to Strapi Content-Type Builder endpoints that result in a 5xx status code. The CVE-2026-22599 advisory lists &#x27;Strapi server crashes immediately following a content-type creation or update&#x27; as a primary IOC — exploitation of the defaultTo isRaw raw() injection commonly triggers a fatal Node exit during schema migration, surfacing as upstream-error 5xx to the reverse proxy.
+references:
+    - https://github.com/advisories/GHSA-3xcq-8mjw-h6mx
+author: SOC Detection Engineering
+date: 2026/05/14
+tags:
+    - attack.t1190
+    - attack.t1499.004
+    - attack.initial-access
+    - attack.impact
+    - cve.2026.22599
+logsource:
+    category: webserver
+detection:
+    selection:
+        cs-method:
+            - POST
+            - PUT
+        cs-uri-stem|contains: &#x27;/content-type-builder/&#x27;
+        sc-status:
+            - 500
+            - 502
+            - 503
+            - 504
+    condition: selection
+falsepositives:
+    - Legitimate schema migration failure during development (wrong field type, duplicate name)
+    - Strapi instance restart during deployment causing transient 502s on admin endpoints
+level: high</code></pre></div>
+    <div class="tab-content" id="art-260-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-260-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-260-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-260-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.user_agent) as user_agent values(Web.status) as statuses values(Web.url) as urls from datamodel=Web where Web.http_method IN (&quot;POST&quot;,&quot;PUT&quot;) Web.url=&quot;*/content-type-builder/*&quot; Web.status&gt;=500 Web.status&lt;600 by Web.src, Web.dest, Web.http_method
+| `drop_dm_object_name(Web)`
+| where count &gt;= 1
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-260-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.user_agent) as user_agent values(Web.status) as statuses values(Web.url) as urls from datamodel=Web where Web.http_method IN (&quot;POST&quot;,&quot;PUT&quot;) Web.url=&quot;*/content-type-builder/*&quot; Web.status&gt;=500 Web.status&lt;600 by Web.src, Web.dest, Web.http_method
+| `drop_dm_object_name(Web)`
+| where count &gt;= 1
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-260-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-260-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-260-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-260-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-22599&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-260-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-22599&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-260-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-260-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-260-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-260-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-22599&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-260-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-22599&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>

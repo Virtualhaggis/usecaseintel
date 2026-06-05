@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1252 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1251 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -29,7 +29,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [miasma npm supply chain attack self spreading worm via phant](./2026-06-04/miasma-npm-supply-chain-attack-self-spreading-worm-via-phant.md)
 - [new ironworm malware hits 36 packages in npm supply chain at](./2026-06-04/new-ironworm-malware-hits-36-packages-in-npm-supply-chain-at.md)
 - [node gyp supply chain compromise a self propagating npm worm](./2026-06-04/node-gyp-supply-chain-compromise-a-self-propagating-npm-worm.md)
-- [proofpoint warns ta4922 deploys atlas rat romulusloader sile](./2026-06-04/proofpoint-warns-ta4922-deploys-atlas-rat-romulusloader-sile.md)
 - [reporting from vegas networking ai and good boys](./2026-06-04/reporting-from-vegas-networking-ai-and-good-boys.md)
 - [so you have an ai security budget now what](./2026-06-04/so-you-have-an-ai-security-budget-now-what.md)
 - [stock exchange executive s outlook account targeted to exfil](./2026-06-04/stock-exchange-executive-s-outlook-account-targeted-to-exfil.md)
