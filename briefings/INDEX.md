@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1252 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-06
+- [cisa warns of solarwinds serv u vulnerability exploited in a](./2026-06-06/cisa-warns-of-solarwinds-serv-u-vulnerability-exploited-in-a.md)
 - [cisco catalyst sd wan manager cve 2026 20245 flaw actively e](./2026-06-06/cisco-catalyst-sd-wan-manager-cve-2026-20245-flaw-actively-e.md)
 
 ## 2026-06-05
@@ -27,10 +28,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hackers publish malicious python package mimicking legitimat](./2026-06-05/hackers-publish-malicious-python-package-mimicking-legitimat.md)
 - [hola browser for windows delivery pipeline compromised to de](./2026-06-05/hola-browser-for-windows-delivery-pipeline-compromised-to-de.md)
 - [ironworm and new miasma worm variant hit npm in supply chain](./2026-06-05/ironworm-and-new-miasma-worm-variant-hit-npm-in-supply-chain.md)
-- [malicious browser add ons target chatgpt claude copilot gemi](./2026-06-05/malicious-browser-add-ons-target-chatgpt-claude-copilot-gemi.md)
 - [new gafgyt variant targets multiple linux architectures with](./2026-06-05/new-gafgyt-variant-targets-multiple-linux-architectures-with.md)
 - [new magecart attack turns stripe into a malware command serv](./2026-06-05/new-magecart-attack-turns-stripe-into-a-malware-command-serv.md)
-- [new shub stealer variant malware targets chrome firefox brav](./2026-06-05/new-shub-stealer-variant-malware-targets-chrome-firefox-brav.md)
 - [new threat cluster op 512 targets microsoft iis servers with](./2026-06-05/new-threat-cluster-op-512-targets-microsoft-iis-servers-with.md)
 - [pcpjack hijacks 230 aws google cloud and azure servers for c](./2026-06-05/pcpjack-hijacks-230-aws-google-cloud-and-azure-servers-for-c.md)
 - [securing ci cd in an agentic world claude code github action](./2026-06-05/securing-ci-cd-in-an-agentic-world-claude-code-github-action.md)
