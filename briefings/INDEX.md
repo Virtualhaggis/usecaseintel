@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1252 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -14,6 +14,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisco catalyst sd wan manager cve 2026 20245 flaw actively e](./2026-06-06/cisco-catalyst-sd-wan-manager-cve-2026-20245-flaw-actively-e.md)
 - [free apps are quietly turning smart tvs into web scraping pr](./2026-06-06/free-apps-are-quietly-turning-smart-tvs-into-web-scraping-pr.md)
 - [miasma worm hits 73 microsoft github repositories in major s](./2026-06-06/miasma-worm-hits-73-microsoft-github-repositories-in-major-s.md)
+- [miasma worm hits microsoft again azure functions action and ](./2026-06-06/miasma-worm-hits-microsoft-again-azure-functions-action-and-.md)
+- [microsoft s durabletask pypi package compromised in supply c](./2026-06-06/microsoft-s-durabletask-pypi-package-compromised-in-supply-c.md)
 
 ## 2026-06-05
 - [android spyware asin targets arabic users via fake news pdf ](./2026-06-05/android-spyware-asin-targets-arabic-users-via-fake-news-pdf-.md)

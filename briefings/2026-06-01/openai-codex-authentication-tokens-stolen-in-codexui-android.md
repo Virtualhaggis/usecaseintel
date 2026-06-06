@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Egress to codexui-android C2 domain anyclaw.store
 
-`UC_105_7` · phase: **actions** · confidence: **High**
+`UC_107_7` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceNetworkEvents
 
 ### [LLM] Non-Codex process reads ~/.codex/auth.json OAuth token file
 
-`UC_105_8` · phase: **actions** · confidence: **Medium**
+`UC_107_8` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceFileEvents
 
 ### [LLM] Installation of malicious codexui-android npm package
 
-`UC_105_9` · phase: **install** · confidence: **High**
+`UC_107_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -309,7 +309,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OpenAI Codex Authentication Tokens Stolen in codexui-android npm Supply Chain At
 
-`UC_105_6` · phase: **exploit** · confidence: **High**
+`UC_107_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
