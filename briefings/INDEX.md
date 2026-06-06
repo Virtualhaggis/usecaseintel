@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,7 +12,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ai agent uncovers 21 zero days in ffmpeg chrome patches reco](./2026-06-06/ai-agent-uncovers-21-zero-days-in-ffmpeg-chrome-patches-reco.md)
 - [cisa adds actively exploited solarwinds serv u dos flaw to k](./2026-06-06/cisa-adds-actively-exploited-solarwinds-serv-u-dos-flaw-to-k.md)
 - [cisco catalyst sd wan manager cve 2026 20245 flaw actively e](./2026-06-06/cisco-catalyst-sd-wan-manager-cve-2026-20245-flaw-actively-e.md)
+- [critical everest forms pro flaw exploited to take over wordp](./2026-06-06/critical-everest-forms-pro-flaw-exploited-to-take-over-wordp.md)
 - [free apps are quietly turning smart tvs into web scraping pr](./2026-06-06/free-apps-are-quietly-turning-smart-tvs-into-web-scraping-pr.md)
+- [free apps on samsung and lg smart tvs secretly turning your ](./2026-06-06/free-apps-on-samsung-and-lg-smart-tvs-secretly-turning-your-.md)
 - [miasma worm hits 73 microsoft github repositories in major s](./2026-06-06/miasma-worm-hits-73-microsoft-github-repositories-in-major-s.md)
 - [miasma worm hits microsoft again azure functions action and ](./2026-06-06/miasma-worm-hits-microsoft-again-azure-functions-action-and-.md)
 - [microsoft s durabletask pypi package compromised in supply c](./2026-06-06/microsoft-s-durabletask-pypi-package-compromised-in-supply-c.md)
@@ -31,9 +33,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47744 shopper authorization bypass an](./2026-06-05/ghsa-critical-cve-2026-47744-shopper-authorization-bypass-an.md)
 - [hackers exploit critical everest forms pro wordpress plugin ](./2026-06-05/hackers-exploit-critical-everest-forms-pro-wordpress-plugin-.md)
 - [hackers publish malicious python package mimicking legitimat](./2026-06-05/hackers-publish-malicious-python-package-mimicking-legitimat.md)
-- [hola browser for windows delivery pipeline compromised to de](./2026-06-05/hola-browser-for-windows-delivery-pipeline-compromised-to-de.md)
 - [ironworm and new miasma worm variant hit npm in supply chain](./2026-06-05/ironworm-and-new-miasma-worm-variant-hit-npm-in-supply-chain.md)
-- [new gafgyt variant targets multiple linux architectures with](./2026-06-05/new-gafgyt-variant-targets-multiple-linux-architectures-with.md)
 - [new magecart attack turns stripe into a malware command serv](./2026-06-05/new-magecart-attack-turns-stripe-into-a-malware-command-serv.md)
 - [new threat cluster op 512 targets microsoft iis servers with](./2026-06-05/new-threat-cluster-op-512-targets-microsoft-iis-servers-with.md)
 - [pcpjack hijacks 230 aws google cloud and azure servers for c](./2026-06-05/pcpjack-hijacks-230-aws-google-cloud-and-azure-servers-for-c.md)
@@ -128,7 +128,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47416 praisonai platform any workspac](./2026-05-29/ghsa-critical-cve-2026-47416-praisonai-platform-any-workspac.md)
 - [how relay network adopted ai coding securely and built the f](./2026-05-29/how-relay-network-adopted-ai-coding-securely-and-built-the-f.md)
 - [microsoft is named a leader in the 2026 gartner magic quadra](./2026-05-29/microsoft-is-named-a-leader-in-the-2026-gartner-magic-quadra.md)
-- [new russia linked greyvibe targets ukraine with ai powered c](./2026-05-29/new-russia-linked-greyvibe-targets-ukraine-with-ai-powered-c.md)
 - [typosquatted npm packages used to steal cloud and ci cd secr](./2026-05-29/typosquatted-npm-packages-used-to-steal-cloud-and-ci-cd-secr.md)
 - [what s in the container analyzing vulnerabilities risks and ](./2026-05-29/what-s-in-the-container-analyzing-vulnerabilities-risks-and-.md)
 
