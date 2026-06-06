@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,7 +11,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-05
 - [android spyware asin targets arabic users via fake news pdf ](./2026-06-05/android-spyware-asin-targets-arabic-users-via-fake-news-pdf-.md)
 - [chinese apt deploys new malware to keep access to hacked net](./2026-06-05/chinese-apt-deploys-new-malware-to-keep-access-to-hacked-net.md)
-- [chinese apt verdantbamboo uses brickstorm malware to comprom](./2026-06-05/chinese-apt-verdantbamboo-uses-brickstorm-malware-to-comprom.md)
 - [cisa hackers now exploit solarwinds serv u flaw to crash ser](./2026-06-05/cisa-hackers-now-exploit-solarwinds-serv-u-flaw-to-crash-ser.md)
 - [cisa kev cve 2026 28318 solarwinds serv u uncontrolled resou](./2026-06-05/cisa-kev-cve-2026-28318-solarwinds-serv-u-uncontrolled-resou.md)
 - [cisco warns of unpatched sd wan zero day exploited in attack](./2026-06-05/cisco-warns-of-unpatched-sd-wan-zero-day-exploited-in-attack.md)

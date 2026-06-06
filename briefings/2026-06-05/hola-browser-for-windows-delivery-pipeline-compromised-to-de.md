@@ -53,7 +53,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hola Browser for Windows Delivery Pipeline Compromised to Deliver Cryptominer
 
-`UC_6_2` · phase: **exploit** · confidence: **High**
+`UC_8_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
