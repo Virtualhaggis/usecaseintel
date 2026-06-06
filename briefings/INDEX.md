@@ -8,6 +8,9 @@ _1253 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-06-06
+- [cisco catalyst sd wan manager cve 2026 20245 flaw actively e](./2026-06-06/cisco-catalyst-sd-wan-manager-cve-2026-20245-flaw-actively-e.md)
+
 ## 2026-06-05
 - [android spyware asin targets arabic users via fake news pdf ](./2026-06-05/android-spyware-asin-targets-arabic-users-via-fake-news-pdf-.md)
 - [chinese apt deploys new malware to keep access to hacked net](./2026-06-05/chinese-apt-deploys-new-malware-to-keep-access-to-hacked-net.md)
@@ -134,7 +137,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [less panic patching more precision](./2026-05-28/less-panic-patching-more-precision.md)
 - [pirates in the crosshairs how one cybercrime gang has been i](./2026-05-28/pirates-in-the-crosshairs-how-one-cybercrime-gang-has-been-i.md)
 - [the gentlemen ransomware dissecting a self propagating go en](./2026-05-28/the-gentlemen-ransomware-dissecting-a-self-propagating-go-en.md)
-- [threat actors exploit critical forticlient ems flaw to deplo](./2026-05-28/threat-actors-exploit-critical-forticlient-ems-flaw-to-deplo.md)
 - [what mdm can t protect on developer machines and what to do ](./2026-05-28/what-mdm-can-t-protect-on-developer-machines-and-what-to-do-.md)
 
 ## 2026-05-27
