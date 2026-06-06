@@ -9,8 +9,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-06
-- [cisa warns of solarwinds serv u vulnerability exploited in a](./2026-06-06/cisa-warns-of-solarwinds-serv-u-vulnerability-exploited-in-a.md)
+- [ai agent uncovers 21 zero days in ffmpeg chrome patches reco](./2026-06-06/ai-agent-uncovers-21-zero-days-in-ffmpeg-chrome-patches-reco.md)
+- [cisa adds actively exploited solarwinds serv u dos flaw to k](./2026-06-06/cisa-adds-actively-exploited-solarwinds-serv-u-dos-flaw-to-k.md)
 - [cisco catalyst sd wan manager cve 2026 20245 flaw actively e](./2026-06-06/cisco-catalyst-sd-wan-manager-cve-2026-20245-flaw-actively-e.md)
+- [free apps are quietly turning smart tvs into web scraping pr](./2026-06-06/free-apps-are-quietly-turning-smart-tvs-into-web-scraping-pr.md)
+- [miasma worm hits 73 microsoft github repositories in major s](./2026-06-06/miasma-worm-hits-73-microsoft-github-repositories-in-major-s.md)
 
 ## 2026-06-05
 - [android spyware asin targets arabic users via fake news pdf ](./2026-06-05/android-spyware-asin-targets-arabic-users-via-fake-news-pdf-.md)
@@ -64,7 +67,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44181 jupyter enterprise gateway jinj](./2026-06-03/ghsa-critical-cve-2026-44181-jupyter-enterprise-gateway-jinj.md)
 - [ghsa critical cve 2026 44182 jupyter enterprise gateway kube](./2026-06-03/ghsa-critical-cve-2026-44182-jupyter-enterprise-gateway-kube.md)
 - [google doubleclick abused in new malspam campaign to deliver](./2026-06-03/google-doubleclick-abused-in-new-malspam-campaign-to-deliver.md)
-- [one click github dev attack lets attackers steal full github](./2026-06-03/one-click-github-dev-attack-lets-attackers-steal-full-github.md)
+- [microsoft fixes one click github dev attack that let attacke](./2026-06-03/microsoft-fixes-one-click-github-dev-attack-that-let-attacke.md)
 - [preinstall to persistence inside the red hat npm miasma cred](./2026-06-03/preinstall-to-persistence-inside-the-red-hat-npm-miasma-cred.md)
 - [the new security risks of the agentic development lifecycle](./2026-06-03/the-new-security-risks-of-the-agentic-development-lifecycle.md)
 - [unpatched windows search uri vulnerability lets attackers st](./2026-06-03/unpatched-windows-search-uri-vulnerability-lets-attackers-st.md)
@@ -122,8 +125,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47410 praisonai platform jwt signing ](./2026-05-29/ghsa-critical-cve-2026-47410-praisonai-platform-jwt-signing-.md)
 - [ghsa critical cve 2026 47416 praisonai platform any workspac](./2026-05-29/ghsa-critical-cve-2026-47416-praisonai-platform-any-workspac.md)
 - [how relay network adopted ai coding securely and built the f](./2026-05-29/how-relay-network-adopted-ai-coding-securely-and-built-the-f.md)
-- [kimsuky deploys httpspy expands arsenal with hellodoor and v](./2026-05-29/kimsuky-deploys-httpspy-expands-arsenal-with-hellodoor-and-v.md)
-- [malicious sicoob nuget steals banking credentials as npm pac](./2026-05-29/malicious-sicoob-nuget-steals-banking-credentials-as-npm-pac.md)
 - [microsoft is named a leader in the 2026 gartner magic quadra](./2026-05-29/microsoft-is-named-a-leader-in-the-2026-gartner-magic-quadra.md)
 - [new russia linked greyvibe targets ukraine with ai powered c](./2026-05-29/new-russia-linked-greyvibe-targets-ukraine-with-ai-powered-c.md)
 - [typosquatted npm packages used to steal cloud and ci cd secr](./2026-05-29/typosquatted-npm-packages-used-to-steal-cloud-and-ci-cd-secr.md)
@@ -131,7 +132,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-28
 - [2026 world cup discussing the world s biggest game s attack ](./2026-05-28/2026-world-cup-discussing-the-world-s-biggest-game-s-attack-.md)
-- [critical gogs rce vulnerability lets any authenticated user ](./2026-05-28/critical-gogs-rce-vulnerability-lets-any-authenticated-user-.md)
 - [eset apt activity report q4 2025 q1 2026](./2026-05-28/eset-apt-activity-report-q4-2025-q1-2026.md)
 - [less panic patching more precision](./2026-05-28/less-panic-patching-more-precision.md)
 - [pirates in the crosshairs how one cybercrime gang has been i](./2026-05-28/pirates-in-the-crosshairs-how-one-cybercrime-gang-has-been-i.md)

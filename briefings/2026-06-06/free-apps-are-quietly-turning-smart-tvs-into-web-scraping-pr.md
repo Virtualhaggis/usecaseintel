@@ -1,23 +1,26 @@
-# [CRIT] One-Click GitHub Dev Attack Lets Attackers Steal Full GitHub OAuth Tokens
+# [HIGH] Free Apps Are Quietly Turning Smart TVs Into Web-Scraping Proxies for AI
 
 **Source:** The Hacker News
-**Published:** 2026-06-03
-**Article:** https://thehackernews.com/2026/06/one-click-github-dev-attack-lets.html
+**Published:** 2026-06-06
+**Article:** https://thehackernews.com/2026/06/free-apps-are-quietly-turning-smart-tvs.html
 
 ## Threat Profile
 
-CISA Adds Exploited Magento RCE Flaw CVE-2026-45247 to KEV Catalog 
- Ravie Lakshmanan  Jun 04, 2026 Web Security / Vulnerability 
-The U.S. Cybersecurity and Infrastructure Security Agency (CISA) on Wednesday added a critical flaw impacting Mirasvit Cache Warmer, a popular Magento full-page cache extension, to its Known Exploited Vulnerabilities (KEV) catalog, following reports of active exploitation in the wild.
-The vulnerability, tracked as CVE-2026-45247 (CVSS score: 9.8), is a case of deser…
+Free Apps Are Quietly Turning Smart TVs Into Web-Scraping Proxies for AI 
+ Swati Khandelwal  Jun 06, 2026 Network Security / IoT Security 
+A researcher has reverse-engineered the iOS SDK that Bright Data embeds in consumer apps and documented how it turns devices, including always-on smart TVs, into exit nodes that relay web-scraping traffic for a data business Bright Data markets heavily to the AI industry.
+The company, the successor to Luminati, operates what it calls the largest residential…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-45247`
+- **Domain (defanged):** `proxyjs.brdtnet.com`
+- **Domain (defanged):** `proxyjs.luminatinet.com`
+- **Domain (defanged):** `proxyjs.bright-sdk.com`
+- **Domain (defanged):** `clientsdk.bright-sdk.com`
+- **Domain (defanged):** `clientsdk.brdtnet.com`
 
 ## MITRE ATT&CK Techniques
 
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -28,12 +31,139 @@ The vulnerability, tracked as CVE-2026-45247 (CVSS score: 9.8), is a case of des
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
+- **T1090.002** — External Proxy
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
+- **T1474.003** — Supply Chain Compromise: Compromise Software Supply Chain (mobile)
+- **T1496** — Resource Hijacking
+- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Bright Data SDK control-plane beacon to proxyjs/clientsdk endpoints
+
+`UC_0_6` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.answer) as answers from datamodel=Network_Resolution where DNS.query IN ("proxyjs.brdtnet.com","proxyjs.luminatinet.com","proxyjs.bright-sdk.com","clientsdk.bright-sdk.com","clientsdk.brdtnet.com") OR DNS.query="*.bright-sdk.com" OR DNS.query="*.brdtnet.com" OR DNS.query="*.luminatinet.com" OR DNS.query="*.luminati.io" by DNS.src DNS.query host
+| `drop_dm_object_name(DNS)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+// Bright Data residential-proxy SDK control-plane beacon
+// Endpoints contacting *.bright-sdk.com / *.brdtnet.com / *.luminatinet.com
+let brdControlHosts = dynamic(["proxyjs.brdtnet.com","proxyjs.luminatinet.com","proxyjs.bright-sdk.com","clientsdk.bright-sdk.com","clientsdk.brdtnet.com"]);
+let brdSuffixes = dynamic([".bright-sdk.com",".brdtnet.com",".luminatinet.com",".luminati.io"]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where isnotempty(RemoteUrl)
+| where RemoteUrl in~ (brdControlHosts)
+    or RemoteUrl has_any (brdSuffixes)
+| extend MatchType = case(RemoteUrl in~ (brdControlHosts), "control-plane FQDN",
+                          RemoteUrl endswith ".bright-sdk.com", "bright-sdk.com suffix",
+                          RemoteUrl endswith ".brdtnet.com", "brdtnet.com suffix",
+                          RemoteUrl endswith ".luminatinet.com", "luminatinet.com suffix",
+                          RemoteUrl endswith ".luminati.io", "luminati.io suffix",
+                          "other")
+| project Timestamp, DeviceName, DeviceId, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, MatchType
+| order by Timestamp desc
+```
+
+### [LLM] Bright Data partner-app or brdsdk.framework present on managed iOS / mobile inventory
+
+`UC_0_7` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(Endpoint.Processes.dest) as devices from datamodel=Endpoint.Processes where Endpoint.Processes.process IN ("*Petflix*","*PlayWorks*","*CloudTV*","*Longvision*","*brdsdk*","*BrdWebSocketFacade*","*BrdNetwork.DNSResolver*") OR Endpoint.Processes.process_name IN ("*Petflix*","*PlayWorks*","*CloudTV*","*Longvision*") by Endpoint.Processes.dest Endpoint.Processes.process_name
+| `drop_dm_object_name("Endpoint.Processes")`
+| `security_content_ctime(firstSeen)`
+| `security_content_ctime(lastSeen)`
+```
+
+**Defender KQL:**
+```kql
+// Hunt managed fleet for Bright Data SDK partner apps and the brdsdk.framework binary
+let brdPartnerApps = dynamic(["Petflix","PlayWorks","CloudTV","Longvision"]);
+let brdVendors = dynamic(["PlayWorks Digital","CloudTV","Longvision","Bright Data","Luminati"]);
+DeviceTvmSoftwareInventory
+| where SoftwareName has_any (brdPartnerApps)
+    or SoftwareVendor has_any (brdVendors)
+    or SoftwareName contains "brdsdk"
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, OSPlatform, DeviceType, PublicIP, LoggedOnUsers) by DeviceId) on DeviceId
+| project DeviceId, DeviceName, OSPlatform, DeviceType, SoftwareVendor, SoftwareName, SoftwareVersion, PublicIP, LoggedOnUsers, EndOfSupportStatus
+| union (
+    DeviceImageLoadEvents
+    | where Timestamp > ago(7d)
+    | where FileName contains "brdsdk" or FolderPath contains "brdsdk.framework" or FileName has_any ("BrdWebSocketFacade","BrdNetwork")
+    | project DeviceId, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+  )
+| order by DeviceName asc
+```
+
+### [LLM] Smart-TV / mobile device acting as residential proxy exit node (high-fan-out HTTPS to unrelated public destinations)
+
+`UC_0_8` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true 
+    dc(All_Traffic.dest) as uniqueDests 
+    dc(All_Traffic.dest_ip) as uniqueDstIPs 
+    sum(All_Traffic.bytes_out) as bytesOut 
+    sum(All_Traffic.bytes_in) as bytesIn 
+    count as connCount 
+    values(All_Traffic.app) as apps 
+    from datamodel=Network_Traffic 
+    where All_Traffic.dest_port IN (80,443) AND All_Traffic.action=allowed 
+    by All_Traffic.src All_Traffic.src_category _time span=1h
+| `drop_dm_object_name("All_Traffic")`
+| where uniqueDests > 250 AND bytesOut > 524288000
+| eval gbOut = round(bytesOut/1073741824, 2)
+| where src_category IN ("iot","smart_tv","mobile","unknown","guest")
+| sort - bytesOut
+```
+
+**Defender KQL:**
+```kql
+// Managed iOS / mobile exhibiting residential-proxy egress pattern (covers Defender for iOS estate)
+let WindowHrs = 1h;
+let MinUniqueRemoteIPs = 100;   // residential browsing rarely fans out to >100 distinct public IPs per hour
+let MinSessions = 500;          // SDK polling + scraping job throughput floor
+let ManagedMobile = DeviceInfo
+    | where Timestamp > ago(24h)
+    | where OSPlatform in ("iOS","iPadOS","Android")
+    | summarize arg_max(Timestamp, OSPlatform, DeviceType, PublicIP, LoggedOnUsers) by DeviceId, DeviceName;
+DeviceNetworkEvents
+| where Timestamp > ago(24h)
+| where ActionType == "ConnectionSuccess"
+| where RemoteIPType == "Public"
+| where RemotePort in (80, 443, 8080, 8443)
+| join kind=inner ManagedMobile on DeviceId
+| summarize UniqueRemoteIPs = dcount(RemoteIP),
+            UniqueRemoteUrls = dcount(RemoteUrl),
+            Sessions = count(),
+            SampleUrls = make_set(RemoteUrl, 25),
+            SampleProcess = make_set(InitiatingProcessFileName, 10),
+            FirstSeen = min(Timestamp),
+            LastSeen = max(Timestamp)
+            by DeviceName, DeviceId, OSPlatform, bin(Timestamp, WindowHrs)
+| where UniqueRemoteIPs > MinUniqueRemoteIPs and Sessions > MinSessions
+| extend MultiUseSig = iff(UniqueRemoteUrls > 200 and array_length(SampleProcess) <= 2, "likely-proxy", "review")
+| order by Sessions desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -238,10 +368,10 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-45247`
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `proxyjs.brdtnet.com`, `proxyjs.luminatinet.com`, `proxyjs.bright-sdk.com`, `clientsdk.bright-sdk.com`, `clientsdk.brdtnet.com`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

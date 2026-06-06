@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Chrome Preferences tamper on macOS by non-Chrome process (FlutterShell browser hijack)
 
-`UC_52_8` · phase: **install** · confidence: **High**
+`UC_55_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceFileEvents
 
 ### [LLM] macOS host beaconing to FlutterShell C2 / ad-intermediary domains
 
-`UC_52_9` · phase: **c2** · confidence: **High**
+`UC_55_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ union net, dns
 
 ### [LLM] Known FlutterShell SHA256 binary execution on macOS
 
-`UC_52_10` · phase: **install** · confidence: **High**
+`UC_55_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ union proc_hits, file_hits
 
 ### [LLM] FlutterShell WebView bridge spawns shell on macOS (arbitrary command execution capability)
 
-`UC_52_11` · phase: **actions** · confidence: **Medium**
+`UC_55_11` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
