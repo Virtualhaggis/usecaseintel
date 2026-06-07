@@ -1,0 +1,44 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_NPM_INSTALL_TIME_LIFECYCLE_HOOK_TRIGGERS_OUTBOUND_')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] npm Install-Time Lifecycle Hook Triggers Outbound Egress to Newly-Seen Domain (Shai-Hulud/Miasma/IronWorm pattern)",
+        "description": "Detects the joint pattern across the fortnight's npm supply-chain wave \u2014 Miasma/@redhat-cloud-services, IronWorm, codexui-android, vpmdhaj typosquats, and the binding.gyp self-propagating worm \u2014 where an npm/yarn/pnpm install spawns a node (or node-gyp/python build helper) child process that within ~5 minutes egresses to a domain or IP never seen before in the org. The chain spans delivery (malicious package landing on a dev/CI host) and C2/exfil (preinstall/binding.gyp payload beaconing harvested AWS, GCP, Azure, GitHub, npm, and CircleCI secrets). Kill-chain stages covered: install (lifecycle-hook execution) \u2192 c2/actions (credential exfil to attacker infrastructure). It will fire when a developer or CI runner installs a poisoned package and the payload reaches out to fresh attacker infra; it will NOT fire on normal npm installs that only contact already-baselined registries/CDNs (registry.npmjs.org, github.com, well-known mirrors), nor on lifecycle scripts that stay local. IOC slots (`<c2_domain_list>`, `<c2_ip_list>`, `<sha256_list>`) are referenced as substitution points so the rule survives weekly IOC rotation.\n\nRationale: Across all 11 articles the invariant is identical: an npm-family parent (or node-gyp triggered by binding.gyp) spawns a node/python/shell child during install that egresses to attacker infrastructure within minutes \u2014 exfiltrating GitHub/AWS/GCP/Azure/npm/Codex/Anthropic tokens. Correlating install-time lifecycle execution with a previously-unseen external destination in a 5-minute window catches Miasma, IronWorm, codexui-android, vpmdhaj typosquats, and the binding.gyp worm without depending on any single campaign's rotating hashes or domains.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let LookbackDays = 7d;\nlet CorrelationWindow = 5m;\nlet KnownC2Domains = dynamic([\"aab.sportsontheweb.net\",\"oob.moika.tech\",\"moika.tech\",\"cloudplatform-single-spa.io\",\"t-in-one.io\",\"anyclaw.store\",\"sentry.anyclaw.store\",\"audit.checkmarx.cx\"]);\nlet KnownC2IPs = dynamic([\"94.154.172.43\"]);\nlet BaselineDomains = DeviceNetworkEvents\n    | where TimeGenerated between (ago(30d) .. ago(1h))\n    | where isnotempty(RemoteUrl)\n    | summarize BaselineHosts = dcount(DeviceName) by RemoteUrl\n    | where BaselineHosts > 2;\nlet InstallHookExec = DeviceProcessEvents\n    | where TimeGenerated > ago(LookbackDays)\n    | where InitiatingProcessFileName in~ (\"npm.exe\",\"npm\",\"npm-cli.js\",\"node.exe\",\"node\",\"yarn.exe\",\"yarn\",\"pnpm.exe\",\"pnpm\",\"npx.exe\",\"npx\",\"node-gyp\",\"node-gyp.exe\")\n    | where FileName in~ (\"node.exe\",\"node\",\"python.exe\",\"python\",\"python3\",\"sh\",\"bash\",\"powershell.exe\",\"pwsh.exe\",\"curl.exe\",\"wget.exe\")\n    | where InitiatingProcessCommandLine has_any (\"install\",\"ci\",\"rebuild\",\"preinstall\",\"postinstall\",\"binding.gyp\",\"node_modules\")\n        or ProcessCommandLine has_any (\"node_modules\",\"binding.gyp\",\"preinstall\",\"postinstall\")\n    | where AccountName !endswith \"$\"\n    | project InstallTime = TimeGenerated, DeviceName, AccountName,\n              InstallParent = InitiatingProcessFileName,\n              InstallParentCmd = InitiatingProcessCommandLine,\n              ChildImage = FileName, ChildCmd = ProcessCommandLine, ChildSHA256 = SHA256;\nlet EgressEvents = DeviceNetworkEvents\n    | where TimeGenerated > ago(LookbackDays)\n    | where RemoteIPType == \"Public\"\n    | where InitiatingProcessFileName in~ (\"node.exe\",\"node\",\"python.exe\",\"python\",\"python3\",\"curl.exe\",\"wget.exe\",\"powershell.exe\",\"pwsh.exe\",\"sh\",\"bash\")\n    | project EgressTime = TimeGenerated, DeviceName, RemoteUrl, RemoteIP, RemotePort;\nInstallHookExec\n| join kind=inner EgressEvents on DeviceName\n| where EgressTime between (InstallTime .. InstallTime + CorrelationWindow)\n| extend DelaySec = datetime_diff('second', EgressTime, InstallTime)\n| join kind=leftanti BaselineDomains on RemoteUrl\n| extend MatchKnownC2 = iff(RemoteUrl in~ (KnownC2Domains) or RemoteIP in (KnownC2IPs), true, false)\n| project InstallTime, EgressTime, DelaySec, DeviceName, AccountName, InstallParent,\n          InstallParentCmd, ChildImage, ChildCmd, ChildSHA256, RemoteUrl, RemoteIP, RemotePort, MatchKnownC2\n| order by InstallTime desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1195.002",
+          "T1546.016",
+          "T1059.007",
+          "T1071.001",
+          "T1552.001",
+          "T1552.005",
+          "T1567"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_NPM_INSTALL_TIME_LIFECYCLE_HOOK_TRIGGERS_OUTBOUND_",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/install/UC_WEEKLY_NPM_INSTALL_TIME_LIFECYCLE_HOOK_TRIGGERS_OUTBOUND_.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,41 @@
+title: [WEEKLY] Public-Facing App Runtime Spawns Shell, LOLBin, or Container-Control Tool
+id: UC_WEEKLY_PUBLIC_FACING_APP_RUNTIME_SPAWNS_SHELL_LOLBIN_OR_C
+status: experimental
+description: Detects an internet-facing application runtime — Node.js, Python/Jupyter, PHP-FPM, IIS w3wp, nginx, httpd, caddy, ruby, or java — spawning a shell, LOLBin, or container-control binary, optionally with a recon/privilege-escalation keyword in the child command line. This is the common post-condition shared across the fortnight's CRITICAL/KEV catch: PAN-OS GlobalProtect auth bypass under active exploitation (CISA KEV CVE-2026-0257; The Hacker News follow-up), three independent vm2 sandbox escapes (CVE-2026-47137 patch bypass, CVE-2026-47140 NodeVM denylist bypass, CVE-2026-47210 JSPI Promise species bypass), the Jupyter Enterprise Gateway KERNEL_UID/GID enforcement bypass (CVE-2026-44180), and the Shopper RBAC authorization bypass (CVE-2026-47744). Every one of these CVEs lets an unauthenticated/low-privileged HTTP touch defeat an auth/authz/sandbox check; the only host-visible signal the bypasses share is the privilege-boundary crossing that follows — a web/app process suddenly executing a shell, container-control tool, or LOLBin. The query spans the exploit and install stages by joining a parent in the app-runtime set to a child in the shell/LOLBin/container-control set on the same host. It fires when the bypass is converted to host action and does NOT fire on benign in-runtime behaviour (a Node API calling git, a PHP composer install, a Python wheel build invoking gcc) because none of those children are in the suspicious-child set; CI build agents and DevOps tooling running as app runtimes are the main FP source and should be allowlisted by hostname.
+references:
+  - https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_PUBLIC_FACING_APP_RUNTIME_SPAWNS_SHELL_LOLBIN_OR_C.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.exploit
+  - attack.t1190
+  - attack.t1059
+  - attack.t1611
+  - attack.t1068
+  - attack.t1610
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'node.exe'
+      - 'node'
+      - 'python.exe'
+      - 'python'
+      - 'python3'
+      - 'jupyter'
+      - 'jupyter-kernel-launcher'
+      - 'php-fpm.exe'
+      - 'php-fpm'
+      - 'php.exe'
+      - 'php'
+      - 'w3wp.exe'
+      - 'nginx.exe'
+      - 'nginx'
+      - 'httpd.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

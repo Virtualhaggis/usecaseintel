@@ -1,0 +1,42 @@
+title: [WEEKLY] Developer/Data-tooling Daemon Spawns Shell Child Seconds After POST to Runner/Exec Endpoint
+id: UC_WEEKLY_DEVELOPER_DATA_TOOLING_DAEMON_SPAWNS_SHELL_CHILD_S
+status: experimental
+description: Detects the joint pattern across this fortnight's GHSA critical-severity disclosures where a long-running developer or data-tooling daemon (Node.js, Python, Jupyter kernel/Enterprise Gateway, Stata) receives an inbound HTTP POST to a code-execution-adjacent endpoint (`/runners/start`, `/runners/load-reader`, `/api/kernels`, `/start`, `/stata_do`, `/workspaces/*/members`, etc.) and within seconds spawns an OS shell, LOLBin, or alternate interpreter as a child — the universal post-condition of code injection (DbGate CVE-2026-47668/47670), arbitrary-file-write turned RCE (DbGate Zip Slip CVE-2026-47669), command injection (MCP-for-Stata CVE-2026-47708), SSTI (Jupyter EG CVE-2026-44181), YAML manifest injection (Jupyter EG CVE-2026-44182), and path-traversal-to-exec (NASA AMMOS CVE-2026-47731). It spans the exploit -> install kill-chain boundary by correlating the network ingress (vulnerable endpoint hit) with the host-side proof of code execution (parent-child anomaly) inside a 2-minute window on the same host. Fires when a vulnerable runner endpoint is POSTed AND the same daemon process spawns sh/bash/cmd/powershell/curl/wget/python/perl within 120s; does NOT fire on the routine background tasks these daemons spawn (helper Node workers, child Python kernels of the same family, scheduled cron-jobs) nor on POSTs to read-only endpoints, keeping FP rate low even in noisy CI/MLOps environments.
+references:
+  - https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_DEVELOPER_DATA_TOOLING_DAEMON_SPAWNS_SHELL_CHILD_S.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.exploit
+  - attack.t1190
+  - attack.t1059_004
+  - attack.t1059_003
+  - attack.t1059_006
+  - attack.t1059_007
+  - attack.t1505_003
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'node'
+      - 'node.exe'
+      - 'python'
+      - 'python.exe'
+      - 'python3'
+      - 'jupyter-kernel'
+      - 'enterprise_gateway'
+      - 'stata'
+      - 'stata.exe'
+      - 'stata-mp'
+      - 'stata-mp.exe'
+      - 'xstata'
+      - 'xstata.exe'
+      - 'php'
+      - 'php-fpm'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

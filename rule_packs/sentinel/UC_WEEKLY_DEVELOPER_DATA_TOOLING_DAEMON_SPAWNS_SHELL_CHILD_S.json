@@ -1,0 +1,43 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_DEVELOPER_DATA_TOOLING_DAEMON_SPAWNS_SHELL_CHILD_S')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Developer/Data-tooling Daemon Spawns Shell Child Seconds After POST to Runner/Exec Endpoint",
+        "description": "Detects the joint pattern across this fortnight's GHSA critical-severity disclosures where a long-running developer or data-tooling daemon (Node.js, Python, Jupyter kernel/Enterprise Gateway, Stata) receives an inbound HTTP POST to a code-execution-adjacent endpoint (`/runners/start`, `/runners/load-reader`, `/api/kernels`, `/start`, `/stata_do`, `/workspaces/*/members`, etc.) and within seconds spawns an OS shell, LOLBin, or alternate interpreter as a child \u2014 the universal post-condition of code injection (DbGate CVE-2026-47668/47670), arbitrary-file-write turned RCE (DbGate Zip Slip CVE-2026-47669), command injection (MCP-for-Stata CVE-2026-47708), SSTI (Jupyter EG CVE-2026-44181), YAML manifest injection (Jupyter EG CVE-2026-44182), and path-traversal-to-exec (NASA AMMOS CVE-2026-47731). It spans the exploit -> install kill-chain boundary by correlating the network ingress (vulnerable endpoint hit) with the host-side proof of code execution (parent-child anomaly) inside a 2-minute window on the same host. Fires when a vulnerable runner endpoint is POSTed AND the same daemon process spawns sh/bash/cmd/powershell/curl/wget/python/perl within 120s; does NOT fire on the routine background tasks these daemons spawn (helper Node workers, child Python kernels of the same family, scheduled cron-jobs) nor on POSTs to read-only endpoints, keeping FP rate low even in noisy CI/MLOps environments.\n\nRationale: The 12 articles share one observable joint pattern: a long-lived developer/data-tooling daemon accepts an HTTP POST to an execution-adjacent endpoint and then immediately spawns a shell, LOLBin, or alternate interpreter \u2014 the universal payoff of code injection, SSTI, manifest injection, command injection, and path-traversal-to-RCE. Correlating the inbound POST with the parent-child anomaly within a 2-minute window on the same host catches every variant in the fortnight (DbGate Node, Jupyter EG Python, Stata, AMMOS Python) while suppressing routine helper-process spawns that don't follow a vulnerable-endpoint POST.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let Window = 2m;\nlet RunnerPaths = dynamic([\"/runners/start\",\"/runners/load-reader\",\"/api/kernels\",\"/stata_do\",\"/workspaces/\",\"/auth/login\"]);\nlet RunnerHits =\n    union isfuzzy=true\n        (W3CIISLog\n            | where TimeGenerated > ago(7d)\n            | where csMethod == \"POST\"\n            | where csUriStem has_any (RunnerPaths)\n            | project NetTime=TimeGenerated, Host=Computer, SrcIP=cIP, ReqUri=csUriStem, UA=csUserAgent),\n        (AzureDiagnostics\n            | where TimeGenerated > ago(7d)\n            | where Category in (\"ApplicationGatewayAccessLog\",\"FrontDoorAccessLog\",\"AppServiceHTTPLogs\")\n            | where httpMethod_s == \"POST\" or CsMethod_s == \"POST\"\n            | extend Uri = coalesce(requestUri_s, csUriStem, originalRequestUriWithArgs_s, \"\")\n            | where Uri has_any (RunnerPaths)\n            | project NetTime=TimeGenerated, Host=coalesce(hostname_s, host_s, Resource), SrcIP=coalesce(clientIp_s, ClientIp_s, CIp_s), ReqUri=Uri, UA=coalesce(userAgent_s, csUserAgent,\"\"))\n    | where isnotempty(Host);\nlet Children =\n    union isfuzzy=true\n        (SecurityEvent\n            | where TimeGenerated > ago(7d)\n            | where EventID == 4688\n            | where ParentProcessName has_any (\"node.exe\",\"python.exe\",\"php.exe\",\"php-fpm.exe\",\"w3wp.exe\",\"stata.exe\",\"xstata.exe\")\n            | where NewProcessName has_any (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"bash.exe\",\"curl.exe\",\"wget.exe\",\"python.exe\",\"perl.exe\")\n            | project ProcTime=TimeGenerated, Host=Computer, ParentBinary=tostring(split(ParentProcessName,\"\\\\\")[-1]), ChildBinary=tostring(split(NewProcessName,\"\\\\\")[-1]), ChildCmd=CommandLine, Account=SubjectUserName),\n        (Syslog\n            | where TimeGenerated > ago(7d)\n            | where Facility == \"authpriv\" or ProcessName in (\"audispd\",\"auditd\",\"sshd\")\n            | where SyslogMessage has_any (\"comm=\\\"sh\\\"\",\"comm=\\\"bash\\\"\",\"comm=\\\"curl\\\"\",\"comm=\\\"wget\\\"\",\"comm=\\\"python\\\"\")\n            | where SyslogMessage has_any (\"node\",\"python\",\"stata\",\"php-fpm\",\"uvicorn\",\"gunicorn\")\n            | extend ParentBinary=extract(@\"pcomm=\\\"([^\\\"]+)\\\"\",1,SyslogMessage), ChildBinary=extract(@\"comm=\\\"([^\\\"]+)\\\"\",1,SyslogMessage), ChildCmd=SyslogMessage, Account=extract(@\"uid=(\\d+)\",1,SyslogMessage)\n            | project ProcTime=TimeGenerated, Host=HostName, ParentBinary, ChildBinary, ChildCmd, Account);\nChildren\n| join kind=inner RunnerHits on Host\n| where ProcTime between (NetTime .. NetTime + Window)\n| extend DelaySec = datetime_diff('second', ProcTime, NetTime)\n| project ProcTime, NetTime, DelaySec, Host, SrcIP, ReqUri, UA, ParentBinary, ChildBinary, ChildCmd, Account\n| order by ProcTime desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1190",
+          "T1059.004",
+          "T1059.003",
+          "T1059.006",
+          "T1059.007",
+          "T1505.003"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_DEVELOPER_DATA_TOOLING_DAEMON_SPAWNS_SHELL_CHILD_S",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_DEVELOPER_DATA_TOOLING_DAEMON_SPAWNS_SHELL_CHILD_S.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

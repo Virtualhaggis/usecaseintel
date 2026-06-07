@@ -1,421 +1,3 @@
-<article class="card" id="art-258" data-art-slug="2026-05-14-ghsa-critical-cve-2026-44789-n8n-http-request-node-paginatio"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="linux,vcs,windows"
-  data-uc-count="4" data-llm-uc-count="3"
-  data-search="[GHSA / CRITICAL] CVE-2026-44789: n8n: HTTP Request Node Pagination Prototype Pollution to RCE n8n: HTTP Request Node Pagination Prototype Pollution to RCE CVE-2026-44789 T1190 [LLM] n8n workflow API request body containing JS prototype pollution tokens (CVE-2026-44789) [LLM] Post-exploit RCE: node.js (n8n) spawning shell or scripting interpreter [LLM] Vulnerable n8n versions in TVM inventory (CVE-2026-44789) Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-05-14-ghsa-critical-cve-2026-44789-n8n-http-request-node-paginatio" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-c8xv-5998-g76h" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-44789: n8n: HTTP Request Node Pagination Prototype Pollution to RCE</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-05-14</span>
-    <span>4 use cases</span>
-    <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">n8n: HTTP Request Node Pagination Prototype Pollution to RCE</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-44789</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-258-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-258"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-258-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Vulnerable n8n versions in TVM inventory (CVE-2026-44789) · Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] n8n workflow API request body containing JS prototype pollution tokens (CVE-2026-44789)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Post-exploit RCE: node.js (n8n) spawning shell or scripting interpreter</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="1952419378" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
-  <summary>
-    <span class="uc-title">[LLM] n8n workflow API request body containing JS prototype pollution tokens (CVE-2026-44789)</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="1952419378" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts for HTTP requests to the n8n workflow/execution API whose body or query string contains JavaScript prototype-pollution sentinels (`__proto__`, `constructor.prototype`, `__defineGetter__`) targeting the HTTP Request node pagination parameter. This is the article-specific pre-exploit signal for CVE-2026-44789.
-
-Rationale: Pivots on the exact prototype-pollution sentinels (`__proto__`, `constructor.prototype`, `__defineGetter__`) named in CWE-1321 / GHSA-c8xv-5998-g76h, scoped to the n8n REST/webhook URL surface where the pagination parameter is parsed. Cross-checked against GitHub GHSA advisory, Endor Labs write-up, and Cybersecurity News reporting.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-c8xv-5998-g76h
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-44789
-  • https://www.endorlabs.com/learn/
-  • https://cwe.mitre.org/data/definitions/1321.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-258-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-258-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-258-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-258-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-258-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-258-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-258-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
-let PollutionTokens = dynamic([&quot;__proto__&quot;, &quot;constructor.prototype&quot;, &quot;__defineGetter__&quot;, &quot;prototype[&quot;, &quot;%5F%5Fproto%5F%5F&quot;, &quot;%5Fproto%5F&quot;]);
-DeviceNetworkEvents
-| where Timestamp &gt; ago(LookbackDays)
-| where RemotePort in (5678, 443, 80) or LocalPort in (5678, 443, 80)
-| where InitiatingProcessFileName has_any (&quot;node.exe&quot;, &quot;n8n.exe&quot;)
-   or InitiatingProcessCommandLine has &quot;n8n&quot;
-| where RemoteUrl has_any (PollutionTokens)
-    or InitiatingProcessCommandLine has_any (PollutionTokens)
-| project Timestamp, DeviceName, RemoteIP, RemoteUrl, LocalPort, RemotePort,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessFolderPath
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-258-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
-let PollutionTokens = dynamic([&quot;__proto__&quot;, &quot;constructor.prototype&quot;, &quot;__defineGetter__&quot;, &quot;prototype[&quot;, &quot;%5F%5Fproto%5F%5F&quot;, &quot;%5Fproto%5F&quot;]);
-let IISHits = W3CIISLog
-    | where TimeGenerated &gt; ago(LookbackDays)
-    | where csUriStem has_any (&quot;/rest/workflows&quot;, &quot;/rest/executions&quot;, &quot;/webhook&quot;)
-    | where csUriQuery has_any (PollutionTokens) or csUriStem has_any (PollutionTokens)
-    | project TimeGenerated, Host = Computer, ClientIP = cIP, User = csUserName,
-              Method = csMethod, Uri = csUriStem, Query = csUriQuery, UA = csUserAgent,
-              Source = &quot;W3CIISLog&quot;;
-let CSLHits = CommonSecurityLog
-    | where TimeGenerated &gt; ago(LookbackDays)
-    | where RequestURL has_any (&quot;/rest/workflows&quot;, &quot;/rest/executions&quot;, &quot;/webhook&quot;)
-    | where RequestURL has_any (PollutionTokens) or Message has_any (PollutionTokens)
-    | project TimeGenerated, Host = DestinationHostName, ClientIP = SourceIP,
-              User = SourceUserName, Method = RequestMethod, Uri = RequestURL,
-              Query = RequestContext, UA = RequestClientApplication,
-              Source = &quot;CommonSecurityLog&quot;;
-let WebHits = ImWebSession
-    | where TimeGenerated &gt; ago(LookbackDays)
-    | where Url has_any (&quot;/rest/workflows&quot;, &quot;/rest/executions&quot;, &quot;/webhook&quot;)
-    | where Url has_any (PollutionTokens) or UrlOriginal has_any (PollutionTokens)
-    | project TimeGenerated, Host = DvcHostname, ClientIP = SrcIpAddr,
-              User = SrcUsername, Method = HttpMethod, Uri = Url,
-              Query = UrlOriginal, UA = HttpRequestHeaderUserAgent,
-              Source = &quot;ImWebSession&quot;;
-union isfuzzy=true IISHits, CSLHits, WebHits
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-258-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: n8n HTTP Request Node Pagination Prototype Pollution Tokens (CVE-2026-44789)
-id: 7e3b2a4c-1f5d-4e9a-8c7f-2d6b3a1c4e8f
-description: Detects HTTP requests to n8n workflow/execution/webhook API endpoints whose URI or query string carries JavaScript prototype-pollution sentinel tokens used to exploit CVE-2026-44789 in the HTTP Request node pagination handler.
-references:
-  - https://github.com/advisories/GHSA-c8xv-5998-g76h
-  - https://nvd.nist.gov/vuln/detail/CVE-2026-44789
-author: SOC Detection Engineering
-date: 2026/05/20
-tags:
-  - attack.initial_access
-  - attack.t1190
-  - attack.execution
-  - attack.t1059.007
-  - cve.2026.44789
-logsource:
-  category: webserver
-detection:
-  selection_uri:
-    cs-uri-stem|contains:
-      - &#x27;/rest/workflows&#x27;
-      - &#x27;/rest/executions&#x27;
-      - &#x27;/webhook&#x27;
-  selection_payload:
-    cs-uri-query|contains:
-      - &#x27;__proto__&#x27;
-      - &#x27;constructor.prototype&#x27;
-      - &#x27;__defineGetter__&#x27;
-      - &#x27;prototype[&#x27;
-      - &#x27;%5F%5Fproto%5F%5F&#x27;
-  condition: selection_uri and selection_payload
-falsepositives:
-  - JavaScript prototype-pollution scanners (Burp, Acunetix, Nessus) run by internal security teams
-  - Legitimate developer use of `__proto__` as a literal string in a workflow body (rare)
-level: high</code></pre></div>
-    <div class="tab-content" id="art-258-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon OR source:nginx OR source:apache OR source:aws.alb OR source:cloudflare) (@http.url:(*&quot;/rest/workflows&quot;* OR *&quot;/rest/executions&quot;* OR *&quot;/webhook&quot;*) OR @url:(*&quot;/rest/workflows&quot;* OR *&quot;/rest/executions&quot;* OR *&quot;/webhook&quot;*)) (@http.url:(*__proto__* OR *constructor.prototype* OR *__defineGetter__* OR *%5F%5Fproto%5F%5F*) OR @url:(*__proto__* OR *constructor.prototype* OR *__defineGetter__*) OR @http.url_details.queryString:(*__proto__* OR *constructor.prototype*))</code></pre></div>
-    <div class="tab-content" id="art-258-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ImageFileName=/node(\.exe)?$/i
-| (regex(&quot;--inspect&quot;, field=CommandLine) OR regex(&quot;n8n&quot;, field=CommandLine))
-| (regex(&quot;__proto__&quot;, field=CommandLine) OR regex(&quot;constructor\.prototype&quot;, field=CommandLine) OR regex(&quot;__defineGetter__&quot;, field=CommandLine))
-| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-258-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-258-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-258-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-258-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as http_method values(Web.src) as src from datamodel=Web.Web where Web.url=&quot;*/rest/workflows*&quot; OR Web.url=&quot;*/rest/executions*&quot; OR Web.url=&quot;*/webhook*&quot; by Web.dest Web.user Web.http_user_agent | `drop_dm_object_name(Web)` | search url=&quot;*__proto__*&quot; OR url=&quot;*constructor.prototype*&quot; OR url=&quot;*__defineGetter__*&quot; OR url=&quot;*prototype%5B*&quot; | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-258-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as http_method values(Web.src) as src from datamodel=Web.Web where Web.url=&quot;*/rest/workflows*&quot; OR Web.url=&quot;*/rest/executions*&quot; OR Web.url=&quot;*/webhook*&quot; by Web.dest Web.user Web.http_user_agent | `drop_dm_object_name(Web)` | search url=&quot;*__proto__*&quot; OR url=&quot;*constructor.prototype*&quot; OR url=&quot;*__defineGetter__*&quot; OR url=&quot;*prototype%5B*&quot; | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="7ff86e11dd" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">[LLM] Post-exploit RCE: node.js (n8n) spawning shell or scripting interpreter</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="7ff86e11dd" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the post-exploitation tail of CVE-2026-44789 — the n8n `node` process spawning a shell (`cmd.exe`, `sh`, `bash`, `powershell.exe`) or a LOLBin. Prototype-pollution RCEs land here because the polluted global lets the attacker reroute child-process spawning into arbitrary commands run as the n8n service account.
-
-Rationale: Uses the most reliable post-exploit signal — n8n&#x27;s `node` process spawning a shell or LOLBin — which is the actual outcome chain described in GHSA-c8xv-5998-g76h (&quot;combined with other techniques this could lead to RCE&quot;). Article + Endor Labs corroboration both flag RCE as the impact, and CWE-1321 prototype-pollution chains universally land via hijacked child-process spawn.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-c8xv-5998-g76h
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-44789
-  • https://cwe.mitre.org/data/definitions/1321.html
-  • https://attack.mitre.org/techniques/T1190/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter">T1059</span> <span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-258-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-258-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-258-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-258-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-258-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-258-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-258-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
-let ShellsAndLolbins = dynamic([&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;zsh&quot;,&quot;dash&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;]);
-DeviceProcessEvents
-| where Timestamp &gt; ago(LookbackDays)
-| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;node&quot;)
-| where InitiatingProcessCommandLine has_any (&quot;n8n&quot;, &quot;\\n8n\\&quot;, &quot;/n8n/&quot;)
-   or InitiatingProcessFolderPath has_any (&quot;n8n&quot;, &quot;\\.n8n\\&quot;)
-| where FileName in~ (ShellsAndLolbins)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, AccountDomain,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-258-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
-let ShellsAndLolbins = dynamic([&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;zsh&quot;,&quot;dash&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;]);
-let WinHits = SecurityEvent
-    | where TimeGenerated &gt; ago(LookbackDays)
-    | where EventID == 4688
-    | where ParentProcessName has_any (&quot;node.exe&quot;,&quot;node\\&quot;,&quot;\\node&quot;)
-    | where tostring(split(NewProcessName, &quot;\\&quot;)[-1]) in~ (ShellsAndLolbins)
-    | where (CommandLine has_any (&quot;n8n&quot;)) or (ParentProcessName has &quot;n8n&quot;) or true
-    | where TargetUserName !endswith &quot;$&quot;
-    | project TimeGenerated, Host=Computer, User=TargetUserName,
-              ParentImage=ParentProcessName, ChildImage=NewProcessName,
-              ChildCmd=CommandLine, Source=&quot;SecurityEvent&quot;;
-let AsimHits = ImProcessCreate
-    | where TimeGenerated &gt; ago(LookbackDays)
-    | where ParentProcessName has_any (&quot;node.exe&quot;,&quot;node&quot;)
-    | where ActingProcessName has_any (ShellsAndLolbins) or TargetProcessName has_any (ShellsAndLolbins)
-    | where ActorUsername !endswith &quot;$&quot;
-    | project TimeGenerated, Host=DvcHostname, User=ActorUsername,
-              ParentImage=ParentProcessName, ChildImage=coalesce(TargetProcessName, ActingProcessName),
-              ChildCmd=coalesce(TargetProcessCommandLine, ActingProcessCommandLine),
-              Source=&quot;ImProcessCreate&quot;;
-union isfuzzy=true WinHits, AsimHits
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-258-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: n8n node.js Process Spawning Shell or LOLBin (CVE-2026-44789 Post-Exploit)
-id: 4a8f1e6c-9d3b-4c7a-b2e5-f8a1c4d6e9b3
-description: Detects post-exploitation of CVE-2026-44789 in n8n where the node.js process hosting n8n spawns a shell or living-off-the-land binary. The pagination prototype-pollution chain hijacks child-process invocation to launch attacker-controlled commands as the n8n service account.
-references:
-  - https://github.com/advisories/GHSA-c8xv-5998-g76h
-  - https://nvd.nist.gov/vuln/detail/CVE-2026-44789
-author: SOC Detection Engineering
-date: 2026/05/20
-tags:
-  - attack.execution
-  - attack.t1059
-  - attack.t1059.001
-  - attack.t1059.004
-  - attack.t1190
-  - cve.2026.44789
-logsource:
-  category: process_creation
-detection:
-  selection_parent:
-    ParentImage|endswith:
-      - &#x27;\node.exe&#x27;
-      - &#x27;/node&#x27;
-  selection_child:
-    Image|endswith:
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;\pwsh.exe&#x27;
-      - &#x27;/sh&#x27;
-      - &#x27;/bash&#x27;
-      - &#x27;/zsh&#x27;
-      - &#x27;/dash&#x27;
-      - &#x27;\mshta.exe&#x27;
-      - &#x27;\wscript.exe&#x27;
-      - &#x27;\cscript.exe&#x27;
-      - &#x27;\rundll32.exe&#x27;
-      - &#x27;\regsvr32.exe&#x27;
-      - &#x27;\certutil.exe&#x27;
-      - &#x27;\bitsadmin.exe&#x27;
-      - &#x27;\curl.exe&#x27;
-      - &#x27;\wget.exe&#x27;
-      - &#x27;/nc&#x27;
-      - &#x27;/ncat&#x27;
-      - &#x27;/socat&#x27;
-  filter_user:
-    User|endswith: &#x27;$&#x27;
-  condition: selection_parent and selection_child and not filter_user
-falsepositives:
-  - Legitimate workflows using the Execute Command node (n8n-nodes-base.executeCommand) — narrow by reviewing the workflow ID / owner
-  - Build pipelines where node spawns shells for compilation tasks
-level: high</code></pre></div>
-    <div class="tab-content" id="art-258-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.security OR source:windows.sysmon OR source:linux.auditd) (@ParentImage:(*\\node.exe OR *\\Node.exe OR */node) OR @process.parent.executable.path:(*\\node.exe OR */node)) (@Image:(*\\cmd.exe OR *\\powershell.exe OR *\\pwsh.exe OR *\\mshta.exe OR *\\wscript.exe OR *\\cscript.exe OR *\\rundll32.exe OR *\\regsvr32.exe OR *\\certutil.exe OR *\\bitsadmin.exe OR *\\curl.exe OR *\\wget.exe) OR @process.executable.path:(*/sh OR */bash OR */zsh OR */dash OR */nc OR */ncat OR */socat OR */curl OR */wget)) -@User:*$</code></pre></div>
-    <div class="tab-content" id="art-258-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ParentBaseFileName=/^node(\.exe)?$/i
-| ImageFileName=/(cmd|powershell|pwsh|sh|bash|zsh|dash|mshta|wscript|cscript|rundll32|regsvr32|certutil|bitsadmin|curl|wget|nc|ncat|socat)(\.exe)?$/i
-| NOT regex(&quot;\\$$&quot;, field=UserName)
-| groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine], function=count())
-| _count &gt; 0</code></pre></div>
-    <div class="tab-content" id="art-258-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-258-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-258-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-258-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;node.exe&quot;,&quot;node&quot;) (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;zsh&quot;,&quot;dash&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-258-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;node.exe&quot;,&quot;node&quot;) (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;zsh&quot;,&quot;dash&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.parent_process_name Processes.process_name Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="9b40739ad2" data-platforms="datadog,def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">[LLM] Vulnerable n8n versions in TVM inventory (CVE-2026-44789)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="9b40739ad2" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Surfaces hosts and software packages where n8n is installed at a version inside the CVE-2026-44789 vulnerable range (&lt;1.123.43, 2.0.0-rc.0–2.20.6, 2.21.0–2.22.0). Pre-exploit asset visibility — without this UC the SOC is hunting blind for an attack surface they don&#x27;t know they own.
-
-Rationale: Article explicitly enumerates vulnerable version ranges (npm:n8n &lt;1.123.43; 2.0.0-rc.0–&lt;2.20.7; 2.21.0–&lt;2.22.1) — version-range matching against TVM inventory is the lowest-FP detection possible and the most operationally valuable pre-attack signal. Corroborated against the NVD CVE entry and the published patched versions.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-c8xv-5998-g76h
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-44789</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Gather Victim Host Information: Software">T1592.002</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-258-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-258-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-258-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-258-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-258-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareInventory
-| where SoftwareName =~ &quot;n8n&quot; or SoftwareName has &quot;n8n&quot;
-| extend Parts = split(SoftwareVersion, &quot;.&quot;)
-| extend Major = toint(Parts[0]), Minor = toint(Parts[1]), Patch = toint(Parts[2])
-| extend Vulnerable = case(
-    Major == 1 and (Minor &lt; 123 or (Minor == 123 and Patch &lt; 43)), &quot;yes-1.x (&lt;1.123.43)&quot;,
-    Major == 2 and Minor &gt;= 0 and Minor &lt;= 19, strcat(&quot;yes-2.&quot;, tostring(Minor), &quot; (&lt;2.20.7)&quot;),
-    Major == 2 and Minor == 20 and Patch &lt; 7, &quot;yes-2.20.&lt;7&quot;,
-    Major == 2 and Minor == 21, &quot;yes-2.21 (&lt;2.22.1)&quot;,
-    Major == 2 and Minor == 22 and Patch &lt; 1, &quot;yes-2.22.0&quot;,
-    &quot;no&quot;)
-| where Vulnerable != &quot;no&quot;
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, *) by DeviceId | project DeviceId, IsInternetFacing, OSPlatform) on DeviceId
-| project DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, Vulnerable, IsInternetFacing, OSPlatform
-| order by IsInternetFacing desc, DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-258-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(30d)
-| where CveId =~ &quot;CVE-2026-44789&quot; or SoftwareName has &quot;n8n&quot;
-| summarize arg_max(TimeGenerated, *) by DeviceId, SoftwareName, SoftwareVersion
-| join kind=leftouter (DeviceInfo | summarize arg_max(TimeGenerated, *) by DeviceId | project DeviceId, IsInternetFacing, OSPlatform) on DeviceId
-| project TimeGenerated, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion,
-          CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing, OSPlatform
-| order by IsInternetFacing desc, DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-258-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(source:cspm OR source:tenable OR source:qualys OR source:rapid7) (@vulnerability.cve:CVE-2026-44789 OR (@software.name:n8n AND @software.version:(1.* OR 2.0.* OR 2.1.* OR 2.2.* OR 2.3.* OR 2.4.* OR 2.5.* OR 2.6.* OR 2.7.* OR 2.8.* OR 2.9.* OR 2.10.* OR 2.11.* OR 2.12.* OR 2.13.* OR 2.14.* OR 2.15.* OR 2.16.* OR 2.17.* OR 2.18.* OR 2.19.* OR 2.20.0 OR 2.20.1 OR 2.20.2 OR 2.20.3 OR 2.20.4 OR 2.20.5 OR 2.20.6 OR 2.21.* OR 2.22.0)))</code></pre></div>
-    <div class="tab-content" id="art-258-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>| inputlookup assets_software | where like(software_name,&quot;%n8n%&quot;) | rex field=software_version &quot;(?&lt;major&gt;\d+)\.(?&lt;minor&gt;\d+)\.(?&lt;patch&gt;\d+)&quot; | eval major=tonumber(major), minor=tonumber(minor), patch=tonumber(patch) | eval vulnerable=case( major==1 AND (minor&lt;123 OR (minor==123 AND patch&lt;43)), &quot;yes-1.x&quot;, major==2 AND minor&gt;=0 AND minor&lt;=19, &quot;yes-2.0-2.19&quot;, major==2 AND minor==20 AND patch&lt;7, &quot;yes-2.20.&lt;7&quot;, major==2 AND minor==21, &quot;yes-2.21&quot;, major==2 AND minor==22 AND patch&lt;1, &quot;yes-2.22.0&quot;, true(), &quot;no&quot;) | where vulnerable!=&quot;no&quot; | table host software_name software_version vulnerable</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-258-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-258-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-258-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-258-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-44789&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-258-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-44789&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-258-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-258-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-258-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-258-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-44789&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-258-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-44789&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-259" data-art-slug="2026-05-14-ongoing-exploitation-of-cisco-catalyst-sd-wan-vulnerabilitie"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1021.001,T1190,T1555.003"
@@ -17540,6 +17122,132 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-298" data-art-slug="2026-05-07-cisa-kev-cve-2026-6973-ivanti-endpoint-manager-mobile-epmm-i"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2026-6973 — Ivanti Endpoint Manager Mobile (EPMM) Improper Input Validation Vulnerability Ivanti Endpoint Manager Mobile (EPMM) contains an improper input validation vulnerability that allows a remotely authenticated user with administrative access to achieve remote code execution. Vendor: Ivanti, Product: Endpoint Manager Mobile (EPMM). Federal patch due: 2026-05-10. CVE-2026-6973 T1190 Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-05-07-cisa-kev-cve-2026-6973-ivanti-endpoint-manager-mobile-epmm-i" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2026-6973 — Ivanti Endpoint Manager Mobile (EPMM) Improper Input Validation Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2026-05-07</span>
+    <span>1 use case</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Ivanti Endpoint Manager Mobile (EPMM) contains an improper input validation vulnerability that allows a remotely authenticated user with administrative access to achieve remote code execution. Vendor: Ivanti, Product: Endpoint Manager Mobile (EPMM). Federal patch due: 2026-05-10.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-6973</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-298-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-298"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-298-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-298-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-298-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-298-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-298-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-6973&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-298-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-6973&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-298-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-298-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-298-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-298-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-6973&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-298-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-6973&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>

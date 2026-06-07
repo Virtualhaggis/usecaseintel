@@ -1,0 +1,57 @@
+{
+  "name": "[WEEKLY] Package-install lifecycle script harvests local credentials and beacons to a non-baselined domain",
+  "description": "Detects the cross-platform supply-chain pattern where a package manager or installer (npm/yarn/pnpm/npx, VS Code extension host, MSI/PKG installer) spawns a child during pre/postinstall that reads developer or cloud credential stores (.npmrc, ~/.aws/credentials, ~/.ssh/id_*, .env, /proc/<pid>/environ, browser Login Data, GitHub/NPM/Anthropic token env vars, macOS keychain) and within ~5 minutes the same host beacons to an external host that has not been seen in the 30-day org-wide baseline. This fortnight is dominated by exactly this chain: CISA KEV CVE-2026-48027 (Nx Console malicious extension), CVE-2026-8398 (Daemon Tools Lite embedded malicious code), Microsoft's 33 malicious npm packages abusing dependency confusion, Snyk's Miasma compromise of @redhat-cloud-services, The Hacker News' Claude Code GitHub Action prompt-injection reading /proc/<pid>/environ on self-hosted runners, FlutterShell macOS malvertising, and GHSA-jpvj-wpmj-h7rv (@cap-js/openapi). It spans install (lifecycle hook), credential-access (file/env scrape), and exfiltration/C2 (new-domain egress) stages, so it gives one alert per real chain rather than one per IOC. It fires when a node/npm/yarn/pnpm/installer-rooted process reads a credential artefact AND the host then talks to a fresh external host within the window; it does NOT fire on a credential read alone (CLI workflows), nor on package-manager network activity to known baselined registries (npmjs, github, vscode CDN, cloud provider endpoints).\n\nRationale: Every article in scope ends with the same chain \u2014 a freshly-installed package or extension's lifecycle hook (npm preinstall, VS Code extension postInstall, MSI custom action, GitHub Actions runner under prompt injection) reads a developer/cloud credential artefact, then beacons home. Correlating the credential-read process (gated on a package-install parent or lifecycle cue) with a new-domain outbound from the same device inside 5 minutes captures every variant \u2014 Nx Console, Daemon Tools Lite, the 33-package dependency-confusion set, @redhat-cloud-services, @cap-js/openapi, FlutterShell, and the Claude Code Action /proc/environ exfil \u2014 while ignoring legitimate npm installs that don't reach for secrets and routine secret access that doesn't egress.",
+  "risk_score": 73,
+  "severity": "high",
+  "type": "query",
+  "language": "kuery",
+  "enabled": false,
+  "interval": "1h",
+  "from": "now-24h",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "endgame-*"
+  ],
+  "query": "event.action:* AND _exists_:host.name",
+  "threat": [
+    {
+      "framework": "MITRE ATT&CK",
+      "tactic": {
+        "id": "",
+        "name": "install",
+        "reference": ""
+      },
+      "technique": [
+        {
+          "id": "T1195.002",
+          "name": "Compromise Software Supply Chain",
+          "reference": "https://attack.mitre.org/techniques/T1195.002/"
+        },
+        {
+          "id": "T1546.016",
+          "name": "Event Triggered Execution: Installer Packages",
+          "reference": "https://attack.mitre.org/techniques/T1546.016/"
+        },
+        {
+          "id": "T1552.001",
+          "name": "Unsecured Credentials: Credentials In Files",
+          "reference": "https://attack.mitre.org/techniques/T1552.001/"
+        }
+      ]
+    }
+  ],
+  "tags": [
+    "usecaseintel",
+    "tier:alerting",
+    "install"
+  ],
+  "note": "**Auto-generated from usecaseintel \u2014 analyst port-over required.** Original Splunk SPL / Defender KQL bodies preserved in the `reference` URL. Translate the source query to Elastic's ECS / EQL syntax before enabling.\n\n### Source query (Defender KQL)\n```\nlet Lookback = 7d;\nlet Window = 5m;\nlet PkgInstallParents = dynamic([\"node.exe\",\"npm.cmd\",\"yarn.cmd\",\"pnpm.cmd\",\"npx.cmd\",\"code.exe\",\"msiexec.exe\",\"setup.exe\",\"installer.exe\"]);\nlet LifecycleCues = dynamic([\"preinstall\",\"postinstall\",\"npm install\",\"yarn install\",\"pnpm install\",\"npm-cli.js\",\"yarn.js\",\"pnpm.cjs\"]);\nlet CredArtefacts = dynamic([\".npmrc\",\".aws\\\\credentials\",\".aws/credentials\",\".ssh\\\\id_\",\".ssh/id_\",\".env\",\"/proc/\",\"environ\",\"Login Data\",\"Cookies\",\"GITHUB_TOKEN\",\"NPM_TOKEN\",\"ANTHROPIC_API_KEY\",\"HF_TOKEN\",\"aws_access_key\",\"aws_secret\",\".netrc\",\".docker\\\\config\",\".docker/config\",\"libsecret\",\"find-generic-password\"]);\nlet KnownRegistries = dynamic([\"registry.npmjs.org\",\"npmjs.com\",\"yarnpkg.com\",\"pnpm.io\",\"github.com\",\"githubusercontent.com\",\"vscode-cdn.net\",\"microsoft.com\",\"windows.net\",\"googleapis.com\",\"amazonaws.com\",\"azure.com\",\"docker.io\",\"docker.com\"]);\nlet CredReads = DeviceProcessEvents\n    | where Timestamp > ago(Lookback)\n    | where InitiatingProcessFileName in~ (PkgInstallParents)\n        or InitiatingProcessCommandLine has_any (LifecycleCues)\n    | where ProcessCommandLine has_any (CredArtefacts)\n        or FolderPath has_any (CredArtefacts)\n        or FileName in~ (\"env\",\"printenv\",\"security\",\"keychain\",\"strings\",\"xxd\")\n    | where AccountName !endswith \"$\"\n        and AccountName !in~ (\"system\",\"local service\",\"network service\")\n    | project CredTime = Timestamp, DeviceId, DeviceName, AccountName,\n              ParentImage = InitiatingProcessFileName,\n              ParentCmd = InitiatingProcessCommandLine,\n              ChildImage = FolderPath,\n              ChildCmd = ProcessCommandLine;\nlet BaselineDomains = DeviceNetworkEvents\n    | where Timestamp between (ago(30d) .. ago(Lookback))\n    | where isnotempty(RemoteUrl)\n    | summarize HostCount = dcount(DeviceId) by RemoteUrl\n    | where HostCount > 3;\nlet Egress = DeviceNetworkEvents\n    | where Timestamp > ago(Lookback)\n    | where RemoteIPType == \"Public\"\n    | where isnotempty(RemoteUrl)\n    | where not(RemoteUrl has_any (KnownRegistries))\n    | join kind=leftanti BaselineDomains on RemoteUrl\n    | project NetTime = Timestamp, DeviceId, EgressImage = InitiatingProcessFileName,\n              EgressCmd = InitiatingProcessCommandLine,\n              RemoteUrl, RemoteIP, RemotePort;\nCredReads\n| join kind=inner Egress on DeviceId\n| where NetTime between (CredTime .. CredTime + Window)\n| extend DelaySec = datetime_diff('second', NetTime, CredTime)\n| project CredTime, NetTime, DelaySec,\n          DeviceName, AccountName,\n          ParentImage, ParentCmd, ChildImage, ChildCmd,\n          EgressImage, EgressCmd, RemoteUrl, RemoteIP, RemotePort\n| order by CredTime desc\n```",
+  "references": [
+    "https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_INSTALL_LIFECYCLE_SCRIPT_HARVESTS_LOCAL_CR.yml"
+  ],
+  "meta": {
+    "tier": "alerting",
+    "fp_rate_estimate": "low"
+  }
+}

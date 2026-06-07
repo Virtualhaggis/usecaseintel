@@ -1,0 +1,42 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_PUBLIC_FACING_APP_RUNTIME_SPAWNS_SHELL_LOLBIN_OR_C')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Public-Facing App Runtime Spawns Shell, LOLBin, or Container-Control Tool",
+        "description": "Detects an internet-facing application runtime \u2014 Node.js, Python/Jupyter, PHP-FPM, IIS w3wp, nginx, httpd, caddy, ruby, or java \u2014 spawning a shell, LOLBin, or container-control binary, optionally with a recon/privilege-escalation keyword in the child command line. This is the common post-condition shared across the fortnight's CRITICAL/KEV catch: PAN-OS GlobalProtect auth bypass under active exploitation (CISA KEV CVE-2026-0257; The Hacker News follow-up), three independent vm2 sandbox escapes (CVE-2026-47137 patch bypass, CVE-2026-47140 NodeVM denylist bypass, CVE-2026-47210 JSPI Promise species bypass), the Jupyter Enterprise Gateway KERNEL_UID/GID enforcement bypass (CVE-2026-44180), and the Shopper RBAC authorization bypass (CVE-2026-47744). Every one of these CVEs lets an unauthenticated/low-privileged HTTP touch defeat an auth/authz/sandbox check; the only host-visible signal the bypasses share is the privilege-boundary crossing that follows \u2014 a web/app process suddenly executing a shell, container-control tool, or LOLBin. The query spans the exploit and install stages by joining a parent in the app-runtime set to a child in the shell/LOLBin/container-control set on the same host. It fires when the bypass is converted to host action and does NOT fire on benign in-runtime behaviour (a Node API calling git, a PHP composer install, a Python wheel build invoking gcc) because none of those children are in the suspicious-child set; CI build agents and DevOps tooling running as app runtimes are the main FP source and should be allowlisted by hostname.\n\nRationale: Across the seven articles the only shared host-visible signal is the privilege-boundary crossing that follows the auth/authz/sandbox bypass: a web/app runtime suddenly running a shell, LOLBin, or container-control tool. Pivoting on the parent\u21c4child pair (instead of any single vm2/PAN-OS/Jupyter/Shopper IOC) catches the joint pattern and survives IOC rotation.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let AppRuntimes = dynamic([\"node.exe\",\"python.exe\",\"python3.exe\",\"jupyter.exe\",\"php-fpm.exe\",\"php.exe\",\"w3wp.exe\",\"nginx.exe\",\"httpd.exe\",\"caddy.exe\",\"ruby.exe\",\"java.exe\"]);\nlet SuspChildren = dynamic([\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"sh.exe\",\"bash.exe\",\"wsl.exe\",\"wmic.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"wscript.exe\",\"cscript.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"curl.exe\",\"wget.exe\",\"kubectl.exe\",\"docker.exe\"]);\nlet ReconRegex = @\"(?i)(whoami|\\bid\\b|uname|hostname|ipconfig|ifconfig|/etc/passwd|/etc/shadow|\\bnet user\\b|\\bnet group\\b|child_process|execSync)\";\nlet PrivRegex  = @\"(?i)(--privileged|runAsUser=0|runAsGroup=0|KERNEL_UID=0|KERNEL_GID=0|\\b-uid\\s+0\\b|\\b-gid\\s+0\\b|setuid\\(0\\))\";\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| extend ParentName = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1]))\n| extend ChildName  = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| where ParentName in (AppRuntimes)\n| where ChildName in (SuspChildren)\n| where SubjectUserName !endswith \"$\"\n| extend HasRecon = CommandLine matches regex ReconRegex\n| extend HasPrivEscalation = CommandLine matches regex PrivRegex\n| extend ScriptingRuntimeParent = ParentName in (\"node.exe\",\"python.exe\",\"python3.exe\",\"jupyter.exe\")\n| where HasRecon or HasPrivEscalation or ScriptingRuntimeParent\n| summarize EventCount=count(), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Cmds=make_set(CommandLine, 10), Users=make_set(SubjectUserName, 5) by Computer, ParentName, ChildName, HasRecon, HasPrivEscalation\n| order by LastSeen desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1190",
+          "T1059",
+          "T1611",
+          "T1068",
+          "T1610"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_PUBLIC_FACING_APP_RUNTIME_SPAWNS_SHELL_LOLBIN_OR_C",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_PUBLIC_FACING_APP_RUNTIME_SPAWNS_SHELL_LOLBIN_OR_C.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+title: [WEEKLY] npm Install-Time Lifecycle Hook Triggers Outbound Egress to Newly-Seen Domain (Shai-Hulud/Miasma/IronWorm pattern)
+id: UC_WEEKLY_NPM_INSTALL_TIME_LIFECYCLE_HOOK_TRIGGERS_OUTBOUND_
+status: experimental
+description: Detects the joint pattern across the fortnight's npm supply-chain wave — Miasma/@redhat-cloud-services, IronWorm, codexui-android, vpmdhaj typosquats, and the binding.gyp self-propagating worm — where an npm/yarn/pnpm install spawns a node (or node-gyp/python build helper) child process that within ~5 minutes egresses to a domain or IP never seen before in the org. The chain spans delivery (malicious package landing on a dev/CI host) and C2/exfil (preinstall/binding.gyp payload beaconing harvested AWS, GCP, Azure, GitHub, npm, and CircleCI secrets). Kill-chain stages covered: install (lifecycle-hook execution) → c2/actions (credential exfil to attacker infrastructure). It will fire when a developer or CI runner installs a poisoned package and the payload reaches out to fresh attacker infra; it will NOT fire on normal npm installs that only contact already-baselined registries/CDNs (registry.npmjs.org, github.com, well-known mirrors), nor on lifecycle scripts that stay local. IOC slots (`<c2_domain_list>`, `<c2_ip_list>`, `<sha256_list>`) are referenced as substitution points so the rule survives weekly IOC rotation.
+references:
+  - https://clankerusecase.com/use_cases/install/UC_WEEKLY_NPM_INSTALL_TIME_LIFECYCLE_HOOK_TRIGGERS_OUTBOUND_.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.install
+  - attack.t1195_002
+  - attack.t1546_016
+  - attack.t1059_007
+  - attack.t1071_001
+  - attack.t1552_001
+  - attack.t1552_005
+  - attack.t1567
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'npm'
+      - 'npm.exe'
+      - 'npm-cli.js'
+      - 'node'
+      - 'node.exe'
+      - 'yarn'
+      - 'yarn.exe'
+      - 'pnpm'
+      - 'pnpm.exe'
+      - 'npx'
+      - 'npx.exe'
+      - 'node-gyp'
+      - 'node-gyp.exe'
+      - 'python'
+      - 'python.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high
