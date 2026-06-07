@@ -79,7 +79,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] MiniUpdate UpdateChecker.dll sideload via legitimate signed .NET host
 
-`UC_175_12` · phase: **install** · confidence: **High**
+`UC_176_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ union imgLoads, fileWrites
 
 ### [LLM] Screening Serpens AppDomainManager hijack via .NET app .config tampering
 
-`UC_175_13` · phase: **install** · confidence: **High**
+`UC_176_13` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ DeviceFileEvents
 
 ### [LLM] Screening Serpens C2 — DNS/network to UNC1549 infrastructure (Feb-Apr 2026)
 
-`UC_175_14` · phase: **c2** · confidence: **High**
+`UC_176_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +154,7 @@ DeviceNetworkEvents
 
 ### [LLM] Screening Serpens recruitment lure — Hiring Portal.zip + job requisition PDFs
 
-`UC_175_15` · phase: **delivery** · confidence: **High**
+`UC_176_15` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -502,7 +502,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Tracking Iranian APT Screening Serpens’ 2026 Espionage Campaigns
 
-`UC_175_11` · phase: **exploit** · confidence: **High**
+`UC_176_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
