@@ -8,6 +8,9 @@ _1253 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-06-07
+- [cisa warns of linux kernel improper authentication vulnerabi](./2026-06-07/cisa-warns-of-linux-kernel-improper-authentication-vulnerabi.md)
+
 ## 2026-06-06
 - [ai agent uncovers 21 zero days in ffmpeg chrome patches reco](./2026-06-06/ai-agent-uncovers-21-zero-days-in-ffmpeg-chrome-patches-reco.md)
 - [cisa adds actively exploited solarwinds serv u dos flaw to k](./2026-06-06/cisa-adds-actively-exploited-solarwinds-serv-u-dos-flaw-to-k.md)
@@ -34,7 +37,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hackers exploit critical everest forms pro wordpress plugin ](./2026-06-05/hackers-exploit-critical-everest-forms-pro-wordpress-plugin-.md)
 - [hackers publish malicious python package mimicking legitimat](./2026-06-05/hackers-publish-malicious-python-package-mimicking-legitimat.md)
 - [ironworm and new miasma worm variant hit npm in supply chain](./2026-06-05/ironworm-and-new-miasma-worm-variant-hit-npm-in-supply-chain.md)
-- [new magecart attack turns stripe into a malware command serv](./2026-06-05/new-magecart-attack-turns-stripe-into-a-malware-command-serv.md)
 - [new threat cluster op 512 targets microsoft iis servers with](./2026-06-05/new-threat-cluster-op-512-targets-microsoft-iis-servers-with.md)
 - [pcpjack hijacks 230 aws google cloud and azure servers for c](./2026-06-05/pcpjack-hijacks-230-aws-google-cloud-and-azure-servers-for-c.md)
 - [securing ci cd in an agentic world claude code github action](./2026-06-05/securing-ci-cd-in-an-agentic-world-claude-code-github-action.md)
