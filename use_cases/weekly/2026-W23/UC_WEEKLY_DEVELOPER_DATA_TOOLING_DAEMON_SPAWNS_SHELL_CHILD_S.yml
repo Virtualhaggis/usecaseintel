@@ -1,0 +1,102 @@
+id: UC_WEEKLY_DEVELOPER_DATA_TOOLING_DAEMON_SPAWNS_SHELL_CHILD_S
+title: "[WEEKLY] Developer/Data-tooling Daemon Spawns Shell Child Seconds After POST to Runner/Exec Endpoint"
+kill_chain: exploit
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1059.004
+  name: "Command and Scripting Interpreter: Unix Shell"
+- id: T1059.003
+  name: "Command and Scripting Interpreter: Windows Command Shell"
+- id: T1059.006
+  name: "Command and Scripting Interpreter: Python"
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1505.003
+  name: "Server Software Component: Web Shell"
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Web
+  - Network_Traffic.All_Traffic
+description: |-
+  Detects the joint pattern across this fortnight's GHSA critical-severity disclosures where a long-running developer or data-tooling daemon (Node.js, Python, Jupyter kernel/Enterprise Gateway, Stata) receives an inbound HTTP POST to a code-execution-adjacent endpoint (`/runners/start`, `/runners/load-reader`, `/api/kernels`, `/start`, `/stata_do`, `/workspaces/*/members`, etc.) and within seconds spawns an OS shell, LOLBin, or alternate interpreter as a child — the universal post-condition of code injection (DbGate CVE-2026-47668/47670), arbitrary-file-write turned RCE (DbGate Zip Slip CVE-2026-47669), command injection (MCP-for-Stata CVE-2026-47708), SSTI (Jupyter EG CVE-2026-44181), YAML manifest injection (Jupyter EG CVE-2026-44182), and path-traversal-to-exec (NASA AMMOS CVE-2026-47731). It spans the exploit -> install kill-chain boundary by correlating the network ingress (vulnerable endpoint hit) with the host-side proof of code execution (parent-child anomaly) inside a 2-minute window on the same host. Fires when a vulnerable runner endpoint is POSTed AND the same daemon process spawns sh/bash/cmd/powershell/curl/wget/python/perl within 120s; does NOT fire on the routine background tasks these daemons spawn (helper Node workers, child Python kernels of the same family, scheduled cron-jobs) nor on POSTs to read-only endpoints, keeping FP rate low even in noisy CI/MLOps environments.
+  
+  Rationale: The 12 articles share one observable joint pattern: a long-lived developer/data-tooling daemon accepts an HTTP POST to an execution-adjacent endpoint and then immediately spawns a shell, LOLBin, or alternate interpreter — the universal payoff of code injection, SSTI, manifest injection, command injection, and path-traversal-to-RCE. Correlating the inbound POST with the parent-child anomaly within a 2-minute window on the same host catches every variant in the fortnight (DbGate Node, Jupyter EG Python, Stata, AMMOS Python) while suppressing routine helper-process spawns that don't follow a vulnerable-endpoint POST.
+defender_kql: |-
+  let Window = 2m;
+  let RunnerPaths = dynamic(["/runners/start","/runners/load-reader","/api/kernels","/stata_do","/workspaces/","/auth/login"]);
+  let RunnerHits =
+      DeviceNetworkEvents
+      | where Timestamp > ago(7d)
+      | where ActionType in ("InboundConnectionAccepted","ConnectionFound","NetworkSignatureInspected")
+      | where isnotempty(RemoteUrl)
+      | where RemoteUrl has_any (RunnerPaths) or AdditionalFields has_any (RunnerPaths)
+      | project NetTime=Timestamp, DeviceId, DeviceName, RemoteIP, RemoteUrl, InboundProcess=InitiatingProcessFileName;
+  DeviceProcessEvents
+  | where Timestamp > ago(7d)
+  | where InitiatingProcessFileName in~ ("node","node.exe","python","python.exe","python3","jupyter-kernel","enterprise_gateway","stata","stata.exe","stata-mp","stata-mp.exe","xstata","xstata.exe","php","php-fpm","php-fpm.exe","w3wp.exe","uvicorn","gunicorn")
+  | where FileName in~ ("sh","bash","dash","zsh","ksh","cmd.exe","powershell.exe","pwsh","pwsh.exe","wget","curl","nc","ncat","perl","ruby","python","python3")
+  | where AccountName !endswith "$"
+  | where AccountName !in~ ("system","local service","network service")
+  | join kind=inner RunnerHits on DeviceId
+  | where Timestamp between (NetTime .. NetTime + Window)
+  | extend DelaySec = datetime_diff('second', Timestamp, NetTime)
+  | project Timestamp, NetTime, DelaySec, DeviceName, RemoteIP, RemoteUrl,
+            ParentBinary=InitiatingProcessFileName,
+            ParentCmd=InitiatingProcessCommandLine,
+            ChildBinary=FileName,
+            ChildCmd=ProcessCommandLine,
+            AccountName, SHA256
+  | order by Timestamp desc
+sentinel_kql: |-
+  let Window = 2m;
+  let RunnerPaths = dynamic(["/runners/start","/runners/load-reader","/api/kernels","/stata_do","/workspaces/","/auth/login"]);
+  let RunnerHits =
+      union isfuzzy=true
+          (W3CIISLog
+              | where TimeGenerated > ago(7d)
+              | where csMethod == "POST"
+              | where csUriStem has_any (RunnerPaths)
+              | project NetTime=TimeGenerated, Host=Computer, SrcIP=cIP, ReqUri=csUriStem, UA=csUserAgent),
+          (AzureDiagnostics
+              | where TimeGenerated > ago(7d)
+              | where Category in ("ApplicationGatewayAccessLog","FrontDoorAccessLog","AppServiceHTTPLogs")
+              | where httpMethod_s == "POST" or CsMethod_s == "POST"
+              | extend Uri = coalesce(requestUri_s, csUriStem, originalRequestUriWithArgs_s, "")
+              | where Uri has_any (RunnerPaths)
+              | project NetTime=TimeGenerated, Host=coalesce(hostname_s, host_s, Resource), SrcIP=coalesce(clientIp_s, ClientIp_s, CIp_s), ReqUri=Uri, UA=coalesce(userAgent_s, csUserAgent,""))
+      | where isnotempty(Host);
+  let Children =
+      union isfuzzy=true
+          (SecurityEvent
+              | where TimeGenerated > ago(7d)
+              | where EventID == 4688
+              | where ParentProcessName has_any ("node.exe","python.exe","php.exe","php-fpm.exe","w3wp.exe","stata.exe","xstata.exe")
+              | where NewProcessName has_any ("cmd.exe","powershell.exe","pwsh.exe","bash.exe","curl.exe","wget.exe","python.exe","perl.exe")
+              | project ProcTime=TimeGenerated, Host=Computer, ParentBinary=tostring(split(ParentProcessName,"\\")[-1]), ChildBinary=tostring(split(NewProcessName,"\\")[-1]), ChildCmd=CommandLine, Account=SubjectUserName),
+          (Syslog
+              | where TimeGenerated > ago(7d)
+              | where Facility == "authpriv" or ProcessName in ("audispd","auditd","sshd")
+              | where SyslogMessage has_any ("comm=\"sh\"","comm=\"bash\"","comm=\"curl\"","comm=\"wget\"","comm=\"python\"")
+              | where SyslogMessage has_any ("node","python","stata","php-fpm","uvicorn","gunicorn")
+              | extend ParentBinary=extract(@"pcomm=\"([^\"]+)\"",1,SyslogMessage), ChildBinary=extract(@"comm=\"([^\"]+)\"",1,SyslogMessage), ChildCmd=SyslogMessage, Account=extract(@"uid=(\d+)",1,SyslogMessage)
+              | project ProcTime=TimeGenerated, Host=HostName, ParentBinary, ChildBinary, ChildCmd, Account);
+  Children
+  | join kind=inner RunnerHits on Host
+  | where ProcTime between (NetTime .. NetTime + Window)
+  | extend DelaySec = datetime_diff('second', ProcTime, NetTime)
+  | project ProcTime, NetTime, DelaySec, Host, SrcIP, ReqUri, UA, ParentBinary, ChildBinary, ChildCmd, Account
+  | order by ProcTime desc
+splunk_spl: |-
+  | tstats summariesonly=true count min(_time) as web_time max(_time) as web_last values(Web.url) as web_urls values(Web.http_user_agent) as web_uas values(Web.src) as src_ip values(Web.http_method) as web_methods from datamodel=Web.Web where Web.http_method=POST (Web.uri_path="*/runners/start*" OR Web.uri_path="*/runners/load-reader*" OR Web.uri_path="*/api/kernels*" OR Web.uri_path="*/stata_do*" OR Web.uri_path="*/workspaces/*/members*" OR Web.uri_path="*/start" OR Web.uri_path="*/auth/login") by Web.dest _time | `drop_dm_object_name(Web)` | rename dest as host | eval web_time=_time | fields - _time | join type=inner host [| tstats summariesonly=true count min(_time) as proc_time max(_time) as proc_last values(Processes.process) as child_cmd values(Processes.process_name) as child_bin values(Processes.parent_process_name) as parent_bin values(Processes.parent_process) as parent_cmd values(Processes.user) as proc_user from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node","node.exe","python","python.exe","python3","jupyter-kernel","enterprise_gateway","stata","stata.exe","stata-mp","stata-mp.exe","xstata","xstata.exe","php","php-fpm","php-fpm.exe","w3wp.exe","uvicorn","gunicorn")) AND (Processes.process_name IN ("sh","bash","dash","zsh","ksh","cmd.exe","powershell.exe","pwsh","pwsh.exe","wget","curl","nc","ncat","perl","ruby","python","python3")) by Processes.dest _time | `drop_dm_object_name(Processes)` | rename dest as host | eval proc_time=_time | fields - _time ] | where proc_time >= web_time AND proc_time <= web_time + 120 | eval delay_sec = proc_time - web_time | table web_time, proc_time, delay_sec, host, src_ip, web_urls, web_methods, parent_bin, parent_cmd, child_bin, child_cmd, proc_user, web_uas | sort 0 - proc_time
+datadog_query: |-
+  source:(windows.sysmon OR linux.auditd) (@EventID:1 OR @auditd.type:EXECVE) (@ParentImage:(*\\node.exe OR *\\Node.exe OR *\\python.exe OR *\\Python.exe OR *\\php.exe OR *\\php-fpm.exe OR *\\w3wp.exe OR *\\stata.exe OR *\\stata-mp.exe OR *\\xstata.exe) OR @process.executable.path:(*/node OR */python OR */python3 OR */php-fpm OR */uvicorn OR */gunicorn OR */jupyter-kernel OR */enterprise_gateway OR */stata OR */stata-mp OR */xstata)) (@Image:(*\\cmd.exe OR *\\CMD.EXE OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\bash.exe OR *\\curl.exe OR *\\wget.exe OR *\\nc.exe OR *\\perl.exe OR *\\python.exe) OR @process.name:(sh OR bash OR dash OR zsh OR ksh OR curl OR wget OR nc OR ncat OR perl OR ruby OR python OR python3))

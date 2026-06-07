@@ -1,0 +1,163 @@
+id: UC_WEEKLY_SCRIPT_INTERPRETER_OR_PACKAGE_INSTALL_HOOK_EGRESS_
+title: "[WEEKLY] Script Interpreter or Package-Install Hook Egress to Free-Tier Edge SaaS Within 5 Minutes of Process Start"
+kill_chain: c2
+confidence: High
+tier: alerting
+fp_rate_estimate: medium
+implementations:
+- defender
+- sentinel
+- splunk
+- sigma
+- datadog
+mitre_attack:
+- id: T1102.002
+  name: "Web Service: Bidirectional Communication"
+- id: T1567.001
+  name: "Exfiltration Over Web Service: Exfiltration to Code Repository"
+- id: T1071.001
+  name: "Application Layer Protocol: Web Protocols"
+- id: T1195.002
+  name: Compromise Software Supply Chain
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1059.001
+  name: "Command and Scripting Interpreter: PowerShell"
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Network_Traffic.All_Traffic
+  - Web.Web
+description: |-
+  Detects a script-host or package-manager process (node, npm/npx/yarn, python, ruby, mshta, wscript, cscript, powershell/pwsh, bash) opening an outbound connection to free-tier edge SaaS that adversaries are increasingly using as living-off-trusted-services (LOTS) staging / C2 / exfiltration channels — *.workers.dev, *.trycloudflare.com, *.supabase.co, *.pages.dev, *.web.app, *.r2.dev, *.vercel.app, raw.githubusercontent.com, gist.githubusercontent.com — within five minutes of the process spawning. This fortnight's driver is the convergence of three campaigns onto this same delivery topology: Gamaredon's WinRAR-delivered GammaPhish HTA payloads call back to bold.zsjtn41091.workers.dev, efficiency-planes-emotions-fascinating.trycloudflare.com and iiwdsxwamylbwwsoyrmj.supabase.co ("Gamaredon Exploits WinRAR to Deliver GammaWorm and GammaSteel Against Ukraine"); the @redhat-cloud-services npm supply-chain compromise exfiltrates credentials from preinstall hooks to attacker-controlled code repositories ("Preinstall to persistence: Inside the Red Hat npm Miasma credential-stealing campaign"); and TA4922's ValleyRAT/Atlas RAT downloaders use the same disposable CDN frontends to stage second-stage payloads across the U.K., Germany, Italy and South Africa ("China-Linked TA4922 Expands Phishing Attacks to U.K., Germany, Italy, and South Africa"). Adjacent CVE-driven RCEs that drop into a Node interpreter — e.g. the LiquidJS template-injection chain ("GHSA CVE-2026-45618: LiquidJS is Vulnerable to Remote Code Execution") — also land squarely in this detection because the post-exploitation interpreter is the egress source. Spans the install → C2 → exfiltration kill-chain phases. It will fire when an interpreter or package manager makes its first egress to one of these tenant-style domains within the correlation window; it will NOT fire on browsers / curl / wget hitting these CDNs (intentionally excluded — those are dominant legitimate consumers) nor on cached/baseline domains the org already routinely calls.
+  
+  Rationale: All three live campaigns this fortnight (Gamaredon GammaPhish HTA, Red Hat npm Miasma preinstall credential exfil, TA4922 ValleyRAT/Atlas RAT staging) and any post-exploitation drop from interpreter RCE chains like LiquidJS converge on the same delivery topology: a script host or package-install hook reaches a disposable free-tier edge SaaS tenant within seconds of spawning. Joining DeviceProcessEvents to DeviceNetworkEvents on (DeviceId, ProcessId) within a 5-minute window catches the joint TTP without depending on any one campaign's rotating IOC set, while the install-context flag separates supply-chain abuse from interactive runtime abuse for triage.
+defender_kql: |-
+  let LookbackHours = 24h;
+  let CorrelationWindow = 5m;     // empirical: legitimate post-install fetches usually complete in <5m, beyond that the parent/child PID linkage gets noisy
+  let ScriptHosts = dynamic(["node.exe","npm.cmd","npx.cmd","yarn.cmd","python.exe","python3.exe","ruby.exe","mshta.exe","wscript.exe","cscript.exe","powershell.exe","pwsh.exe","cmd.exe","bash.exe","wsl.exe"]);
+  let EdgeDomains = dynamic([".workers.dev",".trycloudflare.com",".supabase.co",".pages.dev",".web.app",".r2.dev",".vercel.app",".replit.app",".glitch.me",".onrender.com","raw.githubusercontent.com","gist.githubusercontent.com","bitbucket.org/raw"]);
+  let InstallHints = dynamic(["preinstall","postinstall","install.js","setup.py","pip install","npm install","yarn add","gem install","cargo install"]);
+  let ProcStart = DeviceProcessEvents
+      | where Timestamp > ago(LookbackHours)
+      | where FileName in~ (ScriptHosts)
+      | where AccountName !endswith "$"
+      | where AccountName !in~ ("system","local service","network service")
+      | project ProcTime = Timestamp, DeviceId, DeviceName, AccountName,
+                ParentImage = InitiatingProcessFolderPath,
+                ParentCmd   = InitiatingProcessCommandLine,
+                ScriptHost  = FileName,
+                ScriptCmd   = ProcessCommandLine,
+                ProcSHA256  = SHA256,
+                ProcId      = ProcessId,
+                IsRemoteSession = IsInitiatingProcessRemoteSession;
+  let NetEgress = DeviceNetworkEvents
+      | where Timestamp > ago(LookbackHours)
+      | where RemoteIPType == "Public"
+      | where isnotempty(RemoteUrl)
+      | where RemoteUrl has_any (EdgeDomains)
+      | project NetTime = Timestamp, DeviceId, RemoteUrl, RemoteIP, RemotePort,
+                EgressProc = InitiatingProcessFileName,
+                EgressProcId = InitiatingProcessId;
+  ProcStart
+  | join kind=inner NetEgress on DeviceId, $left.ProcId == $right.EgressProcId
+  | where NetTime between (ProcTime .. ProcTime + CorrelationWindow)
+  | extend DelaySec = datetime_diff('second', NetTime, ProcTime)
+  | extend InstallContext = iff(ParentCmd has_any (InstallHints) or ScriptCmd has_any (InstallHints), "install-hook", "runtime")
+  | summarize FirstSeen = min(ProcTime), LastSeen = max(NetTime), HitCount = count(),
+              DistinctDomains = make_set(RemoteUrl, 25),
+              SampleScriptCmd = any(ScriptCmd),
+              SampleParentCmd = any(ParentCmd),
+              arg_min(DelaySec, *)
+              by DeviceName, AccountName, ScriptHost, InstallContext
+  | order by FirstSeen desc
+sentinel_kql: |-
+  let LookbackHours = 24h;
+  let CorrelationWindow = 5m;
+  let ScriptHosts = dynamic(["node.exe","npm.cmd","npx.cmd","yarn.cmd","python.exe","python3.exe","ruby.exe","mshta.exe","wscript.exe","cscript.exe","powershell.exe","pwsh.exe","cmd.exe","bash.exe","wsl.exe"]);
+  let EdgeDomains = dynamic([".workers.dev",".trycloudflare.com",".supabase.co",".pages.dev",".web.app",".r2.dev",".vercel.app",".replit.app",".glitch.me",".onrender.com","raw.githubusercontent.com","gist.githubusercontent.com"]);
+  let InstallHints = dynamic(["preinstall","postinstall","install.js","setup.py","pip install","npm install","yarn add","gem install","cargo install"]);
+  let ProcStart = DeviceProcessEvents
+      | where TimeGenerated > ago(LookbackHours)
+      | where FileName in~ (ScriptHosts)
+      | where AccountName !endswith "$"
+      | project ProcTime = TimeGenerated, DeviceId, DeviceName, AccountName,
+                ParentCmd = InitiatingProcessCommandLine,
+                ScriptHost = FileName, ScriptCmd = ProcessCommandLine,
+                ProcId = ProcessId;
+  let NetEgress = DeviceNetworkEvents
+      | where TimeGenerated > ago(LookbackHours)
+      | where RemoteIPType == "Public" and isnotempty(RemoteUrl)
+      | where RemoteUrl has_any (EdgeDomains)
+      | project NetTime = TimeGenerated, DeviceId, RemoteUrl, RemoteIP, RemotePort,
+                EgressProcId = InitiatingProcessId;
+  ProcStart
+  | join kind=inner NetEgress on DeviceId, $left.ProcId == $right.EgressProcId
+  | where NetTime between (ProcTime .. ProcTime + CorrelationWindow)
+  | extend DelaySec = datetime_diff('second', NetTime, ProcTime)
+  | extend InstallContext = iff(ParentCmd has_any (InstallHints) or ScriptCmd has_any (InstallHints), "install-hook", "runtime")
+  | summarize FirstSeen = min(ProcTime), HitCount = count(), Domains = make_set(RemoteUrl, 25),
+              SampleScriptCmd = any(ScriptCmd)
+              by DeviceName, AccountName, ScriptHost, InstallContext
+  | order by FirstSeen desc
+sigma_yaml: |-
+  title: Script Interpreter Network Egress to Free-Tier Edge SaaS
+  id: 0c8d1e26-1c4a-4d4f-8e7a-3d6c2c2a91aa
+  status: experimental
+  description: Detects an interpreter or package-manager process (node/npm/npx/yarn/python/ruby/mshta/wscript/cscript/powershell/pwsh/bash) opening an outbound connection to free-tier edge SaaS classes increasingly abused as LOTS C2/staging (workers.dev, trycloudflare.com, supabase.co, pages.dev, web.app, r2.dev, vercel.app, raw.githubusercontent.com, gist.githubusercontent.com). Single-event anchor of the broader multi-stage correlation; pair with a process-start join when telemetry allows.
+  references:
+    - https://thehackernews.com/2026/06/gamaredon-exploits-winrar-to-deliver.html
+    - https://www.microsoft.com/en-us/security/blog/2026/06/02/preinstall-persistence-inside-red-hat-npm-miasma-credential-stealing-campaign/
+    - https://thehackernews.com/2026/06/china-linked-ta4922-expands-phishing.html
+  author: weekly-uc-synth
+  date: 2026/06/07
+  tags:
+    - attack.command_and_control
+    - attack.t1102.002
+    - attack.t1567.001
+    - attack.t1071.001
+  logsource:
+    category: network_connection
+    product: windows
+  detection:
+    selection_proc:
+      Image|endswith:
+        - '\node.exe'
+        - '\npm.cmd'
+        - '\npx.cmd'
+        - '\yarn.cmd'
+        - '\python.exe'
+        - '\python3.exe'
+        - '\ruby.exe'
+        - '\mshta.exe'
+        - '\wscript.exe'
+        - '\cscript.exe'
+        - '\powershell.exe'
+        - '\pwsh.exe'
+        - '\bash.exe'
+        - '\wsl.exe'
+    selection_domain:
+      DestinationHostname|endswith:
+        - '.workers.dev'
+        - '.trycloudflare.com'
+        - '.supabase.co'
+        - '.pages.dev'
+        - '.web.app'
+        - '.r2.dev'
+        - '.vercel.app'
+        - '.replit.app'
+        - '.glitch.me'
+        - '.onrender.com'
+      DestinationHostname|contains:
+        - 'raw.githubusercontent.com'
+        - 'gist.githubusercontent.com'
+    condition: selection_proc and selection_domain
+  falsepositives:
+    - Legitimate npm/yarn/pip installs pulling from public gists or Cloudflare-fronted package mirrors
+    - Developer tooling (Vercel/Workers/Pages deploy CLIs) on engineer workstations
+    - Self-hosted runners cloning from raw.githubusercontent.com
+  level: high
+splunk_spl: |-
+  | tstats summariesonly=true count min(_time) as proc_time values(Processes.process) as cmd values(Processes.parent_process_name) as parent_name values(Processes.parent_process) as parent_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name IN ("node.exe","npm.cmd","npx.cmd","yarn.cmd","python.exe","python3.exe","ruby.exe","mshta.exe","wscript.exe","cscript.exe","powershell.exe","pwsh.exe","bash.exe","wsl.exe") by host Processes.process_name Processes.process_id | `drop_dm_object_name("Processes")` | rename process_id as proc_id | join type=inner host proc_id [| tstats summariesonly=true min(_time) as net_time values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="*.workers.dev" OR All_Traffic.dest="*.trycloudflare.com" OR All_Traffic.dest="*.supabase.co" OR All_Traffic.dest="*.pages.dev" OR All_Traffic.dest="*.web.app" OR All_Traffic.dest="*.r2.dev" OR All_Traffic.dest="*.vercel.app" OR All_Traffic.dest="raw.githubusercontent.com" OR All_Traffic.dest="gist.githubusercontent.com" OR All_Traffic.dest="*.replit.app" OR All_Traffic.dest="*.glitch.me") by host All_Traffic.process_id | `drop_dm_object_name("All_Traffic")` | rename process_id as proc_id] | eval delay_sec = net_time - proc_time | where delay_sec >= 0 AND delay_sec <= 300 | eval install_context = if(match(cmd,"(?i)preinstall|postinstall|npm\s+install|yarn\s+add|pip\s+install|gem\s+install|cargo\s+install|setup\.py"),1,0) | table proc_time delay_sec host user process_name cmd parent_name parent_cmd dest dest_port install_context | sort - proc_time
+datadog_query: |-
+  source:(windows.sysmon OR linux.auditd) ((@EventID:1 @Image:(*\\node.exe OR *\\NODE.EXE OR *\\npm.cmd OR *\\npx.cmd OR *\\yarn.cmd OR *\\python.exe OR *\\PYTHON.EXE OR *\\python3.exe OR *\\ruby.exe OR *\\mshta.exe OR *\\MSHTA.EXE OR *\\wscript.exe OR *\\WScript.exe OR *\\WSCRIPT.EXE OR *\\cscript.exe OR *\\CScript.exe OR *\\CSCRIPT.EXE OR *\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\bash.exe)) OR (@EventID:3 @DestinationHostname:(*.workers.dev OR *.trycloudflare.com OR *.supabase.co OR *.pages.dev OR *.web.app OR *.r2.dev OR *.vercel.app OR *.replit.app OR *.glitch.me OR *.onrender.com OR raw.githubusercontent.com OR gist.githubusercontent.com)) OR (@auditd.type:EXECVE @process.name:(node OR npm OR npx OR yarn OR python OR python3 OR ruby OR bash) @process.command_line:(*workers.dev* OR *trycloudflare.com* OR *supabase.co* OR *pages.dev* OR *raw.githubusercontent.com* OR *gist.githubusercontent.com*)))

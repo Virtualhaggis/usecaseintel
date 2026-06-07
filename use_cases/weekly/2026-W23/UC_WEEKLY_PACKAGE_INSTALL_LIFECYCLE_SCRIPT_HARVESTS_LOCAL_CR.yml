@@ -1,0 +1,129 @@
+id: UC_WEEKLY_PACKAGE_INSTALL_LIFECYCLE_SCRIPT_HARVESTS_LOCAL_CR
+title: "[WEEKLY] Package-install lifecycle script harvests local credentials and beacons to a non-baselined domain"
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1195.002
+  name: Compromise Software Supply Chain
+- id: T1546.016
+  name: "Event Triggered Execution: Installer Packages"
+- id: T1552.001
+  name: "Unsecured Credentials: Credentials In Files"
+- id: T1552.004
+  name: "Unsecured Credentials: Private Keys"
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1041
+  name: Exfiltration Over C2 Channel
+- id: T1027
+  name: Obfuscated Files or Information
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Endpoint.Filesystem
+  - Network_Traffic.All_Traffic
+  - Network_Resolution.DNS
+description: |-
+  Detects the cross-platform supply-chain pattern where a package manager or installer (npm/yarn/pnpm/npx, VS Code extension host, MSI/PKG installer) spawns a child during pre/postinstall that reads developer or cloud credential stores (.npmrc, ~/.aws/credentials, ~/.ssh/id_*, .env, /proc/<pid>/environ, browser Login Data, GitHub/NPM/Anthropic token env vars, macOS keychain) and within ~5 minutes the same host beacons to an external host that has not been seen in the 30-day org-wide baseline. This fortnight is dominated by exactly this chain: CISA KEV CVE-2026-48027 (Nx Console malicious extension), CVE-2026-8398 (Daemon Tools Lite embedded malicious code), Microsoft's 33 malicious npm packages abusing dependency confusion, Snyk's Miasma compromise of @redhat-cloud-services, The Hacker News' Claude Code GitHub Action prompt-injection reading /proc/<pid>/environ on self-hosted runners, FlutterShell macOS malvertising, and GHSA-jpvj-wpmj-h7rv (@cap-js/openapi). It spans install (lifecycle hook), credential-access (file/env scrape), and exfiltration/C2 (new-domain egress) stages, so it gives one alert per real chain rather than one per IOC. It fires when a node/npm/yarn/pnpm/installer-rooted process reads a credential artefact AND the host then talks to a fresh external host within the window; it does NOT fire on a credential read alone (CLI workflows), nor on package-manager network activity to known baselined registries (npmjs, github, vscode CDN, cloud provider endpoints).
+  
+  Rationale: Every article in scope ends with the same chain — a freshly-installed package or extension's lifecycle hook (npm preinstall, VS Code extension postInstall, MSI custom action, GitHub Actions runner under prompt injection) reads a developer/cloud credential artefact, then beacons home. Correlating the credential-read process (gated on a package-install parent or lifecycle cue) with a new-domain outbound from the same device inside 5 minutes captures every variant — Nx Console, Daemon Tools Lite, the 33-package dependency-confusion set, @redhat-cloud-services, @cap-js/openapi, FlutterShell, and the Claude Code Action /proc/environ exfil — while ignoring legitimate npm installs that don't reach for secrets and routine secret access that doesn't egress.
+defender_kql: |-
+  let Lookback = 7d;
+  let Window = 5m;
+  let PkgInstallParents = dynamic(["node.exe","npm.cmd","yarn.cmd","pnpm.cmd","npx.cmd","code.exe","msiexec.exe","setup.exe","installer.exe"]);
+  let LifecycleCues = dynamic(["preinstall","postinstall","npm install","yarn install","pnpm install","npm-cli.js","yarn.js","pnpm.cjs"]);
+  let CredArtefacts = dynamic([".npmrc",".aws\\credentials",".aws/credentials",".ssh\\id_",".ssh/id_",".env","/proc/","environ","Login Data","Cookies","GITHUB_TOKEN","NPM_TOKEN","ANTHROPIC_API_KEY","HF_TOKEN","aws_access_key","aws_secret",".netrc",".docker\\config",".docker/config","libsecret","find-generic-password"]);
+  let KnownRegistries = dynamic(["registry.npmjs.org","npmjs.com","yarnpkg.com","pnpm.io","github.com","githubusercontent.com","vscode-cdn.net","microsoft.com","windows.net","googleapis.com","amazonaws.com","azure.com","docker.io","docker.com"]);
+  let CredReads = DeviceProcessEvents
+      | where Timestamp > ago(Lookback)
+      | where InitiatingProcessFileName in~ (PkgInstallParents)
+          or InitiatingProcessCommandLine has_any (LifecycleCues)
+      | where ProcessCommandLine has_any (CredArtefacts)
+          or FolderPath has_any (CredArtefacts)
+          or FileName in~ ("env","printenv","security","keychain","strings","xxd")
+      | where AccountName !endswith "$"
+          and AccountName !in~ ("system","local service","network service")
+      | project CredTime = Timestamp, DeviceId, DeviceName, AccountName,
+                ParentImage = InitiatingProcessFileName,
+                ParentCmd = InitiatingProcessCommandLine,
+                ChildImage = FolderPath,
+                ChildCmd = ProcessCommandLine;
+  let BaselineDomains = DeviceNetworkEvents
+      | where Timestamp between (ago(30d) .. ago(Lookback))
+      | where isnotempty(RemoteUrl)
+      | summarize HostCount = dcount(DeviceId) by RemoteUrl
+      | where HostCount > 3;
+  let Egress = DeviceNetworkEvents
+      | where Timestamp > ago(Lookback)
+      | where RemoteIPType == "Public"
+      | where isnotempty(RemoteUrl)
+      | where not(RemoteUrl has_any (KnownRegistries))
+      | join kind=leftanti BaselineDomains on RemoteUrl
+      | project NetTime = Timestamp, DeviceId, EgressImage = InitiatingProcessFileName,
+                EgressCmd = InitiatingProcessCommandLine,
+                RemoteUrl, RemoteIP, RemotePort;
+  CredReads
+  | join kind=inner Egress on DeviceId
+  | where NetTime between (CredTime .. CredTime + Window)
+  | extend DelaySec = datetime_diff('second', NetTime, CredTime)
+  | project CredTime, NetTime, DelaySec,
+            DeviceName, AccountName,
+            ParentImage, ParentCmd, ChildImage, ChildCmd,
+            EgressImage, EgressCmd, RemoteUrl, RemoteIP, RemotePort
+  | order by CredTime desc
+sentinel_kql: |-
+  let Lookback = 7d;
+  let Window = 5m;
+  let PkgInstallParents = dynamic(["node.exe","npm.cmd","yarn.cmd","pnpm.cmd","npx.cmd","code.exe","msiexec.exe","setup.exe","installer.exe"]);
+  let LifecycleCues = dynamic(["preinstall","postinstall","npm install","yarn install","pnpm install","npm-cli.js","yarn.js","pnpm.cjs"]);
+  let CredArtefacts = dynamic([".npmrc",".aws\\credentials",".aws/credentials",".ssh\\id_",".ssh/id_",".env","/proc/","environ","Login Data","Cookies","GITHUB_TOKEN","NPM_TOKEN","ANTHROPIC_API_KEY","HF_TOKEN","aws_access_key","aws_secret",".netrc",".docker\\config",".docker/config","libsecret","find-generic-password"]);
+  let KnownRegistries = dynamic(["registry.npmjs.org","npmjs.com","yarnpkg.com","pnpm.io","github.com","githubusercontent.com","vscode-cdn.net","microsoft.com","windows.net","googleapis.com","amazonaws.com","azure.com","docker.io","docker.com"]);
+  let CredReads = DeviceProcessEvents
+      | where TimeGenerated > ago(Lookback)
+      | where InitiatingProcessFileName in~ (PkgInstallParents)
+          or InitiatingProcessCommandLine has_any (LifecycleCues)
+      | where ProcessCommandLine has_any (CredArtefacts)
+          or FolderPath has_any (CredArtefacts)
+          or FileName in~ ("env","printenv","security","keychain","strings","xxd")
+      | where AccountName !endswith "$"
+          and AccountName !in~ ("system","local service","network service")
+      | project CredTime = TimeGenerated, DeviceId, DeviceName, AccountName,
+                ParentImage = InitiatingProcessFileName,
+                ParentCmd = InitiatingProcessCommandLine,
+                ChildImage = FolderPath,
+                ChildCmd = ProcessCommandLine;
+  let BaselineDomains = DeviceNetworkEvents
+      | where TimeGenerated between (ago(30d) .. ago(Lookback))
+      | where isnotempty(RemoteUrl)
+      | summarize HostCount = dcount(DeviceId) by RemoteUrl
+      | where HostCount > 3;
+  let Egress = DeviceNetworkEvents
+      | where TimeGenerated > ago(Lookback)
+      | where RemoteIPType == "Public"
+      | where isnotempty(RemoteUrl)
+      | where not(RemoteUrl has_any (KnownRegistries))
+      | join kind=leftanti BaselineDomains on RemoteUrl
+      | project NetTime = TimeGenerated, DeviceId,
+                EgressImage = InitiatingProcessFileName,
+                EgressCmd = InitiatingProcessCommandLine,
+                RemoteUrl, RemoteIP, RemotePort;
+  CredReads
+  | join kind=inner Egress on DeviceId
+  | where NetTime between (CredTime .. CredTime + Window)
+  | extend DelaySec = datetime_diff('second', NetTime, CredTime)
+  | project CredTime, NetTime, DelaySec,
+            DeviceName, AccountName,
+            ParentImage, ParentCmd, ChildImage, ChildCmd,
+            EgressImage, EgressCmd, RemoteUrl, RemoteIP, RemotePort
+  | order by CredTime desc
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as credTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","node","npm.cmd","npm","yarn.cmd","yarn","pnpm.cmd","pnpm","npx.cmd","npx","Code.exe","code","msiexec.exe","setup.exe","installer","Installer") OR Processes.parent_process IN ("*preinstall*","*postinstall*","*npm-cli.js*","*yarn.js*","*pnpm.cjs*","*npm install*","*yarn install*","*pnpm install*")) AND (Processes.process IN ("*.npmrc*","*.aws/credentials*","*.aws\\credentials*","*.ssh/id_*","*.ssh\\id_*","*.env*","*/proc/*/environ*","*Login Data*","*Cookies*","*GITHUB_TOKEN*","*NPM_TOKEN*","*ANTHROPIC_API_KEY*","*aws_access_key*","*aws_secret*","*.netrc*","*.docker/config*","*libsecret*","*find-generic-password*") OR Processes.process_name IN ("env","printenv","security","keychain","strings","xxd")) by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | rename host AS src | join type=inner src [ search `cim_Network_Traffic_indexes` earliest=-7d | tstats `summariesonly` count as egressCount min(_time) as netTime values(All_Traffic.dest_hostname) as dest_hostname values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (80,443,8080,8443) NOT (All_Traffic.dest_hostname IN ("registry.npmjs.org","*.npmjs.com","*.yarnpkg.com","*.pnpm.io","*.github.com","*.githubusercontent.com","*.vscode-cdn.net","*.microsoft.com","*.windows.net","*.googleapis.com","*.amazonaws.com","*.azure.com","*.docker.io","*.docker.com")) by All_Traffic.src All_Traffic.dest_hostname All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` ] | eval delaySec = abs(netTime - credTime) | where delaySec <= 300 | search NOT user IN ("SYSTEM","LOCAL SERVICE","NETWORK SERVICE") AND NOT match(user,"\$$") | table credTime netTime delaySec src user parent_process_name process_name process dest_hostname dest dest_port | sort -credTime
+datadog_query: |-
+  (source:windows.sysmon @EventID:1 (@ParentImage:(*\\node.exe OR *\\Node.exe OR *\\npm.cmd OR *\\NPM.cmd OR *\\yarn.cmd OR *\\pnpm.cmd OR *\\npx.cmd OR *\\Code.exe OR *\\msiexec.exe OR *\\setup.exe) OR @ParentCommandLine:(*preinstall* OR *postinstall* OR *npm-cli.js* OR *yarn.js* OR *pnpm.cjs* OR *"npm install"* OR *"yarn install"* OR *"pnpm install"*)) (@CommandLine:(*.npmrc* OR *.aws\\credentials* OR *.aws/credentials* OR *.ssh\\id_* OR *.ssh/id_* OR *.env* OR */proc/*environ* OR *"Login Data"* OR *Cookies* OR *GITHUB_TOKEN* OR *NPM_TOKEN* OR *ANTHROPIC_API_KEY* OR *HF_TOKEN* OR *aws_access_key* OR *aws_secret* OR *.netrc* OR *.docker\\config* OR *.docker/config* OR *libsecret* OR *find-generic-password*) OR @Image:(*\\env.exe OR *\\printenv OR *\\strings.exe OR *\\xxd.exe))) OR (source:linux.auditd @auditd.type:EXECVE (@process.executable.path:(/usr/bin/node OR /usr/local/bin/node OR */node_modules/.bin/*) OR @process.command_line:(*preinstall* OR *postinstall* OR *"npm install"* OR *"yarn install"* OR *"pnpm install"* OR *npm-cli.js* OR *yarn.js* OR *pnpm.cjs*)) @process.command_line:(*.npmrc* OR */.aws/credentials* OR */.ssh/id_* OR *.env* OR */proc/*/environ* OR *GITHUB_TOKEN* OR *NPM_TOKEN* OR *ANTHROPIC_API_KEY* OR *aws_access_key* OR */.netrc* OR */.docker/config*)) -@DestinationHostname:(*.npmjs.org OR *.npmjs.com OR *.yarnpkg.com OR *.pnpm.io OR *.github.com OR *.githubusercontent.com OR *.vscode-cdn.net OR *.microsoft.com OR *.windows.net OR *.googleapis.com OR *.amazonaws.com OR *.azure.com OR *.docker.io OR *.docker.com)

@@ -1,0 +1,116 @@
+id: UC_WEEKLY_NPM_INSTALL_TIME_LIFECYCLE_HOOK_TRIGGERS_OUTBOUND_
+title: "[WEEKLY] npm Install-Time Lifecycle Hook Triggers Outbound Egress to Newly-Seen Domain (Shai-Hulud/Miasma/IronWorm pattern)"
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+mitre_attack:
+- id: T1195.002
+  name: Compromise Software Supply Chain
+- id: T1546.016
+  name: "Event Triggered Execution: Installer Packages"
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1071.001
+  name: "Application Layer Protocol: Web Protocols"
+- id: T1552.001
+  name: "Unsecured Credentials: Credentials In Files"
+- id: T1552.005
+  name: "Unsecured Credentials: Cloud Instance Metadata API"
+- id: T1567
+  name: Exfiltration Over Web Service
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Network_Resolution.DNS
+  - Network_Traffic.All_Traffic
+  - Web
+description: |-
+  Detects the joint pattern across the fortnight's npm supply-chain wave — Miasma/@redhat-cloud-services, IronWorm, codexui-android, vpmdhaj typosquats, and the binding.gyp self-propagating worm — where an npm/yarn/pnpm install spawns a node (or node-gyp/python build helper) child process that within ~5 minutes egresses to a domain or IP never seen before in the org. The chain spans delivery (malicious package landing on a dev/CI host) and C2/exfil (preinstall/binding.gyp payload beaconing harvested AWS, GCP, Azure, GitHub, npm, and CircleCI secrets). Kill-chain stages covered: install (lifecycle-hook execution) → c2/actions (credential exfil to attacker infrastructure). It will fire when a developer or CI runner installs a poisoned package and the payload reaches out to fresh attacker infra; it will NOT fire on normal npm installs that only contact already-baselined registries/CDNs (registry.npmjs.org, github.com, well-known mirrors), nor on lifecycle scripts that stay local. IOC slots (`<c2_domain_list>`, `<c2_ip_list>`, `<sha256_list>`) are referenced as substitution points so the rule survives weekly IOC rotation.
+  
+  Rationale: Across all 11 articles the invariant is identical: an npm-family parent (or node-gyp triggered by binding.gyp) spawns a node/python/shell child during install that egresses to attacker infrastructure within minutes — exfiltrating GitHub/AWS/GCP/Azure/npm/Codex/Anthropic tokens. Correlating install-time lifecycle execution with a previously-unseen external destination in a 5-minute window catches Miasma, IronWorm, codexui-android, vpmdhaj typosquats, and the binding.gyp worm without depending on any single campaign's rotating hashes or domains.
+defender_kql: |-
+  let LookbackDays = 7d;
+  let CorrelationWindow = 5m;
+  let BaselineWindow = 30d;
+  let KnownC2Domains = dynamic(["aab.sportsontheweb.net","oob.moika.tech","moika.tech","cloudplatform-single-spa.io","t-in-one.io","anyclaw.store","sentry.anyclaw.store","audit.checkmarx.cx"]);
+  let KnownC2IPs = dynamic(["94.154.172.43"]);
+  let KnownBadHashes = dynamic(["7069e28a5806db4ab0273639667d203f5e31b401d403af7e36d9f360c1f6d655","b86c5ae9e95bd841a595440faa3eb6317441e746f241ae8fd641ab59ed1d1966","ef641e956f91d501b748085996303c96a64d67f63bfeef0dda175e5aa19cca90","5926b86b642e00672252953eb30d8f75cfb7797fe3118bd6fa2cfbee92905d61","ceff7c51d70832c3ec8dd2744b606a23b3c924ef664ae23439b9b742ea154108","da39146ef451d1b174a24d00b1e2a45cd38d54e849737f8f35333dcb22175707","e3dbe63aded45278f49c4746ab938ed9472b36def79b43e2dd2d7eff014481d1","82d83274680df928fdda296a348e01802f595e412308c399565c320df444052a","288f26c2eadcb1a7923fe376d16f5404216cce15d9fc162a4a78574dc7df399a"]);
+  let OrgDomainBaseline = DeviceNetworkEvents
+      | where Timestamp between (ago(BaselineWindow) .. ago(1h))
+      | where isnotempty(RemoteUrl)
+      | summarize BaselineHosts = dcount(DeviceName) by RemoteUrl
+      | where BaselineHosts > 2;
+  let InstallHookExec = DeviceProcessEvents
+      | where Timestamp > ago(LookbackDays)
+      | where InitiatingProcessFileName in~ ("npm.exe","npm","npm-cli.js","node.exe","node","yarn.exe","yarn","pnpm.exe","pnpm","npx.exe","npx","node-gyp","node-gyp.exe")
+      | where FileName in~ ("node.exe","node","python.exe","python","python3","sh","bash","powershell.exe","pwsh.exe","curl.exe","wget.exe","cmd.exe")
+      | where InitiatingProcessCommandLine has_any ("install","i ","ci","add","rebuild","prepare","preinstall","postinstall","binding.gyp","node_modules")
+          or ProcessCommandLine has_any ("node_modules","binding.gyp","preinstall","postinstall","index.js")
+      | where AccountName !endswith "$"
+      | project InstallTime = Timestamp, DeviceName, AccountName,
+                InstallParent = InitiatingProcessFileName,
+                InstallParentCmd = InitiatingProcessCommandLine,
+                ChildImage = FileName, ChildCmd = ProcessCommandLine, ChildSHA256 = SHA256;
+  let EgressEvents = DeviceNetworkEvents
+      | where Timestamp > ago(LookbackDays)
+      | where RemoteIPType == "Public"
+      | where InitiatingProcessFileName in~ ("node.exe","node","python.exe","python","python3","curl.exe","wget.exe","powershell.exe","pwsh.exe","sh","bash","npm.exe","yarn.exe","pnpm.exe")
+      | project EgressTime = Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort,
+                EgressProcess = InitiatingProcessFileName, EgressCmd = InitiatingProcessCommandLine;
+  InstallHookExec
+  | join kind=inner EgressEvents on DeviceName
+  | where EgressTime between (InstallTime .. InstallTime + CorrelationWindow)
+  | extend DelaySec = datetime_diff('second', EgressTime, InstallTime)
+  | join kind=leftanti OrgDomainBaseline on RemoteUrl
+  | extend MatchKnownC2Domain = iff(RemoteUrl in~ (KnownC2Domains) or RemoteUrl has_any (KnownC2Domains), true, false)
+  | extend MatchKnownC2IP = iff(RemoteIP in (KnownC2IPs), true, false)
+  | extend MatchKnownHash = iff(ChildSHA256 in~ (KnownBadHashes), true, false)
+  | project InstallTime, EgressTime, DelaySec, DeviceName, AccountName, InstallParent,
+            InstallParentCmd, ChildImage, ChildCmd, ChildSHA256, RemoteUrl, RemoteIP, RemotePort,
+            MatchKnownC2Domain, MatchKnownC2IP, MatchKnownHash
+  | order by InstallTime desc
+sentinel_kql: |-
+  let LookbackDays = 7d;
+  let CorrelationWindow = 5m;
+  let KnownC2Domains = dynamic(["aab.sportsontheweb.net","oob.moika.tech","moika.tech","cloudplatform-single-spa.io","t-in-one.io","anyclaw.store","sentry.anyclaw.store","audit.checkmarx.cx"]);
+  let KnownC2IPs = dynamic(["94.154.172.43"]);
+  let BaselineDomains = DeviceNetworkEvents
+      | where TimeGenerated between (ago(30d) .. ago(1h))
+      | where isnotempty(RemoteUrl)
+      | summarize BaselineHosts = dcount(DeviceName) by RemoteUrl
+      | where BaselineHosts > 2;
+  let InstallHookExec = DeviceProcessEvents
+      | where TimeGenerated > ago(LookbackDays)
+      | where InitiatingProcessFileName in~ ("npm.exe","npm","npm-cli.js","node.exe","node","yarn.exe","yarn","pnpm.exe","pnpm","npx.exe","npx","node-gyp","node-gyp.exe")
+      | where FileName in~ ("node.exe","node","python.exe","python","python3","sh","bash","powershell.exe","pwsh.exe","curl.exe","wget.exe")
+      | where InitiatingProcessCommandLine has_any ("install","ci","rebuild","preinstall","postinstall","binding.gyp","node_modules")
+          or ProcessCommandLine has_any ("node_modules","binding.gyp","preinstall","postinstall")
+      | where AccountName !endswith "$"
+      | project InstallTime = TimeGenerated, DeviceName, AccountName,
+                InstallParent = InitiatingProcessFileName,
+                InstallParentCmd = InitiatingProcessCommandLine,
+                ChildImage = FileName, ChildCmd = ProcessCommandLine, ChildSHA256 = SHA256;
+  let EgressEvents = DeviceNetworkEvents
+      | where TimeGenerated > ago(LookbackDays)
+      | where RemoteIPType == "Public"
+      | where InitiatingProcessFileName in~ ("node.exe","node","python.exe","python","python3","curl.exe","wget.exe","powershell.exe","pwsh.exe","sh","bash")
+      | project EgressTime = TimeGenerated, DeviceName, RemoteUrl, RemoteIP, RemotePort;
+  InstallHookExec
+  | join kind=inner EgressEvents on DeviceName
+  | where EgressTime between (InstallTime .. InstallTime + CorrelationWindow)
+  | extend DelaySec = datetime_diff('second', EgressTime, InstallTime)
+  | join kind=leftanti BaselineDomains on RemoteUrl
+  | extend MatchKnownC2 = iff(RemoteUrl in~ (KnownC2Domains) or RemoteIP in (KnownC2IPs), true, false)
+  | project InstallTime, EgressTime, DelaySec, DeviceName, AccountName, InstallParent,
+            InstallParentCmd, ChildImage, ChildCmd, ChildSHA256, RemoteUrl, RemoteIP, RemotePort, MatchKnownC2
+  | order by InstallTime desc
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as install_time max(_time) as install_last values(Processes.process) as install_cmd values(Processes.process_path) as install_image values(Processes.parent_process_name) as install_parent from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("npm","npm.exe","npm-cli.js","node","node.exe","yarn","yarn.exe","pnpm","pnpm.exe","npx","npx.exe") OR Processes.process_name IN ("node-gyp","node-gyp.exe")) AND Processes.process_name IN ("node","node.exe","python","python.exe","python3","sh","bash","powershell.exe","pwsh.exe","curl.exe","wget.exe") by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name("Processes")` | rename host as src | join type=inner src [| tstats `summariesonly` count min(_time) as egress_time values(All_Traffic.dest) as c2_dest values(All_Traffic.dest_ip) as c2_ip values(All_Traffic.dest_port) as c2_port from datamodel=Network_Traffic.All_Traffic where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal" by All_Traffic.src All_Traffic.dest | `drop_dm_object_name("All_Traffic")` | rename src as src] | where egress_time>=install_time AND egress_time<=install_time+300 | eval delay_sec=egress_time-install_time | search NOT [| inputlookup npm_install_egress_baseline_30d.csv | fields dest] | search [| inputlookup known_npm_c2_iocs.csv | fields dest] OR c2_dest IN ("<c2_domain_list>") OR c2_ip IN ("<c2_ip_list>") OR NOT [| inputlookup npm_install_egress_baseline_30d.csv | fields dest] | table install_time, egress_time, delay_sec, src, user, install_parent, process_name, install_cmd, c2_dest, c2_ip, c2_port | sort 0 install_time
+datadog_query: |-
+  source:(windows.sysmon OR linux.auditd) ((@EventID:1 AND @ParentImage:(*\\npm.exe OR *\\npm OR *\\node.exe OR *\\node OR *\\yarn.exe OR *\\pnpm.exe OR *\\npm-cli.js OR *\\node-gyp OR *\\node-gyp.exe) AND @Image:(*\\node.exe OR *\\node OR *\\python.exe OR *\\python OR *\\python3 OR *\\sh OR *\\bash OR *\\powershell.exe OR *\\pwsh.exe OR *\\curl.exe OR *\\wget.exe) AND (@CommandLine:(*node_modules* OR *binding.gyp* OR *preinstall* OR *postinstall* OR *index.js*) OR @ParentCommandLine:(*install* OR *ci* OR *rebuild* OR *preinstall* OR *postinstall* OR *binding.gyp*))) OR (@auditd.type:EXECVE AND @process.command_line:(*node_modules* OR *binding.gyp* OR *preinstall* OR *postinstall*) AND @process.parent.name:(npm OR node OR yarn OR pnpm OR node-gyp)))

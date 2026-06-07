@@ -1,0 +1,144 @@
+id: UC_WEEKLY_PUBLIC_FACING_APP_RUNTIME_SPAWNS_SHELL_LOLBIN_OR_C
+title: "[WEEKLY] Public-Facing App Runtime Spawns Shell, LOLBin, or Container-Control Tool"
+kill_chain: exploit
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- sigma
+- datadog
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1059
+  name: Command and Scripting Interpreter
+- id: T1611
+  name: Escape to Host
+- id: T1068
+  name: Exploitation for Privilege Escalation
+- id: T1610
+  name: Deploy Container
+data_models:
+  defender:
+  - Endpoint.Processes
+description: |-
+  Detects an internet-facing application runtime — Node.js, Python/Jupyter, PHP-FPM, IIS w3wp, nginx, httpd, caddy, ruby, or java — spawning a shell, LOLBin, or container-control binary, optionally with a recon/privilege-escalation keyword in the child command line. This is the common post-condition shared across the fortnight's CRITICAL/KEV catch: PAN-OS GlobalProtect auth bypass under active exploitation (CISA KEV CVE-2026-0257; The Hacker News follow-up), three independent vm2 sandbox escapes (CVE-2026-47137 patch bypass, CVE-2026-47140 NodeVM denylist bypass, CVE-2026-47210 JSPI Promise species bypass), the Jupyter Enterprise Gateway KERNEL_UID/GID enforcement bypass (CVE-2026-44180), and the Shopper RBAC authorization bypass (CVE-2026-47744). Every one of these CVEs lets an unauthenticated/low-privileged HTTP touch defeat an auth/authz/sandbox check; the only host-visible signal the bypasses share is the privilege-boundary crossing that follows — a web/app process suddenly executing a shell, container-control tool, or LOLBin. The query spans the exploit and install stages by joining a parent in the app-runtime set to a child in the shell/LOLBin/container-control set on the same host. It fires when the bypass is converted to host action and does NOT fire on benign in-runtime behaviour (a Node API calling git, a PHP composer install, a Python wheel build invoking gcc) because none of those children are in the suspicious-child set; CI build agents and DevOps tooling running as app runtimes are the main FP source and should be allowlisted by hostname.
+  
+  Rationale: Across the seven articles the only shared host-visible signal is the privilege-boundary crossing that follows the auth/authz/sandbox bypass: a web/app runtime suddenly running a shell, LOLBin, or container-control tool. Pivoting on the parent⇄child pair (instead of any single vm2/PAN-OS/Jupyter/Shopper IOC) catches the joint pattern and survives IOC rotation.
+defender_kql: |-
+  let AppRuntimes = dynamic(["node.exe","node","python.exe","python","python3","jupyter","jupyter-kernel-launcher","php-fpm.exe","php-fpm","php.exe","php","w3wp.exe","nginx.exe","nginx","httpd.exe","httpd","caddy.exe","caddy","ruby.exe","ruby","java.exe","java"]);
+  let SuspChildren = dynamic(["cmd.exe","powershell.exe","pwsh.exe","sh","bash","dash","zsh","ash","ksh","wmic.exe","mshta.exe","rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe","certutil.exe","bitsadmin.exe","curl.exe","wget.exe","kubectl","kubectl.exe","docker","docker.exe","crictl","crictl.exe","nsenter","unshare"]);
+  let ReconRegex = @"(?i)(whoami|\bid\b|uname|hostname|ipconfig|ifconfig|/etc/passwd|/etc/shadow|\bnet user\b|\bnet group\b|child_process|execSync)";
+  let PrivRegex  = @"(?i)(--privileged|runAsUser=0|runAsGroup=0|KERNEL_UID=0|KERNEL_GID=0|\b-uid\s+0\b|\b-gid\s+0\b|setuid\(0\)|chmod\s+\+s)";
+  DeviceProcessEvents
+  | where Timestamp > ago(7d)
+  | where InitiatingProcessFileName in~ (AppRuntimes)
+  | where FileName in~ (SuspChildren)
+  | where AccountName !endswith "$"
+  | extend HasRecon = ProcessCommandLine matches regex ReconRegex
+  | extend HasPrivEscalation = ProcessCommandLine matches regex PrivRegex
+  | extend ScriptingRuntimeParent = InitiatingProcessFileName in~ ("node.exe","node","python.exe","python","python3","jupyter","jupyter-kernel-launcher")
+  | where HasRecon or HasPrivEscalation or ScriptingRuntimeParent
+  | summarize EventCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), ParentCmd=any(InitiatingProcessCommandLine), ChildCmds=make_set(ProcessCommandLine, 10), Users=make_set(AccountName, 5), IsRemoteSession=any(IsInitiatingProcessRemoteSession) by DeviceName, InitiatingProcessFileName, FileName, HasRecon, HasPrivEscalation
+  | order by LastSeen desc
+sentinel_kql: |-
+  let AppRuntimes = dynamic(["node.exe","python.exe","python3.exe","jupyter.exe","php-fpm.exe","php.exe","w3wp.exe","nginx.exe","httpd.exe","caddy.exe","ruby.exe","java.exe"]);
+  let SuspChildren = dynamic(["cmd.exe","powershell.exe","pwsh.exe","sh.exe","bash.exe","wsl.exe","wmic.exe","mshta.exe","rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe","certutil.exe","bitsadmin.exe","curl.exe","wget.exe","kubectl.exe","docker.exe"]);
+  let ReconRegex = @"(?i)(whoami|\bid\b|uname|hostname|ipconfig|ifconfig|/etc/passwd|/etc/shadow|\bnet user\b|\bnet group\b|child_process|execSync)";
+  let PrivRegex  = @"(?i)(--privileged|runAsUser=0|runAsGroup=0|KERNEL_UID=0|KERNEL_GID=0|\b-uid\s+0\b|\b-gid\s+0\b|setuid\(0\))";
+  SecurityEvent
+  | where TimeGenerated > ago(7d)
+  | where EventID == 4688
+  | extend ParentName = tolower(tostring(split(ParentProcessName, "\\")[-1]))
+  | extend ChildName  = tolower(tostring(split(NewProcessName, "\\")[-1]))
+  | where ParentName in (AppRuntimes)
+  | where ChildName in (SuspChildren)
+  | where SubjectUserName !endswith "$"
+  | extend HasRecon = CommandLine matches regex ReconRegex
+  | extend HasPrivEscalation = CommandLine matches regex PrivRegex
+  | extend ScriptingRuntimeParent = ParentName in ("node.exe","python.exe","python3.exe","jupyter.exe")
+  | where HasRecon or HasPrivEscalation or ScriptingRuntimeParent
+  | summarize EventCount=count(), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), Cmds=make_set(CommandLine, 10), Users=make_set(SubjectUserName, 5) by Computer, ParentName, ChildName, HasRecon, HasPrivEscalation
+  | order by LastSeen desc
+sigma_yaml: |-
+  title: Internet-Facing App Runtime Spawns Shell, LOLBin, or Container-Control Binary
+  id: 6f3ad9c1-2b8e-4a44-9c20-3f7d0e0c1a55
+  status: experimental
+  description: |
+    Detects a public-facing app runtime (node, python/jupyter, php-fpm, w3wp, nginx, httpd, caddy, ruby, java) spawning a shell, LOLBin, or container-control binary. Common post-condition of CVE-2026-0257 (PAN-OS), CVE-2026-47137 / 47140 / 47210 (vm2), CVE-2026-44180 (Jupyter Enterprise Gateway) and CVE-2026-47744 (Shopper RBAC).
+  references:
+    - https://github.com/advisories/GHSA-m4wx-m65x-ghrr
+    - https://github.com/advisories/GHSA-rp36-8xq3-r6c4
+    - https://github.com/advisories/GHSA-6j2x-vhqr-qr7q
+    - https://github.com/advisories/GHSA-chq7-94j8-cj28
+    - https://github.com/advisories/GHSA-c3qp-2ggw-xjg7
+    - https://thehackernews.com/2026/05/pan-os-globalprotect-authentication.html
+  author: weekly-uc-pipeline
+  date: 2026/06/07
+  logsource:
+    category: process_creation
+    product: windows
+  detection:
+    parent_runtime:
+      ParentImage|endswith:
+        - '\node.exe'
+        - '\python.exe'
+        - '\python3.exe'
+        - '\jupyter.exe'
+        - '\php-fpm.exe'
+        - '\php.exe'
+        - '\w3wp.exe'
+        - '\nginx.exe'
+        - '\httpd.exe'
+        - '\caddy.exe'
+        - '\ruby.exe'
+        - '\java.exe'
+    child_shell_or_lolbin:
+      Image|endswith:
+        - '\cmd.exe'
+        - '\powershell.exe'
+        - '\pwsh.exe'
+        - '\bash.exe'
+        - '\sh.exe'
+        - '\wsl.exe'
+        - '\wmic.exe'
+        - '\mshta.exe'
+        - '\rundll32.exe'
+        - '\regsvr32.exe'
+        - '\wscript.exe'
+        - '\cscript.exe'
+        - '\certutil.exe'
+        - '\bitsadmin.exe'
+        - '\curl.exe'
+        - '\wget.exe'
+        - '\kubectl.exe'
+        - '\docker.exe'
+    filter_machine_acct:
+      User|endswith: '$'
+    condition: parent_runtime and child_shell_or_lolbin and not filter_machine_acct
+  fields:
+    - ParentImage
+    - Image
+    - CommandLine
+    - User
+    - ComputerName
+  falsepositives:
+    - Build agents / CI runners executing under app-runtime context
+    - Container image-build pipelines and DevOps tooling on app servers
+  level: high
+  tags:
+    - attack.initial_access
+    - attack.t1190
+    - attack.execution
+    - attack.t1059
+    - attack.privilege_escalation
+    - attack.t1068
+    - attack.t1611
+  
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.process_path) as child_paths values(Processes.user) as users values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","node","python.exe","python","python3","jupyter","jupyter-kernel-launcher","php-fpm.exe","php-fpm","php.exe","php","w3wp.exe","nginx.exe","nginx","httpd.exe","httpd","caddy.exe","caddy","ruby.exe","ruby","java.exe","java")) AND (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","sh","bash","dash","zsh","ash","ksh","wmic.exe","mshta.exe","rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe","certutil.exe","bitsadmin.exe","curl.exe","wget.exe","kubectl","kubectl.exe","docker","docker.exe","crictl","crictl.exe","nsenter","unshare")) AND Processes.user!="*$" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | eval has_recon=if(match(process,"(?i)(whoami|\bid\b|uname|hostname|ipconfig|ifconfig|/etc/passwd|/etc/shadow|net user|net group|child_process|execSync)"),1,0), has_priv=if(match(process,"(?i)(--privileged|runAsUser=0|runAsGroup=0|KERNEL_UID=0|KERNEL_GID=0|\b-uid\s+0\b|\b-gid\s+0\b|setuid\(0\)|chmod\s+\+s)"),1,0), node_or_jup=if(match(parent_process_name,"(?i)(node|jupyter|python)"),1,0) | where has_recon=1 OR has_priv=1 OR node_or_jup=1 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime lastTime dest user parent_process_name process_name process has_recon has_priv
+datadog_query: |-
+  source:windows.sysmon @EventID:1 @ParentImage:(*\\node.exe OR *\\Node.exe OR *\\python.exe OR *\\Python.exe OR *\\python3.exe OR *\\jupyter.exe OR *\\php-fpm.exe OR *\\php.exe OR *\\w3wp.exe OR *\\nginx.exe OR *\\httpd.exe OR *\\caddy.exe OR *\\ruby.exe OR *\\java.exe) @Image:(*\\cmd.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\bash.exe OR *\\sh.exe OR *\\wsl.exe OR *\\wmic.exe OR *\\mshta.exe OR *\\rundll32.exe OR *\\regsvr32.exe OR *\\wscript.exe OR *\\cscript.exe OR *\\certutil.exe OR *\\bitsadmin.exe OR *\\curl.exe OR *\\wget.exe OR *\\kubectl.exe OR *\\docker.exe) -@User:*$
