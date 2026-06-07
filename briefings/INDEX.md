@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-07
 - [cisa warns of linux kernel improper authentication vulnerabi](./2026-06-07/cisa-warns-of-linux-kernel-improper-authentication-vulnerabi.md)
+- [instagram fixes password reset flaw that exposes user emails](./2026-06-07/instagram-fixes-password-reset-flaw-that-exposes-user-emails.md)
 
 ## 2026-06-06
 - [ai agent uncovers 21 zero days in ffmpeg chrome patches reco](./2026-06-06/ai-agent-uncovers-21-zero-days-in-ffmpeg-chrome-patches-reco.md)

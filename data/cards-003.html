@@ -1,3 +1,404 @@
+<article class="card" id="art-67" data-art-slug="2026-06-03-ghsa-critical-cve-2026-44180-jupyter-enterprise-gateway-cont"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,cloud"
+  data-targets="azure,kubernetes,linux,vcs,windows"
+  data-uc-count="5" data-llm-uc-count="4"
+  data-search="[GHSA / CRITICAL] CVE-2026-44180: Jupyter Enterprise Gateway: ContainerProcessProxy._enforce_prohibited_ids Bypass Jupyter Enterprise Gateway: ContainerProcessProxy._enforce_prohibited_ids Bypass CVE-2026-44180 T1190 [LLM] Jupyter Enterprise Gateway /api/kernels POST with KERNEL_UID/GID body (CVE-2026-44180) [LLM] Enterprise Gateway service account creates Jupyter kernel pod as root (CVE-2026-44180 outcome) [LLM] Jupyter kernel pod created with hostPath volume by enterprise-gateway SA [LLM] Cron/persistence file written on Kubernetes worker node from container runtime context Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-06-03-ghsa-critical-cve-2026-44180-jupyter-enterprise-gateway-cont" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-chq7-94j8-cj28" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-44180: Jupyter Enterprise Gateway: ContainerProcessProxy._enforce_prohibited_ids Bypass</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-06-03</span>
+    <span>5 use cases</span>
+    <span>1 technique</span>
+    <span>5 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Jupyter Enterprise Gateway: ContainerProcessProxy._enforce_prohibited_ids Bypass</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-44180</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-67-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-67"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-67-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Jupyter Enterprise Gateway /api/kernels POST with KERNEL_UID/GID body (CVE-2026-44180) · [LLM] Enterprise Gateway service account creates Jupyter kernel pod as root (CVE-2026-44180 outcome)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Cron/persistence file written on Kubernetes worker node from container runtime context</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Jupyter kernel pod created with hostPath volume by enterprise-gateway SA</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="f56741b5d5" data-platforms="datadog,sent,sigma,spl" data-targets="azure,vcs" open>
+  <summary>
+    <span class="uc-title">[LLM] Jupyter Enterprise Gateway /api/kernels POST with KERNEL_UID/GID body (CVE-2026-44180)</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="f56741b5d5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts inbound POST requests to /api/kernels on the Enterprise Gateway service that supply KERNEL_UID or KERNEL_GID in the JSON body — the attack surface used to exploit the prohibited-UID/GID whitespace bypass described in CVE-2026-44180. Most production workloads call /api/kernels without explicitly setting these env keys, so unsolicited UID/GID-bearing requests are high-signal.
+
+Rationale: Anchors on the exact attack-surface URL &#x27;/api/kernels&#x27; and HTTP POST method from the PoC. Body content (the &#x27;0 &#x27; bypass payload) rarely makes it into access logs, so this UC is a coarse hunting pivot — pair with UC2 (K8s audit on runAsUser=0) for ground truth. Cross-checked GHSA-chq7-94j8-cj28 and Jupyter Enterprise Gateway upstream docs (jupyter-enterprise-gateway.readthedocs.io kernel-envs).
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-chq7-94j8-cj28
+  • https://jupyter-enterprise-gateway.readthedocs.io/en/latest/users/kernel-envs.html
+  • https://github.com/jupyter-server/enterprise_gateway/blob/main/etc/kernel-launchers/kubernetes/scripts/kernel-pod.yaml.j2</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-67-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-67-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-67-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-67-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-67-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let TargetPath = &quot;/api/kernels&quot;;
+union isfuzzy=true
+  (W3CIISLog
+    | where TimeGenerated &gt; ago(1d)
+    | where csMethod == &quot;POST&quot; and csUriStem has TargetPath
+    | project TimeGenerated, SrcIp = cIP, Host = sSiteName, Uri = csUriStem, Status = scStatus, UA = csUserAgent, Source = &quot;W3CIISLog&quot;),
+  (CommonSecurityLog
+    | where TimeGenerated &gt; ago(1d)
+    | where RequestMethod == &quot;POST&quot; and (RequestURL has TargetPath or DeviceCustomString1 has TargetPath)
+    | project TimeGenerated, SrcIp = SourceIP, Host = DestinationHostName, Uri = RequestURL, Status = tostring(EventOutcome), UA = RequestClientApplication, Source = &quot;CommonSecurityLog&quot;),
+  (ImWebSession
+    | where TimeGenerated &gt; ago(1d)
+    | where HttpMethod == &quot;POST&quot; and Url has TargetPath
+    | project TimeGenerated, SrcIp = SrcIpAddr, Host = DstHostname, Uri = Url, Status = tostring(HttpStatusCode), UA = HttpRequestHeaderUserAgent, Source = &quot;ImWebSession&quot;)
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-67-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Jupyter Enterprise Gateway /api/kernels POST (CVE-2026-44180)
+id: 5a8b3c54-2f1d-49ce-9b1e-7c3a4e8d5f01
+description: Detects POST requests to the Jupyter Enterprise Gateway /api/kernels endpoint, the surface exploited by CVE-2026-44180 to launch kernel pods with prohibited UID/GID values (e.g. KERNEL_UID &#x27;0 &#x27;).
+references:
+  - https://github.com/advisories/GHSA-chq7-94j8-cj28
+author: SOC Detection Engineering
+date: 2026/06/03
+tags:
+  - attack.t1190
+  - attack.initial_access
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-method: POST
+    cs-uri-stem|contains: &#x27;/api/kernels&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-67-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:envoy OR source:azure.application_gateway) @http.method:POST @http.url_details.path:*\/api\/kernels*</code></pre></div>
+    <div class="tab-content" id="art-67-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-67-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-67-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-67-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count, values(Web.http_user_agent) as user_agents, values(Web.dest) as dest_hosts from datamodel=Web where Web.http_method=POST Web.url=&quot;*/api/kernels*&quot; by Web.src, Web.url, _time span=1m | `drop_dm_object_name(Web)` | rename src as client_ip | sort - _time</code></pre><pre class="spl-mode-body" id="art-67-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(Web.http_user_agent) as user_agents, values(Web.dest) as dest_hosts from datamodel=Web where Web.http_method=POST Web.url=&quot;*/api/kernels*&quot; by Web.src, Web.url, _time span=1m | `drop_dm_object_name(Web)` | rename src as client_ip | sort - _time</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="6b75d936b9" data-platforms="cloudwatch,datadog,sent,spl" data-targets="kubernetes">
+  <summary>
+    <span class="uc-title">[LLM] Enterprise Gateway service account creates Jupyter kernel pod as root (CVE-2026-44180 outcome)</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="6b75d936b9" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the post-exploitation footprint of CVE-2026-44180: a Kubernetes pod-create call whose service account belongs to enterprise-gateway and whose resolved PodSpec has runAsUser=0 or runAsGroup=0. Default kernel pods run as jovyan (1000:100); any kernel-* pod created with root UID/GID is either the documented bypass or a misconfiguration that should never reach production.
+
+Rationale: Article confirms the default kernel pod runs as uid=1000(jovyan) gid=100(users) — any kernel pod from the enterprise-gateway SA with runAsUser=0 is exactly the bypass outcome (Jinja2 int-coerces &#x27;0 &#x27;→0 even when EG_PROHIBITED_UIDS rejects &#x27;0&#x27;). Cross-referenced the kernel-pod.yaml.j2 template at jupyter-server/enterprise_gateway main branch (where securityContext.runAsUser is templated from KERNEL_UID).
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-chq7-94j8-cj28
+  • https://github.com/jupyter-server/enterprise_gateway/blob/main/etc/kernel-launchers/kubernetes/scripts/kernel-pod.yaml.j2
+  • https://jupyter-enterprise-gateway.readthedocs.io/en/latest/users/kernel-envs.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Escape to Host">T1611</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span> <span class="ind tech" title="Deploy Container">T1610</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-67-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-67-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-67-uc1-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-67-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-67-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+| where TimeGenerated &gt; ago(1d)
+| where Verb == &quot;create&quot;
+| where tostring(ObjectRef) has &quot;\&quot;resource\&quot;:\&quot;pods\&quot;&quot;
+| where tostring(User) has &quot;enterprise-gateway&quot; or Username has &quot;enterprise-gateway&quot;
+| extend req = todynamic(tostring(RequestObject))
+| extend podName = tostring(req.metadata.name)
+| extend podRunAsUser = toint(req.spec.securityContext.runAsUser)
+| extend podRunAsGroup = toint(req.spec.securityContext.runAsGroup)
+| extend containers = req.spec.containers
+| mv-apply c = containers on (
+    extend cRunAsUser = toint(c.securityContext.runAsUser)
+  )
+| summarize anyRoot = max(iff(podRunAsUser == 0 or podRunAsGroup == 0 or cRunAsUser == 0, 1, 0)),
+            runAsUser = take_any(podRunAsUser), runAsGroup = take_any(podRunAsGroup),
+            podName = take_any(podName), User = take_any(tostring(User))
+        by AuditId, TimeGenerated
+| where anyRoot == 1
+| project TimeGenerated, podName, runAsUser, runAsGroup, User, AuditId
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-67-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:create @objectRef.resource:pods @user.username:*enterprise-gateway* (@requestObject.spec.securityContext.runAsUser:0 OR @requestObject.spec.securityContext.runAsGroup:0 OR @requestObject.spec.containers.securityContext.runAsUser:0)</code></pre></div>
+    <div class="tab-content" id="art-67-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/eks/&lt;cluster-name&gt;/cluster
+fields @timestamp, verb, objectRef.name, user.username, sourceIPs.0, requestObject.spec.securityContext.runAsUser, requestObject.spec.securityContext.runAsGroup
+| filter verb = &quot;create&quot;
+      and objectRef.resource = &quot;pods&quot;
+      and user.username like /enterprise-gateway/
+      and (requestObject.spec.securityContext.runAsUser = 0
+           or requestObject.spec.securityContext.runAsGroup = 0
+           or requestObject.spec.containers.0.securityContext.runAsUser = 0)
+| sort @timestamp desc
+| limit 200</code></pre></div>
+    <div class="tab-content" id="art-67-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-67-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-67-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-67-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count, values(All_Changes.object) as pod_names, values(All_Changes.src) as src_ips from datamodel=Change where All_Changes.action=created All_Changes.object_category=pod All_Changes.user=&quot;*enterprise-gateway*&quot; by All_Changes.user, _time span=5m | `drop_dm_object_name(All_Changes)` | join type=inner pod_names [ search index=k8s_audit sourcetype=&quot;kube:apiserver:audit&quot; verb=created objectRef.resource=pods &quot;user.username&quot;=&quot;*enterprise-gateway*&quot; (&quot;requestObject.spec.securityContext.runAsUser&quot;=0 OR &quot;requestObject.spec.securityContext.runAsGroup&quot;=0 OR &quot;requestObject.spec.containers{}.securityContext.runAsUser&quot;=0) | rename objectRef.name as pod_names | table pod_names, requestObject.spec.securityContext.runAsUser, requestObject.spec.securityContext.runAsGroup, sourceIPs{} ] | sort - _time</code></pre><pre class="spl-mode-body" id="art-67-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Changes.object) as pod_names, values(All_Changes.src) as src_ips from datamodel=Change where All_Changes.action=created All_Changes.object_category=pod All_Changes.user=&quot;*enterprise-gateway*&quot; by All_Changes.user, _time span=5m | `drop_dm_object_name(All_Changes)` | join type=inner pod_names [ search index=k8s_audit sourcetype=&quot;kube:apiserver:audit&quot; verb=created objectRef.resource=pods &quot;user.username&quot;=&quot;*enterprise-gateway*&quot; (&quot;requestObject.spec.securityContext.runAsUser&quot;=0 OR &quot;requestObject.spec.securityContext.runAsGroup&quot;=0 OR &quot;requestObject.spec.containers{}.securityContext.runAsUser&quot;=0) | rename objectRef.name as pod_names | table pod_names, requestObject.spec.securityContext.runAsUser, requestObject.spec.securityContext.runAsGroup, sourceIPs{} ] | sort - _time</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="3af99248f1" data-platforms="cloudwatch,datadog,sent,spl" data-targets="kubernetes">
+  <summary>
+    <span class="uc-title">[LLM] Jupyter kernel pod created with hostPath volume by enterprise-gateway SA</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="3af99248f1" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the container-escape vector named in the advisory: a kernel pod from the enterprise-gateway service account that mounts a hostPath volume — especially sensitive worker-node paths (/, /etc, /var/spool/cron, /root, /home, /var/run/docker.sock). Combined with the root UID bypass (UC2), this is the path to crontab-driven node compromise the PoC describes.
+
+Rationale: The advisory explicitly names the escape recipe: &#x27;use a hostPath R/W volume mount, use this UID/GID bypass to run as root, and then gain code execution in the underlying worker node by creating a crontab entry&#x27;. Kernel pods normally do not need hostPath at all — the default kernel-pod.yaml.j2 ships with only emptyDir-style mounts. Any hostPath volume on a kernel-* pod from the EG SA is article-defined-malicious.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-chq7-94j8-cj28
+  • https://github.com/jupyter-server/enterprise_gateway/blob/main/etc/kernel-launchers/kubernetes/scripts/kernel-pod.yaml.j2</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Escape to Host">T1611</span> <span class="ind tech" title="Deploy Container">T1610</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-67-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-67-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-67-uc2-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-67-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-67-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+| where TimeGenerated &gt; ago(7d)
+| where Verb == &quot;create&quot;
+| where tostring(ObjectRef) has &quot;\&quot;resource\&quot;:\&quot;pods\&quot;&quot;
+| where tostring(User) has &quot;enterprise-gateway&quot; or Username has &quot;enterprise-gateway&quot;
+| extend req = todynamic(tostring(RequestObject))
+| extend podName = tostring(req.metadata.name)
+| extend volumes = req.spec.volumes
+| mv-expand v = volumes
+| extend hostPath = tostring(v.hostPath.path)
+| where isnotempty(hostPath)
+| extend sensitive = iff(hostPath in (&quot;/&quot;, &quot;/etc&quot;, &quot;/root&quot;, &quot;/home&quot;, &quot;/var/spool/cron&quot;, &quot;/var/run/docker.sock&quot;, &quot;/var/lib/kubelet&quot;, &quot;/proc&quot;)
+                          or hostPath startswith &quot;/etc/&quot;
+                          or hostPath startswith &quot;/var/spool/cron&quot;
+                          or hostPath startswith &quot;/root/&quot;, &quot;sensitive&quot;, &quot;other&quot;)
+| project TimeGenerated, podName, hostPath, sensitive, User, AuditId
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-67-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:create @objectRef.resource:pods @user.username:*enterprise-gateway* @requestObject.spec.volumes.hostPath.path:*</code></pre></div>
+    <div class="tab-content" id="art-67-uc2-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/eks/&lt;cluster-name&gt;/cluster
+fields @timestamp, objectRef.name, user.username, sourceIPs.0, requestObject.spec.volumes.0.hostPath.path, requestObject.spec.volumes.1.hostPath.path, requestObject.spec.volumes.2.hostPath.path
+| filter verb = &quot;create&quot;
+      and objectRef.resource = &quot;pods&quot;
+      and user.username like /enterprise-gateway/
+      and (isPresent(requestObject.spec.volumes.0.hostPath.path)
+           or isPresent(requestObject.spec.volumes.1.hostPath.path)
+           or isPresent(requestObject.spec.volumes.2.hostPath.path))
+| sort @timestamp desc
+| limit 200</code></pre></div>
+    <div class="tab-content" id="art-67-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-67-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-67-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-67-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count from datamodel=Change where All_Changes.action=created All_Changes.object_category=pod All_Changes.user=&quot;*enterprise-gateway*&quot; by All_Changes.object, All_Changes.user, _time span=5m | `drop_dm_object_name(All_Changes)` | join type=inner object [ search index=k8s_audit sourcetype=&quot;kube:apiserver:audit&quot; verb=created objectRef.resource=pods &quot;user.username&quot;=&quot;*enterprise-gateway*&quot; &quot;requestObject.spec.volumes{}.hostPath.path&quot;=* | rename objectRef.name as object | eval host_paths=mvjoin(&#x27;requestObject.spec.volumes{}.hostPath.path&#x27;, &quot;,&quot;) | table object, host_paths, sourceIPs{} ] | sort - _time</code></pre><pre class="spl-mode-body" id="art-67-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Change where All_Changes.action=created All_Changes.object_category=pod All_Changes.user=&quot;*enterprise-gateway*&quot; by All_Changes.object, All_Changes.user, _time span=5m | `drop_dm_object_name(All_Changes)` | join type=inner object [ search index=k8s_audit sourcetype=&quot;kube:apiserver:audit&quot; verb=created objectRef.resource=pods &quot;user.username&quot;=&quot;*enterprise-gateway*&quot; &quot;requestObject.spec.volumes{}.hostPath.path&quot;=* | rename objectRef.name as object | eval host_paths=mvjoin(&#x27;requestObject.spec.volumes{}.hostPath.path&#x27;, &quot;,&quot;) | table object, host_paths, sourceIPs{} ] | sort - _time</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="a4e2b6b32c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="kubernetes,linux,vcs,windows">
+  <summary>
+    <span class="uc-title">[LLM] Cron/persistence file written on Kubernetes worker node from container runtime context</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="a4e2b6b32c" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects creation or modification of /etc/cron* or /var/spool/cron/* files on Kubernetes worker nodes — the article&#x27;s explicit post-escape persistence vector after the CVE-2026-44180 UID bypass + hostPath mount. Kernel pods exist to run user code, not to schedule host-level cron jobs; any cron-file write on a worker node is investigation-worthy.
+
+Rationale: Article PoC explicitly recommends &#x27;creating a crontab entry in the mounted host file system&#x27; as the worker-node escape outcome. Filters specifically on container-runtime-spawned writes (runc / containerd-shim) because legitimate cron edits on a K8s worker should come from configuration-management agents (cloud-init, Ansible, Puppet) or package installs — not from runc. Cross-checked the article&#x27;s mount-namespace escape pattern against MITRE T1611 / T1053.003.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-chq7-94j8-cj28
+  • https://attack.mitre.org/techniques/T1611/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Scheduled Task/Job: Cron">T1053.003</span> <span class="ind tech" title="Escape to Host">T1611</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-67-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-67-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-67-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-67-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-67-uc3-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-67-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-67-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(1d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| where FolderPath startswith &quot;/etc/cron.&quot;
+     or FolderPath == &quot;/var/spool/cron&quot;
+     or FolderPath startswith &quot;/var/spool/cron/&quot;
+     or (FolderPath == &quot;/etc&quot; and FileName in (&quot;crontab&quot;,&quot;anacrontab&quot;))
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, OSPlatform, MachineGroup, AdditionalFields) by DeviceId) on DeviceId
+| where OSPlatform in (&quot;Linux&quot;,&quot;Ubuntu&quot;,&quot;RedHat&quot;,&quot;CentOS&quot;,&quot;Debian&quot;,&quot;SUSE&quot;)
+| where InitiatingProcessFolderPath has_any (&quot;/run/containerd&quot;,&quot;/var/lib/docker&quot;,&quot;/var/lib/containerd&quot;,&quot;/usr/bin/runc&quot;,&quot;/usr/sbin/runc&quot;)
+   or InitiatingProcessFileName in~ (&quot;runc&quot;,&quot;containerd-shim&quot;,&quot;containerd-shim-runc-v2&quot;,&quot;crun&quot;,&quot;kata-runtime&quot;)
+   or InitiatingProcessParentFileName in~ (&quot;runc&quot;,&quot;containerd-shim&quot;,&quot;containerd-shim-runc-v2&quot;,&quot;crun&quot;)
+| project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-67-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(1d)
+| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where TargetFilePath has_any (&quot;/etc/cron.d/&quot;,&quot;/etc/cron.daily/&quot;,&quot;/etc/cron.hourly/&quot;,&quot;/etc/cron.weekly/&quot;,&quot;/etc/cron.monthly/&quot;,&quot;/var/spool/cron/&quot;)
+     or TargetFilePath in (&quot;/etc/crontab&quot;,&quot;/etc/anacrontab&quot;)
+| extend ParentIsRuntime = ActingProcessName has_any (&quot;runc&quot;,&quot;containerd-shim&quot;,&quot;containerd-shim-runc-v2&quot;,&quot;crun&quot;,&quot;kata-runtime&quot;)
+| where ParentIsRuntime or ActingProcessCommandLine has_any (&quot;/run/containerd&quot;,&quot;/var/lib/containerd&quot;,&quot;/var/lib/docker&quot;)
+| project TimeGenerated, DvcHostname, TargetFilePath, ActingProcessName, ActingProcessCommandLine, ActorUsername
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-67-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Cron Persistence Written from Container Runtime Context on K8s Worker
+id: 8c2f1a47-d931-4e58-92a6-1f7b3c4d2e95
+description: Detects writes to host cron paths on Kubernetes worker nodes whose initiating process is the container runtime (runc / containerd-shim) — a post-escape persistence step described in CVE-2026-44180 (Jupyter Enterprise Gateway hostPath + root-UID bypass).
+references:
+  - https://github.com/advisories/GHSA-chq7-94j8-cj28
+author: SOC Detection Engineering
+date: 2026/06/03
+tags:
+  - attack.t1053.003
+  - attack.t1611
+  - attack.persistence
+  - attack.privilege_escalation
+logsource:
+  category: file_event
+  product: linux
+detection:
+  selection_path:
+    TargetFilename|startswith:
+      - &#x27;/etc/cron.d/&#x27;
+      - &#x27;/etc/cron.daily/&#x27;
+      - &#x27;/etc/cron.hourly/&#x27;
+      - &#x27;/etc/cron.weekly/&#x27;
+      - &#x27;/etc/cron.monthly/&#x27;
+      - &#x27;/var/spool/cron/&#x27;
+  selection_file:
+    TargetFilename:
+      - &#x27;/etc/crontab&#x27;
+      - &#x27;/etc/anacrontab&#x27;
+  selection_runtime:
+    Image|contains:
+      - &#x27;runc&#x27;
+      - &#x27;containerd-shim&#x27;
+      - &#x27;crun&#x27;
+      - &#x27;kata-runtime&#x27;
+  condition: (selection_path or selection_file) and selection_runtime
+level: high</code></pre></div>
+    <div class="tab-content" id="art-67-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:(PATH OR SYSCALL) (@file.path:/etc/cron.d/* OR @file.path:/etc/cron.daily/* OR @file.path:/etc/cron.hourly/* OR @file.path:/etc/cron.weekly/* OR @file.path:/etc/cron.monthly/* OR @file.path:/var/spool/cron/* OR @file.path:/etc/crontab OR @file.path:/etc/anacrontab) (@process.executable.path:*runc* OR @process.executable.path:*containerd-shim* OR @process.executable.path:*crun* OR @process.command_line:*\/run\/containerd*)</code></pre></div>
+    <div class="tab-content" id="art-67-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+| TargetFileName=/^\/(etc\/(cron(tab|\.(d|daily|hourly|weekly|monthly))|anacrontab)|var\/spool\/cron)/i
+| ContextImageFileName=/(runc|containerd-shim|crun|kata-runtime)/i
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())
+| count &gt; 0</code></pre></div>
+    <div class="tab-content" id="art-67-uc3-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-67-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-67-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-67-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count, values(Filesystem.process_name) as procs, values(Filesystem.user) as users from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN (&quot;/etc/crontab&quot;,&quot;/etc/anacrontab&quot;) OR Filesystem.file_path=&quot;/etc/cron.d/*&quot; OR Filesystem.file_path=&quot;/etc/cron.daily/*&quot; OR Filesystem.file_path=&quot;/etc/cron.hourly/*&quot; OR Filesystem.file_path=&quot;/etc/cron.weekly/*&quot; OR Filesystem.file_path=&quot;/etc/cron.monthly/*&quot; OR Filesystem.file_path=&quot;/var/spool/cron/*&quot;) Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;,&quot;written&quot;) by Filesystem.dest, Filesystem.file_path, _time span=5m | `drop_dm_object_name(Filesystem)` | search dest IN (&quot;*worker*&quot;,&quot;*node*&quot;,&quot;*k8s*&quot;,&quot;*kube*&quot;) OR procs IN (&quot;runc&quot;,&quot;containerd-shim&quot;,&quot;containerd-shim-runc-v2&quot;) | sort - _time</code></pre><pre class="spl-mode-body" id="art-67-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(Filesystem.process_name) as procs, values(Filesystem.user) as users from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN (&quot;/etc/crontab&quot;,&quot;/etc/anacrontab&quot;) OR Filesystem.file_path=&quot;/etc/cron.d/*&quot; OR Filesystem.file_path=&quot;/etc/cron.daily/*&quot; OR Filesystem.file_path=&quot;/etc/cron.hourly/*&quot; OR Filesystem.file_path=&quot;/etc/cron.weekly/*&quot; OR Filesystem.file_path=&quot;/etc/cron.monthly/*&quot; OR Filesystem.file_path=&quot;/var/spool/cron/*&quot;) Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;,&quot;written&quot;) by Filesystem.dest, Filesystem.file_path, _time span=5m | `drop_dm_object_name(Filesystem)` | search dest IN (&quot;*worker*&quot;,&quot;*node*&quot;,&quot;*k8s*&quot;,&quot;*kube*&quot;) OR procs IN (&quot;runc&quot;,&quot;containerd-shim&quot;,&quot;containerd-shim-runc-v2&quot;) | sort - _time</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-67-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-67-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-67-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-67-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-44180&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-67-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-44180&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-67-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-67-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-67-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-67-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-44180&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-67-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-44180&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-69" data-art-slug="2026-06-03-microsoft-fixes-one-click-github-dev-attack-that-let-attacke"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190,T1195.002,T1528,T1555.003,T1566"
@@ -21280,371 +21681,6 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-101" data-art-slug="2026-06-01-ghsa-critical-cve-2026-47413-praisonai-platform-any-workspac"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint"
-  data-targets="azure,vcs,windows"
-  data-uc-count="4" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-47413: praisonai-platform: Any workspace member can add arbitrary user as owner via POST /workspaces/{id}/members praisonai-platform: Any workspace member can add arbitrary user as owner via POST /workspaces/{id}/members CVE-2026-47413 T1190 [LLM] praisonai-platform: POST /workspaces/*/members with role=owner (CVE-2026-47413) [LLM] praisonai-platform: identity-swap chain — owner grant followed by login from the granted account Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47413: praisonai-platform: Any workspace member can a">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-01-ghsa-critical-cve-2026-47413-praisonai-platform-any-workspac" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-8g2p-pqm3-fcfh" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-47413: praisonai-platform: Any workspace member can add arbitrary user as owner via POST /workspaces/{id}/members</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-06-01</span>
-    <span>4 use cases</span>
-    <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">praisonai-platform: Any workspace member can add arbitrary user as owner via POST /workspaces/{id}/members</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-47413</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-101-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-101"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-101-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] praisonai-platform: POST /workspaces/*/members with role=owner (CVE-2026-47413) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47413: praisonai-platform: Any workspace member can a</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] praisonai-platform: identity-swap chain — owner grant followed by login from the granted account</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="d67e2339f8" data-platforms="datadog,def,sent,sigma,spl" data-targets="vcs" open>
-  <summary>
-    <span class="uc-title">[LLM] praisonai-platform: POST /workspaces/*/members with role=owner (CVE-2026-47413)</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="d67e2339f8" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the CVE-2026-47413 primitive: a POST to /workspaces/{id}/members whose body contains role=owner, returning 201. The vulnerable endpoint accepts owner grants from any member-tier token, so any successful 201 on this path warrants review against the caller&#x27;s known role.
-
-Rationale: Detection is grounded in the exact route the advisory names (`POST /workspaces/{workspace_id}/members` at workspaces.py:92-101) and the documented response status 201. No external corroboration beyond the GHSA advisory itself; the CVE is freshly published and there are no third-party write-ups yet.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-8g2p-pqm3-fcfh</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-101-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-101-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-101-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Defender Advanced Hunting does not natively ingest praisonai-platform HTTP logs.
-// If the app is fronted by an MDA-monitored proxy that ships to CloudAppEvents, pivot there:
-CloudAppEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in~ (&quot;HttpRequest&quot;,&quot;ApiCall&quot;)
-| where RawEventData has &quot;/workspaces/&quot; and RawEventData has &quot;/members&quot;
-| where RawEventData has_any (&quot;\&quot;role\&quot;:\&quot;owner\&quot;&quot;,&quot;role=owner&quot;)
-| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, UserAgent, ObjectName, RawEventData
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Path 1 — Azure App Service hosting praisonai-platform
-let AppHits = AppServiceHTTPLogs
-    | where TimeGenerated &gt; ago(7d)
-    | where CsMethod =~ &quot;POST&quot;
-    | where CsUriStem matches regex @&quot;(?i)/workspaces/[^/]+/members/?$&quot;
-    | where ScStatus == 201
-    | project TimeGenerated, CsHost, CsUriStem, CsUriQuery, CsUsername, CIp, UserAgent, ScStatus;
-// Path 2 — generic ASIM web session table (covers WAF / reverse proxy / API gateway)
-let WebHits = ImWebSession
-    | where TimeGenerated &gt; ago(7d)
-    | where HttpMethod =~ &quot;POST&quot;
-    | where Url matches regex @&quot;(?i)/workspaces/[^/]+/members/?$&quot;
-    | where HttpStatusCode in (&quot;200&quot;,&quot;201&quot;)
-    | project TimeGenerated, SrcIpAddr, SrcUsername, Url, HttpMethod, HttpStatusCode, HttpRequestBodyBytes, HttpRequestHeaderUserAgent, DstHostname;
-union isfuzzy=true AppHits, WebHits
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: praisonai-platform Workspace Owner Add via POST /workspaces/{id}/members (CVE-2026-47413)
-id: 5e6c8a9d-2f4b-4f5c-9a3e-8d2b1c4e7f90
-status: experimental
-description: Detects POST requests to the praisonai-platform workspace-members endpoint that successfully create a new member. Any 201 response on this route should be reviewed against the caller&#x27;s role because CVE-2026-47413 allows member-tier tokens to grant owner.
-references:
-  - https://github.com/advisories/GHSA-8g2p-pqm3-fcfh
-author: SOC Detection Engineering
-date: 2026/06/01
-tags:
-  - attack.t1068
-  - attack.t1078.004
-  - cve.2026.47413
-logsource:
-  category: webserver
-detection:
-  selection:
-    cs-method: POST
-    cs-uri-stem|re: &#x27;(?i)/workspaces/[^/]+/members/?$&#x27;
-    sc-status:
-      - 200
-      - 201
-  condition: selection
-falsepositives:
-  - Legitimate owner-initiated invitations during the workspace bootstrap window
-  - Internal admin tooling that legitimately calls the API as a workspace owner
-level: high</code></pre></div>
-    <div class="tab-content" id="art-101-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>@http.method:POST @http.url_path:(*\/workspaces\/*\/members OR *\/workspaces\/*\/members\/) (@http.status_code:201 OR @http.status_code:200)</code></pre></div>
-    <div class="tab-content" id="art-101-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as first_seen max(_time) as last_seen from datamodel=Web.Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/workspaces/*/members*&quot; Web.status=201 by Web.src Web.user Web.url Web.http_user_agent Web.dest
-| `drop_dm_object_name(Web)`
-| where first_seen &gt; relative_time(now(), &quot;-7d&quot;)</code></pre><pre class="spl-mode-body" id="art-101-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as first_seen max(_time) as last_seen from datamodel=Web.Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/workspaces/*/members*&quot; Web.status=201 by Web.src Web.user Web.url Web.http_user_agent Web.dest
-| `drop_dm_object_name(Web)`
-| where first_seen &gt; relative_time(now(), &quot;-7d&quot;)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="2b6751cf4c" data-platforms="datadog,def,sent,spl" data-targets="azure">
-  <summary>
-    <span class="uc-title">[LLM] praisonai-platform: identity-swap chain — owner grant followed by login from the granted account</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="2b6751cf4c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the full CVE-2026-47413 exploit chain: a successful POST /workspaces/{id}/members with role=owner from caller A, followed within 1 hour by an authentication from a different identity (B) that begins acting on the same workspace from the same source IP. This is the &#x27;second-identity owner&#x27; fingerprint the advisory describes.
-
-Rationale: Encodes the exploit chain steps 2-4 from the advisory: caller A grants user B owner via POST .../members (201), then within an hour user B authenticates from the same source IP. The same-IP + different-identity within a short window is the specific fingerprint the advisory calls out as hard to attribute via in-app audit logs alone.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-8g2p-pqm3-fcfh</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts">T1078</span> <span class="ind tech" title="Account Manipulation">T1098</span> <span class="ind tech" title="Modify Authentication Process">T1556</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span> <span class="ind">Authentication.Authentication</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-101-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-101-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Pivots on CloudAppEvents if the praisonai app is API-instrumented to MDA.
-let GrantWindow = 1h;
-let Grants = CloudAppEvents
-    | where Timestamp &gt; ago(24h)
-    | where RawEventData has &quot;/workspaces/&quot; and RawEventData has &quot;/members&quot;
-    | where RawEventData has_any (&quot;\&quot;role\&quot;:\&quot;owner\&quot;&quot;,&quot;role=owner&quot;)
-    | project GrantTime = Timestamp, GrantorIp = IPAddress, GrantorObjectId = AccountObjectId, GrantUrl = ObjectName, GrantRaw = RawEventData;
-CloudAppEvents
-| where Timestamp &gt; ago(24h)
-| where ActionType in~ (&quot;Logon&quot;,&quot;LogIn&quot;,&quot;UserLoggedIn&quot;)
-| join kind=inner Grants on $left.IPAddress == $right.GrantorIp
-| where Timestamp between (GrantTime .. GrantTime + GrantWindow)
-| where AccountObjectId != GrantorObjectId
-| project GrantTime, LoginTime = Timestamp, DelaySec = datetime_diff(&#x27;second&#x27;, Timestamp, GrantTime), GrantorIp, GrantorObjectId, NewIdentity = AccountObjectId, NewIdentityName = AccountDisplayName, GrantUrl
-| order by GrantTime desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let GrantWindow = 1h;
-let Grants = (union isfuzzy=true
-    (AppServiceHTTPLogs
-        | where TimeGenerated &gt; ago(24h)
-        | where CsMethod =~ &quot;POST&quot;
-        | where CsUriStem matches regex @&quot;(?i)/workspaces/[^/]+/members/?$&quot;
-        | where ScStatus == 201
-        | project GrantTime = TimeGenerated, GrantorIp = CIp, GrantorUser = CsUsername, GrantUrl = CsUriStem),
-    (ImWebSession
-        | where TimeGenerated &gt; ago(24h)
-        | where HttpMethod =~ &quot;POST&quot;
-        | where Url matches regex @&quot;(?i)/workspaces/[^/]+/members/?$&quot;
-        | where HttpStatusCode in (&quot;200&quot;,&quot;201&quot;)
-        | project GrantTime = TimeGenerated, GrantorIp = SrcIpAddr, GrantorUser = SrcUsername, GrantUrl = Url));
-SigninLogs
-| where TimeGenerated &gt; ago(24h)
-| where ResultType == 0
-| join kind=inner Grants on $left.IPAddress == $right.GrantorIp
-| where TimeGenerated between (GrantTime .. GrantTime + GrantWindow)
-| where UserPrincipalName != GrantorUser
-| project GrantTime, LoginTime = TimeGenerated, DelaySec = datetime_diff(&#x27;second&#x27;, TimeGenerated, GrantTime), GrantorIp, GrantorUser, NewIdentity = UserPrincipalName, UserAgent, AppDisplayName, GrantUrl
-| order by GrantTime desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>@http.method:POST @http.url_path:(*\/workspaces\/*\/members OR *\/workspaces\/*\/members\/) @http.status_code:201</code></pre></div>
-    <div class="tab-content" id="art-101-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Web.Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/workspaces/*/members*&quot; Web.status=201 by _time Web.src Web.user Web.url
-| `drop_dm_object_name(Web)`
-| rename _time as grant_time, src as grant_src, user as grantor, url as grant_url
-| join type=inner grant_src [
-    | tstats summariesonly=true count from datamodel=Authentication.Authentication where Authentication.action=&quot;success&quot; by _time Authentication.src Authentication.user
-    | `drop_dm_object_name(Authentication)`
-    | rename _time as login_time, src as grant_src, user as new_user
-  ]
-| where login_time &gt;= grant_time and login_time &lt;= grant_time + 3600 and new_user != grantor
-| table grant_time login_time grant_src grantor new_user grant_url</code></pre><pre class="spl-mode-body" id="art-101-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web.Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/workspaces/*/members*&quot; Web.status=201 by _time Web.src Web.user Web.url
-| `drop_dm_object_name(Web)`
-| rename _time as grant_time, src as grant_src, user as grantor, url as grant_url
-| join type=inner grant_src [
-    | tstats summariesonly=false count from datamodel=Authentication.Authentication where Authentication.action=&quot;success&quot; by _time Authentication.src Authentication.user
-    | `drop_dm_object_name(Authentication)`
-    | rename _time as login_time, src as grant_src, user as new_user
-  ]
-| where login_time &gt;= grant_time and login_time &lt;= grant_time + 3600 and new_user != grantor
-| table grant_time login_time grant_src grantor new_user grant_url</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-101-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-47413&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-101-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-47413&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-101-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-47413&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-101-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-47413&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="f04482d753" data-platforms="def,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47413: praisonai-platform: Any workspace member can a</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="f04482d753" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-101-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47413: praisonai-platform: Any workspace member can a
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;member_service.py&quot;, &quot;deps.py&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;member_service.py&quot;, &quot;deps.py&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47413: praisonai-platform: Any workspace member can a ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;member_service.py&quot;,&quot;deps.py&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;member_service.py&quot;,&quot;deps.py&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-101-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47413: praisonai-platform: Any workspace member can a ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;member_service.py&quot;,&quot;deps.py&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;member_service.py&quot;,&quot;deps.py&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
   </div>
 </details></div>
 </article>
