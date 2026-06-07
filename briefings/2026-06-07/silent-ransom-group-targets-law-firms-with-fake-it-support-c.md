@@ -11,12 +11,8 @@ By Lawrence Abrams
 June 7, 2026
 10:09 AM
 0 
-
-
 The Silent Ransom Group extortion gang is actively targeting U.S. law firms and professional services organizations in social engineering attacks that often lead to data theft within hours of initial contact, according to a new report by cybersecurity firm Mandiant.
-
-
-The report follows an FBI FLASH advisory published last week warning that the Silent Ransom Group was targeting U.…
+The report follows an FBI FLASH advisory published last week warning that the Silent Ransom Group was targeting U.S. law f…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -28,11 +24,6 @@ The report follows an FBI FLASH advisory published last week warning that the Si
 - **IPv4 (defanged):** `174.169.162.62`
 - **IPv4 (defanged):** `64.94.84.97`
 - **Domain (defanged):** `business-data-leaks.com`
-- **Domain (defanged):** `ep6pheij.com`
-- **Domain (defanged):** `spycorp.pro`
-- **Domain (defanged):** `heopldenticalderr.org`
-- **Domain (defanged):** `hefirealde.org`
-- **Domain (defanged):** `digoprotergonde.org`
 
 ## MITRE ATT&CK Techniques
 
@@ -68,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Access to law-firm-impersonating IT helpdesk phishing domain
 
-`UC_1_10` · phase: **delivery** · confidence: **High**
+`UC_2_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +82,7 @@ DeviceNetworkEvents
 
 ### [LLM] Privnote.com access on endpoint hosting an active remote-support session
 
-`UC_1_11` · phase: **delivery** · confidence: **High**
+`UC_2_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +110,7 @@ PrivnoteHits
 
 ### [LLM] Unsanctioned RMM tool install or first execution (AnyDesk/Zoho/Bomgar/SuperOps)
 
-`UC_1_12` · phase: **install** · confidence: **High**
+`UC_2_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +135,7 @@ DeviceProcessEvents
 
 ### [LLM] Rclone or WinSCP exfiltration to non-corporate external destination
 
-`UC_1_13` · phase: **exfiltration** · confidence: **High**
+`UC_2_13` · phase: **exfiltration** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -175,7 +166,7 @@ RcloneProcs
 
 ### [LLM] Outbound connection to known Silent Ransom Group C2 / leak-site infrastructure
 
-`UC_1_14` · phase: **c2** · confidence: **High**
+`UC_2_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -511,7 +502,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `192.236.147.131`, `192.236.147.138`, `193.141.60.212`, `192.236.154.158`, `192.236.146.173`, `174.169.162.62`, `64.94.84.97`, `business-data-leaks.com` _(+5 more)_
+  - IP / domain IOC(s): `192.236.147.131`, `192.236.147.138`, `193.141.60.212`, `192.236.154.158`, `192.236.146.173`, `174.169.162.62`, `64.94.84.97`, `business-data-leaks.com`
 
 
 ## Why this matters

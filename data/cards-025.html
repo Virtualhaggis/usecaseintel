@@ -1,128 +1,3 @@
-<article class="card" id="art-786" data-art-slug="2025-09-04-cisa-kev-cve-2025-48543-android-runtime-use-after-free-vulne"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
-  data-sources="CISA KEV"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2025-48543 — Android Runtime Use-After-Free Vulnerability Android Runtime contains a use-after-free vulnerability potentially allowing a chrome sandbox escape leading to local privilege escalation. Vendor: Android, Product: Runtime. Federal patch due: 2025-09-25. CVE-2025-48543  Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2025-09-04-cisa-kev-cve-2025-48543-android-runtime-use-after-free-vulne" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2025-48543 — Android Runtime Use-After-Free Vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
-  <div class="pubmeta">
-    <span>2025-09-04</span>
-    <span>1 use case</span>
-    <span>0 techniques</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Android Runtime contains a use-after-free vulnerability potentially allowing a chrome sandbox escape leading to local privilege escalation. Vendor: Android, Product: Runtime. Federal patch due: 2025-09-25.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2025-48543</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-786-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-786"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-786-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-786-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-786-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-786-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-786-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2025-48543&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-786-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2025-48543&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-786-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-786-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-786-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-786-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2025-48543&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-786-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2025-48543&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-787" data-art-slug="2025-09-04-cisa-kev-cve-2025-53690-sitecore-multiple-products-deseriali"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -5899,6 +5774,671 @@ level: critical
 | append
     [| tstats summariesonly=false count from datamodel=Endpoint.Processes
         where Processes.process_hash IN (&quot;0e58ed8671d6b60d0890c21b07f8835ace038e67&quot;)
+        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
+     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-812" data-art-slug="2025-08-09-supply-chain-security-alert-num2words-pypi-package-shows-sig"
+  data-phases="actions,c2,delivery,exploit,install" data-sev="high"
+  data-techs="T1190,T1195.002"
+  data-sources="StepSecurity"
+  data-platforms="datadog,def,sent,sigma,spl"
+  data-splunk-cats="endpoint,network"
+  data-targets="linux,vcs,windows"
+  data-uc-count="6" data-llm-uc-count="3"
+  data-search="Supply Chain Security Alert: num2words PyPI Package Shows Signs of Compromise Popular Python Package num2words v0.5.15 Published Without Repository Tag, Linked to Known Threat Actor  T1190 T1195.002 [LLM] PyPI install footprint of num2words v0.5.15/0.5.16 (Scavenger supply-chain compromise) [LLM] Scavenger C2 callback: ifyouseethisyouareultragay[.]com / pokerainteasy[.]su [LLM] Scavenger loader/stealer SHA256 execution or drop on endpoint Trusted vendor binary / installer launching unusual children Network connections to article IPs / domains File hash IOCs — endpoint file/process match">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2025-08-09-supply-chain-security-alert-num2words-pypi-package-shows-sig" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.stepsecurity.io/blog/supply-chain-security-alert-num2words-pypi-package-shows-signs-of-compromise" target="_blank" rel="noopener">Supply Chain Security Alert: num2words PyPI Package Shows Signs of Compromise</a></h2>
+  <div class="source-badges"><span class="source-badge ">StepSecurity</span></div>
+  <div class="pubmeta">
+    <span>2025-08-09</span>
+    <span>6 use cases</span>
+    <span>2 techniques</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Popular Python Package num2words v0.5.15 Published Without Repository Tag, Linked to Known Threat Actor</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">ifyouseethisyouareultragay.com</span> <span class="ind ">pokerainteasy.su</span></div>
+<div class="ind-group"><span class="ind-label">SHA256</span><span class="ind ">be917cb379b9622f…</span> <span class="ind ">c2a7ee6ab9344e1b…</span> <span class="ind ">439da8bb9c541d26…</span> <span class="ind ">c36ebf96573afcb3…</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-812-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-812"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-812-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] PyPI install footprint of num2words v0.5.15/0.5.16 (Scavenger supply-chain compromise)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Scavenger loader/stealer SHA256 execution or drop on endpoint · File hash IOCs — endpoint file/process match</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Scavenger C2 callback: ifyouseethisyouareultragay[.]com / pokerainteasy[.]su · Network connections to article IPs / domains</em></div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="d406019843" data-platforms="datadog,def,sent,sigma,spl" data-targets="vcs,windows" open>
+  <summary>
+    <span class="uc-title">[LLM] PyPI install footprint of num2words v0.5.15/0.5.16 (Scavenger supply-chain compromise)</span>
+    <span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="d406019843" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects developer/CI hosts that pulled the Scavenger-poisoned num2words releases. Hunts for pip/uv/poetry installing the exact compromised versions, and for the site-packages directory/_build.py loader DLL dropped by the malicious __init__.py. Both 0.5.15 and 0.5.16 were yanked by PyPI; any presence post-July-28 is actionable.
+
+Rationale: v0.5.15 and v0.5.16 are exact strings — the article names 0.5.15 as compromised; InvokeRE and OSV/MAL-2025-6794 confirm 0.5.16 was also published before being yanked. The malicious add-on is a single `_build.py` file inside the `num2words/` package directory (per InvokeRE reverse-engineering) — that file in that path is a uniquely high-fidelity drop. No FPs expected since both versions are gone from PyPI.
+
+Cross-checked against:
+  • https://invokere.com/posts/2025/07/scavenger-malware-distributed-via-num2words-pypi-supply-chain-compromise/
+  • https://github.com/Invoke-RE/community-malware-research/blob/main/Research/Loaders/Scavenger/num2words_IOCs.md
+  • https://osv.dev/vulnerability/MAL-2025-6794
+  • https://security.snyk.io/vuln/SNYK-PYTHON-NUM2WORDS-11172937
+  • https://blog.pypi.org/posts/2025-07-31-incident-report-phishing-attack/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-812-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-812-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-812-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-812-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-812-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-812-uc0-kql"><pre><button class="copy-btn">COPY</button><code>union
+(DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where FileName in~ (&quot;pip.exe&quot;,&quot;pip3.exe&quot;,&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;uv.exe&quot;,&quot;poetry.exe&quot;)
+    or InitiatingProcessFileName in~ (&quot;pip.exe&quot;,&quot;pip3.exe&quot;,&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;uv.exe&quot;,&quot;poetry.exe&quot;)
+| where ProcessCommandLine has_any (&quot;num2words==0.5.15&quot;,&quot;num2words==0.5.16&quot;,&quot;num2words-0.5.15&quot;,&quot;num2words-0.5.16&quot;)
+    or InitiatingProcessCommandLine has_any (&quot;num2words==0.5.15&quot;,&quot;num2words==0.5.16&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine),
+(DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where (FolderPath has &quot;site-packages&quot; and FolderPath has_any (@&quot;num2words-0.5.15&quot;, @&quot;num2words-0.5.16&quot;))
+    or (FolderPath has @&quot;\num2words\&quot; and FileName =~ &quot;_build.py&quot; and InitiatingProcessFileName in~ (&quot;pip.exe&quot;,&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;uv.exe&quot;))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine)
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-812-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
+(SecurityEvent
+| where TimeGenerated &gt; ago(30d)
+| where EventID == 4688
+| where (NewProcessName endswith @&quot;\pip.exe&quot; or NewProcessName endswith @&quot;\pip3.exe&quot; or NewProcessName endswith @&quot;\python.exe&quot; or NewProcessName endswith @&quot;\python3.exe&quot; or NewProcessName endswith @&quot;\uv.exe&quot; or NewProcessName endswith @&quot;\poetry.exe&quot;)
+| where CommandLine has_any (&quot;num2words==0.5.15&quot;,&quot;num2words==0.5.16&quot;,&quot;num2words-0.5.15&quot;,&quot;num2words-0.5.16&quot;)
+| project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName),
+(ImProcessCreate
+| where TimeGenerated &gt; ago(30d)
+| where TargetProcessName has_any (&quot;pip&quot;,&quot;python&quot;,&quot;uv&quot;,&quot;poetry&quot;)
+| where TargetProcessCommandLine has_any (&quot;num2words==0.5.15&quot;,&quot;num2words==0.5.16&quot;,&quot;num2words-0.5.15&quot;,&quot;num2words-0.5.16&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ParentProcessName),
+(ImFileEvent
+| where TimeGenerated &gt; ago(30d)
+| where (TargetFilePath has &quot;site-packages&quot; and TargetFilePath has_any (&quot;num2words-0.5.15&quot;,&quot;num2words-0.5.16&quot;))
+    or (TargetFilePath has @&quot;\num2words\&quot; and TargetFileName =~ &quot;_build.py&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, TargetFileName, TargetFileSHA256, ActingProcessName)
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-812-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: PyPI Install of Compromised num2words v0.5.15/0.5.16 (Scavenger)
+id: 9c1c4d6e-6c8b-4f64-8e62-2ad2a9c4e7d0
+status: experimental
+description: Detects installation of the Scavenger-poisoned num2words PyPI package via pip/uv/poetry, including the exact yanked versions 0.5.15 and 0.5.16.
+references:
+  - https://www.stepsecurity.io/blog/supply-chain-security-alert-num2words-pypi-package-shows-signs-of-compromise
+  - https://invokere.com/posts/2025/07/scavenger-malware-distributed-via-num2words-pypi-supply-chain-compromise/
+  - https://github.com/Invoke-RE/community-malware-research/blob/main/Research/Loaders/Scavenger/num2words_IOCs.md
+  - https://osv.dev/vulnerability/MAL-2025-6794
+author: SOC Detection Engineering
+date: 2025/07/28
+tags:
+  - attack.t1195.002
+  - attack.t1059.006
+  - attack.initial_access
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_installer:
+    Image|endswith:
+      - &#x27;\pip.exe&#x27;
+      - &#x27;\pip3.exe&#x27;
+      - &#x27;\python.exe&#x27;
+      - &#x27;\python3.exe&#x27;
+      - &#x27;\uv.exe&#x27;
+      - &#x27;\poetry.exe&#x27;
+  selection_cmd:
+    CommandLine|contains:
+      - &#x27;num2words==0.5.15&#x27;
+      - &#x27;num2words==0.5.16&#x27;
+      - &#x27;num2words-0.5.15&#x27;
+      - &#x27;num2words-0.5.16&#x27;
+  condition: selection_installer and selection_cmd
+falsepositives:
+  - None expected — both versions were yanked from PyPI within hours of publication on 2025-07-28; any install attempt post-incident indicates a stale lockfile/cache or active compromise.
+level: high</code></pre></div>
+    <div class="tab-content" id="art-812-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon OR source:windows.security) (@EventID:1 OR @EventID:4688) (@Image:(*\pip.exe OR *\pip3.exe OR *\python.exe OR *\python3.exe OR *\uv.exe OR *\poetry.exe OR *\PIP.EXE OR *\PYTHON.EXE) OR @ParentImage:(*\pip.exe OR *\python.exe)) @CommandLine:(*num2words==0.5.15* OR *num2words==0.5.16* OR *num2words-0.5.15* OR *num2words-0.5.16*)</code></pre></div>
+    <div class="tab-content" id="art-812-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-812-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-812-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-812-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;pip.exe&quot;,&quot;pip3.exe&quot;,&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;uv.exe&quot;,&quot;poetry.exe&quot;,&quot;pip&quot;,&quot;pip3&quot;,&quot;python&quot;,&quot;python3&quot;) (Processes.process=&quot;*num2words==0.5.15*&quot; OR Processes.process=&quot;*num2words==0.5.16*&quot; OR Processes.process=&quot;*num2words-0.5.15*&quot; OR Processes.process=&quot;*num2words-0.5.16*&quot;) by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;*site-packages*num2words-0.5.15*&quot; OR Filesystem.file_path=&quot;*site-packages*num2words-0.5.16*&quot; OR (Filesystem.file_path=&quot;*site-packages*num2words*&quot; Filesystem.file_name=&quot;_build.py&quot;)) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)`] | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-812-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;pip.exe&quot;,&quot;pip3.exe&quot;,&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;uv.exe&quot;,&quot;poetry.exe&quot;,&quot;pip&quot;,&quot;pip3&quot;,&quot;python&quot;,&quot;python3&quot;) (Processes.process=&quot;*num2words==0.5.15*&quot; OR Processes.process=&quot;*num2words==0.5.16*&quot; OR Processes.process=&quot;*num2words-0.5.15*&quot; OR Processes.process=&quot;*num2words-0.5.16*&quot;) by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;*site-packages*num2words-0.5.15*&quot; OR Filesystem.file_path=&quot;*site-packages*num2words-0.5.16*&quot; OR (Filesystem.file_path=&quot;*site-packages*num2words*&quot; Filesystem.file_name=&quot;_build.py&quot;)) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)`] | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ca037abf98" data-platforms="datadog,def,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">[LLM] Scavenger C2 callback: ifyouseethisyouareultragay[.]com / pokerainteasy[.]su</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ca037abf98" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects egress to the two confirmed Scavenger loader C2 hosts referenced in InvokeRE&#x27;s reverse-engineering of the num2words v0.5.15 loader. These hostnames are unique, lexically distinctive strings that should never appear in legitimate traffic — any DNS resolution or HTTP(S) connection is post-install-stage execution.
+
+Rationale: Both C2 strings are cross-confirmed in InvokeRE&#x27;s reversing writeup and the Invoke-RE community IOC repo. Their lexical distinctiveness (one is a slur-laced novelty domain, the other a `.su` ccTLD) means zero collision with benign traffic — `has` match is sufficient. Sigma kept simple (single dns selection block).
+
+Cross-checked against:
+  • https://invokere.com/posts/2025/07/scavenger-malware-distributed-via-num2words-pypi-supply-chain-compromise/
+  • https://github.com/Invoke-RE/community-malware-research/blob/main/Research/Loaders/Scavenger/num2words_IOCs.md</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Dynamic Resolution">T1568</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">Web.Web</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-812-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-812-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-812-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-812-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-812-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-812-uc1-kql"><pre><button class="copy-btn">COPY</button><code>union
+(DeviceNetworkEvents
+| where Timestamp &gt; ago(30d)
+| where RemoteUrl has_any (&quot;ifyouseethisyouareultragay.com&quot;,&quot;pokerainteasy.su&quot;)
+| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
+(DeviceEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType == &quot;DnsQueryResponse&quot;
+| extend QueryName = tostring(parse_json(AdditionalFields).QueryName)
+| where QueryName has_any (&quot;ifyouseethisyouareultragay.com&quot;,&quot;pokerainteasy.su&quot;)
+| project Timestamp, DeviceName, QueryName, InitiatingProcessFileName, InitiatingProcessCommandLine)
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-812-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
+(DnsEvents
+| where TimeGenerated &gt; ago(30d)
+| where Name has_any (&quot;ifyouseethisyouareultragay.com&quot;,&quot;pokerainteasy.su&quot;)
+| project TimeGenerated, Computer, ClientIP, Name, QueryType, ResultCodeName),
+(CommonSecurityLog
+| where TimeGenerated &gt; ago(30d)
+| where DestinationHostName has_any (&quot;ifyouseethisyouareultragay.com&quot;,&quot;pokerainteasy.su&quot;)
+    or RequestURL has_any (&quot;ifyouseethisyouareultragay.com&quot;,&quot;pokerainteasy.su&quot;)
+| project TimeGenerated, DeviceVendor, SourceIP, DestinationIP, DestinationHostName, RequestURL, DeviceAction),
+(ImDnsActivity
+| where TimeGenerated &gt; ago(30d)
+| where DnsQuery has_any (&quot;ifyouseethisyouareultragay.com&quot;,&quot;pokerainteasy.su&quot;)
+| project TimeGenerated, SrcIpAddr, SrcHostname, DnsQuery, DnsResponseCodeName),
+(ImWebSession
+| where TimeGenerated &gt; ago(30d)
+| where Url has_any (&quot;ifyouseethisyouareultragay.com&quot;,&quot;pokerainteasy.su&quot;) or HttpHostName has_any (&quot;ifyouseethisyouareultragay.com&quot;,&quot;pokerainteasy.su&quot;)
+| project TimeGenerated, SrcIpAddr, SrcHostname, Url, HttpHostName, DvcAction)
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-812-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Scavenger Loader C2 Domain Resolution (num2words PyPI compromise)
+id: 4b6a4dba-3f4f-4d8a-9e7d-6c2f08a4d8b1
+status: experimental
+description: Detects DNS queries to the two confirmed C2 hostnames used by the Scavenger loader distributed in num2words v0.5.15 on PyPI. Both hostnames are lexically unique and have no legitimate use.
+references:
+  - https://invokere.com/posts/2025/07/scavenger-malware-distributed-via-num2words-pypi-supply-chain-compromise/
+  - https://github.com/Invoke-RE/community-malware-research/blob/main/Research/Loaders/Scavenger/num2words_IOCs.md
+  - https://www.stepsecurity.io/blog/supply-chain-security-alert-num2words-pypi-package-shows-signs-of-compromise
+author: SOC Detection Engineering
+date: 2025/07/28
+tags:
+  - attack.t1071.001
+  - attack.t1568
+  - attack.command_and_control
+logsource:
+  category: dns
+  product: windows
+detection:
+  selection:
+    QueryName|contains:
+      - &#x27;ifyouseethisyouareultragay.com&#x27;
+      - &#x27;pokerainteasy.su&#x27;
+  condition: selection
+falsepositives:
+  - None expected — both hostnames are unique to Scavenger campaign infrastructure.
+level: critical</code></pre></div>
+    <div class="tab-content" id="art-812-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon @EventID:(3 OR 22) AND (@QueryName:(*ifyouseethisyouareultragay.com* OR *pokerainteasy.su*) OR @DestinationHostname:(*ifyouseethisyouareultragay.com* OR *pokerainteasy.su*))) OR (source:linux.syslog AND @message:(*ifyouseethisyouareultragay.com* OR *pokerainteasy.su*)) OR (@dns.question.name:(*ifyouseethisyouareultragay.com* OR *pokerainteasy.su*))</code></pre></div>
+    <div class="tab-content" id="art-812-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-812-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-812-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-812-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (DNS.query=&quot;ifyouseethisyouareultragay.com&quot; OR DNS.query=&quot;*.ifyouseethisyouareultragay.com&quot; OR DNS.query=&quot;pokerainteasy.su&quot; OR DNS.query=&quot;*.pokerainteasy.su&quot;) by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | append [| tstats summariesonly=true count from datamodel=Web where (Web.url=&quot;*ifyouseethisyouareultragay.com*&quot; OR Web.url=&quot;*pokerainteasy.su*&quot; OR Web.dest=&quot;ifyouseethisyouareultragay.com&quot; OR Web.dest=&quot;pokerainteasy.su&quot;) by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-812-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (DNS.query=&quot;ifyouseethisyouareultragay.com&quot; OR DNS.query=&quot;*.ifyouseethisyouareultragay.com&quot; OR DNS.query=&quot;pokerainteasy.su&quot; OR DNS.query=&quot;*.pokerainteasy.su&quot;) by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | append [| tstats summariesonly=false count from datamodel=Web where (Web.url=&quot;*ifyouseethisyouareultragay.com*&quot; OR Web.url=&quot;*pokerainteasy.su*&quot; OR Web.dest=&quot;ifyouseethisyouareultragay.com&quot; OR Web.dest=&quot;pokerainteasy.su&quot;) by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="1440da764e" data-platforms="datadog,def,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">[LLM] Scavenger loader/stealer SHA256 execution or drop on endpoint</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="1440da764e" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts for the four confirmed Scavenger payload hashes (one loader + three stealer variants: electric/exodus/shiny) appearing as a file write, image load, or process execution on any endpoint. These hashes were extracted from the num2words v0.5.15 payload chain by InvokeRE. Catches the post-installation stages that drop version.dll/umpdc.dll/profapi.dll side-loading stealers targeting .pypirc, Electrum wallet config, and Exodus wallet binaries.
+
+Rationale: The four SHA256s are extracted directly from InvokeRE&#x27;s reverse-engineering writeup and the Invoke-RE community IOC repository. SHA256 collisions on a hash sweep are essentially impossible, giving a near-zero FP rate. Covers post-install stages the StepSecurity article notes but doesn&#x27;t enumerate — useful for hunting laterally if the install-stage UC1 has already fired on one host.
+
+Cross-checked against:
+  • https://github.com/Invoke-RE/community-malware-research/blob/main/Research/Loaders/Scavenger/num2words_IOCs.md
+  • https://invokere.com/posts/2025/07/scavenger-malware-distributed-via-num2words-pypi-supply-chain-compromise/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Hijack Execution Flow: DLL Side-Loading">T1574.002</span> <span class="ind tech" title="Credentials from Password Stores">T1555</span> <span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-812-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-812-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-812-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-812-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-812-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-812-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let scavenger_hashes = dynamic([
+  &quot;be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2&quot;,
+  &quot;c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2&quot;,
+  &quot;439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616&quot;,
+  &quot;c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b&quot;
+]);
+union
+(DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where SHA256 in~ (scavenger_hashes)
+| project Timestamp, Source=&quot;DeviceFileEvents&quot;, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
+(DeviceImageLoadEvents
+| where Timestamp &gt; ago(30d)
+| where SHA256 in~ (scavenger_hashes)
+| project Timestamp, Source=&quot;DeviceImageLoadEvents&quot;, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName=InitiatingProcessAccountName),
+(DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where SHA256 in~ (scavenger_hashes) or InitiatingProcessSHA256 in~ (scavenger_hashes)
+| project Timestamp, Source=&quot;DeviceProcessEvents&quot;, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName)
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-812-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let scavenger_hashes = dynamic([
+  &quot;be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2&quot;,
+  &quot;c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2&quot;,
+  &quot;439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616&quot;,
+  &quot;c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b&quot;
+]);
+union isfuzzy=true
+(ImFileEvent
+| where TimeGenerated &gt; ago(30d)
+| where TargetFileSHA256 in~ (scavenger_hashes)
+| project TimeGenerated, Source=&quot;ImFileEvent&quot;, DvcHostname, ActorUsername, TargetFileName, TargetFilePath, TargetFileSHA256, ActingProcessName, ActingProcessCommandLine),
+(ImProcessCreate
+| where TimeGenerated &gt; ago(30d)
+| where SHA256 in~ (scavenger_hashes)
+| project TimeGenerated, Source=&quot;ImProcessCreate&quot;, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, SHA256, ParentProcessName),
+(SecurityEvent
+| where TimeGenerated &gt; ago(30d)
+| where EventID == 4688
+| where FileHash in~ (scavenger_hashes)
+| project TimeGenerated, Source=&quot;SecurityEvent4688&quot;, Computer, Account, NewProcessName, CommandLine, FileHash, ParentProcessName)
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-812-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Scavenger Loader/Stealer Hash Observed (num2words PyPI compromise)
+id: 2e7c5b9a-1d6f-4a5c-bf3e-9b3e8e1c2f7d
+status: experimental
+description: Detects file-creation events where the SHA256 matches the Scavenger loader or any of its three known stealer variants (electric/exodus/shiny) extracted from the num2words v0.5.15 supply-chain compromise.
+references:
+  - https://github.com/Invoke-RE/community-malware-research/blob/main/Research/Loaders/Scavenger/num2words_IOCs.md
+  - https://invokere.com/posts/2025/07/scavenger-malware-distributed-via-num2words-pypi-supply-chain-compromise/
+  - https://www.stepsecurity.io/blog/supply-chain-security-alert-num2words-pypi-package-shows-signs-of-compromise
+author: SOC Detection Engineering
+date: 2025/07/28
+tags:
+  - attack.t1574.002
+  - attack.t1555
+  - attack.t1552.001
+  - attack.execution
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection:
+    Hashes|contains:
+      - &#x27;be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2&#x27;
+      - &#x27;c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2&#x27;
+      - &#x27;439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616&#x27;
+      - &#x27;c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b&#x27;
+  condition: selection
+falsepositives:
+  - None — hashes are unique to Scavenger campaign payloads.
+level: critical</code></pre></div>
+    <div class="tab-content" id="art-812-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR windows.security OR windows.defender OR linux.auditd) (@Hashes:(*be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2* OR *c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2* OR *439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616* OR *c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b*) OR @file.hash.sha256:(be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2 OR c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2 OR 439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616 OR c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b))</code></pre></div>
+    <div class="tab-content" id="art-812-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-812-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-812-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-812-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN (&quot;be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2&quot;,&quot;c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2&quot;,&quot;439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616&quot;,&quot;c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b&quot;) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | append [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_hash IN (&quot;be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2&quot;,&quot;c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2&quot;,&quot;439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616&quot;,&quot;c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b&quot;) by Processes.dest Processes.user Processes.process_name Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)`] | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-812-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN (&quot;be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2&quot;,&quot;c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2&quot;,&quot;439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616&quot;,&quot;c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b&quot;) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | append [| tstats summariesonly=false count from datamodel=Endpoint.Processes where Processes.process_hash IN (&quot;be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2&quot;,&quot;c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2&quot;,&quot;439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616&quot;,&quot;c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b&quot;) by Processes.dest Processes.user Processes.process_name Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)`] | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-812-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-812-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-812-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-812-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-812-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-812-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+// article (matching shape with the Defender query).
+SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where NewProcessName endswith &quot;\powershell.exe&quot;
+   or NewProcessName endswith &quot;\cmd.exe&quot;
+   or NewProcessName endswith &quot;\rundll32.exe&quot;
+   or NewProcessName endswith &quot;\regsvr32.exe&quot;
+   or NewProcessName endswith &quot;\mshta.exe&quot;
+   or NewProcessName endswith &quot;\wscript.exe&quot;
+   or NewProcessName endswith &quot;\cscript.exe&quot;
+   or NewProcessName endswith &quot;\wmic.exe&quot;
+   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
+| project TimeGenerated, Computer, Account, ParentProcessName,
+          NewProcessName, CommandLine
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-812-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
+status: experimental
+description: |
+    A signed vendor binary (in the article&#x27;s named-vendors list)
+    spawning script-host or LOLBin children. Strongest signal when
+    paired with a recent CVE / supply-chain advisory naming the same
+    vendor.
+references:
+    - https://attack.mitre.org/techniques/T1195/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1195
+    - attack.initial-access
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_child:
+        Image|endswith:
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+            - &#x27;\cmd.exe&#x27;
+            - &#x27;\rundll32.exe&#x27;
+            - &#x27;\regsvr32.exe&#x27;
+            - &#x27;\mshta.exe&#x27;
+            - &#x27;\wscript.exe&#x27;
+            - &#x27;\cscript.exe&#x27;
+            - &#x27;\wmic.exe&#x27;
+            - &#x27;\bitsadmin.exe&#x27;
+    selection_parent_vendor:
+        ParentImage|contains:
+            - &#x27;\Program Files\&#x27;
+            - &#x27;\Program Files (x86)\&#x27;
+    condition: selection_child and selection_parent_vendor
+falsepositives:
+    - Many — installers and updaters legitimately spawn children. Pin
+      the parent path to specific vendor binaries observed in the
+      article before alerting.
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-812-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-812-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-812-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-812-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-812-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Network connections to article IPs / domains</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-812-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-812-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-812-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-812-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-812-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIP in (&quot;&quot;) or RemoteUrl has_any (&quot;ifyouseethisyouareultragay.com&quot;, &quot;pokerainteasy.su&quot;)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-812-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;&quot;]);
+let BadDomains = dynamic([&quot;ifyouseethisyouareultragay.com&quot;, &quot;pokerainteasy.su&quot;]);
+ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr in (BadIPs)
+   or Url has_any (BadDomains)
+| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-812-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
+status: experimental
+description: |
+    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
+    article-specific destinations. For dynamic IOC management, use a
+    watchlist or external feed.
+references:
+    - https://attack.mitre.org/tactics/TA0011/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.command-and-control
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection_ip:
+        DestinationIp:
+            - &#x27;__IP_PLACEHOLDER_1__&#x27;
+            - &#x27;__IP_PLACEHOLDER_2__&#x27;
+    selection_domain:
+        DestinationHostname:
+            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
+            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
+    condition: selection_ip or selection_domain
+falsepositives:
+    - None on a true-positive IOC match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-812-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-812-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-812-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-812-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats `summariesonly` count from datamodel=Web
+        where Web.dest IN (&quot;ifyouseethisyouareultragay.com&quot;, &quot;pokerainteasy.su&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;ifyouseethisyouareultragay.com&quot;, &quot;pokerainteasy.su&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-812-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats summariesonly=false count from datamodel=Web
+        where Web.dest IN (&quot;ifyouseethisyouareultragay.com&quot;, &quot;pokerainteasy.su&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;ifyouseethisyouareultragay.com&quot;, &quot;pokerainteasy.su&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-812-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-812-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-812-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-812-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-812-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
+// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
+// (Initiating only) so column-projection has to differ per side.
+union
+    ( DeviceFileEvents
+        | where Timestamp &gt; ago(7d)
+        | where InitiatingProcessAccountName !endswith &quot;$&quot;
+        | where SHA256 in~ (&quot;be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2&quot;, &quot;c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2&quot;, &quot;439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616&quot;, &quot;c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b&quot;) or SHA1 in~ (&quot;be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2&quot;, &quot;c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2&quot;, &quot;439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616&quot;, &quot;c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b&quot;) or MD5 in~ (&quot;be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2&quot;, &quot;c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2&quot;, &quot;439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616&quot;, &quot;c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b&quot;)
+        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
+    ( DeviceProcessEvents
+        | where Timestamp &gt; ago(7d)
+        | where AccountName !endswith &quot;$&quot;
+        | where SHA256 in~ (&quot;be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2&quot;, &quot;c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2&quot;, &quot;439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616&quot;, &quot;c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b&quot;) or SHA1 in~ (&quot;be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2&quot;, &quot;c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2&quot;, &quot;439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616&quot;, &quot;c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b&quot;) or MD5 in~ (&quot;be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2&quot;, &quot;c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2&quot;, &quot;439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616&quot;, &quot;c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b&quot;)
+        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
+| order by Timestamp desc
+</code></pre></div>
+    <div class="tab-content" id="art-812-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
+// Defender version so the engine can push hash predicates per-side.
+let BadHashes = dynamic([&quot;be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2&quot;, &quot;c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2&quot;, &quot;439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616&quot;, &quot;c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b&quot;]);
+union
+    ( ImFileEvent
+        | where TimeGenerated &gt; ago(7d)
+        | where ActorUsername !endswith &quot;$&quot;
+        | where TargetFileSHA256 in~ (BadHashes)
+           or TargetFileSHA1 in~ (BadHashes)
+           or TargetFileMD5 in~ (BadHashes)
+        | project TimeGenerated, DvcHostname, EventType,
+                  TargetFileName, TargetFilePath, TargetFileSHA256,
+                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
+    ( ImProcessCreate
+        | where TimeGenerated &gt; ago(7d)
+        | where ActorUsername !endswith &quot;$&quot;
+        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
+        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
+                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
+                  TargetFileSHA256 = SHA256,
+                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-812-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
+status: experimental
+description: |
+    Replace `__HASH_LIST__` placeholder with article-specific SHA256
+    values. Use a watchlist or external indicator file for management
+    at scale.
+references:
+    - https://attack.mitre.org/techniques/T1027/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1027
+    - attack.defense-evasion
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Hashes|contains:
+            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
+    condition: selection
+falsepositives:
+    - None on a true-positive hash match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-812-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-812-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-812-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-812-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (&quot;be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2&quot;, &quot;c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2&quot;, &quot;439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616&quot;, &quot;c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| append
+    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
+        where Processes.process_hash IN (&quot;be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2&quot;, &quot;c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2&quot;, &quot;439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616&quot;, &quot;c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b&quot;)
+        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
+     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-812-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (&quot;be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2&quot;, &quot;c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2&quot;, &quot;439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616&quot;, &quot;c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| append
+    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
+        where Processes.process_hash IN (&quot;be917cb379b9622f56a4d5ec93bf00c20cb76c6646e5919690d0f7c09c956de2&quot;, &quot;c2a7ee6ab9344e1bb13c61dc689d4a946678e0505367cd55c9b43ddee3d461e2&quot;, &quot;439da8bb9c541d26b0f534b17d75790e252e4d9058561e8907f8690e21cd0616&quot;, &quot;c36ebf96573afcb36bb31590d56e8af49502fb159e00fd4a59336f8a450bec8b&quot;)
         by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
      | `drop_dm_object_name(Processes)`]</code></pre></div></div>
   </div>

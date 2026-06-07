@@ -11,15 +11,9 @@ By Bill Toulas
 June 7, 2026
 10:17 AM
 0 
-
-
 A new variant of the Gafgyt botnet called C0XMO is targeting DD-WRT router firmware and can move to other device types with various CPU architectures.
-
-
 The researchers found samples for ARM, MIPS, PowerPC, SuperH, x86, x86_64, and other architectures, featuring exploits for DVRs, routers, video management platforms, and Android-based devices.
-
-
-The botnet was seen targeting a Japan…
+The botnet was seen targeting a Japanese technolo…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -58,12 +52,129 @@ The botnet was seen targeting a Japan…
 - **T1219** — Remote Access Software
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1095** — Non-Application Layer Protocol
+- **T1564.001** — Hide Artifacts: Hidden Files and Directories
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1053.003** — Scheduled Task/Job: Cron
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1105** — Ingress Tool Transfer
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1489** — Service Stop
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] C0XMO botnet C2 beacon to hardcoded Fortinet-attributed IPs
+
+`UC_1_7` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("217.160.125.125","176.100.37.91","85.215.131.70") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.action | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let C2IPs = dynamic(["217.160.125.125","176.100.37.91","85.215.131.70"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (C2IPs)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort, Protocol, ActionType
+| order by Timestamp desc
+```
+
+### [LLM] C0XMO Gafgyt persistence binary drop to hidden /tmp/.sys paths
+
+`UC_1_8` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("/tmp/.sys","/var/tmp/.sys","/dev/shm/.sys") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FolderPath in~ ("/tmp/.sys","/var/tmp/.sys","/dev/shm/.sys")
+   or (FileName == ".sys" and FolderPath in~ ("/tmp","/var/tmp","/dev/shm"))
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### [LLM] C0XMO cron persistence relaunching binary every 15 minutes
+
+`UC_1_9` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("/var/spool/cron/*","/var/spool/cron/crontabs/*","/etc/cron.d/*","/etc/crontab","/etc/cron.hourly/*","/etc/cron.daily/*")) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+let CronPaths = dynamic(["/var/spool/cron/","/etc/cron.d/","/etc/crontab","/etc/cron.hourly/","/etc/cron.daily/","/etc/cron.weekly/","/etc/cron.monthly/"]);
+let TmpPaths = dynamic(["/tmp/","/var/tmp/","/dev/shm/"]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified")
+| where FolderPath has_any (CronPaths)
+| join kind=leftouter (
+    DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where ProcessCommandLine has "crontab" or InitiatingProcessFileName has "crontab"
+) on DeviceId
+| where FolderPath has_any (CronPaths)
+| project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
+| order by Timestamp desc
+```
+
+### [LLM] C0XMO Python scanner module install (paramiko + beautifulsoup4)
+
+`UC_1_10` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count values(Processes.process) as cmds min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("pip","pip3","python","python3")) AND (Processes.process="*paramiko*" OR Processes.process="*beautifulsoup4*") by Processes.dest Processes.user Processes.parent_process_name | `drop_dm_object_name(Processes)` | where match(cmds,"(?i)paramiko") AND match(cmds,"(?i)beautifulsoup4")
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName in~ ("pip","pip3","python","python3")
+| where ProcessCommandLine has_all ("paramiko","beautifulsoup4") and ProcessCommandLine has "install"
+   or ProcessCommandLine has_all ("paramiko","requests","install")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### [LLM] C0XMO rival botnet and red-team process termination spree
+
+`UC_1_11` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count values(Processes.process) as cmds min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("kill","pkill","killall") AND (Processes.process="*mirai*" OR Processes.process="*gafgyt*" OR Processes.process="*tsunami*" OR Processes.process="*mozi*" OR Processes.process="*hajime*" OR Processes.process="*lucifer*" OR Processes.process="*moobot*" OR Processes.process="*xmrig*" OR Processes.process="*kinsing*" OR Processes.process="*sliver*" OR Processes.process="*meterpreter*") by Processes.dest Processes.user Processes.parent_process_name _time | `drop_dm_object_name(Processes)` | bin _time span=2m | stats dc(cmds) as variantsKilled count by dest user parent_process_name _time | where variantsKilled >= 3
+```
+
+**Defender KQL:**
+```kql
+let RivalTokens = dynamic(["mirai","gafgyt","tsunami","mozi","hajime","lucifer","moobot","satori","xmrig","kinsing","sliver","meterpreter","chisel","frp","merlin"]);
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName in~ ("kill","pkill","killall")
+| extend MatchedRivals = set_intersect(RivalTokens, extract_all(@"(?i)([a-z0-9_-]+)", tostring(ProcessCommandLine)))
+| where array_length(MatchedRivals) >= 3
+| summarize KillCount = count(), Rivals = make_set(MatchedRivals,50), AnyCmd = any(ProcessCommandLine), AnyParent = any(InitiatingProcessCommandLine) by DeviceName, AccountName, bin(Timestamp, 2m)
+| where KillCount >= 3
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -154,7 +265,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — C0XMO botnet spreads via DD-WRT router flaw, kills rival malware
 
-`UC_0_6` · phase: **install** · confidence: **High**
+`UC_1_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -201,4 +312,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, IOCs present, 12 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

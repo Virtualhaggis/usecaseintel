@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -38,7 +38,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47731 nasa ammos instrument toolkit p](./2026-06-05/ghsa-critical-cve-2026-47731-nasa-ammos-instrument-toolkit-p.md)
 - [ghsa critical cve 2026 47744 shopper authorization bypass an](./2026-06-05/ghsa-critical-cve-2026-47744-shopper-authorization-bypass-an.md)
 - [hackers exploit critical everest forms pro wordpress plugin ](./2026-06-05/hackers-exploit-critical-everest-forms-pro-wordpress-plugin-.md)
-- [hackers publish malicious python package mimicking legitimat](./2026-06-05/hackers-publish-malicious-python-package-mimicking-legitimat.md)
 - [ironworm and new miasma worm variant hit npm in supply chain](./2026-06-05/ironworm-and-new-miasma-worm-variant-hit-npm-in-supply-chain.md)
 - [new threat cluster op 512 targets microsoft iis servers with](./2026-06-05/new-threat-cluster-op-512-targets-microsoft-iis-servers-with.md)
 - [pcpjack hijacks 230 aws google cloud and azure servers for c](./2026-06-05/pcpjack-hijacks-230-aws-google-cloud-and-azure-servers-for-c.md)
