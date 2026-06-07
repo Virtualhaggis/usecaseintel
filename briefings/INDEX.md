@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,8 +9,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-07
+- [c0xmo botnet spreads via dd wrt router flaw kills rival malw](./2026-06-07/c0xmo-botnet-spreads-via-dd-wrt-router-flaw-kills-rival-malw.md)
 - [cisa warns of linux kernel improper authentication vulnerabi](./2026-06-07/cisa-warns-of-linux-kernel-improper-authentication-vulnerabi.md)
 - [instagram fixes password reset flaw that exposes user emails](./2026-06-07/instagram-fixes-password-reset-flaw-that-exposes-user-emails.md)
+- [silent ransom group targets law firms with fake it support c](./2026-06-07/silent-ransom-group-targets-law-firms-with-fake-it-support-c.md)
 
 ## 2026-06-06
 - [ai agent uncovers 21 zero days in ffmpeg chrome patches reco](./2026-06-06/ai-agent-uncovers-21-zero-days-in-ffmpeg-chrome-patches-reco.md)
@@ -57,7 +59,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hackers spied on a stock exchange executive s outlook mailbo](./2026-06-04/hackers-spied-on-a-stock-exchange-executive-s-outlook-mailbo.md)
 - [hypotheses telemetry and human judgment inside cisco talos t](./2026-06-04/hypotheses-telemetry-and-human-judgment-inside-cisco-talos-t.md)
 - [miasma npm supply chain attack self spreading worm via phant](./2026-06-04/miasma-npm-supply-chain-attack-self-spreading-worm-via-phant.md)
-- [new ironworm malware hits 36 packages in npm supply chain at](./2026-06-04/new-ironworm-malware-hits-36-packages-in-npm-supply-chain-at.md)
 - [node gyp supply chain compromise a self propagating npm worm](./2026-06-04/node-gyp-supply-chain-compromise-a-self-propagating-npm-worm.md)
 - [reporting from vegas networking ai and good boys](./2026-06-04/reporting-from-vegas-networking-ai-and-good-boys.md)
 - [so you have an ai security budget now what](./2026-06-04/so-you-have-an-ai-security-budget-now-what.md)

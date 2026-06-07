@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Endpoint egress to reactivated polyfill[.]io hijacked CDN domain
 
-`UC_17_2` · phase: **delivery** · confidence: **High**
+`UC_19_2` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceNetworkEvents
 
 ### [LLM] HTTP 401 Basic-Auth challenge served by polyfill[.]io to first-party origin
 
-`UC_17_3` · phase: **actions** · confidence: **High**
+`UC_19_3` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ PolyfillFetches
 
 ### [LLM] First-party web asset referencing abandoned polyfill[.]io CDN script tag (inventory hunt)
 
-`UC_17_4` · phase: **weapon** · confidence: **Medium**
+`UC_19_4` · phase: **weapon** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

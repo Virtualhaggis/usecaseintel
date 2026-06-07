@@ -1,0 +1,98 @@
+{
+  "name": "Conti",
+  "ucs": [
+    {
+      "title": "[LLM] Conti / Wizard Spider AdFind reconnaissance using leaked-playbook flags & output files",
+      "description": "Hunts AdFind execution patterns that match the August 2021 Conti playbook leak (trustdmp, -subnets, -gcb -sc, ad_users.txt / ad_computers.txt / trustdmp.txt). Conti/UNC1878 affiliates ran this verbatim sequence pre-lateral-movement on virtually every documented intrusion (TrickBot/BazarLoader \u2192 Cobalt Strike \u2192 AdFind \u2192 PsExec \u2192 Conti).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1018",
+        "T1087.002",
+        "T1482",
+        "T1059.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.process_path) as path from datamodel=Endpoint.Processes where (Processes.process_name=\"adfind.exe\" OR Processes.original_file_name=\"AdFind.exe\" OR Processes.process=\"*adfind*\") AND (Processes.process=\"*trustdmp*\" OR Processes.process=\"*-subnets*\" OR Processes.process=\"*-gcb -sc*\" OR Processes.process=\"*objectcategory=person*\" OR Processes.process=\"*objectcategory=computer*\" OR Processes.process=\"*objectcategory=subnet*\" OR Processes.process=\"*objectcategory=organizationalUnit*\" OR Processes.process=\"*name=\\\"Domain Admins\\\"*\" OR Processes.process=\"*ad_users.txt*\" OR Processes.process=\"*ad_computers.txt*\" OR Processes.process=\"*ad_ous.txt*\" OR Processes.process=\"*trustdmp.txt*\" OR Processes.process=\"*dcmodes*\" OR Processes.process=\"*adinfo*\") by host Processes.user Processes.dest Processes.process_name Processes.parent_process_name\n| `drop_dm_object_name(Processes)`\n| where NOT match(user, \"(?i)\\\\$$\")\n| convert ctime(firstTime) ctime(lastTime)",
+      "kql": "// Conti playbook AdFind recon \u2014 leaked Aug-2021 verbatim flags\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where (FileName =~ \"adfind.exe\"\n      or ProcessVersionInfoOriginalFileName =~ \"AdFind.exe\"\n      or ProcessCommandLine has \"adfind\")\n| where ProcessCommandLine has_any (\n    \"trustdmp\", \"-subnets\", \"-gcb -sc\",\n    \"objectcategory=person\", \"objectcategory=computer\",\n    \"objectcategory=organizationalunit\", \"objectcategory=subnet\",\n    \"name=\\\"Domain Admins\\\"\",\n    \"ad_users.txt\", \"ad_computers.txt\", \"ad_ous.txt\", \"trustdmp.txt\",\n    \"dcmodes\", \"adinfo\"\n  )\n| where AccountName !endswith \"$\"             // exclude machine accounts\n| where AccountName !in~ (\"system\",\"local service\",\"network service\")\n| project Timestamp, DeviceName, AccountName, FileName,\n          ProcessCommandLine, InitiatingProcessFileName,\n          InitiatingProcessCommandLine, FolderPath, SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "// Conti playbook AdFind recon \u2014 Sentinel SecurityEvent 4688\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where (NewProcessName endswith \"\\\\adfind.exe\" or CommandLine has \"adfind\")\n| where CommandLine has_any (\n    \"trustdmp\", \"-subnets\", \"-gcb -sc\",\n    \"objectcategory=person\", \"objectcategory=computer\",\n    \"objectcategory=organizationalunit\", \"objectcategory=subnet\",\n    \"name=\\\"Domain Admins\\\"\",\n    \"ad_users.txt\", \"ad_computers.txt\", \"ad_ous.txt\", \"trustdmp.txt\",\n    \"dcmodes\", \"adinfo\"\n  )\n| where SubjectUserName !endswith \"$\"\n| where SubjectUserName !in~ (\"SYSTEM\",\"LOCAL SERVICE\",\"NETWORK SERVICE\")\n| project TimeGenerated, Computer, SubjectUserName, NewProcessName,\n          CommandLine, ParentProcessName\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Conti AdFind Reconnaissance Matching Leaked-Playbook Flags\nid: 1b7f4c20-conti-adfind\nstatus: experimental\ndescription: Detects AdFind execution patterns from the August 2021 Conti playbook leak \u2014 trustdmp, -subnets, -gcb -sc and the canonical output filenames Conti operators redirected to.\nreferences:\n  - https://github.com/ForbiddenProgrammer/conti-pentester-guide-leak\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa21-265a\nauthor: SOC Detection Engineering\ndate: 2026/06/07\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_bin:\n    Image|endswith: '\\adfind.exe'\n  selection_name:\n    OriginalFileName: 'AdFind.exe'\n  selection_cmd:\n    CommandLine|contains: 'adfind'\n  selection_args:\n    CommandLine|contains:\n      - 'trustdmp'\n      - '-subnets'\n      - '-gcb -sc'\n      - 'objectcategory=person'\n      - 'objectcategory=computer'\n      - 'objectcategory=organizationalUnit'\n      - 'objectcategory=subnet'\n      - 'ad_users.txt'\n      - 'ad_computers.txt'\n      - 'ad_ous.txt'\n      - 'trustdmp.txt'\n      - 'name=\"Domain Admins\"'\n  condition: (selection_bin or selection_name or selection_cmd) and selection_args\nfalsepositives:\n  - Sanctioned red-team or AD audit engagements\nlevel: high\ntags:\n  - attack.discovery\n  - attack.t1018\n  - attack.t1087.002\n  - attack.t1482\n  - attack.g0102",
+      "datadog_query": "source:(windows.sysmon OR windows.security) @EventID:(1 OR 4688) (@Image:(*\\\\adfind.exe OR *\\\\AdFind.exe OR *\\\\ADFIND.EXE) OR @CommandLine:(*adfind* OR *AdFind* OR *ADFIND*)) @CommandLine:(*trustdmp* OR *-subnets* OR *\"-gcb -sc\"* OR *objectcategory=person* OR *objectcategory=computer* OR *objectcategory=subnet* OR *objectcategory=organizationalUnit* OR *ad_users.txt* OR *ad_computers.txt* OR *ad_ous.txt* OR *trustdmp.txt* OR *\"Domain Admins\"*)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2\n| ImageFileName=/\\\\adfind\\.exe$/i OR CommandLine=/adfind/i\n| regex(\"(trustdmp|-subnets|-gcb\\s+-sc|objectcategory=(person|computer|organizationalUnit|subnet)|ad_users\\.txt|ad_computers\\.txt|ad_ous\\.txt|trustdmp\\.txt|name=\\\"Domain Admins\\\")\", field=CommandLine, flags=\"i\")\n| UserName!=/\\$$/\n| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=[count(), min(@timestamp, as=firstSeen), max(@timestamp, as=lastSeen)])",
+      "cloudwatch_query": "",
+      "rationale": "The output filenames (ad_users.txt, ad_computers.txt, ad_ous.txt, trustdmp.txt) and the exact -f filter strings appeared in the leaked Conti operator guide. Generic AdFind detections fire on every pentester; this one fires on Conti/Wizard Spider tradecraft specifically because we require BOTH the binary AND the leak-published argument set.",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Domain",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "AccountDomain",
+          "message": "`Domain` is not a canonical column of DeviceProcessEvents. Did you mean `AccountDomain`?"
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Admins",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Admins` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Domain",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": "SourceDomain",
+          "message": "`Domain` is not a canonical column of SecurityEvent. Did you mean `SourceDomain`?"
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Admins",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`Admins` is not a canonical column of SecurityEvent."
+        }
+      ],
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    },
+    {
+      "title": "[LLM] Conti pre-encryption host neutralization chain (vssadmin + bcdedit + wbadmin + wevtutil within 10 min)",
+      "description": "Detects the Conti / Wizard Spider pre-encryption sabotage sequence: shadow-copy deletion via vssadmin or wmic, recovery disablement via bcdedit, backup catalog wipe via wbadmin, and event-log clearing via wevtutil \u2014 all on the same host inside a tight window. Conti's CARBON SPIDER-style playbook executes this combo seconds before dropping the encryptor; a single command is noisy, but \u22652 distinct sabotage actions on one host in 10 min is near-pathognomonic.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1490",
+        "T1489",
+        "T1070.001",
+        "T1486"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true min(_time) as firstTime max(_time) as lastTime values(Processes.process_name) as binaries values(Processes.process) as cmdlines values(Processes.user) as users from datamodel=Endpoint.Processes where (Processes.process_name=\"vssadmin.exe\" AND Processes.process=\"*delete*\" AND Processes.process=\"*shadows*\") OR (Processes.process_name=\"wmic.exe\" AND Processes.process=\"*shadowcopy*\" AND Processes.process=\"*delete*\") OR (Processes.process_name=\"wbadmin.exe\" AND Processes.process=\"*delete*\" AND (Processes.process=\"*catalog*\" OR Processes.process=\"*systemstatebackup*\" OR Processes.process=\"*backup*\")) OR (Processes.process_name=\"bcdedit.exe\" AND (Processes.process=\"*recoveryenabled*no*\" OR Processes.process=\"*bootstatuspolicy*ignoreallfailures*\")) OR (Processes.process_name=\"wevtutil.exe\" AND (Processes.process=\"* cl *\" OR Processes.process=\"*clear-log*\")) by host _time span=10m\n| `drop_dm_object_name(Processes)`\n| eval distinct_actions = mvcount(binaries)\n| where distinct_actions >= 2\n| convert ctime(firstTime) ctime(lastTime)\n| sort - firstTime",
+      "kql": "// Conti pre-encryption sabotage \u2014 \u22652 distinct destructive actions on one host in 10 min\nlet Window = 10m;\nlet Sabotage = DeviceProcessEvents\n    | where Timestamp > ago(1d)\n    | where (FileName =~ \"vssadmin.exe\"  and ProcessCommandLine has_all (\"delete\",\"shadows\"))\n         or (FileName =~ \"wmic.exe\"     and ProcessCommandLine has \"shadowcopy\" and ProcessCommandLine has \"delete\")\n         or (FileName =~ \"wbadmin.exe\"  and ProcessCommandLine has \"delete\"\n                                       and ProcessCommandLine has_any (\"catalog\",\"systemstatebackup\",\"backup\"))\n         or (FileName =~ \"bcdedit.exe\"  and (ProcessCommandLine has_all (\"recoveryenabled\",\"no\")\n                                            or ProcessCommandLine has_all (\"bootstatuspolicy\",\"ignoreallfailures\")))\n         or (FileName =~ \"wevtutil.exe\" and ProcessCommandLine has_any (\" cl \",\"clear-log\"))\n    | extend Action = case(\n        FileName =~ \"vssadmin.exe\",  \"vss_delete\",\n        FileName =~ \"wmic.exe\",      \"wmic_shadow_delete\",\n        FileName =~ \"wbadmin.exe\",   \"wbadmin_delete\",\n        FileName =~ \"bcdedit.exe\",   \"bcdedit_disable_recovery\",\n        FileName =~ \"wevtutil.exe\",  \"log_clear\",\n        \"other\");\nSabotage\n| summarize Actions = make_set(Action),\n            DistinctActions = dcount(Action),\n            FirstAction = min(Timestamp),\n            LastAction  = max(Timestamp),\n            SampleCmds  = make_set(ProcessCommandLine, 10),\n            Users       = make_set(AccountName, 5)\n            by DeviceName, bin(Timestamp, Window)\n| where DistinctActions >= 2                  // 2+ distinct sabotage families = Conti chain signature\n| order by FirstAction desc",
+      "sentinel_kql": "// Conti pre-encryption sabotage chain \u2014 Sentinel 4688\nlet Window = 10m;\nlet Sabotage = SecurityEvent\n    | where TimeGenerated > ago(1d)\n    | where EventID == 4688\n    | where (NewProcessName endswith \"\\\\vssadmin.exe\"  and CommandLine has_all (\"delete\",\"shadows\"))\n         or (NewProcessName endswith \"\\\\wmic.exe\"     and CommandLine has \"shadowcopy\" and CommandLine has \"delete\")\n         or (NewProcessName endswith \"\\\\wbadmin.exe\"  and CommandLine has \"delete\"\n                                                     and CommandLine has_any (\"catalog\",\"systemstatebackup\",\"backup\"))\n         or (NewProcessName endswith \"\\\\bcdedit.exe\"  and (CommandLine has_all (\"recoveryenabled\",\"no\")\n                                                          or CommandLine has_all (\"bootstatuspolicy\",\"ignoreallfailures\")))\n         or (NewProcessName endswith \"\\\\wevtutil.exe\" and CommandLine has_any (\" cl \",\"clear-log\"))\n    | extend Action = case(\n        NewProcessName endswith \"vssadmin.exe\",  \"vss_delete\",\n        NewProcessName endswith \"wmic.exe\",      \"wmic_shadow_delete\",\n        NewProcessName endswith \"wbadmin.exe\",   \"wbadmin_delete\",\n        NewProcessName endswith \"bcdedit.exe\",   \"bcdedit_disable_recovery\",\n        NewProcessName endswith \"wevtutil.exe\",  \"log_clear\",\n        \"other\");\nSabotage\n| summarize Actions = make_set(Action),\n            DistinctActions = dcount(Action),\n            FirstAction = min(TimeGenerated),\n            LastAction  = max(TimeGenerated),\n            SampleCmds  = make_set(CommandLine, 10)\n            by Computer, bin(TimeGenerated, Window)\n| where DistinctActions >= 2\n| order by FirstAction desc",
+      "sigma_yaml": "",
+      "datadog_query": "source:(windows.sysmon OR windows.security) @EventID:(1 OR 4688) ((@Image:(*\\\\vssadmin.exe OR *\\\\VSSADMIN.EXE) AND @CommandLine:(*delete* AND *shadows*)) OR (@Image:(*\\\\wmic.exe OR *\\\\WMIC.EXE) AND @CommandLine:(*shadowcopy* AND *delete*)) OR (@Image:(*\\\\wbadmin.exe OR *\\\\WBADMIN.EXE) AND @CommandLine:(*delete* AND (*catalog* OR *systemstatebackup* OR *backup*))) OR (@Image:(*\\\\bcdedit.exe OR *\\\\BCDEDIT.EXE) AND @CommandLine:((*recoveryenabled* AND *no*) OR (*bootstatuspolicy* AND *ignoreallfailures*))) OR (@Image:(*\\\\wevtutil.exe OR *\\\\WEVTUTIL.EXE) AND @CommandLine:(*\" cl \"* OR *clear-log*)))",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2\n| (\n    (ImageFileName=/\\\\vssadmin\\.exe$/i AND regex(\"delete.*shadows\", field=CommandLine, flags=\"i\"))\n    OR (ImageFileName=/\\\\wmic\\.exe$/i AND regex(\"shadowcopy.*delete\", field=CommandLine, flags=\"i\"))\n    OR (ImageFileName=/\\\\wbadmin\\.exe$/i AND regex(\"delete\\s+(catalog|systemstatebackup|backup)\", field=CommandLine, flags=\"i\"))\n    OR (ImageFileName=/\\\\bcdedit\\.exe$/i AND regex(\"(recoveryenabled\\s+no|bootstatuspolicy\\s+ignoreallfailures)\", field=CommandLine, flags=\"i\"))\n    OR (ImageFileName=/\\\\wevtutil\\.exe$/i AND regex(\"\\s(cl|clear-log)\\s\", field=CommandLine, flags=\"i\"))\n  )\n| case {\n    ImageFileName=/\\\\vssadmin\\.exe$/i  | action := \"vss_delete\";\n    ImageFileName=/\\\\wmic\\.exe$/i      | action := \"wmic_shadow_delete\";\n    ImageFileName=/\\\\wbadmin\\.exe$/i   | action := \"wbadmin_delete\";\n    ImageFileName=/\\\\bcdedit\\.exe$/i   | action := \"bcdedit_disable_recovery\";\n    ImageFileName=/\\\\wevtutil\\.exe$/i  | action := \"log_clear\";\n    *                                  | action := \"other\";\n  }\n| bucket(span=10m, field=@timestamp)\n| groupBy([aid, ComputerName, _bucket], function=[collect([action]), count(field=action, distinct=true, as=distinct_actions), min(@timestamp, as=firstSeen), max(@timestamp, as=lastSeen)])\n| distinct_actions >= 2",
+      "cloudwatch_query": "",
+      "rationale": "Backup admins run vssadmin/wbadmin in isolation; Windows updates run bcdedit alone; SOC engineers clear logs alone. Conti deploys the encryptor only AFTER chaining vssadmin \u2192 bcdedit \u2192 wbadmin \u2192 wevtutil in seconds. Requiring \u22652 distinct sabotage families on the same host inside 10 minutes filters out legitimate single-tool maintenance and isolates the Conti/Wizard Spider playbook (also observed i"
+    }
+  ]
+}
