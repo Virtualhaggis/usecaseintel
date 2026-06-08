@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1252 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,7 +9,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-08
+- [critical redis rce vulnerability enable attackers to gain co](./2026-06-08/critical-redis-rce-vulnerability-enable-attackers-to-gain-co.md)
 - [over 20 000 instagram accounts stolen in meta ai support hac](./2026-06-08/over-20-000-instagram-accounts-stolen-in-meta-ai-support-hac.md)
+- [the hades campaign graph ml pypi packages deploy cross platf](./2026-06-08/the-hades-campaign-graph-ml-pypi-packages-deploy-cross-platf.md)
+- [unc3753 used vishing and physical intrusions in u s data the](./2026-06-08/unc3753-used-vishing-and-physical-intrusions-in-u-s-data-the.md)
+- [unifi os server critical rce chain allows root access withou](./2026-06-08/unifi-os-server-critical-rce-chain-allows-root-access-withou.md)
 
 ## 2026-06-07
 - [c0xmo botnet spreads via dd wrt router flaw kills rival malw](./2026-06-07/c0xmo-botnet-spreads-via-dd-wrt-router-flaw-kills-rival-malw.md)
@@ -23,7 +27,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisco catalyst sd wan manager cve 2026 20245 flaw actively e](./2026-06-06/cisco-catalyst-sd-wan-manager-cve-2026-20245-flaw-actively-e.md)
 - [critical everest forms pro flaw exploited to take over wordp](./2026-06-06/critical-everest-forms-pro-flaw-exploited-to-take-over-wordp.md)
 - [free apps are quietly turning smart tvs into web scraping pr](./2026-06-06/free-apps-are-quietly-turning-smart-tvs-into-web-scraping-pr.md)
-- [free apps on samsung and lg smart tvs secretly turning your ](./2026-06-06/free-apps-on-samsung-and-lg-smart-tvs-secretly-turning-your-.md)
 - [miasma worm hits 73 microsoft github repositories in major s](./2026-06-06/miasma-worm-hits-73-microsoft-github-repositories-in-major-s.md)
 - [miasma worm hits microsoft again azure functions action and ](./2026-06-06/miasma-worm-hits-microsoft-again-azure-functions-action-and-.md)
 - [microsoft s durabletask pypi package compromised in supply c](./2026-06-06/microsoft-s-durabletask-pypi-package-compromised-in-supply-c.md)
@@ -115,7 +118,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [pan os globalprotect authentication bypass cve 2026 0257 und](./2026-05-30/pan-os-globalprotect-authentication-bypass-cve-2026-0257-und.md)
 
 ## 2026-05-29
-- [chatgphish vulnerability turns chatgpt web summaries into a ](./2026-05-29/chatgphish-vulnerability-turns-chatgpt-web-summaries-into-a-.md)
 - [cisa kev cve 2026 0257 palo alto networks pan os authenticat](./2026-05-29/cisa-kev-cve-2026-0257-palo-alto-networks-pan-os-authenticat.md)
 - [fix sca issues at scale in your terminal with snyk remediati](./2026-05-29/fix-sca-issues-at-scale-in-your-terminal-with-snyk-remediati.md)
 - [ghsa critical cve 2026 47131 vm2 has a sandbox escape issue](./2026-05-29/ghsa-critical-cve-2026-47131-vm2-has-a-sandbox-escape-issue.md)

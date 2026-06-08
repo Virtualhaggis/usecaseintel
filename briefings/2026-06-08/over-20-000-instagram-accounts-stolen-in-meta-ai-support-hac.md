@@ -11,12 +11,8 @@ By Sergiu Gatlan
 June 8, 2026
 02:00 AM
 0 
-
-
 Meta has revealed that over 20,000 Instagram users had their accounts hijacked in a recent incident where attackers used Meta's AI-powered support system to reset passwords.
-
-
-As BleepingComputer reported one week ago, the threat actors exploited a flaw in the company's High Touch Support (HTS) tool , an AI-assisted support system that helps users regain access after being locked out o…
+As BleepingComputer reported one week ago, the threat actors exploited a flaw in the company's High Touch Support (HTS) tool , an AI-assisted support system that helps users regain access after being locked out of their …
 
 ## Indicators of Compromise (high-fidelity only)
 
