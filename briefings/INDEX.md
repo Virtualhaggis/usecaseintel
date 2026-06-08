@@ -1,12 +1,15 @@
 # Briefings — full archive
 
-_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1252 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-06-08
+- [over 20 000 instagram accounts stolen in meta ai support hac](./2026-06-08/over-20-000-instagram-accounts-stolen-in-meta-ai-support-hac.md)
 
 ## 2026-06-07
 - [c0xmo botnet spreads via dd wrt router flaw kills rival malw](./2026-06-07/c0xmo-botnet-spreads-via-dd-wrt-router-flaw-kills-rival-malw.md)
@@ -49,7 +52,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisco patches cve 2026 20230 in unified cm as exploit code g](./2026-06-04/cisco-patches-cve-2026-20230-in-unified-cm-as-exploit-code-g.md)
 - [claude code github action flaw let one malicious issue hijac](./2026-06-04/claude-code-github-action-flaw-let-one-malicious-issue-hijac.md)
 - [credit card theft campaign abuses stripe to host stolen paym](./2026-06-04/credit-card-theft-campaign-abuses-stripe-to-host-stolen-paym.md)
-- [dentaquest data breach exposed info of 2 6 million accounts](./2026-06-04/dentaquest-data-breach-exposed-info-of-2-6-million-accounts.md)
 - [fake sites mimicking open source tools rank high on google t](./2026-06-04/fake-sites-mimicking-open-source-tools-rank-high-on-google-t.md)
 - [fluttershell backdoor spreads to macos via malicious google ](./2026-06-04/fluttershell-backdoor-spreads-to-macos-via-malicious-google-.md)
 - [ghsa critical cve 2026 47708 mcp for stata command injection](./2026-06-04/ghsa-critical-cve-2026-47708-mcp-for-stata-command-injection.md)
@@ -113,7 +115,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [pan os globalprotect authentication bypass cve 2026 0257 und](./2026-05-30/pan-os-globalprotect-authentication-bypass-cve-2026-0257-und.md)
 
 ## 2026-05-29
-- [attackers use llm agent for post exploitation after marimo c](./2026-05-29/attackers-use-llm-agent-for-post-exploitation-after-marimo-c.md)
 - [chatgphish vulnerability turns chatgpt web summaries into a ](./2026-05-29/chatgphish-vulnerability-turns-chatgpt-web-summaries-into-a-.md)
 - [cisa kev cve 2026 0257 palo alto networks pan os authenticat](./2026-05-29/cisa-kev-cve-2026-0257-palo-alto-networks-pan-os-authenticat.md)
 - [fix sca issues at scale in your terminal with snyk remediati](./2026-05-29/fix-sca-issues-at-scale-in-your-terminal-with-snyk-remediati.md)

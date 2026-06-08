@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mini Shai-Hulud npm worm exfiltration to t.m-kosche.com OpenTelemetry endpoint
 
-`UC_47_3` · phase: **actions** · confidence: **High**
+`UC_49_3` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ union isfuzzy=true
 
 ### [LLM] Bun runtime spawned by npm/node preinstall hook (TeamPCP setup.mjs loader)
 
-`UC_47_4` · phase: **install** · confidence: **High**
+`UC_49_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceProcessEvents
 
 ### [LLM] Mini Shai-Hulud payload SHA256 on disk (7c24b4d9...e627144e8b)
 
-`UC_47_5` · phase: **install** · confidence: **High**
+`UC_49_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ union isfuzzy=true
 
 ### [LLM] Cloud/SSH/npm credential file access by Node or Bun during npm install
 
-`UC_47_6` · phase: **actions** · confidence: **Medium**
+`UC_49_6` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

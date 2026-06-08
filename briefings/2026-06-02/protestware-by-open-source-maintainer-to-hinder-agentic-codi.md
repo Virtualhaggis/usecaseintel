@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] jqwik-engine 1.10.0 malicious JAR on disk (SHA256 / filename match)
 
-`UC_97_2` · phase: **delivery** · confidence: **High**
+`UC_98_2` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ DeviceFileEvents
 
 ### [LLM] AI coding agent bulk-deleting JUnit test files after jqwik resolution
 
-`UC_97_3` · phase: **actions** · confidence: **High**
+`UC_98_3` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceFileEvents
 
 ### [LLM] Maven/Gradle build log file containing jqwik prompt-injection directive
 
-`UC_97_4` · phase: **install** · confidence: **High**
+`UC_98_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

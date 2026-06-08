@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Weedhack DonutDupe.jar launched via java.exe (Minecraft MaaS first stage)
 
-`UC_78_11` · phase: **delivery** · confidence: **High**
+`UC_79_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceProcessEvents
 
 ### [LLM] Weedhack C2 dashboard contact: outbound to weedhack[.]to
 
-`UC_78_12` · phase: **c2** · confidence: **High**
+`UC_79_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ union
 
 ### [LLM] Weedhack EtherHiding: java.exe contacts public Ethereum RPC endpoints
 
-`UC_78_13` · phase: **c2** · confidence: **Medium**
+`UC_79_13` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceNetworkEvents
 
 ### [LLM] Weedhack multi-stage JAR drops: Elevator/SecurityManager/Component.jar
 
-`UC_78_14` · phase: **install** · confidence: **High**
+`UC_79_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceFileEvents
 
 ### [LLM] CountLoader: EXE → PowerShell → mshta.exe obfuscated JS chain
 
-`UC_78_15` · phase: **delivery** · confidence: **High**
+`UC_79_15` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +159,7 @@ DeviceProcessEvents
 
 ### [LLM] CountLoader USB propagation: scripts/EXEs written to removable media
 
-`UC_78_16` · phase: **actions** · confidence: **Medium**
+`UC_79_16` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -181,7 +181,7 @@ DeviceFileEvents
 
 ### [LLM] Pirated-miner DLL side-load via HLS Installer.874.exe
 
-`UC_78_17` · phase: **install** · confidence: **High**
+`UC_79_17` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -207,7 +207,7 @@ HlsProcs
 
 ### [LLM] Pirated-miner: Defender exclusion add + MRT.exe termination + sleep disable
 
-`UC_78_18` · phase: **install** · confidence: **High**
+`UC_79_18` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -560,7 +560,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Weedhack Attacks Minecraft Users, CountLoader Hits 86K, Miners Spread via Pirate
 
-`UC_78_10` · phase: **exploit** · confidence: **High**
+`UC_79_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

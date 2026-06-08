@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Aspose.Email/Aspose.Pst mailbox library loaded by non-Outlook process
 
-`UC_61_9` · phase: **install** · confidence: **High**
+`UC_62_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceImageLoadEvents
 
 ### [LLM] PST exported by non-Outlook binary with password and date-range CLI flags
 
-`UC_61_10` · phase: **actions** · confidence: **High**
+`UC_62_10` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceFileEvents
 
 ### [LLM] Scheduled task masquerading as Adobe/Lenovo/OneDrive system service
 
-`UC_61_11` · phase: **install** · confidence: **Medium**
+`UC_62_11` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### [LLM] FRPC (Fast Reverse Proxy client) execution by config-file argument
 
-`UC_61_12` · phase: **c2** · confidence: **Medium**
+`UC_62_12` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceProcessEvents
 
 ### [LLM] curl/non-browser binary uploading to Dropbox or OneDrive personal API endpoints
 
-`UC_61_13` · phase: **actions** · confidence: **High**
+`UC_62_13` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -431,7 +431,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Spied on a Stock Exchange Executive's Outlook Mailbox for Five Months
 
-`UC_61_8` · phase: **exploit** · confidence: **High**
+`UC_62_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
