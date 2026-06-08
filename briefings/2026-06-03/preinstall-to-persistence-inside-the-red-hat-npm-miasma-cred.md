@@ -69,7 +69,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Bun runtime spawned via node→shell→bun chain from npm install (Miasma dropper)
 
-`UC_90_12` · phase: **install** · confidence: **High**
+`UC_89_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### [LLM] GitHub Actions Runner.Worker process-memory secret scraping (Miasma payload)
 
-`UC_90_13` · phase: **actions** · confidence: **High**
+`UC_89_13` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceProcessEvents
 
 ### [LLM] Cloud IMDS credential harvesting from node/bun process on CI runner
 
-`UC_90_14` · phase: **actions** · confidence: **High**
+`UC_89_14` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceNetworkEvents
 
 ### [LLM] Passwordless sudo rule dropped into /etc/sudoers.d (Miasma privilege escalation)
 
-`UC_90_15` · phase: **exploit** · confidence: **High**
+`UC_89_15` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,7 +163,7 @@ union
 
 ### [LLM] Security vendor domain blackhole written to /etc/hosts from non-admin process
 
-`UC_90_16` · phase: **exploit** · confidence: **High**
+`UC_89_16` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -192,7 +192,7 @@ union
 
 ### [LLM] Public GitHub repo creation matching Miasma 'adjective-creature-N' exfil pattern
 
-`UC_90_17` · phase: **actions** · confidence: **High**
+`UC_89_17` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -218,7 +218,7 @@ CloudAppEvents
 
 ### [LLM] Worm-injected .github/setup.js commit with 'chore: update dependencies [skip ci]' message
 
-`UC_90_18` · phase: **actions** · confidence: **High**
+`UC_89_18` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -242,7 +242,7 @@ CloudAppEvents
 
 ### [LLM] Destructive 'rm -rf ~' or Miasma honeytoken tripwire from node/bun process tree
 
-`UC_90_19` · phase: **actions** · confidence: **High**
+`UC_89_19` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -609,7 +609,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Preinstall to persistence: Inside the Red Hat npm Miasma credential-stealing cam
 
-`UC_90_11` · phase: **exploit** · confidence: **High**
+`UC_89_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

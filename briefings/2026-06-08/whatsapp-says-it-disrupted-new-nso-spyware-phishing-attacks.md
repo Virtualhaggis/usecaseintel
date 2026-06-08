@@ -11,15 +11,9 @@ By Bill Toulas
 June 8, 2026
 02:40 PM
 0 
-
-
 WhatsApp has detected and stopped spear-phishing campaigns allegedly conducted by the NSO Group after investigating user reports of social engineering attacks.
-
-
 The NSO Group is an Israeli commercial spyware vendor known for its advanced “Pegasus” tool that has been deployed against politicians, activists, journalists, academics, and other “high-interest” individuals.
-
-
-The firm has bee…
+The firm has been on the U.S…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -49,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] NSO/Pegasus WhatsApp phishing redirector domains (ikhwancast/ghazacast/fr24cast)
 
-`UC_1_5` · phase: **delivery** · confidence: **High**
+`UC_4_5` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

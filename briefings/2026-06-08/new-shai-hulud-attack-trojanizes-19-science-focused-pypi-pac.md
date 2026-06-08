@@ -1,8 +1,8 @@
-# [HIGH] The Hades Campaign: Graph ML PyPI Packages Deploy Cross-Platform Memory Scrapers, AI Analyst Misdirection, and a Wiper Deterrent
+# [HIGH] New Shai-Hulud attack trojanizes 19 science-focused PyPI packages
 
-**Source:** StepSecurity
+**Source:** BleepingComputer, StepSecurity
 **Published:** 2026-06-08
-**Article:** https://www.stepsecurity.io/blog/the-hades-campaign-pypi-packages
+**Article:** https://www.bleepingcomputer.com/news/security/new-shai-hulud-attack-trojanizes-19-science-focused-pypi-packages/
 
 ## Threat Profile
 
@@ -13,7 +13,9 @@ Summary On June 8, 2026, version 0.8.101 of the popular graph machine learning p
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **SHA256:** `c539766062555d47716f8432e73adbe3a0c0c954a0b6c4005017a668975e275c`
+- **SHA256:** `dc48b09b2a5954f7ff79ab8a2fd80202bd3b59c08c7cdbc6025aa923cb4c0efe`
+- **SHA256:** `e1342a80d4b5e83d2c7c22e1e0aaa95f2d88e3dbf0d853a4994b180c93a4b17d`
 
 ## MITRE ATT&CK Techniques
 
@@ -30,16 +32,20 @@ Summary On June 8, 2026, version 0.8.101 of the popular graph machine learning p
 - **T1195.002** — Compromise Software Supply Chain
 - **T1543.001** — Persistence (article-specific)
 - **T1059.006** — Command and Scripting Interpreter: Python
+- **T1105** — Ingress Tool Transfer
+- **T1218** — System Binary Proxy Execution
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1140** — Deobfuscate/Decode Files or Information
-- **T1543.002** — Create or Modify System Process: Systemd Service
-- **T1546** — Event Triggered Execution
+- **T1036.005** — Match Legitimate Name or Location
+- **T1003** — OS Credential Dumping
+- **T1552.001** — Unsecured Credentials: Credentials in Files
+- **T1057** — Process Discovery
+- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1102.002** — Web Service: Bidirectional Communication
 - **T1567.001** — Exfiltration to Code Repository
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1003** — OS Credential Dumping
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1057** — Process Discovery
+- **T1543** — Create or Modify System Process
+- **T1546.016** — Event Triggered Execution: Installer Packages
+- **T1053.003** — Scheduled Task/Job: Cron
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
 
 ## Kill chain phases observed
 
@@ -47,138 +53,151 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Hades Campaign PyPI install of compromised graph-ML / bio package versions
+### [LLM] Hades Campaign: install of trojanized scientific PyPI packages (ensmallen 0.8.101 et al.)
 
-`UC_2_8` · phase: **delivery** · confidence: **High**
+`UC_0_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("pip","pip.exe","pip3","pip3.exe","uv","uv.exe","poetry","poetry.exe")) AND (Processes.process IN ("*ensmallen==0.8.101*","*ensmallen-0.8.101*","*embiggen==0.11.97*","*embiggen-0.11.97*","*gpsea==0.9.14*","*gpsea-0.9.14*","*pyphetools==0.9.120*","*pyphetools-0.9.120*","*mflux-streamlit==0.0.3*","*mflux-streamlit==0.0.4*","*mflux_streamlit-0.0.3*","*mflux_streamlit-0.0.4*","*nhmpy==2.4.7*","*nhmpy-2.4.7*","*ppkt2synergy==0.1.1*","*ppkt2synergy-0.1.1*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("pip.exe","pip3.exe","pip","pip3","poetry.exe","poetry","uv.exe","uv","python.exe","python3.exe","python","python3")) (Processes.process="*ensmallen==0.8.101*" OR Processes.process="*ensmallen 0.8.101*" OR Processes.process="*embiggen==0.11.97*" OR Processes.process="*embiggen 0.11.97*" OR Processes.process="*gpsea==0.9.14*" OR Processes.process="*gpsea 0.9.14*" OR Processes.process="*pyphetools==0.9.120*" OR Processes.process="*pyphetools 0.9.120*" OR Processes.process="*mflux-streamlit==0.0.3*" OR Processes.process="*mflux-streamlit==0.0.4*" OR Processes.process="*nhmpy==2.4.7*" OR Processes.process="*ppkt2synergy==0.1.1*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [ | tstats `summariesonly` count from datamodel=Web.Web where (Web.url="*files.pythonhosted.org*ensmallen-0.8.101*" OR Web.url="*files.pythonhosted.org*embiggen-0.11.97*" OR Web.url="*files.pythonhosted.org*gpsea-0.9.14*" OR Web.url="*files.pythonhosted.org*pyphetools-0.9.120*" OR Web.url="*mflux_streamlit-0.0.3*" OR Web.url="*mflux_streamlit-0.0.4*" OR Web.url="*nhmpy-2.4.7*" OR Web.url="*ppkt2synergy-0.1.1*") by Web.src Web.url Web.user | `drop_dm_object_name(Web)` ] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let HadesPkgVersions = dynamic(["ensmallen==0.8.101","ensmallen-0.8.101","embiggen==0.11.97","embiggen-0.11.97","gpsea==0.9.14","gpsea-0.9.14","pyphetools==0.9.120","pyphetools-0.9.120","mflux-streamlit==0.0.3","mflux-streamlit==0.0.4","mflux_streamlit-0.0.3","mflux_streamlit-0.0.4","nhmpy==2.4.7","nhmpy-2.4.7","ppkt2synergy==0.1.1","ppkt2synergy-0.1.1"]);
-let HadesDistInfo = dynamic(["ensmallen-0.8.101.dist-info","embiggen-0.11.97.dist-info","gpsea-0.9.14.dist-info","pyphetools-0.9.120.dist-info","mflux_streamlit-0.0.3.dist-info","mflux_streamlit-0.0.4.dist-info","nhmpy-2.4.7.dist-info","ppkt2synergy-0.1.1.dist-info"]);
-union
-(DeviceProcessEvents
- | where Timestamp > ago(7d)
- | where FileName in~ ("pip","pip.exe","pip3","pip3.exe","uv","uv.exe","poetry","poetry.exe") or InitiatingProcessFileName in~ ("pip","pip.exe","pip3","pip3.exe")
- | where ProcessCommandLine has_any (HadesPkgVersions)
- | project Timestamp, DeviceName, AccountName, Surface="process", FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine),
-(DeviceFileEvents
- | where Timestamp > ago(7d)
- | where ActionType == "FileCreated"
- | where FolderPath has_any (HadesDistInfo) or FileName has_any (HadesPkgVersions)
- | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Surface="file", FileName, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine="", FolderPath)
+let HadesPkgs = dynamic(["ensmallen==0.8.101","ensmallen 0.8.101","embiggen==0.11.97","embiggen 0.11.97","gpsea==0.9.14","gpsea 0.9.14","pyphetools==0.9.120","pyphetools 0.9.120","mflux-streamlit==0.0.3","mflux-streamlit==0.0.4","nhmpy==2.4.7","ppkt2synergy==0.1.1"]);
+let HadesArtifacts = dynamic(["ensmallen-0.8.101","embiggen-0.11.97","gpsea-0.9.14","pyphetools-0.9.120","mflux_streamlit-0.0.3","mflux_streamlit-0.0.4","nhmpy-2.4.7","ppkt2synergy-0.1.1"]);
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("pip.exe","pip3.exe","pip","pip3","poetry.exe","poetry","uv.exe","uv","python.exe","python3.exe","python","python3") or FileName in~ ("pip.exe","pip3.exe","poetry.exe","uv.exe")
+| where ProcessCommandLine has_any (HadesPkgs)
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| union (DeviceNetworkEvents
+  | where Timestamp > ago(30d)
+  | where RemoteUrl has "pythonhosted.org" or RemoteUrl has "pypi.org"
+  | where RemoteUrl has_any (HadesArtifacts)
+  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName=InitiatingProcessFileName, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl)
 | order by Timestamp desc
 ```
 
-### [LLM] Hades Campaign python import hook spawning bun runtime from /tmp
+### [LLM] Python process downloading Bun runtime v1.3.14 ZIP from oven-sh GitHub release
 
-`UC_2_9` · phase: **install** · confidence: **High**
+`UC_0_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("python","python.exe","python3","python3.exe","python3.11","python3.12","python3.13") AND (Processes.process_name IN ("bun","bun.exe") OR Processes.process_path IN ("*/tmp/b/bun","*\\Temp\\b\\bun.exe") OR Processes.process IN ("*\\tmp\\b\\bun*","*/tmp/b/bun*","*_index.js*","*bun*run*_index.js*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url IN ("*github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-x64.zip*","*github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-linux-aarch64.zip*","*github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-darwin-x64.zip*","*github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-darwin-aarch64.zip*","*github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-windows-x64.zip*","*github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-windows-aarch64.zip*") by Web.src Web.dest Web.url Web.user Web.http_user_agent | `drop_dm_object_name(Web)` | append [ | tstats `summariesonly` count from datamodel=Endpoint.Filesystem where (Filesystem.file_name="b.zip" OR Filesystem.file_name="bun.zip") (Filesystem.file_path="*\\Temp\\*" OR Filesystem.file_path="/tmp/*") Filesystem.process_name IN ("python.exe","python3.exe","python","python3","pythonw.exe") by Filesystem.dest Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` ] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "github.com/oven-sh/bun/releases/download/bun-v1.3.14"
+| where RemoteUrl has_any ("bun-linux-x64.zip","bun-linux-aarch64.zip","bun-darwin-x64.zip","bun-darwin-aarch64.zip","bun-windows-x64.zip","bun-windows-aarch64.zip")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteUrl, RemoteIP
+| union (DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FileName in~ ("b.zip","bun.zip") and (FolderPath has @"\Temp\" or FolderPath startswith "/tmp/" or FolderPath startswith "/var/folders/")
+    | where InitiatingProcessFileName has_any ("python","pythonw")
+    | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteUrl=FolderPath, RemoteIP="")
+| order by Timestamp desc
+```
+
+### [LLM] Bun runtime executed from /tmp/b or %TEMP%\b with Python parent (Hades Campaign loader)
+
+`UC_0_11` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="bun" OR Processes.process_name="bun.exe") (Processes.process_path="*\\Temp\\b\\bun*" OR Processes.process_path="/tmp/b/bun*" OR Processes.process_path="*/var/folders/*/b/bun*") Processes.parent_process_name IN ("python.exe","python3.exe","python","python3","pythonw.exe") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | search process="*_index.js*" OR process="*run*" | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName has "python" or InitiatingProcessParentFileName has "python"
-| where (FileName =~ "bun" or FileName =~ "bun.exe")
-      or FolderPath has_any (@"/tmp/b/", @"\Temp\b\", @"\AppData\Local\Temp\b\")
-      or ProcessCommandLine has_any ("/tmp/b/bun", @"\Temp\b\bun", "_index.js")
-| extend BunPath = FolderPath, BunCmd = ProcessCommandLine
-| project Timestamp, DeviceName, AccountName, BunPath, BunCmd,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath,
-          InitiatingProcessParentFileName, SHA256
+| where Timestamp > ago(30d)
+| where FileName in~ ("bun","bun.exe")
+| where (FolderPath has @"\Temp\b\" or FolderPath startswith "/tmp/b/" or FolderPath matches regex @"^/var/folders/.+/b/bun$")
+| where InitiatingProcessFileName has_any ("python","pythonw")
+| where ProcessCommandLine has "run" and ProcessCommandLine has "_index.js"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
-### [LLM] Hades Campaign persistence artifacts (systemd units + updater.py + lock/state files)
+### [LLM] Process reading /proc/<pid>/mem or accessing Runner.Worker for credential scraping
 
-`UC_2_10` · phase: **install** · confidence: **High**
+`UC_0_12` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("*/.config/systemd/user/update-monitor.service","*/.config/systemd/user/gh-token-monitor.service","*/.local/share/updater/update.py","*/.local/share/updater/updater.py","/tmp/.bun_ran","/tmp/tmp.0144018410.lock","/var/tmp/.gh_update_state") OR Filesystem.file_name IN ("update-monitor.service","gh-token-monitor.service","tmp.0144018410.lock",".bun_ran",".gh_update_state")) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/proc/*/mem" OR Filesystem.file_path="/proc/*/maps") Filesystem.process_name IN ("python","python3","pythonw","bun","node") by Filesystem.dest Filesystem.process_name Filesystem.process Filesystem.file_path Filesystem.user | `drop_dm_object_name(Filesystem)` | append [ | tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name IN ("python","python3","pythonw","powershell.exe","pwsh.exe") (Processes.process="*task_for_pid*" OR Processes.process="*mach_vm_read*" OR Processes.process="*ReadProcessMemory*" OR Processes.process="*VirtualQueryEx*" OR Processes.process="*Runner.Worker*") by Processes.dest Processes.process_name Processes.process Processes.parent_process_name Processes.user | `drop_dm_object_name(Processes)` ] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let HadesFiles = dynamic(["update-monitor.service","gh-token-monitor.service",".bun_ran",".gh_update_state","tmp.0144018410.lock"]);
-let HadesPaths = dynamic(["/.config/systemd/user/update-monitor.service","/.config/systemd/user/gh-token-monitor.service","/.local/share/updater/update.py","/.local/share/updater/updater.py","/tmp/.bun_ran","/tmp/tmp.0144018410.lock","/var/tmp/.gh_update_state"]);
+let runners = dynamic(["Runner.Worker.exe","Runner.Worker"]);
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileRenamed","FileModified")
-| where FileName in (HadesFiles)
-      or FolderPath has_any (HadesPaths)
-      or (FolderPath has "/.local/share/updater" and FileName =~ "update.py")
-      or (FolderPath has "/.config/systemd/user" and FileName has_any ("update-monitor","gh-token-monitor"))
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256
-| order by Timestamp desc
-```
-
-### [LLM] Hades Campaign GitHub commit-search C2 with firedalazer / DontRevokeOrItGoesBoom markers
-
-`UC_2_11` · phase: **c2** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-(`cim_Web_indexes` (url="*api.github.com/search/commits*" OR url="*api.github.com/repos*/commits*") (url="*firedalazer*" OR url="*DontRevokeOrItGoesBoom*" OR url="*TheBeautifulSnadsOfTime*" OR src_content="*firedalazer*" OR src_content="*DontRevokeOrItGoesBoom*" OR src_content="*TheBeautifulSnadsOfTime*")) | stats count min(_time) as firstTime max(_time) as lastTime values(url) as urls values(http_method) as methods by src user dest user_agent | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [| tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.process IN ("*firedalazer*","*DontRevokeOrItGoesBoom*","*TheBeautifulSnadsOfTime*") by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)`]
-```
-
-**Defender KQL:**
-```kql
-let HadesMarkers = dynamic(["firedalazer","DontRevokeOrItGoesBoom","TheBeautifulSnadsOfTime"]);
-union
-(DeviceNetworkEvents
- | where Timestamp > ago(7d)
- | where RemoteUrl has "api.github.com"
- | where RemoteUrl has_any (HadesMarkers) or RemoteUrl has "search/commits"
- | where RemoteUrl has_any (HadesMarkers)
- | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Surface="network", RemoteIP, RemoteUrl,
-           InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName),
-(DeviceProcessEvents
- | where Timestamp > ago(7d)
- | where ProcessCommandLine has_any (HadesMarkers)
-       or InitiatingProcessCommandLine has_any (HadesMarkers)
- | project Timestamp, DeviceName, AccountName, Surface="process", RemoteIP="", RemoteUrl="",
-           InitiatingProcessFileName, InitiatingProcessCommandLine=strcat(InitiatingProcessCommandLine," | child=",ProcessCommandLine), InitiatingProcessParentFileName)
-| order by Timestamp desc
-```
-
-### [LLM] Hades Campaign cross-platform memory scrape of GitHub Actions Runner.Worker
-
-`UC_2_12` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("python","python.exe","python3","python3.exe","powershell.exe","pwsh.exe","pwsh","bun","bun.exe") AND (Processes.process="*Runner.Worker*" OR Processes.process="*task_for_pid*" OR Processes.process="*mach_vm_read*" OR Processes.process="*ReadProcessMemory*" OR Processes.process="*VirtualQueryEx*" OR Processes.process="*/proc/*/mem*" OR Processes.process="*/proc/*/maps*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let MemPrimitives = dynamic(["Runner.Worker","task_for_pid","mach_vm_read_overwrite","vm_region_basic_info_64","ReadProcessMemory","VirtualQueryEx","PROCESS_VM_READ","/proc/","process_vm_readv"]);
-let ScraperParents = dynamic(["python","python.exe","python3","python3.exe","python3.11","python3.12","powershell.exe","pwsh.exe","pwsh","bun","bun.exe"]);
-let RunnerHosts =
-    DeviceProcessEvents
+| where (FolderPath startswith "/proc/" and FileName in ("mem","maps"))
+| where InitiatingProcessFileName has_any ("python","bun","node")
+| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, ActionType
+| union (DeviceProcessEvents
     | where Timestamp > ago(7d)
-    | where FileName =~ "Runner.Worker" or FileName =~ "Runner.Worker.exe" or ProcessCommandLine has "Runner.Worker"
-    | distinct DeviceId;
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where DeviceId in (RunnerHosts)
-| where InitiatingProcessFileName has_any (ScraperParents) or FileName has_any (ScraperParents)
-| where ProcessCommandLine has_any (MemPrimitives) or InitiatingProcessCommandLine has_any (MemPrimitives)
-| where not(FileName =~ "Runner.Worker" or FileName =~ "Runner.Worker.exe")
-| project Timestamp, DeviceName, AccountName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          FileName, ProcessCommandLine, FolderPath, SHA256
+    | where InitiatingProcessParentFileName in~ (runners) or InitiatingProcessFileName in~ (runners)
+    | where FileName in~ ("python.exe","python3.exe","bun.exe","powershell.exe","pwsh.exe")
+    | where ProcessCommandLine has_any ("task_for_pid","mach_vm_read","ReadProcessMemory","VirtualQueryEx","OpenProcess","ctypes.CDLL","/proc/")
+    | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName=InitiatingProcessParentFileName, InitiatingProcessCommandLine=InitiatingProcessCommandLine, FolderPath, FileName, ActionType)
+| order by Timestamp desc
+```
+
+### [LLM] Hades GitHub C2 dead-drop: api.github.com commit search for magic keywords
+
+`UC_0_13` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*api.github.com*" OR Web.dest="api.github.com") (Web.url="*DontRevokeOrItGoesBoom*" OR Web.url="*TheBeautifulSnadsOfTime*" OR Web.url="*firedalazer*") by Web.src Web.url Web.user Web.http_user_agent | `drop_dm_object_name(Web)` | append [ | tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process="*DontRevokeOrItGoesBoom*" OR Processes.process="*TheBeautifulSnadsOfTime*" OR Processes.process="*firedalazer*" OR Processes.process="*search/commits*api.github.com*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` ] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let HadesKeywords = dynamic(["DontRevokeOrItGoesBoom","TheBeautifulSnadsOfTime","firedalazer"]);
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where RemoteUrl has "api.github.com"
+| where RemoteUrl has_any (HadesKeywords)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteUrl, RemoteIP
+| union (DeviceProcessEvents
+    | where Timestamp > ago(14d)
+    | where ProcessCommandLine has_any (HadesKeywords)
+       or InitiatingProcessCommandLine has_any (HadesKeywords)
+    | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteUrl=ProcessCommandLine, RemoteIP="")
+| order by Timestamp desc
+```
+
+### [LLM] Hades Campaign updater.py persistence dropper written by Bun or Python child
+
+`UC_0_14` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="updater.py" Filesystem.process_name IN ("bun","bun.exe","python","python3","pythonw.exe","python.exe","node","node.exe") by Filesystem.dest Filesystem.process_name Filesystem.file_path Filesystem.user | `drop_dm_object_name(Filesystem)` | append [ | tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process_name="sc.exe" OR Processes.process_name="schtasks.exe" OR Processes.process_name="systemctl" OR Processes.process_name="launchctl" OR Processes.process_name="crontab") Processes.process="*updater.py*" by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` ] | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "updater.py"
+| where InitiatingProcessFileName has_any ("bun","python","pythonw","node")
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, FolderPath, FileName, SHA256, ActionType
+| union (DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where FileName in~ ("sc.exe","schtasks.exe","systemctl","launchctl","crontab","systemd-run")
+    | where ProcessCommandLine has "updater.py"
+    | project Timestamp, DeviceName, InitiatingProcessAccountName=AccountName, InitiatingProcessFileName=FileName, InitiatingProcessCommandLine=ProcessCommandLine, InitiatingProcessParentFileName, FolderPath, FileName, SHA256, ActionType="PersistenceRegister")
 | order by Timestamp desc
 ```
 
@@ -435,13 +454,13 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — The Hades Campaign: Graph ML PyPI Packages Deploy Cross-Platform Memory Scrapers
+### Article-specific behavioural hunt — New Shai-Hulud attack trojanizes 19 science-focused PyPI packages
 
-`UC_2_7` · phase: **exploit** · confidence: **High**
+`UC_0_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — The Hades Campaign: Graph ML PyPI Packages Deploy Cross-Platform Memory Scrapers ```
+``` Article-specific bespoke detection — New Shai-Hulud attack trojanizes 19 science-focused PyPI packages ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN ("__init__.py","_index.js","node.js","kernel32.dll","updater.py","ai_setup.sh","gh-token-monitor.sh","token-monitor.sh"))
@@ -462,7 +481,7 @@ DeviceProcessEvents
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — The Hades Campaign: Graph ML PyPI Packages Deploy Cross-Platform Memory Scrapers
+// Article-specific bespoke detection — New Shai-Hulud attack trojanizes 19 science-focused PyPI packages
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -484,7 +503,14 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `c539766062555d47716f8432e73adbe3a0c0c954a0b6c4005017a668975e275c`, `dc48b09b2a5954f7ff79ab8a2fd80202bd3b59c08c7cdbc6025aa923cb4c0efe`, `e1342a80d4b5e83d2c7c22e1e0aaa95f2d88e3dbf0d853a4994b180c93a4b17d`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 13 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 15 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

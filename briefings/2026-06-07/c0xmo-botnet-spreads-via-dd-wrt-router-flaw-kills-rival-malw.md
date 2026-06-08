@@ -70,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] C0XMO botnet C2 beacon to hardcoded Fortinet-attributed IPs
 
-`UC_28_7` · phase: **c2** · confidence: **High**
+`UC_29_7` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceNetworkEvents
 
 ### [LLM] C0XMO Gafgyt persistence binary drop to hidden /tmp/.sys paths
 
-`UC_28_8` · phase: **install** · confidence: **High**
+`UC_29_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceFileEvents
 
 ### [LLM] C0XMO cron persistence relaunching binary every 15 minutes
 
-`UC_28_9` · phase: **install** · confidence: **High**
+`UC_29_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceFileEvents
 
 ### [LLM] C0XMO Python scanner module install (paramiko + beautifulsoup4)
 
-`UC_28_10` · phase: **install** · confidence: **Medium**
+`UC_29_10` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +156,7 @@ DeviceProcessEvents
 
 ### [LLM] C0XMO rival botnet and red-team process termination spree
 
-`UC_28_11` · phase: **actions** · confidence: **Medium**
+`UC_29_11` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -265,7 +265,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — C0XMO botnet spreads via DD-WRT router flaw, kills rival malware
 
-`UC_28_6` · phase: **install** · confidence: **High**
+`UC_29_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

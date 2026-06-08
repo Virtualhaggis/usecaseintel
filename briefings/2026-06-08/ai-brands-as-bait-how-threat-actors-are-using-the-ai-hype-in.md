@@ -400,7 +400,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — AI brands as bait: How threat actors are using the AI hype in social engineering
 
-`UC_8_11` · phase: **exploit** · confidence: **High**
+`UC_9_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

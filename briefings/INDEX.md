@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1256 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -21,8 +21,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new china linked threat cluster op 512 targets iis servers w](./2026-06-08/new-china-linked-threat-cluster-op-512-targets-iis-servers-w.md)
 - [new lucid stealer targets 18 browsers crypto wallets and dis](./2026-06-08/new-lucid-stealer-targets-18-browsers-crypto-wallets-and-dis.md)
 - [new pink hacking group attacking enterprise users to steal c](./2026-06-08/new-pink-hacking-group-attacking-enterprise-users-to-steal-c.md)
+- [new shai hulud attack trojanizes 19 science focused pypi pac](./2026-06-08/new-shai-hulud-attack-trojanizes-19-science-focused-pypi-pac.md)
+- [one character linux kernel flaw enables local root access ex](./2026-06-08/one-character-linux-kernel-flaw-enables-local-root-access-ex.md)
 - [over 20 000 instagram accounts stolen in meta ai support hac](./2026-06-08/over-20-000-instagram-accounts-stolen-in-meta-ai-support-hac.md)
-- [the hades campaign graph ml pypi packages deploy cross platf](./2026-06-08/the-hades-campaign-graph-ml-pypi-packages-deploy-cross-platf.md)
 - [unc3753 attacking us law firms using vishing and rmm tools t](./2026-06-08/unc3753-attacking-us-law-firms-using-vishing-and-rmm-tools-t.md)
 - [unc3753 used vishing and physical intrusions in u s data the](./2026-06-08/unc3753-used-vishing-and-physical-intrusions-in-u-s-data-the.md)
 - [verdantbamboo deploys bsd variant of brickstorm on linux app](./2026-06-08/verdantbamboo-deploys-bsd-variant-of-brickstorm-on-linux-app.md)
@@ -46,7 +47,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-05
 - [android spyware asin targets arabic users via fake news pdf ](./2026-06-05/android-spyware-asin-targets-arabic-users-via-fake-news-pdf-.md)
-- [chinese apt deploys new malware to keep access to hacked net](./2026-06-05/chinese-apt-deploys-new-malware-to-keep-access-to-hacked-net.md)
 - [cisa hackers now exploit solarwinds serv u flaw to crash ser](./2026-06-05/cisa-hackers-now-exploit-solarwinds-serv-u-flaw-to-crash-ser.md)
 - [cisa kev cve 2026 28318 solarwinds serv u uncontrolled resou](./2026-06-05/cisa-kev-cve-2026-28318-solarwinds-serv-u-uncontrolled-resou.md)
 - [fifa world cup 2026 scams are already live fake sites bankin](./2026-06-05/fifa-world-cup-2026-scams-are-already-live-fake-sites-bankin.md)
@@ -116,7 +116,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47429 when vitest ui server is listen](./2026-06-01/ghsa-critical-cve-2026-47429-when-vitest-ui-server-is-listen.md)
 - [miasma supply chain attack compromises red hat npm packages ](./2026-06-01/miasma-supply-chain-attack-compromises-red-hat-npm-packages-.md)
 - [miasma supply chain attack malicious code found in redhat cl](./2026-06-01/miasma-supply-chain-attack-malicious-code-found-in-redhat-cl.md)
-- [weekly recap new linux flaw pan os exploit ai powered attack](./2026-06-01/weekly-recap-new-linux-flaw-pan-os-exploit-ai-powered-attack.md)
 
 ## 2026-05-30
 - [malicious npm packages abuse dependency confusion to profile](./2026-05-30/malicious-npm-packages-abuse-dependency-confusion-to-profile.md)
@@ -1049,9 +1048,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-07-10
 - [cisa kev cve 2025 5777 citrix netscaler adc and gateway out ](./2025-07-10/cisa-kev-cve-2025-5777-citrix-netscaler-adc-and-gateway-out-.md)
-
-## 2025-07-08
-- [reviewdog github actions are compromised](./2025-07-08/reviewdog-github-actions-are-compromised.md)
 
 ## 2025-07-07
 - [cisa kev cve 2014 3931 multi router looking glass mrlg buffe](./2025-07-07/cisa-kev-cve-2014-3931-multi-router-looking-glass-mrlg-buffe.md)
