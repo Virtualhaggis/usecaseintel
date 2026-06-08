@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,14 +10,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-08
 - [ai phishing is crushing socs with alert volume how to reduce](./2026-06-08/ai-phishing-is-crushing-socs-with-alert-volume-how-to-reduce.md)
+- [cisa kev cve 2026 42271 berriai litellm command injection vu](./2026-06-08/cisa-kev-cve-2026-42271-berriai-litellm-command-injection-vu.md)
 - [critical check point vpn flaw exploited to bypass passwords ](./2026-06-08/critical-check-point-vpn-flaw-exploited-to-bypass-passwords-.md)
-- [critical redis rce vulnerability enable attackers to gain co](./2026-06-08/critical-redis-rce-vulnerability-enable-attackers-to-gain-co.md)
+- [critical unifi os bug lets hackers gain root without authent](./2026-06-08/critical-unifi-os-bug-lets-hackers-gain-root-without-authent.md)
+- [gogs patches critical zero day enabling remote code executio](./2026-06-08/gogs-patches-critical-zero-day-enabling-remote-code-executio.md)
+- [malspam attack uses google doubleclick redirects to deliver ](./2026-06-08/malspam-attack-uses-google-doubleclick-redirects-to-deliver-.md)
 - [new lucid stealer targets 18 browsers crypto wallets and dis](./2026-06-08/new-lucid-stealer-targets-18-browsers-crypto-wallets-and-dis.md)
+- [new pink hacking group attacking enterprise users to steal c](./2026-06-08/new-pink-hacking-group-attacking-enterprise-users-to-steal-c.md)
 - [over 20 000 instagram accounts stolen in meta ai support hac](./2026-06-08/over-20-000-instagram-accounts-stolen-in-meta-ai-support-hac.md)
 - [the hades campaign graph ml pypi packages deploy cross platf](./2026-06-08/the-hades-campaign-graph-ml-pypi-packages-deploy-cross-platf.md)
 - [unc3753 attacking us law firms using vishing and rmm tools t](./2026-06-08/unc3753-attacking-us-law-firms-using-vishing-and-rmm-tools-t.md)
 - [unc3753 used vishing and physical intrusions in u s data the](./2026-06-08/unc3753-used-vishing-and-physical-intrusions-in-u-s-data-the.md)
-- [unifi os server critical rce chain allows root access withou](./2026-06-08/unifi-os-server-critical-rce-chain-allows-root-access-withou.md)
 - [verdantbamboo deploys bsd variant of brickstorm on linux app](./2026-06-08/verdantbamboo-deploys-bsd-variant-of-brickstorm-on-linux-app.md)
 - [weekly recap instagram account hacks android zero day github](./2026-06-08/weekly-recap-instagram-account-hacks-android-zero-day-github.md)
 - [whatsapp disrupts nso linked cyberattack targeting users wit](./2026-06-08/whatsapp-disrupts-nso-linked-cyberattack-targeting-users-wit.md)
@@ -41,7 +44,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [chinese apt deploys new malware to keep access to hacked net](./2026-06-05/chinese-apt-deploys-new-malware-to-keep-access-to-hacked-net.md)
 - [cisa hackers now exploit solarwinds serv u flaw to crash ser](./2026-06-05/cisa-hackers-now-exploit-solarwinds-serv-u-flaw-to-crash-ser.md)
 - [cisa kev cve 2026 28318 solarwinds serv u uncontrolled resou](./2026-06-05/cisa-kev-cve-2026-28318-solarwinds-serv-u-uncontrolled-resou.md)
-- [cisco warns of unpatched sd wan zero day exploited in attack](./2026-06-05/cisco-warns-of-unpatched-sd-wan-zero-day-exploited-in-attack.md)
 - [fifa world cup 2026 scams are already live fake sites bankin](./2026-06-05/fifa-world-cup-2026-scams-are-already-live-fake-sites-bankin.md)
 - [ghsa critical cve 2026 47668 dbgate unauthenticated remote c](./2026-06-05/ghsa-critical-cve-2026-47668-dbgate-unauthenticated-remote-c.md)
 - [ghsa critical cve 2026 47669 dbgate zip slip in archive unzi](./2026-06-05/ghsa-critical-cve-2026-47669-dbgate-zip-slip-in-archive-unzi.md)
@@ -1820,9 +1822,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2024-05-28
 - [cisa kev cve 2024 5274 google chromium v8 type confusion vul](./2024-05-28/cisa-kev-cve-2024-5274-google-chromium-v8-type-confusion-vul.md)
 - [fastify plugins as building blocks for a backend node js api](./2024-05-28/fastify-plugins-as-building-blocks-for-a-backend-node-js-api.md)
-
-## 2024-05-23
-- [cisa kev cve 2020 17519 apache flink improper access control](./2024-05-23/cisa-kev-cve-2020-17519-apache-flink-improper-access-control.md)
 
 ## 2024-05-22
 - [preventing broken access control in express node js applicat](./2024-05-22/preventing-broken-access-control-in-express-node-js-applicat.md)
