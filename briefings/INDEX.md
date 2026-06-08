@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1252 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,6 +9,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-08
+- [ai phishing is crushing socs with alert volume how to reduce](./2026-06-08/ai-phishing-is-crushing-socs-with-alert-volume-how-to-reduce.md)
+- [check point links vpn zero day attacks to qilin ransomware g](./2026-06-08/check-point-links-vpn-zero-day-attacks-to-qilin-ransomware-g.md)
 - [critical redis rce vulnerability enable attackers to gain co](./2026-06-08/critical-redis-rce-vulnerability-enable-attackers-to-gain-co.md)
 - [over 20 000 instagram accounts stolen in meta ai support hac](./2026-06-08/over-20-000-instagram-accounts-stolen-in-meta-ai-support-hac.md)
 - [the hades campaign graph ml pypi packages deploy cross platf](./2026-06-08/the-hades-campaign-graph-ml-pypi-packages-deploy-cross-platf.md)
@@ -18,7 +20,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-07
 - [c0xmo botnet spreads via dd wrt router flaw kills rival malw](./2026-06-07/c0xmo-botnet-spreads-via-dd-wrt-router-flaw-kills-rival-malw.md)
-- [cisa warns of linux kernel improper authentication vulnerabi](./2026-06-07/cisa-warns-of-linux-kernel-improper-authentication-vulnerabi.md)
 - [instagram fixes password reset flaw that exposes user emails](./2026-06-07/instagram-fixes-password-reset-flaw-that-exposes-user-emails.md)
 - [silent ransom group targets law firms with fake it support c](./2026-06-07/silent-ransom-group-targets-law-firms-with-fake-it-support-c.md)
 
@@ -102,16 +103,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [china aligned groups ramp up attacks dragon weave hits czech](./2026-06-01/china-aligned-groups-ramp-up-attacks-dragon-weave-hits-czech.md)
 - [cisa kev cve 2024 21182 oracle weblogic server unspecified v](./2026-06-01/cisa-kev-cve-2024-21182-oracle-weblogic-server-unspecified-v.md)
 - [containers on fire from container escapes to supply chain at](./2026-06-01/containers-on-fire-from-container-escapes-to-supply-chain-at.md)
-- [critical wp maps pro flaw actively exploited to create admin](./2026-06-01/critical-wp-maps-pro-flaw-actively-exploited-to-create-admin.md)
 - [ghsa critical cve 2026 47413 praisonai platform any workspac](./2026-06-01/ghsa-critical-cve-2026-47413-praisonai-platform-any-workspac.md)
 - [ghsa critical cve 2026 47429 when vitest ui server is listen](./2026-06-01/ghsa-critical-cve-2026-47429-when-vitest-ui-server-is-listen.md)
 - [miasma supply chain attack compromises red hat npm packages ](./2026-06-01/miasma-supply-chain-attack-compromises-red-hat-npm-packages-.md)
 - [miasma supply chain attack malicious code found in redhat cl](./2026-06-01/miasma-supply-chain-attack-malicious-code-found-in-redhat-cl.md)
 - [openai codex authentication tokens stolen in codexui android](./2026-06-01/openai-codex-authentication-tokens-stolen-in-codexui-android.md)
 - [weekly recap new linux flaw pan os exploit ai powered attack](./2026-06-01/weekly-recap-new-linux-flaw-pan-os-exploit-ai-powered-attack.md)
-
-## 2026-05-31
-- [dutch authorities dismantle botnet linked to 17 million infe](./2026-05-31/dutch-authorities-dismantle-botnet-linked-to-17-million-infe.md)
 
 ## 2026-05-30
 - [malicious npm packages abuse dependency confusion to profile](./2026-05-30/malicious-npm-packages-abuse-dependency-confusion-to-profile.md)

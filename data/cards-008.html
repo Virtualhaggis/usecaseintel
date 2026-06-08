@@ -1,1270 +1,3 @@
-<article class="card" id="art-230" data-art-slug="2026-05-19-active-supply-chain-attack-malicious-node-ipc-versions-publi"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
-  data-techs="T1027,T1190,T1195.002,T1528"
-  data-sources="StepSecurity"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint,network,web"
-  data-targets="azure,linux,m365,windows"
-  data-uc-count="13" data-llm-uc-count="3"
-  data-search="Active Supply Chain Attack: Malicious node-ipc Versions Published to npm Active Supply Chain Attack: Malicious node-ipc Versions Published to npm StepSecurity has detected multiple malicious releases of the popular node-ipc npm package. Three versions are currently known to be compromised, containing an obfuscated payload designed to steal cloud credentials, SSH keys, and CI/CD secrets. Our team is actively analyzing the attack, and this post will be updated as our investigation progresses  T1027 T1190 T1195.002 T1528 [LLM] node-ipc C2 callback to sh.azurestaticprovider.net (May 2026 npm supply-chain) [LLM] Compromised node-ipc.cjs bundle write (~117KB) under node_modules [LLM] Node.js process bulk-reading cloud &amp; SCM credential files in single session Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains DNS tunneling / TXT-heavy domain queries OAuth consent / suspicious app grant Phishing-link click correlated to endpoint execution Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children File hash IOCs — endpoint file/process match Article-specific behavioural hunt — Active Supply Chain Attack: Malicious node-ipc Versions Published to npm">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-05-19-active-supply-chain-attack-malicious-node-ipc-versions-publi" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack" target="_blank" rel="noopener">Active Supply Chain Attack: Malicious node-ipc Versions Published to npm</a></h2>
-  <div class="source-badges"><span class="source-badge ">StepSecurity</span></div>
-  <div class="pubmeta">
-    <span>2026-05-19</span>
-    <span>13 use cases</span>
-    <span>4 techniques</span>
-    <span>6 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Active Supply Chain Attack: Malicious node-ipc Versions Published to npm StepSecurity has detected multiple malicious releases of the popular node-ipc npm package. Three versions are currently known to be compromised, containing an obfuscated payload designed to steal cloud credentials, SSH keys, and CI/CD secrets. Our team is actively analyzing the attack, and this post will be updated as our investigation progresses</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
-<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">sh.azurestaticprovider.net</span></div>
-<div class="ind-group"><span class="ind-label">SHA256</span><span class="ind ">bf9d8c0c3ed3ceaa…</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-230-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-230"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-230-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) · PowerShell encoded / obfuscated command · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Active Supply Chain Attack: Malicious node-ipc Versions Published to npm</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Compromised node-ipc.cjs bundle write (~117KB) under node_modules · File hash IOCs — endpoint file/process match</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] node-ipc C2 callback to sh.azurestaticprovider.net (May 2026 npm supply-chain) · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains · DNS tunneling / TXT-heavy domain queries</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Node.js process bulk-reading cloud &amp; SCM credential files in single session · OAuth consent / suspicious app grant</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="2d1971071d" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">[LLM] node-ipc C2 callback to sh.azurestaticprovider.net (May 2026 npm supply-chain)</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="2d1971071d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects any DNS lookup or outbound network connection to sh.azurestaticprovider.net, the credential-exfiltration C2 used by the malicious node-ipc versions 9.1.6 / 9.2.3 / 12.0.1 published 2026-05-14. The domain is a typosquat of azurestaticapps.net and has no legitimate business use — first sighting is incident-level signal.
-
-Rationale: Anchored on the literal C2 domain sh.azurestaticprovider.net pulled from the article&#x27;s deobfuscated payload config (the &#x27;r&#x27; field of the _0x501a65 attack config object). Domain typosquats Azure infrastructure and has no benign use — single-hit alerting tier is appropriate.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack
-  • https://www.npmjs.com/package/node-ipc</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span> <span class="ind tech" title="Dynamic Resolution">T1568</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-230-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-230-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-230-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-230-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-230-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-230-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-230-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// node-ipc supply-chain C2: any host contacting sh.azurestaticprovider.net
-DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteUrl has &quot;azurestaticprovider.net&quot; or RemoteUrl =~ &quot;sh.azurestaticprovider.net&quot;
-| where InitiatingProcessAccountName !endswith &quot;$&quot;     // exclude machine-account noise
-| project Timestamp, DeviceName, ActionType, RemoteUrl, RemoteIP, RemotePort,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessAccountName,
-          InitiatingProcessParentFileName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-230-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// node-ipc supply-chain C2 — union across DNS + CEF/firewall + ASIM tables
-let SuspectDomain = &quot;azurestaticprovider.net&quot;;
-let StartTime = ago(30d);
-union isfuzzy=true
-  (DnsEvents
-     | where TimeGenerated &gt; StartTime
-     | where Name has SuspectDomain
-     | project TimeGenerated, Source = &quot;DnsEvents&quot;, Host = Computer, ClientIP, QueriedName = Name, QueryType),
-  (CommonSecurityLog
-     | where TimeGenerated &gt; StartTime
-     | where DestinationHostName has SuspectDomain or RequestURL has SuspectDomain
-     | project TimeGenerated, Source = &quot;CommonSecurityLog&quot;, Host = SourceHostName, SrcIP = SourceIP, DstHost = DestinationHostName, DstIP = DestinationIP, URL = RequestURL),
-  (ImNetworkSession
-     | where TimeGenerated &gt; StartTime
-     | where DstHostname has SuspectDomain or DstDomain has SuspectDomain or Url has SuspectDomain
-     | project TimeGenerated, Source = &quot;ImNetworkSession&quot;, Host = SrcHostname, SrcIP = SrcIpAddr, DstHost = DstHostname, DstIP = DstIpAddr, URL = Url),
-  (ImDnsActivity
-     | where TimeGenerated &gt; StartTime
-     | where DnsQuery has SuspectDomain or DnsQueryName has SuspectDomain
-     | project TimeGenerated, Source = &quot;ImDnsActivity&quot;, Host = SrcHostname, SrcIP = SrcIpAddr, QueriedName = DnsQuery)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-230-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Malicious node-ipc Package C2 Domain Resolution (sh.azurestaticprovider.net)
-id: a47c5e8e-9c21-4b1a-9b6e-b3e4c8d5f1a2
-description: Detects DNS resolution or network connection to sh.azurestaticprovider.net, the credential-exfiltration C2 used by malicious node-ipc npm versions 9.1.6 / 9.2.3 / 12.0.1 published on 2026-05-14 by the rogue maintainer atiertant. The domain typosquats Azure infrastructure and has no legitimate use.
-references:
-  - https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack
-author: SOC Detection Engineering
-date: 2026/05/19
-tags:
-  - attack.t1071.001
-  - attack.t1041
-  - attack.command_and_control
-  - attack.exfiltration
-logsource:
-  category: dns
-detection:
-  selection:
-    QueryName|contains: &#x27;azurestaticprovider.net&#x27;
-  condition: selection
-falsepositives:
-  - None known — this domain has no legitimate purpose; any hit warrants incident handling
-level: high</code></pre></div>
-    <div class="tab-content" id="art-230-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(@QueryName:*azurestaticprovider.net* OR @DomainName:*azurestaticprovider.net* OR @DestinationHostname:*azurestaticprovider.net* OR @network.destination.name:*azurestaticprovider.net* OR @dns.question.name:*azurestaticprovider.net*)</code></pre></div>
-    <div class="tab-content" id="art-230-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>(#event_simpleName=DnsRequest DomainName=/azurestaticprovider\.net/i) OR (#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=* ContextImageFileName=/[\\\/]node(\.exe)?$/i)
-| groupBy([aid, ComputerName, ContextImageFileName, DomainName], function={ count := count() | first := min(@timestamp) | last := max(@timestamp) })</code></pre></div>
-    <div class="tab-content" id="art-230-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-230-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-230-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-230-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.dest) as dest values(DNS.answer) as resolved_ip from datamodel=Network_Resolution where DNS.query=&quot;*azurestaticprovider.net&quot; OR DNS.query=&quot;sh.azurestaticprovider.net&quot; by DNS.query host | `drop_dm_object_name(DNS)` | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.app) as app from datamodel=Network_Traffic where All_Traffic.dest=&quot;*azurestaticprovider.net&quot; OR All_Traffic.url=&quot;*azurestaticprovider.net*&quot; by All_Traffic.dest host | `drop_dm_object_name(All_Traffic)` ] | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-230-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.dest) as dest values(DNS.answer) as resolved_ip from datamodel=Network_Resolution where DNS.query=&quot;*azurestaticprovider.net&quot; OR DNS.query=&quot;sh.azurestaticprovider.net&quot; by DNS.query host | `drop_dm_object_name(DNS)` | append [ | tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.app) as app from datamodel=Network_Traffic where All_Traffic.dest=&quot;*azurestaticprovider.net&quot; OR All_Traffic.url=&quot;*azurestaticprovider.net*&quot; by All_Traffic.dest host | `drop_dm_object_name(All_Traffic)` ] | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="e395cf8b77" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">[LLM] Compromised node-ipc.cjs bundle write (~117KB) under node_modules</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e395cf8b77" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects file-write events targeting `node_modules/node-ipc/node-ipc.cjs` whose payload exceeds 80KB after 2026-05-14, indicating installation of the malicious versions 9.1.6 / 9.2.3 / 12.0.1. The clean 12.0.0 bundle was ~37KB / 1269 lines; the trojanised bundle is ~117KB / 1271 lines with an 80KB obfuscated IIFE appended after the final module.exports.
-
-Rationale: Anchored on the exact file path (`node_modules/node-ipc/node-ipc.cjs`) and size delta (37KB clean → 117KB compromised, +80KB IIFE) called out in the article&#x27;s diff block. The publication-date floor (2026-05-14) eliminates legitimate historical writes; the file-size predicate eliminates any future legitimate node-ipc release that doesn&#x27;t add a comparable bundle.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack
-  • https://www.npmjs.com/package/node-ipc?activeTab=versions</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-230-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-230-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-230-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-230-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-230-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-230-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-230-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Malicious node-ipc bundle write — anomalous .cjs size under node_modules
-DeviceFileEvents
-| where Timestamp &gt; datetime(2026-05-14T00:00:00Z)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileRenamed&quot;,&quot;FileModified&quot;)
-| where FolderPath has @&quot;\node_modules\node-ipc\&quot; or FolderPath has &quot;/node_modules/node-ipc/&quot;
-| where FileName =~ &quot;node-ipc.cjs&quot;
-| where FileSize &gt; 80000     // clean ~37KB; trojanised ~117KB (80KB IIFE injected)
-| project Timestamp, DeviceName, FolderPath, FileName, FileSize, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, InitiatingProcessAccountName,
-          InitiatingProcessParentFileName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-230-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Malicious node-ipc bundle write (ASIM file event)
-ImFileEvent
-| where TimeGenerated &gt; datetime(2026-05-14T00:00:00Z)
-| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where TargetFilePath has @&quot;\node_modules\node-ipc\&quot; or TargetFilePath has &quot;/node_modules/node-ipc/&quot;
-| where TargetFileName =~ &quot;node-ipc.cjs&quot;
-| where TargetFileSize &gt; 80000   // clean ~37KB; trojanised ~117KB
-| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, TargetFileName,
-          TargetFileSize, TargetFileSHA256, ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-230-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Malicious node-ipc Bundle File Write (npm Supply Chain Compromise May 2026)
-id: 8c2e4f7a-1b9d-4a3e-9c8f-2e5d7a8b9c0d
-description: Detects file writes to node_modules/node-ipc/node-ipc.cjs, indicating installation of the malicious node-ipc package versions 9.1.6, 9.2.3, or 12.0.1 published to npm on 2026-05-14 by the rogue maintainer account &#x27;atiertant&#x27; (a.tiertant@atlantis-software.net). The trojanised bundle is ~117KB versus ~37KB for the legitimate 12.0.0 release.
-references:
-  - https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack
-author: SOC Detection Engineering
-date: 2026/05/19
-tags:
-  - attack.t1195.002
-  - attack.initial_access
-logsource:
-  category: file_event
-detection:
-  selection:
-    TargetFilename|contains:
-      - &#x27;\node_modules\node-ipc\node-ipc.cjs&#x27;
-      - &#x27;/node_modules/node-ipc/node-ipc.cjs&#x27;
-  condition: selection
-falsepositives:
-  - Custom internal fork of node-ipc with legitimately enlarged CommonJS bundle (verify SHA256 against published 12.0.0)
-  - Test environments restoring known-good node-ipc tarballs from offline mirrors
-level: high</code></pre></div>
-    <div class="tab-content" id="art-230-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(@EventID:11 source:windows.sysmon AND @TargetFilename:(*\\node_modules\\node-ipc\\node-ipc.cjs OR */node_modules/node-ipc/node-ipc.cjs)) OR (source:linux.auditd @auditd.type:PATH AND @file.path:*/node_modules/node-ipc/node-ipc.cjs)</code></pre></div>
-    <div class="tab-content" id="art-230-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/[\\\/]node_modules[\\\/]node-ipc[\\\/]node-ipc\.cjs$/i
-| WrittenBytes&gt;80000
-| groupBy([aid, ComputerName, TargetFileName, WrittenBytes, ContextImageFileName, UserName], function={ count := count() | first := min(@timestamp) })
-| first &gt; 1747180800   // 2026-05-14T00:00:00Z epoch — only writes after publication date</code></pre></div>
-    <div class="tab-content" id="art-230-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-230-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-230-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-230-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.process_name) as writer_process values(Filesystem.file_hash) as sha256 from datamodel=Endpoint.Filesystem where Filesystem.file_path=&quot;*node_modules*node-ipc*node-ipc.cjs&quot; AND Filesystem.file_size&gt;80000 AND _time&gt;=strptime(&quot;2026-05-14&quot;,&quot;%Y-%m-%d&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_size | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-230-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.process_name) as writer_process values(Filesystem.file_hash) as sha256 from datamodel=Endpoint.Filesystem where Filesystem.file_path=&quot;*node_modules*node-ipc*node-ipc.cjs&quot; AND Filesystem.file_size&gt;80000 AND _time&gt;=strptime(&quot;2026-05-14&quot;,&quot;%Y-%m-%d&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_size | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="a3f32141ae" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">[LLM] Node.js process bulk-reading cloud &amp; SCM credential files in single session</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="a3f32141ae" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts for a single node process that opens &gt;=3 distinct categories of credential artifacts (AWS, SSH, Kubernetes, Azure, GCP, GitHub CLI, Terraform, Docker, npm, Claude / Kiro IDE, shell history) within a single process lifetime. The compromised node-ipc payload harvests over 90 categories of secrets on require() — a fan-out pattern that no legitimate node tool produces in a single session.
-
-Rationale: The article enumerates 90+ credential categories the payload sweeps — AWS, Azure, GCP, SSH, Kubernetes, GitHub CLI, Claude AI, Kiro IDE, Terraform state, shell history. Mass fan-out from a single node PID is a behaviour pattern no legitimate dev tool exhibits in a single session. Sigma omitted because the detection requires aggregation across multiple file-open events keyed by process ID.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Credentials from Password Stores">T1555</span> <span class="ind tech" title="File and Directory Discovery">T1083</span> <span class="ind tech" title="Data from Cloud Storage">T1530</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-230-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-230-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-230-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-230-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-230-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-230-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// node process touching multiple credential-store paths in one session — post-require(&#x27;node-ipc&#x27;) harvest pattern
-let CredPathSubstrings = dynamic([
-    @&quot;\.aws\credentials&quot;, @&quot;\.aws\config&quot;,
-    @&quot;\.ssh\id_rsa&quot;, @&quot;\.ssh\id_ed25519&quot;, @&quot;\.ssh\id_ecdsa&quot;, @&quot;\.ssh\known_hosts&quot;,
-    @&quot;\.kube\config&quot;,
-    @&quot;\.azure\accessTokens&quot;, @&quot;\.azure\azureProfile&quot;,
-    @&quot;\.config\gcloud\&quot;, @&quot;\.config\gh\&quot;,
-    @&quot;\.terraform.d\&quot;, @&quot;\.docker\config.json&quot;,
-    @&quot;\.npmrc&quot;, @&quot;\.netrc&quot;, @&quot;\.gitconfig&quot;,
-    @&quot;\.claude\&quot;, @&quot;\.kiro\&quot;,
-    @&quot;\.bash_history&quot;, @&quot;\.zsh_history&quot;, @&quot;\.psql_history&quot;,
-    &quot;/.aws/&quot;, &quot;/.ssh/&quot;, &quot;/.kube/&quot;, &quot;/.azure/&quot;,
-    &quot;/.config/gcloud/&quot;, &quot;/.config/gh/&quot;, &quot;/.terraform.d/&quot;,
-    &quot;/.docker/config.json&quot;, &quot;/.npmrc&quot;, &quot;/.netrc&quot;, &quot;/.gitconfig&quot;,
-    &quot;/.claude/&quot;, &quot;/.kiro/&quot;, &quot;/.bash_history&quot;, &quot;/.zsh_history&quot;]);
-DeviceFileEvents
-| where Timestamp &gt; ago(14d)
-| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;node&quot;)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| extend FullPath = strcat(FolderPath, FileName)
-| where FullPath has_any (CredPathSubstrings)
-| summarize DistinctCredPaths = dcount(FullPath),
-            CredFilesSample = make_set(FullPath, 30),
-            FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
-            SampleCmdLine = any(InitiatingProcessCommandLine)
-            by DeviceName, InitiatingProcessId, InitiatingProcessCreationTime, InitiatingProcessAccountName
-| where DistinctCredPaths &gt;= 3
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-230-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// node process touching multiple credential-store paths in one session (ASIM file event)
-let CredPathSubstrings = dynamic([
-    @&quot;\.aws\credentials&quot;, @&quot;\.aws\config&quot;,
-    @&quot;\.ssh\id_rsa&quot;, @&quot;\.ssh\id_ed25519&quot;, @&quot;\.ssh\id_ecdsa&quot;,
-    @&quot;\.kube\config&quot;, @&quot;\.azure\accessTokens&quot;, @&quot;\.azure\azureProfile&quot;,
-    @&quot;\.config\gcloud\&quot;, @&quot;\.config\gh\&quot;, @&quot;\.terraform.d\&quot;,
-    @&quot;\.docker\config.json&quot;, @&quot;\.npmrc&quot;, @&quot;\.netrc&quot;, @&quot;\.gitconfig&quot;,
-    @&quot;\.claude\&quot;, @&quot;\.kiro\&quot;, @&quot;\.bash_history&quot;, @&quot;\.zsh_history&quot;,
-    &quot;/.aws/&quot;, &quot;/.ssh/&quot;, &quot;/.kube/&quot;, &quot;/.azure/&quot;,
-    &quot;/.config/gcloud/&quot;, &quot;/.config/gh/&quot;, &quot;/.terraform.d/&quot;,
-    &quot;/.docker/config.json&quot;, &quot;/.npmrc&quot;, &quot;/.netrc&quot;, &quot;/.gitconfig&quot;,
-    &quot;/.claude/&quot;, &quot;/.kiro/&quot;, &quot;/.bash_history&quot;, &quot;/.zsh_history&quot;]);
-ImFileEvent
-| where TimeGenerated &gt; ago(14d)
-| where ActingProcessName has_any (&quot;node.exe&quot;,&quot;/node&quot;,&quot;\\node&quot;)
-| extend FullPath = TargetFilePath
-| where FullPath has_any (CredPathSubstrings)
-| summarize DistinctCredPaths = dcount(FullPath),
-            CredFilesSample = make_set(FullPath, 30),
-            FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated),
-            SampleCmdLine = any(ActingProcessCommandLine)
-            by DvcHostname, ActingProcessId, ActorUsername
-| where DistinctCredPaths &gt;= 3
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-230-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(@process.name:(node OR node.exe) OR @process.executable.name:(node OR node.exe)) AND (@file.path:(*/.aws/credentials* OR */.aws/config* OR */.ssh/id_rsa* OR */.ssh/id_ed25519* OR */.ssh/id_ecdsa* OR */.kube/config* OR */.azure/accessTokens* OR */.azure/azureProfile* OR */.config/gcloud/* OR */.config/gh/* OR */.terraform.d/* OR */.docker/config.json OR */.npmrc OR */.netrc OR */.gitconfig OR */.claude/* OR */.kiro/* OR */.bash_history OR */.zsh_history) OR @auditd.SYSCALL.path:(*/.aws/credentials* OR */.ssh/id_rsa* OR */.kube/config* OR */.azure/* OR */.config/gcloud/* OR */.terraform.d/* OR */.docker/config.json OR */.npmrc OR */.netrc OR */.gitconfig OR */.claude/* OR */.kiro/*))</code></pre></div>
-    <div class="tab-content" id="art-230-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileOpenInfo ContextImageFileName=/[\\\/]node(\.exe)?$/i
-| TargetFileName=/(\.aws[\\\/](credentials|config)|\.ssh[\\\/]id_(rsa|ed25519|ecdsa)|\.kube[\\\/]config|\.azure[\\\/](accessTokens|azureProfile)|\.config[\\\/](gcloud|gh)[\\\/]|\.terraform\.d[\\\/]|\.docker[\\\/]config\.json|\.npmrc|\.netrc|\.gitconfig|\.claude[\\\/]|\.kiro[\\\/]|\.bash_history|\.zsh_history)/i
-| groupBy([aid, ComputerName, ContextProcessId, UserName], function={ DistinctCredFiles := count(field=TargetFileName, distinct=true) | sampleFiles := collect([TargetFileName], limit=30) | first := min(@timestamp) | last := max(@timestamp) })
-| DistinctCredFiles &gt;= 3</code></pre></div>
-    <div class="tab-content" id="art-230-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-230-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-230-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-230-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count dc(Filesystem.file_path) as distinct_cred_files values(Filesystem.file_path) as files_sample min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN (&quot;node.exe&quot;,&quot;node&quot;) AND (Filesystem.file_path=&quot;*/.aws/credentials*&quot; OR Filesystem.file_path=&quot;*/.aws/config*&quot; OR Filesystem.file_path=&quot;*/.ssh/id_rsa*&quot; OR Filesystem.file_path=&quot;*/.ssh/id_ed25519*&quot; OR Filesystem.file_path=&quot;*/.ssh/id_ecdsa*&quot; OR Filesystem.file_path=&quot;*/.kube/config*&quot; OR Filesystem.file_path=&quot;*/.azure/accessTokens*&quot; OR Filesystem.file_path=&quot;*/.azure/azureProfile*&quot; OR Filesystem.file_path=&quot;*/.config/gcloud/*&quot; OR Filesystem.file_path=&quot;*/.terraform.d/*&quot; OR Filesystem.file_path=&quot;*/.docker/config.json*&quot; OR Filesystem.file_path=&quot;*/.npmrc*&quot; OR Filesystem.file_path=&quot;*/.netrc*&quot; OR Filesystem.file_path=&quot;*/.gitconfig*&quot; OR Filesystem.file_path=&quot;*/.config/gh/*&quot; OR Filesystem.file_path=&quot;*/.claude/*&quot; OR Filesystem.file_path=&quot;*/.kiro/*&quot; OR Filesystem.file_path=&quot;*/.bash_history*&quot; OR Filesystem.file_path=&quot;*/.zsh_history*&quot;) by Filesystem.dest Filesystem.process_guid Filesystem.user | `drop_dm_object_name(Filesystem)` | where distinct_cred_files &gt;= 3 | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-230-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count dc(Filesystem.file_path) as distinct_cred_files values(Filesystem.file_path) as files_sample min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN (&quot;node.exe&quot;,&quot;node&quot;) AND (Filesystem.file_path=&quot;*/.aws/credentials*&quot; OR Filesystem.file_path=&quot;*/.aws/config*&quot; OR Filesystem.file_path=&quot;*/.ssh/id_rsa*&quot; OR Filesystem.file_path=&quot;*/.ssh/id_ed25519*&quot; OR Filesystem.file_path=&quot;*/.ssh/id_ecdsa*&quot; OR Filesystem.file_path=&quot;*/.kube/config*&quot; OR Filesystem.file_path=&quot;*/.azure/accessTokens*&quot; OR Filesystem.file_path=&quot;*/.azure/azureProfile*&quot; OR Filesystem.file_path=&quot;*/.config/gcloud/*&quot; OR Filesystem.file_path=&quot;*/.terraform.d/*&quot; OR Filesystem.file_path=&quot;*/.docker/config.json*&quot; OR Filesystem.file_path=&quot;*/.npmrc*&quot; OR Filesystem.file_path=&quot;*/.netrc*&quot; OR Filesystem.file_path=&quot;*/.gitconfig*&quot; OR Filesystem.file_path=&quot;*/.config/gh/*&quot; OR Filesystem.file_path=&quot;*/.claude/*&quot; OR Filesystem.file_path=&quot;*/.kiro/*&quot; OR Filesystem.file_path=&quot;*/.bash_history*&quot; OR Filesystem.file_path=&quot;*/.zsh_history*&quot;) by Filesystem.dest Filesystem.process_guid Filesystem.user | `drop_dm_object_name(Filesystem)` | where distinct_cred_files &gt;= 3 | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Beaconing — periodic outbound to small set of destinations</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="0bf69215de" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">C2 channel detection via inter-beacon-time stddev / fan-out to single dest.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Web Protocols">T1071.001</span> <span class="ind tech" title="DNS">T1071.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-230-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-230-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-230-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-230-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(1d)
-| where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
-| project DeviceName, RemoteIP, RemotePort, Timestamp
-| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
-| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
-         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
-| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
-| extend delta_sec = datetime_diff(&#x27;second&#x27;, Timestamp, prev_ts)
-| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
-    by DeviceName, RemoteIP, RemotePort
-| where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
-| order by conn_count desc</code></pre></div>
-    <div class="tab-content" id="art-230-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
-| where TimeGenerated &gt; ago(2h)
-| where DvcAction != &quot;Block&quot;
-| where ipv4_is_private(DstIpAddr) == false
-| summarize ConnCount = count(),
-            DistinctMinutes = dcount(bin(TimeGenerated, 1m))
-            by DvcHostname, DstIpAddr, DstPortNumber
-| where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
-| order by ConnCount desc
-</code></pre></div>
-    <div class="tab-content" id="art-230-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-230-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-230-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-230-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre><pre class="spl-mode-body" id="art-230-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Network connections to article IPs / domains</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-230-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-230-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-230-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-230-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-230-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteIP in (&quot;&quot;) or RemoteUrl has_any (&quot;sh.azurestaticprovider.net&quot;)
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-230-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;&quot;]);
-let BadDomains = dynamic([&quot;sh.azurestaticprovider.net&quot;]);
-ImNetworkSession
-| where TimeGenerated &gt; ago(7d)
-| where DstIpAddr in (BadIPs)
-   or Url has_any (BadDomains)
-| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-230-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
-status: experimental
-description: |
-    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
-    article-specific destinations. For dynamic IOC management, use a
-    watchlist or external feed.
-references:
-    - https://attack.mitre.org/tactics/TA0011/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.command-and-control
-logsource:
-    category: network_connection
-    product: windows
-detection:
-    selection_ip:
-        DestinationIp:
-            - &#x27;__IP_PLACEHOLDER_1__&#x27;
-            - &#x27;__IP_PLACEHOLDER_2__&#x27;
-    selection_domain:
-        DestinationHostname:
-            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
-            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
-    condition: selection_ip or selection_domain
-falsepositives:
-    - None on a true-positive IOC match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-230-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-230-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-230-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-230-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN (&quot;sh.azurestaticprovider.net&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;sh.azurestaticprovider.net&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-230-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats summariesonly=false count from datamodel=Web
-        where Web.dest IN (&quot;sh.azurestaticprovider.net&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;sh.azurestaticprovider.net&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="2cc42b1dca" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">DNS tunneling / TXT-heavy domain queries</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="2cc42b1dca" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Long subdomain labels + frequent queries to a single 2LD = DNS C2/exfil.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="DNS">T1071.004</span> <span class="ind tech" title="Exfiltration Over Unencrypted Non-C2 Protocol">T1048.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-230-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-230-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-230-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-230-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(1d)
-| where RemotePort == 53 and isnotempty(RemoteUrl)
-| extend qlen = strlen(RemoteUrl)
-| where qlen &gt; 50
-| extend SecondLevelDomain = extract(@&quot;([\w-]+\.[a-zA-Z]{2,})$&quot;, 1, RemoteUrl)
-| summarize qcount = count(), uniqueSubs = dcount(RemoteUrl), maxLabel = max(qlen)
-    by DeviceName, SecondLevelDomain
-| where qcount &gt; 100 and uniqueSubs &gt; 20
-| order by qcount desc</code></pre></div>
-    <div class="tab-content" id="art-230-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImDnsActivity normalises Windows DNS, Sysmon EID 22, Linux dnsmasq, etc.
-ImDnsActivity
-| where TimeGenerated &gt; ago(24h)
-| where DnsQueryTypeName == &quot;TXT&quot;
-| summarize Queries = count(), DistinctNames = dcount(DnsQuery)
-            by SrcIpAddr, bin(TimeGenerated, 5m)
-| where Queries &gt; 200    // tune to TXT-query baseline for environment
-| order by Queries desc
-</code></pre></div>
-    <div class="tab-content" id="art-230-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-230-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-230-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-230-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-    where DNS.message_type=&quot;QUERY&quot;
-    by DNS.src, DNS.query
-| `drop_dm_object_name(DNS)`
-| eval qlen=len(query)
-| where qlen &gt; 50
-| rex field=query &quot;(?&lt;second_level_domain&gt;[\w-]+\.[\w-]+)$&quot;
-| stats sum(count) AS qcount, dc(query) AS unique_subs, max(qlen) AS max_label
-    by src, second_level_domain
-| where qcount &gt; 100 AND unique_subs &gt; 20
-| sort - qcount</code></pre><pre class="spl-mode-body" id="art-230-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
-    where DNS.message_type=&quot;QUERY&quot;
-    by DNS.src, DNS.query
-| `drop_dm_object_name(DNS)`
-| eval qlen=len(query)
-| where qlen &gt; 50
-| rex field=query &quot;(?&lt;second_level_domain&gt;[\w-]+\.[\w-]+)$&quot;
-| stats sum(count) AS qcount, dc(query) AS unique_subs, max(qlen) AS max_label
-    by src, second_level_domain
-| where qcount &gt; 100 AND unique_subs &gt; 20
-| sort - qcount</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="e2349777f5" data-platforms="def,sent,sigma,spl" data-targets="azure">
-  <summary>
-    <span class="uc-title">OAuth consent / suspicious app grant</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e2349777f5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Cloud identity abuse: app gets high-priv scopes, often via consent phishing.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Account Manipulation: Additional Cloud Credentials">T1098.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-230-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-230-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-230-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-230-uc6-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-230-uc6-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
-| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-          ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-230-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
-AuditLogs
-| where TimeGenerated &gt; ago(7d)
-| where OperationName has &quot;Consent to application&quot;
-| where Result =~ &quot;success&quot;
-| extend AppName = tostring(parse_json(tostring(TargetResources))[0].displayName),
-         AppId   = tostring(parse_json(tostring(TargetResources))[0].id),
-         User    = tostring(parse_json(tostring(InitiatedBy)).user.userPrincipalName)
-| project TimeGenerated, OperationName, User, AppName, AppId, Result
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-230-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
-status: experimental
-description: |
-    User-driven consent to a third-party OAuth application — illicit-
-    consent attack precursor. Pair with first-time-seen-app heuristic
-    in your SIEM for higher fidelity.
-references:
-    - https://attack.mitre.org/techniques/T1528/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1528
-    - attack.persistence
-logsource:
-    product: azure
-    service: auditlogs
-detection:
-    selection:
-        OperationName: &#x27;Consent to application&#x27;
-        Result: &#x27;success&#x27;
-    condition: selection
-falsepositives:
-    - Legitimate first-time SaaS app onboarding
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-230-uc6-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-230-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-230-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-230-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action=&quot;success&quot;
-      AND Authentication.signature IN (
-        &quot;Consent to application&quot;,
-        &quot;Add app role assignment grant to user&quot;,
-        &quot;Add OAuth2PermissionGrant&quot;,
-        &quot;Add delegated permission grant&quot;)
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-230-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action=&quot;success&quot;
-      AND Authentication.signature IN (
-        &quot;Consent to application&quot;,
-        &quot;Add app role assignment grant to user&quot;,
-        &quot;Add OAuth2PermissionGrant&quot;,
-        &quot;Add delegated permission grant&quot;)
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="53a9c31d59" data-platforms="def,sent,spl" data-targets="azure,m365,windows">
-  <summary>
-    <span class="uc-title">Phishing-link click correlated to endpoint execution</span>
-    <span class="uc-phase">Delivery</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="53a9c31d59" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">User received an external email containing a URL, clicked it, and within
-60 seconds the recipient&#x27;s endpoint spawned a scripting interpreter or
-network downloader (PowerShell / cmd / mshta / curl / certutil / bitsadmin).
-This is the high-fidelity shape — a raw &quot;user clicked an emailed URL&quot;
-query is too noisy to alert on because every Microsoft 365 tenant
-generates thousands of legitimate clicks per day. The exec-correlation
-step suppresses the noise to roughly the rate at which a click actually
-drives onto-host execution, which is the actionable signal.
-Pair with UC_PHISH_LINK_BYPASS (Safe Links override) and UC_PHISH_LINK_NEWDOMAIN
-for orthogonal high-fidelity variants.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Link">T1566.002</span> <span class="ind tech" title="User Execution: Malicious Link">T1204.001</span> <span class="ind tech" title="PowerShell">T1059.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-230-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-230-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-230-uc7-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-230-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
-// Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
-// never spawn a non-browser child process, so the join eliminates the
-// 99% of noise that makes a raw click query unactionable.
-let LookbackDays = 7d;
-let SuspectClicks = UrlClickEvents
-    | where Timestamp &gt; ago(LookbackDays)
-    | where AccountName !endswith &quot;$&quot;
-    | where ActionType in (&quot;ClickAllowed&quot;,&quot;ClickedThrough&quot;)
-    | join kind=inner (
-        EmailEvents
-        | where Timestamp &gt; ago(LookbackDays)
-        | where DeliveryAction == &quot;Delivered&quot;
-        | where EmailDirection == &quot;Inbound&quot;
-        | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,
-                  RecipientEmailAddress, EmailTimestamp = Timestamp
-      ) on NetworkMessageId
-    | join kind=leftouter (
-        EmailUrlInfo | project NetworkMessageId, Url, UrlDomain
-      ) on NetworkMessageId, Url
-    | project ClickTime = Timestamp, AccountUpn, IPAddress, Url, UrlDomain,
-              Subject, SenderFromAddress, SenderFromDomain, RecipientEmailAddress,
-              ActionType;
-// Correlate to a non-browser child process spawned within 60 seconds on
-// the recipient&#x27;s device.
-DeviceProcessEvents
-| where Timestamp &gt; ago(LookbackDays)
-| where InitiatingProcessFileName in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,
-                                         &quot;outlook.exe&quot;,&quot;brave.exe&quot;,&quot;arc.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;,
-                        &quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,
-                        &quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;)
-| join kind=inner SuspectClicks on $left.AccountName == $right.AccountUpn
-| where Timestamp between (ClickTime .. ClickTime + 60s)
-| project ClickTime, ProcessTime = Timestamp,
-          DelaySec = datetime_diff(&#x27;second&#x27;, Timestamp, ClickTime),
-          DeviceName, AccountName, RecipientEmailAddress, SenderFromAddress,
-          Subject, Url, UrlDomain, ActionType,
-          FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-230-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
-// pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
-// non-browser child process. Lower fidelity than the Defender version.
-let LookbackDays = 7d;
-let SuspectMailUsers = OfficeActivity
-    | where TimeGenerated &gt; ago(LookbackDays)
-    | where OfficeWorkload == &quot;Exchange&quot;
-    | where Operation =~ &quot;Receive&quot;
-    | summarize Subject = any(Subject), Sender = any(Sender)
-                by MailboxOwnerUPN, MessageId, EmailTime = bin(TimeGenerated, 1m);
-SecurityEvent
-| where TimeGenerated &gt; ago(LookbackDays)
-| where EventID == 4688
-| where ParentProcessName has_any (&quot;\chrome.exe&quot;,&quot;\msedge.exe&quot;,
-                                     &quot;\firefox.exe&quot;,&quot;\outlook.exe&quot;,&quot;\brave.exe&quot;)
-| where NewProcessName has_any (&quot;\powershell.exe&quot;,&quot;\pwsh.exe&quot;,&quot;\cmd.exe&quot;,
-                                  &quot;\mshta.exe&quot;,&quot;\rundll32.exe&quot;,&quot;\regsvr32.exe&quot;,
-                                  &quot;\wscript.exe&quot;,&quot;\cscript.exe&quot;,&quot;\bitsadmin.exe&quot;,
-                                  &quot;\certutil.exe&quot;,&quot;\curl.exe&quot;,&quot;\wget.exe&quot;)
-| join kind=inner SuspectMailUsers on $left.Account == $right.MailboxOwnerUPN
-| where TimeGenerated between (EmailTime .. EmailTime + 60s)
-| project TimeGenerated, EmailTime, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine, Sender, Subject
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-230-uc7-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-230-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-230-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-230-uc7-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
-| tstats `summariesonly` earliest(_time) AS click_time
-    from datamodel=Web
-    where Web.action=&quot;allowed&quot;
-    by Web.src, Web.user, Web.dest, Web.url
-| `drop_dm_object_name(Web)`
-| rename user AS recipient, dest AS clicked_domain, url AS clicked_url
-| join type=inner recipient
-    [| tstats `summariesonly` count
-         from datamodel=Email.All_Email
-         where All_Email.action=&quot;delivered&quot; AND All_Email.url!=&quot;-&quot;
-         by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
-     | `drop_dm_object_name(All_Email)`
-     | rex field=url &quot;https?://(?&lt;email_domain&gt;[^/]+)&quot;
-     | rename recipient AS recipient]
-| join type=inner src
-    [| tstats `summariesonly` earliest(_time) AS exec_time
-         values(Processes.process) AS exec_cmd, values(Processes.process_name) AS exec_proc
-         from datamodel=Endpoint.Processes
-         where Processes.parent_process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,
-                                                   &quot;outlook.exe&quot;,&quot;brave.exe&quot;,&quot;arc.exe&quot;)
-           AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;,
-                                            &quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wscript.exe&quot;,
-                                            &quot;cscript.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,
-                                            &quot;curl.exe&quot;,&quot;wget.exe&quot;)
-         by Processes.dest, Processes.user
-     | `drop_dm_object_name(Processes)`
-     | rename dest AS src]
-| eval delta_sec = exec_time - click_time
-| where delta_sec &gt;= 0 AND delta_sec &lt;= 60
-| table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
-        clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-230-uc7-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
-| tstats summariesonly=false earliest(_time) AS click_time
-    from datamodel=Web
-    where Web.action=&quot;allowed&quot;
-    by Web.src, Web.user, Web.dest, Web.url
-| `drop_dm_object_name(Web)`
-| rename user AS recipient, dest AS clicked_domain, url AS clicked_url
-| join type=inner recipient
-    [| tstats summariesonly=false count
-         from datamodel=Email.All_Email
-         where All_Email.action=&quot;delivered&quot; AND All_Email.url!=&quot;-&quot;
-         by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
-     | `drop_dm_object_name(All_Email)`
-     | rex field=url &quot;https?://(?&lt;email_domain&gt;[^/]+)&quot;
-     | rename recipient AS recipient]
-| join type=inner src
-    [| tstats summariesonly=false earliest(_time) AS exec_time
-         values(Processes.process) AS exec_cmd, values(Processes.process_name) AS exec_proc
-         from datamodel=Endpoint.Processes
-         where Processes.parent_process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,
-                                                   &quot;outlook.exe&quot;,&quot;brave.exe&quot;,&quot;arc.exe&quot;)
-           AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;,
-                                            &quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wscript.exe&quot;,
-                                            &quot;cscript.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,
-                                            &quot;curl.exe&quot;,&quot;wget.exe&quot;)
-         by Processes.dest, Processes.user
-     | `drop_dm_object_name(Processes)`
-     | rename dest AS src]
-| eval delta_sec = exec_time - click_time
-| where delta_sec &gt;= 0 AND delta_sec &lt;= 60
-| table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
-        clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="aa8fbce36c" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="aa8fbce36c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Browser-pasted PowerShell launched from explorer/Run dialog — ClickFix social engineering.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious Copy and Paste">T1204.004</span> <span class="ind tech" title="PowerShell">T1059.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-230-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-230-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-230-uc8-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-230-uc8-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-230-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
-| where ProcessCommandLine matches regex @&quot;(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )&quot;
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-230-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName endswith &quot;\explorer.exe&quot;
-   or ParentProcessName endswith &quot;\RuntimeBroker.exe&quot;
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\pwsh.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-| where CommandLine matches regex @&quot;(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-230-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d06
-status: experimental
-description: |
-    &quot;FakeCaptcha&quot; / &quot;ClickFix&quot; social-engineering: malicious site asks
-    user to press Win+R and paste a payload. The result is
-    powershell/mshta launched directly from explorer.exe with iex /
-    base64 / downloadstring in the command line.
-references:
-    - https://attack.mitre.org/techniques/T1059/001/
-    - https://attack.mitre.org/techniques/T1204/002/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1059.001
-    - attack.t1204.002
-    - attack.execution
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_parent:
-        ParentImage|endswith:
-            - &#x27;\explorer.exe&#x27;
-            - &#x27;\RuntimeBroker.exe&#x27;
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-    selection_cmd:
-        CommandLine|contains:
-            - &#x27;iex&#x27;
-            - &#x27;invoke-expression&#x27;
-            - &#x27;frombase64&#x27;
-            - &#x27;downloadstring&#x27;
-            - &#x27;hxxp&#x27;
-            - &#x27;curl &#x27;
-            - &#x27;wget &#x27;
-    condition: selection_parent and selection_child and selection_cmd
-falsepositives:
-    - IT-driven scripted automation that admins paste-launch
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-230-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-230-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-230-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-230-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
-      AND (Processes.process=&quot;*iex*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
-        OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*DownloadString*&quot;
-        OR Processes.process=&quot;*hxxp*&quot; OR Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot;)
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-230-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
-      AND (Processes.process=&quot;*iex*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
-        OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*DownloadString*&quot;
-        OR Processes.process=&quot;*hxxp*&quot; OR Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot;)
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="27f9f5bb66" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">PowerShell encoded / obfuscated command</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="27f9f5bb66" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Encoded or obfuscated PowerShell — common across loaders, recon, and post-exploitation.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-230-uc9-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-230-uc9-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-230-uc9-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-230-uc9-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-230-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-| where ProcessCommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-230-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\pwsh.exe&quot;
-| where CommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
-| project TimeGenerated, Computer, Account, NewProcessName,
-          CommandLine, ParentProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-230-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d08
-status: experimental
-description: |
-    PowerShell launched with -EncodedCommand, base64 strings, hidden
-    window, no-profile, bypass policy, IEX / Invoke-Expression / Net
-    .WebClient.DownloadString — combinations indicating evasion.
-references:
-    - https://attack.mitre.org/techniques/T1059/001/
-    - https://attack.mitre.org/techniques/T1027/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1059.001
-    - attack.t1027
-    - attack.execution
-    - attack.defense-evasion
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_image:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-    selection_args:
-        CommandLine|contains:
-            - &#x27;-enc &#x27;
-            - &#x27;EncodedCommand&#x27;
-            - &#x27;FromBase64String&#x27;
-            - &#x27;Invoke-Expression&#x27;
-            - &#x27;IEX(&#x27;
-            - &#x27;DownloadString&#x27;
-            - &#x27;Net.WebClient&#x27;
-            - &#x27;-w hidden&#x27;
-            - &#x27;-WindowStyle Hidden&#x27;
-            - &#x27;-nop&#x27;
-            - &#x27;-NoProfile&#x27;
-            - &#x27;-ep bypass&#x27;
-            - &#x27;-ExecutionPolicy Bypass&#x27;
-    condition: selection_image and selection_args
-falsepositives:
-    - DevOps tooling that legitimately uses encoded command for
-      cross-shell escaping
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-230-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-230-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-230-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-230-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-      AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
-        OR Processes.process=&quot;*FromBase64String*&quot; OR Processes.process=&quot;*-nop*&quot;
-        OR Processes.process=&quot;*-w hidden*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
-        OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
-        OR Processes.process=&quot;*Net.WebClient*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-230-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-      AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
-        OR Processes.process=&quot;*FromBase64String*&quot; OR Processes.process=&quot;*-nop*&quot;
-        OR Processes.process=&quot;*-w hidden*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
-        OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
-        OR Processes.process=&quot;*Net.WebClient*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-230-uc10-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-230-uc10-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-230-uc10-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-230-uc10-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-230-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-230-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-230-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-230-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-230-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-230-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-230-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-230-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-230-uc11-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-230-uc11-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-230-uc11-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-230-uc11-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-230-uc11-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
-// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
-// (Initiating only) so column-projection has to differ per side.
-union
-    ( DeviceFileEvents
-        | where Timestamp &gt; ago(7d)
-        | where InitiatingProcessAccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;bf9d8c0c3ed3ceaa831a13de27f1b1c7c7b7f01d2db4103bfdba4191940b0301&quot;) or SHA1 in~ (&quot;bf9d8c0c3ed3ceaa831a13de27f1b1c7c7b7f01d2db4103bfdba4191940b0301&quot;) or MD5 in~ (&quot;bf9d8c0c3ed3ceaa831a13de27f1b1c7c7b7f01d2db4103bfdba4191940b0301&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
-    ( DeviceProcessEvents
-        | where Timestamp &gt; ago(7d)
-        | where AccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;bf9d8c0c3ed3ceaa831a13de27f1b1c7c7b7f01d2db4103bfdba4191940b0301&quot;) or SHA1 in~ (&quot;bf9d8c0c3ed3ceaa831a13de27f1b1c7c7b7f01d2db4103bfdba4191940b0301&quot;) or MD5 in~ (&quot;bf9d8c0c3ed3ceaa831a13de27f1b1c7c7b7f01d2db4103bfdba4191940b0301&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
-| order by Timestamp desc
-</code></pre></div>
-    <div class="tab-content" id="art-230-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
-// Defender version so the engine can push hash predicates per-side.
-let BadHashes = dynamic([&quot;bf9d8c0c3ed3ceaa831a13de27f1b1c7c7b7f01d2db4103bfdba4191940b0301&quot;]);
-union
-    ( ImFileEvent
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where TargetFileSHA256 in~ (BadHashes)
-           or TargetFileSHA1 in~ (BadHashes)
-           or TargetFileMD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType,
-                  TargetFileName, TargetFilePath, TargetFileSHA256,
-                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
-    ( ImProcessCreate
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
-                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
-                  TargetFileSHA256 = SHA256,
-                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-230-uc11-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
-status: experimental
-description: |
-    Replace `__HASH_LIST__` placeholder with article-specific SHA256
-    values. Use a watchlist or external indicator file for management
-    at scale.
-references:
-    - https://attack.mitre.org/techniques/T1027/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1027
-    - attack.defense-evasion
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection:
-        Hashes|contains:
-            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
-    condition: selection
-falsepositives:
-    - None on a true-positive hash match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-230-uc11-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-230-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-230-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-230-uc11-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;bf9d8c0c3ed3ceaa831a13de27f1b1c7c7b7f01d2db4103bfdba4191940b0301&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;bf9d8c0c3ed3ceaa831a13de27f1b1c7c7b7f01d2db4103bfdba4191940b0301&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-230-uc11-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;bf9d8c0c3ed3ceaa831a13de27f1b1c7c7b7f01d2db4103bfdba4191940b0301&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;bf9d8c0c3ed3ceaa831a13de27f1b1c7c7b7f01d2db4103bfdba4191940b0301&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="423c2deb94" data-platforms="def,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Active Supply Chain Attack: Malicious node-ipc Versions Published to npm</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="423c2deb94" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-230-uc12-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-230-uc12-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-230-uc12-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Active Supply Chain Attack: Malicious node-ipc Versions Published to npm
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;, &quot;node-ipc.js&quot;, &quot;bt.node.js&quot;, &quot;.bt.node.js&quot;, &quot;router_init.js&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/etc/ssh/ssh_host_&quot;, &quot;/var/run/secrets/kubernetes.io/serviceaccount/token&quot;, &quot;/etc/rancher/k3s/k3s.yaml&quot;, &quot;/Library/Keychains/&quot;, &quot;/tmp/nt-1234/abc.tar.gz&quot;, &quot;/tmp/nt-&quot;, &quot;/dev/null&quot;) or FileName in~ (&quot;node.js&quot;, &quot;node-ipc.js&quot;, &quot;bt.node.js&quot;, &quot;.bt.node.js&quot;, &quot;router_init.js&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-230-uc12-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-230-uc12-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-230-uc12-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-230-uc12-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Active Supply Chain Attack: Malicious node-ipc Versions Published to npm ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;,&quot;node-ipc.js&quot;,&quot;bt.node.js&quot;,&quot;.bt.node.js&quot;,&quot;router_init.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/etc/ssh/ssh_host_*&quot; OR Filesystem.file_path=&quot;*/var/run/secrets/kubernetes.io/serviceaccount/token*&quot; OR Filesystem.file_path=&quot;*/etc/rancher/k3s/k3s.yaml*&quot; OR Filesystem.file_path=&quot;*/Library/Keychains/*&quot; OR Filesystem.file_path=&quot;*/tmp/nt-1234/abc.tar.gz*&quot; OR Filesystem.file_path=&quot;*/tmp/nt-*&quot; OR Filesystem.file_path=&quot;*/dev/null*&quot; OR Filesystem.file_name IN (&quot;node.js&quot;,&quot;node-ipc.js&quot;,&quot;bt.node.js&quot;,&quot;.bt.node.js&quot;,&quot;router_init.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-230-uc12-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Active Supply Chain Attack: Malicious node-ipc Versions Published to npm ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;,&quot;node-ipc.js&quot;,&quot;bt.node.js&quot;,&quot;.bt.node.js&quot;,&quot;router_init.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/etc/ssh/ssh_host_*&quot; OR Filesystem.file_path=&quot;*/var/run/secrets/kubernetes.io/serviceaccount/token*&quot; OR Filesystem.file_path=&quot;*/etc/rancher/k3s/k3s.yaml*&quot; OR Filesystem.file_path=&quot;*/Library/Keychains/*&quot; OR Filesystem.file_path=&quot;*/tmp/nt-1234/abc.tar.gz*&quot; OR Filesystem.file_path=&quot;*/tmp/nt-*&quot; OR Filesystem.file_path=&quot;*/dev/null*&quot; OR Filesystem.file_name IN (&quot;node.js&quot;,&quot;node-ipc.js&quot;,&quot;bt.node.js&quot;,&quot;.bt.node.js&quot;,&quot;router_init.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-231" data-art-slug="2026-05-18-mini-shai-hulud-hits-antv-300-malicious-npm-packages-publish"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1027,T1190,T1195.002,T1555.003"
@@ -12607,6 +11340,712 @@ DeviceTvmSoftwareVulnerabilities
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-261" data-art-slug="2026-05-14-ongoing-exploitation-of-cisco-catalyst-sd-wan-vulnerabilitie"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1021.001,T1190,T1555.003"
+  data-sources="Cisco Talos"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,network"
+  data-targets="azure,linux,windows"
+  data-uc-count="9" data-llm-uc-count="5"
+  data-search="Ongoing exploitation of Cisco Catalyst SD-WAN vulnerabilities Cisco Talos is tracking the active exploitation of CVE-2026-20182, an authentication bypass vulnerability in Cisco Catalyst SD-WAN Controller, formerly SD-WAN vSmart, and Cisco Catalyst SD-WAN Manager, formerly SD-WAN vManage. CVE-2026-20182 CVE-2026-20133 CVE-2026-20128 CVE-2026-20122 CVE-2026-20127 T1021.001 T1190 T1555.003 [LLM] Inbound exploit attempt to Cisco Catalyst SD-WAN Manager from known UAT-8616 / Cluster IPs [LLM] XenShell / Godzilla / Behinder JSP webshell file write on Cisco SD-WAN Manager [LLM] AdaptixC2 &#x27;shadowcore&#x27; / Mythic C2 traffic to UAT-8616 infrastructure 194.163.175.135 [LLM] AdaptixC2 &#x27;systemd-resolved&#x27; or Sliver &#x27;CWan&#x27; implant on Linux / SD-WAN host [LLM] UAT-8616 post-compromise on SD-WAN: SSH key add, NETCONF edit, su root, XMRig miner.sh Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — Ongoing exploitation of Cisco Catalyst SD-WAN vulnerabilities">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-05-14-ongoing-exploitation-of-cisco-catalyst-sd-wan-vulnerabilitie" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://blog.talosintelligence.com/sd-wan-ongoing-exploitation/" target="_blank" rel="noopener">Ongoing exploitation of Cisco Catalyst SD-WAN vulnerabilities</a></h2>
+  <div class="source-badges"><span class="source-badge talos">Cisco Talos</span></div>
+  <div class="pubmeta">
+    <span>2026-05-14</span>
+    <span>9 use cases</span>
+    <span>3 techniques</span>
+    <span>5 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Cisco Talos is tracking the active exploitation of CVE-2026-20182, an authentication bypass vulnerability in Cisco Catalyst SD-WAN Controller, formerly SD-WAN vSmart, and Cisco Catalyst SD-WAN Manager, formerly SD-WAN vManage.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-20182</span> <span class="ind cve">CVE-2026-20133</span> <span class="ind cve">CVE-2026-20128</span> <span class="ind cve">CVE-2026-20122</span> <span class="ind cve">CVE-2026-20127</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Remote Desktop Protocol">T1021.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
+<div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">38.181.52.89</span> <span class="ind ">89.125.244.33</span> <span class="ind ">89.125.244.51</span> <span class="ind ">71.80.85.135</span> <span class="ind ">212.83.162.37</span> <span class="ind ">38.60.214.92</span> <span class="ind ">65.20.67.134</span> <span class="ind ">104.233.156.1</span> <span class="ind ">194.233.100.40</span> <span class="ind ">194.163.175.135</span> <span class="ind ">23.27.143.170</span> <span class="ind ">83.229.126.195</span> <span class="ind ">13.62.52.206</span> <span class="ind ">79.135.105.208</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-261-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-261"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-261-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Inbound exploit attempt to Cisco Catalyst SD-WAN Manager from known UAT-8616 / Cluster IPs · Article-specific behavioural hunt — Ongoing exploitation of Cisco Catalyst SD-WAN vulnerabilities</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] XenShell / Godzilla / Behinder JSP webshell file write on Cisco SD-WAN Manager · [LLM] AdaptixC2 &#x27;systemd-resolved&#x27; or Sliver &#x27;CWan&#x27; implant on Linux / SD-WAN host</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] AdaptixC2 &#x27;shadowcore&#x27; / Mythic C2 traffic to UAT-8616 infrastructure 194.163.175.135 · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] UAT-8616 post-compromise on SD-WAN: SSH key add, NETCONF edit, su root, XMRig miner.sh</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="76f0cc56c4" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="azure,windows" open>
+  <summary>
+    <span class="uc-title">[LLM] Inbound exploit attempt to Cisco Catalyst SD-WAN Manager from known UAT-8616 / Cluster IPs</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="76f0cc56c4" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects network connections from the Talos-published exploit-source IPs targeting Cisco Catalyst SD-WAN Manager / vSmart (vManage) management interfaces. Anchors on the specific source IPs Talos attributes to UAT-8616 and Clusters 1-4 exploiting CVE-2026-20182 and the CVE-2026-20133/20128/20122 chain.
+
+Rationale: Source IPs are explicitly attributed by Talos to UAT-8616 (CVE-2026-20182) and Clusters 1-4 (CVE-2026-20133/20128/20122). Ports cover vManage HTTPS (443/8443), NETCONF (830), SD-WAN device control (4566), and SSH (22). Cross-checked with Cisco PSIRT advisory cisco-sa-sdwan-auth-bypass and Rapid7&#x27;s disclosure referenced in the article.
+
+Cross-checked against:
+  • https://sec.cloudapps.cisco.com/security/center/publicationListing.x
+  • https://blog.talosintelligence.com/sd-wan-ongoing-exploitation/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web.Web</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-261-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-261-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-261-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-261-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-261-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let UAT8616_ExploitIPs = dynamic([&quot;38.181.52.89&quot;,&quot;89.125.244.33&quot;,&quot;89.125.244.51&quot;,&quot;71.80.85.135&quot;,&quot;212.83.162.37&quot;,&quot;38.60.214.92&quot;,&quot;65.20.67.134&quot;,&quot;104.233.156.1&quot;,&quot;194.233.100.40&quot;]);
+DeviceNetworkEvents
+| where Timestamp &gt; ago(60d)
+| where RemoteIP in (UAT8616_ExploitIPs) or LocalIP in (UAT8616_ExploitIPs)
+| where RemotePort in (443,8443,830,4566,22) or LocalPort in (443,8443,830,4566,22)
+| project Timestamp, DeviceName, ActionType, LocalIP, LocalPort, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let UAT8616_ExploitIPs = dynamic([&quot;38.181.52.89&quot;,&quot;89.125.244.33&quot;,&quot;89.125.244.51&quot;,&quot;71.80.85.135&quot;,&quot;212.83.162.37&quot;,&quot;38.60.214.92&quot;,&quot;65.20.67.134&quot;,&quot;104.233.156.1&quot;,&quot;194.233.100.40&quot;]);
+CommonSecurityLog
+| where TimeGenerated &gt; ago(60d)
+| where SourceIP in (UAT8616_ExploitIPs) or DestinationIP in (UAT8616_ExploitIPs)
+| where DestinationPort in (443, 8443, 830, 4566, 22)
+| project TimeGenerated, DeviceVendor, DeviceProduct, DeviceAction, SourceIP, SourcePort, DestinationIP, DestinationPort, DestinationHostName, RequestURL, RequestMethod
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Inbound Connection From Known Cisco SD-WAN Exploit Source IP (UAT-8616 / CVE-2026-20133 Clusters)
+id: 6a4d4f9f-3a8a-4c1f-a2c3-7c2d3f9b8a01
+description: Detects inbound connections from IPs attributed by Cisco Talos to UAT-8616 exploitation of CVE-2026-20182 and clusters exploiting CVE-2026-20133/20128/20122 on Cisco Catalyst SD-WAN Manager/Controller.
+references:
+  - https://blog.talosintelligence.com/sd-wan-ongoing-exploitation/
+author: SOC Detection Engineering
+date: 2026/05/23
+tags:
+  - attack.t1190
+  - attack.t1133
+logsource:
+  category: network_connection
+detection:
+  selection:
+    src_ip:
+      - &#x27;38.181.52.89&#x27;
+      - &#x27;89.125.244.33&#x27;
+      - &#x27;89.125.244.51&#x27;
+      - &#x27;71.80.85.135&#x27;
+      - &#x27;212.83.162.37&#x27;
+      - &#x27;38.60.214.92&#x27;
+      - &#x27;65.20.67.134&#x27;
+      - &#x27;104.233.156.1&#x27;
+      - &#x27;194.233.100.40&#x27;
+    dst_port:
+      - 443
+      - 8443
+      - 830
+      - 4566
+      - 22
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-261-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:(cloudtrail OR azure.activity_logs OR linux.syslog OR windows.security) (@network.client.ip:(&quot;38.181.52.89&quot; OR &quot;89.125.244.33&quot; OR &quot;89.125.244.51&quot; OR &quot;71.80.85.135&quot; OR &quot;212.83.162.37&quot; OR &quot;38.60.214.92&quot; OR &quot;65.20.67.134&quot; OR &quot;104.233.156.1&quot; OR &quot;194.233.100.40&quot;) OR @network.destination.ip:(&quot;38.181.52.89&quot; OR &quot;89.125.244.33&quot; OR &quot;89.125.244.51&quot; OR &quot;71.80.85.135&quot; OR &quot;212.83.162.37&quot; OR &quot;38.60.214.92&quot; OR &quot;65.20.67.134&quot; OR &quot;104.233.156.1&quot; OR &quot;194.233.100.40&quot;))</code></pre></div>
+    <div class="tab-content" id="art-261-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=/^(NetworkConnectIP4|NetworkConnectIP6)$/ | RemoteAddressIP4=/^(38\.181\.52\.89|89\.125\.244\.33|89\.125\.244\.51|71\.80\.85\.135|212\.83\.162\.37|38\.60\.214\.92|65\.20\.67\.134|104\.233\.156\.1|194\.233\.100\.40)$/ | groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-261-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.src_ip IN (&quot;38.181.52.89&quot;,&quot;89.125.244.33&quot;,&quot;89.125.244.51&quot;,&quot;71.80.85.135&quot;,&quot;212.83.162.37&quot;,&quot;38.60.214.92&quot;,&quot;65.20.67.134&quot;,&quot;104.233.156.1&quot;,&quot;194.233.100.40&quot;) AND All_Traffic.dest_port IN (443,8443,830,4566,22) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.dest_hostname | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-261-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.src_ip IN (&quot;38.181.52.89&quot;,&quot;89.125.244.33&quot;,&quot;89.125.244.51&quot;,&quot;71.80.85.135&quot;,&quot;212.83.162.37&quot;,&quot;38.60.214.92&quot;,&quot;65.20.67.134&quot;,&quot;104.233.156.1&quot;,&quot;194.233.100.40&quot;) AND All_Traffic.dest_port IN (443,8443,830,4566,22) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.dest_hostname | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="864ec155bd" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">[LLM] XenShell / Godzilla / Behinder JSP webshell file write on Cisco SD-WAN Manager</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="864ec155bd" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects creation of the specific JSP webshell filenames Talos observed dropped on compromised Cisco Catalyst SD-WAN Manager nodes after exploitation of CVE-2026-20133/20128/20122. Filenames are non-generic and attacker-chosen (20251117022131.jsp, conf.jsp, sysv.jsp, sysinit.jsp, vmurnp_ikp.jsp).
+
+Rationale: Filenames 20251117022131.jsp, conf.jsp, sysv.jsp, sysinit.jsp, vmurnp_ikp.jsp are explicitly named by Talos as attacker-dropped XenShell/Godzilla/Behinder variants on the SD-WAN Manager. Generic .jsp creation under vManage webapps directories also catches XenShell variants with rotating names since SD-WAN Manager should not be receiving developer-dropped JSPs in production.
+
+Cross-checked against:
+  • https://blog.talosintelligence.com/sd-wan-ongoing-exploitation/
+  • https://github.com/BeichenDream/Godzilla</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-261-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-261-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-261-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-261-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-261-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let WebshellNames = dynamic([&quot;20251117022131.jsp&quot;,&quot;conf.jsp&quot;,&quot;sysv.jsp&quot;,&quot;sysinit.jsp&quot;,&quot;vmurnp_ikp.jsp&quot;]);
+DeviceFileEvents
+| where Timestamp &gt; ago(60d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| where FileName in~ (WebshellNames)
+   or (FileName endswith &quot;.jsp&quot; and FolderPath has_any (&quot;/vmanage/&quot;,&quot;/webapps/&quot;,&quot;/opt/web-app/&quot;,&quot;/tomcat/webapps/&quot;))
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let WebshellNames = dynamic([&quot;20251117022131.jsp&quot;,&quot;conf.jsp&quot;,&quot;sysv.jsp&quot;,&quot;sysinit.jsp&quot;,&quot;vmurnp_ikp.jsp&quot;]);
+imFileEvent
+| where TimeGenerated &gt; ago(60d)
+| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| where TargetFileName in~ (WebshellNames)
+   or (TargetFileExtension =~ &quot;jsp&quot; and TargetFilePath has_any (&quot;/vmanage/&quot;,&quot;/webapps/&quot;,&quot;/opt/web-app/&quot;,&quot;/tomcat/webapps/&quot;))
+| project TimeGenerated, DvcHostname, EventType, TargetFilePath, TargetFileName, TargetFileSHA256, ActingProcessName, ActingProcessCommandLine, ActorUsername
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Cisco SD-WAN Webshell Drop (XenShell / Godzilla / Behinder JSP)
+id: 12bb2f56-9d04-4d7e-9c4a-2a3b9f0e9f02
+description: Detects file creation events for JSP webshell filenames observed by Cisco Talos on compromised Catalyst SD-WAN Manager nodes during CVE-2026-20133/20128/20122 exploitation.
+references:
+  - https://blog.talosintelligence.com/sd-wan-ongoing-exploitation/
+author: SOC Detection Engineering
+date: 2026/05/23
+tags:
+  - attack.t1505.003
+  - attack.t1190
+logsource:
+  category: file_event
+detection:
+  selection_names:
+    TargetFilename|endswith:
+      - &#x27;/20251117022131.jsp&#x27;
+      - &#x27;/conf.jsp&#x27;
+      - &#x27;/sysv.jsp&#x27;
+      - &#x27;/sysinit.jsp&#x27;
+      - &#x27;/vmurnp_ikp.jsp&#x27;
+  selection_paths:
+    TargetFilename|contains:
+      - &#x27;/vmanage/&#x27;
+      - &#x27;/webapps/&#x27;
+      - &#x27;/opt/web-app/&#x27;
+      - &#x27;/tomcat/webapps/&#x27;
+    TargetFilename|endswith: &#x27;.jsp&#x27;
+  condition: selection_names or selection_paths
+level: high</code></pre></div>
+    <div class="tab-content" id="art-261-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.auditd OR linux.syslog) (@file.name:(20251117022131.jsp OR conf.jsp OR sysv.jsp OR sysinit.jsp OR vmurnp_ikp.jsp) OR (@file.path:(*\/vmanage\/* OR *\/webapps\/* OR *\/tomcat\/webapps\/*) AND @file.name:*.jsp))</code></pre></div>
+    <div class="tab-content" id="art-261-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten | TargetFileName=/(20251117022131|conf|sysv|sysinit|vmurnp_ikp)\.jsp$/i OR (TargetFileName=/\.jsp$/i AND regex(&quot;(/vmanage/|/webapps/|/opt/web-app/|/tomcat/webapps/)&quot;, field=TargetFileName)) | groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-261-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_name IN (&quot;20251117022131.jsp&quot;,&quot;conf.jsp&quot;,&quot;sysv.jsp&quot;,&quot;sysinit.jsp&quot;,&quot;vmurnp_ikp.jsp&quot;) OR Filesystem.file_path=&quot;*/vmanage/*webapps/*.jsp&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user Filesystem.process_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-261-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_name IN (&quot;20251117022131.jsp&quot;,&quot;conf.jsp&quot;,&quot;sysv.jsp&quot;,&quot;sysinit.jsp&quot;,&quot;vmurnp_ikp.jsp&quot;) OR Filesystem.file_path=&quot;*/vmanage/*webapps/*.jsp&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user Filesystem.process_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="afe6bcb8c6" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="azure,linux,windows">
+  <summary>
+    <span class="uc-title">[LLM] AdaptixC2 &#x27;shadowcore&#x27; / Mythic C2 traffic to UAT-8616 infrastructure 194.163.175.135</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="afe6bcb8c6" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects outbound traffic to the AdaptixC2/Mythic infrastructure Talos attributes to UAT-8616 — IP 194.163.175.135 hosting AdaptixC2 on port 4445 (banner renamed from &#x27;AdapticC2 server&#x27; to &#x27;shadowcore&#x27;), another AdaptixC2 listener on 31337, and a Mythic C2 listener on 7443 with certificate serial fece5b954e69b2c6a8d0a1029631a0d7.
+
+Rationale: 194.163.175.135 plus the trio of ports (4445 AdaptixC2 with &#x27;shadowcore&#x27; banner, 7443 Mythic, 31337 second AdaptixC2 listener) and the Mythic cert serial fece5b954e69b2c6a8d0a1029631a0d7 are explicitly published by Talos as UAT-8616 infrastructure on Contabo GmbH. The IP-and-port tuple is high-fidelity because legitimate enterprise traffic to a Contabo VPS on these obscure ports is exceedingly rare.
+
+Cross-checked against:
+  • https://blog.talosintelligence.com/sd-wan-ongoing-exploitation/
+  • https://github.com/Adaptix-Framework/AdaptixC2
+  • https://github.com/its-a-feature/Mythic</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Encrypted Channel: Asymmetric Cryptography">T1573.002</span> <span class="ind tech" title="Non-Application Layer Protocol">T1095</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Certificates.All_Certificates</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-261-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-261-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-261-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-261-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-261-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let C2_IP = &quot;194.163.175.135&quot;;
+let C2_Ports = dynamic([4445, 7443, 31337]);
+DeviceNetworkEvents
+| where Timestamp &gt; ago(60d)
+| where RemoteIP == C2_IP
+| where RemotePort in (C2_Ports) or RemotePort == 22
+| project Timestamp, DeviceName, ActionType, LocalIP, LocalPort, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let C2_IP = &quot;194.163.175.135&quot;;
+let C2_Ports = dynamic([4445, 7443, 31337, 22]);
+CommonSecurityLog
+| where TimeGenerated &gt; ago(60d)
+| where DestinationIP == C2_IP
+| where DestinationPort in (C2_Ports)
+| project TimeGenerated, DeviceVendor, DeviceProduct, DeviceAction, SourceIP, SourcePort, DestinationIP, DestinationPort, DestinationHostName, ApplicationProtocol, RequestURL
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound C2 To UAT-8616 AdaptixC2 / Mythic Infrastructure 194.163.175.135
+id: 9b3c1e22-7e22-4d09-9b6f-3a91c0f3b2c3
+description: Detects outbound network connections to the IP Cisco Talos attributes to UAT-8616 hosting AdaptixC2 (shadowcore banner) on 4445/31337 and Mythic on 7443 with cert serial fece5b954e69b2c6a8d0a1029631a0d7.
+references:
+  - https://blog.talosintelligence.com/sd-wan-ongoing-exploitation/
+author: SOC Detection Engineering
+date: 2026/05/23
+tags:
+  - attack.t1071.001
+  - attack.t1573.002
+logsource:
+  category: network_connection
+detection:
+  selection:
+    dst_ip: &#x27;194.163.175.135&#x27;
+    dst_port:
+      - 4445
+      - 7443
+      - 31337
+      - 22
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-261-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.auditd OR linux.syslog OR cloudtrail OR azure.activity_logs) (@network.destination.ip:194.163.175.135 OR @DestinationIp:194.163.175.135) AND (@network.destination.port:(4445 OR 7443 OR 31337 OR 22) OR @DestinationPort:(4445 OR 7443 OR 31337 OR 22))</code></pre></div>
+    <div class="tab-content" id="art-261-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=/^(NetworkConnectIP4|NetworkConnectIP6)$/ RemoteAddressIP4=&quot;194.163.175.135&quot; | RemotePort=4445 OR RemotePort=7443 OR RemotePort=31337 OR RemotePort=22 | groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-261-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;194.163.175.135&quot; AND All_Traffic.dest_port IN (4445,7443,31337,22) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | appendcols [| tstats summariesonly=t count from datamodel=Certificates.All_Certificates where All_Certificates.ssl.ssl_serial=&quot;fece5b954e69b2c6a8d0a1029631a0d7&quot; by All_Certificates.ssl.ssl_serial All_Certificates.dest]</code></pre><pre class="spl-mode-body" id="art-261-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;194.163.175.135&quot; AND All_Traffic.dest_port IN (4445,7443,31337,22) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | appendcols [| tstats summariesonly=false count from datamodel=Certificates.All_Certificates where All_Certificates.ssl.ssl_serial=&quot;fece5b954e69b2c6a8d0a1029631a0d7&quot; by All_Certificates.ssl.ssl_serial All_Certificates.dest]</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="71d91cb441" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">[LLM] AdaptixC2 &#x27;systemd-resolved&#x27; or Sliver &#x27;CWan&#x27; implant on Linux / SD-WAN host</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="71d91cb441" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the specific implant filenames Talos observed dropped post-exploitation on Cisco SD-WAN devices: &#x27;systemd-resolved&#x27; (AdaptixC2 agent masquerading as the legitimate Linux service) calling 194.163.175.135:4445, and &#x27;CWan&#x27; (Sliver implant) calling mtls://23.27.143.170:443. Hunts both the file presence and the C2 callouts.
+
+Rationale: Talos explicitly names the implant filenames (&#x27;systemd-resolved&#x27; for AdaptixC2 and &#x27;CWan&#x27; for Sliver) and the C2 endpoints (194.163.175.135:4445, mtls://23.27.143.170:443). The masquerade check excludes the legitimate /lib/systemd path for systemd-resolved, so any other path equals a high-fidelity hit. Verified Sliver and AdaptixC2 framework attribution via the public AdaptixC2 and Sliver project pages.
+
+Cross-checked against:
+  • https://blog.talosintelligence.com/sd-wan-ongoing-exploitation/
+  • https://github.com/BishopFox/sliver
+  • https://github.com/Adaptix-Framework/AdaptixC2</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Masquerading: Match Legitimate Name or Location">T1036.005</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Application Layer Protocol">T1071.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-261-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-261-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-261-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-261-uc3-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-261-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc3-kql"><pre><button class="copy-btn">COPY</button><code>let C2_IPs = dynamic([&quot;194.163.175.135&quot;,&quot;23.27.143.170&quot;]);
+let ImpostorPaths = dynamic([&quot;/lib/systemd/systemd-resolved&quot;,&quot;/usr/lib/systemd/systemd-resolved&quot;,&quot;/usr/libexec/systemd/systemd-resolved&quot;]);
+union isfuzzy=true
+(DeviceProcessEvents
+  | where Timestamp &gt; ago(60d)
+  | where (FileName =~ &quot;systemd-resolved&quot; and FolderPath !in~ (ImpostorPaths))
+     or FileName =~ &quot;CWan&quot;
+     or ProcessCommandLine has_any (&quot;194.163.175.135&quot;,&quot;23.27.143.170&quot;)
+  | project Timestamp, DeviceName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName),
+(DeviceNetworkEvents
+  | where Timestamp &gt; ago(60d)
+  | where RemoteIP in (C2_IPs)
+  | project Timestamp, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName)
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let C2_IPs = dynamic([&quot;194.163.175.135&quot;,&quot;23.27.143.170&quot;]);
+let KeywordList = dynamic([&quot;systemd-resolved&quot;,&quot;CWan&quot;,&quot;194.163.175.135&quot;,&quot;23.27.143.170&quot;,&quot;mtls://23.27.143.170&quot;]);
+Syslog
+| where TimeGenerated &gt; ago(60d)
+| where SyslogMessage has_any (KeywordList)
+| project TimeGenerated, Computer, HostName, Facility, ProcessName, SyslogMessage
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Linux Implant Filenames From UAT-8616 / Sliver Cluster (systemd-resolved Masquerade or CWan)
+id: 4f7e2a55-1b88-49a7-bf7e-8a2dd0c6a0e4
+description: Detects execution of attacker-dropped Linux implants observed by Cisco Talos on compromised Cisco SD-WAN devices — AdaptixC2 binary named &#x27;systemd-resolved&#x27; calling 194.163.175.135 and Sliver binary &#x27;CWan&#x27; calling 23.27.143.170.
+references:
+  - https://blog.talosintelligence.com/sd-wan-ongoing-exploitation/
+author: SOC Detection Engineering
+date: 2026/05/23
+tags:
+  - attack.t1036.005
+  - attack.t1059.004
+  - attack.t1071.001
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_cwan:
+    Image|endswith: &#x27;/CWan&#x27;
+  selection_impostor:
+    Image|endswith: &#x27;/systemd-resolved&#x27;
+  filter_legit:
+    Image:
+      - &#x27;/lib/systemd/systemd-resolved&#x27;
+      - &#x27;/usr/lib/systemd/systemd-resolved&#x27;
+      - &#x27;/usr/libexec/systemd/systemd-resolved&#x27;
+  condition: selection_cwan or (selection_impostor and not filter_legit)
+level: high</code></pre></div>
+    <div class="tab-content" id="art-261-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.auditd OR linux.syslog) ((@process.name:CWan) OR (@process.name:systemd-resolved AND -@process.executable.path:(&quot;/lib/systemd/systemd-resolved&quot; OR &quot;/usr/lib/systemd/systemd-resolved&quot; OR &quot;/usr/libexec/systemd/systemd-resolved&quot;)) OR @process.command_line:(*194.163.175.135* OR *23.27.143.170*))</code></pre></div>
+    <div class="tab-content" id="art-261-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 | (ImageFileName=/\/CWan$/i) OR (ImageFileName=/\/systemd-resolved$/i AND NOT ImageFileName=/^\/(lib|usr\/lib|usr\/libexec)\/systemd\/systemd-resolved$/) OR regex(&quot;(194\.163\.175\.135|23\.27\.143\.170)&quot;, field=CommandLine) | groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-261-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;systemd-resolved&quot; AND Processes.process_path!=&quot;/lib/systemd/systemd-resolved&quot; AND Processes.process_path!=&quot;/usr/lib/systemd/systemd-resolved&quot;) OR Processes.process_name=&quot;CWan&quot; OR match(Processes.process,&quot;194\.163\.175\.135&quot;) OR match(Processes.process,&quot;23\.27\.143\.170&quot;) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-261-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;systemd-resolved&quot; AND Processes.process_path!=&quot;/lib/systemd/systemd-resolved&quot; AND Processes.process_path!=&quot;/usr/lib/systemd/systemd-resolved&quot;) OR Processes.process_name=&quot;CWan&quot; OR match(Processes.process,&quot;194\.163\.175\.135&quot;) OR match(Processes.process,&quot;23\.27\.143\.170&quot;) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="1dc7c96785" data-platforms="datadog,def,falcon,sent,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">[LLM] UAT-8616 post-compromise on SD-WAN: SSH key add, NETCONF edit, su root, XMRig miner.sh</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="1dc7c96785" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the specific post-compromise actions Talos lists for UAT-8616 after exploitation of CVE-2026-20182/20127 — adding SSH keys, modifying NETCONF configuration, privilege escalation via &#x27;su root -c id&#x27;, plus Cluster 7&#x27;s XMRig deployment via /tmp/moneroocean/miner.sh with config_background.json.
+
+Rationale: Anchors directly on the article&#x27;s verbatim strings: Code Block 2 (/tmp/moneroocean/miner.sh --config=/tmp/moneroocean/config_background.json), Code Block 3 (su root -c id), and the named post-compromise actions Talos lists for UAT-8616 (SSH key addition, NETCONF configuration modification). The &#x27;su root -c id&#x27; command is a UAT-8616 fingerprint — a sophisticated actor verifying root context after privilege escalation, not normal admin usage.
+
+Cross-checked against:
+  • https://blog.talosintelligence.com/sd-wan-ongoing-exploitation/
+  • https://moneroocean.stream/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Account Manipulation: SSH Authorized Keys">T1098.004</span> <span class="ind tech" title="Create or Modify System Process">T1543</span> <span class="ind tech" title="Abuse Elevation Control Mechanism: Sudo and Sudo Caching">T1548.003</span> <span class="ind tech" title="Resource Hijacking">T1496</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-261-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-261-uc4-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-261-uc4-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-261-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(60d)
+| where (ProcessCommandLine has &quot;su root&quot; and ProcessCommandLine has &quot;-c&quot; and ProcessCommandLine has &quot;id&quot;)
+   or ProcessCommandLine has_any (&quot;/tmp/moneroocean/miner.sh&quot;,&quot;config_background.json&quot;,&quot;moneroocean&quot;)
+   or (ProcessCommandLine has &quot;authorized_keys&quot; and FileName in~ (&quot;bash&quot;,&quot;sh&quot;,&quot;tee&quot;,&quot;echo&quot;,&quot;cat&quot;,&quot;dd&quot;,&quot;cp&quot;))
+   or (ProcessCommandLine has &quot;edit-config&quot; and ProcessCommandLine has &quot;netconf&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessParentFileName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let Keywords = dynamic([&quot;su root -c id&quot;,&quot;su root \u2013c id&quot;,&quot;/tmp/moneroocean/miner.sh&quot;,&quot;config_background.json&quot;,&quot;moneroocean&quot;,&quot;authorized_keys&quot;,&quot;edit-config&quot;,&quot;netconf&quot;]);
+Syslog
+| where TimeGenerated &gt; ago(60d)
+| where SyslogMessage has_any (Keywords)
+| project TimeGenerated, Computer, HostName, Facility, SeverityLevel, ProcessName, SyslogMessage
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.auditd OR linux.syslog) (@process.command_line:(*&quot;su root&quot;*&quot;-c&quot;*id* OR *&quot;/tmp/moneroocean/miner.sh&quot;* OR *config_background.json* OR *moneroocean*) OR (@process.command_line:*authorized_keys* AND @process.name:(bash OR sh OR tee OR echo OR cat OR dd OR cp)) OR (@process.command_line:*edit-config* AND @process.command_line:*netconf*))</code></pre></div>
+    <div class="tab-content" id="art-261-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 | (regex(&quot;su\\s+root\\s+-c\\s+id&quot;, field=CommandLine) OR regex(&quot;/tmp/moneroocean/miner\\.sh&quot;, field=CommandLine) OR regex(&quot;config_background\\.json&quot;, field=CommandLine) OR (regex(&quot;authorized_keys&quot;, field=CommandLine) AND ImageFileName=/\/(bash|sh|tee|echo|cat|dd|cp)$/i) OR (regex(&quot;edit-config&quot;, field=CommandLine) AND regex(&quot;netconf&quot;, field=CommandLine))) | groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine, ParentBaseFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-261-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process IN (&quot;*su root*-c*id*&quot;,&quot;*/tmp/moneroocean/miner.sh*&quot;,&quot;*config_background.json*&quot;) OR (Processes.process=&quot;*authorized_keys*&quot; AND Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;tee&quot;,&quot;echo&quot;,&quot;cat&quot;)) OR (Processes.process=&quot;*edit-config*&quot; AND Processes.process=&quot;*netconf*&quot;)) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-261-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process IN (&quot;*su root*-c*id*&quot;,&quot;*/tmp/moneroocean/miner.sh*&quot;,&quot;*config_background.json*&quot;) OR (Processes.process=&quot;*authorized_keys*&quot; AND Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;tee&quot;,&quot;echo&quot;,&quot;cat&quot;)) OR (Processes.process=&quot;*edit-config*&quot; AND Processes.process=&quot;*netconf*&quot;)) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Beaconing — periodic outbound to small set of destinations</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="0bf69215de" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">C2 channel detection via inter-beacon-time stddev / fan-out to single dest.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Web Protocols">T1071.001</span> <span class="ind tech" title="DNS">T1071.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-261-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-261-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(1d)
+| where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
+| project DeviceName, RemoteIP, RemotePort, Timestamp
+| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
+| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
+         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
+| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
+| extend delta_sec = datetime_diff(&#x27;second&#x27;, Timestamp, prev_ts)
+| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
+    by DeviceName, RemoteIP, RemotePort
+| where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
+| order by conn_count desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+| where TimeGenerated &gt; ago(2h)
+| where DvcAction != &quot;Block&quot;
+| where ipv4_is_private(DstIpAddr) == false
+| summarize ConnCount = count(),
+            DistinctMinutes = dcount(bin(TimeGenerated, 1m))
+            by DvcHostname, DstIpAddr, DstPortNumber
+| where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
+| order by ConnCount desc
+</code></pre></div>
+    <div class="tab-content" id="art-261-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
+| sort - count</code></pre><pre class="spl-mode-body" id="art-261-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
+    by _time span=10s, All_Traffic.src, All_Traffic.dest
+| `drop_dm_object_name(All_Traffic)`
+| streamstats current=f last(_time) AS prev_time by src, dest
+| eval delta = _time - prev_time
+| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
+| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
+| sort - count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Network connections to article IPs / domains</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-261-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-261-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-261-uc6-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIP in (&quot;38.181.52.89&quot;, &quot;89.125.244.33&quot;, &quot;89.125.244.51&quot;, &quot;71.80.85.135&quot;, &quot;212.83.162.37&quot;, &quot;38.60.214.92&quot;, &quot;65.20.67.134&quot;, &quot;104.233.156.1&quot;, &quot;194.233.100.40&quot;, &quot;194.163.175.135&quot;, &quot;23.27.143.170&quot;, &quot;83.229.126.195&quot;, &quot;13.62.52.206&quot;, &quot;79.135.105.208&quot;) or RemoteUrl has_any (&quot;&quot;)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-261-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;38.181.52.89&quot;, &quot;89.125.244.33&quot;, &quot;89.125.244.51&quot;, &quot;71.80.85.135&quot;, &quot;212.83.162.37&quot;, &quot;38.60.214.92&quot;, &quot;65.20.67.134&quot;, &quot;104.233.156.1&quot;, &quot;194.233.100.40&quot;, &quot;194.163.175.135&quot;, &quot;23.27.143.170&quot;, &quot;83.229.126.195&quot;, &quot;13.62.52.206&quot;, &quot;79.135.105.208&quot;]);
+let BadDomains = dynamic([&quot;&quot;]);
+ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr in (BadIPs)
+   or Url has_any (BadDomains)
+| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-261-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
+status: experimental
+description: |
+    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
+    article-specific destinations. For dynamic IOC management, use a
+    watchlist or external feed.
+references:
+    - https://attack.mitre.org/tactics/TA0011/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.command-and-control
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection_ip:
+        DestinationIp:
+            - &#x27;__IP_PLACEHOLDER_1__&#x27;
+            - &#x27;__IP_PLACEHOLDER_2__&#x27;
+    selection_domain:
+        DestinationHostname:
+            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
+            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
+    condition: selection_ip or selection_domain
+falsepositives:
+    - None on a true-positive IOC match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-261-uc6-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;38.181.52.89&quot;, &quot;89.125.244.33&quot;, &quot;89.125.244.51&quot;, &quot;71.80.85.135&quot;, &quot;212.83.162.37&quot;, &quot;38.60.214.92&quot;, &quot;65.20.67.134&quot;, &quot;104.233.156.1&quot;, &quot;194.233.100.40&quot;, &quot;194.163.175.135&quot;, &quot;23.27.143.170&quot;, &quot;83.229.126.195&quot;, &quot;13.62.52.206&quot;, &quot;79.135.105.208&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats `summariesonly` count from datamodel=Web
+        where Web.dest IN (&quot;&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-261-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;38.181.52.89&quot;, &quot;89.125.244.33&quot;, &quot;89.125.244.51&quot;, &quot;71.80.85.135&quot;, &quot;212.83.162.37&quot;, &quot;38.60.214.92&quot;, &quot;65.20.67.134&quot;, &quot;104.233.156.1&quot;, &quot;194.233.100.40&quot;, &quot;194.163.175.135&quot;, &quot;23.27.143.170&quot;, &quot;83.229.126.195&quot;, &quot;13.62.52.206&quot;, &quot;79.135.105.208&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats summariesonly=false count from datamodel=Web
+        where Web.dest IN (&quot;&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-261-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-261-uc7-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-20182&quot;, &quot;CVE-2026-20133&quot;, &quot;CVE-2026-20128&quot;, &quot;CVE-2026-20122&quot;, &quot;CVE-2026-20127&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-261-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-20182&quot;, &quot;CVE-2026-20133&quot;, &quot;CVE-2026-20128&quot;, &quot;CVE-2026-20122&quot;, &quot;CVE-2026-20127&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-261-uc7-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-20182&quot;, &quot;CVE-2026-20133&quot;, &quot;CVE-2026-20128&quot;, &quot;CVE-2026-20122&quot;, &quot;CVE-2026-20127&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-261-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-20182&quot;, &quot;CVE-2026-20133&quot;, &quot;CVE-2026-20128&quot;, &quot;CVE-2026-20122&quot;, &quot;CVE-2026-20127&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="f03ffa0f16" data-platforms="def,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — Ongoing exploitation of Cisco Catalyst SD-WAN vulnerabilities</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="f03ffa0f16" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-261-uc8-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc8-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Ongoing exploitation of Cisco Catalyst SD-WAN vulnerabilities
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;miner.sh&quot;, &quot;loot_run.sh&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/tmp/moneroocean/miner.sh&quot;, &quot;/tmp/moneroocean/config_background.json&quot;, &quot;/dev/null&quot;) or FileName in~ (&quot;miner.sh&quot;, &quot;loot_run.sh&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc8-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Ongoing exploitation of Cisco Catalyst SD-WAN vulnerabilities ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;miner.sh&quot;,&quot;loot_run.sh&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/tmp/moneroocean/miner.sh*&quot; OR Filesystem.file_path=&quot;*/tmp/moneroocean/config_background.json*&quot; OR Filesystem.file_path=&quot;*/dev/null*&quot; OR Filesystem.file_name IN (&quot;miner.sh&quot;,&quot;loot_run.sh&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-261-uc8-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Ongoing exploitation of Cisco Catalyst SD-WAN vulnerabilities ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;miner.sh&quot;,&quot;loot_run.sh&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/tmp/moneroocean/miner.sh*&quot; OR Filesystem.file_path=&quot;*/tmp/moneroocean/config_background.json*&quot; OR Filesystem.file_path=&quot;*/dev/null*&quot; OR Filesystem.file_name IN (&quot;miner.sh&quot;,&quot;loot_run.sh&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
   </div>
 </details></div>
 </article>

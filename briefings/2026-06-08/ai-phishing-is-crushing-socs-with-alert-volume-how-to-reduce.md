@@ -1,23 +1,27 @@
-# [CRIT] Critical WP Maps Pro Flaw Actively Exploited to Create Admin Accounts
+# [CRIT] AI Phishing Is Crushing SOCs with Alert Volume: How to Reduce Tier 1 Overload
 
 **Source:** The Hacker News
-**Published:** 2026-06-01
-**Article:** https://thehackernews.com/2026/06/critical-wp-maps-pro-flaw-actively.html
+**Published:** 2026-06-08
+**Article:** https://thehackernews.com/2026/06/ai-phishing-is-crushing-socs-with-alert.html
 
 ## Threat Profile
 
-Critical WP Maps Pro Flaw Actively Exploited to Create Admin Accounts 
- Ravie Lakshmanan  Jun 01, 2026 Vulnerability / Website Security, 
-Threat actors are attempting to actively exploit a critical security flaw impacting WP Maps Pro , a WordPress plugin that has had over 15,000 sales on the Envato Market, to create malicious administrator accounts on susceptible sites.
-WP Maps Pro allows site owners to embed customizable Google Maps and OpenStreetMap with markers, listings, and advanced locat…
+AI Phishing Is Crushing SOCs with Alert Volume: How to Reduce Tier 1 Overload 
+ The Hacker News  Jun 08, 2026 Incident Response / Artificial Intelligence 
+Phishing has always been a numbers game. AI has turned it into a volume machine.
+Attackers can now create convincing emails, fake login pages, and tailored lures in minutes. Every polished message adds another case for Tier 1 to review, another link to inspect, and another alert that cannot be dismissed at a glance.
+As the queue grows, a cre…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-8732`
+- **IPv4 (defanged):** `13.107.213.44`
+- **IPv4 (defanged):** `143.204.203.52`
+- **Domain (defanged):** `blog.com`
+- **Domain (defanged):** `openvpn.com`
+- **Domain (defanged):** `epleyonlineo.za.com`
 
 ## MITRE ATT&CK Techniques
 
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -27,61 +31,15 @@ WP Maps Pro allows site owners to embed customizable Google Maps and OpenStreetM
 - **T1218** — System Binary Proxy Execution
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1068** — Exploitation for Privilege Escalation
-- **T1136.001** — Create Account: Local Account
-- **T1505.003** — Server Software Component: Web Shell
-- **T1606.001** — Forge Web Credentials: Web Cookies
-- **T1496** — Resource Hijacking
+- **T1071** — Application Layer Protocol
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### [LLM] WP Maps Pro CVE-2026-8732 exploit attempt — unauthenticated POST to wpgmp_temp_access_ajax
-
-`UC_115_6` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime, values(Web.url) as urls, values(Web.http_user_agent) as user_agents, values(Web.status) as statuses, dc(Web.dest) as targets from datamodel=Web where Web.http_method=POST Web.uri_path="*/wp-admin/admin-ajax.php" (Web.url="*wpgmp_temp_access_ajax*" OR Web.uri_query="*wpgmp_temp_access_ajax*" OR Web.http_content="*wpgmp_temp_access_ajax*") by Web.src, Web.dest
-| `drop_dm_object_name("Web")`
-| convert ctime(firstTime) ctime(lastTime)
-| where count >= 1
-```
-
-### [LLM] WP Maps Pro CVE-2026-8732 successful exploit — check_temp=false admin-account creation payload
-
-`UC_115_7` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime, values(Web.url) as urls, values(Web.http_user_agent) as user_agents, values(Web.status) as statuses from datamodel=Web where Web.http_method=POST Web.uri_path="*/wp-admin/admin-ajax.php" (Web.url="*wpgmp_temp_access_ajax*" OR Web.http_content="*wpgmp_temp_access_ajax*") (Web.url="*check_temp=false*" OR Web.url="*check_temp%3Dfalse*" OR Web.http_content="*check_temp=false*" OR Web.http_content="*\"check_temp\":false*") by Web.src, Web.dest, Web.status
-| `drop_dm_object_name("Web")`
-| convert ctime(firstTime) ctime(lastTime)
-| eval likely_success=if(status=="200","YES","no")
-| where count >= 1
-```
-
-### [LLM] Post-CVE-2026-8732 hijack — magic-login GET followed by theme/plugin-editor abuse from same IP
-
-`UC_115_8` · phase: **actions** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime, values(Web.uri_path) as paths, values(Web.http_method) as methods, values(Web.url) as urls from datamodel=Web where Web.uri_path IN ("*/wp-admin/theme-editor.php","*/wp-admin/plugin-editor.php","*/wp-admin/plugin-install.php","*/wp-admin/update.php","*/wp-admin/admin-ajax.php") by Web.src, Web.dest, bin(_time, 1h) as window
-| `drop_dm_object_name("Web")`
-| join type=inner src, dest [
-    | tstats `summariesonly` count as exploit_count, min(_time) as exploit_time from datamodel=Web where Web.http_method=POST Web.uri_path="*/wp-admin/admin-ajax.php" (Web.url="*wpgmp_temp_access_ajax*" OR Web.http_content="*wpgmp_temp_access_ajax*") by Web.src, Web.dest
-    | `drop_dm_object_name("Web")`
-  ]
-| where firstTime >= exploit_time AND firstTime <= exploit_time + 3600
-| eval delay_sec = firstTime - exploit_time
-| convert ctime(firstTime) ctime(lastTime) ctime(exploit_time)
-| table firstTime, lastTime, exploit_time, delay_sec, src, dest, methods, paths, count, exploit_count
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -258,6 +216,34 @@ CloudAppEvents
           ActivityObjects, IPAddress, UserAgent
 ```
 
+### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
+
+`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
+      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
+      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
+        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
+        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
+    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
+| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
+```
+
 ### Trusted vendor binary / installer launching unusual children
 
 `UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
@@ -286,10 +272,10 @@ DeviceProcessEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-8732`
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `13.107.213.44`, `143.204.203.52`, `blog.com`, `openvpn.com`, `epleyonlineo.za.com`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
