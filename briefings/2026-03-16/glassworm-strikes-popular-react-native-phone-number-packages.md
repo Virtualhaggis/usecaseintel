@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Glassworm stage-2/stage-3 C2 callback to 45.32.150.251 or 217.69.3.152
 
-`UC_444_10` · phase: **c2** · confidence: **High**
+`UC_443_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceNetworkEvents
 
 ### [LLM] Glassworm stage-3 persistence: schtasks UpdateApp + HKCU Run DPKCbbQ
 
-`UC_444_11` · phase: **install** · confidence: **High**
+`UC_443_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ union TaskPersistence, RegPersistence
 
 ### [LLM] Glassworm side-staged Node.js runtime under %APPDATA%\_node_x86 / _node_x64
 
-`UC_444_12` · phase: **install** · confidence: **High**
+`UC_443_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -331,7 +331,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Glassworm Strikes Popular React Native Phone Number Packages
 
-`UC_444_9` · phase: **exploit** · confidence: **High**
+`UC_443_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

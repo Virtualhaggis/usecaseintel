@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1252 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,17 +10,20 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-08
 - [ai phishing is crushing socs with alert volume how to reduce](./2026-06-08/ai-phishing-is-crushing-socs-with-alert-volume-how-to-reduce.md)
-- [check point links vpn zero day attacks to qilin ransomware g](./2026-06-08/check-point-links-vpn-zero-day-attacks-to-qilin-ransomware-g.md)
+- [critical check point vpn flaw exploited to bypass passwords ](./2026-06-08/critical-check-point-vpn-flaw-exploited-to-bypass-passwords-.md)
 - [critical redis rce vulnerability enable attackers to gain co](./2026-06-08/critical-redis-rce-vulnerability-enable-attackers-to-gain-co.md)
+- [new lucid stealer targets 18 browsers crypto wallets and dis](./2026-06-08/new-lucid-stealer-targets-18-browsers-crypto-wallets-and-dis.md)
 - [over 20 000 instagram accounts stolen in meta ai support hac](./2026-06-08/over-20-000-instagram-accounts-stolen-in-meta-ai-support-hac.md)
 - [the hades campaign graph ml pypi packages deploy cross platf](./2026-06-08/the-hades-campaign-graph-ml-pypi-packages-deploy-cross-platf.md)
+- [unc3753 attacking us law firms using vishing and rmm tools t](./2026-06-08/unc3753-attacking-us-law-firms-using-vishing-and-rmm-tools-t.md)
 - [unc3753 used vishing and physical intrusions in u s data the](./2026-06-08/unc3753-used-vishing-and-physical-intrusions-in-u-s-data-the.md)
 - [unifi os server critical rce chain allows root access withou](./2026-06-08/unifi-os-server-critical-rce-chain-allows-root-access-withou.md)
 - [verdantbamboo deploys bsd variant of brickstorm on linux app](./2026-06-08/verdantbamboo-deploys-bsd-variant-of-brickstorm-on-linux-app.md)
+- [weekly recap instagram account hacks android zero day github](./2026-06-08/weekly-recap-instagram-account-hacks-android-zero-day-github.md)
+- [whatsapp disrupts nso linked cyberattack targeting users wit](./2026-06-08/whatsapp-disrupts-nso-linked-cyberattack-targeting-users-wit.md)
 
 ## 2026-06-07
 - [c0xmo botnet spreads via dd wrt router flaw kills rival malw](./2026-06-07/c0xmo-botnet-spreads-via-dd-wrt-router-flaw-kills-rival-malw.md)
-- [instagram fixes password reset flaw that exposes user emails](./2026-06-07/instagram-fixes-password-reset-flaw-that-exposes-user-emails.md)
 - [silent ransom group targets law firms with fake it support c](./2026-06-07/silent-ransom-group-targets-law-firms-with-fake-it-support-c.md)
 
 ## 2026-06-06
@@ -107,7 +110,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47429 when vitest ui server is listen](./2026-06-01/ghsa-critical-cve-2026-47429-when-vitest-ui-server-is-listen.md)
 - [miasma supply chain attack compromises red hat npm packages ](./2026-06-01/miasma-supply-chain-attack-compromises-red-hat-npm-packages-.md)
 - [miasma supply chain attack malicious code found in redhat cl](./2026-06-01/miasma-supply-chain-attack-malicious-code-found-in-redhat-cl.md)
-- [openai codex authentication tokens stolen in codexui android](./2026-06-01/openai-codex-authentication-tokens-stolen-in-codexui-android.md)
 - [weekly recap new linux flaw pan os exploit ai powered attack](./2026-06-01/weekly-recap-new-linux-flaw-pan-os-exploit-ai-powered-attack.md)
 
 ## 2026-05-30

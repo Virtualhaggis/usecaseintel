@@ -245,7 +245,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Node-gyp Supply Chain Compromise: A Self-Propagating npm Worm That Hides in bind
 
-`UC_71_6` · phase: **exploit** · confidence: **High**
+`UC_72_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
