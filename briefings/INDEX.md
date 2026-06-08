@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1253 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -14,6 +14,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the hades campaign graph ml pypi packages deploy cross platf](./2026-06-08/the-hades-campaign-graph-ml-pypi-packages-deploy-cross-platf.md)
 - [unc3753 used vishing and physical intrusions in u s data the](./2026-06-08/unc3753-used-vishing-and-physical-intrusions-in-u-s-data-the.md)
 - [unifi os server critical rce chain allows root access withou](./2026-06-08/unifi-os-server-critical-rce-chain-allows-root-access-withou.md)
+- [verdantbamboo deploys bsd variant of brickstorm on linux app](./2026-06-08/verdantbamboo-deploys-bsd-variant-of-brickstorm-on-linux-app.md)
 
 ## 2026-06-07
 - [c0xmo botnet spreads via dd wrt router flaw kills rival malw](./2026-06-07/c0xmo-botnet-spreads-via-dd-wrt-router-flaw-kills-rival-malw.md)
@@ -54,7 +55,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [china linked ta4922 expands phishing attacks to u k germany ](./2026-06-04/china-linked-ta4922-expands-phishing-attacks-to-u-k-germany-.md)
 - [cisco patches cve 2026 20230 in unified cm as exploit code g](./2026-06-04/cisco-patches-cve-2026-20230-in-unified-cm-as-exploit-code-g.md)
 - [claude code github action flaw let one malicious issue hijac](./2026-06-04/claude-code-github-action-flaw-let-one-malicious-issue-hijac.md)
-- [credit card theft campaign abuses stripe to host stolen paym](./2026-06-04/credit-card-theft-campaign-abuses-stripe-to-host-stolen-paym.md)
 - [fake sites mimicking open source tools rank high on google t](./2026-06-04/fake-sites-mimicking-open-source-tools-rank-high-on-google-t.md)
 - [fluttershell backdoor spreads to macos via malicious google ](./2026-06-04/fluttershell-backdoor-spreads-to-macos-via-malicious-google-.md)
 - [ghsa critical cve 2026 47708 mcp for stata command injection](./2026-06-04/ghsa-critical-cve-2026-47708-mcp-for-stata-command-injection.md)
@@ -115,7 +115,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-30
 - [malicious npm packages abuse dependency confusion to profile](./2026-05-30/malicious-npm-packages-abuse-dependency-confusion-to-profile.md)
-- [pan os globalprotect authentication bypass cve 2026 0257 und](./2026-05-30/pan-os-globalprotect-authentication-bypass-cve-2026-0257-und.md)
 
 ## 2026-05-29
 - [cisa kev cve 2026 0257 palo alto networks pan os authenticat](./2026-05-29/cisa-kev-cve-2026-0257-palo-alto-networks-pan-os-authenticat.md)

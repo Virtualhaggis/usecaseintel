@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Hades Campaign PyPI install of compromised graph-ML / bio package versions
 
-`UC_0_8` · phase: **delivery** · confidence: **High**
+`UC_3_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ union
 
 ### [LLM] Hades Campaign python import hook spawning bun runtime from /tmp
 
-`UC_0_9` · phase: **install** · confidence: **High**
+`UC_3_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### [LLM] Hades Campaign persistence artifacts (systemd units + updater.py + lock/state files)
 
-`UC_0_10` · phase: **install** · confidence: **High**
+`UC_3_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceFileEvents
 
 ### [LLM] Hades Campaign GitHub commit-search C2 with firedalazer / DontRevokeOrItGoesBoom markers
 
-`UC_0_11` · phase: **c2** · confidence: **High**
+`UC_3_11` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +154,7 @@ union
 
 ### [LLM] Hades Campaign cross-platform memory scrape of GitHub Actions Runner.Worker
 
-`UC_0_12` · phase: **actions** · confidence: **Medium**
+`UC_3_12` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -437,7 +437,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The Hades Campaign: Graph ML PyPI Packages Deploy Cross-Platform Memory Scrapers
 
-`UC_0_7` · phase: **exploit** · confidence: **High**
+`UC_3_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
