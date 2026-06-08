@@ -1,8 +1,8 @@
-# [CRIT] Critical Check Point VPN Flaw Exploited to Bypass Passwords in IKEv1 Setups
+# [CRIT] Meta Blocks NSO Group's New WhatsApp Phishing Attack, Files Contempt Order
 
-**Source:** The Hacker News, BleepingComputer, Cyber Security News
+**Source:** The Hacker News, Cyber Security News
 **Published:** 2026-06-08
-**Article:** https://thehackernews.com/2026/06/critical-check-point-vpn-flaw-exploited.html
+**Article:** https://thehackernews.com/2026/06/meta-blocks-nso-groups-new-whatsapp.html
 
 ## Threat Profile
 
@@ -48,12 +48,10 @@ The vulnerability, tracked as CVE-2026-50751 (CVSS score: 9.3), is a case of a l
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
 - **T1133** — External Remote Services
-- **T1078** — Valid Accounts
-- **T1095** — Non-Application Layer Protocol
-- **T1571** — Non-Standard Port
-- **T1219** — Remote Access Software
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1567.002** — Exfiltration to Cloud Storage
+- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1105** — Ingress Tool Transfer
-- **T1059.004** — Unix Shell
 
 ## Kill chain phases observed
 
@@ -61,89 +59,91 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Successful Check Point IKEv1 VPN authentication from known CVE-2026-50751 attacker VPS IPs
+### [LLM] Check Point Remote Access VPN inbound auth from CVE-2026-50751 actor VPS IPs
 
-`UC_1_11` · phase: **exploit** · confidence: **High**
+`UC_3_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.user) as user values(Authentication.dest) as gateway from datamodel=Authentication where Authentication.src IN ("45.77.149.152","209.182.225.136","38.60.157.139","162.33.177.101","45.76.26.42","144.208.127.155","38.54.88.201","38.54.107.167") AND (Authentication.app="CheckPoint*" OR Authentication.app="IKE*" OR Authentication.app="Mobile Access*" OR Authentication.app="Remote Access*") AND Authentication.action=success by Authentication.src Authentication.user Authentication.dest Authentication.app | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(dest) as gateway values(dest_port) as dest_port values(action) as action from datamodel=Network_Traffic.All_Traffic where (sourcetype IN ("opsec","cp_log","checkpoint:firewall","checkpoint:vpn") OR All_Traffic.dest_port IN (500,4500,443) AND All_Traffic.action!="blocked") AND All_Traffic.src IN ("45.77.149.152","209.182.225.136","38.60.157.139","162.33.177.101","45.76.26.42","144.208.127.155","38.54.88.201","38.54.107.167") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.action | `drop_dm_object_name(All_Traffic)` | eval firstSeen=strftime(firstSeen,"%Y-%m-%dT%H:%M:%S"), lastSeen=strftime(lastSeen,"%Y-%m-%dT%H:%M:%S")
 ```
 
 **Defender KQL:**
 ```kql
-// Defender Advanced Hunting has no native Check Point gateway telemetry; pivot to internal RDP/SMB lateral movement initiated by the post-VPN session source IP.
-let AttackerIPs = dynamic(["45.77.149.152","209.182.225.136","38.60.157.139","162.33.177.101","45.76.26.42","144.208.127.155","38.54.88.201","38.54.107.167"]);
-DeviceLogonEvents
-| where Timestamp > ago(7d)
-| where RemoteIP in (AttackerIPs)
-| where ActionType == "LogonSuccess"
-| project Timestamp, DeviceName, AccountName, AccountDomain, LogonType, RemoteIP, Protocol, ReportId
-| order by Timestamp desc
-```
-
-### [LLM] Outbound Tox protocol (UDP/33445) egress from internal hosts post-VPN
-
-`UC_1_12` · phase: **c2** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src_ip) as src_ip values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.app) as app from datamodel=Network_Traffic where All_Traffic.dest_port=33445 AND All_Traffic.transport=udp AND All_Traffic.direction=outbound by All_Traffic.src host | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
+// Targets internet-facing CP gateway whose NIC is enrolled in Defender for Endpoint / Server
 DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where ActionType == "ConnectionSuccess"
-| where Protocol =~ "Udp"
-| where RemotePort == 33445
-| where RemoteIPType == "Public"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemotePort, LocalIP, ReportId
-| order by Timestamp desc
+| where Timestamp > ago(45d)   // Check Point assesses earliest exploitation 2026-05-07
+| where ActionType in ("InboundConnectionAccepted","ConnectionSuccess","ConnectionInbound")
+| where RemoteIP in ("45.77.149.152","209.182.225.136","38.60.157.139","162.33.177.101","45.76.26.42","144.208.127.155","38.54.88.201","38.54.107.167")
+| where LocalPort in (500, 4500, 443)
+| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalIP, LocalPort, Protocol, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp asc
 ```
 
-### [LLM] Internal asset egress to known Qilin-affiliate C2 infrastructure (CVE-2026-50751 IOC IPs)
+### [LLM] Qilin Linux ransomware ELF payload (CVE-2026-50751 campaign) — known MD5 file event
 
-`UC_1_13` · phase: **c2** · confidence: **High**
+`UC_3_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src_ip) as src_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.transport) as transport from datamodel=Network_Traffic where All_Traffic.dest_ip IN ("45.77.149.152","209.182.225.136","38.60.157.139","162.33.177.101","45.76.26.42","144.208.127.155","38.54.88.201","38.54.107.167") by All_Traffic.src host All_Traffic.dest_ip | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(Filesystem.file_path) as file_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("52fda5c1b9704544f32ee98d9060e689","51d39aa39478beeac94f2d12f682ecce") by Filesystem.dest Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | append [| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_hash IN ("52fda5c1b9704544f32ee98d9060e689","51d39aa39478beeac94f2d12f682ecce") by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)`]
 ```
 
 **Defender KQL:**
 ```kql
-let C2IPs = dynamic(["45.77.149.152","209.182.225.136","38.60.157.139","162.33.177.101","45.76.26.42","144.208.127.155","38.54.88.201","38.54.107.167"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (C2IPs)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemotePort, Protocol, ActionType, ReportId
-| order by Timestamp desc
-```
-
-### [LLM] Malicious ELF payload drop with known CVE-2026-50751 actor MD5
-
-`UC_1_14` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path from datamodel=Endpoint.Processes where (Processes.process_hash IN ("52fda5c1b9704544f32ee98d9060e689","51d39aa39478beeac94f2d12f682ecce")) by host Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("52fda5c1b9704544f32ee98d9060e689","51d39aa39478beeac94f2d12f682ecce")) by host Filesystem.user Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) ]
-```
-
-**Defender KQL:**
-```kql
-let BadMD5 = dynamic(["52fda5c1b9704544f32ee98d9060e689","51d39aa39478beeac94f2d12f682ecce"]);
+let qilinHashes = dynamic(["52fda5c1b9704544f32ee98d9060e689","51d39aa39478beeac94f2d12f682ecce"]);
 union
-  ( DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where MD5 in (BadMD5)
-    | project Timestamp, Table="DeviceFileEvents", DeviceName, FileName, FolderPath, MD5, SHA256, InitiatingProcessFileName, InitiatingProcessAccountName, FileOriginUrl, FileOriginIP),
-  ( DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where MD5 in (BadMD5)
-    | project Timestamp, Table="DeviceProcessEvents", DeviceName, FileName, FolderPath, MD5, SHA256, InitiatingProcessFileName=InitiatingProcessFileName, InitiatingProcessAccountName, FileOriginUrl="", FileOriginIP="")
+  (DeviceFileEvents
+    | where Timestamp > ago(45d)
+    | where MD5 in (qilinHashes)
+    | project Timestamp, DeviceName, Source="FileEvent", ActionType, FileName, FolderPath, MD5, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
+  (DeviceProcessEvents
+    | where Timestamp > ago(45d)
+    | where MD5 in (qilinHashes)
+    | project Timestamp, DeviceName, Source="ProcessEvent", ActionType="ProcessCreated", FileName, FolderPath, MD5, SHA256, InitiatingProcessFileName=InitiatingProcessFileName, InitiatingProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessAccountName=AccountName)
+| order by Timestamp asc
+```
+
+### [LLM] Rclone exfiltration from Check Point VPN gateway or post-bypass internal host
+
+`UC_3_13` · phase: **actions** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name IN ("rclone","rclone.exe") AND Processes.process IN ("*copy*","*sync*","*move*","*cat*") AND Processes.process IN ("*mega:*","*s3:*","*b2:*","*drive:*","*dropbox:*","*onedrive:*","*pcloud:*","*box:*","*remote:*","*gcs:*","*azureblob:*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | where user!="root" OR (user="root" AND parent!="cron" AND parent!="systemd")
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(45d)
+| where FileName =~ "rclone" or FileName =~ "rclone.exe" or ProcessCommandLine matches regex @"(?i)\brclone\b"
+| where ProcessCommandLine has_any ("copy","sync","move","copyto","moveto","cat")
+| where ProcessCommandLine matches regex @"(?i)\s(mega|s3|b2|drive|dropbox|onedrive|pcloud|box|gcs|azureblob|webdav|sftp|ftp|remote):"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256
 | order by Timestamp desc
+```
+
+### [LLM] Internal host outbound to CVE-2026-50751 Qilin actor IPs (post-bypass C2 / staging)
+
+`UC_3_14` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen sum(All_Traffic.bytes_out) as bytes_out sum(All_Traffic.bytes_in) as bytes_in values(All_Traffic.dest_port) as dest_ports values(All_Traffic.app) as apps from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("45.77.149.152","209.182.225.136","38.60.157.139","162.33.177.101","45.76.26.42","144.208.127.155","38.54.88.201","38.54.107.167") AND All_Traffic.src_category!="external" by All_Traffic.src All_Traffic.dest All_Traffic.action | `drop_dm_object_name(All_Traffic)` | eval firstSeen=strftime(firstSeen,"%Y-%m-%dT%H:%M:%S"), lastSeen=strftime(lastSeen,"%Y-%m-%dT%H:%M:%S")
+```
+
+**Defender KQL:**
+```kql
+let actorIPs = dynamic(["45.77.149.152","209.182.225.136","38.60.157.139","162.33.177.101","45.76.26.42","144.208.127.155","38.54.88.201","38.54.107.167"]);
+DeviceNetworkEvents
+| where Timestamp > ago(45d)
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt","ConnectionFound")
+| where RemoteIPType == "Public"
+| where RemoteIP in (actorIPs)
+| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), ConnCount = count(), Ports = make_set(RemotePort, 20), Processes = make_set(InitiatingProcessFileName, 20) by DeviceName, RemoteIP, InitiatingProcessAccountName
+| order by FirstSeen asc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -445,4 +445,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 15 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

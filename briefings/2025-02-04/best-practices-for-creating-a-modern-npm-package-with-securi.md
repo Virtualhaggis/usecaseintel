@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Best Practices for Creating a Modern npm Package with Security in Mind
 
-`UC_1008_0` · phase: **exploit** · confidence: **High**
+`UC_1009_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

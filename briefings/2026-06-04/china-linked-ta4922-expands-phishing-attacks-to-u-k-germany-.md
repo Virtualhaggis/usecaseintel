@@ -70,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] TA4922 Known C2 IPs and Domains (Proofpoint Jun-2026)
 
-`UC_64_10` · phase: **c2** · confidence: **High**
+`UC_67_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceNetworkEvents
 
 ### [LLM] TA4922 Atlas RAT / RomulusLoader / SilentRunLoader Known SHA256 Execution
 
-`UC_64_11` · phase: **install** · confidence: **High**
+`UC_67_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ union isfuzzy=true
 
 ### [LLM] SilentRunLoader: Python process touching Chrome Login Data / Cookies / Local State
 
-`UC_64_12` · phase: **actions** · confidence: **High**
+`UC_67_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -167,7 +167,7 @@ DeviceFileEvents
 
 ### [LLM] RomulusLoader: AnyDesk or SyncFuture written/spawned from non-installer parent
 
-`UC_64_13` · phase: **install** · confidence: **Medium**
+`UC_67_13` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

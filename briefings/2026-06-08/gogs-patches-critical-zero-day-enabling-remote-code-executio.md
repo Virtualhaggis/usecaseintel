@@ -11,20 +11,18 @@ By Sergiu Gatlan
 June 8, 2026
 12:18 PM
 0 
-
-
 Gogs has patched a critical security zero-day flaw that can allow attackers to compromise Internet-facing instances and access any repositories (including private ones).
-
-
-This  argument injection vulnerability has yet to be assigned a CVE ID, can only be exploited by authenticated attackers without admin privileges, and affects all Gogs releases up to and including 0.14.2 and 0.15.0+d…
+This  argument injection vulnerability has yet to be assigned a CVE ID, can only be exploited by authenticated attackers without admin privileges, and affects all Gogs releases up to and including 0.14.2 and 0.15.0+dev.
+They…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2025-8110`
 - **CVE:** `CVE-2024-39933`
 - **CVE:** `CVE-2024-39932`
 - **CVE:** `CVE-2026-26194`
 - **CVE:** `CVE-2024-39930`
+- **CVE:** `CVE-2025-8110`
+- **CVE:** `CVE-2024-55947`
 
 ## MITRE ATT&CK Techniques
 
@@ -44,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Gogs Merge() argument injection — git rebase invoked with --exec= flag
 
-`UC_4_2` · phase: **exploit** · confidence: **High**
+`UC_6_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +72,7 @@ DeviceProcessEvents
 
 ### [LLM] Gogs daemon ancestry spawns shell / downloader (post-arg-injection RCE)
 
-`UC_4_3` · phase: **install** · confidence: **Medium**
+`UC_6_3` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +110,7 @@ DeviceProcessEvents
 
 ### [LLM] Internet-facing Gogs instances on pre-0.14.3 (CVE-pending Merge() injection)
 
-`UC_4_4` · phase: **recon** · confidence: **High**
+`UC_6_4` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -182,7 +180,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2025-8110`, `CVE-2024-39933`, `CVE-2024-39932`, `CVE-2026-26194`, `CVE-2024-39930`
+  - CVE(s): `CVE-2024-39933`, `CVE-2024-39932`, `CVE-2026-26194`, `CVE-2024-39930`, `CVE-2025-8110`, `CVE-2024-55947`
 
 
 ## Why this matters

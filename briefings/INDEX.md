@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,12 +9,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-08
+- [ai brands as bait how threat actors are using the ai hype in](./2026-06-08/ai-brands-as-bait-how-threat-actors-are-using-the-ai-hype-in.md)
 - [ai phishing is crushing socs with alert volume how to reduce](./2026-06-08/ai-phishing-is-crushing-socs-with-alert-volume-how-to-reduce.md)
+- [check point links vpn zero day attacks to qilin ransomware g](./2026-06-08/check-point-links-vpn-zero-day-attacks-to-qilin-ransomware-g.md)
 - [cisa kev cve 2026 42271 berriai litellm command injection vu](./2026-06-08/cisa-kev-cve-2026-42271-berriai-litellm-command-injection-vu.md)
-- [critical check point vpn flaw exploited to bypass passwords ](./2026-06-08/critical-check-point-vpn-flaw-exploited-to-bypass-passwords-.md)
+- [cisa kev cve 2026 50751 check point security gateway imprope](./2026-06-08/cisa-kev-cve-2026-50751-check-point-security-gateway-imprope.md)
 - [critical unifi os bug lets hackers gain root without authent](./2026-06-08/critical-unifi-os-bug-lets-hackers-gain-root-without-authent.md)
 - [gogs patches critical zero day enabling remote code executio](./2026-06-08/gogs-patches-critical-zero-day-enabling-remote-code-executio.md)
 - [malspam attack uses google doubleclick redirects to deliver ](./2026-06-08/malspam-attack-uses-google-doubleclick-redirects-to-deliver-.md)
+- [meta blocks nso group s new whatsapp phishing attack files c](./2026-06-08/meta-blocks-nso-group-s-new-whatsapp-phishing-attack-files-c.md)
+- [new china linked threat cluster op 512 targets iis servers w](./2026-06-08/new-china-linked-threat-cluster-op-512-targets-iis-servers-w.md)
 - [new lucid stealer targets 18 browsers crypto wallets and dis](./2026-06-08/new-lucid-stealer-targets-18-browsers-crypto-wallets-and-dis.md)
 - [new pink hacking group attacking enterprise users to steal c](./2026-06-08/new-pink-hacking-group-attacking-enterprise-users-to-steal-c.md)
 - [over 20 000 instagram accounts stolen in meta ai support hac](./2026-06-08/over-20-000-instagram-accounts-stolen-in-meta-ai-support-hac.md)
@@ -24,6 +28,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [verdantbamboo deploys bsd variant of brickstorm on linux app](./2026-06-08/verdantbamboo-deploys-bsd-variant-of-brickstorm-on-linux-app.md)
 - [weekly recap instagram account hacks android zero day github](./2026-06-08/weekly-recap-instagram-account-hacks-android-zero-day-github.md)
 - [whatsapp disrupts nso linked cyberattack targeting users wit](./2026-06-08/whatsapp-disrupts-nso-linked-cyberattack-targeting-users-wit.md)
+- [whatsapp says it disrupted new nso spyware phishing attacks](./2026-06-08/whatsapp-says-it-disrupted-new-nso-spyware-phishing-attacks.md)
 
 ## 2026-06-07
 - [c0xmo botnet spreads via dd wrt router flaw kills rival malw](./2026-06-07/c0xmo-botnet-spreads-via-dd-wrt-router-flaw-kills-rival-malw.md)
@@ -105,7 +110,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [why edr and proxy won t save you from supply chain malware](./2026-06-02/why-edr-and-proxy-won-t-save-you-from-supply-chain-malware.md)
 
 ## 2026-06-01
-- [china aligned groups ramp up attacks dragon weave hits czech](./2026-06-01/china-aligned-groups-ramp-up-attacks-dragon-weave-hits-czech.md)
 - [cisa kev cve 2024 21182 oracle weblogic server unspecified v](./2026-06-01/cisa-kev-cve-2024-21182-oracle-weblogic-server-unspecified-v.md)
 - [containers on fire from container escapes to supply chain at](./2026-06-01/containers-on-fire-from-container-escapes-to-supply-chain-at.md)
 - [ghsa critical cve 2026 47413 praisonai platform any workspac](./2026-06-01/ghsa-critical-cve-2026-47413-praisonai-platform-any-workspac.md)
@@ -1820,7 +1824,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2024 4978 justice av solutions javs viewer inst](./2024-05-29/cisa-kev-cve-2024-4978-justice-av-solutions-javs-viewer-inst.md)
 
 ## 2024-05-28
-- [cisa kev cve 2024 5274 google chromium v8 type confusion vul](./2024-05-28/cisa-kev-cve-2024-5274-google-chromium-v8-type-confusion-vul.md)
 - [fastify plugins as building blocks for a backend node js api](./2024-05-28/fastify-plugins-as-building-blocks-for-a-backend-node-js-api.md)
 
 ## 2024-05-22

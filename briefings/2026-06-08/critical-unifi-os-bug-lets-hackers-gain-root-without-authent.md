@@ -11,15 +11,9 @@ By Bill Toulas
 June 8, 2026
 11:51 AM
 0 
-
-
 Attackers can chain three already fixed vulnerabilities in the Ubiquiti UniFi OS server to execute remote code with root privileges and without authentication.
-
-
 The security issues are tracked as CVE-2026-34908, CVE-2026-34909, and CVE-2026-34910. They have been addressed in May and impact UniFi OS Server versions 5.0.6 and earlier.
-
-
-While all three flaws received the maximum s…
+While all three flaws received the maximum severity rati…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -43,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] UniFi OS CVE-2026-34908/34909 auth bypass via /api/auth/validate-sso/ URI normalization
 
-`UC_6_1` · phase: **exploit** · confidence: **High**
+`UC_9_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +60,7 @@ DeviceNetworkEvents
 
 ### [LLM] UniFi OS CVE-2026-34910 command injection via ucs/update/latest_package endpoint
 
-`UC_6_2` · phase: **exploit** · confidence: **High**
+`UC_9_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +82,7 @@ DeviceNetworkEvents
 
 ### [LLM] Anomalous child processes spawned under UniFi ucs-update service (post-exploitation)
 
-`UC_6_3` · phase: **install** · confidence: **High**
+`UC_9_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
