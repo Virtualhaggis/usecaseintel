@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Pip install of compromised Microsoft durabletask versions 1.4.1-1.4.3
 
-`UC_49_8` · phase: **delivery** · confidence: **High**
+`UC_51_8` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceProcessEvents
 
 ### [LLM] rope.pyz dropper executed as /tmp/managed.pyz from durabletask import
 
-`UC_49_9` · phase: **install** · confidence: **High**
+`UC_51_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### [LLM] Egress to TeamPCP rope.pyz C2 infrastructure (check.git-service.com / t.m-kosche.com / 160.119.64.3)
 
-`UC_49_10` · phase: **c2** · confidence: **High**
+`UC_51_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceNetworkEvents
 
 ### [LLM] gh auth token / gpg-decrypt credential harvesting by python3 child
 
-`UC_49_11` · phase: **actions** · confidence: **High**
+`UC_51_11` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ DeviceProcessEvents
 
 ### [LLM] Fake pgsql-monitor.service systemd persistence written under ~/.config/systemd/user/
 
-`UC_49_12` · phase: **install** · confidence: **High**
+`UC_51_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -168,7 +168,7 @@ union file_persist, daemon_reload
 
 ### [LLM] Burst of AWS SSM SendCommand / StartSession from stolen durabletask credentials
 
-`UC_49_13` · phase: **actions** · confidence: **Medium**
+`UC_51_13` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -322,7 +322,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft's durabletask PyPI Package Compromised in Supply Chain Attack
 
-`UC_49_7` · phase: **exploit** · confidence: **High**
+`UC_51_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Hades/Miasma PyPI poisoned package installation (26 named packages)
 
-`UC_10_9` · phase: **delivery** · confidence: **High**
+`UC_16_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### [LLM] Python interpreter downloading Bun runtime ZIP from oven-sh GitHub release
 
-`UC_10_10` · phase: **install** · confidence: **High**
+`UC_16_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceNetworkEvents
 
 ### [LLM] Hades persistence: *-setup.pth file written into Python site-packages
 
-`UC_10_11` · phase: **install** · confidence: **High**
+`UC_16_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceFileEvents
 
 ### [LLM] Bun runtime reading developer credential files (.npmrc / .pypirc / .ssh / .env / cloud configs)
 
-`UC_10_12` · phase: **actions** · confidence: **High**
+`UC_16_12` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,7 +149,7 @@ DeviceFileEvents
 
 ### [LLM] gh-token-monitor service install or rm -rf wiper command (Hades self-destruct)
 
-`UC_10_13` · phase: **actions** · confidence: **High**
+`UC_16_13` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -186,7 +186,7 @@ union
 
 ### [LLM] Hades C2: GitHub commit search for campaign markers TheBeautifulSnadsOfTime / firedalazer
 
-`UC_10_14` · phase: **c2** · confidence: **High**
+`UC_16_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -472,7 +472,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hades PyPI Attack: 19 Packages Poisoned to Auto-Run Bun Credential Stealer
 
-`UC_10_8` · phase: **exploit** · confidence: **High**
+`UC_16_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -74,7 +74,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] CVE-2022-26923 exploitation via update6.exe binary execution
 
-`UC_284_14` · phase: **exploit** · confidence: **High**
+`UC_293_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### [LLM] AD CS attacker tooling execution: Certify, Certipy, Whisker process indicators
 
-`UC_284_15` · phase: **install** · confidence: **High**
+`UC_293_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceProcessEvents
 
 ### [LLM] Shadow Credentials: msDS-KeyCredentialLink attribute modification
 
-`UC_284_16` · phase: **install** · confidence: **High**
+`UC_293_16` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ IdentityQueryEvents
 
 ### [LLM] PKINIT Kerberos TGT request via certificate authentication anomaly
 
-`UC_284_17` · phase: **actions** · confidence: **Medium**
+`UC_293_17` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +154,7 @@ IdentityLogonEvents
 
 ### [LLM] AD CS certificate request with ENROLLEE_SUPPLIES_SUBJECT flag (ESC1)
 
-`UC_284_18` · phase: **exploit** · confidence: **Medium**
+`UC_293_18` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -568,7 +568,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Inside AD CS Escalation: Unpacking Advanced Misuse Techniques and Tools
 
-`UC_284_13` · phase: **exploit** · confidence: **High**
+`UC_293_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

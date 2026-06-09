@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] DynoWiper / ZOV wiper known-bad SHA-1 hash execution
 
-`UC_561_9` · phase: **install** · confidence: **High**
+`UC_570_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceProcessEvents
 
 ### [LLM] Executable dropped into C:\inetpub\pub\ shared directory
 
-`UC_561_10` · phase: **delivery** · confidence: **High**
+`UC_570_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceFileEvents
 
 ### [LLM] DynoWiper schtask.exe / *_update.exe execution from C:\inetpub\pub\
 
-`UC_561_11` · phase: **install** · confidence: **High**
+`UC_570_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceProcessEvents
 
 ### [LLM] Sandworm SOCKS5 C2 egress to 31.172.71[.]5 (Fornex) or progamevl.ru
 
-`UC_561_12` · phase: **c2** · confidence: **High**
+`UC_570_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceNetworkEvents
 
 ### [LLM] Mass file-content overwrite by single non-system process from non-standard path
 
-`UC_561_13` · phase: **actions** · confidence: **Medium**
+`UC_570_13` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -355,7 +355,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DynoWiper update: Technical analysis and attribution
 
-`UC_561_8` · phase: **exploit** · confidence: **High**
+`UC_570_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

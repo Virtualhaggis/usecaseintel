@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Inbound IKEv1 traffic from Qilin VPN-bypass infrastructure to Check Point gateways
 
-`UC_36_6` · phase: **delivery** · confidence: **High**
+`UC_39_6` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceNetworkEvents
 
 ### [LLM] Check Point IKEv1 Remote Access VPN session with no machine certificate (CVE-2026-50751 bypass shape)
 
-`UC_36_7` · phase: **exploit** · confidence: **High**
+`UC_39_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ IdentityLogonEvents
 
 ### [LLM] Long-lived VPN tunnel from VPS hosting ranges (Vultr/Cogent) attributed to Qilin VPN-bypass C2
 
-`UC_36_8` · phase: **c2** · confidence: **Medium**
+`UC_39_8` · phase: **c2** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### [LLM] Qilin post-compromise payload hashes (52fda5c1, 51d39aa3) on hosts reachable from VPN concentrator
 
-`UC_36_9` · phase: **install** · confidence: **High**
+`UC_39_9` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
