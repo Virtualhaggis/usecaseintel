@@ -1,6 +1,6 @@
 # [CRIT] One-Character Linux Kernel Flaw Enables Local Root Access, Exploits Now Public
 
-**Source:** The Hacker News, Cyber Security News
+**Source:** The Hacker News
 **Published:** 2026-06-08
 **Article:** https://thehackernews.com/2026/06/one-character-linux-kernel-flaw-enables.html
 
@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Unprivileged user namespace + nf_tables manipulation chain (CVE-2026-23111 exploitation)
 
-`UC_20_7` · phase: **exploit** · confidence: **High**
+`UC_26_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ NsCreate
 
 ### [LLM] nft (nftables) ruleset manipulation by non-root account on Linux endpoints
 
-`UC_20_8` · phase: **exploit** · confidence: **Medium**
+`UC_26_8` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceProcessEvents
 
 ### [LLM] Linux assets carrying vulnerable kernel for CVE-2026-23111 (nf_tables UAF)
 
-`UC_20_9` · phase: **recon** · confidence: **High**
+`UC_26_9` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -323,7 +323,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — One-Character Linux Kernel Flaw Enables Local Root Access, Exploits Now Public
 
-`UC_20_6` · phase: **install** · confidence: **High**
+`UC_26_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

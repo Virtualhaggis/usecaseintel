@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Quick Assist launched followed by remote interactive session (UNC3753 vishing pretext)
 
-`UC_34_11` · phase: **delivery** · confidence: **Medium**
+`UC_40_11` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### [LLM] AnyDesk, Bomgar, SuperOps or Zoho Assist installer execution (UNC3753 RMM foothold)
 
-`UC_34_12` · phase: **install** · confidence: **Medium**
+`UC_40_12` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### [LLM] Privnote[.]com self-destructing-note URL access from corporate endpoint
 
-`UC_34_13` · phase: **delivery** · confidence: **Medium**
+`UC_40_13` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### [LLM] Outbound connection to UNC3753 (Luna Moth) infrastructure IPs
 
-`UC_34_14` · phase: **c2** · confidence: **High**
+`UC_40_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceNetworkEvents
 
 ### [LLM] WinSCP or Rclone exfiltration from end-user workstations
 
-`UC_34_15` · phase: **actions** · confidence: **Medium**
+`UC_40_15` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +160,7 @@ DeviceProcessEvents
 
 ### [LLM] USB mass-storage attached followed by bulk file copy (UNC3753 physical intrusion)
 
-`UC_34_16` · phase: **actions** · confidence: **Medium**
+`UC_40_16` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -188,7 +188,7 @@ USBAttach
 
 ### [LLM] Outbound mail to or domain lookup of business-data-leaks[.]com (UNC3753 extortion infrastructure)
 
-`UC_34_17` · phase: **c2** · confidence: **High**
+`UC_40_17` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

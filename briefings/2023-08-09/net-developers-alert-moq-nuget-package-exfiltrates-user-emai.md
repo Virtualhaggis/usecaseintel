@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] .NET build (dotnet/MSBuild) spawns git config to harvest user.email
 
-`UC_1394_2` · phase: **actions** · confidence: **High**
+`UC_1389_2` · phase: **actions** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceProcessEvents
 
 ### [LLM] Moq SponsorLink email exfil egress to cdn.devlooped.com / SponsorLink blob
 
-`UC_1394_3` · phase: **c2** · confidence: **High**
+`UC_1389_3` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceNetworkEvents
 
 ### [LLM] Vulnerable Moq 4.20.0 or Devlooped.SponsorLink NuGet package landed on endpoint
 
-`UC_1394_4` · phase: **delivery** · confidence: **High**
+`UC_1389_4` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

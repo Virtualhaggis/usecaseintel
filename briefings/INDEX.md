@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-09
 - [21 0 day vulnerabilities in ffmpeg enables remote code execu](./2026-06-09/21-0-day-vulnerabilities-in-ffmpeg-enables-remote-code-execu.md)
+- [chrome v8 zero day cve 2026 11645 exploited in the wild patc](./2026-06-09/chrome-v8-zero-day-cve-2026-11645-exploited-in-the-wild-patc.md)
 - [cisa gives feds 3 days to patch check point vpn bug exploite](./2026-06-09/cisa-gives-feds-3-days-to-patch-check-point-vpn-bug-exploite.md)
 - [french govt messaging service breached in account hijacking ](./2026-06-09/french-govt-messaging-service-breached-in-account-hijacking-.md)
 - [google patches new chrome zero day flaw exploited in the wil](./2026-06-09/google-patches-new-chrome-zero-day-flaw-exploited-in-the-wil.md)
@@ -18,7 +19,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft defender now monitors rpc protocol abuse by hacker](./2026-06-09/microsoft-defender-now-monitors-rpc-protocol-abuse-by-hacker.md)
 - [new frost attack lets websites track what sites and apps you](./2026-06-09/new-frost-attack-lets-websites-track-what-sites-and-apps-you.md)
 - [new shai hulud attack compromises 23 pypi packages to target](./2026-06-09/new-shai-hulud-attack-compromises-23-pypi-packages-to-target.md)
+- [new weedhack malware as a service targets minecraft players ](./2026-06-09/new-weedhack-malware-as-a-service-targets-minecraft-players-.md)
+- [researchers build self replicating ai worm that operates ent](./2026-06-09/researchers-build-self-replicating-ai-worm-that-operates-ent.md)
 - [threat actors abuse chatgpt claude and deepseek brands as ph](./2026-06-09/threat-actors-abuse-chatgpt-claude-and-deepseek-brands-as-ph.md)
+- [winrar flaw exploited by russia aligned groups to deploy ste](./2026-06-09/winrar-flaw-exploited-by-russia-aligned-groups-to-deploy-ste.md)
 
 ## 2026-06-08
 - [ai brands as bait how threat actors are using the ai hype in](./2026-06-08/ai-brands-as-bait-how-threat-actors-are-using-the-ai-hype-in.md)
@@ -86,7 +90,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [type level security the future of secure ai code generation](./2026-06-04/type-level-security-the-future-of-secure-ai-code-generation.md)
 
 ## 2026-06-03
-- [argamal malware hidden in hentai games](./2026-06-03/argamal-malware-hidden-in-hentai-games.md)
 - [autonomous ai tool finds 2 year old rce flaw in redis cve 20](./2026-06-03/autonomous-ai-tool-finds-2-year-old-rce-flaw-in-redis-cve-20.md)
 - [cisa kev cve 2026 45247 mirasvit full page cache warmer dese](./2026-06-03/cisa-kev-cve-2026-45247-mirasvit-full-page-cache-warmer-dese.md)
 - [ghsa critical cve 2026 44180 jupyter enterprise gateway cont](./2026-06-03/ghsa-critical-cve-2026-44180-jupyter-enterprise-gateway-cont.md)
@@ -102,7 +105,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-02
 - [cisa kev cve 2022 0492 linux kernel improper authentication ](./2026-06-02/cisa-kev-cve-2022-0492-linux-kernel-improper-authentication-.md)
 - [cisa kev cve 2025 48595 android framework integer overflow v](./2026-06-02/cisa-kev-cve-2025-48595-android-framework-integer-overflow-v.md)
-- [gamaredon exploits winrar to deliver gammaworm and gammastee](./2026-06-02/gamaredon-exploits-winrar-to-deliver-gammaworm-and-gammastee.md)
 - [google june 2026 android update patches 124 flaws one active](./2026-06-02/google-june-2026-android-update-patches-124-flaws-one-active.md)
 - [laravel lang supply chain attack every tag across multiple c](./2026-06-02/laravel-lang-supply-chain-attack-every-tag-across-multiple-c.md)
 - [microsoft build 2026 securing code agents and models across ](./2026-06-02/microsoft-build-2026-securing-code-agents-and-models-across-.md)
@@ -115,10 +117,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-01
 - [cisa kev cve 2024 21182 oracle weblogic server unspecified v](./2026-06-01/cisa-kev-cve-2024-21182-oracle-weblogic-server-unspecified-v.md)
-- [containers on fire from container escapes to supply chain at](./2026-06-01/containers-on-fire-from-container-escapes-to-supply-chain-at.md)
 - [ghsa critical cve 2026 47413 praisonai platform any workspac](./2026-06-01/ghsa-critical-cve-2026-47413-praisonai-platform-any-workspac.md)
 - [ghsa critical cve 2026 47429 when vitest ui server is listen](./2026-06-01/ghsa-critical-cve-2026-47429-when-vitest-ui-server-is-listen.md)
 - [miasma supply chain attack malicious code found in redhat cl](./2026-06-01/miasma-supply-chain-attack-malicious-code-found-in-redhat-cl.md)
+- [red hat npm packages compromised to spread a credential stea](./2026-06-01/red-hat-npm-packages-compromised-to-spread-a-credential-stea.md)
 
 ## 2026-05-30
 - [malicious npm packages abuse dependency confusion to profile](./2026-05-30/malicious-npm-packages-abuse-dependency-confusion-to-profile.md)
@@ -140,13 +142,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [how relay network adopted ai coding securely and built the f](./2026-05-29/how-relay-network-adopted-ai-coding-securely-and-built-the-f.md)
 - [microsoft is named a leader in the 2026 gartner magic quadra](./2026-05-29/microsoft-is-named-a-leader-in-the-2026-gartner-magic-quadra.md)
 - [typosquatted npm packages used to steal cloud and ci cd secr](./2026-05-29/typosquatted-npm-packages-used-to-steal-cloud-and-ci-cd-secr.md)
-- [what s in the container analyzing vulnerabilities risks and ](./2026-05-29/what-s-in-the-container-analyzing-vulnerabilities-risks-and-.md)
 
 ## 2026-05-28
 - [2026 world cup discussing the world s biggest game s attack ](./2026-05-28/2026-world-cup-discussing-the-world-s-biggest-game-s-attack-.md)
 - [eset apt activity report q4 2025 q1 2026](./2026-05-28/eset-apt-activity-report-q4-2025-q1-2026.md)
 - [less panic patching more precision](./2026-05-28/less-panic-patching-more-precision.md)
-- [pirates in the crosshairs how one cybercrime gang has been i](./2026-05-28/pirates-in-the-crosshairs-how-one-cybercrime-gang-has-been-i.md)
 - [the gentlemen ransomware dissecting a self propagating go en](./2026-05-28/the-gentlemen-ransomware-dissecting-a-self-propagating-go-en.md)
 - [what mdm can t protect on developer machines and what to do ](./2026-05-28/what-mdm-can-t-protect-on-developer-machines-and-what-to-do-.md)
 
@@ -176,7 +176,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-22
 - [cisa kev cve 2026 9082 drupal core sql injection vulnerabili](./2026-05-22/cisa-kev-cve-2026-9082-drupal-core-sql-injection-vulnerabili.md)
-- [cloud atlas activity in the second half of 2025 and early 20](./2026-05-22/cloud-atlas-activity-in-the-second-half-of-2025-and-early-20.md)
 - [foul play fake fifa websites target soccer fans looking for ](./2026-05-22/foul-play-fake-fifa-websites-target-soccer-fans-looking-for-.md)
 - [ghsa critical cve 2026 46670 yeswiki unauthenticated sql inj](./2026-05-22/ghsa-critical-cve-2026-46670-yeswiki-unauthenticated-sql-inj.md)
 - [ghsa critical cve 2026 48777 filebrowser quantum path traver](./2026-05-22/ghsa-critical-cve-2026-48777-filebrowser-quantum-path-traver.md)
@@ -237,7 +236,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 7302 sglang s multimodal generation r](./2026-05-18/ghsa-critical-cve-2026-7302-sglang-s-multimodal-generation-r.md)
 - [ghsa critical cve 2026 7304 sglang unauthenticated rce via e](./2026-05-18/ghsa-critical-cve-2026-7304-sglang-unauthenticated-rce-via-e.md)
 - [ghsa critical ghsa wx9m wx4f 4cmg malicious dropper in mistr](./2026-05-18/ghsa-critical-ghsa-wx9m-wx4f-4cmg-malicious-dropper-in-mistr.md)
-- [it threat evolution in q1 2026 mobile statistics](./2026-05-18/it-threat-evolution-in-q1-2026-mobile-statistics.md)
 - [mini shai hulud hits antv 300 malicious npm packages publish](./2026-05-18/mini-shai-hulud-hits-antv-300-malicious-npm-packages-publish.md)
 
 ## 2026-05-15
@@ -263,7 +261,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 46442 flowiseai authenticated host rc](./2026-05-14/ghsa-critical-cve-2026-46442-flowiseai-authenticated-host-rc.md)
 - [ghsa critical cve 2026 8178 amazon redshift vulnerable to re](./2026-05-14/ghsa-critical-cve-2026-8178-amazon-redshift-vulnerable-to-re.md)
 - [ghsa critical ghsa wf8q wvv8 p8jf samanhappy mcphub sse endp](./2026-05-14/ghsa-critical-ghsa-wf8q-wvv8-p8jf-samanhappy-mcphub-sse-endp.md)
-- [kimsuky targets organizations with pebbledash based tools](./2026-05-14/kimsuky-targets-organizations-with-pebbledash-based-tools.md)
 - [ongoing exploitation of cisco catalyst sd wan vulnerabilitie](./2026-05-14/ongoing-exploitation-of-cisco-catalyst-sd-wan-vulnerabilitie.md)
 - [the time of much patching is coming](./2026-05-14/the-time-of-much-patching-is-coming.md)
 

@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] AVideo YPTSocket plugin XSS injection via webSocketSelfURI/page_title query strings
 
-`UC_66_2` · phase: **exploit** · confidence: **High**
+`UC_72_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-8whc-2wmv-ww35: WWBN AVideo: Unauthenticated Stored DOM C
 
-`UC_66_1` · phase: **exploit** · confidence: **High**
+`UC_72_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

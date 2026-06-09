@@ -11,17 +11,13 @@ By Sergiu Gatlan
 June 9, 2026
 06:53 AM
 0 
-
-
 DINUM, the digital affairs directorate of the French government, warned that hackers used a hijacked user account to breach Tchap, the French government's encrypted messaging platform.
-
-
-Developed in-house by DINUM in collaboration with ANSSI (the French Cybersecurity Agency) in 2018, Tchap is an instant messaging service and collaboration tool based on the decentralized Matrix pr…
+Developed in-house by DINUM in collaboration with ANSSI (the French Cybersecurity Agency) in 2018, Tchap is an instant messaging service and collaboration tool based on the decentralized Matrix protocol, …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `tchap.gouv.fr`
 - **Domain (defanged):** `matrix.agent.education.tchap.gouv.fr`
+- **Domain (defanged):** `tchap.gouv.fr`
 
 ## MITRE ATT&CK Techniques
 
@@ -45,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Mass /_matrix/media/ bulk download from tchap.gouv.fr to a single endpoint (Tchap exfil)
 
-`UC_0_2` · phase: **actions** · confidence: **Medium**
+`UC_6_2` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +68,7 @@ DeviceNetworkEvents
 
 ### [LLM] PowerShell script containing hardcoded LDAP bind with plaintext password (Tchap-leak vector)
 
-`UC_0_3` · phase: **weapon** · confidence: **High**
+`UC_6_3` · phase: **weapon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +100,7 @@ DeviceProcessEvents
 
 ### [LLM] High-rate Matrix client API enumeration against tchap.gouv.fr (room/user/media scraping)
 
-`UC_0_4` · phase: **actions** · confidence: **Medium**
+`UC_6_4` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -166,7 +162,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `tchap.gouv.fr`, `matrix.agent.education.tchap.gouv.fr`
+  - IP / domain IOC(s): `matrix.agent.education.tchap.gouv.fr`, `tchap.gouv.fr`
 
 
 ## Why this matters

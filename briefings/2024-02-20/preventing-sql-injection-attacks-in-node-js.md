@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Preventing SQL injection attacks in Node.js
 
-`UC_1280_0` · phase: **exploit** · confidence: **High**
+`UC_1275_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
