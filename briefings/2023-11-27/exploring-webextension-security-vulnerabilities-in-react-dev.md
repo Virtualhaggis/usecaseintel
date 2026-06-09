@@ -30,9 +30,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Browser extension folder write at vulnerable React DevTools 4.27.8 / Vue.js devtools 6.5.0
+### Browser extension folder write at vulnerable React DevTools 4.27.8 / Vue.js devtools 6.5.0
 
-`UC_1326_4` · phase: **exploit** · confidence: **Medium**
+`UC_1326_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

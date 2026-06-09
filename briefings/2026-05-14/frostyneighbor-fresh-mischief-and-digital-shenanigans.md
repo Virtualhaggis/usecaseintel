@@ -63,9 +63,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] FrostyNeighbor PicassoLoader drop to %AppData%\WinDataScope\Update.js
+### FrostyNeighbor PicassoLoader drop to %AppData%\WinDataScope\Update.js
 
-`UC_276_12` · phase: **install** · confidence: **High**
+`UC_279_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,9 +84,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] FrostyNeighbor JS dropper self-relaunch with --update flag
+### FrostyNeighbor JS dropper self-relaunch with --update flag
 
-`UC_276_13` · phase: **exploit** · confidence: **High**
+`UC_279_13` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,9 +107,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] FrostyNeighbor C2 callout to needbinding/nebao/algsat/sardk/alexavegas/lavanille
+### FrostyNeighbor C2 callout to needbinding/nebao/algsat/sardk/alexavegas/lavanille
 
-`UC_276_14` · phase: **c2** · confidence: **High**
+`UC_279_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,9 +140,9 @@ union NetHits, EventHits
 | order by Timestamp desc
 ```
 
-### [LLM] PicassoLoader scheduled-task creation by wscript/cscript after C2 XML fetch
+### PicassoLoader scheduled-task creation by wscript/cscript after C2 XML fetch
 
-`UC_276_15` · phase: **install** · confidence: **Medium**
+`UC_279_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -165,9 +165,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] FrostyNeighbor Cobalt Strike beacon ViberPC.dll image load
+### FrostyNeighbor Cobalt Strike beacon ViberPC.dll image load
 
-`UC_276_16` · phase: **install** · confidence: **High**
+`UC_279_16` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -491,7 +491,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — FrostyNeighbor: Fresh mischief and digital shenanigans
 
-`UC_276_11` · phase: **exploit** · confidence: **High**
+`UC_279_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

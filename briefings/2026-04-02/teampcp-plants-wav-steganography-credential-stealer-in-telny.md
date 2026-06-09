@@ -42,9 +42,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] TeamPCP telnyx FetchAudio() — python subprocess running inline base64 exec
+### TeamPCP telnyx FetchAudio() — python subprocess running inline base64 exec
 
-`UC_393_7` · phase: **install** · confidence: **High**
+`UC_396_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,9 +66,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Outbound connection to TeamPCP C2 83.142.209.203 / ringtone.wav stego payload fetch
+### Outbound connection to TeamPCP C2 83.142.209.203 / ringtone.wav stego payload fetch
 
-`UC_393_8` · phase: **c2** · confidence: **High**
+`UC_396_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,9 +90,9 @@ DeviceNetworkEvents
 | order by Timestamp asc
 ```
 
-### [LLM] msbuild.exe dropped to Startup folder (TeamPCP telnyx Windows persistence)
+### msbuild.exe dropped to Startup folder (TeamPCP telnyx Windows persistence)
 
-`UC_393_9` · phase: **install** · confidence: **High**
+`UC_396_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,9 +114,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] TeamPCP exfiltration archive tpcp.tar.gz created on disk
+### TeamPCP exfiltration archive tpcp.tar.gz created on disk
 
-`UC_393_10` · phase: **actions** · confidence: **High**
+`UC_396_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,9 +135,9 @@ DeviceFileEvents
 | order by Timestamp asc
 ```
 
-### [LLM] pip install of malicious telnyx versions 4.87.1 / 4.87.2
+### pip install of malicious telnyx versions 4.87.1 / 4.87.2
 
-`UC_393_11` · phase: **delivery** · confidence: **High**
+`UC_396_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -362,7 +362,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TeamPCP Plants WAV Steganography Credential Stealer in telnyx PyPI Package
 
-`UC_393_6` · phase: **exploit** · confidence: **High**
+`UC_396_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

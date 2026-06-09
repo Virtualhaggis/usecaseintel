@@ -48,9 +48,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] PlushDaemon EdgeStepper hijacking infrastructure (wcsset.com / 47.242.198.250 / 8.212.132.120) contact
+### PlushDaemon EdgeStepper hijacking infrastructure (wcsset.com / 47.242.198.250 / 8.212.132.120) contact
 
-`UC_683_5` · phase: **c2** · confidence: **High**
+`UC_686_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,9 +75,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] LittleDaemon / DaemonicLogistics update-hijack URL pattern (popup_4.2.0.2246.dll, /update/updateInfo.bzp, /update/file6.bdat, /update/file2.
+### LittleDaemon / DaemonicLogistics update-hijack URL pattern (popup_4.2.0.2246.dll, /update/updateInfo.bzp, /update/file6.bdat, /update/file2.
 
-`UC_683_6` · phase: **delivery** · confidence: **High**
+`UC_686_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,9 +101,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] DaemonicLogistics fake-Tencent payload drop (logo.gif at %PROGRAMDATA%\Tencent\QQUpdateMgr\UpdateFiles)
+### DaemonicLogistics fake-Tencent payload drop (logo.gif at %PROGRAMDATA%\Tencent\QQUpdateMgr\UpdateFiles)
 
-`UC_683_7` · phase: **install** · confidence: **High**
+`UC_686_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -226,7 +226,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PlushDaemon compromises network devices for adversary-in-the-middle attacks
 
-`UC_683_4` · phase: **exploit** · confidence: **High**
+`UC_686_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

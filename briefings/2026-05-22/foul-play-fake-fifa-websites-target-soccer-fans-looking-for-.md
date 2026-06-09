@@ -34,9 +34,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Mail-borne click to fake FIFA World Cup 2026 phishing domain
+### Mail-borne click to fake FIFA World Cup 2026 phishing domain
 
-`UC_187_4` · phase: **delivery** · confidence: **High**
+`UC_190_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,9 +58,9 @@ ClickedUrls
 | order by Timestamp desc
 ```
 
-### [LLM] Endpoint DNS or web traffic to fake FIFA World Cup 2026 typosquat domain
+### Endpoint DNS or web traffic to fake FIFA World Cup 2026 typosquat domain
 
-`UC_187_5` · phase: **delivery** · confidence: **High**
+`UC_190_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -55,9 +55,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Browser egress to Unit 42 'High-Risk GenAI Extension' C2 / exfil infrastructure
+### Browser egress to Unit 42 'High-Risk GenAI Extension' C2 / exfil infrastructure
 
-`UC_318_10` · phase: **c2** · confidence: **High**
+`UC_321_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,9 +78,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Installation of Unit 42-named malicious GenAI Chrome extension (by ID / SHA256)
+### Installation of Unit 42-named malicious GenAI Chrome extension (by ID / SHA256)
 
-`UC_318_11` · phase: **install** · confidence: **High**
+`UC_321_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -360,7 +360,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — That AI Extension Helping You Write Emails? It’s Reading Them First
 
-`UC_318_9` · phase: **exploit** · confidence: **High**
+`UC_321_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

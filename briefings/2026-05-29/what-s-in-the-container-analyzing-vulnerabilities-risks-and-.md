@@ -65,9 +65,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Web service in container spawning interactive shell (Redis/nginx RCE)
+### Web service in container spawning interactive shell (Redis/nginx RCE)
 
-`UC_145_4` · phase: **exploit** · confidence: **High**
+`UC_148_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,9 +85,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Container privilege escalation via Looney Tunables, PwnKit, sudo chroot
+### Container privilege escalation via Looney Tunables, PwnKit, sudo chroot
 
-`UC_145_5` · phase: **exploit** · confidence: **High**
+`UC_148_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,9 +105,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] perfctl rootkit — /etc/ld.so.preload write or LD_PRELOAD on root daemon
+### perfctl rootkit — /etc/ld.so.preload write or LD_PRELOAD on root daemon
 
-`UC_145_6` · phase: **install** · confidence: **High**
+`UC_148_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,9 +134,9 @@ union
 | order by Timestamp desc
 ```
 
-### [LLM] Container default credential leak — PKP_DB_PASSWORD=changeMePlease and --secret
+### Container default credential leak — PKP_DB_PASSWORD=changeMePlease and --secret
 
-`UC_145_7` · phase: **weapon** · confidence: **Medium**
+`UC_148_7` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -153,9 +153,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Container-to-container horizontal scan — Dero miner self-propagation
+### Container-to-container horizontal scan — Dero miner self-propagation
 
-`UC_145_8` · phase: **actions** · confidence: **Medium**
+`UC_148_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -175,9 +175,9 @@ DeviceNetworkEvents
 | order by UniqueDests desc
 ```
 
-### [LLM] Container egress to cryptominer pool / Kinsing C2
+### Container egress to cryptominer pool / Kinsing C2
 
-`UC_145_9` · phase: **c2** · confidence: **High**
+`UC_148_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -255,7 +255,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — What’s in the container? Analyzing vulnerabilities, risks and protection with Ka
 
-`UC_145_3` · phase: **install** · confidence: **High**
+`UC_148_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

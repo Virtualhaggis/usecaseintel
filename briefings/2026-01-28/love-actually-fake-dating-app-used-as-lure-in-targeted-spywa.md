@@ -30,9 +30,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] GhostChat C2/staging infrastructure contact (hitpak.org, buildthenations.info, fkclb.com)
+### GhostChat C2/staging infrastructure contact (hitpak.org, buildthenations.info, fkclb.com)
 
-`UC_574_2` · phase: **c2** · confidence: **High**
+`UC_577_2` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -49,9 +49,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] GhostChat C2 beacon URL pattern: hitpak.org/page.php?tynor=<host>sss<user>
+### GhostChat C2 beacon URL pattern: hitpak.org/page.php?tynor=<host>sss<user>
 
-`UC_574_3` · phase: **exfil** · confidence: **High**
+`UC_577_3` · phase: **exfil** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

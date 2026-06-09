@@ -59,9 +59,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] vpmdhaj typosquat npm package install via preinstall hook (node child of npm)
+### vpmdhaj typosquat npm package install via preinstall hook (node child of npm)
 
-`UC_148_12` · phase: **delivery** · confidence: **High**
+`UC_151_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,9 +95,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] payload.bin written under node_modules by node process
+### payload.bin written under node_modules by node process
 
-`UC_148_13` · phase: **install** · confidence: **High**
+`UC_151_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,9 +117,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Outbound HTTP beacon to vpmdhaj C2 (aab.sportsontheweb.net)
+### Outbound HTTP beacon to vpmdhaj C2 (aab.sportsontheweb.net)
 
-`UC_148_14` · phase: **c2** · confidence: **High**
+`UC_151_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,9 +138,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] __DAEMONIZED=1 environment marker on spawned process
+### __DAEMONIZED=1 environment marker on spawned process
 
-`UC_148_15` · phase: **install** · confidence: **High**
+`UC_151_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,9 +160,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Cloud metadata service hit (IMDSv2 / ECS) from node process under node_modules
+### Cloud metadata service hit (IMDSv2 / ECS) from node process under node_modules
 
-`UC_148_16` · phase: **actions** · confidence: **High**
+`UC_151_16` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,9 +184,9 @@ DeviceNetworkEvents
 | order by FirstSeen desc
 ```
 
-### [LLM] Bun runtime download from github.com/oven-sh during npm install (Gen-2 loader)
+### Bun runtime download from github.com/oven-sh during npm install (Gen-2 loader)
 
-`UC_148_17` · phase: **delivery** · confidence: **Medium**
+`UC_151_17` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -548,7 +548,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Typosquatted npm packages used to steal cloud and CI/CD secrets
 
-`UC_148_11` · phase: **exploit** · confidence: **High**
+`UC_151_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

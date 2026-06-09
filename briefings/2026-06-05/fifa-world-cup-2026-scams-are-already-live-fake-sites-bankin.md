@@ -97,9 +97,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] GHOST STADIUM FIFA lookalike domain resolution (fifa.bio/.center/.gold/.red/.sale/.shopping/.show/.ski)
+### GHOST STADIUM FIFA lookalike domain resolution (fifa.bio/.center/.gold/.red/.sale/.shopping/.show/.ski)
 
-`UC_69_10` · phase: **delivery** · confidence: **High**
+`UC_73_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,9 +119,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] GHOST STADIUM phishing kit / Android trojan C2 IP egress (8 specific hosts)
+### GHOST STADIUM phishing kit / Android trojan C2 IP egress (8 specific hosts)
 
-`UC_69_11` · phase: **c2** · confidence: **High**
+`UC_73_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,9 +139,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Massiv / Perseus (Cerberus-derived) Android banking trojan APK hash on managed endpoint
+### Massiv / Perseus (Cerberus-derived) Android banking trojan APK hash on managed endpoint
 
-`UC_69_12` · phase: **install** · confidence: **High**
+`UC_73_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,9 +158,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] GHOST STADIUM PingIdentity SSO clone: external referrer hot-linking fifa.com static assets
+### GHOST STADIUM PingIdentity SSO clone: external referrer hot-linking fifa.com static assets
 
-`UC_69_13` · phase: **delivery** · confidence: **Medium**
+`UC_73_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

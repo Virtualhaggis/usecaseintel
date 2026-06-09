@@ -39,9 +39,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] SnakeStealer Telegram Bot Exfiltration via api.telegram.org from Non-Telegram Process
+### SnakeStealer Telegram Bot Exfiltration via api.telegram.org from Non-Telegram Process
 
-`UC_724_4` · phase: **c2** · confidence: **High**
+`UC_727_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,9 +66,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] SnakeStealer SMTP Credential Exfiltration to Public Webmail Relays from Non-Mail Client
+### SnakeStealer SMTP Credential Exfiltration to Public Webmail Relays from Non-Mail Client
 
-`UC_724_5` · phase: **actions** · confidence: **High**
+`UC_727_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,9 +95,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] SnakeStealer Startup-Folder Persistence (ageless.vbs / .exe drop in Programs\Startup)
+### SnakeStealer Startup-Folder Persistence (ageless.vbs / .exe drop in Programs\Startup)
 
-`UC_724_6` · phase: **install** · confidence: **High**
+`UC_727_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,9 +129,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] SnakeStealer Wi-Fi Credential Harvest via netsh wlan show profile key=clear
+### SnakeStealer Wi-Fi Credential Harvest via netsh wlan show profile key=clear
 
-`UC_724_7` · phase: **actions** · confidence: **High**
+`UC_727_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

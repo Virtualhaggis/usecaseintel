@@ -76,9 +76,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] BadIIS demo.pdb variant known SHA256 file/process hashes
+### BadIIS demo.pdb variant known SHA256 file/process hashes
 
-`UC_232_5` · phase: **install** · confidence: **High**
+`UC_235_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,9 +95,9 @@ union
 | order by Timestamp desc
 ```
 
-### [LLM] BadIIS C2 IP / domain beacon (lee.6686ty.vip, iis.01nmwe.xyz)
+### BadIIS C2 IP / domain beacon (lee.6686ty.vip, iis.01nmwe.xyz)
 
-`UC_232_6` · phase: **c2** · confidence: **High**
+`UC_235_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,9 +115,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] IIS worker (w3wp.exe) initiating outbound connection to public IP
+### IIS worker (w3wp.exe) initiating outbound connection to public IP
 
-`UC_232_7` · phase: **c2** · confidence: **Medium**
+`UC_235_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,9 +137,9 @@ DeviceNetworkEvents
 | order by ConnCount desc
 ```
 
-### [LLM] IIS native module DLL drop or applicationHost.config modification by non-IIS process
+### IIS native module DLL drop or applicationHost.config modification by non-IIS process
 
-`UC_232_8` · phase: **install** · confidence: **High**
+`UC_235_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,9 +160,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] IIS worker (w3wp.exe) writing robots.txt / .php / .js into web root
+### IIS worker (w3wp.exe) writing robots.txt / .php / .js into web root
 
-`UC_232_9` · phase: **actions** · confidence: **Medium**
+`UC_235_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -253,7 +253,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — From PDB strings to MaaS: Tracking a commodity BadIIS ecosystem used by Chinese-
 
-`UC_232_4` · phase: **exploit** · confidence: **High**
+`UC_235_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

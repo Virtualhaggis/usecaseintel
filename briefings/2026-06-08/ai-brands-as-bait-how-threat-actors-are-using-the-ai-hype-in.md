@@ -90,9 +90,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] ChatGPT Plus payment-update phishing emails (display-name + subject lure)
+### ChatGPT Plus payment-update phishing emails (display-name + subject lure)
 
-`UC_37_12` · phase: **delivery** · confidence: **High**
+`UC_45_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,9 +112,9 @@ EmailEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Claude 'Appeal Request' phishing email with PDF attachment lure
+### Claude 'Appeal Request' phishing email with PDF attachment lure
 
-`UC_37_13` · phase: **delivery** · confidence: **High**
+`UC_45_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,9 +139,9 @@ suspect_mail
 | order by Timestamp desc
 ```
 
-### [LLM] Connection to AI-brand phishing / installer C2 infrastructure (MSTI June 2026 IOCs)
+### Connection to AI-brand phishing / installer C2 infrastructure (MSTI June 2026 IOCs)
 
-`UC_37_14` · phase: **c2** · confidence: **High**
+`UC_45_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -161,9 +161,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Execution or drop of fake AI-platform installer (DeepSeek/Manus/Seedance/GPT-5.5/Kimi)
+### Execution or drop of fake AI-platform installer (DeepSeek/Manus/Seedance/GPT-5.5/Kimi)
 
-`UC_37_15` · phase: **install** · confidence: **High**
+`UC_45_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -190,9 +190,9 @@ union isfuzzy=false
 | order by Timestamp desc
 ```
 
-### [LLM] Phishing redirect chain via awstrack.me / Rebrandly into AI-themed landing path
+### Phishing redirect chain via awstrack.me / Rebrandly into AI-themed landing path
 
-`UC_37_16` · phase: **delivery** · confidence: **Medium**
+`UC_45_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -532,7 +532,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — AI brands as bait: How threat actors are using the AI hype in social engineering
 
-`UC_37_11` · phase: **exploit** · confidence: **High**
+`UC_45_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

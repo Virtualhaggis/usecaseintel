@@ -69,9 +69,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] NoName057(16) DDoSia client check-in (/client/login, /client/get_targets)
+### NoName057(16) DDoSia client check-in (/client/login, /client/get_targets)
 
-`UC_153_11` · phase: **c2** · confidence: **High**
+`UC_156_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,9 +93,9 @@ DeviceNetworkEvents
 | order by LastSeen desc
 ```
 
-### [LLM] World Cup 2026 themed lookalike / typosquat domain resolution by corporate hosts
+### World Cup 2026 themed lookalike / typosquat domain resolution by corporate hosts
 
-`UC_153_12` · phase: **delivery** · confidence: **Medium**
+`UC_156_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

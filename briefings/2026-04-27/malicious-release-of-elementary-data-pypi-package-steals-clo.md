@@ -52,9 +52,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Compromised elementary-data==0.23.3 PyPI install on developer / CI host
+### Compromised elementary-data==0.23.3 PyPI install on developer / CI host
 
-`UC_332_7` · phase: **delivery** · confidence: **High**
+`UC_335_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,9 +72,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Trinny marker file creation (.trinny-security-update)
+### Trinny marker file creation (.trinny-security-update)
 
-`UC_332_8` · phase: **install** · confidence: **High**
+`UC_335_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,9 +91,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Credential archive staging — trin.tar.gz created by python process
+### Credential archive staging — trin.tar.gz created by python process
 
-`UC_332_9` · phase: **actions** · confidence: **High**
+`UC_335_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,9 +110,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Exfil to skyhanni.cloud C2 with X-Rise-To-The-Trinny header
+### Exfil to skyhanni.cloud C2 with X-Rise-To-The-Trinny header
 
-`UC_332_10` · phase: **c2** · confidence: **High**
+`UC_335_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -251,7 +251,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious Release of elementary-data PyPI Package Steals Cloud Credentials from
 
-`UC_332_6` · phase: **exploit** · confidence: **High**
+`UC_335_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -149,9 +149,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] PowerShell-parented taskkill of winrar.exe (Cloud Atlas LNK anti-forensic cleanup)
+### PowerShell-parented taskkill of winrar.exe (Cloud Atlas LNK anti-forensic cleanup)
 
-`UC_186_12` · phase: **install** · confidence: **High**
+`UC_189_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -171,9 +171,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] PowerShower dropped to user Pictures folder as googleearth.ps1
+### PowerShower dropped to user Pictures folder as googleearth.ps1
 
-`UC_186_13` · phase: **install** · confidence: **High**
+`UC_189_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -196,9 +196,9 @@ union
 | order by Timestamp desc
 ```
 
-### [LLM] SAM/SECURITY registry hives copied from VSS shadow to Public\Documents as .pdf
+### SAM/SECURITY registry hives copied from VSS shadow to Public\Documents as .pdf
 
-`UC_186_14` · phase: **actions** · confidence: **High**
+`UC_189_14` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -218,9 +218,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] termsrv.dll patched (multi-RDP enabling) - takeown + binary write + TermService restart
+### termsrv.dll patched (multi-RDP enabling) - takeown + binary write + TermService restart
 
-`UC_186_15` · phase: **install** · confidence: **High**
+`UC_189_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -245,9 +245,9 @@ union TermsrvProc, TermsrvFileWrite
 | order by Timestamp desc
 ```
 
-### [LLM] OpenSSH reverse port-forward (-R) launched on a workstation - Cloud Atlas backup C2
+### OpenSSH reverse port-forward (-R) launched on a workstation - Cloud Atlas backup C2
 
-`UC_186_16` · phase: **c2** · confidence: **High**
+`UC_189_16` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -567,7 +567,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Cloud Atlas activity in the second half of 2025 and early 2026: new tools and a
 
-`UC_186_11` · phase: **exploit** · confidence: **High**
+`UC_189_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

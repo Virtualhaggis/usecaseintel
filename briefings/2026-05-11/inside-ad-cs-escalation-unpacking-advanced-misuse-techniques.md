@@ -72,9 +72,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] CVE-2022-26923 exploitation via update6.exe binary execution
+### CVE-2022-26923 exploitation via update6.exe binary execution
 
-`UC_293_14` · phase: **exploit** · confidence: **High**
+`UC_296_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,9 +91,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] AD CS attacker tooling execution: Certify, Certipy, Whisker process indicators
+### AD CS attacker tooling execution: Certify, Certipy, Whisker process indicators
 
-`UC_293_15` · phase: **install** · confidence: **High**
+`UC_296_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,9 +111,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Shadow Credentials: msDS-KeyCredentialLink attribute modification
+### Shadow Credentials: msDS-KeyCredentialLink attribute modification
 
-`UC_293_16` · phase: **install** · confidence: **High**
+`UC_296_16` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,9 +130,9 @@ IdentityQueryEvents
 | order by Timestamp desc
 ```
 
-### [LLM] PKINIT Kerberos TGT request via certificate authentication anomaly
+### PKINIT Kerberos TGT request via certificate authentication anomaly
 
-`UC_293_17` · phase: **actions** · confidence: **Medium**
+`UC_296_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -152,9 +152,9 @@ IdentityLogonEvents
 | order by Timestamp desc
 ```
 
-### [LLM] AD CS certificate request with ENROLLEE_SUPPLIES_SUBJECT flag (ESC1)
+### AD CS certificate request with ENROLLEE_SUPPLIES_SUBJECT flag (ESC1)
 
-`UC_293_18` · phase: **exploit** · confidence: **Medium**
+`UC_296_18` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -568,7 +568,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Inside AD CS Escalation: Unpacking Advanced Misuse Techniques and Tools
 
-`UC_293_13` · phase: **exploit** · confidence: **High**
+`UC_296_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

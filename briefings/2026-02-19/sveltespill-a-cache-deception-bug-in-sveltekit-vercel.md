@@ -31,18 +31,18 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] SvelteKit Vercel __pathname cache deception exploit request (CVE-2026-27118)
+### SvelteKit Vercel __pathname cache deception exploit request (CVE-2026-27118)
 
-`UC_498_5` · phase: **exploit** · confidence: **High**
+`UC_501_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.uri_query) as uri_query values(Web.uri_path) as uri_path values(Web.src) as src values(Web.user_agent) as user_agent values(Web.http_method) as method values(Web.status) as status from datamodel=Web where Web.url="*__pathname=*" Web.url="*/_app/immutable/*" by Web.dest | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
-### [LLM] User-targeted SvelteSpill exploit URL delivered or clicked (CVE-2026-27118)
+### User-targeted SvelteSpill exploit URL delivered or clicked (CVE-2026-27118)
 
-`UC_498_6` · phase: **delivery** · confidence: **High**
+`UC_501_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — SvelteSpill: A Cache Deception Bug in SvelteKit + Vercel
 
-`UC_498_4` · phase: **exploit** · confidence: **High**
+`UC_501_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

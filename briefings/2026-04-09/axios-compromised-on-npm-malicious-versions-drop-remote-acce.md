@@ -43,9 +43,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] axios Supply Chain RAT C2 Callback to sfrclak.com (Port 8000)
+### axios Supply Chain RAT C2 Callback to sfrclak.com (Port 8000)
 
-`UC_381_8` · phase: **c2** · confidence: **High**
+`UC_384_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,9 +67,9 @@ union
 | order by Timestamp desc
 ```
 
-### [LLM] npm postinstall node setup.js dropper executing from plain-crypto-js with immediate network egress
+### npm postinstall node setup.js dropper executing from plain-crypto-js with immediate network egress
 
-`UC_381_9` · phase: **install** · confidence: **High**
+`UC_384_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,9 +100,9 @@ SetupRun
 | order by SetupTime desc
 ```
 
-### [LLM] Malicious axios or plain-crypto-js package files written to node_modules
+### Malicious axios or plain-crypto-js package files written to node_modules
 
-`UC_381_10` · phase: **delivery** · confidence: **High**
+`UC_384_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,9 +122,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] plain-crypto-js setup.js self-deletion or package.json overwrite (anti-forensics)
+### plain-crypto-js setup.js self-deletion or package.json overwrite (anti-forensics)
 
-`UC_381_11` · phase: **actions** · confidence: **Medium**
+`UC_384_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -324,7 +324,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — axios Compromised on npm - Malicious Versions Drop Remote Access Trojan
 
-`UC_381_7` · phase: **exploit** · confidence: **High**
+`UC_384_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

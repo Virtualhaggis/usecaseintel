@@ -52,9 +52,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] DynoWiper / ZOV wiper known-bad SHA-1 hash execution
+### DynoWiper / ZOV wiper known-bad SHA-1 hash execution
 
-`UC_570_9` · phase: **install** · confidence: **High**
+`UC_573_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,9 +71,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Executable dropped into C:\inetpub\pub\ shared directory
+### Executable dropped into C:\inetpub\pub\ shared directory
 
-`UC_570_10` · phase: **delivery** · confidence: **High**
+`UC_573_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,9 +92,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] DynoWiper schtask.exe / *_update.exe execution from C:\inetpub\pub\
+### DynoWiper schtask.exe / *_update.exe execution from C:\inetpub\pub\
 
-`UC_570_11` · phase: **install** · confidence: **High**
+`UC_573_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,9 +111,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Sandworm SOCKS5 C2 egress to 31.172.71[.]5 (Fornex) or progamevl.ru
+### Sandworm SOCKS5 C2 egress to 31.172.71[.]5 (Fornex) or progamevl.ru
 
-`UC_570_12` · phase: **c2** · confidence: **High**
+`UC_573_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,9 +129,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Mass file-content overwrite by single non-system process from non-standard path
+### Mass file-content overwrite by single non-system process from non-standard path
 
-`UC_570_13` · phase: **actions** · confidence: **Medium**
+`UC_573_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -355,7 +355,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DynoWiper update: Technical analysis and attribution
 
-`UC_570_8` · phase: **exploit** · confidence: **High**
+`UC_573_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

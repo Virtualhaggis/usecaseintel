@@ -28,12 +28,61 @@ The vulnerability, tracked as CVE-2026-45247 (CVSS score: 9.8), is a case of des
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1505.003** — Server Software Component: Web Shell
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Mirasvit CacheWarmer cookie carrying base64 PHP object (CVE-2026-45247)
+
+`UC_99_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_user_agent) as ua values(Web.status) as status from datamodel=Web.Web where Web.http_method IN ("GET","POST") (Web.cookie="*CacheWarmer:Tz*" OR Web.cookie="*CacheWarmer:Qz*" OR Web.cookie="*CacheWarmer:YT*" OR Web.http_request_header="*CacheWarmer:Tz*" OR Web.http_request_header="*CacheWarmer:Qz*" OR Web.http_request_header="*CacheWarmer:YT*") by Web.src Web.dest Web.site Web.user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+// Defender XDR has no native web-server log table; use DeviceNetworkEvents only where a proxy/agent surfaces the cookie via AdditionalFields.
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where ActionType == "InboundConnectionAccepted" or ActionType == "ConnectionSuccess"
+| where RemotePort in (80, 443, 8080, 8443)
+| where AdditionalFields has "CacheWarmer:" and (AdditionalFields has "CacheWarmer:Tz" or AdditionalFields has "CacheWarmer:Qz" or AdditionalFields has "CacheWarmer:YT")
+| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalIP, LocalPort, InitiatingProcessFileName, AdditionalFields
+| order by Timestamp desc
+```
+
+### Magento/PHP webserver spawning shell post-CacheWarmer deserialization RCE
+
+`UC_99_7` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user values(Processes.process_hash) as sha256 from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("php-fpm","php","php-cgi","httpd","apache2","nginx") Processes.process_name IN ("sh","bash","dash","zsh","ksh","curl","wget","python","python3","perl","nc","ncat","socat","busybox") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("php-fpm", "php", "php-cgi", "httpd", "apache2", "nginx")
+| where FileName in~ ("sh", "bash", "dash", "zsh", "ksh", "curl", "wget", "python", "python3", "perl", "nc", "ncat", "socat", "busybox")
+| where ProcessCommandLine has_any ("-i", "/dev/tcp/", "/tmp/", "/var/tmp/", "/dev/shm/", "base64", "-d", "http://", "https://")
+   or InitiatingProcessCommandLine has_any ("system", "passthru", "current", "exec")
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -244,4 +293,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 6 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

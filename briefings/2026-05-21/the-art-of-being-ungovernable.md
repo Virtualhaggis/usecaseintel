@@ -45,9 +45,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] BadIIS rogue native module drop in IIS folders (demo.pdb / Chinese path heuristic)
+### BadIIS rogue native module drop in IIS folders (demo.pdb / Chinese path heuristic)
 
-`UC_195_2` · phase: **install** · confidence: **Medium**
+`UC_198_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,9 +76,9 @@ union FileDrops, ModuleLoads
 | order by Timestamp desc
 ```
 
-### [LLM] Talos weekly prevalent-malware hash hit (Coinminer worm / TunMirror / SECOH-QAD / KMS-Loader)
+### Talos weekly prevalent-malware hash hit (Coinminer worm / TunMirror / SECOH-QAD / KMS-Loader)
 
-`UC_195_3` · phase: **install** · confidence: **High**
+`UC_198_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,9 +105,9 @@ union ExecHits, FileHits, ImageHits
 | order by Timestamp desc
 ```
 
-### [LLM] BadIIS traffic-hijacking: IIS 503 surge + anomalous external redirect ratio per site/hour
+### BadIIS traffic-hijacking: IIS 503 surge + anomalous external redirect ratio per site/hour
 
-`UC_195_4` · phase: **actions** · confidence: **Medium**
+`UC_198_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ union ExecHits, FileHits, ImageHits
 
 ### Article-specific behavioural hunt — The art of being ungovernable
 
-`UC_195_1` · phase: **exploit** · confidence: **High**
+`UC_198_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

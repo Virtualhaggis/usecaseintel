@@ -38,9 +38,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] DynoWiper deployment from shared inetpub\pub directory (Sandworm, Poland Dec 2025)
+### DynoWiper deployment from shared inetpub\pub directory (Sandworm, Poland Dec 2025)
 
-`UC_584_1` · phase: **install** · confidence: **High**
+`UC_587_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,9 +71,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] rsocx SOCKS5 reverse proxy beacon to 31.172.71.5:8008 (Sandworm Poland C2)
+### rsocx SOCKS5 reverse proxy beacon to 31.172.71.5:8008 (Sandworm Poland C2)
 
-`UC_584_2` · phase: **c2** · confidence: **High**
+`UC_587_2` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,9 +105,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] DynoWiper PDB-string + vagrant build artefact in loaded modules
+### DynoWiper PDB-string + vagrant build artefact in loaded modules
 
-`UC_584_3` · phase: **install** · confidence: **Medium**
+`UC_587_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

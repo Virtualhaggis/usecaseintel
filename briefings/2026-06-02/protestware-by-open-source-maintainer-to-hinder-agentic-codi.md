@@ -30,9 +30,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] jqwik-engine 1.10.0 malicious JAR on disk (SHA256 / filename match)
+### jqwik-engine 1.10.0 malicious JAR on disk (SHA256 / filename match)
 
-`UC_116_2` · phase: **delivery** · confidence: **High**
+`UC_119_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,9 +50,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] AI coding agent bulk-deleting JUnit test files after jqwik resolution
+### AI coding agent bulk-deleting JUnit test files after jqwik resolution
 
-`UC_116_3` · phase: **actions** · confidence: **High**
+`UC_119_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,9 +82,9 @@ DeviceFileEvents
 | order by DeletedCount desc
 ```
 
-### [LLM] Maven/Gradle build log file containing jqwik prompt-injection directive
+### Maven/Gradle build log file containing jqwik prompt-injection directive
 
-`UC_116_4` · phase: **install** · confidence: **High**
+`UC_119_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

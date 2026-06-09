@@ -29,9 +29,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Mailcow Autodiscover endpoint receives unauthenticated XSS payload (GHSA-f9xf-vc72-rcgm)
+### Mailcow Autodiscover endpoint receives unauthenticated XSS payload (GHSA-f9xf-vc72-rcgm)
 
-`UC_359_4` · phase: **delivery** · confidence: **High**
+`UC_362_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -41,9 +41,9 @@ _(none detected from narrative keywords)_
 | sort 0 - _time
 ```
 
-### [LLM] Mailcow quarantine XSS via EICAR + HTML in attachment filename (GHSA-2xjc-rg88-jvpp)
+### Mailcow quarantine XSS via EICAR + HTML in attachment filename (GHSA-2xjc-rg88-jvpp)
 
-`UC_359_5` · phase: **delivery** · confidence: **High**
+`UC_362_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,9 +64,9 @@ EmailAttachmentInfo
 | order by Timestamp desc
 ```
 
-### [LLM] Mailcow login with HTML/JS injected into X-Real-IP header (GHSA-jprq-w83q-q62h)
+### Mailcow login with HTML/JS injected into X-Real-IP header (GHSA-jprq-w83q-q62h)
 
-`UC_359_6` · phase: **delivery** · confidence: **Medium**
+`UC_362_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -161,7 +161,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Multiple Cross-Site Scripting (XSS) Vulnerabilities in Mailcow
 
-`UC_359_3` · phase: **exploit** · confidence: **High**
+`UC_362_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

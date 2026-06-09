@@ -57,9 +57,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Mini Shai-Hulud npm Worm C2 callback to Session Protocol CDN and masscan.cloud
+### Mini Shai-Hulud npm Worm C2 callback to Session Protocol CDN and masscan.cloud
 
-`UC_288_9` · phase: **c2** · confidence: **High**
+`UC_291_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,9 +83,9 @@ NetHits
 | order by Timestamp desc
 ```
 
-### [LLM] TeamPCP Mini Shai-Hulud stealer payload hash match (SHA256/SHA1)
+### TeamPCP Mini Shai-Hulud stealer payload hash match (SHA256/SHA1)
 
-`UC_288_10` · phase: **install** · confidence: **High**
+`UC_291_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,9 +112,9 @@ ProcHits | union FileHits, ImgHits
 | order by Timestamp desc
 ```
 
-### [LLM] Mini Shai-Hulud router_init.js dropped at npm package root in node_modules
+### Mini Shai-Hulud router_init.js dropped at npm package root in node_modules
 
-`UC_288_11` · phase: **install** · confidence: **High**
+`UC_291_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,9 +137,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Mini Shai-Hulud dead-drop git commit authored as claude@users.noreply.github.com
+### Mini Shai-Hulud dead-drop git commit authored as claude@users.noreply.github.com
 
-`UC_288_12` · phase: **actions** · confidence: **High**
+`UC_291_12` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -161,9 +161,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Node/npm/Bun process enumerating cloud, wallet, AI, and messaging credential file paths
+### Node/npm/Bun process enumerating cloud, wallet, AI, and messaging credential file paths
 
-`UC_288_13` · phase: **actions** · confidence: **Medium**
+`UC_291_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -342,7 +342,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TeamPCP's Mini Shai-Hulud Is Back: A Self-Spreading Supply Chain Attack Compromi
 
-`UC_288_8` · phase: **exploit** · confidence: **High**
+`UC_291_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

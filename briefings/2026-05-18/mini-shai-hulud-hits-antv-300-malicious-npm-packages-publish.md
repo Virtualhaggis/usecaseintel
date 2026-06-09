@@ -49,9 +49,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Mini Shai-Hulud npm preinstall hook spawning bun runtime
+### Mini Shai-Hulud npm preinstall hook spawning bun runtime
 
-`UC_237_8` · phase: **install** · confidence: **High**
+`UC_240_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,9 +76,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Mini Shai-Hulud Claude Code SessionStart hook injection via npm install
+### Mini Shai-Hulud Claude Code SessionStart hook injection via npm install
 
-`UC_237_9` · phase: **install** · confidence: **High**
+`UC_240_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,9 +103,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] VS Code tasks.json folderOpen persistence written by npm install chain
+### VS Code tasks.json folderOpen persistence written by npm install chain
 
-`UC_237_10` · phase: **install** · confidence: **Medium**
+`UC_240_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,9 +129,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Mini Shai-Hulud Linux daemon persistence: kitty/cat.py and systemd user service
+### Mini Shai-Hulud Linux daemon persistence: kitty/cat.py and systemd user service
 
-`UC_237_11` · phase: **install** · confidence: **High**
+`UC_240_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,9 +156,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Mini Shai-Hulud C2 backchannel: python polling GitHub commit search for 'firedalazer'
+### Mini Shai-Hulud C2 backchannel: python polling GitHub commit search for 'firedalazer'
 
-`UC_237_12` · phase: **c2** · confidence: **High**
+`UC_240_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -179,9 +179,9 @@ DeviceNetworkEvents
 | order by LastSeen desc
 ```
 
-### [LLM] Mini Shai-Hulud GitHub dead-drop exfiltration via python-requests/2.31.0
+### Mini Shai-Hulud GitHub dead-drop exfiltration via python-requests/2.31.0
 
-`UC_237_13` · phase: **actions** · confidence: **High**
+`UC_240_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -409,7 +409,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mini Shai-Hulud Hits AntV: 300+ Malicious npm Packages Published via Compromised
 
-`UC_237_7` · phase: **exploit** · confidence: **High**
+`UC_240_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

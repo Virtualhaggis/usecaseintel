@@ -56,9 +56,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Curious Serpens / APT29 ROADtools-pattern: device registration immediately following non-interactive token acquisition
+### Curious Serpens / APT29 ROADtools-pattern: device registration immediately following non-interactive token acquisition
 
-`UC_185_8` · phase: **install** · confidence: **Medium**
+`UC_188_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,9 +70,9 @@ _(none detected from narrative keywords)_
 let DeviceReg = AuditLogs | where TimeGenerated > ago(7d) | where OperationName has_any ("Add registered owner to device", "Add registered users to device", "Add device") | extend TargetUpn = tostring(TargetResources[0].userPrincipalName) | extend ActorUpn = tostring(InitiatedBy.user.userPrincipalName) | extend ActorIp = tostring(InitiatedBy.user.ipAddress) | project RegTime = TimeGenerated, ActorUpn, ActorIp, OperationName, TargetResources; let TokenAuth = AADSignInEventsBeta | where Timestamp > ago(7d) | where IsInteractive == false | where ResourceDisplayName in ("Microsoft Graph", "Azure Active Directory Graph", "Windows Azure Active Directory") | where ApplicationId in ("1b730954-1685-4b74-9bfd-dac224a7b894", "d3590ed6-52b3-4102-aeff-aad2292ab01c", "04b07795-8ddb-461a-bbee-02f9e1bf7b46") | project AuthTime = Timestamp, AccountUpn, IPAddress, UserAgent, ApplicationId, ClientAppUsed; DeviceReg | join kind=inner TokenAuth on $left.ActorUpn == $right.AccountUpn | where datetime_diff('minute', RegTime, AuthTime) between (0 .. 30) | where ActorIp != IPAddress | project RegTime, AuthTime, MinutesBetween = datetime_diff('minute', RegTime, AuthTime), ActorUpn, RegIp = ActorIp, TokenIp = IPAddress, UserAgent, ApplicationId, ClientAppUsed
 ```
 
-### [LLM] UTA0355 device-code phishing: deviceCode auth flow with cross-IP token redemption
+### UTA0355 device-code phishing: deviceCode auth flow with cross-IP token redemption
 
-`UC_185_9` · phase: **delivery** · confidence: **High**
+`UC_188_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,9 +84,9 @@ let DeviceReg = AuditLogs | where TimeGenerated > ago(7d) | where OperationName 
 AADSignInEventsBeta | where Timestamp > ago(7d) | where AuthenticationProcessingDetails has "deviceCode" or AuthenticationDetails has "device code" or ClientAppUsed == "Authenticated SMTP" and Application has "device" | extend IsDeviceCode = AuthenticationProcessingDetails has "deviceCode" or AuthenticationDetails has_cs "Device Code" | where IsDeviceCode == true | summarize CodeIssued = min(Timestamp), TokenRedeemed = max(Timestamp), SrcIPs = make_set(IPAddress, 10), SrcCountries = make_set(Country, 10), UAs = make_set(UserAgent, 10), IPCount = dcount(IPAddress), CountryCount = dcount(Country), Apps = make_set(ResourceDisplayName, 10), ReqIds = make_set(RequestId, 10) by AccountUpn, bin(Timestamp, 15m) | where IPCount >= 2 or CountryCount >= 2 | project CodeIssued, TokenRedeemed, DeltaSec = datetime_diff('second', TokenRedeemed, CodeIssued), AccountUpn, SrcIPs, SrcCountries, UAs, Apps
 ```
 
-### [LLM] ROADtools roadtx FOCI client-ID swap: refresh-token resource hop across MS Office FOCI app IDs
+### ROADtools roadtx FOCI client-ID swap: refresh-token resource hop across MS Office FOCI app IDs
 
-`UC_185_10` · phase: **c2** · confidence: **Medium**
+`UC_188_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

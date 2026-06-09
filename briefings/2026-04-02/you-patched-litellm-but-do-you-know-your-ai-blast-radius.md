@@ -52,9 +52,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Compromised litellm 1.82.7 / 1.82.8 PyPI install (TeamPCP supply-chain)
+### Compromised litellm 1.82.7 / 1.82.8 PyPI install (TeamPCP supply-chain)
 
-`UC_394_2` · phase: **install** · confidence: **High**
+`UC_397_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,9 +74,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] litellm_init.pth Python autoload persistence drop
+### litellm_init.pth Python autoload persistence drop
 
-`UC_394_3` · phase: **install** · confidence: **High**
+`UC_397_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,9 +95,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] WAV-disguised stager pull from TeamPCP loader 83.142.209.203:8080
+### WAV-disguised stager pull from TeamPCP loader 83.142.209.203:8080
 
-`UC_394_4` · phase: **delivery** · confidence: **High**
+`UC_397_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,9 +116,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] TeamPCP C2 / exfil egress to models.litellm.cloud, checkmarx.zone and AS205759 nodes
+### TeamPCP C2 / exfil egress to models.litellm.cloud, checkmarx.zone and AS205759 nodes
 
-`UC_394_5` · phase: **c2** · confidence: **High**
+`UC_397_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,9 +137,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Linux user-systemd sysmon persistence drop (~/.config/sysmon/sysmon.py + sysmon.service)
+### Linux user-systemd sysmon persistence drop (~/.config/sysmon/sysmon.py + sysmon.service)
 
-`UC_394_6` · phase: **install** · confidence: **High**
+`UC_397_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -161,9 +161,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Kubernetes privileged-pod DaemonSet fan-out from compromised LiteLLM workload
+### Kubernetes privileged-pod DaemonSet fan-out from compromised LiteLLM workload
 
-`UC_394_7` · phase: **actions** · confidence: **Medium**
+`UC_397_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

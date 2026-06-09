@@ -65,9 +65,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] npm install of dependency-confusion scoped packages (moika.tech actor)
+### npm install of dependency-confusion scoped packages (moika.tech actor)
 
-`UC_126_12` · phase: **delivery** · confidence: **High**
+`UC_129_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,9 +92,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] C2 callback to moika.tech payload distribution infrastructure
+### C2 callback to moika.tech payload distribution infrastructure
 
-`UC_126_13` · phase: **c2** · confidence: **High**
+`UC_129_13` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,9 +113,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Malicious postinstall.js dropped under node_modules for actor scopes
+### Malicious postinstall.js dropped under node_modules for actor scopes
 
-`UC_126_14` · phase: **install** · confidence: **High**
+`UC_129_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,9 +138,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] node.exe spawns detached child from tmpdir after npm install (moika.tech dropper)
+### node.exe spawns detached child from tmpdir after npm install (moika.tech dropper)
 
-`UC_126_15` · phase: **install** · confidence: **Medium**
+`UC_129_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -520,7 +520,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious npm packages abuse dependency confusion to profile developer environme
 
-`UC_126_11` · phase: **exploit** · confidence: **High**
+`UC_129_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

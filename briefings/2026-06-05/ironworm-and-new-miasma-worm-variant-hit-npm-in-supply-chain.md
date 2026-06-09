@@ -54,9 +54,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Installation of compromised Microsoft durabletask PyPI versions 1.4.1-1.4.3
+### Installation of compromised Microsoft durabletask PyPI versions 1.4.1-1.4.3
 
-`UC_60_9` · phase: **delivery** · confidence: **High**
+`UC_64_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,9 +75,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Python urlretrieve download of rope.pyz from check.git-service.com to /tmp/managed.pyz
+### Python urlretrieve download of rope.pyz from check.git-service.com to /tmp/managed.pyz
 
-`UC_60_10` · phase: **install** · confidence: **High**
+`UC_64_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,9 +102,9 @@ union Net, Drop
 | order by Timestamp desc
 ```
 
-### [LLM] python3 import durabletask spawning detached /tmp/managed.pyz collector swarm
+### python3 import durabletask spawning detached /tmp/managed.pyz collector swarm
 
-`UC_60_11` · phase: **install** · confidence: **High**
+`UC_64_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,9 +123,9 @@ DeviceProcessEvents
 | order by FirstSeen desc
 ```
 
-### [LLM] Fake pgsql-monitor.service persistence via systemctl --user daemon-reload from python parent
+### Fake pgsql-monitor.service persistence via systemctl --user daemon-reload from python parent
 
-`UC_60_12` · phase: **install** · confidence: **High**
+`UC_64_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,9 +150,9 @@ union Procs, Files
 | order by Timestamp desc
 ```
 
-### [LLM] GPG batch passphrase 'anon' + gh auth token credential harvesting from python parent
+### GPG batch passphrase 'anon' + gh auth token credential harvesting from python parent
 
-`UC_60_13` · phase: **actions** · confidence: **High**
+`UC_64_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -170,9 +170,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] DNS / connection to TeamPCP secondary C2 m-kosche.com
+### DNS / connection to TeamPCP secondary C2 m-kosche.com
 
-`UC_60_14` · phase: **c2** · confidence: **High**
+`UC_64_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -190,9 +190,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] AWS SSM SendCommand / kubectl exec lateral movement from compromised CI runtime
+### AWS SSM SendCommand / kubectl exec lateral movement from compromised CI runtime
 
-`UC_60_15` · phase: **actions** · confidence: **Medium**
+`UC_64_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -474,7 +474,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — IronWorm and New Miasma Worm Variant Hit npm in Supply Chain Attacks
 
-`UC_60_8` · phase: **exploit** · confidence: **High**
+`UC_64_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

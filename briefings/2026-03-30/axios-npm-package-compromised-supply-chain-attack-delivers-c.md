@@ -59,9 +59,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Outbound C2 to sfrclak.com / 142.11.206.73:8000 (Axios npm RAT beacon)
+### Outbound C2 to sfrclak.com / 142.11.206.73:8000 (Axios npm RAT beacon)
 
-`UC_400_11` · phase: **c2** · confidence: **High**
+`UC_403_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,9 +79,9 @@ DeviceNetworkEvents
 | order by Timestamp asc
 ```
 
-### [LLM] PowerShell masquerading as Windows Terminal at %PROGRAMDATA%\wt.exe (Axios RAT Windows stage)
+### PowerShell masquerading as Windows Terminal at %PROGRAMDATA%\wt.exe (Axios RAT Windows stage)
 
-`UC_400_12` · phase: **install** · confidence: **High**
+`UC_403_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,9 +106,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Linux Python RAT orphaned via nohup python3 /tmp/ld.py (Axios npm payload)
+### Linux Python RAT orphaned via nohup python3 /tmp/ld.py (Axios npm payload)
 
-`UC_400_13` · phase: **install** · confidence: **High**
+`UC_403_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,9 +133,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] macOS Axios RAT daemon spoof + ad-hoc codesign of hidden /private/tmp binary
+### macOS Axios RAT daemon spoof + ad-hoc codesign of hidden /private/tmp binary
 
-`UC_400_14` · phase: **install** · confidence: **High**
+`UC_403_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,9 +164,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] npm/node postinstall hook spawning interpreter and reaching new C2 host (Axios-style dropper)
+### npm/node postinstall hook spawning interpreter and reaching new C2 host (Axios-style dropper)
 
-`UC_400_15` · phase: **delivery** · confidence: **Medium**
+`UC_403_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -489,7 +489,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Axios npm Package Compromised: Supply Chain Attack Delivers Cross-Platform RAT
 
-`UC_400_10` · phase: **exploit** · confidence: **High**
+`UC_403_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

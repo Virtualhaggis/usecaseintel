@@ -19,12 +19,54 @@ ESET researchers uncovered the first known case of Android malware abusing gener
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1660** — Phishing
+- **T1583.001** — Acquire Infrastructure: Domains
+- **T1219** — Remote Access Software
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### PromptSpy / MorganArg Android banker — distribution domain DNS/proxy hits
+
+`UC_502_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where nodename=DNS DNS.query IN ("*morganarg*","*promptspy*") by DNS.src DNS.query DNS.answer host | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let lookback = 7d;
+let sus_hosts = dynamic(["morganarg","promptspy"]);
+DeviceNetworkEvents
+| where Timestamp > ago(lookback)
+| where RemoteUrl has_any (sus_hosts) or RemoteUrl matches regex @"(?i)morganarg|promptspy"
+| project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### PromptSpy VNC C2 egress to 54.67.2.84
+
+`UC_502_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest="54.67.2.84" by All_Traffic.src All_Traffic.src_ip All_Traffic.dest All_Traffic.dest_port All_Traffic.app host | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteIP == "54.67.2.84"
+| project Timestamp, DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, Protocol, LocalIP
+| order by Timestamp desc
+```
 
 ### Ransomware-style mass file rename / extension change
 
@@ -113,4 +155,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

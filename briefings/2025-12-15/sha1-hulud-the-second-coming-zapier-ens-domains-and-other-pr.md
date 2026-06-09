@@ -50,9 +50,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] NPM preinstall hook fetching Bun installer from bun.sh (Sha1-Hulud dropper)
+### NPM preinstall hook fetching Bun installer from bun.sh (Sha1-Hulud dropper)
 
-`UC_641_6` · phase: **delivery** · confidence: **High**
+`UC_644_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,9 +80,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Bun/Node executing the Sha1-Hulud worm payload (setup_bun.js / bun_environment.js)
+### Bun/Node executing the Sha1-Hulud worm payload (setup_bun.js / bun_environment.js)
 
-`UC_641_7` · phase: **install** · confidence: **High**
+`UC_644_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,9 +109,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Sha1-Hulud self-hosted GitHub Actions runner deployed under ~/.dev-env (SHA1HULUD)
+### Sha1-Hulud self-hosted GitHub Actions runner deployed under ~/.dev-env (SHA1HULUD)
 
-`UC_641_8` · phase: **install** · confidence: **High**
+`UC_644_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,9 +146,9 @@ union RunnerArchiveWrite, RunnerProcess
 | order by Timestamp desc
 ```
 
-### [LLM] Bun/Node initiating multi-cloud secret-manager enumeration burst (Sha1-Hulud aL0 harvest)
+### Bun/Node initiating multi-cloud secret-manager enumeration burst (Sha1-Hulud aL0 harvest)
 
-`UC_641_9` · phase: **actions** · confidence: **Medium**
+`UC_644_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -185,9 +185,9 @@ DeviceNetworkEvents
 | order by FirstSeen desc
 ```
 
-### [LLM] Bun/Node bursty PUT to api.github.com /contents from infected host (Sha1-Hulud exfil)
+### Bun/Node bursty PUT to api.github.com /contents from infected host (Sha1-Hulud exfil)
 
-`UC_641_10` · phase: **actions** · confidence: **High**
+`UC_644_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -365,7 +365,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Sha1-Hulud: The Second Coming - Zapier, ENS Domains, and Other Prominent NPM Pac
 
-`UC_641_5` · phase: **exploit** · confidence: **High**
+`UC_644_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

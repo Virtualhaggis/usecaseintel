@@ -52,9 +52,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Sednit known-bad SHA-1 hash match: Xagent / SlimAgent / BeardShell binaries
+### Sednit known-bad SHA-1 hash match: Xagent / SlimAgent / BeardShell binaries
 
-`UC_457_8` · phase: **install** · confidence: **High**
+`UC_460_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,9 +70,9 @@ union (DeviceProcessEvents | where Timestamp > ago(30d) | where SHA1 in~ (Sednit
 | order by Timestamp desc
 ```
 
-### [LLM] SlimAgent / BeardShell DLL load with implant filename outside System32
+### SlimAgent / BeardShell DLL load with implant filename outside System32
 
-`UC_457_9` · phase: **install** · confidence: **High**
+`UC_460_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,9 +97,9 @@ union
 | order by Timestamp desc
 ```
 
-### [LLM] BeardShell C2: outbound to Icedrive cloud-storage API as non-browser process
+### BeardShell C2: outbound to Icedrive cloud-storage API as non-browser process
 
-`UC_457_10` · phase: **c2** · confidence: **High**
+`UC_460_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,9 +117,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Covenant C2: outbound to Filen cloud-storage API as non-browser process
+### Covenant C2: outbound to Filen cloud-storage API as non-browser process
 
-`UC_457_11` · phase: **c2** · confidence: **High**
+`UC_460_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,9 +137,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Sednit COM-hijacking persistence via HKCU CLSID InprocServer32 to user-writable DLL
+### Sednit COM-hijacking persistence via HKCU CLSID InprocServer32 to user-writable DLL
 
-`UC_457_12` · phase: **install** · confidence: **High**
+`UC_460_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,9 +160,9 @@ DeviceRegistryEvents
 | order by Timestamp desc
 ```
 
-### [LLM] SlimAgent keylogger HTML log artefact written to disk (Xagent-lineage colour scheme)
+### SlimAgent keylogger HTML log artefact written to disk (Xagent-lineage colour scheme)
 
-`UC_457_13` · phase: **actions** · confidence: **Medium**
+`UC_460_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -426,7 +426,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Sednit reloaded: Back in the trenches
 
-`UC_457_7` · phase: **exploit** · confidence: **High**
+`UC_460_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

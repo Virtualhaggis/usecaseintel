@@ -46,9 +46,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Mini Shai-Hulud npm worm exfiltration to t.m-kosche.com OpenTelemetry endpoint
+### Mini Shai-Hulud npm worm exfiltration to t.m-kosche.com OpenTelemetry endpoint
 
-`UC_73_3` · phase: **actions** · confidence: **High**
+`UC_77_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,9 +79,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] Bun runtime spawned by npm/node preinstall hook (TeamPCP setup.mjs loader)
+### Bun runtime spawned by npm/node preinstall hook (TeamPCP setup.mjs loader)
 
-`UC_73_4` · phase: **install** · confidence: **High**
+`UC_77_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,9 +103,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Mini Shai-Hulud payload SHA256 on disk (7c24b4d9...e627144e8b)
+### Mini Shai-Hulud payload SHA256 on disk (7c24b4d9...e627144e8b)
 
-`UC_73_5` · phase: **install** · confidence: **High**
+`UC_77_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,9 +141,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] Cloud/SSH/npm credential file access by Node or Bun during npm install
+### Cloud/SSH/npm credential file access by Node or Bun during npm install
 
-`UC_73_6` · phase: **actions** · confidence: **Medium**
+`UC_77_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

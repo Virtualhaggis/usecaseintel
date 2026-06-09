@@ -39,9 +39,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Miasma Phantom Gyp: python.exe (gyp parser) spawning node index.js during npm install
+### Miasma Phantom Gyp: python.exe (gyp parser) spawning node index.js during npm install
 
-`UC_12_7` · phase: **install** · confidence: **High**
+`UC_20_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,9 +63,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Miasma-tainted package install: binding.gyp dropped into known-compromised npm package paths
+### Miasma-tainted package install: binding.gyp dropped into known-compromised npm package paths
 
-`UC_12_8` · phase: **delivery** · confidence: **High**
+`UC_20_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,9 +90,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Miasma payload SHA256 hash hit (published Phantom Gyp IOCs)
+### Miasma payload SHA256 hash hit (published Phantom Gyp IOCs)
 
-`UC_12_9` · phase: **install** · confidence: **High**
+`UC_20_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,9 +119,9 @@ union
 | order by Timestamp desc
 ```
 
-### [LLM] Node child of node-gyp/python making outbound to GitHub dead-drop or anomalous web service during install
+### Node child of node-gyp/python making outbound to GitHub dead-drop or anomalous web service during install
 
-`UC_12_10` · phase: **exfil** · confidence: **Medium**
+`UC_20_10` · phase: **exfil** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -288,7 +288,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Wait, binding.gyp Can Do What? Exploring npm's Weirdest Build System
 
-`UC_12_6` · phase: **exploit** · confidence: **High**
+`UC_20_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

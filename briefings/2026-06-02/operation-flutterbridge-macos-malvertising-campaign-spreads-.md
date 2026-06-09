@@ -71,9 +71,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] FlutterShell macOS C2 contact (atsheisdomestic / etoftheappyrince / healightejustb)
+### FlutterShell macOS C2 contact (atsheisdomestic / etoftheappyrince / healightejustb)
 
-`UC_115_8` · phase: **c2** · confidence: **High**
+`UC_118_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,9 +92,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] FlutterShell macOS payload SHA256 IOC match
+### FlutterShell macOS payload SHA256 IOC match
 
-`UC_115_9` · phase: **install** · confidence: **High**
+`UC_118_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,9 +123,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Non-Chrome process modifies macOS Chrome Preferences (FlutterShell browser hijack)
+### Non-Chrome process modifies macOS Chrome Preferences (FlutterShell browser hijack)
 
-`UC_115_10` · phase: **actions** · confidence: **Medium**
+`UC_118_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,9 +149,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] FlutterShell adware redirector contact (ads-parkpro / sinterfumesco / softwe.art)
+### FlutterShell adware redirector contact (ads-parkpro / sinterfumesco / softwe.art)
 
-`UC_115_11` · phase: **actions** · confidence: **High**
+`UC_118_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

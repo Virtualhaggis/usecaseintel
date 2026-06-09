@@ -47,9 +47,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Claude Code Action Read tool exfil: node opens /proc/<pid>/environ on Linux CI runner
+### Claude Code Action Read tool exfil: node opens /proc/<pid>/environ on Linux CI runner
 
-`UC_61_4` · phase: **exploit** · confidence: **High**
+`UC_65_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,9 +70,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Claude Code Read tool steered to cloud-credential files on GitHub Actions runner
+### Claude Code Read tool steered to cloud-credential files on GitHub Actions runner
 
-`UC_61_5` · phase: **exploit** · confidence: **Medium**
+`UC_65_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,9 +96,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] GitHub Actions runner: node from Claude Code Action egresses to non-Anthropic/non-GitHub endpoint
+### GitHub Actions runner: node from Claude Code Action egresses to non-Anthropic/non-GitHub endpoint
 
-`UC_61_6` · phase: **c2** · confidence: **Medium**
+`UC_65_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

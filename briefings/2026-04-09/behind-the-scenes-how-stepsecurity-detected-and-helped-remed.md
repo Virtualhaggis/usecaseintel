@@ -51,9 +51,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] TeamPCP Trivy/KICS C2 callback to scan.aquasecurtiy.org / 45.148.10.212
+### TeamPCP Trivy/KICS C2 callback to scan.aquasecurtiy.org / 45.148.10.212
 
-`UC_380_5` · phase: **c2** · confidence: **High**
+`UC_383_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,9 +79,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] Read of /proc/<pid>/mem targeting GitHub Runner.Worker (TeamPCP credential dump)
+### Read of /proc/<pid>/mem targeting GitHub Runner.Worker (TeamPCP credential dump)
 
-`UC_380_6` · phase: **actions** · confidence: **High**
+`UC_383_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,9 +112,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] TeamPCP sysmon.py systemd-user persistence on developer host
+### TeamPCP sysmon.py systemd-user persistence on developer host
 
-`UC_380_7` · phase: **install** · confidence: **High**
+`UC_383_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -48,9 +48,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Aspose.Email/Aspose.Pst mailbox library loaded by non-Outlook process
+### Aspose.Email/Aspose.Pst mailbox library loaded by non-Outlook process
 
-`UC_86_9` · phase: **install** · confidence: **High**
+`UC_90_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,9 +67,9 @@ DeviceImageLoadEvents
 | order by Timestamp desc
 ```
 
-### [LLM] PST exported by non-Outlook binary with password and date-range CLI flags
+### PST exported by non-Outlook binary with password and date-range CLI flags
 
-`UC_86_10` · phase: **actions** · confidence: **High**
+`UC_90_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,9 +88,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Scheduled task masquerading as Adobe/Lenovo/OneDrive system service
+### Scheduled task masquerading as Adobe/Lenovo/OneDrive system service
 
-`UC_86_11` · phase: **install** · confidence: **Medium**
+`UC_90_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,9 +110,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] FRPC (Fast Reverse Proxy client) execution by config-file argument
+### FRPC (Fast Reverse Proxy client) execution by config-file argument
 
-`UC_86_12` · phase: **c2** · confidence: **Medium**
+`UC_90_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,9 +130,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] curl/non-browser binary uploading to Dropbox or OneDrive personal API endpoints
+### curl/non-browser binary uploading to Dropbox or OneDrive personal API endpoints
 
-`UC_86_13` · phase: **actions** · confidence: **High**
+`UC_90_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -431,7 +431,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Spied on a Stock Exchange Executive's Outlook Mailbox for Five Months
 
-`UC_86_8` · phase: **exploit** · confidence: **High**
+`UC_90_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

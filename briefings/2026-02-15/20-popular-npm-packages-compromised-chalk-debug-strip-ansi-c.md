@@ -38,9 +38,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Phishing email impersonating npm support from typosquatted npmjs.help domain
+### Phishing email impersonating npm support from typosquatted npmjs.help domain
 
-`UC_517_7` · phase: **delivery** · confidence: **High**
+`UC_520_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,9 +75,9 @@ MailHits
 | order by Timestamp desc
 ```
 
-### [LLM] Install of Qix-compromised npm package@version (chalk 5.6.1, debug 4.4.2, ansi-styles 6.2.2 et al.)
+### Install of Qix-compromised npm package@version (chalk 5.6.1, debug 4.4.2, ansi-styles 6.2.2 et al.)
 
-`UC_517_8` · phase: **install** · confidence: **High**
+`UC_520_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,9 +126,9 @@ union CmdHits, FileHits
 | order by Timestamp desc
 ```
 
-### [LLM] Egress to Qix npm phishing/exfil infrastructure (npmjs.help, publicvm.com, BunnyCDN buckets)
+### Egress to Qix npm phishing/exfil infrastructure (npmjs.help, publicvm.com, BunnyCDN buckets)
 
-`UC_517_9` · phase: **c2** · confidence: **High**
+`UC_520_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

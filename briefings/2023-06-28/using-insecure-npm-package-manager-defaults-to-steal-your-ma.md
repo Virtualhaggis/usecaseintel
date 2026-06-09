@@ -32,9 +32,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] macOS Text Replacements exfiltration via `defaults read NSUserDictionaryReplacementItems`
+### macOS Text Replacements exfiltration via `defaults read NSUserDictionaryReplacementItems`
 
-`UC_1423_2` · phase: **actions** · confidence: **High**
+`UC_1423_2` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -34,9 +34,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Obot /mcp-connect/{id} authenticated-user fan-out (ACR bypass probing)
+### Obot /mcp-connect/{id} authenticated-user fan-out (ACR bypass probing)
 
-`UC_281_2` · phase: **actions** · confidence: **Medium**
+`UC_284_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -47,9 +47,9 @@ _(none detected from narrative keywords)_
 | sort - DistinctMcpIds
 ```
 
-### [LLM] First-time-seen authenticated user → MCP server ID pairing on /mcp-connect
+### First-time-seen authenticated user → MCP server ID pairing on /mcp-connect
 
-`UC_281_3` · phase: **actions** · confidence: **Medium**
+`UC_284_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

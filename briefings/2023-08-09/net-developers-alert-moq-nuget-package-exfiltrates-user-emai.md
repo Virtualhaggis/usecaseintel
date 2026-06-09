@@ -35,9 +35,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] .NET build (dotnet/MSBuild) spawns git config to harvest user.email
+### .NET build (dotnet/MSBuild) spawns git config to harvest user.email
 
-`UC_1396_2` · phase: **actions** · confidence: **High**
+`UC_1396_2` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,9 +56,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Moq SponsorLink email exfil egress to cdn.devlooped.com / SponsorLink blob
+### Moq SponsorLink email exfil egress to cdn.devlooped.com / SponsorLink blob
 
-`UC_1396_3` · phase: **c2** · confidence: **High**
+`UC_1396_3` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,9 +75,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Vulnerable Moq 4.20.0 or Devlooped.SponsorLink NuGet package landed on endpoint
+### Vulnerable Moq 4.20.0 or Devlooped.SponsorLink NuGet package landed on endpoint
 
-`UC_1396_4` · phase: **delivery** · confidence: **High**
+`UC_1396_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

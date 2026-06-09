@@ -46,9 +46,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Miasma C2 / IOC domain resolution: check.git-service.com, t.m-kosche.com, git-service.com
+### Miasma C2 / IOC domain resolution: check.git-service.com, t.m-kosche.com, git-service.com
 
-`UC_3_9` · phase: **c2** · confidence: **High**
+`UC_10_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,9 +65,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Miasma/Shai-Hulud typosquat PyPI package installation (rsquests, tlask, langchain-core-mcp, durabletask)
+### Miasma/Shai-Hulud typosquat PyPI package installation (rsquests, tlask, langchain-core-mcp, durabletask)
 
-`UC_3_10` · phase: **delivery** · confidence: **High**
+`UC_10_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,9 +86,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Miasma loader artifact written to Python site-packages: .pth, _index.js, .abi3.so
+### Miasma loader artifact written to Python site-packages: .pth, _index.js, .abi3.so
 
-`UC_3_11` · phase: **install** · confidence: **High**
+`UC_10_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,9 +107,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Bun or Node runtime spawned by Python package manager (Miasma stealer bootstrap)
+### Bun or Node runtime spawned by Python package manager (Miasma stealer bootstrap)
 
-`UC_3_12` · phase: **install** · confidence: **High**
+`UC_10_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,9 +127,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Miasma stealer payload SHA256 match on disk or in execution
+### Miasma stealer payload SHA256 match on disk or in execution
 
-`UC_3_13` · phase: **install** · confidence: **High**
+`UC_10_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -375,7 +375,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft Restores Some GitHub Repos, Keeps Others Offline as Miasma Probe Conti
 
-`UC_3_8` · phase: **exploit** · confidence: **High**
+`UC_10_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

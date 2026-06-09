@@ -43,9 +43,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] NGate (HandyPay variant) PIN exfil egress to dedicated C&C 108.165.230.223 (BattleHost)
+### NGate (HandyPay variant) PIN exfil egress to dedicated C&C 108.165.230.223 (BattleHost)
 
-`UC_349_4` · phase: **actions** · confidence: **High**
+`UC_352_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,9 +63,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Access to NGate distribution domain protecaocartao[.]online (HandyPay trojan + APK delivery)
+### Access to NGate distribution domain protecaocartao[.]online (HandyPay trojan + APK delivery)
 
-`UC_349_5` · phase: **delivery** · confidence: **High**
+`UC_352_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,9 +95,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] Trojanized HandyPay / Proteção Cartão APK SHA-1 file drop on managed device
+### Trojanized HandyPay / Proteção Cartão APK SHA-1 file drop on managed device
 
-`UC_349_6` · phase: **install** · confidence: **High**
+`UC_352_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

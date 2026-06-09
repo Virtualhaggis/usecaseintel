@@ -31,18 +31,18 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] phpMyFAQ /admin/check unauthenticated TOTP brute-force (CVE GHSA-9pq7-mfwh-xx2j)
+### phpMyFAQ /admin/check unauthenticated TOTP brute-force (CVE GHSA-9pq7-mfwh-xx2j)
 
-`UC_247_0` · phase: **exploit** · confidence: **High**
+`UC_250_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
 | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.user) as users values(Web.http_user_agent) as ua values(Web.status) as statuses dc(Web.status) as distinctStatuses from datamodel=Web.Web where Web.http_method=POST Web.uri_path="/admin/check" by Web.src Web.dest _time span=5m | `drop_dm_object_name(Web)` | where count >= 30 | sort - count
 ```
 
-### [LLM] phpMyFAQ 2FA bypass success: /admin/check brute burst followed by authenticated /admin/ access
+### phpMyFAQ 2FA bypass success: /admin/check brute burst followed by authenticated /admin/ access
 
-`UC_247_1` · phase: **install** · confidence: **High**
+`UC_250_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

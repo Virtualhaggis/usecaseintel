@@ -68,9 +68,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] HLS Installer.874.exe DLL side-load from pirate-streaming ZIP lure
+### HLS Installer.874.exe DLL side-load from pirate-streaming ZIP lure
 
-`UC_156_8` · phase: **install** · confidence: **High**
+`UC_159_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,9 +94,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] SilentCryptoMiner-fork: Defender exclusions added for %USERPROFILE%, %PROGRAMDATA%, %WINDIR%, .exe, .dll
+### SilentCryptoMiner-fork: Defender exclusions added for %USERPROFILE%, %PROGRAMDATA%, %WINDIR%, .exe, .dll
 
-`UC_156_9` · phase: **install** · confidence: **High**
+`UC_159_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,9 +116,9 @@ DeviceRegistryEvents
 | order by Bucket desc
 ```
 
-### [LLM] MSRT tampering: HKLM\Software\Policies\Microsoft\MRT DontOfferThroughWUAU = 1
+### MSRT tampering: HKLM\Software\Policies\Microsoft\MRT DontOfferThroughWUAU = 1
 
-`UC_156_10` · phase: **install** · confidence: **High**
+`UC_159_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,9 +144,9 @@ union RegHit, FileHit
 | order by Timestamp desc
 ```
 
-### [LLM] powercfg sleep/hibernate disable burst (4-command sequence)
+### powercfg sleep/hibernate disable burst (4-command sequence)
 
-`UC_156_11` · phase: **install** · confidence: **High**
+`UC_159_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -171,9 +171,9 @@ DeviceProcessEvents
 | order by Bucket desc
 ```
 
-### [LLM] SilentCryptoMiner DNS tunneling to *.microsoft.com lookalike and known C2 .space domains
+### SilentCryptoMiner DNS tunneling to *.microsoft.com lookalike and known C2 .space domains
 
-`UC_156_12` · phase: **c2** · confidence: **High**
+`UC_159_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -418,7 +418,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pirates in the crosshairs: how one cybercrime gang has been infecting book, movi
 
-`UC_156_7` · phase: **exploit** · confidence: **High**
+`UC_159_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

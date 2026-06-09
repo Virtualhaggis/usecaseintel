@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1260 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,18 +11,23 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-09
 - [chrome v8 zero day cve 2026 11645 exploited in the wild patc](./2026-06-09/chrome-v8-zero-day-cve-2026-11645-exploited-in-the-wild-patc.md)
 - [cisa gives feds 3 days to patch check point vpn bug exploite](./2026-06-09/cisa-gives-feds-3-days-to-patch-check-point-vpn-bug-exploite.md)
+- [cisa kev cve 2026 11645 google chromium v8 out of bounds rea](./2026-06-09/cisa-kev-cve-2026-11645-google-chromium-v8-out-of-bounds-rea.md)
+- [cisa kev cve 2026 20245 cisco catalyst sd wan manager improp](./2026-06-09/cisa-kev-cve-2026-20245-cisco-catalyst-sd-wan-manager-improp.md)
+- [cisa kev cve 2026 7473 arista extensible operating system in](./2026-06-09/cisa-kev-cve-2026-7473-arista-extensible-operating-system-in.md)
 - [fortinet fortisandbox vulnerability allows attackers to exec](./2026-06-09/fortinet-fortisandbox-vulnerability-allows-attackers-to-exec.md)
 - [french govt messaging service breached in account hijacking ](./2026-06-09/french-govt-messaging-service-breached-in-account-hijacking-.md)
 - [google chrome 0 day vulnerability exploited in the wild upda](./2026-06-09/google-chrome-0-day-vulnerability-exploited-in-the-wild-upda.md)
 - [google patches new chrome zero day flaw exploited in the wil](./2026-06-09/google-patches-new-chrome-zero-day-flaw-exploited-in-the-wil.md)
 - [hades pypi attack 19 packages poisoned to auto run bun crede](./2026-06-09/hades-pypi-attack-19-packages-poisoned-to-auto-run-bun-crede.md)
 - [litellm flaw cve 2026 42271 exploited in the wild chains to ](./2026-06-09/litellm-flaw-cve-2026-42271-exploited-in-the-wild-chains-to-.md)
+- [meta to use off site business data for feed and ai personali](./2026-06-09/meta-to-use-off-site-business-data-for-feed-and-ai-personali.md)
+- [miasma worm hits microsoft again azure functions action and ](./2026-06-09/miasma-worm-hits-microsoft-again-azure-functions-action-and-.md)
+- [microsoft june 2026 patch tuesday fixes 3 zero day 200 flaws](./2026-06-09/microsoft-june-2026-patch-tuesday-fixes-3-zero-day-200-flaws.md)
 - [microsoft patch tuesday june 2026 198 vulnerabilities fixed ](./2026-06-09/microsoft-patch-tuesday-june-2026-198-vulnerabilities-fixed-.md)
 - [microsoft restores some github repos keeps others offline as](./2026-06-09/microsoft-restores-some-github-repos-keeps-others-offline-as.md)
 - [new frost attack lets websites track what sites and apps you](./2026-06-09/new-frost-attack-lets-websites-track-what-sites-and-apps-you.md)
-- [new nfcshare android malware delivered via weaponized versio](./2026-06-09/new-nfcshare-android-malware-delivered-via-weaponized-versio.md)
+- [new magicad android malware flood device with ads bypassing ](./2026-06-09/new-magicad-android-malware-flood-device-with-ads-bypassing-.md)
 - [new veeam vulnerability exposes backup servers to rce attack](./2026-06-09/new-veeam-vulnerability-exposes-backup-servers-to-rce-attack.md)
-- [new weedhack malware as a service targets minecraft players ](./2026-06-09/new-weedhack-malware-as-a-service-targets-minecraft-players-.md)
 - [researchers build self replicating ai worm that operates ent](./2026-06-09/researchers-build-self-replicating-ai-worm-that-operates-ent.md)
 - [wait binding gyp can do what exploring npm s weirdest build ](./2026-06-09/wait-binding-gyp-can-do-what-exploring-npm-s-weirdest-build-.md)
 - [winrar flaw exploited by russia aligned groups to deploy ste](./2026-06-09/winrar-flaw-exploited-by-russia-aligned-groups-to-deploy-ste.md)
@@ -30,10 +35,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-08
 - [ai brands as bait how threat actors are using the ai hype in](./2026-06-08/ai-brands-as-bait-how-threat-actors-are-using-the-ai-hype-in.md)
 - [ai phishing is crushing socs with alert volume how to reduce](./2026-06-08/ai-phishing-is-crushing-socs-with-alert-volume-how-to-reduce.md)
-- [check point links vpn zero day attacks to qilin ransomware g](./2026-06-08/check-point-links-vpn-zero-day-attacks-to-qilin-ransomware-g.md)
 - [cisa kev cve 2026 42271 berriai litellm command injection vu](./2026-06-08/cisa-kev-cve-2026-42271-berriai-litellm-command-injection-vu.md)
 - [cisa kev cve 2026 50751 check point security gateway imprope](./2026-06-08/cisa-kev-cve-2026-50751-check-point-security-gateway-imprope.md)
-- [critical unifi os bug lets hackers gain root without authent](./2026-06-08/critical-unifi-os-bug-lets-hackers-gain-root-without-authent.md)
 - [ghsa critical cve 2026 45034 phpspreadsheet has a patch bypa](./2026-06-08/ghsa-critical-cve-2026-45034-phpspreadsheet-has-a-patch-bypa.md)
 - [ghsa critical cve 2026 47252 anyquery applescript jxa code i](./2026-06-08/ghsa-critical-cve-2026-47252-anyquery-applescript-jxa-code-i.md)
 - [ghsa critical cve 2026 47724 nebula mesh api endpoints lack ](./2026-06-08/ghsa-critical-cve-2026-47724-nebula-mesh-api-endpoints-lack-.md)
@@ -55,7 +58,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisco catalyst sd wan manager cve 2026 20245 flaw actively e](./2026-06-06/cisco-catalyst-sd-wan-manager-cve-2026-20245-flaw-actively-e.md)
 - [free apps are quietly turning smart tvs into web scraping pr](./2026-06-06/free-apps-are-quietly-turning-smart-tvs-into-web-scraping-pr.md)
 - [miasma worm hits 73 microsoft github repositories in major s](./2026-06-06/miasma-worm-hits-73-microsoft-github-repositories-in-major-s.md)
-- [miasma worm hits microsoft again azure functions action and ](./2026-06-06/miasma-worm-hits-microsoft-again-azure-functions-action-and-.md)
 - [microsoft s durabletask pypi package compromised in supply c](./2026-06-06/microsoft-s-durabletask-pypi-package-compromised-in-supply-c.md)
 
 ## 2026-06-05
@@ -102,7 +104,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [preinstall to persistence inside the red hat npm miasma cred](./2026-06-03/preinstall-to-persistence-inside-the-red-hat-npm-miasma-cred.md)
 - [the new security risks of the agentic development lifecycle](./2026-06-03/the-new-security-risks-of-the-agentic-development-lifecycle.md)
 - [unpatched windows search uri vulnerability lets attackers st](./2026-06-03/unpatched-windows-search-uri-vulnerability-lets-attackers-st.md)
-- [weedhack attacks minecraft users countloader hits 86k miners](./2026-06-03/weedhack-attacks-minecraft-users-countloader-hits-86k-miners.md)
 
 ## 2026-06-02
 - [cisa kev cve 2022 0492 linux kernel improper authentication ](./2026-06-02/cisa-kev-cve-2022-0492-linux-kernel-improper-authentication-.md)
@@ -1814,12 +1815,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2024-05-30
 - [5 tips for adopting ai code assistance securely](./2024-05-30/5-tips-for-adopting-ai-code-assistance-securely.md)
-- [cisa kev cve 2024 1086 linux kernel use after free vulnerabi](./2024-05-30/cisa-kev-cve-2024-1086-linux-kernel-use-after-free-vulnerabi.md)
-- [cisa kev cve 2024 24919 check point quantum security gateway](./2024-05-30/cisa-kev-cve-2024-24919-check-point-quantum-security-gateway.md)
 
 ## 2024-05-29
 - [10 modern node js runtime features to start using in 2024](./2024-05-29/10-modern-node-js-runtime-features-to-start-using-in-2024.md)
-- [cisa kev cve 2024 4978 justice av solutions javs viewer inst](./2024-05-29/cisa-kev-cve-2024-4978-justice-av-solutions-javs-viewer-inst.md)
 
 ## 2024-05-28
 - [fastify plugins as building blocks for a backend node js api](./2024-05-28/fastify-plugins-as-building-blocks-for-a-backend-node-js-api.md)

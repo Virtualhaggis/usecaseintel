@@ -88,9 +88,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] BTMOB C2/phishing domain contact — arbsniper.com
+### BTMOB C2/phishing domain contact — arbsniper.com
 
-`UC_176_5` · phase: **c2** · confidence: **High**
+`UC_179_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,9 +110,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] BTMOB Android RAT APK SHA256 sighting in file or email telemetry
+### BTMOB Android RAT APK SHA256 sighting in file or email telemetry
 
-`UC_176_6` · phase: **delivery** · confidence: **High**
+`UC_179_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -182,9 +182,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] Egress to BTMOB hosted C2 cluster (LATAM/Hetzner IPs, Google CDN excluded)
+### Egress to BTMOB hosted C2 cluster (LATAM/Hetzner IPs, Google CDN excluded)
 
-`UC_176_7` · phase: **c2** · confidence: **Medium**
+`UC_179_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

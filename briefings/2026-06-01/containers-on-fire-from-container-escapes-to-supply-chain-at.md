@@ -66,9 +66,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] TeamPCP Checkmarx KICS supply-chain stealer C2 callback (audit.checkmarx.cx / 94.154.172.43)
+### TeamPCP Checkmarx KICS supply-chain stealer C2 callback (audit.checkmarx.cx / 94.154.172.43)
 
-`UC_123_7` · phase: **c2** · confidence: **High**
+`UC_126_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,9 +86,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Privileged container launch — docker run --privileged from non-CI parent
+### Privileged container launch — docker run --privileged from non-CI parent
 
-`UC_123_8` · phase: **exploit** · confidence: **Medium**
+`UC_126_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,9 +108,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Container escape via cgroups release_agent write (CVE-2022-0492)
+### Container escape via cgroups release_agent write (CVE-2022-0492)
 
-`UC_123_9` · phase: **exploit** · confidence: **High**
+`UC_126_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,9 +127,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] runC binary modified outside package manager (CVE-2019-5736 / CVE-2024-21626)
+### runC binary modified outside package manager (CVE-2019-5736 / CVE-2024-21626)
 
-`UC_123_10` · phase: **install** · confidence: **High**
+`UC_126_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,9 +148,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Kubernetes API curl/wget with ServiceAccount token from container
+### Kubernetes API curl/wget with ServiceAccount token from container
 
-`UC_123_11` · phase: **actions** · confidence: **High**
+`UC_126_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -246,7 +246,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Containers on fire: from container escapes to supply chain attacks
 
-`UC_123_6` · phase: **install** · confidence: **High**
+`UC_126_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

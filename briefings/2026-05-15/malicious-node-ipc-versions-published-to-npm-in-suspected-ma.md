@@ -40,9 +40,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Outbound egress to node-ipc stealer infrastructure (azurestaticprovider[.]net / 37.16.75.69)
+### Outbound egress to node-ipc stealer infrastructure (azurestaticprovider[.]net / 37.16.75.69)
 
-`UC_251_4` · phase: **actions** · confidence: **High**
+`UC_254_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,9 +62,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] DNS lookup for azurestaticprovider[.]net node-ipc exfil domain
+### DNS lookup for azurestaticprovider[.]net node-ipc exfil domain
 
-`UC_251_5` · phase: **c2** · confidence: **High**
+`UC_254_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,9 +85,9 @@ DeviceNetworkEvents
 | order by FirstSeen asc
 ```
 
-### [LLM] node-ipc stealer __ntw=1 environment marker in process command line
+### node-ipc stealer __ntw=1 environment marker in process command line
 
-`UC_251_6` · phase: **install** · confidence: **High**
+`UC_254_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,9 +107,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Malicious node-ipc package landed on disk under node_modules
+### Malicious node-ipc package landed on disk under node_modules
 
-`UC_251_7` · phase: **delivery** · confidence: **Medium**
+`UC_254_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,9 +129,9 @@ DeviceFileEvents
 | order by Timestamp asc
 ```
 
-### [LLM] node.js process staging credential dump in nt-* temp directory
+### node.js process staging credential dump in nt-* temp directory
 
-`UC_251_8` · phase: **actions** · confidence: **Medium**
+`UC_254_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -208,7 +208,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious node-ipc versions published to npm in suspected maintainer account com
 
-`UC_251_3` · phase: **exploit** · confidence: **High**
+`UC_254_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

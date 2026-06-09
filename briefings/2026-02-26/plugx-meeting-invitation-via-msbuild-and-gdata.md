@@ -62,9 +62,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] PlugX phishing lure — 'Meeting Invitation' email linking to gesecole.net ZIP
+### PlugX phishing lure — 'Meeting Invitation' email linking to gesecole.net ZIP
 
-`UC_483_8` · phase: **delivery** · confidence: **High**
+`UC_486_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,9 +76,9 @@ _(none detected from narrative keywords)_
 let LureSubjects = dynamic(["Meeting Invitation","Invitation_Letter","Invitation Letter"]); let PlugxDomains = dynamic(["gesecole.net","onedown.gesecole.net"]); let LureMail = EmailEvents | where Timestamp > ago(30d) | where Subject has_any (LureSubjects); let LureUrls = EmailUrlInfo | where Timestamp > ago(30d) | where Url has_any (PlugxDomains) or Url has "Invitation_Letter_No" or Url endswith ".zip"; LureMail | join kind=inner LureUrls on NetworkMessageId | project Timestamp, NetworkMessageId, SenderFromAddress, SenderFromDomain, RecipientEmailAddress, Subject, Url, UrlDomain, DeliveryAction, DeliveryLocation | order by Timestamp desc
 ```
 
-### [LLM] Renamed MSBuild.exe executing inline .csproj from user-writable path
+### Renamed MSBuild.exe executing inline .csproj from user-writable path
 
-`UC_483_9` · phase: **install** · confidence: **High**
+`UC_486_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,9 +90,9 @@ let LureSubjects = dynamic(["Meeting Invitation","Invitation_Letter","Invitation
 DeviceProcessEvents | where Timestamp > ago(7d) | where FileName =~ "msbuild.exe" or ProcessVersionInfoOriginalFileName =~ "MSBuild.exe" or ProcessVersionInfoInternalFileName =~ "MSBuild.exe" | where ProcessCommandLine has ".csproj" | where ProcessCommandLine matches regex @"(?i)\\(Users|Downloads|Temp|AppData|Public|ProgramData)\\" or FolderPath matches regex @"(?i)\\(Users|Downloads|Temp|AppData|Public|ProgramData)\\" | where not(FolderPath has_any (@"\Program Files\Microsoft Visual Studio\", @"\Program Files (x86)\Microsoft Visual Studio\", @"\Program Files\dotnet\")) | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessVersionInfoOriginalFileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256 | order by Timestamp desc
 ```
 
-### [LLM] PlugX DLL side-load — G DATA Avk.exe running from C:\Users\Public\GDatas\
+### PlugX DLL side-load — G DATA Avk.exe running from C:\Users\Public\GDatas\
 
-`UC_483_10` · phase: **install** · confidence: **High**
+`UC_486_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,9 +104,9 @@ DeviceProcessEvents | where Timestamp > ago(7d) | where FileName =~ "msbuild.exe
 DeviceProcessEvents | where Timestamp > ago(7d) | where FileName =~ "avk.exe" or ProcessVersionInfoOriginalFileName =~ "AVK.exe" or ProcessVersionInfoCompanyName has "G DATA" | where not(FolderPath matches regex @"(?i)\\Program Files( \(x86\))?\\G\s?DATA\\") | where FolderPath has_any (@"\Users\Public\", @"\AppData\", @"\Temp\", @"\ProgramData\", @"\Downloads\") or ProcessCommandLine matches regex @"(?i)\\Avk\.exe[\"']?\s+\d{2,5}\s+\d{2,5}\s*$" | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, ProcessVersionInfoCompanyName, ProcessVersionInfoOriginalFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256 | join kind=leftouter (DeviceImageLoadEvents | where Timestamp > ago(7d) | where FileName =~ "avk.dll" | project DeviceId, DllFolderPath = FolderPath, DllSHA256 = SHA256, DllInitiatingProcessId = InitiatingProcessId) on DeviceId | order by Timestamp desc
 ```
 
-### [LLM] PlugX persistence — Run key 'G DATA' pointing to C:\Users\Public\GDatas\Avk.exe
+### PlugX persistence — Run key 'G DATA' pointing to C:\Users\Public\GDatas\Avk.exe
 
-`UC_483_11` · phase: **install** · confidence: **High**
+`UC_486_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,9 +118,9 @@ DeviceProcessEvents | where Timestamp > ago(7d) | where FileName =~ "avk.exe" or
 DeviceRegistryEvents | where Timestamp > ago(30d) | where ActionType in ("RegistryValueSet","RegistryKeyCreated") | where RegistryKey has @"\Microsoft\Windows\CurrentVersion\Run" | where RegistryValueName =~ "G DATA" or RegistryValueData has @"\Users\Public\GDatas\Avk.exe" or RegistryValueData has @"GDatas\Avk.exe" or RegistryValueData matches regex @"(?i)Avk\.exe[\"']?\s+\d{2,5}\s+\d{2,5}" | project Timestamp, DeviceName, ActionType, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessParentFileName, InitiatingProcessAccountName | order by Timestamp desc
 ```
 
-### [LLM] PlugX C2 egress — connections to decoraat.net / decoorat.net / gesecole.net
+### PlugX C2 egress — connections to decoraat.net / decoorat.net / gesecole.net
 
-`UC_483_12` · phase: **c2** · confidence: **High**
+`UC_486_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -334,7 +334,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PlugX Meeting Invitation via MSBuild and GDATA
 
-`UC_483_7` · phase: **exploit** · confidence: **High**
+`UC_486_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -28,9 +28,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] GlassWorm Mar 2026 wave — compromised npm/VS Code package artifacts on disk
+### GlassWorm Mar 2026 wave — compromised npm/VS Code package artifacts on disk
 
-`UC_448_3` · phase: **delivery** · confidence: **High**
+`UC_451_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,9 +52,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] GlassWorm invisible-Unicode decoder signature (variation-selector eval loader) in process cmdline
+### GlassWorm invisible-Unicode decoder signature (variation-selector eval loader) in process cmdline
 
-`UC_448_4` · phase: **exploit** · confidence: **High**
+`UC_451_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -28,12 +28,123 @@ Blog Vulnerabilities & Threats It's time to treat browser extensions like supply
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
+- **T1189** — Drive-by Compromise
+- **T1566** — Phishing
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Cyberhaven compromised Chrome extension C2 callback (cyberhavenext.pro)
+
+`UC_337_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest in ("149.28.124.84","45.76.225.148") OR All_Traffic.dest_host="cyberhavenext.pro" OR like(All_Traffic.dest_host,"%.cyberhavenext.pro")) by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | append [ | tstats summariesonly=true count from datamodel=Network_Resolution.DNS where DNS.query="*cyberhavenext.pro" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` ]
+```
+
+**Defender KQL:**
+```kql
+let BadDomains = dynamic(["cyberhavenext.pro"]);
+let BadIPs = dynamic(["149.28.124.84","45.76.225.148"]);
+DeviceNetworkEvents
+| where Timestamp > ago(180d)
+| where RemoteUrl has_any (BadDomains) or RemoteIP in (BadIPs)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, Protocol
+| order by Timestamp desc
+```
+
+### Context.ai compromised Chrome extension installed on host (ID omddlmnhcofjbnbflmjginpjjblphbgk)
+
+`UC_337_9` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\Google\\Chrome\\User Data\\*\\Extensions\\omddlmnhcofjbnbflmjginpjjblphbgk*" OR Filesystem.file_path="*\\Google\\Chrome\\User Data\\*\\Sync Extension Settings\\omddlmnhcofjbnbflmjginpjjblphbgk*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let ExtId = "omddlmnhcofjbnbflmjginpjjblphbgk";
+union
+(DeviceFileEvents
+ | where Timestamp > ago(180d)
+ | where FolderPath has ExtId
+ | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, FolderPath),
+(DeviceProcessEvents
+ | where Timestamp > ago(180d)
+ | where ProcessCommandLine has ExtId
+ | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, FolderPath)
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Evidence=make_set(strcat(FileName, " :: ", FolderPath), 10)
+  by DeviceName, InitiatingProcessAccountName
+| order by FirstSeen asc
+```
+
+### First-time OAuth consent granting Drive/Mail read scope to non-sanctioned third-party app
+
+`UC_337_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+`azure_audit_logs` (OperationName="Consent to application" OR OperationName="Add OAuth2PermissionGrant" OR OperationName="Add delegated permission grant")
+| spath output=AppName path="TargetResources{}.displayName"
+| spath output=ConsentValues path="TargetResources{}.modifiedProperties{}.newValue"
+| eval Scopes=mvjoin(ConsentValues,",")
+| search Scopes IN ("*Files.Read*","*Files.ReadWrite*","*Mail.Read*","*Mail.ReadWrite*","*Sites.Read.All*","*offline_access*","*https://www.googleapis.com/auth/drive*")
+| spath output=Initiator path="InitiatedBy.user.userPrincipalName"
+| stats min(_time) as firstSeen count by Initiator AppName Scopes
+| eventstats values(AppName) as KnownApps by Initiator
+| where firstSeen > relative_time(now(), "-7d@d")
+| convert ctime(firstSeen)
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(30d)
+| where ActionType in~ ("Consent to application", "Add app role assignment grant to user", "Add delegated permission grant to user")
+| extend Raw = parse_json(RawEventData)
+| extend AppName = tostring(Raw.Target[0].ID)
+| extend ModProps = Raw.ModifiedProperties
+| extend ScopeText = tostring(ModProps)
+| where ScopeText has_any ("Files.Read","Files.ReadWrite","Mail.Read","Mail.ReadWrite","Sites.Read.All","offline_access","googleapis.com/auth/drive","googleapis.com/auth/documents")
+| summarize FirstSeen=min(Timestamp), GrantCount=count() by AccountObjectId, AccountDisplayName, AppName, IPAddress, CountryCode
+| where FirstSeen > ago(7d)
+| order by FirstSeen desc
+```
+
+### Roblox cheat/exploit download on enterprise endpoint (Lumma Stealer entry vector)
+
+`UC_337_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\Downloads\\*" OR Filesystem.file_path="*\\Desktop\\*" OR Filesystem.file_path="*\\Temp\\*") (Filesystem.file_name="*synapse*" OR Filesystem.file_name="*krnl*" OR Filesystem.file_name="*fluxus*" OR Filesystem.file_name="*hydrogen*" OR Filesystem.file_name="*argon*" OR Filesystem.file_name="*wave_executor*" OR Filesystem.file_name="*autofarm*" OR Filesystem.file_name="*auto-farm*" OR Filesystem.file_name="*roblox-exploit*" OR Filesystem.file_name="*robloxexploit*") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let CheatNames = dynamic(["synapse","krnl","fluxus","hydrogen","argon","wave_executor","wave-executor","autofarm","auto-farm","roblox-exploit","robloxexploit","roblox_bypass"]);
+let CheatHosts = dynamic(["wearedevs.net","krnl.cat","krnl.place","krnl.live","fluxteam.net","synapsex.to","hydrogenwave.com","getsynapse.cc"]);
+union
+(DeviceFileEvents
+ | where Timestamp > ago(30d)
+ | where FolderPath has_any ("\\Downloads\\","\\Desktop\\","\\Temp\\","\\AppData\\Local\\Temp\\")
+ | where FileName has_any (CheatNames)
+ | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, FolderPath, FileOriginUrl, FileOriginIP),
+(DeviceNetworkEvents
+ | where Timestamp > ago(30d)
+ | where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+ | where RemoteUrl has_any (CheatHosts)
+ | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP)
+| order by Timestamp desc
+```
 
 ### Suspicious browser extension installation
 
@@ -321,4 +432,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

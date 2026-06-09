@@ -50,9 +50,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Trust Wallet Shai-Hulud C2 callback to metrics-trustwallet.com / 138.124.70.40
+### Trust Wallet Shai-Hulud C2 callback to metrics-trustwallet.com / 138.124.70.40
 
-`UC_375_7` · phase: **c2** · confidence: **High**
+`UC_378_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,9 +76,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Shai-Hulud 2.0 npm worm artifact: setup_bun.js / bun_environment.js dropped by node/npm
+### Shai-Hulud 2.0 npm worm artifact: setup_bun.js / bun_environment.js dropped by node/npm
 
-`UC_375_8` · phase: **install** · confidence: **High**
+`UC_378_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,9 +101,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Shai-Hulud preinstall: node/npm spawning git/curl/gh pushing to attacker repo or GitHub API
+### Shai-Hulud preinstall: node/npm spawning git/curl/gh pushing to attacker repo or GitHub API
 
-`UC_375_9` · phase: **actions** · confidence: **Medium**
+`UC_378_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

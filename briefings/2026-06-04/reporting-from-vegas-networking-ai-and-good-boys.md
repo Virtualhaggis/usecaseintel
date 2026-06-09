@@ -54,9 +54,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Talos weekly prevalent malware SHA256 IOC sweep (Coinminer / Procpatcher / KMS activator)
+### Talos weekly prevalent malware SHA256 IOC sweep (Coinminer / Procpatcher / KMS activator)
 
-`UC_76_8` · phase: **install** · confidence: **Medium**
+`UC_80_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -302,7 +302,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — Reporting from Vegas: Networking, AI, and good boys
 
-`UC_76_7` · phase: **exploit** · confidence: **High**
+`UC_80_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

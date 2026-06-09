@@ -60,9 +60,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Chrome Preferences tamper on macOS by non-Chrome process (FlutterShell browser hijack)
+### Chrome Preferences tamper on macOS by non-Chrome process (FlutterShell browser hijack)
 
-`UC_84_8` · phase: **install** · confidence: **High**
+`UC_88_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,9 +82,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] macOS host beaconing to FlutterShell C2 / ad-intermediary domains
+### macOS host beaconing to FlutterShell C2 / ad-intermediary domains
 
-`UC_84_9` · phase: **c2** · confidence: **High**
+`UC_88_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,9 +109,9 @@ union net, dns
 | order by Timestamp desc
 ```
 
-### [LLM] Known FlutterShell SHA256 binary execution on macOS
+### Known FlutterShell SHA256 binary execution on macOS
 
-`UC_84_10` · phase: **install** · confidence: **High**
+`UC_88_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,9 +133,9 @@ union proc_hits, file_hits
 | order by Timestamp desc
 ```
 
-### [LLM] FlutterShell WebView bridge spawns shell on macOS (arbitrary command execution capability)
+### FlutterShell WebView bridge spawns shell on macOS (arbitrary command execution capability)
 
-`UC_84_11` · phase: **actions** · confidence: **Medium**
+`UC_88_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

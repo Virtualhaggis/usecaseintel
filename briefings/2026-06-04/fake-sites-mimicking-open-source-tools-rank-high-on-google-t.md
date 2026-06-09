@@ -61,9 +61,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Outbound contact to fake open-source tool / TDS / CloudFront staging domains
+### Outbound contact to fake open-source tool / TDS / CloudFront staging domains
 
-`UC_85_10` · phase: **delivery** · confidence: **High**
+`UC_89_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,9 +80,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Browser-spawned executable/installer drop within 5 min of TDS site contact
+### Browser-spawned executable/installer drop within 5 min of TDS site contact
 
-`UC_85_11` · phase: **delivery** · confidence: **High**
+`UC_89_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,9 +109,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] SessionGate final-stage rundll32 spawning cmd.exe to fetch and silently execute next-stage payload
+### SessionGate final-stage rundll32 spawning cmd.exe to fetch and silently execute next-stage payload
 
-`UC_85_12` · phase: **install** · confidence: **High**
+`UC_89_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,9 +131,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Remus/Lumma Stealer browser-credential and crypto-wallet directory enumeration
+### Remus/Lumma Stealer browser-credential and crypto-wallet directory enumeration
 
-`UC_85_13` · phase: **actions** · confidence: **Medium**
+`UC_89_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,9 +158,9 @@ DeviceFileEvents
 | order by LastSeen desc
 ```
 
-### [LLM] AnimateClipper ClickFix paste-to-run via explorer.exe spawning mshta/powershell/cmd
+### AnimateClipper ClickFix paste-to-run via explorer.exe spawning mshta/powershell/cmd
 
-`UC_85_14` · phase: **exploit** · confidence: **High**
+`UC_89_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

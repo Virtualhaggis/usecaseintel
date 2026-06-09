@@ -41,9 +41,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] NSO/Pegasus WhatsApp phishing redirector domains (ikhwancast/ghazacast/fr24cast)
+### NSO/Pegasus WhatsApp phishing redirector domains (ikhwancast/ghazacast/fr24cast)
 
-`UC_34_5` · phase: **delivery** · confidence: **High**
+`UC_42_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

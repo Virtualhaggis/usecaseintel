@@ -29,9 +29,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] IndonesianFoods npm spam package install on developer/CI endpoint
+### IndonesianFoods npm spam package install on developer/CI endpoint
 
-`UC_692_2` · phase: **delivery** · confidence: **High**
+`UC_695_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -51,9 +51,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] IndonesianFoods auto-publish artifact (auto.js / publishScript.js) dropped in node_modules
+### IndonesianFoods auto-publish artifact (auto.js / publishScript.js) dropped in node_modules
 
-`UC_692_3` · phase: **install** · confidence: **High**
+`UC_695_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,9 +72,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] TEA Protocol (tea.xyz) DNS resolution from developer or build endpoint
+### TEA Protocol (tea.xyz) DNS resolution from developer or build endpoint
 
-`UC_692_4` · phase: **c2** · confidence: **Medium**
+`UC_695_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Automated Package-Publication Incident IndonesianFoods in the NPM Ecosystem Link
 
-`UC_692_1` · phase: **exploit** · confidence: **High**
+`UC_695_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -45,9 +45,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Bright Data SDK control-plane beacon to proxyjs/clientsdk endpoints
+### Bright Data SDK control-plane beacon to proxyjs/clientsdk endpoints
 
-`UC_53_6` · phase: **c2** · confidence: **High**
+`UC_57_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,9 +81,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Bright Data partner-app or brdsdk.framework present on managed iOS / mobile inventory
+### Bright Data partner-app or brdsdk.framework present on managed iOS / mobile inventory
 
-`UC_53_7` · phase: **install** · confidence: **Medium**
+`UC_57_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,9 +113,9 @@ DeviceTvmSoftwareInventory
 | order by DeviceName asc
 ```
 
-### [LLM] Smart-TV / mobile device acting as residential proxy exit node (high-fan-out HTTPS to unrelated public destinations)
+### Smart-TV / mobile device acting as residential proxy exit node (high-fan-out HTTPS to unrelated public destinations)
 
-`UC_53_8` · phase: **actions** · confidence: **Medium**
+`UC_57_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

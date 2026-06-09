@@ -39,9 +39,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] GhostAction malicious workflow file added with curl POST to Plesk infrastructure
+### GhostAction malicious workflow file added with curl POST to Plesk infrastructure
 
-`UC_776_2` · phase: **install** · confidence: **High**
+`UC_779_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,9 +60,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] GhostAction C2 egress to Plesk-hosted exfiltration infrastructure
+### GhostAction C2 egress to Plesk-hosted exfiltration infrastructure
 
-`UC_776_3` · phase: **c2** · confidence: **High**
+`UC_779_3` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,9 +79,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] GhostAction curl/wget POST of CI/CD secret token to Plesk endpoint
+### GhostAction curl/wget POST of CI/CD secret token to Plesk endpoint
 
-`UC_776_4` · phase: **actions** · confidence: **High**
+`UC_779_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,9 +100,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] GitHub Actions self-hosted runner spawning curl/wget POST to non-allowlisted egress
+### GitHub Actions self-hosted runner spawning curl/wget POST to non-allowlisted egress
 
-`UC_776_5` · phase: **exploit** · confidence: **Medium**
+`UC_779_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,9 +121,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] GhostAction GitHub workflow secret-enumeration commit pattern
+### GhostAction GitHub workflow secret-enumeration commit pattern
 
-`UC_776_6` · phase: **weapon** · confidence: **Medium**
+`UC_779_6` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -53,9 +53,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Egress to typosquatted C2 flipboxstudio.info (Laravel-Lang Composer SC)
+### Egress to typosquatted C2 flipboxstudio.info (Laravel-Lang Composer SC)
 
-`UC_110_5` · phase: **c2** · confidence: **High**
+`UC_113_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,9 +71,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] PHP CLI drops hidden /tmp dropper artefacts (Laravel-Lang autoload payload)
+### PHP CLI drops hidden /tmp dropper artefacts (Laravel-Lang autoload payload)
 
-`UC_110_6` · phase: **install** · confidence: **High**
+`UC_113_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,9 +93,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Orphaned process (ppid=1) executing from /tmp hidden hex path (post-dropper stage-2)
+### Orphaned process (ppid=1) executing from /tmp hidden hex path (post-dropper stage-2)
 
-`UC_110_7` · phase: **actions** · confidence: **High**
+`UC_113_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,9 +114,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] GitHub bulk git tag force-push by single actor across multiple org repos
+### GitHub bulk git tag force-push by single actor across multiple org repos
 
-`UC_110_8` · phase: **delivery** · confidence: **Medium**
+`UC_113_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -191,7 +191,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Laravel-Lang Supply Chain Attack: Every Tag Across Multiple Composer Packages Re
 
-`UC_110_4` · phase: **install** · confidence: **High**
+`UC_113_4` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

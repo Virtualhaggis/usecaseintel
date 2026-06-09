@@ -59,9 +59,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] npm/node lifecycle script fetching Bun runtime from github.com/oven-sh/bun
+### npm/node lifecycle script fetching Bun runtime from github.com/oven-sh/bun
 
-`UC_108_8` · phase: **install** · confidence: **High**
+`UC_111_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,9 +102,9 @@ union ProcHits, NetHits
 | order by Timestamp desc
 ```
 
-### [LLM] C2 beacon to audit.checkmarx[.]cx /v1/telemetry (TeamPCP Shai-Hulud Third Coming)
+### C2 beacon to audit.checkmarx[.]cx /v1/telemetry (TeamPCP Shai-Hulud Third Coming)
 
-`UC_108_9` · phase: **c2** · confidence: **High**
+`UC_111_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,9 +128,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Malicious @bitwarden/cli payload artifacts on disk (bw_setup.js, bw1.js, Shai-Hulud markers)
+### Malicious @bitwarden/cli payload artifacts on disk (bw_setup.js, bw1.js, Shai-Hulud markers)
 
-`UC_108_10` · phase: **install** · confidence: **High**
+`UC_111_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -394,7 +394,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The npm Threat Landscape: Attack Surface and Mitigations (Updated June 2)
 
-`UC_108_7` · phase: **exploit** · confidence: **High**
+`UC_111_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

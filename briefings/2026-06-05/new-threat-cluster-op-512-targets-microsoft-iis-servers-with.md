@@ -45,9 +45,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] OP-512 C2 beacon to ashx.lhlsjcb[.]com from IIS host
+### OP-512 C2 beacon to ashx.lhlsjcb[.]com from IIS host
 
-`UC_66_7` · phase: **c2** · confidence: **High**
+`UC_70_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,9 +63,9 @@ DeviceNetworkEvents
 | order by Timestamp asc
 ```
 
-### [LLM] IIS worker w3wp.exe writes .aspx/.ashx handler to upload/temp directory (OP-512 web shell drop)
+### IIS worker w3wp.exe writes .aspx/.ashx handler to upload/temp directory (OP-512 web shell drop)
 
-`UC_66_8` · phase: **install** · confidence: **High**
+`UC_70_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,9 +84,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] IIS w3wp.exe spawns whoami /priv or cmd.exe — OP-512 web shell command execution
+### IIS w3wp.exe spawns whoami /priv or cmd.exe — OP-512 web shell command execution
 
-`UC_66_9` · phase: **actions** · confidence: **High**
+`UC_70_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,9 +104,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] OP-512 Potato Suite SYSTEM escalation from IIS worker (SeImpersonate token abuse)
+### OP-512 Potato Suite SYSTEM escalation from IIS worker (SeImpersonate token abuse)
 
-`UC_66_10` · phase: **exploit** · confidence: **High**
+`UC_70_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -328,7 +328,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Threat Cluster OP-512 Targets Microsoft IIS Servers with Custom Web Shell Fr
 
-`UC_66_6` · phase: **exploit** · confidence: **High**
+`UC_70_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

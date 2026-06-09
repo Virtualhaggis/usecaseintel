@@ -52,9 +52,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Outbound C2 to PCPJack Sliver server 213.136.80.73 (esp. port 9000)
+### Outbound C2 to PCPJack Sliver server 213.136.80.73 (esp. port 9000)
 
-`UC_70_8` · phase: **c2** · confidence: **High**
+`UC_74_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,9 +71,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] PCPJack SMTP quality-gate probe to smtp.gmail.com:587 from non-mail Linux workloads
+### PCPJack SMTP quality-gate probe to smtp.gmail.com:587 from non-mail Linux workloads
 
-`UC_70_9` · phase: **actions** · confidence: **High**
+`UC_74_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,9 +91,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] SCP exfiltration of PCPJack proxy lists to downstream collector 38.242.204.245
+### SCP exfiltration of PCPJack proxy lists to downstream collector 38.242.204.245
 
-`UC_70_10` · phase: **actions** · confidence: **High**
+`UC_74_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,9 +115,9 @@ union
 | order by Timestamp desc
 ```
 
-### [LLM] PCPJack hidden Chisel implant drop at /var/tmp/.xs on Linux
+### PCPJack hidden Chisel implant drop at /var/tmp/.xs on Linux
 
-`UC_70_11` · phase: **install** · confidence: **High**
+`UC_74_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,9 +136,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] PCPJack SOCKS5 listener bound to deterministic port 10000-14999 on Linux
+### PCPJack SOCKS5 listener bound to deterministic port 10000-14999 on Linux
 
-`UC_70_12` · phase: **c2** · confidence: **Medium**
+`UC_74_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,9 +156,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] PCPJack exit-IP enrichment lookups to api.ipify.org and ip-api.com from Linux workloads
+### PCPJack exit-IP enrichment lookups to api.ipify.org and ip-api.com from Linux workloads
 
-`UC_70_13` · phase: **recon** · confidence: **Medium**
+`UC_74_13` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -412,7 +412,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PCPJack Hijacks 230 AWS, Google Cloud, and Azure Servers for Covert SMTP Relay N
 
-`UC_70_7` · phase: **exploit** · confidence: **High**
+`UC_74_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

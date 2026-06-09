@@ -35,18 +35,18 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Tag deletion/repointing on critical GitHub Action repositories (configure-aws-credentials v4.3.0 pattern)
+### Tag deletion/repointing on critical GitHub Action repositories (configure-aws-credentials v4.3.0 pattern)
 
-`UC_805_3` · phase: **weapon** · confidence: **High**
+`UC_808_3` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
 `summariesonly` | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Change.user) as actor values(Change.src) as src_ip values(Change.object) as ref from datamodel=Change where Change.vendor_product="GitHub" (Change.action="deleted" OR Change.action="delete") (Change.object_category="tag" OR Change.object="refs/tags/*") Change.object_path IN ("aws-actions/configure-aws-credentials","tj-actions/*","reviewdog/*","actions/*") by Change.object_path Change.object Change.action | `drop_dm_object_name(Change)` | rex field=object "refs/tags/(?<tag_name>v?\d+(\.\d+){0,2})$" | where isnotnull(tag_name) | eval _is_buggy_aws_v430=if(object_path="aws-actions/configure-aws-credentials" AND tag_name="v4.3.0", 1, 0)
 ```
 
-### [LLM] Internal workflows pulling aws-actions/configure-aws-credentials@v4.3.0 during the buggy-release window
+### Internal workflows pulling aws-actions/configure-aws-credentials@v4.3.0 during the buggy-release window
 
-`UC_805_4` · phase: **delivery** · confidence: **High**
+`UC_808_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

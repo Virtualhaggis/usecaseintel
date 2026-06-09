@@ -35,9 +35,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] MuddyWater Fooder loader (OsUpdater.exe) execution from Downloads
+### MuddyWater Fooder loader (OsUpdater.exe) execution from Downloads
 
-`UC_664_0` · phase: **install** · confidence: **High**
+`UC_667_0` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,9 +64,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] MuddyViper persistence via ManageOnDriveUpdater scheduled task or Startup folder hijack
+### MuddyViper persistence via ManageOnDriveUpdater scheduled task or Startup folder hijack
 
-`UC_664_1` · phase: **install** · confidence: **High**
+`UC_667_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,9 +101,9 @@ union SchedTaskHits, StartupHijackHits
 | order by Timestamp desc
 ```
 
-### [LLM] MuddyViper C2 fingerprint: 'A WinHTTP Example Program/1.0' UA + distinctive URI paths
+### MuddyViper C2 fingerprint: 'A WinHTTP Example Program/1.0' UA + distinctive URI paths
 
-`UC_664_2` · phase: **c2** · confidence: **High**
+`UC_667_2` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,9 +130,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] MuddyWater CE-Notes / LP-Notes / Blub stealer staging-file writes
+### MuddyWater CE-Notes / LP-Notes / Blub stealer staging-file writes
 
-`UC_664_3` · phase: **actions** · confidence: **High**
+`UC_667_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,9 +155,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Non-browser process reading Chrome/Edge/Opera Login Data or Local State
+### Non-browser process reading Chrome/Edge/Opera Login Data or Local State
 
-`UC_664_4` · phase: **actions** · confidence: **High**
+`UC_667_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -45,9 +45,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Trojanized axios npm package postinstall: node.exe spawned from plain-crypto-js dependency
+### Trojanized axios npm package postinstall: node.exe spawned from plain-crypto-js dependency
 
-`UC_155_7` · phase: **install** · confidence: **High**
+`UC_158_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,9 +69,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] axios RAT Windows persistence: %PROGRAMDATA%\wt.exe drop + %TEMP%\6202033.vbs/.ps1 staging
+### axios RAT Windows persistence: %PROGRAMDATA%\wt.exe drop + %TEMP%\6202033.vbs/.ps1 staging
 
-`UC_155_8` · phase: **install** · confidence: **High**
+`UC_158_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,9 +91,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] axios RAT C2 callout to sfrclak.com / 142.11.206.73:8000
+### axios RAT C2 callout to sfrclak.com / 142.11.206.73:8000
 
-`UC_155_9` · phase: **c2** · confidence: **High**
+`UC_158_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

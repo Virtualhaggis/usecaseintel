@@ -65,9 +65,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] ZIP delivery from gleeze.com look-alike utility download sites (SEO/AI poisoning)
+### ZIP delivery from gleeze.com look-alike utility download sites (SEO/AI poisoning)
 
-`UC_172_13` · phase: **delivery** · confidence: **High**
+`UC_175_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,9 +88,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] DLL side-loading of autorun.dll by spoofed hardware-utility executables
+### DLL side-loading of autorun.dll by spoofed hardware-utility executables
 
-`UC_172_14` · phase: **install** · confidence: **High**
+`UC_175_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,9 +110,9 @@ DeviceImageLoadEvents
 | order by Timestamp desc
 ```
 
-### [LLM] msiexec silently installing masqueraded vcredist_x64.dll (ScreenConnect packaged installer)
+### msiexec silently installing masqueraded vcredist_x64.dll (ScreenConnect packaged installer)
 
-`UC_172_15` · phase: **install** · confidence: **High**
+`UC_175_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,9 +131,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Unauthorized ScreenConnect client beaconing to directdownload.icu:8041 / 193.42.11.108
+### Unauthorized ScreenConnect client beaconing to directdownload.icu:8041 / 193.42.11.108
 
-`UC_172_16` · phase: **c2** · confidence: **High**
+`UC_175_16` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -152,9 +152,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] SimpleRunPE / RuntimeHost.exe dropped to hidden D3F4E2A1 install folder
+### SimpleRunPE / RuntimeHost.exe dropped to hidden D3F4E2A1 install folder
 
-`UC_172_17` · phase: **install** · confidence: **High**
+`UC_175_17` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -175,9 +175,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Defender exclusion added via Add-MpPreference for campaign install path
+### Defender exclusion added via Add-MpPreference for campaign install path
 
-`UC_172_18` · phase: **install** · confidence: **Medium**
+`UC_175_18` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -198,9 +198,9 @@ DeviceProcessEvents
 | order by HighConf desc, Timestamp desc
 ```
 
-### [LLM] Cryptojacking persistence: Run key WinSysCache
+### Cryptojacking persistence: Run key WinSysCache
 
-`UC_172_19` · phase: **install** · confidence: **High**
+`UC_175_19` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -220,9 +220,9 @@ DeviceRegistryEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Cryptojacking persistence: 'Windows System Health' scheduled tasks
+### Cryptojacking persistence: 'Windows System Health' scheduled tasks
 
-`UC_172_20` · phase: **install** · confidence: **High**
+`UC_175_20` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -604,7 +604,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — From poisoned search results to GPU mining: A cryptojacking campaign abusing Scr
 
-`UC_172_12` · phase: **exploit** · confidence: **High**
+`UC_175_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

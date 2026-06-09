@@ -31,9 +31,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Hoppscotch device-login open redirect token theft via localhost.* / sslip.io bypass
+### Hoppscotch device-login open redirect token theft via localhost.* / sslip.io bypass
 
-`UC_386_3` · phase: **exploit** · confidence: **High**
+`UC_389_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,9 +55,9 @@ DeviceNetworkEvents
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
 ```
 
-### [LLM] Hoppscotch Mock Server stored XSS via GraphQL updateRESTUserRequest content-type override
+### Hoppscotch Mock Server stored XSS via GraphQL updateRESTUserRequest content-type override
 
-`UC_386_4` · phase: **exploit** · confidence: **Medium**
+`UC_389_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,9 +89,9 @@ DeviceNetworkEvents
 | project Timestamp, GraphqlTime, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, MockUrl=RemoteUrl, GraphqlUrl
 ```
 
-### [LLM] Hoppscotch cross-team request injection via moveRequest GraphQL with null nextRequestID
+### Hoppscotch cross-team request injection via moveRequest GraphQL with null nextRequestID
 
-`UC_386_5` · phase: **exploit** · confidence: **Medium**
+`UC_389_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

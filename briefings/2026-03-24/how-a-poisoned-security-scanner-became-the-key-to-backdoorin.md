@@ -51,9 +51,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Malicious litellm 1.82.7/1.82.8 wheel install drops litellm_init.pth in site-packages
+### Malicious litellm 1.82.7/1.82.8 wheel install drops litellm_init.pth in site-packages
 
-`UC_423_9` · phase: **delivery** · confidence: **High**
+`UC_426_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,9 +73,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Python .pth startup hook executes subprocess to curl C2 (litellm fork-bomb pattern)
+### Python .pth startup hook executes subprocess to curl C2 (litellm fork-bomb pattern)
 
-`UC_423_10` · phase: **install** · confidence: **High**
+`UC_426_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,9 +99,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] DNS / HTTPS egress to TeamPCP exfil infra (models.litellm.cloud, checkmarx.zone)
+### DNS / HTTPS egress to TeamPCP exfil infra (models.litellm.cloud, checkmarx.zone)
 
-`UC_423_11` · phase: **c2** · confidence: **High**
+`UC_426_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,9 +125,9 @@ union
 | order by Timestamp desc
 ```
 
-### [LLM] Exfil staging artefacts: session.key, payload.enc, session.key.enc, tpcp.tar.gz in temp
+### Exfil staging artefacts: session.key, payload.enc, session.key.enc, tpcp.tar.gz in temp
 
-`UC_423_12` · phase: **actions** · confidence: **High**
+`UC_426_12` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,9 +149,9 @@ DeviceFileEvents
 | order by FirstSeen desc
 ```
 
-### [LLM] TeamPCP Linux credential harvest: Python reading /etc/shadow + auth.log + cloud
+### TeamPCP Linux credential harvest: Python reading /etc/shadow + auth.log + cloud
 
-`UC_423_13` · phase: **actions** · confidence: **Medium**
+`UC_426_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -443,7 +443,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — How a Poisoned Security Scanner Became the Key to Backdooring LiteLLM
 
-`UC_423_8` · phase: **exploit** · confidence: **High**
+`UC_426_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -38,9 +38,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] PyPI install footprint of num2words v0.5.15/0.5.16 (Scavenger supply-chain compromise)
+### PyPI install footprint of num2words v0.5.15/0.5.16 (Scavenger supply-chain compromise)
 
-`UC_815_3` · phase: **delivery** · confidence: **High**
+`UC_818_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,9 +65,9 @@ union
 | order by Timestamp desc
 ```
 
-### [LLM] Scavenger C2 callback: ifyouseethisyouareultragay[.]com / pokerainteasy[.]su
+### Scavenger C2 callback: ifyouseethisyouareultragay[.]com / pokerainteasy[.]su
 
-`UC_815_4` · phase: **c2** · confidence: **High**
+`UC_818_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,9 +90,9 @@ union
 | order by Timestamp desc
 ```
 
-### [LLM] Scavenger loader/stealer SHA256 execution or drop on endpoint
+### Scavenger loader/stealer SHA256 execution or drop on endpoint
 
-`UC_815_5` · phase: **install** · confidence: **High**
+`UC_818_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

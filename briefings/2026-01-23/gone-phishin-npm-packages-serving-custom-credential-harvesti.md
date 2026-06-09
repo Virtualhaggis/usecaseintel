@@ -52,9 +52,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Aikido npm phishing: direct outbound connection to RackGenius C2 (163.123.236.118)
+### Aikido npm phishing: direct outbound connection to RackGenius C2 (163.123.236.118)
 
-`UC_586_11` · phase: **c2** · confidence: **High**
+`UC_589_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,9 +70,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Aikido npm phishing: DNS / web request to siemens-energy.icu or siemensergy.icu typosquats
+### Aikido npm phishing: DNS / web request to siemens-energy.icu or siemensergy.icu typosquats
 
-`UC_586_12` · phase: **delivery** · confidence: **High**
+`UC_589_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,9 +88,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Aikido campaign: jsDelivr CDN fetch of weaponised flockiali/opresc/prndn/oprnm/operni npm package
+### Aikido campaign: jsDelivr CDN fetch of weaponised flockiali/opresc/prndn/oprnm/operni npm package
 
-`UC_586_13` · phase: **delivery** · confidence: **High**
+`UC_589_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,9 +107,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Aikido npm phishing: user clicked phishing URL hosting /DIVzTaSF credential capture
+### Aikido npm phishing: user clicked phishing URL hosting /DIVzTaSF credential capture
 
-`UC_586_14` · phase: **delivery** · confidence: **High**
+`UC_589_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,9 +125,9 @@ UrlClickEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Aikido npm phishing: inbound email containing jsDelivr link to flockiali/opresc/prndn/oprnm/operni
+### Aikido npm phishing: inbound email containing jsDelivr link to flockiali/opresc/prndn/oprnm/operni
 
-`UC_586_15` · phase: **delivery** · confidence: **High**
+`UC_589_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -443,7 +443,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Gone Phishin': npm Packages Serving Custom Credential Harvesting Pages
 
-`UC_586_10` · phase: **exploit** · confidence: **High**
+`UC_589_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

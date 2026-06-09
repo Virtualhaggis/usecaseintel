@@ -99,9 +99,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Vulnerable react-server-dom-* package versions (CVE-2025-55182) in workload inventory
+### Vulnerable react-server-dom-* package versions (CVE-2025-55182) in workload inventory
 
-`UC_660_4` · phase: **recon** · confidence: **High**
+`UC_663_4` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,9 +120,9 @@ DeviceTvmSoftwareVulnerabilities
 | order by IsInternetFacing desc, Timestamp desc
 ```
 
-### [LLM] Node.js process spawning interactive shell — suspected post-exploit RCE on Next.js / RSC server
+### Node.js process spawning interactive shell — suspected post-exploit RCE on Next.js / RSC server
 
-`UC_660_5` · phase: **exploit** · confidence: **High**
+`UC_663_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,9 +150,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Anomalous POST to Next.js Server Action / RSC endpoint with 5xx error clustering
+### Anomalous POST to Next.js Server Action / RSC endpoint with 5xx error clustering
 
-`UC_660_6` · phase: **exploit** · confidence: **Medium**
+`UC_663_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -174,7 +174,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — Security Advisory: Critical RCE Vulnerabilities in React Server Components (CVE-
 
-`UC_660_3` · phase: **exploit** · confidence: **High**
+`UC_663_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

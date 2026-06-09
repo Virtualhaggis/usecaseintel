@@ -50,9 +50,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Sha1-Hulud npm Worm — Egress to bun.sh / oss.trufflehog.org / keychecker.trufflesecurity.com from npm/node context
+### Sha1-Hulud npm Worm — Egress to bun.sh / oss.trufflehog.org / keychecker.trufflesecurity.com from npm/node context
 
-`UC_640_5` · phase: **install** · confidence: **High**
+`UC_643_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,9 +82,9 @@ DeviceNetworkEvents
 | order by FirstSeen desc
 ```
 
-### [LLM] Sha1-Hulud npm Worm — Self-Hosted GitHub Actions Runner Registration with Name 'SHA1HULUD'
+### Sha1-Hulud npm Worm — Self-Hosted GitHub Actions Runner Registration with Name 'SHA1HULUD'
 
-`UC_640_6` · phase: **install** · confidence: **High**
+`UC_643_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,9 +110,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Sha1-Hulud npm Worm — Drop of setup_bun.js / bun_environment.js / discussion.yaml by node or shell
+### Sha1-Hulud npm Worm — Drop of setup_bun.js / bun_environment.js / discussion.yaml by node or shell
 
-`UC_640_7` · phase: **install** · confidence: **Medium**
+`UC_643_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -191,7 +191,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — How Harden Runner Detected the Sha1-Hulud Supply Chain Attack in CNCF's Backstag
 
-`UC_640_4` · phase: **exploit** · confidence: **High**
+`UC_643_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

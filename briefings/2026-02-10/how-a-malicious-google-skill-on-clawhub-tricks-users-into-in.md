@@ -41,9 +41,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Endpoint contact with attacker C2 setup-service.com (OpenClaw skill stager)
+### Endpoint contact with attacker C2 setup-service.com (OpenClaw skill stager)
 
-`UC_544_4` · phase: **c2** · confidence: **High**
+`UC_547_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,9 +65,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] Pastebin-piping stager retrieved from rentry.co/openclaw-core (macOS/Linux ClawHub skill)
+### Pastebin-piping stager retrieved from rentry.co/openclaw-core (macOS/Linux ClawHub skill)
 
-`UC_544_5` · phase: **delivery** · confidence: **High**
+`UC_547_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,9 +91,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] Download of openclawcore-1.0.3.zip from denboss99 GitHub release (Windows OpenClaw skill payload)
+### Download of openclawcore-1.0.3.zip from denboss99 GitHub release (Windows OpenClaw skill payload)
 
-`UC_544_6` · phase: **delivery** · confidence: **High**
+`UC_547_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,9 +117,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] SKILL.md file written referencing fabricated openclaw-core prerequisite (ClawHub skill social engineering hook)
+### SKILL.md file written referencing fabricated openclaw-core prerequisite (ClawHub skill social engineering hook)
 
-`UC_544_7` · phase: **weapon** · confidence: **Medium**
+`UC_547_7` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

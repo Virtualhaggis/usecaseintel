@@ -50,9 +50,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Hades/Miasma PyPI poisoned package installation (26 named packages)
+### Hades/Miasma PyPI poisoned package installation (26 named packages)
 
-`UC_21_9` · phase: **delivery** · confidence: **High**
+`UC_26_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,9 +72,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Python interpreter downloading Bun runtime ZIP from oven-sh GitHub release
+### Python interpreter downloading Bun runtime ZIP from oven-sh GitHub release
 
-`UC_21_10` · phase: **install** · confidence: **High**
+`UC_26_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,9 +100,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Hades persistence: *-setup.pth file written into Python site-packages
+### Hades persistence: *-setup.pth file written into Python site-packages
 
-`UC_21_11` · phase: **install** · confidence: **High**
+`UC_26_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,9 +122,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Bun runtime reading developer credential files (.npmrc / .pypirc / .ssh / .env / cloud configs)
+### Bun runtime reading developer credential files (.npmrc / .pypirc / .ssh / .env / cloud configs)
 
-`UC_21_12` · phase: **actions** · confidence: **High**
+`UC_26_12` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,9 +147,9 @@ DeviceFileEvents
 | order by LastSeen desc
 ```
 
-### [LLM] gh-token-monitor service install or rm -rf wiper command (Hades self-destruct)
+### gh-token-monitor service install or rm -rf wiper command (Hades self-destruct)
 
-`UC_21_13` · phase: **actions** · confidence: **High**
+`UC_26_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,9 +184,9 @@ union
 | order by Timestamp desc
 ```
 
-### [LLM] Hades C2: GitHub commit search for campaign markers TheBeautifulSnadsOfTime / firedalazer
+### Hades C2: GitHub commit search for campaign markers TheBeautifulSnadsOfTime / firedalazer
 
-`UC_21_14` · phase: **c2** · confidence: **High**
+`UC_26_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -472,7 +472,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hades PyPI Attack: 19 Packages Poisoned to Auto-Run Bun Credential Stealer
 
-`UC_21_8` · phase: **exploit** · confidence: **High**
+`UC_26_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

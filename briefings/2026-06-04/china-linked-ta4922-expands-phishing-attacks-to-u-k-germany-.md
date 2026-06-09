@@ -68,9 +68,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] TA4922 Known C2 IPs and Domains (Proofpoint Jun-2026)
+### TA4922 Known C2 IPs and Domains (Proofpoint Jun-2026)
 
-`UC_81_10` · phase: **c2** · confidence: **High**
+`UC_85_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,9 +91,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] TA4922 Atlas RAT / RomulusLoader / SilentRunLoader Known SHA256 Execution
+### TA4922 Atlas RAT / RomulusLoader / SilentRunLoader Known SHA256 Execution
 
-`UC_81_11` · phase: **install** · confidence: **High**
+`UC_85_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,9 +130,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] SilentRunLoader: Python process touching Chrome Login Data / Cookies / Local State
+### SilentRunLoader: Python process touching Chrome Login Data / Cookies / Local State
 
-`UC_81_12` · phase: **actions** · confidence: **High**
+`UC_85_12` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -165,9 +165,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] RomulusLoader: AnyDesk or SyncFuture written/spawned from non-installer parent
+### RomulusLoader: AnyDesk or SyncFuture written/spawned from non-installer parent
 
-`UC_81_13` · phase: **install** · confidence: **Medium**
+`UC_85_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

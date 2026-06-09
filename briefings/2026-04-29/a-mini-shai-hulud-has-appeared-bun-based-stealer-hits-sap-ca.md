@@ -48,9 +48,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Mini Shai-Hulud npm preinstall chain: node setup.mjs → bun execution.js
+### Mini Shai-Hulud npm preinstall chain: node setup.mjs → bun execution.js
 
-`UC_327_7` · phase: **install** · confidence: **High**
+`UC_330_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,9 +75,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Mini Shai-Hulud payload file drop: setup.mjs/execution.js by hash & size in node_modules
+### Mini Shai-Hulud payload file drop: setup.mjs/execution.js by hash & size in node_modules
 
-`UC_327_8` · phase: **install** · confidence: **High**
+`UC_330_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,9 +107,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Mini Shai-Hulud post-compromise persistence artifacts in .claude/, .vscode/, .github/workflows/
+### Mini Shai-Hulud post-compromise persistence artifacts in .claude/, .vscode/, .github/workflows/
 
-`UC_327_9` · phase: **actions** · confidence: **High**
+`UC_330_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -282,7 +282,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — "A Mini Shai-Hulud Has Appeared": Bun-Based Stealer Hits SAP @cap-js and mbt npm
 
-`UC_327_6` · phase: **exploit** · confidence: **High**
+`UC_330_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

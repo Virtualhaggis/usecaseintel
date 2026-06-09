@@ -37,9 +37,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] npx invocation of known phantom package names disclosed by Aikido
+### npx invocation of known phantom package names disclosed by Aikido
 
-`UC_558_6` · phase: **install** · confidence: **High**
+`UC_561_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,9 +64,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] File creation under npx cache for Aikido-claimed phantom package names
+### File creation under npx cache for Aikido-claimed phantom package names
 
-`UC_558_7` · phase: **install** · confidence: **High**
+`UC_561_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

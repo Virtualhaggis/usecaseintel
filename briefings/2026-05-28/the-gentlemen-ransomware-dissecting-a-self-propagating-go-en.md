@@ -63,9 +63,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Gentlemen ransomware SYSTEM elevation via gentlemen_system scheduled task
+### Gentlemen ransomware SYSTEM elevation via gentlemen_system scheduled task
 
-`UC_151_12` · phase: **install** · confidence: **High**
+`UC_154_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,9 +87,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] The Gentlemen ransomware known SHA256 file/process sightings
+### The Gentlemen ransomware known SHA256 file/process sightings
 
-`UC_151_13` · phase: **delivery** · confidence: **High**
+`UC_154_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,9 +124,9 @@ union
 | order by Timestamp desc
 ```
 
-### [LLM] The Gentlemen ransomware command-line argument signature
+### The Gentlemen ransomware command-line argument signature
 
-`UC_151_14` · phase: **exploit** · confidence: **High**
+`UC_154_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,9 +149,9 @@ DeviceProcessEvents
 | order by BadPasswordMatch desc, Timestamp desc
 ```
 
-### [LLM] The Gentlemen ransomware --full dual child relaunch (--system + --shares)
+### The Gentlemen ransomware --full dual child relaunch (--system + --shares)
 
-`UC_151_15` · phase: **exploit** · confidence: **High**
+`UC_154_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -539,7 +539,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The Gentlemen ransomware: Dissecting a self-propagating Go encryptor
 
-`UC_151_11` · phase: **exploit** · confidence: **High**
+`UC_154_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

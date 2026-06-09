@@ -41,9 +41,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] VSCode/VSCodium spawning shell or curl to raw.githubusercontent.com/BlokTrooper
+### VSCode/VSCodium spawning shell or curl to raw.githubusercontent.com/BlokTrooper
 
-`UC_439_7` · phase: **delivery** · confidence: **High**
+`UC_442_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,9 +63,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Outbound TCP beacon to BlokTrooper Socket.IO C2 195.201.104.53:6931/6936/6939
+### Outbound TCP beacon to BlokTrooper Socket.IO C2 195.201.104.53:6931/6936/6939
 
-`UC_439_8` · phase: **c2** · confidence: **High**
+`UC_442_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,9 +84,9 @@ DeviceNetworkEvents
 | order by Timestamp asc
 ```
 
-### [LLM] VSCode-family host fetching from raw.githubusercontent.com/BlokTrooper/extension path
+### VSCode-family host fetching from raw.githubusercontent.com/BlokTrooper/extension path
 
-`UC_439_9` · phase: **delivery** · confidence: **High**
+`UC_442_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,9 +106,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Four-way node.exe -e fanout spawned from VSCode shell descendants (BlokTrooper stage-2)
+### Four-way node.exe -e fanout spawned from VSCode shell descendants (BlokTrooper stage-2)
 
-`UC_439_10` · phase: **install** · confidence: **High**
+`UC_442_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,9 +132,9 @@ DeviceProcessEvents
 | order by FirstSeen desc
 ```
 
-### [LLM] Non-browser process copying Chrome/Edge/Brave Login Data, Web Data, or wallet extension LevelDB state
+### Non-browser process copying Chrome/Edge/Brave Login Data, Web Data, or wallet extension LevelDB state
 
-`UC_439_11` · phase: **actions** · confidence: **High**
+`UC_442_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -305,7 +305,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — fast-draft Open VSX Extension Compromised by BlokTrooper
 
-`UC_439_6` · phase: **install** · confidence: **High**
+`UC_442_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

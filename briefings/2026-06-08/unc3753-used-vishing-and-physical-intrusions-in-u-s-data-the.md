@@ -58,9 +58,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Quick Assist launched followed by remote interactive session (UNC3753 vishing pretext)
+### Quick Assist launched followed by remote interactive session (UNC3753 vishing pretext)
 
-`UC_45_11` · phase: **delivery** · confidence: **Medium**
+`UC_50_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,9 +77,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] AnyDesk, Bomgar, SuperOps or Zoho Assist installer execution (UNC3753 RMM foothold)
+### AnyDesk, Bomgar, SuperOps or Zoho Assist installer execution (UNC3753 RMM foothold)
 
-`UC_45_12` · phase: **install** · confidence: **Medium**
+`UC_50_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,9 +98,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Privnote[.]com self-destructing-note URL access from corporate endpoint
+### Privnote[.]com self-destructing-note URL access from corporate endpoint
 
-`UC_45_13` · phase: **delivery** · confidence: **Medium**
+`UC_50_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,9 +117,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Outbound connection to UNC3753 (Luna Moth) infrastructure IPs
+### Outbound connection to UNC3753 (Luna Moth) infrastructure IPs
 
-`UC_45_14` · phase: **c2** · confidence: **High**
+`UC_50_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,9 +136,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] WinSCP or Rclone exfiltration from end-user workstations
+### WinSCP or Rclone exfiltration from end-user workstations
 
-`UC_45_15` · phase: **actions** · confidence: **Medium**
+`UC_50_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,9 +158,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] USB mass-storage attached followed by bulk file copy (UNC3753 physical intrusion)
+### USB mass-storage attached followed by bulk file copy (UNC3753 physical intrusion)
 
-`UC_45_16` · phase: **actions** · confidence: **Medium**
+`UC_50_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -186,9 +186,9 @@ USBAttach
 | order by AttachTime desc
 ```
 
-### [LLM] Outbound mail to or domain lookup of business-data-leaks[.]com (UNC3753 extortion infrastructure)
+### Outbound mail to or domain lookup of business-data-leaks[.]com (UNC3753 extortion infrastructure)
 
-`UC_45_17` · phase: **c2** · confidence: **High**
+`UC_50_17` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

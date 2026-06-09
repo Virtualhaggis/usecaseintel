@@ -72,9 +72,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Shai-Hulud npm postinstall reads cloud credential files (~/.aws, ~/.ssh, ~/.kube, gcloud ADC)
+### Shai-Hulud npm postinstall reads cloud credential files (~/.aws, ~/.ssh, ~/.kube, gcloud ADC)
 
-`UC_159_10` · phase: **install** · confidence: **High**
+`UC_162_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,9 +93,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Shai-Hulud exfiltration: node.exe POSTs to api.github.com creating public repo
+### Shai-Hulud exfiltration: node.exe POSTs to api.github.com creating public repo
 
-`UC_159_11` · phase: **actions** · confidence: **Medium**
+`UC_162_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,9 +119,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Bling Libra: Entra device join immediately after vishing-driven MFA registration
+### Bling Libra: Entra device join immediately after vishing-driven MFA registration
 
-`UC_159_12` · phase: **install** · confidence: **High**
+`UC_162_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,9 +148,9 @@ CloudAppEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Hazy Scorpius (CL0P) Oracle EBS exploitation via CVE-2025-61882 — concurrent processing spawns shell/wget
+### Hazy Scorpius (CL0P) Oracle EBS exploitation via CVE-2025-61882 — concurrent processing spawns shell/wget
 
-`UC_159_13` · phase: **exploit** · confidence: **High**
+`UC_162_13` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

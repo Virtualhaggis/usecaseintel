@@ -54,9 +54,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Pip install of compromised Microsoft durabletask versions 1.4.1-1.4.3
+### Pip install of compromised Microsoft durabletask versions 1.4.1-1.4.3
 
-`UC_52_8` · phase: **delivery** · confidence: **High**
+`UC_56_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,9 +76,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] rope.pyz dropper executed as /tmp/managed.pyz from durabletask import
+### rope.pyz dropper executed as /tmp/managed.pyz from durabletask import
 
-`UC_52_9` · phase: **install** · confidence: **High**
+`UC_56_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,9 +96,9 @@ DeviceProcessEvents
 | order by Timestamp asc
 ```
 
-### [LLM] Egress to TeamPCP rope.pyz C2 infrastructure (check.git-service.com / t.m-kosche.com / 160.119.64.3)
+### Egress to TeamPCP rope.pyz C2 infrastructure (check.git-service.com / t.m-kosche.com / 160.119.64.3)
 
-`UC_52_10` · phase: **c2** · confidence: **High**
+`UC_56_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,9 +115,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] gh auth token / gpg-decrypt credential harvesting by python3 child
+### gh auth token / gpg-decrypt credential harvesting by python3 child
 
-`UC_52_11` · phase: **actions** · confidence: **High**
+`UC_56_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,9 +140,9 @@ DeviceProcessEvents
 | order by FirstSeen desc
 ```
 
-### [LLM] Fake pgsql-monitor.service systemd persistence written under ~/.config/systemd/user/
+### Fake pgsql-monitor.service systemd persistence written under ~/.config/systemd/user/
 
-`UC_52_12` · phase: **install** · confidence: **High**
+`UC_56_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -166,9 +166,9 @@ union file_persist, daemon_reload
 | order by Timestamp desc
 ```
 
-### [LLM] Burst of AWS SSM SendCommand / StartSession from stolen durabletask credentials
+### Burst of AWS SSM SendCommand / StartSession from stolen durabletask credentials
 
-`UC_52_13` · phase: **actions** · confidence: **Medium**
+`UC_56_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -322,7 +322,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft's durabletask PyPI Package Compromised in Supply Chain Attack
 
-`UC_52_7` · phase: **exploit** · confidence: **High**
+`UC_56_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

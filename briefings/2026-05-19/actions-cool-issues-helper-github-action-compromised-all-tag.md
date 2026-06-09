@@ -32,9 +32,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Outbound C2 to t.m-kosche.com from CI/CD runner or any endpoint
+### Outbound C2 to t.m-kosche.com from CI/CD runner or any endpoint
 
-`UC_235_2` · phase: **c2** · confidence: **High**
+`UC_238_2` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,9 +57,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] python3 reading /proc/<PID>/mem to scrape Runner.Worker secrets
+### python3 reading /proc/<PID>/mem to scrape Runner.Worker secrets
 
-`UC_235_3` · phase: **actions** · confidence: **High**
+`UC_238_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,9 +79,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] bun runtime executed on CI runner spawning python3 with sudo escalation
+### bun runtime executed on CI runner spawning python3 with sudo escalation
 
-`UC_235_4` · phase: **install** · confidence: **High**
+`UC_238_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,9 +106,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] GitHub workflow references actions-cool/issues-helper or maintain-one-comment by tag
+### GitHub workflow references actions-cool/issues-helper or maintain-one-comment by tag
 
-`UC_235_5` · phase: **delivery** · confidence: **High**
+`UC_238_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — actions-cool/issues-helper GitHub Action Compromised: All Tags Point to Imposter
 
-`UC_235_1` · phase: **exploit** · confidence: **High**
+`UC_238_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

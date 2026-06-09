@@ -39,9 +39,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Mass /_matrix/media/ bulk download from tchap.gouv.fr to a single endpoint (Tchap exfil)
+### Mass /_matrix/media/ bulk download from tchap.gouv.fr to a single endpoint (Tchap exfil)
 
-`UC_19_2` · phase: **actions** · confidence: **Medium**
+`UC_24_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,9 +66,9 @@ DeviceNetworkEvents
 | order by Downloads desc
 ```
 
-### [LLM] PowerShell script containing hardcoded LDAP bind with plaintext password (Tchap-leak vector)
+### PowerShell script containing hardcoded LDAP bind with plaintext password (Tchap-leak vector)
 
-`UC_19_3` · phase: **weapon** · confidence: **High**
+`UC_24_3` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,9 +98,9 @@ DeviceProcessEvents
   ) on DeviceName
 ```
 
-### [LLM] High-rate Matrix client API enumeration against tchap.gouv.fr (room/user/media scraping)
+### High-rate Matrix client API enumeration against tchap.gouv.fr (room/user/media scraping)
 
-`UC_19_4` · phase: **actions** · confidence: **Medium**
+`UC_24_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

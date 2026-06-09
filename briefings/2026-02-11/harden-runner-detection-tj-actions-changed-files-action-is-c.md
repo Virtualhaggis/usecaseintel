@@ -34,9 +34,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] tj-actions/changed-files compromise: self-hosted runner egress to nikitastupin memdump gist (CVE-2025-30066)
+### tj-actions/changed-files compromise: self-hosted runner egress to nikitastupin memdump gist (CVE-2025-30066)
 
-`UC_536_3` · phase: **delivery** · confidence: **High**
+`UC_539_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -53,9 +53,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] tj-actions/changed-files compromise: memdump.py secret-exfiltration shell pattern on runner (CVE-2025-30066)
+### tj-actions/changed-files compromise: memdump.py secret-exfiltration shell pattern on runner (CVE-2025-30066)
 
-`UC_536_4` · phase: **actions** · confidence: **High**
+`UC_539_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,9 +84,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] tj-actions/changed-files compromise: malicious commit SHA 0e58ed86... referenced on host (CVE-2025-30066)
+### tj-actions/changed-files compromise: malicious commit SHA 0e58ed86... referenced on host (CVE-2025-30066)
 
-`UC_536_5` · phase: **install** · confidence: **High**
+`UC_539_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

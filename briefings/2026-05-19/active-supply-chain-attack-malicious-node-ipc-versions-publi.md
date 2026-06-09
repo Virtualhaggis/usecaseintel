@@ -44,9 +44,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] node-ipc C2 callback to sh.azurestaticprovider.net (May 2026 npm supply-chain)
+### node-ipc C2 callback to sh.azurestaticprovider.net (May 2026 npm supply-chain)
 
-`UC_236_10` · phase: **c2** · confidence: **High**
+`UC_239_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,9 +67,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Compromised node-ipc.cjs bundle write (~117KB) under node_modules
+### Compromised node-ipc.cjs bundle write (~117KB) under node_modules
 
-`UC_236_11` · phase: **install** · confidence: **High**
+`UC_239_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,9 +92,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Node.js process bulk-reading cloud & SCM credential files in single session
+### Node.js process bulk-reading cloud & SCM credential files in single session
 
-`UC_236_12` · phase: **actions** · confidence: **Medium**
+`UC_239_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -396,7 +396,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Active Supply Chain Attack: Malicious node-ipc Versions Published to npm
 
-`UC_236_9` · phase: **exploit** · confidence: **High**
+`UC_239_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -41,9 +41,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Nx Console v18.95.0 Malicious Payload Bootstrap via Orphan Commit (npx github:nrwl/nx#558b09d7)
+### Nx Console v18.95.0 Malicious Payload Bootstrap via Orphan Commit (npx github:nrwl/nx#558b09d7)
 
-`UC_111_6` · phase: **delivery** · confidence: **High**
+`UC_114_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,9 +60,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Nx Console v18.95.0 Compromised VSIX / main.js / payload SHA-256 Hash Match
+### Nx Console v18.95.0 Compromised VSIX / main.js / payload SHA-256 Hash Match
 
-`UC_111_7` · phase: **install** · confidence: **High**
+`UC_114_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,9 +92,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] macOS LaunchAgent Persistence — com.user.kitty-monitor.plist (Nx Console Compromise)
+### macOS LaunchAgent Persistence — com.user.kitty-monitor.plist (Nx Console Compromise)
 
-`UC_111_8` · phase: **install** · confidence: **High**
+`UC_114_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,9 +112,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Kitty cat.py Python Backdoor File Drop / Execution (Nx Console Compromise)
+### Kitty cat.py Python Backdoor File Drop / Execution (Nx Console Compromise)
 
-`UC_111_9` · phase: **install** · confidence: **High**
+`UC_114_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,9 +139,9 @@ union
 | order by Timestamp desc
 ```
 
-### [LLM] AWS IMDS (169.254.169.254) Hit from Developer / Non-EC2 Endpoint (Nx Console Credential Theft)
+### AWS IMDS (169.254.169.254) Hit from Developer / Non-EC2 Endpoint (Nx Console Credential Theft)
 
-`UC_111_10` · phase: **actions** · confidence: **Medium**
+`UC_114_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -286,7 +286,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Nx Console VS Code Extension Compromised
 
-`UC_111_5` · phase: **exploit** · confidence: **High**
+`UC_114_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

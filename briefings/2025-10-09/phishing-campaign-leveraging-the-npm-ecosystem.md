@@ -48,9 +48,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Inbound email with HTML attachment linking to unpkg.com Beamglea package
+### Inbound email with HTML attachment linking to unpkg.com Beamglea package
 
-`UC_745_8` · phase: **delivery** · confidence: **High**
+`UC_748_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,9 +75,9 @@ htmlAttachments
 | project Timestamp, NetworkMessageId, SenderFromAddress, RecipientEmailAddress, FileName, FileType, SHA256, Url, UrlDomain
 ```
 
-### [LLM] Browser load of Beamglea redirect-* or mad-* package script from unpkg.com
+### Browser load of Beamglea redirect-* or mad-* package script from unpkg.com
 
-`UC_745_9` · phase: **exploit** · confidence: **High**
+`UC_748_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,9 +97,9 @@ DeviceNetworkEvents
 | project Timestamp, DeviceName, InitiatingProcessAccountUpn, InitiatingProcessFileName, InitiatingProcessCommandLine, BeamgleaPackage, RemoteUrl, RemoteIP
 ```
 
-### [LLM] Beamglea mad-* dead-drop fetch from raw.githubusercontent.com/Abassdos2992
+### Beamglea mad-* dead-drop fetch from raw.githubusercontent.com/Abassdos2992
 
-`UC_745_10` · phase: **c2** · confidence: **High**
+`UC_748_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,9 +116,9 @@ DeviceNetworkEvents
 | project Timestamp, DeviceName, InitiatingProcessAccountUpn, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 ```
 
-### [LLM] Connection to Beamglea phishing credential-harvesting domains
+### Connection to Beamglea phishing credential-harvesting domains
 
-`UC_745_11` · phase: **actions** · confidence: **High**
+`UC_748_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -366,7 +366,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Phishing Campaign Leveraging the NPM Ecosystem
 
-`UC_745_7` · phase: **exploit** · confidence: **High**
+`UC_748_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

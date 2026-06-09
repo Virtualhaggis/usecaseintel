@@ -77,9 +77,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] MiniUpdate UpdateChecker.dll sideload via legitimate signed .NET host
+### MiniUpdate UpdateChecker.dll sideload via legitimate signed .NET host
 
-`UC_184_12` · phase: **install** · confidence: **High**
+`UC_187_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,9 +104,9 @@ union imgLoads, fileWrites
 | order by Timestamp desc
 ```
 
-### [LLM] Screening Serpens AppDomainManager hijack via .NET app .config tampering
+### Screening Serpens AppDomainManager hijack via .NET app .config tampering
 
-`UC_184_13` · phase: **install** · confidence: **High**
+`UC_187_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,9 +133,9 @@ DeviceFileEvents
 | project Timestamp, DeviceName, InitiatingProcessAccountName, ConfigPath=FolderPath, ConfigName=FileName, DllName, DllSHA256, DllWriter, InitiatingProcessCommandLine
 ```
 
-### [LLM] Screening Serpens C2 — DNS/network to UNC1549 infrastructure (Feb-Apr 2026)
+### Screening Serpens C2 — DNS/network to UNC1549 infrastructure (Feb-Apr 2026)
 
-`UC_184_14` · phase: **c2** · confidence: **High**
+`UC_187_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -152,9 +152,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Screening Serpens recruitment lure — Hiring Portal.zip + job requisition PDFs
+### Screening Serpens recruitment lure — Hiring Portal.zip + job requisition PDFs
 
-`UC_184_15` · phase: **delivery** · confidence: **High**
+`UC_187_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -502,7 +502,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Tracking Iranian APT Screening Serpens’ 2026 Espionage Campaigns
 
-`UC_184_11` · phase: **exploit** · confidence: **High**
+`UC_187_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

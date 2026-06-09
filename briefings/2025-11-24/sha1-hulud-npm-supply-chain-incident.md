@@ -58,9 +58,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] SHA1-Hulud worm payload execution via npm preinstall (setup_bun.js / bun_environment.js)
+### SHA1-Hulud worm payload execution via npm preinstall (setup_bun.js / bun_environment.js)
 
-`UC_674_5` · phase: **install** · confidence: **High**
+`UC_677_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,9 +80,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] TruffleHog secret-scanner execution on developer / CI host (SHA1-Hulud credential harvest)
+### TruffleHog secret-scanner execution on developer / CI host (SHA1-Hulud credential harvest)
 
-`UC_674_6` · phase: **actions** · confidence: **High**
+`UC_677_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,9 +102,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Outbound exfiltration to webhook.site from npm / node / bun process tree
+### Outbound exfiltration to webhook.site from npm / node / bun process tree
 
-`UC_674_7` · phase: **c2** · confidence: **High**
+`UC_677_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,9 +123,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Cloud metadata service (IMDS) access from npm / node child process
+### Cloud metadata service (IMDS) access from npm / node child process
 
-`UC_674_8` · phase: **actions** · confidence: **High**
+`UC_677_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,9 +149,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Malicious '.github/workflows/discussion.yaml' workflow file created by npm/node
+### Malicious '.github/workflows/discussion.yaml' workflow file created by npm/node
 
-`UC_674_9` · phase: **install** · confidence: **High**
+`UC_677_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -173,9 +173,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] SHA1-Hulud wiper: mass deletion of user home directory by npm/node descendant
+### SHA1-Hulud wiper: mass deletion of user home directory by npm/node descendant
 
-`UC_674_10` · phase: **actions** · confidence: **High**
+`UC_677_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

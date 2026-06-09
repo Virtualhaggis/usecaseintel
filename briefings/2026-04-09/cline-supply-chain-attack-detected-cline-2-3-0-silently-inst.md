@@ -36,9 +36,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] npm postinstall chain installs malicious 'openclaw' global package (cline@2.3.0 supply-chain IOC)
+### npm postinstall chain installs malicious 'openclaw' global package (cline@2.3.0 supply-chain IOC)
 
-`UC_384_4` · phase: **install** · confidence: **High**
+`UC_387_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,9 +58,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] OpenClaw Gateway WebSocket listener / loopback connection on TCP 18789
+### OpenClaw Gateway WebSocket listener / loopback connection on TCP 18789
 
-`UC_384_5` · phase: **c2** · confidence: **High**
+`UC_387_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,9 +78,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Access to OpenClaw credential store (~/.openclaw/credentials/, ~/.openclaw/config.json5)
+### Access to OpenClaw credential store (~/.openclaw/credentials/, ~/.openclaw/config.json5)
 
-`UC_384_6` · phase: **actions** · confidence: **High**
+`UC_387_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,9 +96,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] OpenClaw persistence — launchd plist / systemd unit drop referencing 'openclaw'
+### OpenClaw persistence — launchd plist / systemd unit drop referencing 'openclaw'
 
-`UC_384_7` · phase: **install** · confidence: **High**
+`UC_387_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -169,7 +169,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Cline Supply Chain Attack Detected: cline@2.3.0 Silently Installs OpenClaw
 
-`UC_384_3` · phase: **exploit** · confidence: **High**
+`UC_387_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

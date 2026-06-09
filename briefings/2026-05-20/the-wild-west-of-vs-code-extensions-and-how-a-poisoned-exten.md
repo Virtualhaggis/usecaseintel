@@ -52,9 +52,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Nx Console v18.95.0 compromised extension installed (May 2026 supply-chain attack)
+### Nx Console v18.95.0 compromised extension installed (May 2026 supply-chain attack)
 
-`UC_203_9` · phase: **delivery** · confidence: **High**
+`UC_206_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,9 +72,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] VS Code/Cursor extension host fetches dropper from nrwl/nx orphan commit on GitHub
+### VS Code/Cursor extension host fetches dropper from nrwl/nx orphan commit on GitHub
 
-`UC_203_10` · phase: **install** · confidence: **Medium**
+`UC_206_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,9 +92,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] macOS Python backdoor persistence via kitty-monitor LaunchAgent and cat.py drop
+### macOS Python backdoor persistence via kitty-monitor LaunchAgent and cat.py drop
 
-`UC_203_11` · phase: **install** · confidence: **High**
+`UC_206_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,9 +113,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Python backdoor self-daemonisation via __DAEMONIZED=1 spawned by VS Code helper or node
+### Python backdoor self-daemonisation via __DAEMONIZED=1 spawned by VS Code helper or node
 
-`UC_203_12` · phase: **install** · confidence: **Medium**
+`UC_206_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,9 +134,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] VS Code extension host fan-out reads of developer secrets (.ssh, .aws, .npmrc, ~/.claude/settings.json)
+### VS Code extension host fan-out reads of developer secrets (.ssh, .aws, .npmrc, ~/.claude/settings.json)
 
-`UC_203_13` · phase: **actions** · confidence: **Medium**
+`UC_206_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -393,7 +393,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The Wild West of VS Code extensions and how a poisoned extension breached GitHub
 
-`UC_203_8` · phase: **exploit** · confidence: **High**
+`UC_206_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

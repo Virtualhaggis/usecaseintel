@@ -61,9 +61,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] HTML attachment with meta-refresh redirect via Google DoubleClick to malspam landing
+### HTML attachment with meta-refresh redirect via Google DoubleClick to malspam landing
 
-`UC_97_10` · phase: **delivery** · confidence: **Medium**
+`UC_101_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,9 +88,9 @@ HtmlAttachments
 | order by EmailTime desc
 ```
 
-### [LLM] ZIP-borne JavaScript loader spawning PowerShell from user Downloads
+### ZIP-borne JavaScript loader spawning PowerShell from user Downloads
 
-`UC_97_11` · phase: **install** · confidence: **High**
+`UC_101_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,9 +117,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] PowerShell fetching DesckVB .NET loader from pastee.dev
+### PowerShell fetching DesckVB .NET loader from pastee.dev
 
-`UC_97_12` · phase: **c2** · confidence: **High**
+`UC_101_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,9 +139,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] DesckVB Defender exclusion configuration via Add-MpPreference / WMIC
+### DesckVB Defender exclusion configuration via Add-MpPreference / WMIC
 
-`UC_97_13` · phase: **install** · confidence: **High**
+`UC_101_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -165,9 +165,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] DesckVB persistence via Run/RunOnce + Startup folder loader drop
+### DesckVB persistence via Run/RunOnce + Startup folder loader drop
 
-`UC_97_14` · phase: **install** · confidence: **Medium**
+`UC_101_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -211,9 +211,9 @@ RunKeys
 | order by Timestamp desc
 ```
 
-### [LLM] DesckVB C2 raw TCP beacon to known infrastructure (IPs + DDNS + hostgator domain)
+### DesckVB C2 raw TCP beacon to known infrastructure (IPs + DDNS + hostgator domain)
 
-`UC_97_15` · phase: **c2** · confidence: **High**
+`UC_101_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

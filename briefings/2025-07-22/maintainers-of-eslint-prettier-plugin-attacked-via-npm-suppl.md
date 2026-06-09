@@ -53,9 +53,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] rundll32.exe loading node-gyp.dll dropped by Scavenger-infected npm postinstall (CVE-2025-54313)
+### rundll32.exe loading node-gyp.dll dropped by Scavenger-infected npm postinstall (CVE-2025-54313)
 
-`UC_830_8` · phase: **install** · confidence: **High**
+`UC_833_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,9 +80,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Scavenger Stealer C2 beacon to corroborated infrastructure (datahog.su / datalytica.su / smartscreen-api.com)
+### Scavenger Stealer C2 beacon to corroborated infrastructure (datahog.su / datalytica.su / smartscreen-api.com)
 
-`UC_830_9` · phase: **c2** · confidence: **High**
+`UC_833_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,9 +103,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] npm registry typosquat npnjs.com — DNS / URL click (eslint-config-prettier maintainer phishing kit)
+### npm registry typosquat npnjs.com — DNS / URL click (eslint-config-prettier maintainer phishing kit)
 
-`UC_830_10` · phase: **delivery** · confidence: **High**
+`UC_833_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,9 +130,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] Scavenger Loader DLL (node-gyp.dll) written inside node_modules of CVE-2025-54313 packages
+### Scavenger Loader DLL (node-gyp.dll) written inside node_modules of CVE-2025-54313 packages
 
-`UC_830_11` · phase: **delivery** · confidence: **High**
+`UC_833_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,9 +162,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Scavenger Stealer sandbox-evasion marker file %TEMP%\SCVNGR_VM created
+### Scavenger Stealer sandbox-evasion marker file %TEMP%\SCVNGR_VM created
 
-`UC_830_12` · phase: **install** · confidence: **High**
+`UC_833_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

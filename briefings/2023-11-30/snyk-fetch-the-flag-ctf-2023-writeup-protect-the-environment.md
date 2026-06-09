@@ -30,9 +30,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Container PID 1 environment harvest via /proc/1/environ read
+### Container PID 1 environment harvest via /proc/1/environ read
 
-`UC_1319_1` · phase: **actions** · confidence: **Medium**
+`UC_1319_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

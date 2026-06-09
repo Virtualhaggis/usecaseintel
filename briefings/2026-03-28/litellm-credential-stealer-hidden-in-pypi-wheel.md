@@ -57,9 +57,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Outbound DNS/HTTPS to TeamPCP exfil domain models.litellm.cloud (litellm PyPI compromise)
+### Outbound DNS/HTTPS to TeamPCP exfil domain models.litellm.cloud (litellm PyPI compromise)
 
-`UC_403_11` · phase: **c2** · confidence: **High**
+`UC_406_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,9 +87,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] Malicious litellm_init.pth dropped to site-packages by pip (litellm==1.82.8 install artifact)
+### Malicious litellm_init.pth dropped to site-packages by pip (litellm==1.82.8 install artifact)
 
-`UC_403_12` · phase: **install** · confidence: **High**
+`UC_406_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,9 +110,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Python spawning python -c with base64.b64decode exec (litellm .pth stage-1 launcher)
+### Python spawning python -c with base64.b64decode exec (litellm .pth stage-1 launcher)
 
-`UC_403_13` · phase: **install** · confidence: **High**
+`UC_406_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,9 +135,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Python process spawning shell with TeamPCP recon chain (hostname; whoami; uname; ip addr fallback)
+### Python process spawning shell with TeamPCP recon chain (hostname; whoami; uname; ip addr fallback)
 
-`UC_403_14` · phase: **actions** · confidence: **High**
+`UC_406_14` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,9 +159,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Python process contacting AWS IMDS 169.254.169.254 (litellm stealer IAM credential theft)
+### Python process contacting AWS IMDS 169.254.169.254 (litellm stealer IAM credential theft)
 
-`UC_403_15` · phase: **actions** · confidence: **High**
+`UC_406_15` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -182,9 +182,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] In-cluster Kubernetes secret enumeration with Python user-agent (litellm stealer K8s pivot)
+### In-cluster Kubernetes secret enumeration with Python user-agent (litellm stealer K8s pivot)
 
-`UC_403_16` · phase: **actions** · confidence: **High**
+`UC_406_16` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -524,7 +524,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — litellm: Credential Stealer Hidden in PyPI Wheel
 
-`UC_403_10` · phase: **exploit** · confidence: **High**
+`UC_406_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

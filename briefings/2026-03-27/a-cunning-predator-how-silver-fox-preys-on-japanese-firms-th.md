@@ -34,9 +34,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Silver Fox Japan tax-season lure: inbound email with Japanese HR/ESOP subject + gofile.io URL or RAR/ZIP
+### Silver Fox Japan tax-season lure: inbound email with Japanese HR/ESOP subject + gofile.io URL or RAR/ZIP
 
-`UC_406_4` · phase: **delivery** · confidence: **High**
+`UC_409_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -76,9 +76,9 @@ union UrlSide, AttachSide
 | order by Timestamp desc
 ```
 
-### [LLM] gofile.io archive download by browser followed by extracted-EXE execution within 30 minutes
+### gofile.io archive download by browser followed by extracted-EXE execution within 30 minutes
 
-`UC_406_5` · phase: **install** · confidence: **Medium**
+`UC_409_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -102,9 +102,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] ValleyRAT registry-resident shellcode (HKCU\Console\0|1) and MyPythonApp Run-key persistence
+### ValleyRAT registry-resident shellcode (HKCU\Console\0|1) and MyPythonApp Run-key persistence
 
-`UC_406_6` · phase: **install** · confidence: **High**
+`UC_409_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

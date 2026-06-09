@@ -40,9 +40,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Scavenger npm supply chain: rundll32 executing node-gyp.dll from node_modules (CVE-2025-54313)
+### Scavenger npm supply chain: rundll32 executing node-gyp.dll from node_modules (CVE-2025-54313)
 
-`UC_534_4` · phase: **install** · confidence: **High**
+`UC_537_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,9 +69,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Scavenger npm malware C2 beacon to firebase.su / dieorsuffer.com / smartscreen-api.com
+### Scavenger npm malware C2 beacon to firebase.su / dieorsuffer.com / smartscreen-api.com
 
-`UC_534_5` · phase: **c2** · confidence: **High**
+`UC_537_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,9 +102,9 @@ union _net, _dns
 | order by Timestamp desc
 ```
 
-### [LLM] Scavenger loader/install.js dropped into node_modules (known SHA256 or filename match)
+### Scavenger loader/install.js dropped into node_modules (known SHA256 or filename match)
 
-`UC_534_6` · phase: **delivery** · confidence: **High**
+`UC_537_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

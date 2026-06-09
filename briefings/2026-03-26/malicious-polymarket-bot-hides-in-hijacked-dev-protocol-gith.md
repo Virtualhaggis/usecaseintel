@@ -40,9 +40,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] C2 beaconing to Vercel-hosted Cloudflare-impersonating domains (cloudflareguard / cloudflareinsights)
+### C2 beaconing to Vercel-hosted Cloudflare-impersonating domains (cloudflareguard / cloudflareinsights)
 
-`UC_413_5` · phase: **c2** · confidence: **High**
+`UC_416_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,9 +72,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] npm postinstall SSH-backdoor chain: node spawning sudo ufw allow 22/tcp + chown ~/.ssh
+### npm postinstall SSH-backdoor chain: node spawning sudo ufw allow 22/tcp + chown ~/.ssh
 
-`UC_413_6` · phase: **install** · confidence: **High**
+`UC_416_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,9 +104,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Malicious typosquat npm packages installed on disk (ts-bign / big-nunber / levex-refa / lint-builder)
+### Malicious typosquat npm packages installed on disk (ts-bign / big-nunber / levex-refa / lint-builder)
 
-`UC_413_7` · phase: **delivery** · confidence: **High**
+`UC_416_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -226,7 +226,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious Polymarket Bot Hides in Hijacked dev-protocol GitHub Org and Steals Wa
 
-`UC_413_4` · phase: **exploit** · confidence: **High**
+`UC_416_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

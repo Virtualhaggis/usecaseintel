@@ -50,9 +50,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Compromised Microsoft durabletask PyPI Package Install (TeamPCP 1.4.1-1.4.3)
+### Compromised Microsoft durabletask PyPI Package Install (TeamPCP 1.4.1-1.4.3)
 
-`UC_215_6` · phase: **delivery** · confidence: **High**
+`UC_218_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,9 +73,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] TeamPCP rope.pyz Dropper Fetch from check.git-service.com C2
+### TeamPCP rope.pyz Dropper Fetch from check.git-service.com C2
 
-`UC_215_7` · phase: **c2** · confidence: **High**
+`UC_218_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,9 +100,9 @@ union
 | order by Timestamp desc
 ```
 
-### [LLM] TeamPCP rope.pyz Dropper Infection Markers on Linux
+### TeamPCP rope.pyz Dropper Infection Markers on Linux
 
-`UC_215_8` · phase: **install** · confidence: **High**
+`UC_218_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,9 +120,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] AWS SSM SendCommand Fan-out from EC2 Instance Role (TeamPCP Worm Propagation)
+### AWS SSM SendCommand Fan-out from EC2 Instance Role (TeamPCP Worm Propagation)
 
-`UC_215_9` · phase: **actions** · confidence: **Medium**
+`UC_218_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,9 +134,9 @@ DeviceFileEvents
 | sort 0 -last_seen
 ```
 
-### [LLM] Python Process Reading Multi-Cloud Credential Stores (durabletask Stealer Stage)
+### Python Process Reading Multi-Cloud Credential Stores (durabletask Stealer Stage)
 
-`UC_215_10` · phase: **actions** · confidence: **Medium**
+`UC_218_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -220,7 +220,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The AntV Supply Chain Campaign Expands: Microsoft's `durabletask` PyPI Package C
 
-`UC_215_5` · phase: **exploit** · confidence: **High**
+`UC_218_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

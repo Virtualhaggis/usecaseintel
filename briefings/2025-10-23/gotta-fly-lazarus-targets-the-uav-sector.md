@@ -94,9 +94,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Lazarus DreamJob DLL side-load: wksprt.exe loading webservices.dll from ProgramData
+### Lazarus DreamJob DLL side-load: wksprt.exe loading webservices.dll from ProgramData
 
-`UC_722_6` · phase: **install** · confidence: **High**
+`UC_725_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,9 +123,9 @@ host_proc
 | order by Timestamp desc
 ```
 
-### [LLM] ScoringMathTea C2 beacon to compromised WordPress hosts (Lazarus DreamJob IOCs)
+### ScoringMathTea C2 beacon to compromised WordPress hosts (Lazarus DreamJob IOCs)
 
-`UC_722_7` · phase: **c2** · confidence: **High**
+`UC_725_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,9 +143,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Lazarus DreamJob loader/dropper SHA1 sighting (DroneEXEHijackingLoader / NukeSped family)
+### Lazarus DreamJob loader/dropper SHA1 sighting (DroneEXEHijackingLoader / NukeSped family)
 
-`UC_722_8` · phase: **install** · confidence: **High**
+`UC_725_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -172,9 +172,9 @@ union isfuzzy=true
 | order by Timestamp desc
 ```
 
-### [LLM] DreamJob trojanized PDF/installer execution from job-lure decoy folder
+### DreamJob trojanized PDF/installer execution from job-lure decoy folder
 
-`UC_722_9` · phase: **delivery** · confidence: **Medium**
+`UC_725_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -290,7 +290,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Gotta fly: Lazarus targets the UAV sector
 
-`UC_722_5` · phase: **exploit** · confidence: **High**
+`UC_725_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -43,9 +43,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Megalodon CI/CD exfil: outbound HTTPS to C2 216.126.225.129:8443
+### Megalodon CI/CD exfil: outbound HTTPS to C2 216.126.225.129:8443
 
-`UC_182_6` · phase: **c2** · confidence: **High**
+`UC_185_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,9 +61,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Megalodon harvester: curl POST to C2 /collect endpoint on Linux runner
+### Megalodon harvester: curl POST to C2 /collect endpoint on Linux runner
 
-`UC_182_7` · phase: **actions** · confidence: **High**
+`UC_185_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,9 +80,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Megalodon harvester: bash secret-grep across workspace (API_KEY|SECRET|TOKEN|PRIVATE_KEY|BEGIN RSA)
+### Megalodon harvester: bash secret-grep across workspace (API_KEY|SECRET|TOKEN|PRIVATE_KEY|BEGIN RSA)
 
-`UC_182_8` · phase: **actions** · confidence: **Medium**
+`UC_185_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,9 +99,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Megalodon backdoor workflow file (SysDiag.yml / Optimize-Build.yml) written to .github/workflows/
+### Megalodon backdoor workflow file (SysDiag.yml / Optimize-Build.yml) written to .github/workflows/
 
-`UC_182_9` · phase: **install** · confidence: **High**
+`UC_185_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,9 +119,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Megalodon harvester: clustered read of ~/.ssh/id_*, ~/.kube/config, ~/.npmrc, ~/.docker/config.json in one session
+### Megalodon harvester: clustered read of ~/.ssh/id_*, ~/.kube/config, ~/.npmrc, ~/.docker/config.json in one session
 
-`UC_182_10` · phase: **actions** · confidence: **Medium**
+`UC_185_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -242,7 +242,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Megalodon: Mass GitHub Actions Secret Exfiltration Across 5,500+ Public Reposito
 
-`UC_182_5` · phase: **install** · confidence: **High**
+`UC_185_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

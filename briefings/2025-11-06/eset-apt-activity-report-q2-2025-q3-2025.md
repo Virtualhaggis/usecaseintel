@@ -39,9 +39,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Archive utility writing LNK/DLL/EXE to Windows Startup folder (RomCom CVE-2025-8088)
+### Archive utility writing LNK/DLL/EXE to Windows Startup folder (RomCom CVE-2025-8088)
 
-`UC_703_7` · phase: **install** · confidence: **High**
+`UC_706_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,9 +71,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Python interpreter executed from %TEMP% / Public — RomCom DLL side-load chain (CVE-2025-8088)
+### Python interpreter executed from %TEMP% / Public — RomCom DLL side-load chain (CVE-2025-8088)
 
-`UC_703_8` · phase: **exploit** · confidence: **High**
+`UC_706_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

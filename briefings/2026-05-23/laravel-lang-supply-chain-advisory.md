@@ -49,9 +49,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] Laravel-Lang supply chain C2/exfil to flipboxstudio.info
+### Laravel-Lang supply chain C2/exfil to flipboxstudio.info
 
-`UC_178_8` · phase: **c2** · confidence: **High**
+`UC_181_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,9 +73,9 @@ DeviceNetworkEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Laravel-Lang stealer file drop in .laravel_locale temp directory
+### Laravel-Lang stealer file drop in .laravel_locale temp directory
 
-`UC_178_9` · phase: **install** · confidence: **High**
+`UC_181_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,9 +97,9 @@ DeviceFileEvents
 | order by Timestamp desc
 ```
 
-### [LLM] DebugChromium.exe execution (Laravel-Lang stealer Windows artifact)
+### DebugChromium.exe execution (Laravel-Lang stealer Windows artifact)
 
-`UC_178_10` · phase: **install** · confidence: **High**
+`UC_181_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,9 +117,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] cscript/wscript executing a script from .laravel_locale temp directory
+### cscript/wscript executing a script from .laravel_locale temp directory
 
-`UC_178_11` · phase: **install** · confidence: **High**
+`UC_181_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,9 +138,9 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### [LLM] Compromised laravel-lang Composer package: helpers.php in vendor tree
+### Compromised laravel-lang Composer package: helpers.php in vendor tree
 
-`UC_178_12` · phase: **delivery** · confidence: **High**
+`UC_181_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -310,7 +310,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Laravel Lang Supply Chain Advisory
 
-`UC_178_7` · phase: **exploit** · confidence: **High**
+`UC_181_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
