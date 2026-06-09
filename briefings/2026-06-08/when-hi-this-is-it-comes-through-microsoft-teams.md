@@ -43,12 +43,9 @@ It's Friday afternoon. The week has been busy, and everyone is wrapping up befor
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1071** — Application Layer Protocol
 - **T1566.003** — Phishing: Spearphishing via Service
-- **T1585.002** — Establish Accounts: Email Accounts
 - **T1656** — Impersonation
-- **T1585** — Establish Accounts
-- **T1199** — Trusted Relationship
 - **T1621** — Multi-Factor Authentication Request Generation
-- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1583.001** — Acquire Infrastructure: Domains
 
 ## Kill chain phases observed
 
@@ -56,36 +53,20 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### [LLM] External MS Teams chat from typosquatted Microsoft-themed tenant domain (ommicrosoft.com)
+### [LLM] External MS Teams chat invite from IT-impersonating unmanaged or federated tenant
 
-`UC_2_7` · phase: **delivery** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.dest) as dest from datamodel=Authentication where Authentication.app="MicrosoftTeams" (Authentication.user="*@ommicrosoft.com" OR Authentication.src_user="*@ommicrosoft.com" OR Authentication.user="*ommicrosoft*") by Authentication.user Authentication.src_user Authentication.dest_user Authentication.action | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(30d)
-| where Application =~ "Microsoft Teams"
-| where ActionType in~ ("ChatCreated", "MessageSent", "MemberAdded", "MessageCreatedHasLink", "MessageCreatedNotification")
-| extend RawData = tostring(RawEventData)
-| where AccountDisplayName has "ommicrosoft" 
-    or RawData has "ommicrosoft.com" 
-    or AdditionalFields has "ommicrosoft"
-| project Timestamp, ActionType, AccountDisplayName, AccountObjectId, ObjectName, IPAddress, CountryCode, UserAgent, RawEventData
-| order by Timestamp desc
-```
-
-### [LLM] External MS Teams chat from sender with IT/helpdesk/support display name
-
-`UC_2_8` · phase: **delivery** · confidence: **Medium**
+`UC_2_7` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.dest_user) as recipients from datamodel=Authentication where Authentication.app="MicrosoftTeams" Authentication.action="ChatCreated" (Authentication.src_user_display="*IT *" OR Authentication.src_user_display="*Help*Desk*" OR Authentication.src_user_display="*Service*Desk*" OR Authentication.src_user_display="*IT Support*" OR Authentication.src_user_display="*Tech Support*" OR Authentication.src_user_display="*Security Team*" OR Authentication.src_user_display="*IT Department*" OR Authentication.src_user_display="*Microsoft Support*") by Authentication.src_user Authentication.src_user_display | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime) | where count >= 1
+`cim_Authentication_indexes` sourcetype IN ("o365:management:activity","ms:o365:management") Workload="MicrosoftTeams" Operation IN ("ChatCreated","MessageSent","MemberAdded","MemberRoleChanged") 
+| spath input=Parameters 
+| eval is_external=if(match(UserId,"(?i)#EXT#|onmicrosoft\.com") OR UserType IN ("Guest","External"),1,0) 
+| where is_external=1 
+| eval impersonation=if(match(_raw,"(?i)(IT\s?Support|Help\s?Desk|Helpdesk|Service\s?Desk|IT\s?Department|IT\s?Admin|MSP|Managed\s?Service|Security\s?Team|SOC\s?Team)"),1,0) 
+| where impersonation=1 
+| table _time UserId UserType ClientIP UserAgent Operation OfficeWorkload Parameters 
+| sort - _time
 ```
 
 **Defender KQL:**
@@ -93,76 +74,91 @@ CloudAppEvents
 CloudAppEvents
 | where Timestamp > ago(7d)
 | where Application =~ "Microsoft Teams"
-| where ActionType in~ ("ChatCreated", "MessageSent", "MemberAdded")
-| extend SenderUpn = tostring(RawEventData.UserId), SenderDisplay = tostring(AccountDisplayName), Participants = tostring(RawEventData.ParticipantInfo)
-| where AccountType =~ "Guest" or Participants has "ExternalUser" or RawEventData has "HasForeignTenantUsers"
-| where SenderDisplay matches regex @"(?i)(IT[\s\-]?(Dept|Department|Support|Helpdesk|Team)|Help[\s\-]?Desk|Service[\s\-]?Desk|Tech[\s\-]?Support|Security[\s\-]?(Team|Operations)|Microsoft[\s\-]?Support|M365[\s\-]?Admin|O365[\s\-]?Admin)"
-| project Timestamp, ActionType, SenderUpn, SenderDisplay, AccountObjectId, IPAddress, CountryCode, ObjectName, RawEventData
+| where ActionType in~ ("ChatCreated","MessageSent","MemberAdded","ChatRetrieved","MeetingDetailMessaged")
+| extend RawStr = tostring(RawEventData), ActObjStr = tostring(ActivityObjects)
+| where AccountType in~ ("Guest","External") or RawStr has_any ("#EXT#","onmicrosoft.com")
+| where ActObjStr has_any ("IT Support","IT Department","Help Desk","Helpdesk","Service Desk","IT Admin","Security Team","SOC Team","Managed Service","MSP")
+| project Timestamp, ActionType, AccountDisplayName, AccountId, AccountType, IPAddress, CountryCode, UserAgent, ObjectName, ActivityObjects, RawEventData
 | order by Timestamp desc
 ```
 
-### [LLM] First-time external M365 tenant initiating MS Teams chats with internal users
+### [LLM] MFA approval within minutes of inbound external Microsoft Teams chat
 
-`UC_2_9` · phase: **delivery** · confidence: **Medium**
+`UC_2_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` min(_time) as firstSeen max(_time) as lastSeen count from datamodel=Authentication where Authentication.app="MicrosoftTeams" Authentication.action IN ("ChatCreated","MessageSent","MemberAdded") earliest=-60d@d by Authentication.src_user_domain | `drop_dm_object_name(Authentication)` | where firstSeen >= relative_time(now(), "-24h") AND src_user_domain!="<your-corp-domain>" | convert ctime(firstSeen) ctime(lastSeen)
+| tstats `summariesonly` min(_time) as ChatTime from datamodel=Authentication where nodename=Authentication.Authentication Authentication.action=success Authentication.app="MicrosoftTeams" Authentication.signature IN ("ChatCreated","MessageSent") Authentication.src_user_type IN ("Guest","External") by Authentication.user Authentication.src 
+| `drop_dm_object_name(Authentication)` 
+| rename user as victim 
+| join type=inner victim [ | tstats `summariesonly` min(_time) as MfaTime from datamodel=Authentication where nodename=Authentication.Authentication Authentication.action=success Authentication.authentication_method="mfa" by Authentication.user 
+| `drop_dm_object_name(Authentication)` 
+| rename user as victim ] 
+| eval delay_min=round((MfaTime-ChatTime)/60,1) 
+| where delay_min>=0 AND delay_min<=30 
+| table ChatTime MfaTime delay_min victim src
 ```
 
 **Defender KQL:**
 ```kql
-let Baseline = CloudAppEvents
-    | where Timestamp between (ago(60d) .. ago(24h))
-    | where Application =~ "Microsoft Teams"
-    | where ActionType in~ ("ChatCreated", "MessageSent", "MemberAdded")
-    | extend SenderDomain = tolower(tostring(split(AccountDisplayName, "@")[1]))
-    | extend SenderDomainRaw = tolower(extract(@"@([A-Za-z0-9\-\.]+)", 1, tostring(RawEventData)))
-    | summarize by SenderDomain = coalesce(SenderDomain, SenderDomainRaw);
-CloudAppEvents
-| where Timestamp > ago(24h)
-| where Application =~ "Microsoft Teams"
-| where ActionType in~ ("ChatCreated", "MessageSent", "MemberAdded")
-| extend SenderDomain = tolower(extract(@"@([A-Za-z0-9\-\.]+)", 1, tostring(RawEventData)))
-| where isnotempty(SenderDomain) and SenderDomain !endswith "<your-corp-domain>"
-| join kind=leftanti Baseline on SenderDomain
-| summarize FirstSeen = min(Timestamp), ChatCount = count(), InternalRecipients = dcount(ObjectId), SampleSender = any(AccountDisplayName), SampleIP = any(IPAddress) by SenderDomain
-| order by FirstSeen desc
-```
-
-### [LLM] MFA push approval within minutes of external Teams chat (social-engineering chain)
-
-`UC_2_10` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` min(_time) as chatTime from datamodel=Authentication where Authentication.app="MicrosoftTeams" Authentication.action="ChatCreated" by Authentication.dest_user Authentication.src_user | `drop_dm_object_name(Authentication)` | rename dest_user as user src_user as external_sender | join type=inner user [| tstats `summariesonly` min(_time) as signinTime values(Authentication.src) as signin_ip from datamodel=Authentication where Authentication.app="AzureActiveDirectory" Authentication.action="success" Authentication.authentication_method="MFA" by Authentication.user | `drop_dm_object_name(Authentication)` | rename user as user] | eval delta_sec=signinTime-chatTime | where delta_sec >= 0 AND delta_sec <= 600 | convert ctime(chatTime) ctime(signinTime)
-```
-
-**Defender KQL:**
-```kql
-let WindowMin = 10m;
+let WindowMinutes = 30m;
 let ExternalChats = CloudAppEvents
     | where Timestamp > ago(7d)
     | where Application =~ "Microsoft Teams"
-    | where ActionType in~ ("ChatCreated", "MessageSent")
-    | where AccountType =~ "Guest" or RawEventData has "HasForeignTenantUsers" or AdditionalFields has "ExternalUser"
-    | extend RecipientUpn = tolower(tostring(ObjectId)), ExternalSender = AccountDisplayName, ChatTime = Timestamp
-    | project ChatTime, RecipientUpn, ExternalSender, ExternalSenderIP = IPAddress;
-ExternalChats
-| join kind=inner (
-    AADSignInEventsBeta
-    | where Timestamp > ago(7d)
-    | where ErrorCode == 0
-    | where AuthenticationRequirement =~ "multiFactorAuthentication"
-    | extend AuthDetails = tostring(AuthenticationDetails)
-    | where AuthDetails has "succeeded" and (AuthDetails has "Authenticator" or AuthDetails has "Mobile app notification" or AuthDetails has "push")
-    | project SignInTime = Timestamp, AccountUpn = tolower(AccountUpn), IPAddress, Country, Application, AppDisplayName, RiskLevelDuringSignIn
-) on $left.RecipientUpn == $right.AccountUpn
-| where SignInTime between (ChatTime .. ChatTime + WindowMin)
-| extend DelaySeconds = datetime_diff('second', SignInTime, ChatTime)
-| project ChatTime, SignInTime, DelaySeconds, RecipientUpn, ExternalSender, ExternalSenderIP, SignInIP = IPAddress, Country, AppDisplayName, RiskLevelDuringSignIn
-| order by ChatTime desc
+    | where ActionType in~ ("ChatCreated","MessageSent","MemberAdded")
+    | extend RawStr = tostring(RawEventData)
+    | where AccountType in~ ("Guest","External") or RawStr has_any ("#EXT#","onmicrosoft.com")
+    | extend Recipient = tostring(parse_json(tostring(ActivityObjects))[0].Name)
+    | project ChatTime = Timestamp, SenderUpn = AccountDisplayName, SenderIP = IPAddress, Recipient, ActionType;
+AADSignInEventsBeta
+| where Timestamp > ago(7d)
+| where ErrorCode == 0
+| where AuthenticationRequirement =~ "multiFactorAuthentication"
+| extend AuthDetailStr = tostring(AuthenticationDetails)
+| where AuthDetailStr has_any ("Mobile app notification","PhoneAppNotification","OAuth Verify","Authenticator App")
+| join kind=inner ExternalChats on $left.AccountUpn == $right.Recipient
+| where Timestamp between (ChatTime .. ChatTime + WindowMinutes)
+| extend DelayMinutes = datetime_diff('minute', Timestamp, ChatTime)
+| project ChatTime, MfaApprovalTime = Timestamp, DelayMinutes, AccountUpn, IPAddress, Country, City, Application, RiskLevelDuringSignIn, ConditionalAccessStatus, SenderUpn, SenderIP
+| order by MfaApprovalTime desc
+```
+
+### [LLM] Activity involving ommicrosoft.com Cloaked-Ursa Teams typosquat
+
+`UC_2_9` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as first_seen max(_time) as last_seen from datamodel=Network_Resolution where DNS.query="*ommicrosoft.com" by DNS.src DNS.query 
+| `drop_dm_object_name(DNS)` 
+| append [| tstats `summariesonly` count from datamodel=Web where Web.url="*ommicrosoft.com*" OR Web.dest="*ommicrosoft.com*" by Web.src Web.user Web.url Web.dest] 
+| append [| tstats `summariesonly` count from datamodel=Authentication where Authentication.user="*ommicrosoft.com*" OR Authentication.src_user="*ommicrosoft.com*" by Authentication.user Authentication.src Authentication.app] 
+| sort - last_seen
+```
+
+**Defender KQL:**
+```kql
+let IOC = dynamic(["ommicrosoft.com"]);
+union isfuzzy=true
+    (DeviceNetworkEvents
+        | where Timestamp > ago(30d)
+        | where RemoteUrl has_any (IOC) or AdditionalFields has_any (IOC)
+        | project Timestamp, Source="NetworkEvents", DeviceName, AccountUpn=InitiatingProcessAccountUpn, InitiatingProcessFileName, RemoteUrl, RemoteIP),
+    (UrlClickEvents
+        | where Timestamp > ago(30d)
+        | where Url has_any (IOC)
+        | project Timestamp, Source="UrlClickEvents", DeviceName="", AccountUpn, InitiatingProcessFileName="", RemoteUrl=Url, RemoteIP=tostring(IPAddress)),
+    (CloudAppEvents
+        | where Timestamp > ago(30d)
+        | where Application =~ "Microsoft Teams"
+        | extend Raw = tostring(RawEventData), Acts = tostring(ActivityObjects)
+        | where Raw has_any (IOC) or Acts has_any (IOC)
+        | project Timestamp, Source="Teams", DeviceName="", AccountUpn=AccountDisplayName, InitiatingProcessFileName=ActionType, RemoteUrl=ObjectName, RemoteIP=IPAddress),
+    (AADSignInEventsBeta
+        | where Timestamp > ago(30d)
+        | where AccountUpn has_any (IOC) or AlternateSignInName has_any (IOC) or ResourceDisplayName has_any (IOC)
+        | project Timestamp, Source="AADSignIn", DeviceName=DeviceName, AccountUpn, InitiatingProcessFileName=Application, RemoteUrl=ResourceDisplayName, RemoteIP=IPAddress)
+| order by Timestamp desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -404,4 +400,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

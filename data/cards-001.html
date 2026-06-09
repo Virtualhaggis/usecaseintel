@@ -774,11 +774,11 @@ DeviceFileEvents
   data-phases="actions,c2,delivery,exploit,install,weapon" data-sev="high"
   data-techs="T1190,T1566"
   data-sources="Unit 42 (Palo Alto)"
-  data-platforms="datadog,def,sent,sigma,spl"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="application,cloud,endpoint,network,web"
   data-targets="azure,m365,windows"
-  data-uc-count="11" data-llm-uc-count="4"
-  data-search="When “Hi, This Is IT” Comes Through Microsoft Teams Attackers are increasingly targeting collaboration platforms like Microsoft Teams. Learn the risks and key steps to strengthen your organization&#x27;s security. The post When “Hi, This Is IT” Comes Through Microsoft Teams appeared first on Unit 42 .  T1190 T1566 [LLM] External MS Teams chat from typosquatted Microsoft-themed tenant domain (ommicrosoft.com) [LLM] External MS Teams chat from sender with IT/helpdesk/support display name [LLM] First-time external M365 tenant initiating MS Teams chats with internal users [LLM] MFA push approval within minutes of external Teams chat (social-engineering chain) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Network connections to article IPs / domains">
+  data-uc-count="10" data-llm-uc-count="3"
+  data-search="When “Hi, This Is IT” Comes Through Microsoft Teams Attackers are increasingly targeting collaboration platforms like Microsoft Teams. Learn the risks and key steps to strengthen your organization&#x27;s security. The post When “Hi, This Is IT” Comes Through Microsoft Teams appeared first on Unit 42 .  T1190 T1566 [LLM] External MS Teams chat invite from IT-impersonating unmanaged or federated tenant [LLM] MFA approval within minutes of inbound external Microsoft Teams chat [LLM] Activity involving ommicrosoft.com Cloaked-Ursa Teams typosquat Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Network connections to article IPs / domains">
   <div class="sev-ribbon high">High</div>
   <button class="share-btn card-share" data-share-art="2026-06-08-when-hi-this-is-it-comes-through-microsoft-teams" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -787,7 +787,7 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge unit42">Unit 42 (Palo Alto)</span></div>
   <div class="pubmeta">
     <span>2026-06-08</span>
-    <span>11 use cases</span>
+    <span>10 use cases</span>
     <span>2 techniques</span>
     <span>6 kill-chain phases detected</span>
   </div>
@@ -837,272 +837,247 @@ DeviceFileEvents
 </div></div>
   <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] External MS Teams chat from typosquatted Microsoft-themed tenant domain (ommicrosoft.com) · [LLM] External MS Teams chat from sender with IT/helpdesk/support display name · [LLM] First-time external M365 tenant initiating MS Teams chats with internal users · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender · Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] MFA push approval within minutes of external Teams chat (social-engineering chain) · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] External MS Teams chat invite from IT-impersonating unmanaged or federated tenant · [LLM] Activity involving ommicrosoft.com Cloaked-Ursa Teams typosquat · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender · Microsoft Teams external-tenant chat from unverified IT-helpdesk impersonator</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] MFA approval within minutes of inbound external Microsoft Teams chat · Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)</em></div>
 <div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</em></div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Network connections to article IPs / domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="a072017782" data-platforms="datadog,def,sent,sigma,spl" data-targets="azure,m365" open>
+  <div class="usecases"><details class="uc" data-uc-slug="7386b5bf88" data-platforms="datadog,def,sent,spl" data-targets="azure,m365" open>
   <summary>
-    <span class="uc-title">[LLM] External MS Teams chat from typosquatted Microsoft-themed tenant domain (ommicrosoft.com)</span>
+    <span class="uc-title">[LLM] External MS Teams chat invite from IT-impersonating unmanaged or federated tenant</span>
     <span class="uc-phase">Delivery</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="a072017782" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="7386b5bf88" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts inbound Microsoft Teams chat activity originating from the typosquatted tenant domain ommicrosoft.com — the only IOC named in the article and consistent with how Cloaked Ursa/UNC6692 stand up Microsoft-look-alike tenants to impersonate IT support. Article-specific because it pivots on this exact lookalike string in cross-tenant chat metadata.
+    <div class="uc-desc">Hunts for inbound Microsoft Teams chat invitations from external/guest users whose display name or sender domain impersonates internal IT/helpdesk/MSP functions — the exact technique Cloaked Ursa and UNC6692 used to initiate the social-engineering conversation before requesting MFA approval.
 
-Rationale: Pivots on the only concrete IOC the article supplies — the typosquatted Microsoft-themed tenant domain ommicrosoft.com — across the cross-tenant Teams chat metadata where it would appear (UserId/UserKey on inbound external chats). Cross-checked Microsoft&#x27;s published mitigation guidance on cross-tenant Teams intrusions and Mandiant&#x27;s UNC6692 write-up linked from the article.
-
-Cross-checked against:
-  • https://learn.microsoft.com/en-us/security/operations/incident-response-playbook-compromised-on-premises-account
-  • https://cloud.google.com/blog/topics/threat-intelligence/voice-phishing-data-extortion
-  • https://attack.mitre.org/techniques/T1566/003/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Phishing: Spearphishing via Service">T1566.003</span> <span class="ind tech" title="Establish Accounts: Email Accounts">T1585.002</span> <span class="ind tech" title="Impersonation">T1656</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">Web.Web</span></div>
+Rationale: Maps to the article&#x27;s central narrative — external Teams chat from an unmanaged/federated tenant whose sender display name impersonates IT/helpdesk/MSP. Combines the external-user predicate (#EXT#/onmicrosoft.com/UserType=Guest) with the IT-impersonation lexicon Unit 42 calls out as the lowered-suspicion lure.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Phishing: Spearphishing via Service">T1566.003</span> <span class="ind tech" title="Impersonation">T1656</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication</span> <span class="ind">Web</span></div>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-02-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-02-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc0-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-02-uc0-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-02-uc0-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-02-uc0-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
-| where Timestamp &gt; ago(30d)
+| where Timestamp &gt; ago(7d)
 | where Application =~ &quot;Microsoft Teams&quot;
-| where ActionType in~ (&quot;ChatCreated&quot;, &quot;MessageSent&quot;, &quot;MemberAdded&quot;, &quot;MessageCreatedHasLink&quot;, &quot;MessageCreatedNotification&quot;)
-| extend RawData = tostring(RawEventData)
-| where AccountDisplayName has &quot;ommicrosoft&quot; 
-    or RawData has &quot;ommicrosoft.com&quot; 
-    or AdditionalFields has &quot;ommicrosoft&quot;
-| project Timestamp, ActionType, AccountDisplayName, AccountObjectId, ObjectName, IPAddress, CountryCode, UserAgent, RawEventData
+| where ActionType in~ (&quot;ChatCreated&quot;,&quot;MessageSent&quot;,&quot;MemberAdded&quot;,&quot;ChatRetrieved&quot;,&quot;MeetingDetailMessaged&quot;)
+| extend RawStr = tostring(RawEventData), ActObjStr = tostring(ActivityObjects)
+| where AccountType in~ (&quot;Guest&quot;,&quot;External&quot;) or RawStr has_any (&quot;#EXT#&quot;,&quot;onmicrosoft.com&quot;)
+| where ActObjStr has_any (&quot;IT Support&quot;,&quot;IT Department&quot;,&quot;Help Desk&quot;,&quot;Helpdesk&quot;,&quot;Service Desk&quot;,&quot;IT Admin&quot;,&quot;Security Team&quot;,&quot;SOC Team&quot;,&quot;Managed Service&quot;,&quot;MSP&quot;)
+| project Timestamp, ActionType, AccountDisplayName, AccountId, AccountType, IPAddress, CountryCode, UserAgent, ObjectName, ActivityObjects, RawEventData
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-02-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>OfficeActivity
-| where TimeGenerated &gt; ago(30d)
+| where TimeGenerated &gt; ago(7d)
 | where OfficeWorkload =~ &quot;MicrosoftTeams&quot;
-| where Operation in~ (&quot;MessageSent&quot;, &quot;ChatCreated&quot;, &quot;MemberAdded&quot;, &quot;MessageCreatedHasLink&quot;)
-| where UserId has &quot;ommicrosoft.com&quot; 
-    or UserKey has &quot;ommicrosoft&quot; 
-    or EventData has &quot;ommicrosoft.com&quot; 
-    or ParameterValue has &quot;ommicrosoft&quot;
-| project TimeGenerated, Operation, UserId, UserKey, OfficeId, ClientIP, UserAgent, ItemName, ParameterValue, EventData
+| where Operation in~ (&quot;ChatCreated&quot;,&quot;MessageSent&quot;,&quot;MemberAdded&quot;,&quot;MemberRoleChanged&quot;)
+| extend ParamsStr = tostring(Parameters)
+| where UserType in (&quot;Guest&quot;,&quot;External&quot;) or UserId has_any (&quot;#EXT#&quot;,&quot;#ext#&quot;,&quot;onmicrosoft.com&quot;)
+| where ParamsStr has_any (&quot;IT Support&quot;,&quot;IT Department&quot;,&quot;Help Desk&quot;,&quot;Helpdesk&quot;,&quot;Service Desk&quot;,&quot;IT Admin&quot;,&quot;Security Team&quot;,&quot;SOC Team&quot;,&quot;Managed Service&quot;,&quot;MSP&quot;)
+| project TimeGenerated, Operation, UserId, UserType, ClientIP, UserAgent, OfficeObjectId, ParamsStr
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: External Microsoft Teams Chat From ommicrosoft.com Typosquat Tenant
-id: 8a1f5b27-3c4e-4f9b-9a83-7e2d8c1f3a4b
-description: Detects inbound Microsoft Teams chat or membership activity from the typosquatted tenant domain ommicrosoft.com reported by Unit 42 as a Microsoft-impersonation IT-helpdesk lure tenant.
-references:
-  - https://unit42.paloaltonetworks.com/microsoft-teams-phishing/
-author: SOC Detection Engineering
-date: 2026/06/09
-tags:
-  - attack.initial_access
-  - attack.t1566.003
-  - attack.t1656
-logsource:
-  product: m365
-  service: threat_management
-detection:
-  selection:
-    Workload: MicrosoftTeams
-    Operation:
-      - MessageSent
-      - ChatCreated
-      - MemberAdded
-      - MessageCreatedHasLink
-  domain:
-    - UserId|contains: &#x27;ommicrosoft.com&#x27;
-    - UserKey|contains: &#x27;ommicrosoft&#x27;
-  condition: selection and domain
-level: high</code></pre></div>
-    <div class="tab-content" id="art-02-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:(office365 OR azure.activeDirectory) (@Workload:MicrosoftTeams OR @evt.name:(MessageSent OR ChatCreated OR MemberAdded)) (@UserId:*@ommicrosoft.com OR @UserKey:*ommicrosoft* OR @ParticipantInfo.ParticipatingTenantIds:*ommicrosoft*)</code></pre></div>
-    <div class="tab-content" id="art-02-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.dest) as dest from datamodel=Authentication where Authentication.app=&quot;MicrosoftTeams&quot; (Authentication.user=&quot;*@ommicrosoft.com&quot; OR Authentication.src_user=&quot;*@ommicrosoft.com&quot; OR Authentication.user=&quot;*ommicrosoft*&quot;) by Authentication.user Authentication.src_user Authentication.dest_user Authentication.action | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-02-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.dest) as dest from datamodel=Authentication where Authentication.app=&quot;MicrosoftTeams&quot; (Authentication.user=&quot;*@ommicrosoft.com&quot; OR Authentication.src_user=&quot;*@ommicrosoft.com&quot; OR Authentication.user=&quot;*ommicrosoft*&quot;) by Authentication.user Authentication.src_user Authentication.dest_user Authentication.action | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-02-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:(office365 OR azure.activeDirectory) (@Workload:MicrosoftTeams OR @evt.name:(&quot;ChatCreated&quot; OR &quot;MessageSent&quot; OR &quot;MemberAdded&quot;)) (@UserType:(Guest OR External) OR @UserId:(*#EXT#* OR *onmicrosoft.com*)) (&quot;IT Support&quot; OR &quot;IT Department&quot; OR &quot;Help Desk&quot; OR Helpdesk OR &quot;Service Desk&quot; OR &quot;Security Team&quot; OR &quot;Managed Service&quot; OR MSP)</code></pre></div>
+    <div class="tab-content" id="art-02-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>`cim_Authentication_indexes` sourcetype IN (&quot;o365:management:activity&quot;,&quot;ms:o365:management&quot;) Workload=&quot;MicrosoftTeams&quot; Operation IN (&quot;ChatCreated&quot;,&quot;MessageSent&quot;,&quot;MemberAdded&quot;,&quot;MemberRoleChanged&quot;) 
+| spath input=Parameters 
+| eval is_external=if(match(UserId,&quot;(?i)#EXT#|onmicrosoft\.com&quot;) OR UserType IN (&quot;Guest&quot;,&quot;External&quot;),1,0) 
+| where is_external=1 
+| eval impersonation=if(match(_raw,&quot;(?i)(IT\s?Support|Help\s?Desk|Helpdesk|Service\s?Desk|IT\s?Department|IT\s?Admin|MSP|Managed\s?Service|Security\s?Team|SOC\s?Team)&quot;),1,0) 
+| where impersonation=1 
+| table _time UserId UserType ClientIP UserAgent Operation OfficeWorkload Parameters 
+| sort - _time</code></pre></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="6c413f2920" data-platforms="datadog,def,sent,spl" data-targets="azure,m365">
+<details class="uc" data-uc-slug="611b12af19" data-platforms="datadog,def,falcon,sent,spl" data-targets="azure,m365">
   <summary>
-    <span class="uc-title">[LLM] External MS Teams chat from sender with IT/helpdesk/support display name</span>
-    <span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="6c413f2920" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">[LLM] MFA approval within minutes of inbound external Microsoft Teams chat</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="611b12af19" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts inbound external Teams chats where the sender&#x27;s display name impersonates IT support, helpdesk, security or service-desk roles — the exact lure pattern the article describes (&quot;Hi, this is the IT Department&quot;). Article-specific because it targets the social-engineering naming convention attackers used in both the Cloaked Ursa and UNC6692 campaigns referenced.
+    <div class="uc-desc">Correlates an inbound external Teams chat to a user with a successful MFA-satisfied sign-in by that same user inside a 30-minute window. Surfaces the Cloaked Ursa / UNC6692 pattern where the &#x27;IT technician&#x27; chat is immediately followed by a victim-approved MFA push.
 
-Rationale: Targets the exact social-engineering naming pattern the article describes in the opening narrative (&quot;Hi, this is the IT Department&quot;) and that UNC6692 used in the Mandiant-tracked Dec-2025 campaign. Combines the external/guest sender requirement with the IT-impersonation display-name regex so it doesn&#x27;t fire on legitimate internal helpdesk traffic.
-
-Cross-checked against:
-  • https://cloud.google.com/blog/topics/threat-intelligence/voice-phishing-data-extortion
-  • https://attack.mitre.org/techniques/T1566/003/
-  • https://learn.microsoft.com/en-us/microsoftteams/manage-external-access</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Phishing: Spearphishing via Service">T1566.003</span> <span class="ind tech" title="Impersonation">T1656</span> <span class="ind tech" title="Establish Accounts">T1585</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span></div>
+Rationale: 30-minute window pairing an inbound external Teams chat with an MFA-satisfied sign-in by the same recipient maps directly to the article&#x27;s narrative — &#x27;IT technician&#x27; chat → &#x27;approve this MFA&#x27; → compromise. Time-window correlation is the noise-killer the BluRaven kb prescribes for this scenario.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Multi-Factor Authentication Request Generation">T1621</span> <span class="ind tech" title="Phishing: Spearphishing via Service">T1566.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication</span></div>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-02-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-02-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-02-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-02-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-02-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc1-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
-| where Timestamp &gt; ago(7d)
-| where Application =~ &quot;Microsoft Teams&quot;
-| where ActionType in~ (&quot;ChatCreated&quot;, &quot;MessageSent&quot;, &quot;MemberAdded&quot;)
-| extend SenderUpn = tostring(RawEventData.UserId), SenderDisplay = tostring(AccountDisplayName), Participants = tostring(RawEventData.ParticipantInfo)
-| where AccountType =~ &quot;Guest&quot; or Participants has &quot;ExternalUser&quot; or RawEventData has &quot;HasForeignTenantUsers&quot;
-| where SenderDisplay matches regex @&quot;(?i)(IT[\s\-]?(Dept|Department|Support|Helpdesk|Team)|Help[\s\-]?Desk|Service[\s\-]?Desk|Tech[\s\-]?Support|Security[\s\-]?(Team|Operations)|Microsoft[\s\-]?Support|M365[\s\-]?Admin|O365[\s\-]?Admin)&quot;
-| project Timestamp, ActionType, SenderUpn, SenderDisplay, AccountObjectId, IPAddress, CountryCode, ObjectName, RawEventData
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>OfficeActivity
-| where TimeGenerated &gt; ago(7d)
-| where OfficeWorkload =~ &quot;MicrosoftTeams&quot;
-| where Operation in~ (&quot;ChatCreated&quot;, &quot;MessageSent&quot;, &quot;MemberAdded&quot;)
-| extend SenderDisplay = tostring(parse_json(EventData).UserId), Ext = tostring(ExternalAccess)
-| where Ext =~ &quot;True&quot; or EventData has &quot;HasForeignTenantUsers&quot; or UserType in~ (&quot;Guest&quot;, &quot;CustomerLockboxAccessApprover&quot;)
-| where UserId matches regex @&quot;(?i)(it[._-]?(dept|department|support|helpdesk|team)|help[._-]?desk|service[._-]?desk|tech[._-]?support|security[._-]?(team|ops)|ms[._-]?support|m365[._-]?admin)&quot;
-    or EventData matches regex @&quot;(?i)\&quot;DisplayName\&quot;:\&quot;[^\&quot;]*(IT (Dept|Department|Support|Helpdesk|Team)|Help[ -]?Desk|Service[ -]?Desk|Tech Support|Security (Team|Operations)|Microsoft Support)[^\&quot;]*\&quot;&quot;
-| project TimeGenerated, Operation, UserId, UserKey, OfficeId, ClientIP, UserAgent, ItemName, EventData
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:(office365 OR azure.activeDirectory) @Workload:MicrosoftTeams @evt.name:(ChatCreated OR MessageSent OR MemberAdded) @ExternalAccess:True (@UserDisplayName:(*&quot;IT Department&quot;* OR *&quot;IT Support&quot;* OR *Helpdesk* OR *&quot;Service Desk&quot;* OR *&quot;Tech Support&quot;* OR *&quot;Security Team&quot;* OR *&quot;Microsoft Support&quot;*) OR @UserId:(*it.support* OR *helpdesk* OR *servicedesk* OR *msft.support*))</code></pre></div>
-    <div class="tab-content" id="art-02-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.dest_user) as recipients from datamodel=Authentication where Authentication.app=&quot;MicrosoftTeams&quot; Authentication.action=&quot;ChatCreated&quot; (Authentication.src_user_display=&quot;*IT *&quot; OR Authentication.src_user_display=&quot;*Help*Desk*&quot; OR Authentication.src_user_display=&quot;*Service*Desk*&quot; OR Authentication.src_user_display=&quot;*IT Support*&quot; OR Authentication.src_user_display=&quot;*Tech Support*&quot; OR Authentication.src_user_display=&quot;*Security Team*&quot; OR Authentication.src_user_display=&quot;*IT Department*&quot; OR Authentication.src_user_display=&quot;*Microsoft Support*&quot;) by Authentication.src_user Authentication.src_user_display | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime) | where count &gt;= 1</code></pre><pre class="spl-mode-body" id="art-02-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Authentication.dest_user) as recipients from datamodel=Authentication where Authentication.app=&quot;MicrosoftTeams&quot; Authentication.action=&quot;ChatCreated&quot; (Authentication.src_user_display=&quot;*IT *&quot; OR Authentication.src_user_display=&quot;*Help*Desk*&quot; OR Authentication.src_user_display=&quot;*Service*Desk*&quot; OR Authentication.src_user_display=&quot;*IT Support*&quot; OR Authentication.src_user_display=&quot;*Tech Support*&quot; OR Authentication.src_user_display=&quot;*Security Team*&quot; OR Authentication.src_user_display=&quot;*IT Department*&quot; OR Authentication.src_user_display=&quot;*Microsoft Support*&quot;) by Authentication.src_user Authentication.src_user_display | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime) | where count &gt;= 1</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="cd88c6dcd2" data-platforms="datadog,def,sent,spl" data-targets="azure,m365">
-  <summary>
-    <span class="uc-title">[LLM] First-time external M365 tenant initiating MS Teams chats with internal users</span>
-    <span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="cd88c6dcd2" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the FIRST EVER chat invitation from any external Microsoft 365 tenant to internal users over a 60-day baseline. The article specifically calls out that adversaries operate from &quot;M365 tenants that have no previous affiliation with the target organization&quot; as a primary delivery vector — this hunts that exact shape regardless of display-name lure.
-
-Rationale: Implements the article&#x27;s core observation that adversaries use unaffiliated M365 tenants as the delivery vehicle. The 60-day anti-join baseline catches the exact shape: an external tenant with zero prior history suddenly chatting internal users. The pattern matches both Cloaked Ursa&#x27;s 2024 compromised-tenant approach AND UNC6692&#x27;s stood-up-tenant approach, so it survives the next attacker rotation.
-
-Cross-checked against:
-  • https://learn.microsoft.com/en-us/microsoftteams/trusted-organizations-external-meetings-chat
-  • https://learn.microsoft.com/en-us/entra/identity/external-identities/cross-tenant-access-settings-b2b-collaboration
-  • https://attack.mitre.org/techniques/T1199/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Phishing: Spearphishing via Service">T1566.003</span> <span class="ind tech" title="Trusted Relationship">T1199</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-02-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-02-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let Baseline = CloudAppEvents
-    | where Timestamp between (ago(60d) .. ago(24h))
-    | where Application =~ &quot;Microsoft Teams&quot;
-    | where ActionType in~ (&quot;ChatCreated&quot;, &quot;MessageSent&quot;, &quot;MemberAdded&quot;)
-    | extend SenderDomain = tolower(tostring(split(AccountDisplayName, &quot;@&quot;)[1]))
-    | extend SenderDomainRaw = tolower(extract(@&quot;@([A-Za-z0-9\-\.]+)&quot;, 1, tostring(RawEventData)))
-    | summarize by SenderDomain = coalesce(SenderDomain, SenderDomainRaw);
-CloudAppEvents
-| where Timestamp &gt; ago(24h)
-| where Application =~ &quot;Microsoft Teams&quot;
-| where ActionType in~ (&quot;ChatCreated&quot;, &quot;MessageSent&quot;, &quot;MemberAdded&quot;)
-| extend SenderDomain = tolower(extract(@&quot;@([A-Za-z0-9\-\.]+)&quot;, 1, tostring(RawEventData)))
-| where isnotempty(SenderDomain) and SenderDomain !endswith &quot;&lt;your-corp-domain&gt;&quot;
-| join kind=leftanti Baseline on SenderDomain
-| summarize FirstSeen = min(Timestamp), ChatCount = count(), InternalRecipients = dcount(ObjectId), SampleSender = any(AccountDisplayName), SampleIP = any(IPAddress) by SenderDomain
-| order by FirstSeen desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let Baseline = OfficeActivity
-    | where TimeGenerated between (ago(60d) .. ago(24h))
-    | where OfficeWorkload =~ &quot;MicrosoftTeams&quot;
-    | where Operation in~ (&quot;ChatCreated&quot;, &quot;MessageSent&quot;, &quot;MemberAdded&quot;)
-    | extend SenderDomain = tolower(extract(@&quot;@([A-Za-z0-9\-\.]+)&quot;, 1, UserId))
-    | summarize by SenderDomain;
-OfficeActivity
-| where TimeGenerated &gt; ago(24h)
-| where OfficeWorkload =~ &quot;MicrosoftTeams&quot;
-| where Operation in~ (&quot;ChatCreated&quot;, &quot;MessageSent&quot;, &quot;MemberAdded&quot;)
-| extend SenderDomain = tolower(extract(@&quot;@([A-Za-z0-9\-\.]+)&quot;, 1, UserId))
-| where isnotempty(SenderDomain) and SenderDomain !endswith &quot;&lt;your-corp-domain&gt;&quot;
-| join kind=leftanti Baseline on SenderDomain
-| summarize FirstSeen = min(TimeGenerated), ChatCount = count(), InternalRecipients = dcount(OfficeId), SampleSender = any(UserId), SampleIP = any(ClientIP) by SenderDomain
-| order by FirstSeen desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:(office365 OR azure.activeDirectory) @Workload:MicrosoftTeams @evt.name:(ChatCreated OR MessageSent OR MemberAdded) @ExternalAccess:True -@UserId:*@&lt;your-corp-domain&gt;</code></pre></div>
-    <div class="tab-content" id="art-02-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` min(_time) as firstSeen max(_time) as lastSeen count from datamodel=Authentication where Authentication.app=&quot;MicrosoftTeams&quot; Authentication.action IN (&quot;ChatCreated&quot;,&quot;MessageSent&quot;,&quot;MemberAdded&quot;) earliest=-60d@d by Authentication.src_user_domain | `drop_dm_object_name(Authentication)` | where firstSeen &gt;= relative_time(now(), &quot;-24h&quot;) AND src_user_domain!=&quot;&lt;your-corp-domain&gt;&quot; | convert ctime(firstSeen) ctime(lastSeen)</code></pre><pre class="spl-mode-body" id="art-02-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false min(_time) as firstSeen max(_time) as lastSeen count from datamodel=Authentication where Authentication.app=&quot;MicrosoftTeams&quot; Authentication.action IN (&quot;ChatCreated&quot;,&quot;MessageSent&quot;,&quot;MemberAdded&quot;) earliest=-60d@d by Authentication.src_user_domain | `drop_dm_object_name(Authentication)` | where firstSeen &gt;= relative_time(now(), &quot;-24h&quot;) AND src_user_domain!=&quot;&lt;your-corp-domain&gt;&quot; | convert ctime(firstSeen) ctime(lastSeen)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="e8b11e9371" data-platforms="def,sent,spl" data-targets="azure,m365">
-  <summary>
-    <span class="uc-title">[LLM] MFA push approval within minutes of external Teams chat (social-engineering chain)</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e8b11e9371" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Correlates an inbound external Microsoft Teams chat against an MFA-success sign-in by the same internal user within a 10-minute window — the exact attack chain the article describes where the fake IT helpdesk asks the user to &quot;approve a multi-factor authentication (MFA) prompt to confirm their identity.&quot; Distinct from generic MFA-fatigue rules because it requires the Teams delivery vector.
-
-Rationale: This is the article&#x27;s named attack chain end-to-end: external Teams chat from impersonator → user-approved MFA push within minutes. The 10-minute correlation window plus the MFA-method filter (push/Authenticator notification specifically — what attackers prompt-bomb) makes it high-fidelity. Cross-checked with MITRE T1621 (MFA Request Generation) and Microsoft&#x27;s published mitigation guidance on cross-tenant Teams intrusions referenced in the article.
-
-Cross-checked against:
-  • https://attack.mitre.org/techniques/T1621/
-  • https://learn.microsoft.com/en-us/security/operations/incident-response-playbook-compromised-on-premises-account
-  • https://www.microsoft.com/en-us/security/blog/2024/01/25/midnight-blizzard-guidance-for-responders-on-nation-state-attack/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Multi-Factor Authentication Request Generation">T1621</span> <span class="ind tech" title="Phishing: Spearphishing via Service">T1566.003</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-02-uc3-kql"><pre><button class="copy-btn">COPY</button><code>let WindowMin = 10m;
+    <div class="tab-content active" id="art-02-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let WindowMinutes = 30m;
 let ExternalChats = CloudAppEvents
     | where Timestamp &gt; ago(7d)
     | where Application =~ &quot;Microsoft Teams&quot;
-    | where ActionType in~ (&quot;ChatCreated&quot;, &quot;MessageSent&quot;)
-    | where AccountType =~ &quot;Guest&quot; or RawEventData has &quot;HasForeignTenantUsers&quot; or AdditionalFields has &quot;ExternalUser&quot;
-    | extend RecipientUpn = tolower(tostring(ObjectId)), ExternalSender = AccountDisplayName, ChatTime = Timestamp
-    | project ChatTime, RecipientUpn, ExternalSender, ExternalSenderIP = IPAddress;
-ExternalChats
-| join kind=inner (
-    AADSignInEventsBeta
-    | where Timestamp &gt; ago(7d)
-    | where ErrorCode == 0
-    | where AuthenticationRequirement =~ &quot;multiFactorAuthentication&quot;
-    | extend AuthDetails = tostring(AuthenticationDetails)
-    | where AuthDetails has &quot;succeeded&quot; and (AuthDetails has &quot;Authenticator&quot; or AuthDetails has &quot;Mobile app notification&quot; or AuthDetails has &quot;push&quot;)
-    | project SignInTime = Timestamp, AccountUpn = tolower(AccountUpn), IPAddress, Country, Application, AppDisplayName, RiskLevelDuringSignIn
-) on $left.RecipientUpn == $right.AccountUpn
-| where SignInTime between (ChatTime .. ChatTime + WindowMin)
-| extend DelaySeconds = datetime_diff(&#x27;second&#x27;, SignInTime, ChatTime)
-| project ChatTime, SignInTime, DelaySeconds, RecipientUpn, ExternalSender, ExternalSenderIP, SignInIP = IPAddress, Country, AppDisplayName, RiskLevelDuringSignIn
-| order by ChatTime desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let WindowMin = 10m;
+    | where ActionType in~ (&quot;ChatCreated&quot;,&quot;MessageSent&quot;,&quot;MemberAdded&quot;)
+    | extend RawStr = tostring(RawEventData)
+    | where AccountType in~ (&quot;Guest&quot;,&quot;External&quot;) or RawStr has_any (&quot;#EXT#&quot;,&quot;onmicrosoft.com&quot;)
+    | extend Recipient = tostring(parse_json(tostring(ActivityObjects))[0].Name)
+    | project ChatTime = Timestamp, SenderUpn = AccountDisplayName, SenderIP = IPAddress, Recipient, ActionType;
+AADSignInEventsBeta
+| where Timestamp &gt; ago(7d)
+| where ErrorCode == 0
+| where AuthenticationRequirement =~ &quot;multiFactorAuthentication&quot;
+| extend AuthDetailStr = tostring(AuthenticationDetails)
+| where AuthDetailStr has_any (&quot;Mobile app notification&quot;,&quot;PhoneAppNotification&quot;,&quot;OAuth Verify&quot;,&quot;Authenticator App&quot;)
+| join kind=inner ExternalChats on $left.AccountUpn == $right.Recipient
+| where Timestamp between (ChatTime .. ChatTime + WindowMinutes)
+| extend DelayMinutes = datetime_diff(&#x27;minute&#x27;, Timestamp, ChatTime)
+| project ChatTime, MfaApprovalTime = Timestamp, DelayMinutes, AccountUpn, IPAddress, Country, City, Application, RiskLevelDuringSignIn, ConditionalAccessStatus, SenderUpn, SenderIP
+| order by MfaApprovalTime desc</code></pre></div>
+    <div class="tab-content" id="art-02-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let WindowMinutes = 30m;
 let ExternalChats = OfficeActivity
     | where TimeGenerated &gt; ago(7d)
     | where OfficeWorkload =~ &quot;MicrosoftTeams&quot;
-    | where Operation in~ (&quot;ChatCreated&quot;, &quot;MessageSent&quot;)
-    | where ExternalAccess =~ &quot;True&quot; or EventData has &quot;HasForeignTenantUsers&quot;
-    | extend RecipientUpn = tolower(tostring(parse_json(EventData).MembersAdded[0].UPN)), ExternalSender = UserId, ChatTime = TimeGenerated
-    | extend RecipientUpn = coalesce(RecipientUpn, tolower(tostring(parse_json(EventData).TargetUserOrGroupName)))
-    | where isnotempty(RecipientUpn)
-    | project ChatTime, RecipientUpn, ExternalSender, ChatClientIP = ClientIP, OfficeId;
-ExternalChats
-| join kind=inner (
-    SigninLogs
-    | where TimeGenerated &gt; ago(7d)
-    | where ResultType == 0
-    | where AuthenticationRequirement =~ &quot;multiFactorAuthentication&quot;
-    | extend AuthDetails = tostring(AuthenticationDetails)
-    | where AuthDetails has &quot;succeeded&quot; and (AuthDetails has &quot;Authenticator&quot; or AuthDetails has &quot;Mobile app notification&quot; or AuthDetails has &quot;push&quot;)
-    | project SignInTime = TimeGenerated, UserPrincipalName = tolower(UserPrincipalName), IPAddress, Location, AppDisplayName, RiskLevelDuringSignIn
-) on $left.RecipientUpn == $right.UserPrincipalName
-| where SignInTime between (ChatTime .. ChatTime + WindowMin)
-| extend DelaySeconds = datetime_diff(&#x27;second&#x27;, SignInTime, ChatTime)
-| project ChatTime, SignInTime, DelaySeconds, RecipientUpn, ExternalSender, ChatClientIP, SignInIP = IPAddress, Location, AppDisplayName, RiskLevelDuringSignIn
-| order by ChatTime desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc3-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` min(_time) as chatTime from datamodel=Authentication where Authentication.app=&quot;MicrosoftTeams&quot; Authentication.action=&quot;ChatCreated&quot; by Authentication.dest_user Authentication.src_user | `drop_dm_object_name(Authentication)` | rename dest_user as user src_user as external_sender | join type=inner user [| tstats `summariesonly` min(_time) as signinTime values(Authentication.src) as signin_ip from datamodel=Authentication where Authentication.app=&quot;AzureActiveDirectory&quot; Authentication.action=&quot;success&quot; Authentication.authentication_method=&quot;MFA&quot; by Authentication.user | `drop_dm_object_name(Authentication)` | rename user as user] | eval delta_sec=signinTime-chatTime | where delta_sec &gt;= 0 AND delta_sec &lt;= 600 | convert ctime(chatTime) ctime(signinTime)</code></pre><pre class="spl-mode-body" id="art-02-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false min(_time) as chatTime from datamodel=Authentication where Authentication.app=&quot;MicrosoftTeams&quot; Authentication.action=&quot;ChatCreated&quot; by Authentication.dest_user Authentication.src_user | `drop_dm_object_name(Authentication)` | rename dest_user as user src_user as external_sender | join type=inner user [| tstats summariesonly=false min(_time) as signinTime values(Authentication.src) as signin_ip from datamodel=Authentication where Authentication.app=&quot;AzureActiveDirectory&quot; Authentication.action=&quot;success&quot; Authentication.authentication_method=&quot;MFA&quot; by Authentication.user | `drop_dm_object_name(Authentication)` | rename user as user] | eval delta_sec=signinTime-chatTime | where delta_sec &gt;= 0 AND delta_sec &lt;= 600 | convert ctime(chatTime) ctime(signinTime)</code></pre></div></div>
+    | where Operation in~ (&quot;ChatCreated&quot;,&quot;MessageSent&quot;,&quot;MemberAdded&quot;)
+    | where UserType in (&quot;Guest&quot;,&quot;External&quot;) or UserId has_any (&quot;#EXT#&quot;,&quot;#ext#&quot;,&quot;onmicrosoft.com&quot;)
+    | extend ParamsStr = tostring(Parameters)
+    | extend Recipient = extract(@&quot;(?i)([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})&quot;, 1, ParamsStr)
+    | project ChatTime = TimeGenerated, SenderUpn = UserId, SenderIP = ClientIP, Recipient;
+SigninLogs
+| where TimeGenerated &gt; ago(7d)
+| where ResultType == 0
+| where AuthenticationRequirement =~ &quot;multiFactorAuthentication&quot;
+| extend AuthMethods = tostring(AuthenticationMethodsUsed)
+| where AuthMethods has_any (&quot;Mobile app notification&quot;,&quot;PhoneAppNotification&quot;,&quot;Microsoft Authenticator&quot;)
+| join kind=inner ExternalChats on $left.UserPrincipalName == $right.Recipient
+| where TimeGenerated between (ChatTime .. ChatTime + WindowMinutes)
+| extend DelayMinutes = datetime_diff(&#x27;minute&#x27;, TimeGenerated, ChatTime)
+| project ChatTime, MfaApprovalTime = TimeGenerated, DelayMinutes, UserPrincipalName, IPAddress, Location, AppDisplayName, RiskLevelDuringSignIn, ConditionalAccessStatus, SenderUpn, SenderIP
+| order by MfaApprovalTime desc</code></pre></div>
+    <div class="tab-content" id="art-02-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:azure.activeDirectory @evt.name:&quot;Sign-in activity&quot; @properties.status.errorCode:0 @properties.authenticationRequirement:multiFactorAuthentication (@properties.authenticationMethodsUsed:(&quot;Mobile app notification&quot; OR &quot;PhoneAppNotification&quot; OR &quot;Microsoft Authenticator&quot;))</code></pre></div>
+    <div class="tab-content" id="art-02-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=IdpAuthenticationLog
+| Application=/microsoft|teams|office/i
+| AuthenticationRequirement=/multiFactor/i
+| Status=/success/i
+| AuthenticationMethod=/(Mobile app notification|PhoneAppNotification|Microsoft Authenticator)/i
+| groupBy([UserPrincipalName, IPAddress], function=count())</code></pre></div>
+    <div class="tab-content" id="art-02-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` min(_time) as ChatTime from datamodel=Authentication where nodename=Authentication.Authentication Authentication.action=success Authentication.app=&quot;MicrosoftTeams&quot; Authentication.signature IN (&quot;ChatCreated&quot;,&quot;MessageSent&quot;) Authentication.src_user_type IN (&quot;Guest&quot;,&quot;External&quot;) by Authentication.user Authentication.src 
+| `drop_dm_object_name(Authentication)` 
+| rename user as victim 
+| join type=inner victim [ | tstats `summariesonly` min(_time) as MfaTime from datamodel=Authentication where nodename=Authentication.Authentication Authentication.action=success Authentication.authentication_method=&quot;mfa&quot; by Authentication.user 
+| `drop_dm_object_name(Authentication)` 
+| rename user as victim ] 
+| eval delay_min=round((MfaTime-ChatTime)/60,1) 
+| where delay_min&gt;=0 AND delay_min&lt;=30 
+| table ChatTime MfaTime delay_min victim src</code></pre><pre class="spl-mode-body" id="art-02-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false min(_time) as ChatTime from datamodel=Authentication where nodename=Authentication.Authentication Authentication.action=success Authentication.app=&quot;MicrosoftTeams&quot; Authentication.signature IN (&quot;ChatCreated&quot;,&quot;MessageSent&quot;) Authentication.src_user_type IN (&quot;Guest&quot;,&quot;External&quot;) by Authentication.user Authentication.src 
+| `drop_dm_object_name(Authentication)` 
+| rename user as victim 
+| join type=inner victim [ | tstats summariesonly=false min(_time) as MfaTime from datamodel=Authentication where nodename=Authentication.Authentication Authentication.action=success Authentication.authentication_method=&quot;mfa&quot; by Authentication.user 
+| `drop_dm_object_name(Authentication)` 
+| rename user as victim ] 
+| eval delay_min=round((MfaTime-ChatTime)/60,1) 
+| where delay_min&gt;=0 AND delay_min&lt;=30 
+| table ChatTime MfaTime delay_min victim src</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="313f58c2c8" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="azure,m365,windows">
+  <summary>
+    <span class="uc-title">[LLM] Activity involving ommicrosoft.com Cloaked-Ursa Teams typosquat</span>
+    <span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="313f58c2c8" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Direct IOC hunt for the ommicrosoft.com typosquat domain referenced by Unit 42 in connection with Cloaked Ursa / Midnight Blizzard Teams credential-harvesting infrastructure. Sweeps Teams/Office activity, AAD sign-ins, DNS resolutions, and proxy traffic for any reference to the domain.
+
+Rationale: ommicrosoft.com is the only hard IOC in the article — a single-character typosquat of microsoft.com that Unit 42 ties to Cloaked Ursa Teams credential-harvesting. Any resolution, web request, sign-in reference, or Teams artifact mentioning this string is high-fidelity. Union covers chat, sign-in, DNS, and proxy surfaces because the same domain may surface across all four during the kill chain.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Acquire Infrastructure: Domains">T1583.001</span> <span class="ind tech" title="Phishing: Spearphishing via Service">T1566.003</span> <span class="ind tech" title="Impersonation">T1656</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution</span> <span class="ind">Web</span> <span class="ind">Authentication</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-02-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-02-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-02-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-02-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-02-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let IOC = dynamic([&quot;ommicrosoft.com&quot;]);
+union isfuzzy=true
+    (DeviceNetworkEvents
+        | where Timestamp &gt; ago(30d)
+        | where RemoteUrl has_any (IOC) or AdditionalFields has_any (IOC)
+        | project Timestamp, Source=&quot;NetworkEvents&quot;, DeviceName, AccountUpn=InitiatingProcessAccountUpn, InitiatingProcessFileName, RemoteUrl, RemoteIP),
+    (UrlClickEvents
+        | where Timestamp &gt; ago(30d)
+        | where Url has_any (IOC)
+        | project Timestamp, Source=&quot;UrlClickEvents&quot;, DeviceName=&quot;&quot;, AccountUpn, InitiatingProcessFileName=&quot;&quot;, RemoteUrl=Url, RemoteIP=tostring(IPAddress)),
+    (CloudAppEvents
+        | where Timestamp &gt; ago(30d)
+        | where Application =~ &quot;Microsoft Teams&quot;
+        | extend Raw = tostring(RawEventData), Acts = tostring(ActivityObjects)
+        | where Raw has_any (IOC) or Acts has_any (IOC)
+        | project Timestamp, Source=&quot;Teams&quot;, DeviceName=&quot;&quot;, AccountUpn=AccountDisplayName, InitiatingProcessFileName=ActionType, RemoteUrl=ObjectName, RemoteIP=IPAddress),
+    (AADSignInEventsBeta
+        | where Timestamp &gt; ago(30d)
+        | where AccountUpn has_any (IOC) or AlternateSignInName has_any (IOC) or ResourceDisplayName has_any (IOC)
+        | project Timestamp, Source=&quot;AADSignIn&quot;, DeviceName=DeviceName, AccountUpn, InitiatingProcessFileName=Application, RemoteUrl=ResourceDisplayName, RemoteIP=IPAddress)
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-02-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let IOC = dynamic([&quot;ommicrosoft.com&quot;]);
+union isfuzzy=true
+    (OfficeActivity
+        | where TimeGenerated &gt; ago(30d)
+        | where UserId has_any (IOC) or tostring(Parameters) has_any (IOC)
+        | project TimeGenerated, Source=&quot;OfficeActivity&quot;, Operation, User=UserId, SrcIP=ClientIP, Detail=tostring(Parameters)),
+    (SigninLogs
+        | where TimeGenerated &gt; ago(30d)
+        | where UserPrincipalName has_any (IOC) or AppDisplayName has_any (IOC) or ResourceDisplayName has_any (IOC) or AlternateSignInName has_any (IOC)
+        | project TimeGenerated, Source=&quot;SigninLogs&quot;, Operation=OperationName, User=UserPrincipalName, SrcIP=IPAddress, Detail=strcat(AppDisplayName,&quot; | &quot;,ResultDescription)),
+    (DnsEvents
+        | where TimeGenerated &gt; ago(30d)
+        | where Name has_any (IOC)
+        | project TimeGenerated, Source=&quot;DnsEvents&quot;, Operation=QueryTypeName, User=&quot;&quot;, SrcIP=ClientIP, Detail=Name),
+    (CommonSecurityLog
+        | where TimeGenerated &gt; ago(30d)
+        | where DestinationHostName has_any (IOC) or RequestURL has_any (IOC) or DestinationDnsDomain has_any (IOC)
+        | project TimeGenerated, Source=&quot;Proxy/CSL&quot;, Operation=DeviceAction, User=SourceUserName, SrcIP=SourceIP, Detail=coalesce(RequestURL, DestinationHostName))
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-02-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Cloaked Ursa ommicrosoft.com Typosquat Domain Resolution
+id: 8f4a2c1b-9e3d-4f5a-b2c8-7a6b5d4e3f2a
+description: DNS resolution to ommicrosoft.com, the Microsoft typosquat domain attributed to Cloaked Ursa / APT29 Teams credential harvesting infrastructure by Unit 42.
+references:
+    - https://unit42.paloaltonetworks.com/microsoft-teams-phishing/
+author: Detection Engineering
+date: 2026/06/09
+tags:
+    - attack.initial_access
+    - attack.t1566.003
+    - attack.t1583.001
+logsource:
+    category: dns
+status: experimental
+detection:
+    selection:
+        QueryName|endswith: &#x27;ommicrosoft.com&#x27;
+    condition: selection
+falsepositives:
+    - Security researcher / threat-intel platform fetching the IOC
+    - Sandbox detonation environments
+level: high</code></pre></div>
+    <div class="tab-content" id="art-02-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(@network.client.ip:* OR @host:*) (&quot;ommicrosoft.com&quot; OR @DomainName:*ommicrosoft.com OR @DestinationHostname:*ommicrosoft.com OR @url:*ommicrosoft.com* OR @UserId:*ommicrosoft.com*)</code></pre></div>
+    <div class="tab-content" id="art-02-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>(#event_simpleName=DnsRequest DomainName=/ommicrosoft\.com$/i) OR (#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=*) OR (#event_simpleName=ProcessRollup2 CommandLine=/ommicrosoft\.com/i)
+| groupBy([aid, ComputerName, ContextImageFileName, DomainName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-02-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as first_seen max(_time) as last_seen from datamodel=Network_Resolution where DNS.query=&quot;*ommicrosoft.com&quot; by DNS.src DNS.query 
+| `drop_dm_object_name(DNS)` 
+| append [| tstats `summariesonly` count from datamodel=Web where Web.url=&quot;*ommicrosoft.com*&quot; OR Web.dest=&quot;*ommicrosoft.com*&quot; by Web.src Web.user Web.url Web.dest] 
+| append [| tstats `summariesonly` count from datamodel=Authentication where Authentication.user=&quot;*ommicrosoft.com*&quot; OR Authentication.src_user=&quot;*ommicrosoft.com*&quot; by Authentication.user Authentication.src Authentication.app] 
+| sort - last_seen</code></pre><pre class="spl-mode-body" id="art-02-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as first_seen max(_time) as last_seen from datamodel=Network_Resolution where DNS.query=&quot;*ommicrosoft.com&quot; by DNS.src DNS.query 
+| `drop_dm_object_name(DNS)` 
+| append [| tstats summariesonly=false count from datamodel=Web where Web.url=&quot;*ommicrosoft.com*&quot; OR Web.dest=&quot;*ommicrosoft.com*&quot; by Web.src Web.user Web.url Web.dest] 
+| append [| tstats summariesonly=false count from datamodel=Authentication where Authentication.user=&quot;*ommicrosoft.com*&quot; OR Authentication.src_user=&quot;*ommicrosoft.com*&quot; by Authentication.user Authentication.src Authentication.app] 
+| sort - last_seen</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="53a9c31d59" data-platforms="def,sent,spl" data-targets="azure,m365,windows">
@@ -1128,11 +1103,11 @@ for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Link">T1566.002</span> <span class="ind tech" title="User Execution: Malicious Link">T1204.001</span> <span class="ind tech" title="PowerShell">T1059.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+    <div class="tab-content active" id="art-02-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
 // Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
 // never spawn a non-browser child process, so the join eliminates the
 // 99% of noise that makes a raw click query unactionable.
@@ -1172,7 +1147,7 @@ DeviceProcessEvents
           Subject, Url, UrlDomain, ActionType,
           FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-02-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+    <div class="tab-content" id="art-02-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
 // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
 // non-browser child process. Lower fidelity than the Defender version.
 let LookbackDays = 7d;
@@ -1197,7 +1172,7 @@ SecurityEvent
           NewProcessName, CommandLine, Sender, Subject
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc4-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+    <div class="tab-content" id="art-02-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats `summariesonly` earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -1229,7 +1204,7 @@ SecurityEvent
 | where delta_sec &gt;= 0 AND delta_sec &lt;= 60
 | table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
         clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-02-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-02-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats summariesonly=false earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -1278,11 +1253,11 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Attachment">T1566.001</span> <span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailAttachmentInfo</span> <span class="ind">DeviceProcessEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc5-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+    <div class="tab-content active" id="art-02-uc4-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp &gt; ago(LookbackDays)
     | where AccountName !endswith &quot;$&quot;
@@ -1296,7 +1271,7 @@ DeviceProcessEvents
 | join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
           InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256</code></pre></div>
-    <div class="tab-content" id="art-02-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
+    <div class="tab-content" id="art-02-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
 // OfficeActivity Send/Receive activity + correlate to host process spawn.
 let LookbackDays = 7d;
 let MailWithAttach = OfficeActivity
@@ -1319,7 +1294,7 @@ SecurityEvent
           ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
+    <div class="tab-content" id="art-02-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -1330,7 +1305,7 @@ SecurityEvent
         where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
           AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
         by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-02-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
+     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-02-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -1358,18 +1333,18 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Visual Basic">T1059.005</span> <span class="ind tech" title="System Binary Proxy Execution">T1218</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-02-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-02-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-02-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
 | where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-02-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-02-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -1392,7 +1367,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
+    <div class="tab-content" id="art-02-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
 status: experimental
 description: |
@@ -1436,13 +1411,13 @@ falsepositives:
     - Legitimate automation macros in trusted internal documents
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-02-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-02-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-02-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
@@ -1465,11 +1440,11 @@ level: high
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Phishing: Spearphishing Voice">T1566.004</span> <span class="ind tech" title="Phishing">T1566</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">CloudAppEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc7-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc7-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+    <div class="tab-content active" id="art-02-uc6-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
 | where Timestamp &gt; ago(7d)
 | where Application == &quot;Microsoft Teams&quot;
 | where ActionType == &quot;MessageSent&quot;
@@ -1477,7 +1452,7 @@ level: high
 | extend SenderDisplayName = tostring(parse_json(RawEventData).SenderDisplayName)
 | where SenderDisplayName matches regex @&quot;(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)&quot;
 | project Timestamp, AccountDisplayName, IPAddress, ActivityType, SenderDisplayName, RawEventData</code></pre></div>
-    <div class="tab-content" id="art-02-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// External Teams chat — Teams audit lives in OfficeActivity.
+    <div class="tab-content" id="art-02-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// External Teams chat — Teams audit lives in OfficeActivity.
 OfficeActivity
 | where TimeGenerated &gt; ago(7d)
 | where OfficeWorkload == &quot;MicrosoftTeams&quot;
@@ -1489,7 +1464,7 @@ OfficeActivity
           ClientIP, UserAgent
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc7-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>`o365_management_activity`
+    <div class="tab-content" id="art-02-uc6-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>`o365_management_activity`
   Workload=MicrosoftTeams Operation=MessageSent
   ExternalParticipants=*
 | where match(SenderDisplayName, &quot;(?i)(help.?desk|it.?support|service.?desk|tech.?support|admin)&quot;)
@@ -1511,12 +1486,12 @@ OfficeActivity
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Remote Access Software">T1219</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc8-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-02-uc8-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc7-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-02-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-02-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName in~ (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
@@ -1524,7 +1499,7 @@ OfficeActivity
         &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;)
    or FileName matches regex @&quot;(?i)kaseya.*\.exe&quot;
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-02-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-02-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -1541,7 +1516,7 @@ OfficeActivity
           CommandLine, ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Remote-Management (RMM) Tool Execution
+    <div class="tab-content" id="art-02-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Remote-Management (RMM) Tool Execution
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0c
 status: experimental
 description: |
@@ -1576,13 +1551,13 @@ falsepositives:
       tool exclusion list per environment.
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-02-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
         &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
         &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-02-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-02-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
         &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
@@ -1605,19 +1580,19 @@ level: high
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious Copy and Paste">T1204.004</span> <span class="ind tech" title="PowerShell">T1059.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc9-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc9-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc9-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-02-uc9-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc8-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-02-uc8-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-02-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-02-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-02-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -1631,7 +1606,7 @@ level: high
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
+    <div class="tab-content" id="art-02-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d06
 status: experimental
 description: |
@@ -1675,7 +1650,7 @@ falsepositives:
     - IT-driven scripted automation that admins paste-launch
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-02-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -1683,7 +1658,7 @@ level: high
         OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*hxxp*&quot; OR Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot;)
     by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-02-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-02-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -1708,17 +1683,17 @@ level: high
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-02-uc10-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-02-uc10-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-02-uc10-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-02-uc10-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-02-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-02-uc9-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-02-uc9-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-02-uc9-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-02-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-02-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
 | where RemoteIP in (&quot;&quot;) or RemoteUrl has_any (&quot;ommicrosoft.com&quot;)
 | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-02-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;&quot;]);
+    <div class="tab-content" id="art-02-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;&quot;]);
 let BadDomains = dynamic([&quot;ommicrosoft.com&quot;]);
 ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
@@ -1727,7 +1702,7 @@ ImNetworkSession
 | project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+    <div class="tab-content" id="art-02-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
 status: experimental
 description: |
@@ -1757,7 +1732,7 @@ falsepositives:
     - None on a true-positive IOC match
 level: critical
 </code></pre></div>
-    <div class="tab-content" id="art-02-uc10-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-02-uc9-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-02-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-02-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-02-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -1771,7 +1746,7 @@ level: critical
     [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
         where DNS.query IN (&quot;ommicrosoft.com&quot;)
         by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-02-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-02-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -2282,11 +2257,11 @@ DeviceFileEvents
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
   data-techs="T1190,T1566"
   data-sources="BleepingComputer"
-  data-platforms="def,sent,sigma,spl"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="endpoint,network,web"
   data-targets="azure,m365,windows"
-  data-uc-count="6" data-llm-uc-count="0"
-  data-search="NFCShare Android malware spreads via fake banking app updates on GitHub New variants of the NFCShare Android malware are being distributed as fake updates for legitimate banking apps hosted on GitHub. [...]  T1190 T1566 Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process File hash IOCs — endpoint file/process match">
+  data-uc-count="7" data-llm-uc-count="3"
+  data-search="NFCShare Android malware spreads via fake banking app updates on GitHub New variants of the NFCShare Android malware are being distributed as fake updates for legitimate banking apps hosted on GitHub. [...]  T1190 T1566 [LLM] M365 URL click to GitHub repo hosting NFCShare banking-themed APK [LLM] GitHub-sourced APK download with Italian/Spanish bank impersonation filename [LLM] Android EDR: NFCShare WebSocket C2 from sideloaded banking-impersonating package Beaconing — periodic outbound to small set of destinations Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process">
   <div class="sev-ribbon high">High</div>
   <button class="share-btn card-share" data-share-art="2026-06-08-nfcshare-android-malware-spreads-via-fake-banking-app-update" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -2295,15 +2270,12 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge bc">BleepingComputer</span></div>
   <div class="pubmeta">
     <span>2026-06-08</span>
-    <span>6 use cases</span>
+    <span>7 use cases</span>
     <span>2 techniques</span>
-    <span>6 kill-chain phases detected</span>
+    <span>5 kill-chain phases detected</span>
   </div>
   <p class="summary">New variants of the NFCShare Android malware are being distributed as fake updates for legitimate banking apps hosted on GitHub. [...]</p>
   <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Phishing">T1566</span></div>
-<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">portale-deut.com</span></div>
-<div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">38.47.213.197</span></div>
-<div class="ind-group"><span class="ind-label">SHA256</span><span class="ind ">afbe6751d339fbc5…</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-04-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-04"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -2330,10 +2302,10 @@ DeviceFileEvents
   <div class="name">Exploitation</div>
   <div class="marker">Detected</div>
 </div>
-<div class="kc-cell hit">
+<div class="kc-cell inferred">
   <div class="num">Phase 5</div>
   <div class="name">Installation</div>
-  <div class="marker">Detected</div>
+  <div class="marker">Likely</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 6</div>
@@ -2347,13 +2319,230 @@ DeviceFileEvents
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] M365 URL click to GitHub repo hosting NFCShare banking-themed APK · [LLM] GitHub-sourced APK download with Italian/Spanish bank impersonation filename · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Office app spawning script/LOLBin child process</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ File hash IOCs — endpoint file/process match</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Android EDR: NFCShare WebSocket C2 from sideloaded banking-impersonating package · Beaconing — periodic outbound to small set of destinations</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="a78b3ba195" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="m365,windows" open>
+  <summary>
+    <span class="uc-title">[LLM] M365 URL click to GitHub repo hosting NFCShare banking-themed APK</span>
+    <span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="a78b3ba195" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts user clicks on URLs pointing to GitHub raw/release paths whose filename matches the NFCShare distribution APK names (Intesa Carte, Sella Carte, Nexi Carte, Fideuram, Mooney, CaixaBank, CaixaReactivaTarjeta). Catches the phishing→GitHub redirect step described by D3Lab.
+
+Rationale: Uses the verbatim 9 APK filenames from the article plus the GitHub hosting infrastructure described by D3Lab. The cross-join of (GitHub host) + (bank-themed APK filename) is an extremely tight predicate with very low FP rate for corporate web egress.
+
+Cross-checked against:
+  • https://d3lab.net
+  • https://attack.mitre.org/techniques/T1566/002/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Link">T1566.002</span> <span class="ind tech" title="User Execution: Malicious Link">T1204.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-04-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-04-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-04-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-04-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-04-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-04-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-04-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let SuspectFilenames = pack_array(&quot;Intesa Carte.apk&quot;,&quot;Sella Carte.apk&quot;,&quot;Banca Sella Carte.apk&quot;,&quot;Nexi Carte.apk&quot;,&quot;Fideuram Carte.apk&quot;,&quot;Mooney Carte.apk&quot;,&quot;CaixaBank.apk&quot;,&quot;CaixaBankNfc.apk&quot;,&quot;CaixaReactivaTarjeta.apk&quot;);
+let GithubHosts = dynamic([&quot;github.com&quot;,&quot;raw.githubusercontent.com&quot;,&quot;objects.githubusercontent.com&quot;,&quot;github.io&quot;,&quot;codeload.github.com&quot;]);
+UrlClickEvents
+| where Timestamp &gt; ago(30d)
+| where Url has_any (GithubHosts)
+| where Url endswith &quot;.apk&quot; or Url has_any (SuspectFilenames)
+| where ActionType in (&quot;ClickAllowed&quot;,&quot;ClickedThrough&quot;,&quot;UrlScanInProgress&quot;)
+| project Timestamp, AccountUpn, Url, NetworkMessageId, IPAddress, ActionType, ThreatTypes
+| join kind=leftouter (EmailUrlInfo | where Timestamp &gt; ago(30d) | project NetworkMessageId, UrlDomain, EmailUrl=Url) on NetworkMessageId
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let SuspectFilenames = dynamic([&quot;intesa carte.apk&quot;,&quot;sella carte.apk&quot;,&quot;banca sella carte.apk&quot;,&quot;nexi carte.apk&quot;,&quot;fideuram carte.apk&quot;,&quot;mooney carte.apk&quot;,&quot;caixabank.apk&quot;,&quot;caixabanknfc.apk&quot;,&quot;caixareactivatarjeta.apk&quot;]);
+let GithubHosts = dynamic([&quot;github.com&quot;,&quot;raw.githubusercontent.com&quot;,&quot;objects.githubusercontent.com&quot;,&quot;github.io&quot;,&quot;codeload.github.com&quot;]);
+ImWebSession
+| where TimeGenerated &gt; ago(30d)
+| extend UrlLower = tolower(Url)
+| where UrlLower has_any (GithubHosts)
+| where UrlLower endswith &quot;.apk&quot; or UrlLower has_any (SuspectFilenames)
+| project TimeGenerated, SrcUsername, SrcIpAddr, DstHostname, Url, HttpMethod, HttpStatusCode, EventVendor
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: NFCShare banking APK download from GitHub
+id: 5b6e1cc0-8d4c-4f97-9b1b-2c4f9e2a1d12
+description: Detects HTTP requests to GitHub-hosted APKs whose filename matches the NFCShare distribution set (Italian/Spanish bank impersonations) reported by D3Lab.
+references:
+  - https://www.bleepingcomputer.com/news/security/nfcshare-android-malware-spreads-via-fake-banking-app-updates-on-github/
+author: SOC Detection Engineering
+date: 2026/06/09
+tags:
+  - attack.t1566.002
+  - attack.t1204.001
+logsource:
+  category: proxy
+detection:
+  selection_host:
+    cs-host|contains:
+      - &#x27;github.com&#x27;
+      - &#x27;githubusercontent.com&#x27;
+      - &#x27;github.io&#x27;
+  selection_apk:
+    cs-uri|contains:
+      - &#x27;Intesa Carte.apk&#x27;
+      - &#x27;Sella Carte.apk&#x27;
+      - &#x27;Banca Sella Carte.apk&#x27;
+      - &#x27;Nexi Carte.apk&#x27;
+      - &#x27;Fideuram Carte.apk&#x27;
+      - &#x27;Mooney Carte.apk&#x27;
+      - &#x27;CaixaBank.apk&#x27;
+      - &#x27;CaixaBankNfc.apk&#x27;
+      - &#x27;CaixaReactivaTarjeta.apk&#x27;
+  condition: selection_host and selection_apk
+level: high</code></pre></div>
+    <div class="tab-content" id="art-04-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.defender OR source:proxy OR source:zscaler OR source:cloudflare) (@url:(*github.com* OR *githubusercontent.com* OR *github.io*)) AND (@url:(*Intesa*Carte*.apk* OR *Sella*Carte*.apk* OR *Nexi*Carte*.apk* OR *Fideuram*Carte*.apk* OR *Mooney*Carte*.apk* OR *CaixaBank*.apk* OR *CaixaBankNfc*.apk* OR *CaixaReactivaTarjeta*.apk*))</code></pre></div>
+    <div class="tab-content" id="art-04-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest (DomainName=/github\.com$/i OR DomainName=/githubusercontent\.com$/i)
+| join({#event_simpleName=ProcessRollup2 (ImageFileName=/(chrome|msedge|firefox|brave|opera)\.exe$/i)}, field=[aid, ContextProcessId=TargetProcessId])
+| groupBy([aid, ComputerName, DomainName, ImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-04-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url IN(&quot;*github.com*&quot;,&quot;*githubusercontent.com*&quot;,&quot;*github.io*&quot;) (Web.url=&quot;*Intesa*Carte*.apk&quot; OR Web.url=&quot;*Sella*Carte*.apk&quot; OR Web.url=&quot;*Nexi*Carte*.apk&quot; OR Web.url=&quot;*Fideuram*Carte*.apk&quot; OR Web.url=&quot;*Mooney*Carte*.apk&quot; OR Web.url=&quot;*CaixaBank*.apk&quot; OR Web.url=&quot;*CaixaBankNfc*.apk&quot; OR Web.url=&quot;*CaixaReactivaTarjeta*.apk&quot;) by Web.src Web.user Web.url Web.http_user_agent | `drop_dm_object_name(Web)`</code></pre><pre class="spl-mode-body" id="art-04-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url IN(&quot;*github.com*&quot;,&quot;*githubusercontent.com*&quot;,&quot;*github.io*&quot;) (Web.url=&quot;*Intesa*Carte*.apk&quot; OR Web.url=&quot;*Sella*Carte*.apk&quot; OR Web.url=&quot;*Nexi*Carte*.apk&quot; OR Web.url=&quot;*Fideuram*Carte*.apk&quot; OR Web.url=&quot;*Mooney*Carte*.apk&quot; OR Web.url=&quot;*CaixaBank*.apk&quot; OR Web.url=&quot;*CaixaBankNfc*.apk&quot; OR Web.url=&quot;*CaixaReactivaTarjeta*.apk&quot;) by Web.src Web.user Web.url Web.http_user_agent | `drop_dm_object_name(Web)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="8053e03b1a" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">[LLM] GitHub-sourced APK download with Italian/Spanish bank impersonation filename</span>
+    <span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="8053e03b1a" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts file-create events on managed endpoints (BYOD-sync folders, mobile-management staging, USB transfer hosts) where an APK matching the NFCShare distribution filename list lands and the file-origin URL is GitHub. Catches the second step (download) when the click event itself wasn&#x27;t captured.
+
+Rationale: The 9 APK filenames are verbatim IOCs from D3Lab&#x27;s tracking of the GitHub repo (created 2026-04-10, 56 APKs total). Pinning on filename + browser/email parent process is a high-fidelity drop signal even when the proxy log misses the URL.
+
+Cross-checked against:
+  • https://d3lab.net
+  • https://attack.mitre.org/techniques/T1105/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-04-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-04-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-04-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-04-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-04-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-04-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-04-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let SuspectFilenames = pack_array(&quot;Intesa Carte.apk&quot;,&quot;Sella Carte.apk&quot;,&quot;Banca Sella Carte.apk&quot;,&quot;Nexi Carte.apk&quot;,&quot;Fideuram Carte.apk&quot;,&quot;Mooney Carte.apk&quot;,&quot;CaixaBank.apk&quot;,&quot;CaixaBankNfc.apk&quot;,&quot;CaixaReactivaTarjeta.apk&quot;);
+let GithubHosts = dynamic([&quot;github.com&quot;,&quot;raw.githubusercontent.com&quot;,&quot;objects.githubusercontent.com&quot;,&quot;github.io&quot;,&quot;codeload.github.com&quot;]);
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileRenamed&quot;,&quot;FileModified&quot;)
+| where FileName endswith &quot;.apk&quot;
+| where FileName has_any (SuspectFilenames) or FileOriginUrl has_any (GithubHosts) and FileName endswith &quot;.apk&quot;
+| where InitiatingProcessFileName in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;,&quot;outlook.exe&quot;,&quot;teams.exe&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountUpn, FileName, FolderPath, FileOriginUrl, InitiatingProcessFileName, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let SuspectFilenames = dynamic([&quot;intesa carte.apk&quot;,&quot;sella carte.apk&quot;,&quot;banca sella carte.apk&quot;,&quot;nexi carte.apk&quot;,&quot;fideuram carte.apk&quot;,&quot;mooney carte.apk&quot;,&quot;caixabank.apk&quot;,&quot;caixabanknfc.apk&quot;,&quot;caixareactivatarjeta.apk&quot;]);
+ImFileEvent
+| where TimeGenerated &gt; ago(30d)
+| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| extend FnLower = tolower(TargetFileName)
+| where FnLower endswith &quot;.apk&quot;
+| where FnLower has_any (SuspectFilenames)
+| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, TargetFileName, ActingProcessName, TargetFileSHA256
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: NFCShare banking APK dropped to disk
+id: 8a6b3a5e-4b41-4a90-9c4f-1be4f6c5e312
+description: Detects an APK file whose name matches the NFCShare Italian/Spanish bank impersonation set being written to disk by a browser or messaging client.
+references:
+  - https://www.bleepingcomputer.com/news/security/nfcshare-android-malware-spreads-via-fake-banking-app-updates-on-github/
+author: SOC Detection Engineering
+date: 2026/06/09
+tags:
+  - attack.t1105
+  - attack.t1204.002
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection:
+    TargetFilename|endswith:
+      - &#x27;Intesa Carte.apk&#x27;
+      - &#x27;Sella Carte.apk&#x27;
+      - &#x27;Banca Sella Carte.apk&#x27;
+      - &#x27;Nexi Carte.apk&#x27;
+      - &#x27;Fideuram Carte.apk&#x27;
+      - &#x27;Mooney Carte.apk&#x27;
+      - &#x27;CaixaBank.apk&#x27;
+      - &#x27;CaixaBankNfc.apk&#x27;
+      - &#x27;CaixaReactivaTarjeta.apk&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-04-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@TargetFilename:(*Intesa*Carte*.apk* OR *Sella*Carte*.apk* OR *Nexi*Carte*.apk* OR *Fideuram*Carte*.apk* OR *Mooney*Carte*.apk* OR *CaixaBank*.apk* OR *CaixaBankNfc*.apk* OR *CaixaReactivaTarjeta*.apk*))</code></pre></div>
+    <div class="tab-content" id="art-04-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten (TargetFileName=/Intesa[\s_]?Carte\.apk$/i OR TargetFileName=/Sella[\s_]?Carte\.apk$/i OR TargetFileName=/Banca[\s_]?Sella[\s_]?Carte\.apk$/i OR TargetFileName=/Nexi[\s_]?Carte\.apk$/i OR TargetFileName=/Fideuram[\s_]?Carte\.apk$/i OR TargetFileName=/Mooney[\s_]?Carte\.apk$/i OR TargetFileName=/CaixaBank\.apk$/i OR TargetFileName=/CaixaBankNfc\.apk$/i OR TargetFileName=/CaixaReactivaTarjeta\.apk$/i)
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-04-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name IN(&quot;Intesa Carte.apk&quot;,&quot;Sella Carte.apk&quot;,&quot;Banca Sella Carte.apk&quot;,&quot;Nexi Carte.apk&quot;,&quot;Fideuram Carte.apk&quot;,&quot;Mooney Carte.apk&quot;,&quot;CaixaBank.apk&quot;,&quot;CaixaBankNfc.apk&quot;,&quot;CaixaReactivaTarjeta.apk&quot;) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-04-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name IN(&quot;Intesa Carte.apk&quot;,&quot;Sella Carte.apk&quot;,&quot;Banca Sella Carte.apk&quot;,&quot;Nexi Carte.apk&quot;,&quot;Fideuram Carte.apk&quot;,&quot;Mooney Carte.apk&quot;,&quot;CaixaBank.apk&quot;,&quot;CaixaBankNfc.apk&quot;,&quot;CaixaReactivaTarjeta.apk&quot;) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="937833f457" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">[LLM] Android EDR: NFCShare WebSocket C2 from sideloaded banking-impersonating package</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="937833f457" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">On Android-MDM / Mobile-Threat-Defense telemetry shipped to SIEM, hunts apps installed outside Play Store whose package label matches the NFCShare cluster (Carte / Carta / Tarjeta / Nfc) AND that subsequently open outbound WebSocket connections (port 80/443 ws/wss) to non-CDN hosts. Targets the exfil step described: &#x27;exfiltrates card PAN/expiry/PIN over a WebSocket channel&#x27;.
+
+Rationale: Combines the article&#x27;s specific bank-impersonation naming convention (the 9 listed APKs all use Carte/Carta/Tarjeta tokens) with the explicit WebSocket exfil protocol called out in the body. Constrains to Android telemetry so the corporate-Windows noise floor doesn&#x27;t fire.
+
+Cross-checked against:
+  • https://d3lab.net
+  • https://attack.mitre.org/techniques/T1437/001/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1437.001</span> <span class="ind tech" title="Encrypted Channel">T1521</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-04-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-04-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-04-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-04-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-04-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-04-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(14d)
+| join kind=inner (DeviceInfo | where OSPlatform == &quot;Android&quot; | distinct DeviceId, DeviceName) on DeviceId
+| where InitiatingProcessFileName has_any (&quot;Carte&quot;,&quot;Carta&quot;,&quot;Tarjeta&quot;,&quot;CaixaBank&quot;,&quot;Reactiva&quot;,&quot;Nexi&quot;,&quot;Sella&quot;,&quot;Intesa&quot;,&quot;Fideuram&quot;,&quot;Mooney&quot;)
+| where RemoteIPType == &quot;Public&quot;
+| where RemotePort in (80, 443, 8080, 8443)
+| where AdditionalFields has_any (&quot;websocket&quot;,&quot;\&quot;upgrade\&quot;:\&quot;websocket\&quot;&quot;,&quot;ws://&quot;,&quot;wss://&quot;)
+| summarize ConnCount = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Hosts = make_set(RemoteUrl, 20) by DeviceName, InitiatingProcessFileName, RemoteIP
+| where ConnCount &gt;= 3
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(14d)
+| where DeviceProduct has_any (&quot;Intune&quot;,&quot;Lookout&quot;,&quot;Zimperium&quot;,&quot;Pradeo&quot;,&quot;Defender for Endpoint&quot;)
+| where ApplicationProtocol in~ (&quot;websocket&quot;,&quot;wss&quot;,&quot;ws&quot;)
+| where SourceUserName has_any (&quot;Carte&quot;,&quot;Carta&quot;,&quot;Tarjeta&quot;,&quot;CaixaBank&quot;,&quot;Reactiva&quot;,&quot;Nexi&quot;,&quot;Sella&quot;,&quot;Intesa&quot;,&quot;Fideuram&quot;,&quot;Mooney&quot;)
+   or DeviceCustomString1 has_any (&quot;Carte&quot;,&quot;Carta&quot;,&quot;Tarjeta&quot;,&quot;CaixaBank&quot;)
+| project TimeGenerated, SourceHostName, SourceUserName, DestinationHostName, DestinationIP, DestinationPort, ApplicationProtocol, DeviceCustomString1
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:(mobile.defender OR intune OR lookout OR zimperium) (@app.name:(*Carte* OR *Carta* OR *Tarjeta* OR *CaixaBank* OR *Reactiva* OR *Nexi* OR *Sella* OR *Intesa* OR *Fideuram* OR *Mooney*)) AND (@network.protocol:(websocket OR ws OR wss) OR @http.upgrade:websocket)</code></pre></div>
+    <div class="tab-content" id="art-04-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 event_platform=Android
+| ContextImageFileName=/(Carte|Carta|Tarjeta|CaixaBank|Reactiva|Nexi|Sella|Intesa|Fideuram|Mooney)/i
+| RemotePort=80 OR RemotePort=443 OR RemotePort=8080 OR RemotePort=8443
+| join({#event_simpleName=ProcessRollup2 event_platform=Android CommandLine=/websocket|wss?:\/\//i}, field=[aid, ContextProcessId=TargetProcessId])
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4], function=count())
+| _count &gt;= 3</code></pre></div>
+    <div class="tab-content" id="art-04-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN(&quot;*Carte*&quot;,&quot;*Carta*&quot;,&quot;*Tarjeta*&quot;,&quot;*CaixaBank*&quot;,&quot;*CaixaBankNfc*&quot;,&quot;*Reactiva*&quot;) (All_Traffic.dest_port=443 OR All_Traffic.dest_port=80) All_Traffic.protocol_stack=&quot;websocket&quot; by All_Traffic.src All_Traffic.app All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)`</code></pre><pre class="spl-mode-body" id="art-04-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN(&quot;*Carte*&quot;,&quot;*Carta*&quot;,&quot;*Tarjeta*&quot;,&quot;*CaixaBank*&quot;,&quot;*CaixaBankNfc*&quot;,&quot;*Reactiva*&quot;) (All_Traffic.dest_port=443 OR All_Traffic.dest_port=80) All_Traffic.protocol_stack=&quot;websocket&quot; by All_Traffic.src All_Traffic.app All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
   <summary>
     <span class="uc-title">Beaconing — periodic outbound to small set of destinations</span>
     <span class="uc-phase">Command &amp; Control</span>
@@ -2367,11 +2556,11 @@ DeviceFileEvents
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Web Protocols">T1071.001</span> <span class="ind tech" title="DNS">T1071.004</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-04-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-04-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-04-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-04-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-04-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-04-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-04-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-04-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(1d)
 | where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
 | project DeviceName, RemoteIP, RemotePort, Timestamp
@@ -2384,7 +2573,7 @@ DeviceFileEvents
     by DeviceName, RemoteIP, RemotePort
 | where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
 | order by conn_count desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+    <div class="tab-content" id="art-04-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(2h)
 | where DvcAction != &quot;Block&quot;
 | where ipv4_is_private(DstIpAddr) == false
@@ -2394,7 +2583,7 @@ DeviceFileEvents
 | where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
 | order by ConnCount desc
 </code></pre></div>
-    <div class="tab-content" id="art-04-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    <div class="tab-content" id="art-04-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -2403,7 +2592,7 @@ DeviceFileEvents
 | eval delta = _time - prev_time
 | stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
 | where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre><pre class="spl-mode-body" id="art-04-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
+| sort - count</code></pre><pre class="spl-mode-body" id="art-04-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -2413,100 +2602,6 @@ DeviceFileEvents
 | stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
 | where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
 | sort - count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Network connections to article IPs / domains</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-04-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-04-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-04-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-04-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-04-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteIP in (&quot;38.47.213.197&quot;) or RemoteUrl has_any (&quot;portale-deut.com&quot;)
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;38.47.213.197&quot;]);
-let BadDomains = dynamic([&quot;portale-deut.com&quot;]);
-ImNetworkSession
-| where TimeGenerated &gt; ago(7d)
-| where DstIpAddr in (BadIPs)
-   or Url has_any (BadDomains)
-| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
-status: experimental
-description: |
-    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
-    article-specific destinations. For dynamic IOC management, use a
-    watchlist or external feed.
-references:
-    - https://attack.mitre.org/tactics/TA0011/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.command-and-control
-logsource:
-    category: network_connection
-    product: windows
-detection:
-    selection_ip:
-        DestinationIp:
-            - &#x27;__IP_PLACEHOLDER_1__&#x27;
-            - &#x27;__IP_PLACEHOLDER_2__&#x27;
-    selection_domain:
-        DestinationHostname:
-            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
-            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
-    condition: selection_ip or selection_domain
-falsepositives:
-    - None on a true-positive IOC match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;38.47.213.197&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN (&quot;portale-deut.com&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;portale-deut.com&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-04-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;38.47.213.197&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats summariesonly=false count from datamodel=Web
-        where Web.dest IN (&quot;portale-deut.com&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;portale-deut.com&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="53a9c31d59" data-platforms="def,sent,spl" data-targets="azure,m365,windows">
@@ -2532,11 +2627,11 @@ for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Link">T1566.002</span> <span class="ind tech" title="User Execution: Malicious Link">T1204.001</span> <span class="ind tech" title="PowerShell">T1059.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-04-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-04-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-04-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-04-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-04-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-04-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-04-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+    <div class="tab-content active" id="art-04-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
 // Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
 // never spawn a non-browser child process, so the join eliminates the
 // 99% of noise that makes a raw click query unactionable.
@@ -2576,7 +2671,7 @@ DeviceProcessEvents
           Subject, Url, UrlDomain, ActionType,
           FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+    <div class="tab-content" id="art-04-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
 // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
 // non-browser child process. Lower fidelity than the Defender version.
 let LookbackDays = 7d;
@@ -2601,7 +2696,7 @@ SecurityEvent
           NewProcessName, CommandLine, Sender, Subject
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-04-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc2-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+    <div class="tab-content" id="art-04-uc4-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats `summariesonly` earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -2633,7 +2728,7 @@ SecurityEvent
 | where delta_sec &gt;= 0 AND delta_sec &lt;= 60
 | table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
         clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-04-uc2-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-04-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats summariesonly=false earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -2682,11 +2777,11 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Attachment">T1566.001</span> <span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailAttachmentInfo</span> <span class="ind">DeviceProcessEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-04-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-04-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-04-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-04-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-04-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-04-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-04-uc3-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+    <div class="tab-content active" id="art-04-uc5-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp &gt; ago(LookbackDays)
     | where AccountName !endswith &quot;$&quot;
@@ -2700,7 +2795,7 @@ DeviceProcessEvents
 | join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
           InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256</code></pre></div>
-    <div class="tab-content" id="art-04-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
+    <div class="tab-content" id="art-04-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
 // OfficeActivity Send/Receive activity + correlate to host process spawn.
 let LookbackDays = 7d;
 let MailWithAttach = OfficeActivity
@@ -2723,7 +2818,7 @@ SecurityEvent
           ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-04-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
+    <div class="tab-content" id="art-04-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -2734,7 +2829,7 @@ SecurityEvent
         where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
           AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
         by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-04-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
+     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-04-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -2762,18 +2857,18 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Visual Basic">T1059.005</span> <span class="ind tech" title="System Binary Proxy Execution">T1218</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-04-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-04-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-04-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-04-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-04-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-04-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-04-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-04-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-04-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-04-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
 | where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-04-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-04-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -2796,7 +2891,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-04-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
+    <div class="tab-content" id="art-04-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
 status: experimental
 description: |
@@ -2840,13 +2935,13 @@ falsepositives:
     - Legitimate automation macros in trusted internal documents
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-04-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-04-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-04-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-04-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
@@ -2854,124 +2949,17 @@ level: high
 | `drop_dm_object_name(Processes)`
 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
   </div>
-</details>
-<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-04-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-04-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-04-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-04-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-04-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
-// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
-// (Initiating only) so column-projection has to differ per side.
-union
-    ( DeviceFileEvents
-        | where Timestamp &gt; ago(7d)
-        | where InitiatingProcessAccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;afbe6751d339fbc5b7bddd29429a11740e82fef935a61acaf2fe5487444dbed4&quot;) or SHA1 in~ (&quot;afbe6751d339fbc5b7bddd29429a11740e82fef935a61acaf2fe5487444dbed4&quot;) or MD5 in~ (&quot;afbe6751d339fbc5b7bddd29429a11740e82fef935a61acaf2fe5487444dbed4&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
-    ( DeviceProcessEvents
-        | where Timestamp &gt; ago(7d)
-        | where AccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;afbe6751d339fbc5b7bddd29429a11740e82fef935a61acaf2fe5487444dbed4&quot;) or SHA1 in~ (&quot;afbe6751d339fbc5b7bddd29429a11740e82fef935a61acaf2fe5487444dbed4&quot;) or MD5 in~ (&quot;afbe6751d339fbc5b7bddd29429a11740e82fef935a61acaf2fe5487444dbed4&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
-| order by Timestamp desc
-</code></pre></div>
-    <div class="tab-content" id="art-04-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
-// Defender version so the engine can push hash predicates per-side.
-let BadHashes = dynamic([&quot;afbe6751d339fbc5b7bddd29429a11740e82fef935a61acaf2fe5487444dbed4&quot;]);
-union
-    ( ImFileEvent
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where TargetFileSHA256 in~ (BadHashes)
-           or TargetFileSHA1 in~ (BadHashes)
-           or TargetFileMD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType,
-                  TargetFileName, TargetFilePath, TargetFileSHA256,
-                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
-    ( ImProcessCreate
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
-                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
-                  TargetFileSHA256 = SHA256,
-                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-04-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
-status: experimental
-description: |
-    Replace `__HASH_LIST__` placeholder with article-specific SHA256
-    values. Use a watchlist or external indicator file for management
-    at scale.
-references:
-    - https://attack.mitre.org/techniques/T1027/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1027
-    - attack.defense-evasion
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection:
-        Hashes|contains:
-            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
-    condition: selection
-falsepositives:
-    - None on a true-positive hash match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-04-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;afbe6751d339fbc5b7bddd29429a11740e82fef935a61acaf2fe5487444dbed4&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;afbe6751d339fbc5b7bddd29429a11740e82fef935a61acaf2fe5487444dbed4&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-04-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;afbe6751d339fbc5b7bddd29429a11740e82fef935a61acaf2fe5487444dbed4&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;afbe6751d339fbc5b7bddd29429a11740e82fef935a61acaf2fe5487444dbed4&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
-  </div>
 </details></div>
 </article>
 <article class="card" id="art-05" data-art-slug="2026-06-08-sofi-confirms-third-party-data-breach-at-hong-kong-subsidiar"
-  data-phases="actions,c2,delivery,exploit,install" data-sev="high"
+  data-phases="c2,delivery,exploit,install" data-sev="high"
   data-techs="T1190,T1566"
   data-sources="BleepingComputer"
   data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="endpoint,network,web"
+  data-splunk-cats="endpoint,web"
   data-targets="azure,m365,windows"
-  data-uc-count="4" data-llm-uc-count="0"
-  data-search="SoFi confirms third-party data breach at Hong Kong subsidiary SoFi Hong Kong is warning that it suffered a data breach after hackers gained access to a database at a third-party vendor containing customer information. [...]  T1190 T1566 Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Network connections to article IPs / domains">
+  data-uc-count="3" data-llm-uc-count="0"
+  data-search="SoFi confirms third-party data breach at Hong Kong subsidiary SoFi Hong Kong is warning that it suffered a data breach after hackers gained access to a database at a third-party vendor containing customer information. [...]  T1190 T1566 Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process">
   <div class="sev-ribbon high">High</div>
   <button class="share-btn card-share" data-share-art="2026-06-08-sofi-confirms-third-party-data-breach-at-hong-kong-subsidiar" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -2980,13 +2968,12 @@ level: critical
   <div class="source-badges"><span class="source-badge bc">BleepingComputer</span></div>
   <div class="pubmeta">
     <span>2026-06-08</span>
-    <span>4 use cases</span>
+    <span>3 use cases</span>
     <span>2 techniques</span>
-    <span>3 kill-chain phases detected</span>
+    <span>2 kill-chain phases detected</span>
   </div>
   <p class="summary">SoFi Hong Kong is warning that it suffered a data breach after hackers gained access to a database at a third-party vendor containing customer information. [...]</p>
   <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Phishing">T1566</span></div>
-<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">sofi.hk</span></div>
   <div class="action-row">
     <button class="btn btn-kc" data-target="art-05-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
     <button class="btn btn-hunt" data-hunt-art="art-05"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
@@ -3018,23 +3005,23 @@ level: critical
   <div class="name">Installation</div>
   <div class="marker">Likely</div>
 </div>
-<div class="kc-cell hit">
+<div class="kc-cell inferred">
   <div class="num">Phase 6</div>
   <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
+  <div class="marker">Likely</div>
 </div>
-<div class="kc-cell inferred">
+<div class="kc-cell ">
   <div class="num">Phase 7</div>
   <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
+  <div class="marker">—</div>
 </div></div>
   <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Office app spawning script/LOLBin child process</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Network connections to article IPs / domains</em></div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
   <div class="usecases"><details class="uc" data-uc-slug="53a9c31d59" data-platforms="def,sent,spl" data-targets="azure,m365,windows" open>
   <summary>
@@ -3380,100 +3367,6 @@ level: high
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Network connections to article IPs / domains</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-05-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-05-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-05-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-05-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-05-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteIP in (&quot;&quot;) or RemoteUrl has_any (&quot;sofi.hk&quot;)
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-05-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;&quot;]);
-let BadDomains = dynamic([&quot;sofi.hk&quot;]);
-ImNetworkSession
-| where TimeGenerated &gt; ago(7d)
-| where DstIpAddr in (BadIPs)
-   or Url has_any (BadDomains)
-| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-05-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
-status: experimental
-description: |
-    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
-    article-specific destinations. For dynamic IOC management, use a
-    watchlist or external feed.
-references:
-    - https://attack.mitre.org/tactics/TA0011/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.command-and-control
-logsource:
-    category: network_connection
-    product: windows
-detection:
-    selection_ip:
-        DestinationIp:
-            - &#x27;__IP_PLACEHOLDER_1__&#x27;
-            - &#x27;__IP_PLACEHOLDER_2__&#x27;
-    selection_domain:
-        DestinationHostname:
-            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
-            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
-    condition: selection_ip or selection_domain
-falsepositives:
-    - None on a true-positive IOC match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-05-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-05-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-05-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-05-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN (&quot;sofi.hk&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;sofi.hk&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-05-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats summariesonly=false count from datamodel=Web
-        where Web.dest IN (&quot;sofi.hk&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;sofi.hk&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
   </div>
 </details></div>
 </article>
