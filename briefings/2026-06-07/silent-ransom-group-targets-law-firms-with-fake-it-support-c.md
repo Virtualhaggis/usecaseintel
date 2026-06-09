@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Access to law-firm-impersonating IT helpdesk phishing domain
 
-`UC_36_10` · phase: **delivery** · confidence: **High**
+`UC_38_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceNetworkEvents
 
 ### [LLM] Privnote.com access on endpoint hosting an active remote-support session
 
-`UC_36_11` · phase: **delivery** · confidence: **High**
+`UC_38_11` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ PrivnoteHits
 
 ### [LLM] Unsanctioned RMM tool install or first execution (AnyDesk/Zoho/Bomgar/SuperOps)
 
-`UC_36_12` · phase: **install** · confidence: **High**
+`UC_38_12` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ DeviceProcessEvents
 
 ### [LLM] Rclone or WinSCP exfiltration to non-corporate external destination
 
-`UC_36_13` · phase: **exfiltration** · confidence: **High**
+`UC_38_13` · phase: **exfiltration** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -166,7 +166,7 @@ RcloneProcs
 
 ### [LLM] Outbound connection to known Silent Ransom Group C2 / leak-site infrastructure
 
-`UC_36_14` · phase: **c2** · confidence: **High**
+`UC_38_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

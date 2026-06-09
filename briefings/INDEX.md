@@ -10,6 +10,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-09
 - [21 0 day vulnerabilities in ffmpeg enables remote code execu](./2026-06-09/21-0-day-vulnerabilities-in-ffmpeg-enables-remote-code-execu.md)
+- [google patches new chrome zero day flaw exploited in the wil](./2026-06-09/google-patches-new-chrome-zero-day-flaw-exploited-in-the-wil.md)
+- [litellm flaw cve 2026 42271 exploited in the wild chains to ](./2026-06-09/litellm-flaw-cve-2026-42271-exploited-in-the-wild-chains-to-.md)
 - [new shai hulud attack compromises 23 pypi packages to target](./2026-06-09/new-shai-hulud-attack-compromises-23-pypi-packages-to-target.md)
 
 ## 2026-06-08
@@ -48,7 +50,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ai agent uncovers 21 zero days in ffmpeg chrome patches reco](./2026-06-06/ai-agent-uncovers-21-zero-days-in-ffmpeg-chrome-patches-reco.md)
 - [cisa adds actively exploited solarwinds serv u dos flaw to k](./2026-06-06/cisa-adds-actively-exploited-solarwinds-serv-u-dos-flaw-to-k.md)
 - [cisco catalyst sd wan manager cve 2026 20245 flaw actively e](./2026-06-06/cisco-catalyst-sd-wan-manager-cve-2026-20245-flaw-actively-e.md)
-- [critical everest forms pro flaw exploited to take over wordp](./2026-06-06/critical-everest-forms-pro-flaw-exploited-to-take-over-wordp.md)
 - [free apps are quietly turning smart tvs into web scraping pr](./2026-06-06/free-apps-are-quietly-turning-smart-tvs-into-web-scraping-pr.md)
 - [miasma worm hits 73 microsoft github repositories in major s](./2026-06-06/miasma-worm-hits-73-microsoft-github-repositories-in-major-s.md)
 - [miasma worm hits microsoft again azure functions action and ](./2026-06-06/miasma-worm-hits-microsoft-again-azure-functions-action-and-.md)
@@ -121,7 +122,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [containers on fire from container escapes to supply chain at](./2026-06-01/containers-on-fire-from-container-escapes-to-supply-chain-at.md)
 - [ghsa critical cve 2026 47413 praisonai platform any workspac](./2026-06-01/ghsa-critical-cve-2026-47413-praisonai-platform-any-workspac.md)
 - [ghsa critical cve 2026 47429 when vitest ui server is listen](./2026-06-01/ghsa-critical-cve-2026-47429-when-vitest-ui-server-is-listen.md)
-- [miasma supply chain attack compromises red hat npm packages ](./2026-06-01/miasma-supply-chain-attack-compromises-red-hat-npm-packages-.md)
 - [miasma supply chain attack malicious code found in redhat cl](./2026-06-01/miasma-supply-chain-attack-malicious-code-found-in-redhat-cl.md)
 
 ## 2026-05-30
