@@ -1,0 +1,59 @@
+{
+  "name": "Scattered Spider",
+  "ucs": [
+    {
+      "title": "[LLM] Scattered Spider (Octo Tempest / UNC3944) multi-RMM tooling cluster install",
+      "description": "Hunts for the actor's signature pattern of layering 2+ legitimate Remote Monitoring & Management tools (AnyDesk, ScreenConnect, Splashtop, Pulseway, Teleport-style tunnels like ngrok/chisel/rsocx) on the same host within one hour of help-desk-vishing or AiTM-based initial access. Scattered Spider is documented by Microsoft (Octo Tempest), Mandiant (UNC3944) and CrowdStrike (Scattered Spider) as the e-crime crew that prefers signed commercial RMMs over custom implants because they survive AV/EDR allowlists.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1219",
+        "T1219.002",
+        "T1133",
+        "T1071.001",
+        "T1090"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as first_seen max(_time) as last_seen dc(Processes.process_name) as distinct_rmms values(Processes.process_name) as rmm_binaries values(Processes.process) as cmdlines values(Processes.parent_process_name) as parents from datamodel=Endpoint.Processes where Processes.process_name IN (\"anydesk.exe\",\"screenconnect.clientservice.exe\",\"screenconnect.windowsclient.exe\",\"connectwisecontrol.client.exe\",\"splashtop.exe\",\"splashtopstreamer.exe\",\"teamviewer.exe\",\"teamviewer_service.exe\",\"pulseway.exe\",\"rustdesk.exe\",\"ateraagent.exe\",\"tacticalagent.exe\",\"tacticalrmm.exe\",\"ngrok.exe\",\"chisel.exe\",\"rsocx.exe\",\"fleetdeck.exe\",\"level.exe\",\"msp360.exe\",\"syncro.exe\",\"meshagent.exe\") by host Processes.user _time span=1h | `drop_dm_object_name(Processes)` | where distinct_rmms >= 2 AND NOT match(user,\"\\$$\") | sort - first_seen",
+      "kql": "let RMMNames = dynamic([\"anydesk.exe\",\"screenconnect.clientservice.exe\",\"screenconnect.windowsclient.exe\",\"connectwisecontrol.client.exe\",\"splashtop.exe\",\"splashtopstreamer.exe\",\"teamviewer.exe\",\"teamviewer_service.exe\",\"pulseway.exe\",\"rustdesk.exe\",\"ateraagent.exe\",\"tacticalagent.exe\",\"tacticalrmm.exe\",\"ngrok.exe\",\"chisel.exe\",\"rsocx.exe\",\"fleetdeck.exe\",\"level.exe\",\"msp360.exe\",\"syncro.exe\",\"meshagent.exe\"]);\nlet LookbackHours = 24h;\nlet WindowMinutes = 60m;\nDeviceProcessEvents\n| where Timestamp > ago(LookbackHours)\n| where FileName in~ (RMMNames)\n| where AccountName !endswith \"$\"\n| where AccountName !in~ (\"system\",\"local service\",\"network service\")\n| summarize DistinctRMMs = dcount(FileName),\n            RMMList = make_set(FileName, 16),\n            FirstSeen = min(Timestamp),\n            LatestSeen = max(Timestamp),\n            SampleCmd = any(ProcessCommandLine),\n            SampleParent = any(InitiatingProcessFileName)\n            by DeviceName, AccountName, bin(Timestamp, WindowMinutes)\n| where DistinctRMMs >= 2     // 2+ distinct RMM agents in same hour = Octo Tempest signature\n| order by FirstSeen desc",
+      "sentinel_kql": "let RMMNames = dynamic([\"anydesk.exe\",\"screenconnect.clientservice.exe\",\"screenconnect.windowsclient.exe\",\"connectwisecontrol.client.exe\",\"splashtop.exe\",\"splashtopstreamer.exe\",\"teamviewer.exe\",\"teamviewer_service.exe\",\"pulseway.exe\",\"rustdesk.exe\",\"ateraagent.exe\",\"tacticalagent.exe\",\"tacticalrmm.exe\",\"ngrok.exe\",\"chisel.exe\",\"rsocx.exe\",\"fleetdeck.exe\",\"level.exe\",\"msp360.exe\",\"syncro.exe\",\"meshagent.exe\"]);\nlet WindowMinutes = 60m;\nSecurityEvent\n| where TimeGenerated > ago(24h)\n| where EventID == 4688\n| extend RMMBinary = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| where RMMBinary in (RMMNames)\n| where TargetUserName !endswith \"$\"\n| where TargetUserName !in~ (\"system\",\"local service\",\"network service\")\n| summarize DistinctRMMs = dcount(RMMBinary),\n            RMMList = make_set(RMMBinary, 16),\n            FirstSeen = min(TimeGenerated),\n            LatestSeen = max(TimeGenerated),\n            SampleCmd = any(CommandLine),\n            SampleParent = any(ParentProcessName)\n            by Computer, TargetUserName, bin(TimeGenerated, WindowMinutes)\n| where DistinctRMMs >= 2     // 2+ distinct RMM agents in same hour = Octo Tempest signature\n| order by FirstSeen desc",
+      "sigma_yaml": "",
+      "datadog_query": "source:windows.sysmon @EventID:1 @Image:(*\\\\anydesk.exe OR *\\\\AnyDesk.exe OR *\\\\screenconnect.clientservice.exe OR *\\\\ScreenConnect.ClientService.exe OR *\\\\screenconnect.windowsclient.exe OR *\\\\ScreenConnect.WindowsClient.exe OR *\\\\splashtopstreamer.exe OR *\\\\SplashtopStreamer.exe OR *\\\\splashtop.exe OR *\\\\Splashtop.exe OR *\\\\teamviewer.exe OR *\\\\TeamViewer.exe OR *\\\\teamviewer_service.exe OR *\\\\TeamViewer_Service.exe OR *\\\\pulseway.exe OR *\\\\Pulseway.exe OR *\\\\rustdesk.exe OR *\\\\RustDesk.exe OR *\\\\ateraagent.exe OR *\\\\AteraAgent.exe OR *\\\\tacticalagent.exe OR *\\\\TacticalAgent.exe OR *\\\\ngrok.exe OR *\\\\Ngrok.exe OR *\\\\chisel.exe OR *\\\\Chisel.exe OR *\\\\rsocx.exe OR *\\\\fleetdeck.exe OR *\\\\FleetDeck.exe OR *\\\\level.exe OR *\\\\Level.exe OR *\\\\msp360.exe OR *\\\\MSP360.exe OR *\\\\syncro.exe OR *\\\\Syncro.exe OR *\\\\meshagent.exe OR *\\\\MeshAgent.exe)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ImageFileName=/\\\\(anydesk|screenconnect\\.clientservice|screenconnect\\.windowsclient|connectwisecontrol\\.client|splashtopstreamer|splashtop|teamviewer|teamviewer_service|pulseway|rustdesk|ateraagent|tacticalagent|tacticalrmm|ngrok|chisel|rsocx|fleetdeck|level|msp360|syncro|meshagent)\\.exe$/i\n| RmmBin := regex(\"\\\\\\\\(?<exe>[^\\\\\\\\]+\\\\.exe)$\", field=ImageFileName, strict=false)\n| RmmBin := lower(\"exe\")\n| groupBy([aid, ComputerName, UserName], function=[count(as=Events), count(field=RmmBin, distinct=true, as=DistinctRMMs), collect([RmmBin], as=RMMList), min(@timestamp, as=FirstSeen), max(@timestamp, as=LastSeen)])\n| DistinctRMMs >= 2\n| sort(FirstSeen, order=desc)",
+      "cloudwatch_query": "",
+      "rationale": "Microsoft (Octo Tempest writeup, Oct-2023), Mandiant (UNC3944 reporting) and CISA's #StopRansomware:Scattered Spider advisory (AA23-320A) all explicitly enumerate this exact tool stack \u2014 AnyDesk, ScreenConnect, Splashtop, Pulseway, RustDesk, TeamViewer, Tactical RMM, Atera, Ngrok, Chisel, Rsocx, FleetDeck, Level, MSP360, Syncro \u2014 as the actor's preferred persistence/C2 layer because the binaries a"
+    },
+    {
+      "title": "[LLM] Scattered Spider Entra ID federated-domain trust backdoor (T1484.002 Golden SAML setup)",
+      "description": "Detects modification of Microsoft Entra ID domain authentication / federation trust settings \u2014 the actor converts a managed domain to federated, points it at an attacker-controlled IdP, and mints arbitrary SAML tokens for any user in the tenant. Microsoft's Octo Tempest blog specifically calls this out as the crew's hallmark persistence move after compromising a Global Admin via help-desk vishing.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1484.002",
+        "T1098.003",
+        "T1078.004",
+        "T1556"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as first_seen max(_time) as last_seen values(All_Changes.src) as src_ips values(All_Changes.user) as initiators values(All_Changes.object) as target_domains values(All_Changes.command) as operations from datamodel=Change.All_Changes where All_Changes.vendor_product=\"Office 365\" AND All_Changes.object_category=\"domain\" AND All_Changes.command IN (\"Set domain authentication.\",\"Set federation settings on domain.\",\"Add unverified domain.\",\"Set DirSyncEnabled flag.\",\"Update domain.\") by All_Changes.object All_Changes.user | `drop_dm_object_name(All_Changes)` | sort - first_seen",
+      "kql": "let LookbackDays = 7d;\nCloudAppEvents\n| where Timestamp > ago(LookbackDays)\n| where Application == \"Office 365\"\n| where ActionType in~ (\n    \"Set domain authentication.\",\n    \"Set federation settings on domain.\",\n    \"Add unverified domain.\",\n    \"Set DirSyncEnabled flag.\",\n    \"Update domain.\"\n  )\n| extend TargetDomain = tostring(parse_json(tostring(ActivityObjects))[0].Name)\n| extend RawJson = tostring(RawEventData)\n| project Timestamp, ActionType, AccountDisplayName, AccountObjectId,\n          IPAddress, CountryCode, City, UserAgent,\n          TargetDomain, ActivityObjects, RawJson\n| order by Timestamp desc",
+      "sentinel_kql": "let LookbackDays = 7d;\nAuditLogs\n| where TimeGenerated > ago(LookbackDays)\n| where OperationName in~ (\n    \"Set domain authentication\",\n    \"Set federation settings on domain\",\n    \"Add unverified domain\",\n    \"Set DirSyncEnabled flag\",\n    \"Update domain\"\n  )\n| extend Initiator = tostring(InitiatedBy.user.userPrincipalName),\n         InitiatorIp = tostring(InitiatedBy.user.ipAddress),\n         AppInitiator = tostring(InitiatedBy.app.displayName),\n         TargetDomain = tostring(TargetResources[0].displayName),\n         OldFederationValue = tostring(TargetResources[0].modifiedProperties[0].oldValue),\n         NewFederationValue = tostring(TargetResources[0].modifiedProperties[0].newValue)\n| project TimeGenerated, OperationName, Result, Initiator, InitiatorIp,\n          AppInitiator, TargetDomain, OldFederationValue, NewFederationValue,\n          AdditionalDetails\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Entra ID Federated Domain Trust Modification (Scattered Spider / Octo Tempest)\nid: 9c3a1f4a-7b2e-4d4f-9a13-octotempest0001\nstatus: experimental\ndescription: Detects modification of Microsoft Entra ID domain authentication or federation trust settings, a hallmark Scattered Spider / UNC3944 persistence technique to mint arbitrary SAML tokens via an attacker-controlled IdP (Golden SAML).\nreferences:\n  - https://www.microsoft.com/en-us/security/blog/2023/10/25/octo-tempest-crosses-boundaries-to-facilitate-extortion-encryption-and-destruction/\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-320a\nauthor: SOC Detection Engineering\ndate: 2026/06/09\ntags:\n  - attack.persistence\n  - attack.privilege_escalation\n  - attack.defense_evasion\n  - attack.t1484.002\n  - attack.t1098.003\n  - attack.t1556\nlogsource:\n  product: m365\n  service: audit\ndetection:\n  selection:\n    Workload: AzureActiveDirectory\n    Operation:\n      - 'Set domain authentication.'\n      - 'Set federation settings on domain.'\n      - 'Add unverified domain.'\n      - 'Set DirSyncEnabled flag.'\n  condition: selection\nfalsepositives:\n  - Legitimate IdP migration or federation onboarding performed by a tenant Global Administrator\n  - M&A activity that adds a partner domain\nlevel: high",
+      "datadog_query": "source:azure.activeDirectory @evt.name:(\"Set domain authentication\" OR \"Set federation settings on domain\" OR \"Add unverified domain\" OR \"Set DirSyncEnabled flag\" OR \"Update domain\")",
+      "falcon_logscale_query": "",
+      "cloudwatch_query": "",
+      "rationale": "Microsoft's Octo Tempest report (Oct-2023) explicitly names federated-domain backdoor creation as a Scattered Spider hallmark and Mandiant's UNC3944 tracking corroborates the same TTP \u2014 after social-engineering a help-desk into resetting a Global Admin's MFA, the actor either converts a managed domain to federated or adds a sub-domain pointed at an attacker IdP, allowing arbitrary token issuance t",
+      "_sigma_issues": [
+        "sigma parse error: Sigma rule identifier must be an UUID"
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1256 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1259 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -15,6 +15,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 42271 berriai litellm command injection vu](./2026-06-08/cisa-kev-cve-2026-42271-berriai-litellm-command-injection-vu.md)
 - [cisa kev cve 2026 50751 check point security gateway imprope](./2026-06-08/cisa-kev-cve-2026-50751-check-point-security-gateway-imprope.md)
 - [critical unifi os bug lets hackers gain root without authent](./2026-06-08/critical-unifi-os-bug-lets-hackers-gain-root-without-authent.md)
+- [ghsa critical cve 2026 45034 phpspreadsheet has a patch bypa](./2026-06-08/ghsa-critical-cve-2026-45034-phpspreadsheet-has-a-patch-bypa.md)
+- [ghsa critical cve 2026 47252 anyquery applescript jxa code i](./2026-06-08/ghsa-critical-cve-2026-47252-anyquery-applescript-jxa-code-i.md)
+- [ghsa critical cve 2026 47724 nebula mesh api endpoints lack ](./2026-06-08/ghsa-critical-cve-2026-47724-nebula-mesh-api-endpoints-lack-.md)
 - [gogs patches critical zero day enabling remote code executio](./2026-06-08/gogs-patches-critical-zero-day-enabling-remote-code-executio.md)
 - [malspam attack uses google doubleclick redirects to deliver ](./2026-06-08/malspam-attack-uses-google-doubleclick-redirects-to-deliver-.md)
 - [meta blocks nso group s new whatsapp phishing attack files c](./2026-06-08/meta-blocks-nso-group-s-new-whatsapp-phishing-attack-files-c.md)
@@ -22,14 +25,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new lucid stealer targets 18 browsers crypto wallets and dis](./2026-06-08/new-lucid-stealer-targets-18-browsers-crypto-wallets-and-dis.md)
 - [new pink hacking group attacking enterprise users to steal c](./2026-06-08/new-pink-hacking-group-attacking-enterprise-users-to-steal-c.md)
 - [new shai hulud attack trojanizes 19 science focused pypi pac](./2026-06-08/new-shai-hulud-attack-trojanizes-19-science-focused-pypi-pac.md)
+- [nfcshare android malware spreads via fake banking app update](./2026-06-08/nfcshare-android-malware-spreads-via-fake-banking-app-update.md)
 - [one character linux kernel flaw enables local root access ex](./2026-06-08/one-character-linux-kernel-flaw-enables-local-root-access-ex.md)
 - [over 20 000 instagram accounts stolen in meta ai support hac](./2026-06-08/over-20-000-instagram-accounts-stolen-in-meta-ai-support-hac.md)
+- [sofi confirms third party data breach at hong kong subsidiar](./2026-06-08/sofi-confirms-third-party-data-breach-at-hong-kong-subsidiar.md)
 - [unc3753 attacking us law firms using vishing and rmm tools t](./2026-06-08/unc3753-attacking-us-law-firms-using-vishing-and-rmm-tools-t.md)
 - [unc3753 used vishing and physical intrusions in u s data the](./2026-06-08/unc3753-used-vishing-and-physical-intrusions-in-u-s-data-the.md)
 - [verdantbamboo deploys bsd variant of brickstorm on linux app](./2026-06-08/verdantbamboo-deploys-bsd-variant-of-brickstorm-on-linux-app.md)
 - [weekly recap instagram account hacks android zero day github](./2026-06-08/weekly-recap-instagram-account-hacks-android-zero-day-github.md)
 - [whatsapp disrupts nso linked cyberattack targeting users wit](./2026-06-08/whatsapp-disrupts-nso-linked-cyberattack-targeting-users-wit.md)
 - [whatsapp says it disrupted new nso spyware phishing attacks](./2026-06-08/whatsapp-says-it-disrupted-new-nso-spyware-phishing-attacks.md)
+- [when hi this is it comes through microsoft teams](./2026-06-08/when-hi-this-is-it-comes-through-microsoft-teams.md)
 
 ## 2026-06-07
 - [c0xmo botnet spreads via dd wrt router flaw kills rival malw](./2026-06-07/c0xmo-botnet-spreads-via-dd-wrt-router-flaw-kills-rival-malw.md)
@@ -47,7 +53,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-05
 - [android spyware asin targets arabic users via fake news pdf ](./2026-06-05/android-spyware-asin-targets-arabic-users-via-fake-news-pdf-.md)
-- [cisa hackers now exploit solarwinds serv u flaw to crash ser](./2026-06-05/cisa-hackers-now-exploit-solarwinds-serv-u-flaw-to-crash-ser.md)
 - [cisa kev cve 2026 28318 solarwinds serv u uncontrolled resou](./2026-06-05/cisa-kev-cve-2026-28318-solarwinds-serv-u-uncontrolled-resou.md)
 - [fifa world cup 2026 scams are already live fake sites bankin](./2026-06-05/fifa-world-cup-2026-scams-are-already-live-fake-sites-bankin.md)
 - [ghsa critical cve 2026 47668 dbgate unauthenticated remote c](./2026-06-05/ghsa-critical-cve-2026-47668-dbgate-unauthenticated-remote-c.md)
@@ -60,7 +65,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new threat cluster op 512 targets microsoft iis servers with](./2026-06-05/new-threat-cluster-op-512-targets-microsoft-iis-servers-with.md)
 - [pcpjack hijacks 230 aws google cloud and azure servers for c](./2026-06-05/pcpjack-hijacks-230-aws-google-cloud-and-azure-servers-for-c.md)
 - [securing ci cd in an agentic world claude code github action](./2026-06-05/securing-ci-cd-in-an-agentic-world-claude-code-github-action.md)
-- [suspicious polyfill login prompts pop up on toshiba muji web](./2026-06-05/suspicious-polyfill-login-prompts-pop-up-on-toshiba-muji-web.md)
 
 ## 2026-06-04
 - [china linked ta4922 expands phishing attacks to u k germany ](./2026-06-04/china-linked-ta4922-expands-phishing-attacks-to-u-k-germany-.md)
@@ -176,7 +180,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cloud atlas activity in the second half of 2025 and early 20](./2026-05-22/cloud-atlas-activity-in-the-second-half-of-2025-and-early-20.md)
 - [foul play fake fifa websites target soccer fans looking for ](./2026-05-22/foul-play-fake-fifa-websites-target-soccer-fans-looking-for-.md)
 - [ghsa critical cve 2026 46670 yeswiki unauthenticated sql inj](./2026-05-22/ghsa-critical-cve-2026-46670-yeswiki-unauthenticated-sql-inj.md)
-- [ghsa critical ghsa qqqm 5547 774x filebrowser quantum path t](./2026-05-22/ghsa-critical-ghsa-qqqm-5547-774x-filebrowser-quantum-path-t.md)
+- [ghsa critical cve 2026 48777 filebrowser quantum path traver](./2026-05-22/ghsa-critical-cve-2026-48777-filebrowser-quantum-path-traver.md)
 - [megalodon mass github actions secret exfiltration across 5 5](./2026-05-22/megalodon-mass-github-actions-secret-exfiltration-across-5-5.md)
 - [paved with intent roadtools and nation state tactics in the ](./2026-05-22/paved-with-intent-roadtools-and-nation-state-tactics-in-the-.md)
 - [tracking iranian apt screening serpens 2026 espionage campai](./2026-05-22/tracking-iranian-apt-screening-serpens-2026-espionage-campai.md)
@@ -337,7 +341,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2024 7399 samsung magicinfo 9 server path trave](./2026-04-24/cisa-kev-cve-2024-7399-samsung-magicinfo-9-server-path-trave.md)
 - [cisa kev cve 2025 29635 d link dir 823x command injection vu](./2026-04-24/cisa-kev-cve-2025-29635-d-link-dir-823x-command-injection-vu.md)
 - [it s time to treat browser extensions like supply chain atta](./2026-04-24/it-s-time-to-treat-browser-extensions-like-supply-chain-atta.md)
-- [tgr sta 1030 new activity in central and south america](./2026-04-24/tgr-sta-1030-new-activity-in-central-and-south-america.md)
 
 ## 2026-04-23
 - [cisa kev cve 2026 39987 marimo remote code execution vulnera](./2026-04-23/cisa-kev-cve-2026-39987-marimo-remote-code-execution-vulnera.md)

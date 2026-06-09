@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Hades Campaign: install of trojanized scientific PyPI packages (ensmallen 0.8.101 et al.)
 
-`UC_0_9` · phase: **delivery** · confidence: **High**
+`UC_6_9` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### [LLM] Python process downloading Bun runtime v1.3.14 ZIP from oven-sh GitHub release
 
-`UC_0_10` · phase: **delivery** · confidence: **High**
+`UC_6_10` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceNetworkEvents
 
 ### [LLM] Bun runtime executed from /tmp/b or %TEMP%\b with Python parent (Hades Campaign loader)
 
-`UC_0_11` · phase: **install** · confidence: **High**
+`UC_6_11` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceProcessEvents
 
 ### [LLM] Process reading /proc/<pid>/mem or accessing Runner.Worker for credential scraping
 
-`UC_0_12` · phase: **actions** · confidence: **Medium**
+`UC_6_12` · phase: **actions** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -153,7 +153,7 @@ DeviceFileEvents
 
 ### [LLM] Hades GitHub C2 dead-drop: api.github.com commit search for magic keywords
 
-`UC_0_13` · phase: **c2** · confidence: **High**
+`UC_6_13` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -178,7 +178,7 @@ DeviceNetworkEvents
 
 ### [LLM] Hades Campaign updater.py persistence dropper written by Bun or Python child
 
-`UC_0_14` · phase: **install** · confidence: **High**
+`UC_6_14` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -456,7 +456,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Shai-Hulud attack trojanizes 19 science-focused PyPI packages
 
-`UC_0_8` · phase: **exploit** · confidence: **High**
+`UC_6_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
