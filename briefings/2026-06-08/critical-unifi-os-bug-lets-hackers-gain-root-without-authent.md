@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] UniFi OS CVE-2026-34908/34909 auth bypass via /api/auth/validate-sso/ URI normalization
 
-`UC_21_1` · phase: **exploit** · confidence: **High**
+`UC_23_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceNetworkEvents
 
 ### [LLM] UniFi OS CVE-2026-34910 command injection via ucs/update/latest_package endpoint
 
-`UC_21_2` · phase: **exploit** · confidence: **High**
+`UC_23_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceNetworkEvents
 
 ### [LLM] Anomalous child processes spawned under UniFi ucs-update service (post-exploitation)
 
-`UC_21_3` · phase: **install** · confidence: **High**
+`UC_23_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

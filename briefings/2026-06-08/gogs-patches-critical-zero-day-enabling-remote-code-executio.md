@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Gogs Merge() argument injection — git rebase invoked with --exec= flag
 
-`UC_18_2` · phase: **exploit** · confidence: **High**
+`UC_21_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### [LLM] Gogs daemon ancestry spawns shell / downloader (post-arg-injection RCE)
 
-`UC_18_3` · phase: **install** · confidence: **Medium**
+`UC_21_3` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceProcessEvents
 
 ### [LLM] Internet-facing Gogs instances on pre-0.14.3 (CVE-pending Merge() injection)
 
-`UC_18_4` · phase: **recon** · confidence: **High**
+`UC_21_4` · phase: **recon** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

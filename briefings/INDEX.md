@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1260 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,9 +10,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-09
 - [21 0 day vulnerabilities in ffmpeg enables remote code execu](./2026-06-09/21-0-day-vulnerabilities-in-ffmpeg-enables-remote-code-execu.md)
+- [cisa gives feds 3 days to patch check point vpn bug exploite](./2026-06-09/cisa-gives-feds-3-days-to-patch-check-point-vpn-bug-exploite.md)
 - [google patches new chrome zero day flaw exploited in the wil](./2026-06-09/google-patches-new-chrome-zero-day-flaw-exploited-in-the-wil.md)
 - [litellm flaw cve 2026 42271 exploited in the wild chains to ](./2026-06-09/litellm-flaw-cve-2026-42271-exploited-in-the-wild-chains-to-.md)
 - [new shai hulud attack compromises 23 pypi packages to target](./2026-06-09/new-shai-hulud-attack-compromises-23-pypi-packages-to-target.md)
+- [threat actors abuse chatgpt claude and deepseek brands as ph](./2026-06-09/threat-actors-abuse-chatgpt-claude-and-deepseek-brands-as-ph.md)
 
 ## 2026-06-08
 - [ai brands as bait how threat actors are using the ai hype in](./2026-06-08/ai-brands-as-bait-how-threat-actors-are-using-the-ai-hype-in.md)
@@ -25,17 +27,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47252 anyquery applescript jxa code i](./2026-06-08/ghsa-critical-cve-2026-47252-anyquery-applescript-jxa-code-i.md)
 - [ghsa critical cve 2026 47724 nebula mesh api endpoints lack ](./2026-06-08/ghsa-critical-cve-2026-47724-nebula-mesh-api-endpoints-lack-.md)
 - [gogs patches critical zero day enabling remote code executio](./2026-06-08/gogs-patches-critical-zero-day-enabling-remote-code-executio.md)
-- [malspam attack uses google doubleclick redirects to deliver ](./2026-06-08/malspam-attack-uses-google-doubleclick-redirects-to-deliver-.md)
 - [meta blocks nso group s new whatsapp phishing attack files c](./2026-06-08/meta-blocks-nso-group-s-new-whatsapp-phishing-attack-files-c.md)
 - [new china linked threat cluster op 512 targets iis servers w](./2026-06-08/new-china-linked-threat-cluster-op-512-targets-iis-servers-w.md)
-- [new lucid stealer targets 18 browsers crypto wallets and dis](./2026-06-08/new-lucid-stealer-targets-18-browsers-crypto-wallets-and-dis.md)
 - [new pink hacking group attacking enterprise users to steal c](./2026-06-08/new-pink-hacking-group-attacking-enterprise-users-to-steal-c.md)
 - [new shai hulud attack trojanizes 19 science focused pypi pac](./2026-06-08/new-shai-hulud-attack-trojanizes-19-science-focused-pypi-pac.md)
 - [nfcshare android malware spreads via fake banking app update](./2026-06-08/nfcshare-android-malware-spreads-via-fake-banking-app-update.md)
 - [one character linux kernel flaw enables local root access ex](./2026-06-08/one-character-linux-kernel-flaw-enables-local-root-access-ex.md)
 - [over 20 000 instagram accounts stolen in meta ai support hac](./2026-06-08/over-20-000-instagram-accounts-stolen-in-meta-ai-support-hac.md)
 - [sofi confirms third party data breach at hong kong subsidiar](./2026-06-08/sofi-confirms-third-party-data-breach-at-hong-kong-subsidiar.md)
-- [unc3753 attacking us law firms using vishing and rmm tools t](./2026-06-08/unc3753-attacking-us-law-firms-using-vishing-and-rmm-tools-t.md)
 - [unc3753 used vishing and physical intrusions in u s data the](./2026-06-08/unc3753-used-vishing-and-physical-intrusions-in-u-s-data-the.md)
 - [verdantbamboo deploys bsd variant of brickstorm on linux app](./2026-06-08/verdantbamboo-deploys-bsd-variant-of-brickstorm-on-linux-app.md)
 - [weekly recap instagram account hacks android zero day github](./2026-06-08/weekly-recap-instagram-account-hacks-android-zero-day-github.md)
@@ -44,7 +43,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-07
 - [c0xmo botnet spreads via dd wrt router flaw kills rival malw](./2026-06-07/c0xmo-botnet-spreads-via-dd-wrt-router-flaw-kills-rival-malw.md)
-- [silent ransom group targets law firms with fake it support c](./2026-06-07/silent-ransom-group-targets-law-firms-with-fake-it-support-c.md)
 
 ## 2026-06-06
 - [ai agent uncovers 21 zero days in ffmpeg chrome patches reco](./2026-06-06/ai-agent-uncovers-21-zero-days-in-ffmpeg-chrome-patches-reco.md)
