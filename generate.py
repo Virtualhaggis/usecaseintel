@@ -7125,13 +7125,16 @@ details.uc summary::before{
 }
 details.uc[open] summary::before{transform:rotate(90deg);}
 .uc-title{font-weight:600; font-size:13.5px; flex:1; min-width:200px;letter-spacing:-0.012em;}
-.uc-phase, .uc-conf, .uc-dm{
+.uc-phase, .uc-conf, .uc-dm, .uc-kind{
   font-size:10px; text-transform:uppercase; letter-spacing:0.05em;
   padding:2px 8px; border-radius:4px; font-weight:500;
   background:var(--panel-elev); border:1px solid var(--border);
   color:var(--muted);
 }
 .uc-phase{color:#9b8afb;}
+/* "AI" / "Weekly" kind badge — replaces the raw "[LLM]"/"[WEEKLY]" title
+   prefixes that used to leak pipeline jargon into reader-facing titles. */
+.uc-kind{color:#7170ff;border-color:rgba(113,112,255,0.35);}
 .uc-conf.high{color:#4cb782;}
 .uc-conf.medium{color:#e2a93f;}
 .uc-conf.low{color:var(--muted);}
@@ -9359,7 +9362,11 @@ body.view-home-active .stats-articles{display:none !important;}
     <div class="stats-wrap">
       <div class="stats stats-articles" id="topStats">
         <div class="stat"><div class="v">__ARTICLE_COUNT__</div><div class="l">Articles</div></div>
-        <div class="stat"><div class="v">__USECASE_COUNT__</div><div class="l">Use Cases</div></div>
+        <!-- "Detections mapped" (not "Use Cases"): this is total_ucs — the
+             per-article instance count (one UC firing on 5 articles counts 5).
+             The Library/Matrix strips show the unique-catalogue count under
+             "Use Cases", so the two totals must carry different labels. -->
+        <div class="stat"><div class="v">__USECASE_COUNT__</div><div class="l">Detections Mapped</div></div>
         <div class="stat"><div class="v">__TECH_COUNT__</div><div class="l">ATT&amp;CK</div></div>
         <div class="stat"><div class="v">__CVE_COUNT__</div><div class="l">CVEs</div></div>
         <div class="stat"><div class="v">__CRIT_COUNT__</div><div class="l">Critical</div></div>
@@ -9471,13 +9478,13 @@ __HOME__
     <div id="navlist">__NAV__</div>
   </nav>
   <section id="articles">
-    <!-- LLM-UC explainer: collapsed by default, click to expand. Sits above
-         the source filter so analysts know what an `[LLM]` prefix means
-         before they click "LLM UCs only". -->
+    <!-- AI-UC explainer: collapsed by default, click to expand. Sits above
+         the source filter so analysts know what the "AI" badge means
+         before they click "AI use cases". -->
     <details class="info-banner" id="llmInfoBanner">
       <summary>
         <span class="info-icon">ℹ︎</span>
-        <strong>What's an <code>[LLM]</code> use case?</strong>
+        <strong>What's an <code>AI</code>-badged use case?</strong>
         <span class="info-hint">click to expand</span>
       </summary>
       <div class="info-body">
@@ -9488,18 +9495,18 @@ __HOME__
           Useful, but not tailored to the specific attack.
         </p>
         <p>
-          UCs prefixed <code>[LLM]</code> are different. The pipeline asks
-          Claude to <strong>read the actual article</strong> and write a
-          detection that hunts <em>exactly that campaign / actor / malware</em>
-          — Defender KQL or Splunk SPL pinned to the IOCs and TTPs the article
-          describes. Cross-checked via WebSearch against vendor advisories
-          (Microsoft Threat Intel, Mandiant, CrowdStrike, MITRE, abuse.ch)
-          and linked back as <em>"Cross-checked against:"</em>.
+          Use cases carrying the <code>AI</code> badge are different. The
+          pipeline asks Claude to <strong>read the actual article</strong> and
+          write a detection that hunts <em>exactly that campaign / actor /
+          malware</em> — Defender KQL or Splunk SPL pinned to the IOCs and
+          TTPs the article describes. Cross-checked via WebSearch against
+          vendor advisories (Microsoft Threat Intel, Mandiant, CrowdStrike,
+          MITRE, abuse.ch) and linked back as <em>"Cross-checked against:"</em>.
         </p>
         <p>
           They sort to the top of every article card and the matrix drawer
           because they're the highest-fidelity content here. Use the
-          <strong>LLM UCs only</strong> filter below to see only articles
+          <strong>AI use cases</strong> filter below to see only articles
           where Claude generated bespoke detection logic.
         </p>
       </div>
@@ -9531,8 +9538,8 @@ __HOME__
             Has UCs <span class="cnt" id="featCntHasUc"></span>
           </button>
           <button class="src-chip feat-chip" data-feat="has-llm"
-                  title="Show only articles where the LLM generated bespoke article-specific UCs">
-            LLM UCs only <span class="cnt" id="featCntHasLlm"></span>
+                  title="Show only articles with bespoke AI-generated use cases tailored to that specific article">
+            AI use cases <span class="cnt" id="featCntHasLlm"></span>
           </button>
         </div>
       </div>
@@ -10478,7 +10485,7 @@ function openHuntDrawer(artId){
     <div class="hunt-quality">
       <div class="hunt-quality-head">
         <span>IOC quality</span>
-        <span class="cert cert-${certLabel}" title="LLM confidence (0-100%) that this is a coherent named campaign">campaign certainty ${certPct}%</span>
+        <span class="cert cert-${certLabel}" title="AI confidence (0-100%) that this is a coherent named campaign">campaign certainty ${certPct}%</span>
       </div>
       <div class="hunt-quality-grid">
         <span class="qcell"><b>${confCounts.high}</b><span>high (2+ sources)</span></span>
@@ -10486,7 +10493,7 @@ function openHuntDrawer(artId){
         <span class="qcell"><b>${confCounts.low}</b><span>low (article only)</span></span>
         <span class="qcell"><b>${corrCount}</b><span>multi-source corroborated</span></span>
       </div>
-      ${inferredList.length ? `<details class="hunt-inferred"><summary><b>${inferredList.length}</b> inferred IOCs (LLM gap-fill — validate before hunting)</summary><ul>${inferredPreview}${inferredList.length > 3 ? `<li class="hunt-more">+ ${inferredList.length - 3} more…</li>` : ''}</ul></details>` : ''}
+      ${inferredList.length ? `<details class="hunt-inferred"><summary><b>${inferredList.length}</b> inferred IOCs (AI gap-fill — validate before hunting)</summary><ul>${inferredPreview}${inferredList.length > 3 ? `<li class="hunt-more">+ ${inferredList.length - 3} more…</li>` : ''}</ul></details>` : ''}
     </div>`;
   }
 
@@ -10714,7 +10721,7 @@ function _buildIndex() {
       const tgs = (uc.tg || []).join(' ');
       idx.ucs.push({
         kind: 'uc',
-        title: uc.t || uc.n || '',
+        title: ucDisplayTitle(uc.t) || uc.n || '',
         meta: [uc.src || '', uc.ph || '', uc.tier || '', techs].filter(Boolean).join(' · '),
         techs: techs,
         blob: ((uc.t || '') + ' ' + (uc.n || '') + ' ' + techs + ' ' +
@@ -11600,7 +11607,7 @@ function _libBuildFilters(prepared) {
   const phaseSel = selectChip('Phase', 'phase', phases);
   const tacticSel = selectChip('Tactic', 'tactic', tactics, v => TACTIC_NAME[v] || v);
   const tierSel = selectChip('Tier', 'tier', tiers, v => v[0].toUpperCase() + v.slice(1));
-  const srcSel = selectChip('Source', 'src', srcs, v => v === 'internal' ? 'Internal' : 'LLM');
+  const srcSel = selectChip('Source', 'src', srcs, v => ({internal:'Internal', escu:'ESCU', llm:'AI-generated', bespoke:'AI-generated'}[v] || v));
   const appSel = selectChip('App', 'app', apps);
   const actorSel = selectChip('Actor', 'actor', actors);
   const countrySel = selectChip('Country', 'country', countries);
@@ -11620,8 +11627,8 @@ function _libBuildFilters(prepared) {
   for (const p of prepared) kCounts[p.kind] = (kCounts[p.kind] || 0) + 1;
   const KIND_META = [
     ['normal', 'Normal', 'Hand-built catalogue use cases + synced Splunk ESCU detections — reviewed and stable.'],
-    ['llm',    'LLM',    'Per-article LLM-generated use cases (titles prefixed [LLM]) — auto-synthesised from each new article in the daily pipeline.'],
-    ['wkc',    'WKC',    'Weekly Kill-Chain use cases (titles prefixed [WEEKLY]) — biweekly cross-article LLM synthesis covering recurring themes and trending CVEs.'],
+    ['llm',    'AI',     'AI-generated use cases — auto-synthesised from each new article in the daily pipeline and cross-checked against vendor advisories.'],
+    ['wkc',    'Weekly', 'Weekly kill-chain use cases — biweekly cross-article synthesis covering recurring themes and trending CVEs.'],
   ];
   const kindPills = `<div class="lib-pill-group lib-kind-pills" data-lib-kinds>` +
     KIND_META.map(([k, label, tip]) =>
@@ -11661,15 +11668,17 @@ function _libCardHtml(p) {
     `<span class="lib-tag lib-tg lib-tg-${escapeHtml(t)}" title="Target surface: ${escapeHtml(_TGT_LABEL[t] || t)}">${escapeHtml(_TGT_LABEL[t] || t)}</span>`
   ).join('');
   const moreTgt = (p.targets || []).length > 3 ? `<span class="lib-tag lib-tg" title="${escapeHtml((p.targets||[]).join(', '))}">+${(p.targets||[]).length - 3}</span>` : '';
+  const kindTag = p.kind === 'llm' ? `<span class="lib-tag lib-kind-llm" title="AI-generated from a specific article by the pipeline, cross-checked against vendor advisories">AI</span>`
+                : p.kind === 'wkc' ? `<span class="lib-tag lib-kind-wkc" title="Weekly kill-chain synthesis across recent articles">Weekly</span>` : '';
   return `<article class="lib-card" role="listitem" data-uc-idx="${p._idx}">
     <div class="lib-card-head">
       <div style="flex:1;">
-        <div class="lib-card-name">${escapeHtml(p.uc.t || p.uc.n)}</div>
+        <div class="lib-card-name">${escapeHtml(ucDisplayTitle(p.uc.t) || p.uc.n)}</div>
         <div class="lib-card-id">${escapeHtml(p.uc.n)}</div>
       </div>
     </div>
     <div class="lib-card-meta">
-      ${sevTag}${tacticTag}${tierTag}${techPills}${moreTechs}${tgtTags}${moreTgt}${platTags}
+      ${sevTag}${kindTag}${tacticTag}${tierTag}${techPills}${moreTechs}${tgtTags}${moreTgt}${platTags}
     </div>
     <div class="lib-card-footer">
       <div class="lib-svs" title="SOC Value Score">
@@ -11958,7 +11967,7 @@ function _libDetailHtml(p) {
     </a>`;
   }).join('');
 
-  const descLine = p.uc.t || p.uc.n;
+  const descLine = ucDisplayTitle(p.uc.t) || p.uc.n;
   const descIntro = (() => {
     const tCount = (p.uc.techs || []).length;
     const phaseLabel = p.uc.ph ? `the <b>${escapeHtml(p.uc.ph)}</b> phase` : 'multiple kill-chain phases';
@@ -12057,7 +12066,7 @@ function _libDetailHtml(p) {
   return `
     <div class="lib-detail-head">
       <div class="lib-detail-name">${escapeHtml(p.uc.n)}</div>
-      <h2 class="lib-detail-title" id="libDrawerTitle">${escapeHtml(p.uc.t || p.uc.n)}</h2>
+      <h2 class="lib-detail-title" id="libDrawerTitle">${escapeHtml(ucDisplayTitle(p.uc.t) || p.uc.n)}</h2>
       <div class="lib-detail-meta">${sevTag}${tierTag}${phaseTag}${tacticChips}${platTags}</div>
       <div class="lib-detail-svs">
         <div class="lib-detail-svs-score">
@@ -12768,7 +12777,7 @@ const TOUR_STEPS = [
   { section: "Threat Actors", view: "actors",
     target: ".actor-card", fallback: ".actors-grid",
     title: "Per-actor bespoke detections",
-    body: "Each actor card carries detection queries the LLM tailored specifically to that group's known tradecraft — not just a generic technique template.",
+    body: "Each actor card carries detection queries the pipeline's AI tailored specifically to that group's known tradecraft — not just a generic technique template.",
     preview: '<span class="tour-preview-meta">e.g.</span>' +
              '<span class="tour-preview-pill">APT28 → INCLUDEPICTURE webhooks</span>' },
 
@@ -13189,6 +13198,13 @@ function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
 }
 
+function ucDisplayTitle(t) {
+  // "[LLM]" / "[WEEKLY]" title prefixes are internal kind markers (the
+  // canonical discriminator for sorting/filtering — see _libPrepare).
+  // Strip them at display time; badges/pills carry the kind instead.
+  return String(t || '').replace(/^(\s*\[(LLM|WEEKLY)\]\s*)+/, '');
+}
+
 function renderMatrix() {
   if (!MATRIX) {
     document.getElementById('matrixGrid').innerHTML =
@@ -13385,13 +13401,14 @@ function initDrawerUcList() {
   const PAGE = 30;
   function ucCardHtml(uc) {
     const artLinks = (uc.arts || []).map(ai => MATRIX.arts[ai] && `<a href="#${MATRIX.arts[ai].id}" data-jump="${MATRIX.arts[ai].id}" class="art-jump" style="color:var(--accent);text-decoration:none;font-size:11px;">→ ${escapeHtml(MATRIX.arts[ai].title.slice(0, 60))}</a>`).filter(Boolean).join('<br>');
+    const isAi = (uc.t || '').startsWith('[LLM]') || uc.src === 'llm' || uc.src === 'bespoke';
     const srcCls = uc.src === 'escu' ? 'escu' : 'internal';
-    const srcLabel = uc.src === 'escu' ? 'ESCU' : 'Internal';
+    const srcLabel = uc.src === 'escu' ? 'ESCU' : (isAi ? 'AI' : 'Internal');
     const tier = (uc.tier || 'hunting');
     const tierLabel = tier === 'alerting' ? 'ALERTING' : 'HUNTING';
     return `<div class="uc-card-row tier-${tier}" data-uc-key="${escapeHtml(uc.n)}" data-tier="${tier}" style="padding:8px 10px;background:var(--panel);border:1px solid var(--border);border-radius:6px;margin-bottom:6px;cursor:pointer;">
       <div style="display:flex;align-items:center;gap:8px;">
-        <div class="uc-card-title" style="font-weight:600;font-size:12.5px;flex:1;">${escapeHtml(uc.t)}</div>
+        <div class="uc-card-title" style="font-weight:600;font-size:12.5px;flex:1;">${escapeHtml(ucDisplayTitle(uc.t))}</div>
         <span class="uc-tier-pill ${tier}" title="${tier === 'alerting' ? 'High-fidelity — safe to alert on' : 'Hunting — needs analyst review and tuning'}">${tierLabel}</span>
         <span class="uc-src-pill ${srcCls}">${srcLabel}</span>
         <span class="uc-card-chev" style="color:var(--muted);font-size:11px;">▸</span>
@@ -13855,7 +13872,7 @@ function applyActorsFilter() {
       `<div class="stat"><div class="v">${filtered.length}</div><div class="l">Actors</div></div>` +
       `<div class="stat"><div class="v">${countries.size}</div><div class="l">Nations</div></div>` +
       `<div class="stat"><div class="v">${totalArticles}</div><div class="l">Articles</div></div>` +
-      `<div class="stat"><div class="v">${totalLlm}</div><div class="l">LLM UCs</div></div>` +
+      `<div class="stat"><div class="v">${totalLlm}</div><div class="l">AI Use Cases</div></div>` +
       `<div class="stat"><div class="v">${totalTechs.size}</div><div class="l">Techniques</div></div>`;
   }
   // World map dot states refresh on filter change
@@ -13963,15 +13980,15 @@ function renderActorView(name) {
                  data-art-id="${uc.art_id}"
                  data-uc-title="${escapeHtml(uc.title)}">
           <summary>
-            ${uc.is_llm ? '<span class="uc-llm-pill">LLM</span>' : ''}
-            <span class="uc-name">${escapeHtml(uc.title.replace(/^(\[LLM\]\s*)+/, ''))}</span>
+            ${uc.is_llm ? '<span class="uc-llm-pill" title="AI-generated from a specific article by the pipeline">AI</span>' : ''}
+            <span class="uc-name">${escapeHtml(ucDisplayTitle(uc.title))}</span>
             <span class="uc-techs">${(uc.techs||[]).slice(0,3).map(escapeHtml).join(' ')}</span>
             <span class="uc-arrow">▾</span>
           </summary>
           <div class="actor-uc-body" data-loaded="false"></div>
         </details>
       `).join('')}
-    </div>` : '<div class="drawer-empty">No linked use cases yet — articles citing this actor didn\'t fire any UC rules or generate LLM-bespoke detections.</div>';
+    </div>` : '<div class="drawer-empty">No linked use cases yet — articles citing this actor didn\'t fire any UC rules or generate AI-bespoke detections.</div>';
   // Severity bar (drawer-sized)
   const sd = a.sev_dist || {};
   const sevBar = `<div class="actor-drawer-sev">
@@ -14702,6 +14719,18 @@ def render_killchain(art_id: str, hit: set, inferred: set,
 """.strip()
 
 
+_UC_TITLE_PREFIX_RE = re.compile(r"^(?:\s*\[(?:LLM|WEEKLY)\]\s*)+")
+
+
+def _uc_display_title(title: str) -> str:
+    """User-facing form of a UC title. "[LLM]" / "[WEEKLY]" prefixes are
+    internal pipeline markers (the canonical kind discriminator for sorting
+    and filtering) — readers get a styled badge instead of raw jargon, so
+    every render surface strips the prefix at display time only. The
+    underlying data keeps the prefix."""
+    return _UC_TITLE_PREFIX_RE.sub("", title or "").strip()
+
+
 def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
     spl = parameterize(uc.splunk_spl, ind)
     kql = parameterize(uc.defender_kql, ind)
@@ -14817,11 +14846,20 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
     # CloudTrail / cloudtrail-tagged UC light up the AWS chip even when the
     # article title is generic.
     uc_targets_attr = ",".join(_infer_uc_targets(uc))
+    _title_stripped = (uc.title or "").lstrip()
+    if _title_stripped.startswith("[LLM]"):
+        kind_pill = ('<span class="uc-kind" title="AI-generated for this specific article — '
+                     'drafted from the article text and cross-checked against vendor advisories">AI</span>')
+    elif _title_stripped.startswith("[WEEKLY]"):
+        kind_pill = ('<span class="uc-kind" title="Weekly kill-chain synthesis — generated '
+                     'across multiple recent articles">Weekly</span>')
+    else:
+        kind_pill = ""
     return f"""
 <details class="uc" data-uc-slug="{uslug}" data-platforms="{uc_plats}" data-targets="{uc_targets_attr}"{ ' open' if idx == 0 else '' }>
   <summary>
-    <span class="uc-title">{html.escape(uc.title)}</span>
-    <span class="uc-phase">{html.escape(phase_name)}</span>
+    <span class="uc-title">{html.escape(_uc_display_title(uc.title))}</span>
+    {kind_pill}<span class="uc-phase">{html.escape(phase_name)}</span>
     <span class="uc-conf {conf_cls}">{html.escape(uc.confidence)}</span>
     <button class="share-btn" data-share-uc="{uslug}" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -15531,7 +15569,12 @@ def aggregate_iocs(articles_meta):
                     if _SEV_RANK.get(sev, 0) > _SEV_RANK.get(ent["severity"], 0):
                         ent["severity"] = sev
     out = list(iocs.values())
+    # Severity/type/value is the stable tiebreak; the outer first-seen-desc
+    # pass (Python sorts are stable) puts the freshest intel at the top of
+    # the table — an alphabetical default surfaced CVE-2007-xxxx rows first,
+    # which made the feed look ancient.
     out.sort(key=lambda x: (-_SEV_RANK.get(x["severity"], 0), x["type"], x["value"].lower()))
+    out.sort(key=lambda x: x.get("first_seen") or "", reverse=True)
     # Enrich each IOC with public-feed cross-references (ThreatFox / URLhaus).
     # Free, no API key, rate-limited but generous. Toggle off with
     # USECASEINTEL_ENRICH=0 if running offline.
@@ -16325,9 +16368,12 @@ def _news_briefing(article, ind, ucs_pairs, techs, hit, sev):
             continue
         spl = parameterize(uc.splunk_spl, ind) if uc.splunk_spl else ""
         kql = parameterize(uc.defender_kql, ind) if uc.defender_kql else ""
-        block = f"""### {uc.title}
+        # Reader-facing heading: strip the internal "[LLM]"/"[WEEKLY]" prefix
+        # and note AI-generated provenance in the meta line instead.
+        _is_ai_uc = (uc.title or "").lstrip().startswith(("[LLM]", "[WEEKLY]"))
+        block = f"""### {_uc_display_title(uc.title) or uc.title}
 
-`{uc_var}` · phase: **{uc.kill_chain}** · confidence: **{uc.confidence}**
+`{uc_var}` · phase: **{uc.kill_chain}** · confidence: **{uc.confidence}**{" · AI-generated for this article" if _is_ai_uc else ""}
 """
         if spl:
             block += f"\n**Splunk SPL (CIM):**\n```spl\n{spl.strip()}\n```\n"
@@ -16619,7 +16665,9 @@ def write_share_stubs(articles_meta, articles_raw_index, base_url: str = "https:
                 # Same UC reused across articles — first emit wins.
                 continue
             seen_uc_slugs.add(usl)
-            uctitle = (uc.title or "Use case").lstrip("[LLM] ").strip() or "Use case"
+            # _uc_display_title (not str.lstrip) — lstrip("[LLM] ") strips a
+            # char-set, which also ate the leading "L" of real titles.
+            uctitle = _uc_display_title(uc.title) or "Use case"
             ucdesc = (uc.description or "")
             _emit_share_stub(uc_dir / f"{usl}.html", uctitle + " — Clankerusecase UC",
                              ucdesc, f"{base_url}/#uc-{usl}")
@@ -17089,7 +17137,7 @@ def _render_actor_page(actor: dict, technique_view: dict,
         # Source pill — bespoke (article-bound), llm (actor-profile), or mitre-match
         kind = uc.get("source_kind") or ""
         if kind == "actor-bespoke":
-            src_label, src_cls = "LLM · profile", "bespoke"
+            src_label, src_cls = "AI · profile", "bespoke"
         elif uc.get("is_mitre_match"):
             src_label, src_cls = "MITRE match", "internal"
         elif title.startswith("[LLM]"):
@@ -17099,7 +17147,7 @@ def _render_actor_page(actor: dict, technique_view: dict,
         href = f"{base_url}/#actor-{html.escape(slug)}"
         uc_parts.append(
             f'<a class="uc-card" href="{href}">'
-            f'  <span class="t">{html.escape(title)}</span>'
+            f'  <span class="t">{html.escape(_uc_display_title(title))}</span>'
             f'  <span class="meta">'
             f'    <span class="src {src_cls}">{html.escape(src_label)}</span>'
             f'    {platforms_html}'
@@ -20464,7 +20512,7 @@ def render_home_trust_strip(usecase_count: int, tech_count: int,
     # via the data-count-final attribute; JS uses that as the final
     # rendered text so we don't lose comma grouping mid-animation.
     tiles = [
-        (usecase_count, f"{usecase_count:,}", "Detections"),
+        (usecase_count, f"{usecase_count:,}", "Detections mapped"),
         (tech_count,    f"{tech_count:,}",    "ATT&CK techniques"),
         (7,             "7",                  "Query languages"),
         (article_count, f"{article_count:,}", "Threat-intel articles"),
@@ -20806,7 +20854,7 @@ def render_home_workflow(usecase_count: int, ioc_count: int, actor_count: int) -
         '<svg viewBox="0 0 24 24" aria-hidden="true">'
         '<path d="M5 7 L19 7"/><path d="M5 12 L19 12"/><path d="M5 17 L13 17"/>'
         '</svg>'
-        '<span class="hw-chip-label">Use cases generated</span>'
+        '<span class="hw-chip-label">Detections mapped</span>'
         f'<strong>{usecase_count:,}</strong>'
         '</div>\n'
         '          <div class="home-workflow-chip">'
