@@ -15,6 +15,25 @@ set LOG=logs\auto.log
 
 >>"%LOG%" echo.
 >>"%LOG%" echo === run_once start %TS% ===
+
+REM ---- Failure-sentinel re-alert: if an earlier push failed and nobody
+REM      resolved it, keep shouting every run until the sentinel clears.
+if exist "%~dp0.push_failed" (
+  >>"%LOG%" echo [!] unresolved .push_failed sentinel from an earlier run
+  start "" /b msg %USERNAME% "Clankerusecase: an earlier git push FAILED and is unresolved - site may be stale. See logs\auto.log"
+)
+
+REM ---- Branch guard: abort BEFORE the ~27-min generate run if the
+REM      checked-out branch has no upstream. A bare `git push` on such a
+REM      branch fails silently run after run - exactly the 2026-06-07
+REM      stale-site incident (2 days of commits stranded on a side branch).
+git rev-parse --abbrev-ref --symbolic-full-name @{u} 1>nul 2>nul
+if errorlevel 1 (
+  >>"%LOG%" echo [!] BRANCH GUARD: current branch has no upstream -- aborting run
+  echo branch-guard %TS% > "%~dp0.push_failed"
+  start "" /b msg %USERNAME% "Clankerusecase pipeline ABORTED: repo is on a branch with no upstream - pushes would fail silently. Check out main."
+  exit /b 3
+)
 REM Dual-account failover: point at two Claude CLI config dirs (each
 REM holding its own logged-in session). generate.py routes the first
 REM `claude -p` call through PRIMARY and sticky-switches to SECONDARY
@@ -57,9 +76,12 @@ if errorlevel 1 (
   git push 1>>"%LOG%" 2>>&1
   if errorlevel 1 (
     >>"%LOG%" echo [!] push FAILED -- resolve manually
+    echo push-failed %TS% > "%~dp0.push_failed"
+    start "" /b msg %USERNAME% "Clankerusecase pipeline: git push FAILED (%TS%) - site is going stale. See logs\auto.log"
     exit /b 2
   )
   >>"%LOG%" echo [git] pushed
+  if exist "%~dp0.push_failed" del "%~dp0.push_failed"
 ) else (
   >>"%LOG%" echo [git] no changes
 )

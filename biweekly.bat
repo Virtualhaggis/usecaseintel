@@ -12,6 +12,15 @@ set LOG=logs\biweekly.log
 
 >>"%LOG%" echo.
 >>"%LOG%" echo === biweekly start %TS% ===
+
+REM ---- Branch guard: skip the run if the checked-out branch has no
+REM      upstream (push would fail silently; see run_once.bat).
+git rev-parse --abbrev-ref --symbolic-full-name @{u} 1>nul 2>nul
+if errorlevel 1 (
+  >>"%LOG%" echo [!] BRANCH GUARD: current branch has no upstream -- aborting run
+  start "" /b msg %USERNAME% "Clankerusecase biweekly synthesis ABORTED: repo is on a branch with no upstream. Check out main."
+  exit /b 3
+)
 REM Dual-account failover. See run_once.bat. biweekly_review.py delegates
 REM to generate._llm_call_via_oauth → _call_claude_cli, so the same switch
 REM logic applies without any per-script change.
@@ -41,9 +50,12 @@ if errorlevel 1 (
   git push 1>>"%LOG%" 2>>&1
   if errorlevel 1 (
     >>"%LOG%" echo [!] push FAILED -- resolve manually
+    echo push-failed %TS% > "%~dp0.push_failed"
+    start "" /b msg %USERNAME% "Clankerusecase biweekly: git push FAILED (%TS%). See logs\biweekly.log"
     exit /b 2
   )
   >>"%LOG%" echo [git] pushed -- pipeline regen will pick them up
+  if exist "%~dp0.push_failed" del "%~dp0.push_failed"
 ) else (
   >>"%LOG%" echo [git] no new weekly UCs
 )

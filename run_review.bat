@@ -18,6 +18,15 @@ set LOG=logs\review.log
 
 >>"%LOG%" echo.
 >>"%LOG%" echo === run_review start %TS% ===
+
+REM ---- Branch guard: skip the run if the checked-out branch has no
+REM      upstream (push would fail silently; see run_once.bat).
+git rev-parse --abbrev-ref --symbolic-full-name @{u} 1>nul 2>nul
+if errorlevel 1 (
+  >>"%LOG%" echo [!] BRANCH GUARD: current branch has no upstream -- aborting run
+  start "" /b msg %USERNAME% "Clankerusecase review pass ABORTED: repo is on a branch with no upstream. Check out main."
+  exit /b 3
+)
 REM Dual-account failover. See run_once.bat for the protocol. Review-pass
 REM LLM calls (Haiku reviewer via gen._call_claude_cli) also honour the
 REM sticky switch because the failover lives inside _call_claude_cli.
@@ -51,9 +60,12 @@ if errorlevel 1 (
   git push 1>>"%LOG%" 2>>&1
   if errorlevel 1 (
     >>"%LOG%" echo [!] push FAILED -- resolve manually
+    echo push-failed %TS% > "%~dp0.push_failed"
+    start "" /b msg %USERNAME% "Clankerusecase review pass: git push FAILED (%TS%). See logs\review.log"
     exit /b 2
   )
   >>"%LOG%" echo [git] pushed
+  if exist "%~dp0.push_failed" del "%~dp0.push_failed"
 ) else (
   >>"%LOG%" echo [git] no suggestions log changes
 )

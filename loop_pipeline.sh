@@ -10,6 +10,13 @@ set -u
 cd "$(dirname "$0")"
 mkdir -p logs
 
+# Branch guard: refuse to loop on a branch with no upstream — every
+# iteration's push would fail silently (the 2026-06-07 stale-site mode).
+if ! git rev-parse --abbrev-ref --symbolic-full-name '@{u}' >/dev/null 2>&1; then
+  echo "[!] BRANCH GUARD: current branch has no upstream — aborting loop" | tee -a logs/loop.log
+  exit 3
+fi
+
 DEADLINE=$(($(date +%s) + 7200))   # now + 2 hours
 INTERVAL=1200                       # 20 minutes between starts
 ITER=1
@@ -30,8 +37,13 @@ while [ "$(date +%s)" -lt "$DEADLINE" ]; do
     echo "  no changes this iter" | tee -a logs/loop.log
   else
     git commit -m "auto: pipeline iter $ITER ($TS)" >>logs/loop.log 2>&1
-    git push >>logs/loop.log 2>&1 && echo "  pushed" | tee -a logs/loop.log \
-                                  || echo "  push failed" | tee -a logs/loop.log
+    if git push >>logs/loop.log 2>&1; then
+      echo "  pushed" | tee -a logs/loop.log
+      rm -f .push_failed
+    else
+      echo "  push failed" | tee -a logs/loop.log
+      echo "push-failed $TS" > .push_failed
+    fi
   fi
 
   ITER=$((ITER + 1))

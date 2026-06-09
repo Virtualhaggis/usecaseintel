@@ -41,6 +41,16 @@ for /f %%a in ('powershell -nop -c "Get-Date -Format yyyy-MM-dd"') do set TS=%%a
 set LOG=logs\daily_%TS%.log
 
 >>"%LOG%" echo === %date% %time% ===================================
+
+REM ---- Branch guard: skip the run if the checked-out branch has no
+REM      upstream (push would fail silently; see run_once.bat).
+git rev-parse --abbrev-ref --symbolic-full-name @{u} 1>nul 2>nul
+if errorlevel 1 (
+  >>"%LOG%" echo [!] BRANCH GUARD: current branch has no upstream -- aborting run
+  start "" /b msg %USERNAME% "Clankerusecase daily run ABORTED: repo is on a branch with no upstream. Check out main."
+  exit /b 3
+)
+
 >>"%LOG%" echo [validate]
 py validate.py 1>>"%LOG%" 2>>&1
 if errorlevel 1 (
@@ -63,8 +73,11 @@ if errorlevel 1 (
   git push 1>>"%LOG%" 2>>&1
   if errorlevel 1 (
     >>"%LOG%" echo [git] push failed - resolve manually.
+    echo push-failed %TS% > "%~dp0.push_failed"
+    start "" /b msg %USERNAME% "Clankerusecase daily run: git push FAILED (%TS%). See logs."
   ) else (
     >>"%LOG%" echo [git] pushed.
+    if exist "%~dp0.push_failed" del "%~dp0.push_failed"
   )
 ) else (
   >>"%LOG%" echo [git] no changes to commit.

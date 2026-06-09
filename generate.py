@@ -1226,6 +1226,10 @@ def _format_validation_errors_for_retry(ucs: list[dict]) -> str:
             ("_syntax_issues",          "defender_kql (syntax)", "defender_kql"),
             ("_sentinel_syntax_issues", "sentinel_kql (syntax)", "sentinel_kql"),
             ("_cwli_issues",            "cloudwatch_query (CWLI field/syntax)", "cloudwatch_query"),
+            ("_spl_issues",             "splunk_spl (structure)", "splunk_spl"),
+            ("_datadog_issues",         "datadog_query (structure)", "datadog_query"),
+            ("_falcon_issues",          "falcon_logscale_query (structure)", "falcon_logscale_query"),
+            ("_dangerous_issues",       "SAFETY — remove the flagged command", ""),
         ):
             issues = uc.get(issues_key) or []
             for i in issues[:4]:  # cap per platform per uc
@@ -1359,6 +1363,115 @@ def _attach_cwli_issues(uc_dict: dict, key: str = "cloudwatch_query") -> int:
                           "possible typo or unsupported field")
     if issues:
         uc_dict["_cwli_issues"] = issues[:8]
+    return len(issues)
+
+
+# ----- Splunk SPL / Datadog / Falcon validators + safety denylist -------
+# Defender/Sentinel KQL goes through a real grammar parser + schema check,
+# but SPL, Datadog, and Falcon LogScale bodies used to ship with ZERO
+# validation — the widest correctness gap in the pipeline. No public SPL
+# grammar parser exists, so these checks are deliberately conservative:
+# structural sanity that is very unlikely to false-positive (a wrong flag
+# here costs a retry LLM call), plus a hard denylist of side-effectful
+# commands that a prompt-injected article must never be able to plant in
+# a query an analyst will copy-paste into a production SIEM.
+
+_SPL_KNOWN_DATAMODELS = {
+    # CIM datamodel roots (research.splunk.com) the catalogue queries use.
+    "endpoint", "network_traffic", "network_resolution", "network_sessions",
+    "web", "authentication", "email", "change", "intrusion_detection",
+    "malware", "updates", "vulnerabilities", "risk", "alerts",
+    "certificates", "data_access", "databases", "dlp", "jvm",
+    "performance", "splunk_audit", "ticket_management",
+}
+
+
+def _attach_spl_issues(uc_dict: dict, key: str = "splunk_spl") -> int:
+    """Heuristic Splunk SPL validator. Catches the failure classes the LLM
+    actually produces: leaked markdown fences, unbalanced quotes/parens/
+    macro backticks, and hallucinated CIM datamodel names. Attaches to
+    `_spl_issues`; empty body is fine (SPL is optional on some UCs)."""
+    body = (uc_dict.get(key) or "").strip()
+    if not body:
+        return 0
+    issues = []
+    if "```" in body:
+        issues.append("SPL: markdown code fence leaked into the query body")
+    stripped = re.sub(r'"[^"]*"', '""', body)  # ignore delimiters inside strings
+    if stripped.count('"') % 2:
+        issues.append("SPL: unbalanced double quotes")
+    if stripped.count("(") != stripped.count(")"):
+        issues.append("SPL: unbalanced parentheses")
+    if stripped.count("`") % 2:
+        issues.append("SPL: unbalanced macro backticks")
+    for m in re.finditer(r"datamodel\s*=\s*([A-Za-z_][A-Za-z0-9_]*)", body, re.IGNORECASE):
+        if m.group(1).lower() not in _SPL_KNOWN_DATAMODELS:
+            issues.append(f"SPL: unknown CIM datamodel '{m.group(1)}' — use a real "
+                          "CIM root (Endpoint, Network_Traffic, Web, Authentication, ...)")
+    if issues:
+        uc_dict["_spl_issues"] = issues[:8]
+    return len(issues)
+
+
+def _attach_generic_query_issues(uc_dict: dict, key: str, label: str,
+                                 issues_key: str) -> int:
+    """Minimal structural sanity for platforms without a parser (Datadog
+    Cloud SIEM, Falcon LogScale): leaked fences + unbalanced delimiters."""
+    body = (uc_dict.get(key) or "").strip()
+    if not body:
+        return 0
+    issues = []
+    if "```" in body:
+        issues.append(f"{label}: markdown code fence leaked into the query body")
+    stripped = re.sub(r'"[^"]*"', '""', body)
+    if stripped.count('"') % 2:
+        issues.append(f"{label}: unbalanced double quotes")
+    if stripped.count("(") != stripped.count(")"):
+        issues.append(f"{label}: unbalanced parentheses")
+    if issues:
+        uc_dict[issues_key] = issues[:6]
+    return len(issues)
+
+
+# Side-effectful query commands. Article text is UNTRUSTED input to the
+# UC prompt; the published queries get copy-pasted into production SIEMs.
+# Anything that writes, sends, deletes, or pulls external data is banned
+# outright — a UC still carrying one of these after retries is dropped.
+_SPL_DANGEROUS_RE = re.compile(
+    r"\|\s*(outputlookup|outputcsv|collect|mcollect|meventcollect|sendemail|"
+    r"sendalert|delete|dump|runshellscript|script)\b",
+    re.IGNORECASE)
+_KQL_DANGEROUS_RE = re.compile(
+    r"\bexternaldata\s*\(|\bevaluate\s+(?:python|http_request)\b",
+    re.IGNORECASE)
+_KQL_CONTROL_CMD_RE = re.compile(r"^\s*\.[a-z]+", re.IGNORECASE | re.MULTILINE)
+
+
+def _attach_dangerous_issues(uc_dict: dict) -> int:
+    """Scan every query body for side-effectful / egress commands. Attaches
+    `_dangerous_issues`; the retry loop treats these as validation errors
+    and any UC still flagged after retries is quarantined (never shipped,
+    never cached)."""
+    issues = []
+    spl = uc_dict.get("splunk_spl") or ""
+    m = _SPL_DANGEROUS_RE.search(spl)
+    if m:
+        issues.append(f"splunk_spl: side-effectful command `{m.group(1)}` — "
+                      "detection queries must be read-only; remove it")
+    for key in ("defender_kql", "sentinel_kql"):
+        body = uc_dict.get(key) or ""
+        if not body:
+            continue
+        m = _KQL_DANGEROUS_RE.search(body)
+        if m:
+            issues.append(f"{key}: `{m.group(0).strip()[:40]}` — externaldata / "
+                          "unsafe evaluate plugins are not allowed in a detection query")
+        body_nostr = re.sub(r'"[^"]*"|\'[^\']*\'', '""', body)
+        if _KQL_CONTROL_CMD_RE.search(body_nostr):
+            issues.append(f"{key}: KQL control command (line starting with `.`) "
+                          "is not allowed in a detection query")
+    if issues:
+        uc_dict["_dangerous_issues"] = issues
     return len(issues)
 
 
@@ -1678,6 +1791,15 @@ _OAUTH_BREAKERS: dict[str, dict] = {
 _OAUTH_FAILURES = 0
 _OAUTH_CIRCUIT_OPEN = False
 
+# Breaker/budget state is mutated from the parallel UC ThreadPoolExecutor
+# workers as well as the main thread. Without a lock, concurrent workers
+# could all pass the budget gate before any of them recorded its call
+# (overshooting the per-run cost cap) and the dual-account switch could
+# fire twice. RLock because _record_oauth_outcome can call
+# _maybe_switch_account while already holding it.
+import threading as _brk_threading
+_OAUTH_LOCK = _brk_threading.RLock()
+
 
 # =============================================================================
 # Pipeline lock + review-pass interop.
@@ -1714,6 +1836,65 @@ def _pipeline_pid_alive(pid: int) -> bool:
         return True
     except OSError:
         return False
+
+
+# ----- Degraded-run tracking -------------------------------------------
+# Per-article LLM failures (bespoke UC, kill-chain, UC generation) are
+# individually non-fatal by design — one flaky article shouldn't kill a
+# 27-minute run. But when MANY articles fail, the pipeline used to publish
+# a quietly thinner site with no signal to the operator. Each failure site
+# now records itself here; main() checks the tally at the end and exits
+# non-zero when it crosses the threshold, which makes run_once.bat skip
+# the commit entirely (better no update than a silently degraded one).
+import threading as _deg_threading
+_DEGRADED_EVENTS: list = []
+_DEGRADED_LOCK = _deg_threading.Lock()
+
+
+def _note_degraded(msg: str) -> None:
+    with _DEGRADED_LOCK:
+        _DEGRADED_EVENTS.append(msg)
+
+
+def _check_degradation(article_count: int) -> None:
+    """Exit non-zero if too many per-article LLM steps failed this run.
+    Threshold: 15% of articles, floor of 10 — small flaps stay non-fatal."""
+    threshold = max(10, int(article_count * 0.15))
+    if len(_DEGRADED_EVENTS) >= threshold:
+        print(f"[!] DEGRADED RUN: {len(_DEGRADED_EVENTS)} LLM-step failures "
+              f"across {article_count} articles (threshold {threshold}).")
+        for ev in _DEGRADED_EVENTS[:20]:
+            print(f"    - {ev}")
+        if len(_DEGRADED_EVENTS) > 20:
+            print(f"    ... +{len(_DEGRADED_EVENTS) - 20} more")
+        print("[!] Exiting non-zero so the scheduler skips the commit; "
+              "next run retries with caches warm.")
+        sys.exit(5)
+
+
+def _verify_outputs() -> None:
+    """Postcondition checks on the core site artefacts before the scheduler
+    is allowed to commit. A write that failed with a logged-and-ignored
+    exception used to leave a stale or truncated file to be committed as if
+    fresh; exiting non-zero here makes run_once.bat abort instead."""
+    problems = []
+    try:
+        if not OUT_HTML.exists() or OUT_HTML.stat().st_size < 300_000:
+            problems.append(f"index.html missing or suspiciously small "
+                            f"({OUT_HTML.stat().st_size if OUT_HTML.exists() else 0} bytes)")
+    except OSError as e:
+        problems.append(f"index.html unreadable: {e}")
+    data_dir = OUT_HTML.parent / "data"
+    for required in ("matrix.json", "intel.json", "actors.json", "search.json"):
+        p = data_dir / required
+        if not p.exists() or p.stat().st_size < 100:
+            problems.append(f"data/{required} missing or near-empty")
+    if problems:
+        print("[!] OUTPUT VERIFICATION FAILED — refusing to let this run commit:")
+        for pr in problems:
+            print(f"    - {pr}")
+        sys.exit(4)
+    print("[*] Output verification passed (index.html + data chunks present and sane)")
 
 
 def acquire_pipeline_lock() -> bool:
@@ -1884,41 +2065,42 @@ def _record_oauth_outcome(kind: str, ok: bool, reason: str | None = None) -> Non
     truth for both success and failure paths so the legacy aliases stay
     in sync without each caller having to remember to update them."""
     global _OAUTH_FAILURES, _OAUTH_CIRCUIT_OPEN
-    bk = _OAUTH_BREAKERS.setdefault(
-        kind, {"failures": 0, "open": False, "window": [],
-               "budget": 100, "used": 0})
-    bk["used"] += 1
-    bk["window"].append(0 if ok else 1)
-    if len(bk["window"]) > _OAUTH_WINDOW_SIZE:
-        bk["window"].pop(0)
-    bk["failures"] = sum(bk["window"])
-    if not ok:
-        safe = str(reason or "").encode("ascii", "replace").decode("ascii")[:120]
-        print(f"    [!] OAuth call failed ({kind} {bk['failures']}/{_OAUTH_WINDOW_SIZE} "
-              f"in window): {safe}")
-    # Trip on rate, only once we have a reasonable sample size.
-    if (not bk["open"]
-            and len(bk["window"]) >= _OAUTH_FAIL_THRESHOLD
-            and bk["failures"] >= _OAUTH_FAIL_THRESHOLD):
-        bk["open"] = True
-        print(f"    [!] OAuth circuit breaker OPEN for '{kind}' — "
-              f"{bk['failures']}/{len(bk['window'])} failures in window. "
-              f"Falling back to regex/rules for remainder of run.")
-        # Belt-and-suspenders dual-account safety net: if the breaker
-        # tripped while still on primary AND a secondary is configured,
-        # treat the open event as an implicit "primary is unhealthy" signal
-        # and flip accounts. This catches credit-exhaustion cases the
-        # `_looks_like_credit_error` regex missed (e.g. new wording from
-        # Anthropic). The switch resets every breaker so future calls
-        # resume on secondary; if both accounts are bad, the breakers
-        # re-trip and we fall through to the regex/rules path as before.
-        if (_CLAUDE_ACTIVE_ACCOUNT == "primary"
-                and not _CLAUDE_SWITCHED
-                and _CLAUDE_CONFIG_DIR_SECONDARY):
-            _maybe_switch_account(reason=f"breaker_open[{kind}] {bk['failures']}/{len(bk['window'])}")
-    if kind == "uc":
-        _OAUTH_FAILURES = bk["failures"]
-        _OAUTH_CIRCUIT_OPEN = bk["open"]
+    with _OAUTH_LOCK:
+        bk = _OAUTH_BREAKERS.setdefault(
+            kind, {"failures": 0, "open": False, "window": [],
+                   "budget": 100, "used": 0})
+        bk["used"] += 1
+        bk["window"].append(0 if ok else 1)
+        if len(bk["window"]) > _OAUTH_WINDOW_SIZE:
+            bk["window"].pop(0)
+        bk["failures"] = sum(bk["window"])
+        if not ok:
+            safe = str(reason or "").encode("ascii", "replace").decode("ascii")[:120]
+            print(f"    [!] OAuth call failed ({kind} {bk['failures']}/{_OAUTH_WINDOW_SIZE} "
+                  f"in window): {safe}")
+        # Trip on rate, only once we have a reasonable sample size.
+        if (not bk["open"]
+                and len(bk["window"]) >= _OAUTH_FAIL_THRESHOLD
+                and bk["failures"] >= _OAUTH_FAIL_THRESHOLD):
+            bk["open"] = True
+            print(f"    [!] OAuth circuit breaker OPEN for '{kind}' — "
+                  f"{bk['failures']}/{len(bk['window'])} failures in window. "
+                  f"Falling back to regex/rules for remainder of run.")
+            # Belt-and-suspenders dual-account safety net: if the breaker
+            # tripped while still on primary AND a secondary is configured,
+            # treat the open event as an implicit "primary is unhealthy" signal
+            # and flip accounts. This catches credit-exhaustion cases the
+            # `_looks_like_credit_error` regex missed (e.g. new wording from
+            # Anthropic). The switch resets every breaker so future calls
+            # resume on secondary; if both accounts are bad, the breakers
+            # re-trip and we fall through to the regex/rules path as before.
+            if (_CLAUDE_ACTIVE_ACCOUNT == "primary"
+                    and not _CLAUDE_SWITCHED
+                    and _CLAUDE_CONFIG_DIR_SECONDARY):
+                _maybe_switch_account(reason=f"breaker_open[{kind}] {bk['failures']}/{len(bk['window'])}")
+        if kind == "uc":
+            _OAUTH_FAILURES = bk["failures"]
+            _OAUTH_CIRCUIT_OPEN = bk["open"]
 
 
 def _note_oauth_failure(reason: str, kind: str = "uc") -> None:
@@ -1937,20 +2119,21 @@ def _oauth_circuit_open(kind: str = "uc") -> bool:
     """Return True if the breaker is open OR the per-run call budget
     for this kind is exhausted. Callers treat both the same way: no
     OAuth call this article, use the fallback."""
-    bk = _OAUTH_BREAKERS.get(kind)
-    if not bk:
+    with _OAUTH_LOCK:
+        bk = _OAUTH_BREAKERS.get(kind)
+        if not bk:
+            return False
+        if bk.get("open"):
+            return True
+        if bk.get("used", 0) >= bk.get("budget", 10**9):
+            # Print once per run when the budget first runs out.
+            if not bk.get("_budget_logged"):
+                bk["_budget_logged"] = True
+                print(f"    [*] OAuth call budget for '{kind}' "
+                      f"({bk['budget']} calls) exhausted; remaining articles "
+                      f"will use fallback path.")
+            return True
         return False
-    if bk.get("open"):
-        return True
-    if bk.get("used", 0) >= bk.get("budget", 10**9):
-        # Print once per run when the budget first runs out.
-        if not bk.get("_budget_logged"):
-            bk["_budget_logged"] = True
-            print(f"    [*] OAuth call budget for '{kind}' "
-                  f"({bk['budget']} calls) exhausted; remaining articles "
-                  f"will use fallback path.")
-        return True
-    return False
 
 
 # =============================================================================
@@ -2170,23 +2353,27 @@ def _maybe_switch_account(reason: str) -> bool:
     the failures were credentials-bound, not infra-bound. Returns True on a
     real switch, False if already switched or no secondary configured."""
     global _CLAUDE_ACTIVE_ACCOUNT, _CLAUDE_SWITCHED, _OAUTH_FAILURES, _OAUTH_CIRCUIT_OPEN
-    if _CLAUDE_SWITCHED or not _CLAUDE_CONFIG_DIR_SECONDARY:
-        return False
-    _CLAUDE_ACTIVE_ACCOUNT = "secondary"
-    _CLAUDE_SWITCHED = True
-    # Reset every per-kind breaker — windows, failure counters, open flag.
-    # Keep `used` budgets in place so a runaway run still has a cost cap.
-    for bk in _OAUTH_BREAKERS.values():
-        bk["failures"] = 0
-        bk["open"] = False
-        bk["window"] = []
-        bk.pop("_budget_logged", None)
-    _OAUTH_FAILURES = 0
-    _OAUTH_CIRCUIT_OPEN = False
-    safe = (reason or "").encode("ascii", "replace").decode("ascii")[:160]
-    print(f"[CLAUDE-AUTH] primary account exhausted ({safe!r}); switching to "
-          f"secondary account (dir={_CLAUDE_CONFIG_DIR_SECONDARY})", flush=True)
-    return True
+    with _OAUTH_LOCK:
+        # Check-and-flip under the breaker lock: two parallel UC workers
+        # detecting credit exhaustion at the same moment must not both
+        # perform the switch (double breaker reset, interleaved prints).
+        if _CLAUDE_SWITCHED or not _CLAUDE_CONFIG_DIR_SECONDARY:
+            return False
+        _CLAUDE_ACTIVE_ACCOUNT = "secondary"
+        _CLAUDE_SWITCHED = True
+        # Reset every per-kind breaker — windows, failure counters, open flag.
+        # Keep `used` budgets in place so a runaway run still has a cost cap.
+        for bk in _OAUTH_BREAKERS.values():
+            bk["failures"] = 0
+            bk["open"] = False
+            bk["window"] = []
+            bk.pop("_budget_logged", None)
+        _OAUTH_FAILURES = 0
+        _OAUTH_CIRCUIT_OPEN = False
+        safe = (reason or "").encode("ascii", "replace").decode("ascii")[:160]
+        print(f"[CLAUDE-AUTH] primary account exhausted ({safe!r}); switching to "
+              f"secondary account (dir={_CLAUDE_CONFIG_DIR_SECONDARY})", flush=True)
+        return True
 
 
 def _parse_stream_json_buffer(raw: str, *, timed_out: bool) -> str | None:
@@ -2778,14 +2965,31 @@ def _llm_generate_ucs(article: dict, ind: dict):
     # auth; the env-var gate moved below the cache lookup.
     LLM_UC_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     # Cache key folds in UC_VERSION so prompt changes (Phase 1C onward)
-    # silently invalidate old entries without manual cache deletes.
-    cache_key = hashlib.sha1(f"{UC_VERSION}|{url}".encode("utf-8", "replace")).hexdigest()
+    # silently invalidate old entries without manual cache deletes, and
+    # LLM_UC_MODEL so an operator switching models (e.g. Opus -> Haiku to
+    # save cost, or back up again) doesn't keep serving the old model's
+    # cached output indefinitely.
+    cache_key = hashlib.sha1(f"{UC_VERSION}|{LLM_UC_MODEL}|{url}".encode("utf-8", "replace")).hexdigest()
     cache_path = LLM_UC_CACHE_DIR / f"{cache_key[:2]}/{cache_key}.json"
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     if cache_path.exists():
         try:
             data = __import__("json").loads(cache_path.read_text(encoding="utf-8"))
             return [_uc_from_llm_dict(d) for d in data.get("ucs", []) if d]
+        except Exception:
+            pass
+    # ---- Legacy v2 fallback (pre-model-id key: UC_VERSION|url) ----
+    # Read-only, same rationale as the v1 fallback below: adding the model
+    # to the key must not orphan the existing cache corpus. Fresh calls
+    # write under the new key only.
+    legacy2_key = hashlib.sha1(f"{UC_VERSION}|{url}".encode("utf-8", "replace")).hexdigest()
+    legacy2_path = LLM_UC_CACHE_DIR / f"{legacy2_key[:2]}/{legacy2_key}.json"
+    if legacy2_path.exists() and legacy2_path != cache_path:
+        try:
+            data = __import__("json").loads(legacy2_path.read_text(encoding="utf-8"))
+            ucs = [_uc_from_llm_dict(d) for d in data.get("ucs", []) if d]
+            if ucs:
+                return ucs
         except Exception:
             pass
     # ---- Legacy v1 fallback ----
@@ -2911,6 +3115,13 @@ def _llm_generate_ucs(article: dict, ind: dict):
     data: dict | None = None
     retries_used = 0
     for attempt in range(_UC_MAX_VALIDATION_RETRIES + 1):
+        # Per-attempt budget/breaker gate. _llm_call_via_oauth checks this
+        # internally, but the API-key fallback path below does NOT — without
+        # this gate, validation retries through the API key could keep
+        # spending after the per-run 'uc' budget was exhausted.
+        if attempt > 0 and _oauth_circuit_open("uc"):
+            print("    [UC-RETRY] skipping retry — 'uc' breaker open / budget exhausted")
+            break
         raw = None
         if use_oauth:
             raw = _llm_call_via_oauth(prompt_to_send, enable_search=not has_hard_iocs)
@@ -2979,9 +3190,14 @@ def _llm_generate_ucs(article: dict, ind: dict):
             if isinstance(uc, dict):
                 for k in ("_field_issues", "_field_issues_autofix",
                           "_sentinel_field_issues", "_sentinel_field_issues_autofix",
-                          "_syntax_issues", "_sentinel_syntax_issues"):
+                          "_syntax_issues", "_sentinel_syntax_issues",
+                          "_cwli_issues", "_spl_issues", "_datadog_issues",
+                          "_falcon_issues", "_dangerous_issues"):
                     uc.pop(k, None)
         cwli_issues = 0
+        spl_issues = 0
+        other_issues = 0
+        dangerous_issues = 0
         for uc in ucs_list:
             if isinstance(uc, dict):
                 field_issues += _attach_field_issues(uc, "defender_kql")
@@ -2989,13 +3205,22 @@ def _llm_generate_ucs(article: dict, ind: dict):
                                                       issues_key="_sentinel_field_issues")
                 sigma_issues += _attach_sigma_issues(uc, "sigma_yaml")
                 cwli_issues += _attach_cwli_issues(uc, "cloudwatch_query")
+                spl_issues += _attach_spl_issues(uc, "splunk_spl")
+                other_issues += _attach_generic_query_issues(
+                    uc, "datadog_query", "Datadog", "_datadog_issues")
+                other_issues += _attach_generic_query_issues(
+                    uc, "falcon_logscale_query", "Falcon LogScale", "_falcon_issues")
+                dangerous_issues += _attach_dangerous_issues(uc)
         syntax_issues = _attach_syntax_issues_batch(ucs_list)
-        total_validation_errors = field_issues + syntax_issues
+        total_validation_errors = (field_issues + syntax_issues + spl_issues
+                                   + other_issues + dangerous_issues)
         if total_validation_errors == 0:
             # Clean. No retry needed.
             break
         if attempt >= _UC_MAX_VALIDATION_RETRIES:
             # Out of retries. Ship with issues attached — better than nothing.
+            # (Exception: UCs still carrying _dangerous_issues are dropped
+            # below, after the loop — those never ship.)
             break
         # Build the retry payload and re-prompt.
         error_text = _format_validation_errors_for_retry(ucs_list)
@@ -3003,7 +3228,8 @@ def _llm_generate_ucs(article: dict, ind: dict):
             break
         retries_used += 1
         print(f"    [UC-RETRY] attempt {attempt+1}: "
-              f"{field_issues} field + {syntax_issues} syntax issue(s) — re-prompting LLM")
+              f"{field_issues} field + {syntax_issues} syntax + {spl_issues} SPL "
+              f"+ {other_issues} other + {dangerous_issues} safety issue(s) — re-prompting LLM")
         prompt_to_send = prompt + "\n\n" + error_text
 
     if data is None or not isinstance(data, dict):
@@ -3029,6 +3255,31 @@ def _llm_generate_ucs(article: dict, ind: dict):
         print(f"    [!] {total_syntax_issues} KQL syntax issue(s) flagged across {len(ucs_list)} UC(s)")
     if total_sigma_issues:
         print(f"    [!] {total_sigma_issues} Sigma rule issue(s) across {len(ucs_list)} UC(s)")
+
+    # Safety quarantine: a UC whose query STILL contains a side-effectful
+    # command after the retry loop never ships and never caches. Publishing
+    # a query that writes/sends/deletes (a realistic prompt-injection
+    # payload via article text) is strictly worse than missing a detection.
+    _dangerous = [u for u in ucs_list
+                  if isinstance(u, dict) and u.get("_dangerous_issues")]
+    if _dangerous:
+        for u in _dangerous:
+            print(f"    [!] QUARANTINED UC (unsafe query survived retries): "
+                  f"{(u.get('title') or '?')[:80]}")
+            for iss in u.get("_dangerous_issues") or []:
+                print(f"        - {iss}")
+        data["ucs"] = [u for u in ucs_list
+                       if not (isinstance(u, dict) and u.get("_dangerous_issues"))]
+        ucs_list = data["ucs"]
+
+    # Cache-write gate: only a well-formed payload (ucs == list of dicts)
+    # may be persisted. A truncated / partially-parsed response that slipped
+    # through (e.g. JSON salvaged from a timed-out stream) used to be cached
+    # as-is and then served as authoritative on every subsequent run.
+    _ucs_payload = data.get("ucs")
+    if not isinstance(_ucs_payload, list) or any(not isinstance(d, dict) for d in _ucs_payload):
+        print("    [!] refusing to cache malformed UC payload (ucs is not a list of objects)")
+        return [_uc_from_llm_dict(d) for d in (_ucs_payload or []) if isinstance(d, dict)]
 
     # Stamp the cache with the inputs we used so the 24h re-review pass
     # can detect when an article's body has been edited, a new image has
@@ -3388,7 +3639,7 @@ def _llm_generate_actor_ucs(actor: dict):
         if not isinstance(d, dict): continue
         title = (d.get("title") or "").strip()
         if not title: continue
-        title = _re.sub(r"^(\[LLM\]\s*)+", "", title) if (_re := __import__("re")) else title
+        title = re.sub(r"^(\[LLM\]\s*)+", "", title)
         out_ucs.append({
             "title": f"[LLM] {title[:140]}",
             "description": (d.get("description") or "")[:600],
@@ -18067,6 +18318,25 @@ def _extract_article_image_urls(html_doc: str, base_url: str, max_images: int = 
         "/share-button", "/social/", "/badge", "/emoji",
         "1x1.gif", "pixel.gif", "spacer.gif", "blank.gif",
     )
+    def _is_private_target(absolute_url: str) -> bool:
+        """SSRF guard: these URLs are handed to the LLM's WebFetch, so an
+        attacker-controlled article must not be able to point that fetch at
+        loopback / RFC1918 / link-local / metadata addresses."""
+        import ipaddress
+        from urllib.parse import urlparse
+        try:
+            host = (urlparse(absolute_url).hostname or "").strip("[]").lower()
+        except Exception:
+            return True
+        if not host or host == "localhost" or host.endswith((".local", ".internal", ".lan")):
+            return True
+        try:
+            ip = ipaddress.ip_address(host)
+        except ValueError:
+            return False  # hostname, not an IP literal — allowed
+        return (ip.is_private or ip.is_loopback or ip.is_link_local
+                or ip.is_multicast or ip.is_reserved or ip.is_unspecified)
+
     out = []
     seen = set()
     for src in raw:
@@ -18081,6 +18351,8 @@ def _extract_article_image_urls(html_doc: str, base_url: str, max_images: int = 
             continue
         low = absolute.lower()
         if any(p in low for p in REJECT):
+            continue
+        if _is_private_target(absolute):
             continue
         if absolute in seen:
             continue
@@ -18140,6 +18412,10 @@ def _fetch_full_body(url: str, fallback: str = "") -> tuple:
                 except Exception:
                     pass
             else:
+                # Non-200 / empty body: degrading to the RSS summary is the
+                # right fallback, but it must be VISIBLE — IOC extraction
+                # quality drops sharply on preview-only text.
+                print(f"    [!] body fetch HTTP {r.status_code} for {url[:80]} — using RSS summary")
                 return (fallback,) + _EMPTY_FETCH_EXTRAS
         except Exception as e:
             safe_err = str(e).encode("ascii", "replace").decode("ascii")
@@ -18148,6 +18424,7 @@ def _fetch_full_body(url: str, fallback: str = "") -> tuple:
     text = _html_to_text_for_iocs(html_doc)
     if len(text) < 200:
         # extraction looks broken — better to keep the RSS summary than ship rubbish
+        print(f"    [!] body extraction too short ({len(text)} chars) for {url[:80]} — using RSS summary")
         return (fallback,) + _EMPTY_FETCH_EXTRAS
     images      = _extract_article_image_urls(html_doc, url)
     code_blocks = _extract_code_blocks(html_doc)
@@ -18160,15 +18437,42 @@ def _fetch_full_body(url: str, fallback: str = "") -> tuple:
 
 def _fetch_rss(source, since):
     feed = feedparser.parse(source["url"])
+    # feedparser never raises — malformed XML / error pages just come back
+    # as an empty or partial entries list with bozo set. Unchecked, a feed
+    # that drifts into bad XML silently drops ALL its articles forever.
+    _status = getattr(feed, "status", None)
+    if getattr(feed, "bozo", 0):
+        _bx = getattr(feed, "bozo_exception", "")
+        print(f"    [!] feed parse warning ({source['name']}): "
+              f"{str(_bx)[:100]} — {len(feed.entries)} entries salvaged")
+    if _status is not None and _status != 200:
+        print(f"    [!] feed HTTP status {_status} ({source['name']})")
+    if not feed.entries:
+        print(f"    [!] feed returned ZERO entries ({source['name']}, "
+              f"status={_status}) — dead feed or schema drift?")
     out = []
     fetched = 0
+    undated = 0
     for e in feed.entries[:MAX_PER_SOURCE]:
         pub = _parse_published(e)
+        if pub is None and (e.get("published") or e.get("updated")):
+            # Date present but unparseable: the lookback filter below is
+            # bypassed for this entry (kept fail-open) — log it so a feed
+            # whose date format drifts is visible instead of silently
+            # admitting arbitrarily old articles.
+            undated += 1
         if since and pub and pub < since:
             continue
         rss_summary = strip_html(e.get("summary", "") or e.get("description", "") or "")
         rss_summary = re.sub(r"\s+", " ", rss_summary).strip()
         link = e.get("link", "")
+        # Scheme whitelist at the single ingestion point: article links are
+        # rendered into hrefs across the site (Python cards + JS tabs), and
+        # html.escape does NOT neutralise a javascript: URL. A compromised
+        # feed must not be able to plant an executable link.
+        if link and not link.lower().startswith(("http://", "https://")):
+            print(f"    [!] non-http(s) link scheme dropped ({source['name']}): {link[:80]!r}")
+            link = ""
 
         # Pull the full article body so IOC extraction sees hashes / defanged
         # IPs / domains that live below the RSS preview. Also harvest the
@@ -18205,6 +18509,9 @@ def _fetch_rss(source, since):
         })
     if fetched:
         print(f"    -> fetched {fetched} full article bodies")
+    if undated:
+        print(f"    [!] {undated} entr{'y' if undated == 1 else 'ies'} with "
+              f"unparseable published dates ({source['name']}) — lookback filter bypassed for them")
     return out
 
 
@@ -20088,6 +20395,7 @@ def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
     since = dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=days)
     print(f"[*] Lookback window: {days} days (since {since.strftime('%Y-%m-%d')})")
     raw = []
+    src_stats = []
     for src in SOURCES:
         try:
             print(f"[*] {src['name']}…")
@@ -20112,7 +20420,18 @@ def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
         if dropped:
             print(f"    -> dropped {dropped} marketing post(s)")
         print(f"    -> {len(items)} articles in window")
+        src_stats.append((src["name"], len(items)))
         raw.extend(items)
+
+    # Per-source fetch summary — a quietly-dead feed (bad XML, schema
+    # drift, HTTP errors) used to be invisible until someone noticed a
+    # coverage gap. One line per run makes it visible immediately.
+    print("[*] Per-source article counts: "
+          + ", ".join(f"{n}={c}" for n, c in src_stats))
+    _zero_srcs = [n for n, c in src_stats if c == 0]
+    if _zero_srcs:
+        print(f"[!] {len(_zero_srcs)} source(s) returned ZERO articles this run: "
+              f"{', '.join(_zero_srcs)} — check the feed if this persists")
 
     # Pre-tokenize titles for word-set Jaccard dedupe across sources.
     # Also extract canonical incident IDs (CVE / GHSA / @scope/pkg / named
@@ -20131,8 +20450,13 @@ def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
     MERGE_WINDOW = dt.timedelta(hours=4)
     def _within_window(a_, b_):
         da, db = a_.get("published_dt"), b_.get("published_dt")
+        if not da and not db:
+            # BOTH undated: refuse to merge — two dateless articles from
+            # different sources used to auto-merge on any token overlap,
+            # collapsing unrelated stories into one card.
+            return False
         if not da or not db:
-            return True  # if either is undated, can't enforce — allow
+            return True  # one undated (e.g. a feed without dates) — allow
         return abs(da - db) <= MERGE_WINDOW
 
     deduped = []
@@ -20171,10 +20495,11 @@ def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
             if len(a.get("raw_body","")) > len(match.get("raw_body","")):
                 match["summary"] = a["summary"]
                 match["raw_body"] = a["raw_body"]
-            # Carry forward canonical IDs from each merged article — every
-            # subsequent comparison gets the full set, so a third article
-            # sharing any one of them folds in too.
-            match["_ids"] = match["_ids"] | a["_ids"]
+            # Canonical IDs are FROZEN at the merge target's original set.
+            # Unioning them in (the old behaviour) let merges chain: A
+            # merges into B, B inherits A's CVE, then unrelated C sharing
+            # only that CVE with A folds into B too — collapsing distinct
+            # incidents that merely cite the same vulnerability.
             match["_tokens"] = match["_tokens"] | a["_tokens"]
         else:
             deduped.append(a)
@@ -21110,6 +21435,7 @@ def main():
                 a["_mechanics"] = mechanics
         except Exception as _e:
             print(f"    [!] bespoke UC failed for article {i}: {_e}")
+            _note_degraded(f"bespoke UC art {i}: {str(_e)[:80]}")
         # Phase 1B — kill-chain reconstruction. One Opus call returns
         # the ordered phase list (initial_access → execution → ...) with
         # MITRE techniques, citation phrases, and log sources per phase.
@@ -21121,6 +21447,7 @@ def main():
             a["kill_chain"] = kc
         except Exception as _e:
             print(f"    [!] kill-chain reconstruction failed for article {i}: {_e}")
+            _note_degraded(f"kill-chain art {i}: {str(_e)[:80]}")
             a["kill_chain"] = {"phases": [], "overall_summary": ""}
         # LLM-driven bespoke UCs. Parallelised across the next
         # _UC_PARALLELISM articles via a background ThreadPoolExecutor
@@ -21158,6 +21485,7 @@ def main():
                 bespoke_built += 1
         except Exception as _e:
             print(f"    [!] LLM UC failed for article {i}: {_e}")
+            _note_degraded(f"LLM UC art {i}: {str(_e)[:80]}")
         narrative_hit, _ = detect_kill_chain(text)
         hit = narrative_hit | {uc.kill_chain for uc in ucs}
         inferred = set()
@@ -21925,6 +22253,12 @@ def main():
         print(f"[*] Wrote sitemap.xml ({len(sitemap_urls)} URLs)")
     except Exception as _e:
         print(f"[!] sitemap.xml write failed: {_e}")
+
+    # Postcondition gates — run LAST so every artefact has been written.
+    # Either can sys.exit non-zero, which makes run_once.bat skip the
+    # commit+push for this cycle (caches stay warm; next run retries).
+    _verify_outputs()
+    _check_degradation(len(articles))
 
 
 if __name__ == "__main__":

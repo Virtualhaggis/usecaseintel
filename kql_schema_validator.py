@@ -517,6 +517,15 @@ def auto_fix_kql(kql: str) -> tuple[str, list[str]]:
         if new_body != fixed:
             fixed = new_body
             changes.append(f"{field} -> {replacement}")
+    if changes:
+        # Convergence check: an auto-fix must never make the query WORSE.
+        # The suggested replacements all exist on the target table, but a
+        # rewrite can still introduce new issues (e.g. the replacement is
+        # wrong-table for a second table joined into the same scope). If
+        # the rewritten body validates with more issues than the original,
+        # revert and let the caller's retry/issue-attachment path handle it.
+        if len(validate_kql(fixed)) > len(issues):
+            return kql, []
     return fixed, changes
 
 

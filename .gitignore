@@ -25,6 +25,10 @@ intel/.enrich_cache/
 # LLM-generated UC cache (per-article API responses, never committed)
 intel/.llm_uc_cache/
 
+# Push-failure sentinel written by the scheduler bat files; presence means
+# an automated git push failed and the operator hasn't resolved it yet.
+.push_failed
+
 # Local-only files
 *.bak_*
 inspect_*.py
@@ -77,3 +81,13 @@ intel/last_run_articles.json
 # operator metric; not part of the public threat-intel exports. View it
 # with `.\show_usage.ps1`.
 intel/.usage_log.jsonl
+
+# Local-only operator work area -- M365 detection library + per-article
+# UC generation targeting a private Splunk index schema (cto_m365_exchange).
+# Lives in the repo for code-locality (.local/build_*.py can import from
+# the main generate.py for Claude OAuth + dual-account failover) but
+# EVERY file inside .local/ is untracked. Never commit anything here.
+.local/
+
+# Offline SEO preview (throwaway, never published)
+_seo_preview/
