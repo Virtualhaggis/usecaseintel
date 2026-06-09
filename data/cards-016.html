@@ -1,248 +1,3 @@
-<article class="card" id="art-475" data-art-slug="2026-03-04-the-89-problem-how-llms-are-resurrecting-the-dormant-majorit"
-  data-phases="c2,delivery,exploit,install,recon" data-sev="med"
-  data-techs="T1190,T1195.002"
-  data-sources="Snyk"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="endpoint"
-  data-targets="windows"
-  data-uc-count="2" data-llm-uc-count="0"
-  data-search="The 89% Problem: How LLMs Are Resurrecting the &quot;Dormant Majority&quot; of Open Source AI coding assistants are resurrecting millions of abandoned open source packages. Learn how LLMs expose the “Dormant Majority” and why package health intelligence is critical for supply chain security.  T1190 T1195.002 Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — The 89% Problem: How LLMs Are Resurrecting the &quot;Dormant Majority&quot; of Open Source">
-  <div class="sev-ribbon med">Medium</div>
-  <button class="share-btn card-share" data-share-art="2026-03-04-the-89-problem-how-llms-are-resurrecting-the-dormant-majorit" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/llms-resurrecting-open-source-dormant-majority/" target="_blank" rel="noopener">The 89% Problem: How LLMs Are Resurrecting the &quot;Dormant Majority&quot; of Open Source</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2026-03-04</span>
-    <span>2 use cases</span>
-    <span>2 techniques</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">AI coding assistants are resurrecting millions of abandoned open source packages. Learn how LLMs expose the “Dormant Majority” and why package health intelligence is critical for supply chain security.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-475-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-475"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-475-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — The 89% Problem: How LLMs Are Resurrecting the &quot;Dormant Majority&quot; of Open Source</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-475-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-475-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-475-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-475-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-475-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-475-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-475-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-475-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-475-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-475-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-475-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-475-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="51e52e044e" data-platforms="def,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — The 89% Problem: How LLMs Are Resurrecting the &quot;Dormant Majority&quot; of Open Source</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="51e52e044e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-475-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-475-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-475-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — The 89% Problem: How LLMs Are Resurrecting the &quot;Dormant Majority&quot; of Open Source
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;next.js&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;next.js&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-475-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-475-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-475-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-475-uc1-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — The 89% Problem: How LLMs Are Resurrecting the &quot;Dormant Majority&quot; of Open Source ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;next.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;next.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-475-uc1-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — The 89% Problem: How LLMs Are Resurrecting the &quot;Dormant Majority&quot; of Open Source ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;next.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;next.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-477" data-art-slug="2026-03-03-persistent-xss-rce-using-websockets-in-storybook-s-dev-serve"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190,T1195.002,T1555.003"
@@ -331,6 +86,7 @@ DeviceFileEvents
 Rationale: The article documents that the attacker-supplied componentFilePath is interpolated into the import statement and persisted on disk with the JS-breaking characters embedded in the filename (e.g. &quot;Button&#x27;;alert(document.domain);var a=&#x27;.tsx&quot; and the RCE variant containing &quot;RCE_PROOF&quot; and &quot;child_process&quot;). Legitimate story filenames never contain &#x27;;, alert(, require(, child_process, execSync, or document.domain - they map 1:1 to JS identifier-safe component names - so the markers + .stories.* extension + src/stories path is a tight signature with minimal FP potential. Did not externally corroborate via WebFetch (permissions not granted); references to GHSA-mjf5-7g4m-gx5w cited from the article body.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span> <span class="ind tech" title="Compromise Software Dependencies and Development Tools">T1195.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher or red-teamer reproducing the published PoC on their own workstation</li><li>Authorized penetration test of the dev environment exercising the same CVE</li><li>Storybook addon snapshot that auto-generates story fixtures containing special characters in titles (rare, addon-specific)</li><li>Developer manually testing the exploit against a patched version to verify the fix</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where FolderPath !contains &quot;\\node_modules\\&quot; and FolderPath !contains &quot;/node_modules/&quot; and FolderPath !contains &quot;\\storybook-static\\&quot; and InitiatingProcessCommandLine !has &quot;jest-image-snapshot&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the file&#x27;s full contents (git show / cat) - confirm the JS injection beyond the filename, identify which developer&#x27;s workstation wrote it, and check whether the file was committed (git log -- src/stories/) or pushed. 2) Contain: delete the file from disk AND scrub from git history (BFG / git filter-repo) before it propagates through CI; rotate every secret reachable from that workstation (NPM_TOKEN, GITHUB_TOKEN, AWS_*, .npmrc, ~/.aws, SSH keys) because vitest portable-stories may have already executed it server-side. 3) Hunt: query DeviceTvmSoftwareInventory for Storybook versions &lt;10.2.10 / &lt;9.1.19 / &lt;8.6.17 / &lt;7.6.23 across the org; review any CI runs that executed portable stories in the 24h window for unexpected child processes; search the entire repo and adjacent repos for additional .stories.* files with the same injection markers.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-477-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-477-uc0-sentinel">Sentinel KQL</button>
@@ -435,6 +191,7 @@ level: high</code></pre></div>
 Rationale: The article literally demonstrates the escalation: vitest running portable stories executes the injected story file in a Node context, with the PoC payload containing require(&#x27;child_process&#x27;).execSync(&#x27;id&#x27;) and printing &#x27;RCE_PROOF:&#x27;. Pairing vitest/node parent + storybook-related parent cmdline + child shell OR PoC-string cmdline gives a tight, deployable signature. Did not externally corroborate via WebFetch (permission not granted in this session).</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter">T1059</span> <span class="ind tech" title="Credentials In Files">T1552.001</span> <span class="ind tech" title="Compromise Software Dependencies and Development Tools">T1195.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>playwright / test-storybook / chromatic visual regression addons spawning chromium during portable-stories runs (filtered above)</li><li>Test fixtures that legitimately exec child_process to seed databases or start dependent services</li><li>CI orchestration wrappers (jenkins agents, github runners) that shell out around the test invocation</li><li>Developer-authored test utilities that genuinely call execSync for environment setup</li><li>Coverage tooling (nyc / c8) that spawns helper processes</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;playwright&quot; and InitiatingProcessCommandLine !has &quot;test-storybook&quot; and InitiatingProcessCommandLine !has &quot;chromatic&quot; and ProcessCommandLine !contains &quot;\\node_modules\\.bin\\esbuild&quot; and ProcessCommandLine !contains &quot;\\node_modules\\.bin\\rollup&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the vitest invocation context (cwd, branch, story file under test), then grep the repo&#x27;s src/stories tree for files containing the recon strings the child executed - the on-disk story file IS the payload. Run UC1 against the same host for the corresponding FileWritten event in the prior 24h. 2) Contain: isolate the workstation or CI runner, revoke ALL credentials accessible to the affected user/runner (cloud keys, source-control PATs, package-registry tokens, .npmrc auth tokens), and quarantine the offending branch from being merged. 3) Hunt: pivot on aid/DeviceName for outbound DeviceNetworkEvents/NetworkConnectIP4 in the +/- 30 min window for credential-exfil destinations; check git log for already-committed malicious .stories.* across the org; search EmailEvents / AzureActivity for new OAuth app grants from compromised user accounts in the following 48h.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-477-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-477-uc1-sentinel">Sentinel KQL</button>
@@ -557,6 +314,7 @@ level: high</code></pre></div>
     <div class="uc-desc">Stealers / wallet drainers read keystore.json, MetaMask, Exodus, Atomic, Phantom data.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Local System">T1005</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-477-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-477-uc2-sentinel">Sentinel KQL</button>
@@ -661,6 +419,7 @@ level: high
     <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-477-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-477-uc3-sentinel">Sentinel KQL</button>
@@ -765,6 +524,7 @@ level: high
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-477-uc4-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-477-uc4-sentinel">Sentinel KQL</button>
@@ -817,6 +577,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-477-uc5-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-477-uc5-sentinel">Sentinel KQL</button>
@@ -917,6 +678,7 @@ level: medium
     <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-477-uc6-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-477-uc6-spl">Splunk SPL (CIM)</button>
@@ -1063,6 +825,7 @@ DeviceFileEvents
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-479-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-479-uc0-sentinel">Sentinel KQL</button>
@@ -1188,6 +951,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-480-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-480-uc0-sentinel">Sentinel KQL</button>
@@ -1313,6 +1077,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-482-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-482-uc0-sentinel">Sentinel KQL</button>
@@ -1486,6 +1251,7 @@ level: medium
     <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-483-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-483-uc0-sentinel">Sentinel KQL</button>
@@ -1586,6 +1352,7 @@ level: medium
     <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-483-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-483-uc1-spl">Splunk SPL (CIM)</button>
@@ -1741,6 +1508,7 @@ Cross-checked against:
   • https://sect.iij.ad.jp/d/2025/02/news-plugx-staticplugin.html</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Link">T1566.002</span> <span class="ind tech" title="User Execution: Malicious Link">T1204.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel team forwarding the Lab52 article body to colleagues (subject contains the lure phrases verbatim)</li><li>Calendar/SharePoint notifications about external meetings using the phrase &#x27;Meeting Invitation&#x27;</li><li>Phishing-simulation vendors (KnowBe4, Cofense) running an awareness campaign with PlugX-style lures</li><li>Legitimate diplomatic correspondence about Iceland MFA events when in scope of the original campaign window</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SenderFromDomain !in~ (&quot;yourorg.com&quot;,&quot;trusted-partner.com&quot;) and not (SenderFromAddress has_any (&quot;phishsim@&quot;,&quot;knowbe4.com&quot;,&quot;cofense.com&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull EmailEvents for the NetworkMessageId — confirm SenderFromDomain is external and not on the org allowlist; pivot on UrlClickEvents for the same recipient to see if any user clicked through; check DeliveryAction (Delivered vs Junked). 2) Contain: soft-delete via Defender Submissions, block sender domain at gateway, sinkhole gesecole.net at DNS/proxy, push UrlBlockList for the exact ZIP URL. 3) Hunt: for every recipient, run UC2/UC3/UC4 (MSBuild .csproj, Avk.exe sideload, Run key) over the next 7 days from delivery time; query DeviceNetworkEvents for decoraat[.]net / decoorat[.]net to find post-click C2.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-486-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-486-uc0-sentinel">Sentinel KQL</button>
@@ -1800,6 +1568,7 @@ Cross-checked against:
   • https://lolbas-project.github.io/lolbas/Binaries/Msbuild/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Trusted Developer Utilities Proxy Execution: MSBuild">T1127.001</span> <span class="ind tech" title="System Binary Proxy Execution">T1218</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer running MSBuild outside Visual Studio (CLI build of a personal project in Downloads)</li><li>CI/CD agent installed under C:\ProgramData running build pipelines</li><li>Power-user with VS Build Tools (not full VS) compiling .csproj from a Git clone under Users</li><li>Legitimate dotnet SDK invocation that wraps MSBuild against a project in AppData\Local</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;devenv.exe&quot;,&quot;dotnet.exe&quot;,&quot;vshost.exe&quot;,&quot;jenkins-agent.exe&quot;,&quot;AzureDevOps.exe&quot;,&quot;Runner.Worker.exe&quot;)) and not (AccountName endswith &quot;$&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the .csproj target file from the host (\Live Response) and grep for Base64 blobs / WebClient.DownloadFile / HttpClient — PlugX .csproj has 3 Base64 URLs pointing to gesecole.net staging. Confirm SHA256 of the loader against 29cd44aa2a51a200d82cca578d97dc13241bc906ea6a33b132c6ca567dc8f3ad (ZIP) or de8ddc2451fb1305d76ab20661725d11c77625aeeaa1447faf3fbf56706c87f1 (.csproj). 2) Contain: isolate device via Defender Live Response, kill MSBuild process tree, quarantine the .csproj + originating ZIP. 3) Hunt: run UC3 (Avk.exe sideload from \Public\GDatas\) and UC4 (Run key &#x27;G DATA&#x27;) on the same host; pivot UC5 (C2 egress) network-wide for the next 30d.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-486-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-486-uc1-sentinel">Sentinel KQL</button>
@@ -1873,6 +1642,7 @@ Cross-checked against:
   • https://attack.mitre.org/techniques/T1574/002/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Hijack Execution Flow: DLL Side-Loading">T1574.002</span> <span class="ind tech" title="Masquerading: Match Legitimate Name or Location">T1036.005</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>G DATA Antivirus uninstaller leaving copies under \ProgramData\ during cleanup</li><li>Legitimate G DATA support running Avk.exe from a temp diagnostic folder</li><li>Software-deployment systems (SCCM/Intune) staging the installer under \Users\Public\ pre-installation</li><li>Forensic analyst manually copying Avk.exe to a sandbox VM</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;msiexec.exe&quot;,&quot;GDataSetup.exe&quot;,&quot;AVKWizard.exe&quot;)) and AccountName !endswith &quot;$&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm Avk.exe path is NOT under \Program Files\G DATA\; pull DeviceImageLoadEvents for the same ProcessId and inspect Avk.dll SHA256 — legitimate G DATA Avk.dll has a known hash, malicious Korplug Avk.dll is 46314092c8d00ab93cbbdc824b9fc39dec9303169163b9625bae3b1717d70ebc. Look for AVKTray.dat in the same folder (encrypted payload, ~673KB). 2) Contain: isolate device, quarantine the entire \Users\Public\GDatas\ folder, kill Avk.exe and any svchost-style child processes. 3) Hunt: pivot to UC4 (Run key &#x27;G DATA&#x27; persistence) for the same DeviceId, then UC5 (C2 to decoraat.net) across the org — finding one host with this side-load typically indicates 2–5 more in the same campaign.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-486-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-486-uc2-sentinel">Sentinel KQL</button>
@@ -1944,6 +1714,7 @@ Cross-checked against:
   • https://attack.mitre.org/techniques/T1547/001/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder">T1547.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Registry</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>G DATA support installer writing a Run key during repair (legitimate path under \Program Files\)</li><li>Power-user manually re-naming a registry value to &#x27;G DATA&#x27; for organisation</li><li>Endpoint backup-restore tool replaying old registry hives onto a re-imaged host</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;GDataSetup.exe&quot;,&quot;AVKWizard.exe&quot;,&quot;msiexec.exe&quot;,&quot;AVKBackupService.exe&quot;)) and InitiatingProcessAccountName !endswith &quot;$&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the RegistryValueData fully — confirm path is \Users\Public\GDatas\ (NOT \Program Files\G DATA\). Identify InitiatingProcessFileName — should NOT be a G DATA installer. 2) Contain: isolate device, delete the Run-key value via Live Response (`reg delete &quot;HKCU\Software\Microsoft\Windows\CurrentVersion\Run&quot; /v &quot;G DATA&quot; /f`), quarantine \Users\Public\GDatas\ folder, kill any active Avk.exe processes. 3) Hunt: query DeviceProcessEvents for prior Avk.exe executions on the host (UC3), pull NetFlow/DNS for decoraat.net / decoorat.net / gesecole.net (UC5) for the past 30 days, and check the user&#x27;s mailbox for the originating &#x27;Meeting Invitation&#x27; email (UC1).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-486-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-486-uc3-sentinel">Sentinel KQL</button>
@@ -2005,6 +1776,7 @@ Cross-checked against:
   • https://attack.mitre.org/software/S0013/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Encrypted Channel: Asymmetric Cryptography">T1573.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel analyst sandbox or VM detonating the Lab52 sample for research</li><li>Security tool actively probing the C2 (passive DNS, urlscan-style health checks)</li><li>Malware repository fetching the .csproj/.zip artefacts (VirusTotal, Any.Run)</li><li>Threat-hunter manually browsing the domain for OSINT validation</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;)) and not (InitiatingProcessAccountName in~ (&quot;defaultaccount&quot;,&quot;securityresearch&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm InitiatingProcessFileName — TP signal is Avk.exe or MSBuild.exe (article&#x27;s loader chain), not a browser; check whether DNS resolution succeeded and whether a TCP/443 connection followed. Pull PCAP or proxy logs for the connection if available. 2) Contain: sinkhole the four domains at DNS/proxy/firewall layer immediately, isolate the originating host, kill Avk.exe/MSBuild.exe process tree, quarantine \Users\Public\GDatas\ and downloaded ZIP. 3) Hunt: pivot to UC2 (MSBuild .csproj), UC3 (Avk.exe sideload), UC4 (Run key &#x27;G DATA&#x27;) on the same host for the past 30d; query the org for any other host that resolved these four domains; check ThreatIntelligenceIndicator table for related IOC pivots.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-486-uc4-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-486-uc4-sentinel">Sentinel KQL</button>
@@ -2068,6 +1840,7 @@ Pair with UC_PHISH_LINK_BYPASS (Safe Links override) and UC_PHISH_LINK_NEWDOMAIN
 for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Link">T1566.002</span> <span class="ind tech" title="User Execution: Malicious Link">T1204.001</span> <span class="ind tech" title="PowerShell">T1059.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-486-uc5-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-486-uc5-sentinel">Sentinel KQL</button>
@@ -2218,6 +1991,7 @@ SecurityEvent
     <div class="uc-desc">Attachment delivery + execution by recipient — most common malware initial access.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Attachment">T1566.001</span> <span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailAttachmentInfo</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-486-uc6-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-486-uc6-sentinel">Sentinel KQL</button>
@@ -2298,6 +2072,7 @@ SecurityEvent
     <div class="uc-desc">Classic macro/exploit pattern — Office app launching cmd/powershell/wmic/regsvr32.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Visual Basic">T1059.005</span> <span class="ind tech" title="System Binary Proxy Execution">T1218</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-486-uc7-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-486-uc7-sentinel">Sentinel KQL</button>
@@ -2405,6 +2180,7 @@ level: high
     <div class="uc-desc">Browser-pasted PowerShell launched from explorer/Run dialog — ClickFix social engineering.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious Copy and Paste">T1204.004</span> <span class="ind tech" title="PowerShell">T1059.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-486-uc8-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-486-uc8-sentinel">Sentinel KQL</button>
@@ -2508,6 +2284,7 @@ level: high
     <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-486-uc9-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-486-uc9-sentinel">Sentinel KQL</button>
@@ -2608,6 +2385,7 @@ level: medium
     <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-486-uc10-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-486-uc10-sentinel">Sentinel KQL</button>
@@ -2702,6 +2480,7 @@ level: critical
     <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-486-uc11-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-486-uc11-sentinel">Sentinel KQL</button>
@@ -2809,6 +2588,7 @@ level: critical
     <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-486-uc12-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-486-uc12-spl">Splunk SPL (CIM)</button>
@@ -2954,6 +2734,7 @@ DeviceFileEvents
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-487-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-487-uc0-sentinel">Sentinel KQL</button>
@@ -3079,6 +2860,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-488-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-488-uc0-sentinel">Sentinel KQL</button>
@@ -3204,6 +2986,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-490-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-490-uc0-sentinel">Sentinel KQL</button>
@@ -3377,6 +3160,7 @@ level: medium
     <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-491-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-491-uc0-sentinel">Sentinel KQL</button>
@@ -3550,6 +3334,7 @@ level: medium
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-492-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-492-uc0-sentinel">Sentinel KQL</button>
@@ -3684,6 +3469,7 @@ Cross-checked against:
   • https://www.sentinelone.com/vulnerability-database/cve-2026-25545/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-493-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-493-uc0-sentinel">Sentinel KQL</button>
@@ -3773,6 +3559,7 @@ Cross-checked against:
   • https://www.aikido.dev/blog/astro-full-read-ssrf-via-host-header-injection</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-493-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-493-uc1-spl">Splunk SPL (CIM)</button>
@@ -3813,6 +3600,7 @@ union isfuzzy=true AppService, Proxy
     <div class="uc-desc">Stealers / wallet drainers read keystore.json, MetaMask, Exodus, Atomic, Phantom data.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Local System">T1005</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-493-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-493-uc2-sentinel">Sentinel KQL</button>
@@ -3917,6 +3705,7 @@ level: high
     <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-493-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-493-uc3-sentinel">Sentinel KQL</button>
@@ -4021,6 +3810,7 @@ level: high
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-493-uc4-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-493-uc4-sentinel">Sentinel KQL</button>
@@ -4073,6 +3863,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-493-uc5-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-493-uc5-sentinel">Sentinel KQL</button>
@@ -4321,6 +4112,7 @@ level: medium
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-497-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-497-uc0-sentinel">Sentinel KQL</button>
@@ -4447,6 +4239,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-499-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-499-uc0-sentinel">Sentinel KQL</button>
@@ -4572,6 +4365,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-500-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-500-uc0-sentinel">Sentinel KQL</button>
@@ -4705,6 +4499,7 @@ Cross-checked against:
   • https://vercel.com/changelog</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Exploitation for Credential Access">T1212</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal penetration testers or red-team exercising the SvelteSpill PoC against staging</li><li>Vulnerability scanners (Nuclei, Burp, Aikido Intel) running CVE-2026-27118 templates</li><li>Bug-bounty researchers probing the public web app</li><li>Patch-validation traffic from the security team after deploying the Vercel fix</li><li>Automated cache-warmer or synthetic monitor mis-templated with the literal string</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ClientIP !in (&quot;&lt;security-scanner-cidr&gt;&quot;, &quot;&lt;bug-bounty-tester-ip&gt;&quot;) and UserAgent !has_any (&quot;Nuclei&quot;, &quot;Burp&quot;, &quot;AikidoIntel&quot;, &quot;sqlmap&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull all matching requests for the past 24h; look at Client IP, User-Agent, and the exact __pathname= value — pathnames pointing at /api/, /account/, /me, /session indicate genuine exploit attempts vs scanner probes. Check if any returned 200 OK (cached) and what response Content-Length was. 2) Contain: confirm the Vercel adapter is on the patched version (Vercel claims auto-fix rolled out); if self-hosted, force-redeploy SvelteKit adapter and purge CDN cache for the /_app/immutable/ path tree to evict any poisoned entries. Rotate any session tokens that may have leaked. 3) Hunt: pivot on the source IPs across all your SvelteKit/Vercel-hosted properties; search outbound web/proxy logs for users who CLICKED such URLs (separate UC); review CDN cache-key configuration to ensure auth cookies vary the cache.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-501-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-501-uc0-sigma">Sigma</button>
@@ -4774,6 +4569,7 @@ Cross-checked against:
   • https://github.com/sveltejs/kit/blob/main/packages/adapter-vercel/src/serverless.js</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Phishing: Spearphishing Link">T1566.002</span> <span class="ind tech" title="User Execution: Malicious Link">T1204.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span> <span class="ind">Email</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researchers sharing the Aikido blog / PoC URL via email or chat (link contains literal pattern in screenshots)</li><li>Internal red-team or AppSec testing the SvelteSpill exploit against own assets</li><li>Vulnerability scanner reports linking to the original write-up</li><li>Threat-intel mailing lists or RSS aggregators redistributing the article URL</li><li>Bug-bounty hunters sharing remediation PoCs via Slack/Teams ingested by the proxy</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Url !has_any (&quot;aikido.dev&quot;, &quot;nvd.nist.gov&quot;, &quot;sveltejs/kit/security&quot;) and SrcUsername !in (&quot;&lt;redteam-upn&gt;&quot;, &quot;&lt;appsec-upn&gt;&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the recipient/clicker, the target host in the URL, and whether the victim&#x27;s account holds sessions on that property. Determine if IsClickedThrough=true (Defender) or HttpStatusCode==200 (proxy) — a 200 means the response was cached and the attacker can now retrieve it. 2) Contain: invalidate the victim&#x27;s active sessions on the targeted SvelteKit app immediately, force re-auth, and issue a cache-purge to Vercel for the affected path. If the app uses bearer tokens, rotate them. Block the originating sender / source domain at the email gateway. 3) Hunt: search the past 30d for the same recipient receiving other __pathname= variants pointing at different sensitive routes (/admin, /api/users, /me); pivot on the sender email/IP for other targeted users; correlate with the server-side UC to see if the same URL was successfully cached.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-501-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-501-uc1-sentinel">Sentinel KQL</button>
@@ -4839,6 +4635,7 @@ level: high</code></pre></div>
     <div class="uc-desc">Stealers / wallet drainers read keystore.json, MetaMask, Exodus, Atomic, Phantom data.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Local System">T1005</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-501-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-501-uc2-sentinel">Sentinel KQL</button>
@@ -4943,6 +4740,7 @@ level: high
     <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-501-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-501-uc3-sentinel">Sentinel KQL</button>
@@ -5047,6 +4845,7 @@ level: high
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-501-uc4-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-501-uc4-sentinel">Sentinel KQL</button>
@@ -5099,6 +4898,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-501-uc5-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-501-uc5-sentinel">Sentinel KQL</button>
@@ -5199,6 +4999,7 @@ level: medium
     <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-501-uc6-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-501-uc6-spl">Splunk SPL (CIM)</button>
@@ -5350,6 +5151,7 @@ Cross-checked against:
   • https://attack.mitre.org/techniques/T1660/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Phishing">T1660</span> <span class="ind tech" title="Acquire Infrastructure: Domains">T1583.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher resolving the IOC domain while triaging this very article</li><li>Threat-intel feed enrichment service prefetching newly-listed IOCs</li><li>User browsing a vendor blog (e.g. ESET WeLiveSecurity) that embeds the IOC string in page text — DoH-routed resolution may not fire, plain DNS may</li><li>Sandbox detonation traffic from a malware-analysis VM on the corporate network</li><li>Reverse-DNS or passive-DNS scanner sweeping the namespace</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;smartscreen.exe&quot;,&quot;msmpeng.exe&quot;,&quot;securityhealthservice.exe&quot;) and DeviceName !startswith &quot;SANDBOX-&quot; and DeviceName !startswith &quot;MALWAREVM-&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the resolving host and user; check whether the host is a research/sandbox box (suppress) or a normal endpoint (escalate). Pull recent web-proxy / TLS-SNI logs for the same client IP to see if an APK was downloaded. 2) Contain: if a real user resolved the domain, isolate the endpoint, push DNS-sinkhole / proxy block for the IOC domain across the perimeter, and notify the user&#x27;s mobile-management team to check any Android device on the same Wi-Fi for the PromptSpy package. 3) Hunt: pivot on the source IP for additional resolutions of related infrastructure, look for the VNC C2 egress UC firing from the same network segment, and check MDM/Intune Android compliance reports for unmanaged Accessibility-Service grants in the last 7 days.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-502-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-502-uc0-sentinel">Sentinel KQL</button>
@@ -5411,7 +5213,7 @@ level: high</code></pre></div>
   <summary>
     <span class="uc-title">PromptSpy VNC C2 egress to 54.67.2.84</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
+    <span class="uc-conf medium">Medium</span>
     <button class="share-btn" data-share-uc="749b973648" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
@@ -5426,6 +5228,7 @@ Cross-checked against:
   • https://attack.mitre.org/techniques/T1219/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Remote Access Software">T1219</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel ingestion service prefetching IOCs over HTTPS that share the same IP via shared hosting</li><li>Security researcher pinging the C2 host from a corporate jumpbox during triage</li><li>AWS EC2 instance reuse: the IP was previously a benign service (AWS public ranges rotate)</li><li>Sandbox / detonation VM intentionally connecting to the C2 for analysis</li><li>Network scanner (Shodan/Censys ingest, internal vulnerability scanner) probing the address</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;msedge.exe&quot;,&quot;chrome.exe&quot;,&quot;firefox.exe&quot;) and DeviceName !startswith &quot;SANDBOX-&quot; and DeviceName !startswith &quot;RESEARCH-&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the connecting host&#x27;s role — research/sandbox (suppress) vs production endpoint (escalate). For NAT&#x27;d Wi-Fi gateways, pull DHCP and AP-association logs to attribute the connection to a specific Android device / user. 2) Contain: block 54.67.2.84 at the perimeter firewall and on the EDR-managed clients; revoke the suspect Android device&#x27;s corporate Wi-Fi cert and require MDM re-enrollment. Notify the user. 3) Hunt: pivot on the source IP/MAC for prior resolutions of the MorganArg distribution domain (sister UC), look for Accessibility-Service grants in MDM telemetry, and search for additional VNC-shaped egress (long-lived TCP, periodic small encrypted bursts) from the same gateway in the last 30 days.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-502-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-502-uc1-sentinel">Sentinel KQL</button>
@@ -5490,6 +5293,7 @@ level: high</code></pre></div>
     <div class="uc-desc">Threshold detection: many files renamed in short window, often with new extension.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Encrypted for Impact">T1486</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-502-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-502-uc2-sentinel">Sentinel KQL</button>
@@ -5541,6 +5345,7 @@ level: high</code></pre></div>
     <div class="uc-desc">Mimikatz, comsvcs.dll MiniDump, or any non-Windows process opening LSASS.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="LSASS Memory">T1003.001</span> <span class="ind tech" title="OS Credential Dumping">T1003</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-502-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-502-uc3-sentinel">Sentinel KQL</button>
@@ -5636,6 +5441,7 @@ level: high
     <div class="uc-desc">psexec / paexec / smbexec / wmic /node — service install over SMB from remote host.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="SMB/Windows Admin Shares">T1021.002</span> <span class="ind tech" title="Service Execution">T1569.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-502-uc4-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-502-uc4-sentinel">Sentinel KQL</button>
@@ -5810,6 +5616,7 @@ Cross-checked against:
   • https://github.com/advisories/GHSA-9ppg-jx86-fqw7</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher intentionally installing cline@2.3.0 in an isolated VM to reverse-engineer the payload</li><li>CI/CD smoke tests pinned to a vulnerable version for regression coverage</li><li>Air-gapped malware analysis sandbox replaying the package</li><li>Internal IOC enrichment tool pulling the package metadata as part of a feed</li><li>Forensic timeline replay on a snapshotted developer workstation</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and not (DeviceName matches regex @&quot;(?i)(malware|sandbox|appsec|redteam|research)&quot; or AccountName matches regex @&quot;(?i)(secanalyst|secresearch|appsec)&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (Triage): Confirm the host had cline@2.3.0 actually installed by checking %AppData%\npm\node_modules\cline\package.json (or per-project node_modules). Cross-reference Timestamp against the Feb 17 2026 04:00-12:00 UTC window when the package was live. Step 2 (Contain): If installed, isolate the endpoint via Defender Live Response, run &#x27;npm uninstall -g cline openclaw&#x27;, and rotate any developer-stored npm/git/cloud credentials accessible from that workstation. Step 3 (Hunt): Pivot on the same DeviceId for outbound connections to *.oastify.com, *.burpcollaborator.net, and any &#x27;npm install -g openclaw&#x27; command lines (the secondary payload).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-504-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-504-uc0-sentinel">Sentinel KQL</button>
@@ -5892,6 +5699,7 @@ Cross-checked against:
   • https://adnanthekhan.com/posts/clinejection/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Event Triggered Execution">T1546</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Reverse engineer detonating the postinstall hook in a controlled sandbox</li><li>Threat-intel team mirroring the package for IOC enrichment</li><li>Internal SCA scanner (&#x27;npm view openclaw&#x27; or similar enumeration of the malicious package metadata)</li><li>Forensic IR replay on an imaged endpoint after the incident</li><li>SOAR playbook proactively testing endpoint detection efficacy</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and not (DeviceName matches regex @&quot;(?i)(malware|sandbox|appsec|redteam|research|detlab)&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (Triage): On the alerting host, confirm &#x27;openclaw&#x27; exists under the npm global prefix (&#x27;npm root -g&#x27; then ls). Walk back 5 min in DeviceProcessEvents on the same DeviceId to look for the parent &#x27;npm install cline&#x27; or &#x27;cline@2.3.0&#x27; command that triggered the postinstall. Step 2 (Contain): Live-Response uninstall openclaw and cline globally and locally, kill any &#x27;node.exe&#x27; children, rotate any credentials cached in ~/.npmrc, ~/.aws, ~/.kube, and GIT_TOKEN env vars. Disconnect the host from VPN until the developer is interviewed. Step 3 (Hunt): Pivot on the same user across DeviceLogonEvents and AADSignInEventsBeta for the 24h after install to spot session token reuse from anomalous geos.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-504-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-504-uc1-sentinel">Sentinel KQL</button>
@@ -5981,6 +5789,7 @@ Cross-checked against:
   • https://www.aikido.dev/blog/the-malware-dating-guide-understanding-the-types-of-malware-on-npm</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Exfiltration Over Web Service">T1567</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized internal AppSec / red-team engagement using Burp Suite Professional against in-scope assets</li><li>External pentesting vendor running scans against the org&#x27;s perimeter from a host that resolves Collaborator domains internally</li><li>Web app developer using Burp Suite locally for testing against staging</li><li>Security training lab (HTB / Portswigger Academy) on a corporate laptop</li><li>DAST tool with Burp integration scanning internal apps</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and not (DeviceName matches regex @&quot;(?i)(appsec|redteam|burp|dast|pentest)&quot; or InitiatingProcessFileName in~ (&quot;burpsuite_pro.exe&quot;,&quot;burp.exe&quot;,&quot;burpsuite.exe&quot;,&quot;burpsuitecommunity.exe&quot;) or InitiatingProcessFolderPath has @&quot;\BurpSuitePro\&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (Triage): Identify the initiating process on the source host (InitiatingProcessFileName + InitiatingProcessCommandLine). Check if the host is a known AppSec/red-team workstation per the asset inventory or AD security group. Cross-reference against the authorized engagement calendar. Step 2 (Contain): If not authorized: isolate the endpoint, capture the HTTP request bodies / pcap (look for keys, tokens, /etc/passwd content), rotate any credentials that the initiating process had access to. If a node.exe / npm.exe spawned it, treat as supply-chain compromise and follow UC1/UC2 playbook. Step 3 (Hunt): Pivot on the Collaborator subdomain (everything left of &#x27;.oastify.com&#x27;) across all corp hosts for the past 90d — actors reuse the same Collaborator instance for the full campaign.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-504-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-504-uc2-sentinel">Sentinel KQL</button>
@@ -6061,6 +5870,7 @@ Cross-checked against:
   • https://www.cremit.io/blog/ai-supply-chain-attack-clinejection</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Dependencies and Development Tools">T1195.001</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span> <span class="ind tech" title="Event Triggered Execution: Installer Packages">T1546.016</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer pinning a dependency to an unreleased upstream commit awaiting a fix (legitimate but uncommon)</li><li>Open-source contributor testing a downstream PR by installing from the contributor&#x27;s fork commit</li><li>CI bootstrap script that intentionally uses &#x27;github:org/repo#tag-sha&#x27; for ephemeral private build deps</li><li>Yarn workspaces using git-protocol shortcuts for internal packages mirrored to GitHub</li><li>Lerna/changesets monorepo with pre-release commit references</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and not (DeviceName matches regex @&quot;(?i)(build|ci|jenkins|gha-runner)&quot; and ProcessCommandLine has_any (&quot;@internal/&quot;,&quot;@&lt;your-org&gt;/&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (Triage): Resolve the &#x27;owner/repo&#x27; from the GitRef match against your asset inventory. If owner is not on the org&#x27;s approved-publishers list, treat as suspicious. Pull the commit via &#x27;git fetch &lt;repo&gt; &lt;sha&gt;&#x27; in a sandbox and diff against the public default branch — look for package.json preinstall/postinstall additions or new scripts. Step 2 (Contain): If the diff shows a lifecycle hook with curl/wget/network egress, isolate the host, kill the npm process tree, rotate credentials reachable from the workstation env vars and ~/.npmrc. Step 3 (Hunt): Pivot on the same owner/repo across the org&#x27;s GitHub orgs and CI logs — if the prompt-injection vector is in use, the same commit may show up in multiple developers&#x27; history. Search UC3 detections (oastify.com) on the same DeviceId in the next 60 min.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-504-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-504-uc3-sentinel">Sentinel KQL</button>
@@ -6140,6 +5950,7 @@ level: medium</code></pre></div>
     <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-504-uc4-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-504-uc4-sentinel">Sentinel KQL</button>
@@ -6240,6 +6051,7 @@ level: medium
     <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-504-uc5-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-504-uc5-sentinel">Sentinel KQL</button>
@@ -6481,6 +6293,7 @@ level: critical
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-506-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-506-uc0-sentinel">Sentinel KQL</button>
@@ -6606,6 +6419,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-507-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-507-uc0-sentinel">Sentinel KQL</button>
@@ -6731,6 +6545,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Side-loaded / unsigned extensions, often masquerading as wallets, productivity tools.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Browser Extensions">T1176</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Registry</span> <span class="ind">DeviceRegistryEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-508-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-508-uc0-sentinel">Sentinel KQL</button>
@@ -6809,6 +6624,7 @@ level: medium
     <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-508-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-508-uc1-sentinel">Sentinel KQL</button>
@@ -6913,6 +6729,7 @@ level: high
     <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-508-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-508-uc2-sentinel">Sentinel KQL</button>
@@ -7086,6 +6903,7 @@ level: medium
     <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-509-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-509-uc0-sentinel">Sentinel KQL</button>
@@ -7171,6 +6989,253 @@ level: medium
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-511" data-art-slug="2026-02-17-securing-the-agent-skill-ecosystem-how-snyk-and-vercel-are-l"
+  data-phases="c2,delivery,exploit,install,recon" data-sev="med"
+  data-techs="T1190,T1195.002"
+  data-sources="Snyk"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="endpoint"
+  data-targets="windows"
+  data-uc-count="2" data-llm-uc-count="0"
+  data-search="Securing the Agent Skill Ecosystem: How Snyk and Vercel Are Locking Down the New Software Supply Chain Snyk has partnered with Vercel to secure the skills.sh ecosystem, integrating real-time security scanning to detect malicious payloads and prompt injections before they reach your machine. Discover how this partnership is locking down the future of agentic AI.  T1190 T1195.002 Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — Securing the Agent Skill Ecosystem: How Snyk and Vercel Are Locking Down the New">
+  <div class="sev-ribbon med">Medium</div>
+  <button class="share-btn card-share" data-share-art="2026-02-17-securing-the-agent-skill-ecosystem-how-snyk-and-vercel-are-l" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/snyk-vercel-securing-agent-skill-ecosystem/" target="_blank" rel="noopener">Securing the Agent Skill Ecosystem: How Snyk and Vercel Are Locking Down the New Software Supply Chain</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2026-02-17</span>
+    <span>2 use cases</span>
+    <span>2 techniques</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Snyk has partnered with Vercel to secure the skills.sh ecosystem, integrating real-time security scanning to detect malicious payloads and prompt injections before they reach your machine. Discover how this partnership is locking down the future of agentic AI.</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-511-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-511"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-511-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Securing the Agent Skill Ecosystem: How Snyk and Vercel Are Locking Down the New</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-511-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-511-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-511-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-511-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-511-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-511-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+// article (matching shape with the Defender query).
+SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where NewProcessName endswith &quot;\powershell.exe&quot;
+   or NewProcessName endswith &quot;\cmd.exe&quot;
+   or NewProcessName endswith &quot;\rundll32.exe&quot;
+   or NewProcessName endswith &quot;\regsvr32.exe&quot;
+   or NewProcessName endswith &quot;\mshta.exe&quot;
+   or NewProcessName endswith &quot;\wscript.exe&quot;
+   or NewProcessName endswith &quot;\cscript.exe&quot;
+   or NewProcessName endswith &quot;\wmic.exe&quot;
+   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
+| project TimeGenerated, Computer, Account, ParentProcessName,
+          NewProcessName, CommandLine
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-511-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
+status: experimental
+description: |
+    A signed vendor binary (in the article&#x27;s named-vendors list)
+    spawning script-host or LOLBin children. Strongest signal when
+    paired with a recent CVE / supply-chain advisory naming the same
+    vendor.
+references:
+    - https://attack.mitre.org/techniques/T1195/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1195
+    - attack.initial-access
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_child:
+        Image|endswith:
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+            - &#x27;\cmd.exe&#x27;
+            - &#x27;\rundll32.exe&#x27;
+            - &#x27;\regsvr32.exe&#x27;
+            - &#x27;\mshta.exe&#x27;
+            - &#x27;\wscript.exe&#x27;
+            - &#x27;\cscript.exe&#x27;
+            - &#x27;\wmic.exe&#x27;
+            - &#x27;\bitsadmin.exe&#x27;
+    selection_parent_vendor:
+        ParentImage|contains:
+            - &#x27;\Program Files\&#x27;
+            - &#x27;\Program Files (x86)\&#x27;
+    condition: selection_child and selection_parent_vendor
+falsepositives:
+    - Many — installers and updaters legitimately spawn children. Pin
+      the parent path to specific vendor binaries observed in the
+      article before alerting.
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-511-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-511-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-511-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-511-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-511-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="51107561b5" data-platforms="def,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — Securing the Agent Skill Ecosystem: How Snyk and Vercel Are Locking Down the New</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="51107561b5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-511-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-511-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-511-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Securing the Agent Skill Ecosystem: How Snyk and Vercel Are Locking Down the New
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;skills.sh&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;skills.sh&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-511-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-511-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-511-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-511-uc1-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Securing the Agent Skill Ecosystem: How Snyk and Vercel Are Locking Down the New ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;skills.sh&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;skills.sh&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-511-uc1-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Securing the Agent Skill Ecosystem: How Snyk and Vercel Are Locking Down the New ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;skills.sh&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;skills.sh&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
   </div>
 </details></div>
 </article>

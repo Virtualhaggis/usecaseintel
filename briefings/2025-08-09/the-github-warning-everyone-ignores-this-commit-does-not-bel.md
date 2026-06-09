@@ -64,7 +64,7 @@ DeviceProcessEvents
 
 ### tj-actions memdump.py credential-dump payload fetched or executed on CI runner
 
-`UC_820_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_820_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

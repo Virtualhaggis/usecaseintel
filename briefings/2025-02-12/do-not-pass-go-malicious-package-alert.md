@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### BoltDB Go backdoor C2 callback to 49.12.198.231:20022
 
-`UC_996_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_996_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -113,7 +113,7 @@ DeviceProcessEvents
 
 ### Sandworm SOCKS5 C2 egress to 31.172.71[.]5 (Fornex) or progamevl.ru
 
-`UC_573_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_573_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

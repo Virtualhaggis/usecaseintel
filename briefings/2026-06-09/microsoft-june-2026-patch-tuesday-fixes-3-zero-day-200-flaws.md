@@ -11,50 +11,213 @@ By Lawrence Abrams
 June 9, 2026
 01:57 PM
 0 
-
 Today is Microsoft's June 2026 Patch Tuesday, with security updates for 200 flaws and three publicly disclosed zero-day vulnerabilities.
-
-
 This Patch Tuesday addresses 33 "Critical" vulnerabilities, 28 of which are remote code execution, 4 are elevation of privilege, and 1 is an information disclosure flaw.
-
-
 The number of bugs in each vulnerability category is listed below:
-
-
-65 E…
+65 Elevation of Pr…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-45586`
 - **CVE:** `CVE-2026-49160`
 - **CVE:** `CVE-2026-50507`
+- **CVE:** `CVE-2026-45491`
+- **CVE:** `CVE-2026-45490`
 - **CVE:** `CVE-2026-45648`
+- **CVE:** `CVE-2026-45591`
+- **CVE:** `CVE-2026-47643`
+- **CVE:** `CVE-2026-41098`
+- **CVE:** `CVE-2026-42836`
+- **CVE:** `CVE-2026-45482`
 - **CVE:** `CVE-2026-45476`
+- **CVE:** `CVE-2026-45642`
 - **CVE:** `CVE-2026-33828`
 - **CVE:** `CVE-2026-32193`
-- **CVE:** `CVE-2026-45463`
-- **CVE:** `CVE-2026-45474`
-- **CVE:** `CVE-2026-45472`
-- **CVE:** `CVE-2026-45458`
-- **CVE:** `CVE-2026-45460`
-- **CVE:** `CVE-2026-47635`
-- **CVE:** `CVE-2026-45456`
-- **CVE:** `CVE-2026-45461`
-- **CVE:** `CVE-2026-45583`
+- **CVE:** `CVE-2026-45650`
+- **CVE:** `CVE-2026-45647`
+- **CVE:** `CVE-2026-40371`
 - **CVE:** `CVE-2026-45500`
 - **CVE:** `CVE-2026-45501`
 - **CVE:** `CVE-2026-47631`
 - **CVE:** `CVE-2026-45503`
 - **CVE:** `CVE-2026-45504`
 - **CVE:** `CVE-2026-45502`
-- **CVE:** `CVE-2026-47643`
-- **CVE:** `CVE-2026-41098`
-- **CVE:** `CVE-2026-45647`
-- **CVE:** `CVE-2026-45482`
-- **CVE:** `CVE-2026-45491`
-- **CVE:** `CVE-2026-45490`
-- **CVE:** `CVE-2026-45591`
+- **CVE:** `CVE-2026-45583`
+- **CVE:** `CVE-2026-42986`
+- **CVE:** `CVE-2026-41092`
+- **CVE:** `CVE-2026-45644`
+- **CVE:** `CVE-2026-45463`
+- **CVE:** `CVE-2026-44821`
+- **CVE:** `CVE-2026-45474`
+- **CVE:** `CVE-2026-44819`
+- **CVE:** `CVE-2026-44824`
+- **CVE:** `CVE-2026-45485`
+- **CVE:** `CVE-2026-45645`
+- **CVE:** `CVE-2026-45472`
+- **CVE:** `CVE-2026-45458`
+- **CVE:** `CVE-2026-45460`
+- **CVE:** `CVE-2026-47635`
+- **CVE:** `CVE-2026-45456`
+- **CVE:** `CVE-2026-45461`
+- **CVE:** `CVE-2026-45475`
+- **CVE:** `CVE-2026-47293`
 - **CVE:** `CVE-2026-44820`
+- **CVE:** `CVE-2026-44818`
+- **CVE:** `CVE-2026-44817`
+- **CVE:** `CVE-2026-45469`
+- **CVE:** `CVE-2026-44822`
+- **CVE:** `CVE-2026-45455`
+- **CVE:** `CVE-2026-44823`
+- **CVE:** `CVE-2026-45459`
+- **CVE:** `CVE-2026-45483`
+- **CVE:** `CVE-2026-45484`
+- **CVE:** `CVE-2026-45465`
+- **CVE:** `CVE-2026-47634`
+- **CVE:** `CVE-2026-47640`
+- **CVE:** `CVE-2026-45481`
+- **CVE:** `CVE-2026-45468`
+- **CVE:** `CVE-2026-47638`
+- **CVE:** `CVE-2026-47639`
+- **CVE:** `CVE-2026-47641`
+- **CVE:** `CVE-2026-47637`
+- **CVE:** `CVE-2026-45467`
+- **CVE:** `CVE-2026-45453`
+- **CVE:** `CVE-2026-47636`
+- **CVE:** `CVE-2026-48560`
+- **CVE:** `CVE-2026-47298`
+- **CVE:** `CVE-2026-45454`
+- **CVE:** `CVE-2026-33113`
+- **CVE:** `CVE-2026-45479`
+- **CVE:** `CVE-2026-48562`
+- **CVE:** `CVE-2026-45464`
+- **CVE:** `CVE-2026-45462`
+- **CVE:** `CVE-2026-45643`
+- **CVE:** `CVE-2026-45457`
+- **CVE:** `CVE-2026-45486`
+- **CVE:** `CVE-2026-45471`
+- **CVE:** `CVE-2026-45466`
+- **CVE:** `CVE-2026-49161`
+- **CVE:** `CVE-2026-42902`
+- **CVE:** `CVE-2026-42835`
+- **CVE:** `CVE-2026-45606`
+- **CVE:** `CVE-2026-41108`
+- **CVE:** `CVE-2026-26142`
+- **CVE:** `CVE-2026-45649`
+- **CVE:** `CVE-2026-42993`
+- **CVE:** `CVE-2026-42985`
+- **CVE:** `CVE-2026-47653`
+- **CVE:** `CVE-2026-47289`
+- **CVE:** `CVE-2026-42909`
+- **CVE:** `CVE-2026-47654`
+- **CVE:** `CVE-2026-42992`
+- **CVE:** `CVE-2026-42913`
+- **CVE:** `CVE-2026-44801`
+- **CVE:** `CVE-2026-44799`
+- **CVE:** `CVE-2026-48563`
+- **CVE:** `CVE-2026-45641`
+- **CVE:** `CVE-2026-42972`
+- **CVE:** `CVE-2026-45597`
+- **CVE:** `CVE-2026-45599`
+- **CVE:** `CVE-2026-45635`
+- **CVE:** `CVE-2026-47287`
+- **CVE:** `CVE-2026-47292`
+- **CVE:** `CVE-2026-40376`
+- **CVE:** `CVE-2026-47284`
+- **CVE:** `CVE-2026-47281`
+- **CVE:** `CVE-2026-48569`
+- **CVE:** `CVE-2026-42829`
+- **CVE:** `CVE-2026-42911`
+- **CVE:** `CVE-2026-45598`
+- **CVE:** `CVE-2026-45601`
+- **CVE:** `CVE-2026-45603`
+- **CVE:** `CVE-2026-34335`
+- **CVE:** `CVE-2026-45596`
+- **CVE:** `CVE-2026-45638`
+- **CVE:** `CVE-2026-45604`
+- **CVE:** `CVE-2026-45594`
+- **CVE:** `CVE-2026-45658`
+- **CVE:** `CVE-2026-45655`
+- **CVE:** `CVE-2026-45640`
+- **CVE:** `CVE-2026-45605`
+- **CVE:** `CVE-2026-47656`
+- **CVE:** `CVE-2026-44809`
+- **CVE:** `CVE-2026-44810`
+- **CVE:** `CVE-2026-42987`
+- **CVE:** `CVE-2026-44815`
+- **CVE:** `CVE-2026-45608`
+- **CVE:** `CVE-2026-45634`
+- **CVE:** `CVE-2026-45602`
+- **CVE:** `CVE-2026-44807`
+- **CVE:** `CVE-2026-44814`
+- **CVE:** `CVE-2026-44811`
+- **CVE:** `CVE-2026-44808`
+- **CVE:** `CVE-2026-48566`
+- **CVE:** `CVE-2026-45637`
+- **CVE:** `CVE-2026-42905`
+- **CVE:** `CVE-2026-44813`
+- **CVE:** `CVE-2026-42983`
+- **CVE:** `CVE-2026-44802`
+- **CVE:** `CVE-2026-44804`
+- **CVE:** `CVE-2026-42910`
+- **CVE:** `CVE-2026-47291`
+- **CVE:** `CVE-2026-47652`
+- **CVE:** `CVE-2026-45607`
+- **CVE:** `CVE-2026-45592`
+- **CVE:** `CVE-2026-47288`
+- **CVE:** `CVE-2026-42914`
+- **CVE:** `CVE-2026-42903`
+- **CVE:** `CVE-2026-42984`
+- **CVE:** `CVE-2026-45653`
+- **CVE:** `CVE-2026-48583`
+- **CVE:** `CVE-2025-10263`
+- **CVE:** `CVE-2026-45657`
+- **CVE:** `CVE-2026-45600`
+- **CVE:** `CVE-2026-45595`
+- **CVE:** `CVE-2026-48574`
+- **CVE:** `CVE-2026-48565`
+- **CVE:** `CVE-2026-44805`
+- **CVE:** `CVE-2026-42980`
+- **CVE:** `CVE-2026-42916`
+- **CVE:** `CVE-2026-45636`
+- **CVE:** `CVE-2026-50508`
+- **CVE:** `CVE-2026-42981`
+- **CVE:** `CVE-2026-42974`
+- **CVE:** `CVE-2026-45487`
+- **CVE:** `CVE-2026-42828`
+- **CVE:** `CVE-2026-42837`
+- **CVE:** `CVE-2026-42991`
+- **CVE:** `CVE-2026-42977`
+- **CVE:** `CVE-2026-42979`
+- **CVE:** `CVE-2026-42978`
+- **CVE:** `CVE-2026-42973`
+- **CVE:** `CVE-2026-42970`
+- **CVE:** `CVE-2026-42969`
+- **CVE:** `CVE-2026-42971`
+- **CVE:** `CVE-2026-45639`
+- **CVE:** `CVE-2026-42908`
+- **CVE:** `CVE-2026-45593`
+- **CVE:** `CVE-2026-45588`
+- **CVE:** `CVE-2026-45654`
+- **CVE:** `CVE-2026-48570`
+- **CVE:** `CVE-2026-48568`
+- **CVE:** `CVE-2026-48575`
+- **CVE:** `CVE-2026-48578`
+- **CVE:** `CVE-2026-48573`
+- **CVE:** `CVE-2026-48576`
+- **CVE:** `CVE-2026-42907`
+- **CVE:** `CVE-2026-42906`
+- **CVE:** `CVE-2026-47648`
+- **CVE:** `CVE-2026-42904`
+- **CVE:** `CVE-2026-42915`
+- **CVE:** `CVE-2026-42968`
+- **CVE:** `CVE-2026-42912`
+- **CVE:** `CVE-2026-8863`
+- **CVE:** `CVE-2026-45656`
+- **CVE:** `CVE-2026-40404`
+- **CVE:** `CVE-2026-40409`
+- **CVE:** `CVE-2026-44812`
+- **CVE:** `CVE-2026-44803`
+- **CVE:** `CVE-2026-42989`
 
 ## MITRE ATT&CK Techniques
 
@@ -83,7 +246,7 @@ _(none detected from narrative keywords)_
 
 ### BitLocker YellowKey (CVE-2026-50507) — Shell Spawned in WinRE/WinPE Context
 
-`UC_4_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_9_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +269,7 @@ DeviceProcessEvents
 
 ### HTTP/2 Bomb (CVE-2026-49160) — MaxHeadersCount Mitigation Posture
 
-`UC_4_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_9_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +296,7 @@ DeviceRegistryEvents
 
 ### June 2026 Patch Tuesday Zero-Day Exposure Inventory (CVE-2026-45586/49160/50507)
 
-`UC_4_9` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_9_9` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -299,7 +462,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft June 2026 Patch Tuesday fixes 3 zero-day, 200 flaws
 
-`UC_4_6` · phase: **exploit** · confidence: **High**
+`UC_9_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -351,7 +514,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-45586`, `CVE-2026-49160`, `CVE-2026-50507`, `CVE-2026-45648`, `CVE-2026-45476`, `CVE-2026-33828`, `CVE-2026-32193`, `CVE-2026-45463` _(+22 more)_
+  - CVE(s): `CVE-2026-45586`, `CVE-2026-49160`, `CVE-2026-50507`, `CVE-2026-45491`, `CVE-2026-45490`, `CVE-2026-45648`, `CVE-2026-45591`, `CVE-2026-47643` _(+192 more)_
 
 
 ## Why this matters

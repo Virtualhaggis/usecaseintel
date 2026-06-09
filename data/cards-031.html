@@ -1,475 +1,3 @@
-<article class="card" id="art-935" data-art-slug="2025-04-04-cisa-kev-cve-2025-22457-ivanti-connect-secure-policy-secure-"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190,T1486"
-  data-sources="CISA KEV"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application,endpoint"
-  data-targets="windows"
-  data-uc-count="5" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2025-22457 — Ivanti Connect Secure, Policy Secure, and ZTA Gateways Stack-Based Buffer Overflow Vulnerability Ivanti Connect Secure, Policy Secure, and ZTA Gateways contains a stack-based buffer overflow vulnerability that allows a remote unauthenticated attacker to achieve remote code execution.  Vendor: Ivanti, Product: Connect Secure, Policy Secure, and ZTA Gateways. Known ransomware use: Known. Federal patch due: 2025-04-11. CVE-2025-22457 T1190 T1486 Asset exposure — vulnerability matches article CVE(s) Ransomware-style mass file rename / extension change LSASS process access / dump (credential theft) Remote service execution — PsExec / SMB lateral movement File hash IOCs — endpoint file/process match">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2025-04-04-cisa-kev-cve-2025-22457-ivanti-connect-secure-policy-secure-" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2025-22457 — Ivanti Connect Secure, Policy Secure, and ZTA Gateways Stack-Based Buffer Overflow Vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
-  <div class="pubmeta">
-    <span>2025-04-04</span>
-    <span>5 use cases</span>
-    <span>2 techniques</span>
-    <span>4 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Ivanti Connect Secure, Policy Secure, and ZTA Gateways contains a stack-based buffer overflow vulnerability that allows a remote unauthenticated attacker to achieve remote code execution.  Vendor: Ivanti, Product: Connect Secure, Policy Secure, and ZTA Gateways. Known ransomware use: Known. Federal patch due: 2025-04-11.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2025-22457</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Data Encrypted for Impact">T1486</span></div>
-<div class="ind-group"><span class="ind-label">MD5</span><span class="ind ">4628a501088c31f5…</span> <span class="ind ">e5192258c27e712c…</span> <span class="ind ">6e01ef1367ea8199…</span> <span class="ind ">ce2b6a554ae46b5e…</span> <span class="ind ">10659b392e7f5b30…</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-935-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-935"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-935-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ File hash IOCs — endpoint file/process match</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Ransomware-style mass file rename / extension change · LSASS process access / dump (credential theft) · Remote service execution — PsExec / SMB lateral movement</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-935-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-935-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-935-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-935-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2025-22457&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-935-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2025-22457&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-935-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-935-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-935-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-935-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2025-22457&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-935-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2025-22457&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="8f76affc05" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Ransomware-style mass file rename / extension change</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="8f76affc05" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Threshold detection: many files renamed in short window, often with new extension.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Encrypted for Impact">T1486</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-935-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-935-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-935-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-935-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(1d)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where ActionType in (&quot;FileRenamed&quot;,&quot;FileModified&quot;)
-| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
-| where files &gt; 200    // empirical: &gt; 200 unique-file renames in 1m by one account on one host
-                       //            is well above the P99 of legitimate bulk-tooling
-| order by files desc
-</code></pre></div>
-    <div class="tab-content" id="art-935-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(1d)
-| where ActorUsername !endswith &quot;$&quot;
-| where EventType in (&quot;FileRenamed&quot;,&quot;FileModified&quot;)
-| summarize files = dcount(TargetFileName)
-            by DvcHostname, ActorUsername, ActingProcessName, bin(TimeGenerated, 1m)
-| where files &gt; 200    // P99 of legit bulk-tooling per-minute rename volume
-| order by files desc
-</code></pre></div>
-    <div class="tab-content" id="art-935-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-935-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-935-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-935-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;modified&quot;,&quot;renamed&quot;)
-    by Filesystem.dest, Filesystem.user, _time span=1m
-| `drop_dm_object_name(Filesystem)`
-| where files &gt; 200
-| sort - files</code></pre><pre class="spl-mode-body" id="art-935-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, dc(Filesystem.file_name) AS files
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;modified&quot;,&quot;renamed&quot;)
-    by Filesystem.dest, Filesystem.user, _time span=1m
-| `drop_dm_object_name(Filesystem)`
-| where files &gt; 200
-| sort - files</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="b723485c48" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">LSASS process access / dump (credential theft)</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="b723485c48" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Mimikatz, comsvcs.dll MiniDump, or any non-Windows process opening LSASS.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="LSASS Memory">T1003.001</span> <span class="ind tech" title="OS Credential Dumping">T1003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-935-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-935-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-935-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-935-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-935-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where ActionType == &quot;OpenProcessApiCall&quot;
-| where FileName =~ &quot;lsass.exe&quot;
-| where InitiatingProcessFileName !in~ (&quot;MsSense.exe&quot;,&quot;MsMpEng.exe&quot;,&quot;csrss.exe&quot;,
-                                          &quot;svchost.exe&quot;,&quot;wininit.exe&quot;,&quot;services.exe&quot;,
-                                          &quot;lsm.exe&quot;,&quot;SearchProtocolHost.exe&quot;)
-| project Timestamp, DeviceName, ActionType, FileName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, AccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-935-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// SecurityEvent EventID 4663 = object access. AccessMask 0x10 / 0x40 / 0x1010
-// indicate read access to lsass.exe — credential-dump signature. Audit
-// Object Access &gt; Audit File System policy required.
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4663
-| where ObjectName endswith &quot;\lsass.exe&quot;
-| where Account !endswith &quot;$&quot;
-| project TimeGenerated, Computer, Account, ObjectName, ProcessName,
-          AccessMask, AccessReason
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-935-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: LSASS Process Access Outside Microsoft-Signed Tooling
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d04
-status: experimental
-description: |
-    Anything opening lsass.exe with read-memory access that isn&#x27;t a
-    Microsoft signed component (Defender, csrss, etc.) is suspect.
-    Mimikatz / Pypykatz / nanodump signature.
-references:
-    - https://attack.mitre.org/techniques/T1003/001/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1003.001
-    - attack.credential-access
-logsource:
-    category: process_access
-    product: windows
-detection:
-    selection:
-        TargetImage|endswith: &#x27;\lsass.exe&#x27;
-    filter_known_good:
-        SourceImage|endswith:
-            - &#x27;\MsSense.exe&#x27;
-            - &#x27;\MsMpEng.exe&#x27;
-            - &#x27;\csrss.exe&#x27;
-            - &#x27;\svchost.exe&#x27;
-            - &#x27;\wininit.exe&#x27;
-            - &#x27;\services.exe&#x27;
-            - &#x27;\lsm.exe&#x27;
-            - &#x27;\SearchProtocolHost.exe&#x27;
-    condition: selection and not filter_known_good
-falsepositives:
-    - Third-party EDR / forensic tools — extend the filter list
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-935-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-935-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-935-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-935-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process=&quot;*lsass*&quot; OR Processes.process=&quot;*sekurlsa*&quot;
-        OR Processes.process=&quot;*MiniDump*&quot; OR Processes.process=&quot;*comsvcs.dll*MiniDump*&quot;
-        OR Processes.process=&quot;*procdump*lsass*&quot;)
-       OR (Processes.process_name=&quot;rundll32.exe&quot; AND Processes.process=&quot;*comsvcs*MiniDump*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-935-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process=&quot;*lsass*&quot; OR Processes.process=&quot;*sekurlsa*&quot;
-        OR Processes.process=&quot;*MiniDump*&quot; OR Processes.process=&quot;*comsvcs.dll*MiniDump*&quot;
-        OR Processes.process=&quot;*procdump*lsass*&quot;)
-       OR (Processes.process_name=&quot;rundll32.exe&quot; AND Processes.process=&quot;*comsvcs*MiniDump*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="4e3ef9d0b4" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Remote service execution — PsExec / SMB lateral movement</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="4e3ef9d0b4" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">psexec / paexec / smbexec / wmic /node — service install over SMB from remote host.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="SMB/Windows Admin Shares">T1021.002</span> <span class="ind tech" title="Service Execution">T1569.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-935-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-935-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-935-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-935-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-935-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where FileName in~ (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
-   or (FileName =~ &quot;wmic.exe&quot; and ProcessCommandLine has &quot;/node:&quot;)
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc
-</code></pre></div>
-    <div class="tab-content" id="art-935-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688            // process-create (audit-policy required)
-| where Account !endswith &quot;$&quot;
-| where NewProcessName endswith &quot;\psexec.exe&quot;
-   or NewProcessName endswith &quot;\psexesvc.exe&quot;
-   or NewProcessName endswith &quot;\paexec.exe&quot;
-   or (NewProcessName endswith &quot;\wmic.exe&quot; and CommandLine has &quot;/node:&quot;)
-| project TimeGenerated, Computer, Account, NewProcessName, CommandLine,
-          ParentProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-935-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: PsExec / SMB Lateral Movement Tooling Execution
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d03
-status: experimental
-description: |
-    PsExec, paexec, smbexec, csexec, remcom — admin-grade tooling that
-    pivots over SMB. Pair with `wmic /node:` for the full cluster.
-references:
-    - https://attack.mitre.org/techniques/T1021/002/
-    - https://attack.mitre.org/techniques/T1569/002/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1021.002
-    - attack.t1569.002
-    - attack.lateral-movement
-    - attack.execution
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_psexec:
-        Image|endswith:
-            - &#x27;\psexec.exe&#x27;
-            - &#x27;\psexec64.exe&#x27;
-            - &#x27;\psexesvc.exe&#x27;
-            - &#x27;\paexec.exe&#x27;
-            - &#x27;\csexec.exe&#x27;
-            - &#x27;\remcom.exe&#x27;
-            - &#x27;\smbexec.py&#x27;
-    selection_wmic_remote:
-        Image|endswith:
-            - &#x27;\wmic.exe&#x27;
-        CommandLine|contains:
-            - &#x27;/node:&#x27;
-    condition: selection_psexec or selection_wmic_remote
-falsepositives:
-    - Sysadmins running approved remote-management tooling — wrap with
-      a known-admin-host watchlist
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-935-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-935-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-935-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-935-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
-       OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-935-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
-       OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-935-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-935-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-935-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-935-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-935-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
-// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
-// (Initiating only) so column-projection has to differ per side.
-union
-    ( DeviceFileEvents
-        | where Timestamp &gt; ago(7d)
-        | where InitiatingProcessAccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;4628a501088c31f53b5c9ddf6788e835&quot;, &quot;e5192258c27e712c7acf80303e68980b&quot;, &quot;6e01ef1367ea81994578526b3bd331d6&quot;, &quot;ce2b6a554ae46b5eb7d79ca5e7f440da&quot;, &quot;10659b392e7f5b30b375b94cae4fdca0&quot;) or SHA1 in~ (&quot;4628a501088c31f53b5c9ddf6788e835&quot;, &quot;e5192258c27e712c7acf80303e68980b&quot;, &quot;6e01ef1367ea81994578526b3bd331d6&quot;, &quot;ce2b6a554ae46b5eb7d79ca5e7f440da&quot;, &quot;10659b392e7f5b30b375b94cae4fdca0&quot;) or MD5 in~ (&quot;4628a501088c31f53b5c9ddf6788e835&quot;, &quot;e5192258c27e712c7acf80303e68980b&quot;, &quot;6e01ef1367ea81994578526b3bd331d6&quot;, &quot;ce2b6a554ae46b5eb7d79ca5e7f440da&quot;, &quot;10659b392e7f5b30b375b94cae4fdca0&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
-    ( DeviceProcessEvents
-        | where Timestamp &gt; ago(7d)
-        | where AccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;4628a501088c31f53b5c9ddf6788e835&quot;, &quot;e5192258c27e712c7acf80303e68980b&quot;, &quot;6e01ef1367ea81994578526b3bd331d6&quot;, &quot;ce2b6a554ae46b5eb7d79ca5e7f440da&quot;, &quot;10659b392e7f5b30b375b94cae4fdca0&quot;) or SHA1 in~ (&quot;4628a501088c31f53b5c9ddf6788e835&quot;, &quot;e5192258c27e712c7acf80303e68980b&quot;, &quot;6e01ef1367ea81994578526b3bd331d6&quot;, &quot;ce2b6a554ae46b5eb7d79ca5e7f440da&quot;, &quot;10659b392e7f5b30b375b94cae4fdca0&quot;) or MD5 in~ (&quot;4628a501088c31f53b5c9ddf6788e835&quot;, &quot;e5192258c27e712c7acf80303e68980b&quot;, &quot;6e01ef1367ea81994578526b3bd331d6&quot;, &quot;ce2b6a554ae46b5eb7d79ca5e7f440da&quot;, &quot;10659b392e7f5b30b375b94cae4fdca0&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
-| order by Timestamp desc
-</code></pre></div>
-    <div class="tab-content" id="art-935-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
-// Defender version so the engine can push hash predicates per-side.
-let BadHashes = dynamic([&quot;4628a501088c31f53b5c9ddf6788e835&quot;, &quot;e5192258c27e712c7acf80303e68980b&quot;, &quot;6e01ef1367ea81994578526b3bd331d6&quot;, &quot;ce2b6a554ae46b5eb7d79ca5e7f440da&quot;, &quot;10659b392e7f5b30b375b94cae4fdca0&quot;]);
-union
-    ( ImFileEvent
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where TargetFileSHA256 in~ (BadHashes)
-           or TargetFileSHA1 in~ (BadHashes)
-           or TargetFileMD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType,
-                  TargetFileName, TargetFilePath, TargetFileSHA256,
-                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
-    ( ImProcessCreate
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
-                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
-                  TargetFileSHA256 = SHA256,
-                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-935-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
-status: experimental
-description: |
-    Replace `__HASH_LIST__` placeholder with article-specific SHA256
-    values. Use a watchlist or external indicator file for management
-    at scale.
-references:
-    - https://attack.mitre.org/techniques/T1027/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1027
-    - attack.defense-evasion
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection:
-        Hashes|contains:
-            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
-    condition: selection
-falsepositives:
-    - None on a true-positive hash match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-935-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-935-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-935-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-935-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;4628a501088c31f53b5c9ddf6788e835&quot;, &quot;e5192258c27e712c7acf80303e68980b&quot;, &quot;6e01ef1367ea81994578526b3bd331d6&quot;, &quot;ce2b6a554ae46b5eb7d79ca5e7f440da&quot;, &quot;10659b392e7f5b30b375b94cae4fdca0&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;4628a501088c31f53b5c9ddf6788e835&quot;, &quot;e5192258c27e712c7acf80303e68980b&quot;, &quot;6e01ef1367ea81994578526b3bd331d6&quot;, &quot;ce2b6a554ae46b5eb7d79ca5e7f440da&quot;, &quot;10659b392e7f5b30b375b94cae4fdca0&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-935-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;4628a501088c31f53b5c9ddf6788e835&quot;, &quot;e5192258c27e712c7acf80303e68980b&quot;, &quot;6e01ef1367ea81994578526b3bd331d6&quot;, &quot;ce2b6a554ae46b5eb7d79ca5e7f440da&quot;, &quot;10659b392e7f5b30b375b94cae4fdca0&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;4628a501088c31f53b5c9ddf6788e835&quot;, &quot;e5192258c27e712c7acf80303e68980b&quot;, &quot;6e01ef1367ea81994578526b3bd331d6&quot;, &quot;ce2b6a554ae46b5eb7d79ca5e7f440da&quot;, &quot;10659b392e7f5b30b375b94cae4fdca0&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-936" data-art-slug="2025-04-01-q-a-session-with-snyk-john-hammond-your-fetch-the-flag-quest"
   data-phases="c2,exploit,install" data-sev="med"
   data-techs="T1190"
@@ -704,6 +232,7 @@ level: critical
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-938-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-938-uc0-sentinel">Sentinel KQL</button>
@@ -756,6 +285,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-938-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-938-uc1-sentinel">Sentinel KQL</button>
@@ -923,6 +453,7 @@ level: critical
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-939-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-939-uc0-sentinel">Sentinel KQL</button>
@@ -1126,6 +657,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-941-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-941-uc0-sentinel">Sentinel KQL</button>
@@ -1178,6 +710,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-941-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-941-uc1-sentinel">Sentinel KQL</button>
@@ -1272,6 +805,7 @@ level: critical
     <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-941-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-941-uc2-sentinel">Sentinel KQL</button>
@@ -1452,6 +986,7 @@ level: critical
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-942-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-942-uc0-sentinel">Sentinel KQL</button>
@@ -1578,6 +1113,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-943-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-943-uc0-sentinel">Sentinel KQL</button>
@@ -1630,6 +1166,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-943-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-943-uc1-sentinel">Sentinel KQL</button>
@@ -1818,6 +1355,9 @@ Cross-checked against:
   • https://zhero-web-sec.github.io/research-and-things/nextjs-and-the-corrupt-middleware</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Valid Accounts">T1078</span> <span class="ind tech" title="Modify Authentication Process">T1556</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized penetration test or red-team engagement exercising the CVE intentionally</li><li>Vulnerability scanners (Snyk, Nuclei, Burp templates) probing CVE-2025-29927 from a known scanner IP range</li><li>Internal Next.js subrequest traffic that erroneously transits an external WAF due to misconfigured routing</li><li>Bug-bounty researcher submitting via your responsible-disclosure inbound IPs</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Add to WafHits / SyslogHits / IISHits before the union:
+// | where SourceIP !in (&quot;&lt;authorized-pentest-IP-1&gt;&quot;, &quot;&lt;authorized-pentest-IP-2&gt;&quot;)
+// | where RequestClientApplication !contains &quot;Nuclei&quot; and RequestClientApplication !contains &quot;Snyk-Scanner&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1. Triage: pull the source IP, request URL, and response status from the matched events. Confirm the target host is running a self-hosted Next.js version in the vulnerable range (11.1.4–13.5.6, 14.x &lt; 14.2.25, 15.x &lt; 15.2.3); deployments on Vercel/Netlify are not affected. Determine whether the matched request reached a protected route (e.g. /admin, /api/*) and what response code it received. 2. Contain: block the offending source IP at the WAF/edge, deploy the Cloudflare managed-WAF rule that strips the header, and roll out the patched Next.js version (14.2.25 / 15.2.3 / 13.5.9). As an interim, add an edge rule that drops `x-middleware-subrequest` on inbound traffic. 3. Hunt: retro-search the last 30 days for the same header from any external IP, correlate with authenticated session creation / privileged-action logs from the same source IP, and review admin-route access logs for anomalous 200 OK responses to unauthenticated principals.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-944-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-944-uc0-sentinel">Sentinel KQL</button>
@@ -1922,6 +1462,7 @@ level: high</code></pre></div>
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-944-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-944-uc1-sentinel">Sentinel KQL</button>
@@ -1974,6 +1515,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-944-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-944-uc2-sentinel">Sentinel KQL</button>
@@ -2074,6 +1616,7 @@ level: medium
     <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-944-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-944-uc3-spl">Splunk SPL (CIM)</button>
@@ -2293,6 +1836,7 @@ DeviceFileEvents
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-946-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-946-uc0-sentinel">Sentinel KQL</button>
@@ -2418,6 +1962,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-947-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-947-uc0-sentinel">Sentinel KQL</button>
@@ -2544,6 +2089,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-948-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-948-uc0-sentinel">Sentinel KQL</button>
@@ -2743,6 +2289,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-950-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-950-uc0-spl">Splunk SPL (CIM)</button>
@@ -2889,6 +2436,7 @@ DeviceFileEvents
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-951-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-951-uc0-sentinel">Sentinel KQL</button>
@@ -2941,6 +2489,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-951-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-951-uc1-sentinel">Sentinel KQL</button>
@@ -3124,6 +2673,7 @@ level: critical
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-952-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-952-uc0-sentinel">Sentinel KQL</button>
@@ -3176,6 +2726,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Threshold detection: many files renamed in short window, often with new extension.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Encrypted for Impact">T1486</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-952-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-952-uc1-sentinel">Sentinel KQL</button>
@@ -3227,6 +2778,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Mimikatz, comsvcs.dll MiniDump, or any non-Windows process opening LSASS.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="LSASS Memory">T1003.001</span> <span class="ind tech" title="OS Credential Dumping">T1003</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-952-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-952-uc2-sentinel">Sentinel KQL</button>
@@ -3322,6 +2874,7 @@ level: high
     <div class="uc-desc">psexec / paexec / smbexec / wmic /node — service install over SMB from remote host.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="SMB/Windows Admin Shares">T1021.002</span> <span class="ind tech" title="Service Execution">T1569.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-952-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-952-uc3-sentinel">Sentinel KQL</button>
@@ -3414,6 +2967,7 @@ level: high
     <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-952-uc4-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-952-uc4-sentinel">Sentinel KQL</button>
@@ -3508,6 +3062,7 @@ level: critical
     <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-952-uc5-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-952-uc5-sentinel">Sentinel KQL</button>
@@ -3698,6 +3253,7 @@ Cross-checked against:
   • https://github.com/advisories/ghsa-mrrh-fwg8-r2c3</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher fetching the gist for IOC analysis</li><li>Threat-intel platform automated IOC enrichment job</li><li>SOC tabletop exercise replaying the attack chain</li><li>DFIR retro-hunt on archived runner image</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessParentFileName !in~ (&quot;falcon-sensor&quot;,&quot;mdatp&quot;,&quot;osqueryd&quot;) and InitiatingProcessCommandLine !has &quot;ioc-enrichment&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the host is a self-hosted GitHub Action runner; check ProcessCreationTime against the CVE-2025-30066 window (2025-03-12 00:00 → 2025-03-15 12:00 UTC, but assume rehosts after); pull the curl response body and stdout. 2) Contain: revoke ALL repository / org / environment secrets that the runner had access to (GitHub PATs, AWS keys, npm tokens, RSA keys, signing certs); rotate before any commit. Isolate the runner host from the network. 3) Hunt: search audit logs for the runner&#x27;s outbound network and process events ±2 hours; check the parent workflow YAML for `tj-actions/changed-files` pinning; scan org for other workflows referencing the same action; look for sibling reviewdog/action-setup (CVE-2025-30154) usage in same window.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-953-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-953-uc0-sentinel">Sentinel KQL</button>
@@ -3781,6 +3337,7 @@ Cross-checked against:
   • https://semgrep.dev/blog/2025/popular-github-action-tj-actionschanged-files-is-compromised/</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="OS Credential Dumping">T1003</span> <span class="ind tech" title="Credentials In Files">T1552.001</span> <span class="ind tech" title="Exploitation for Credential Access">T1212</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>GDB or pdb debugger session by a developer (different parent — usually gdb, not python)</li><li>CRIU checkpoint/restore in container orchestration</li><li>perf-tools / py-spy profiling (uses /proc/PID/mem too — distinguish via parent and cmdline)</li><li>SRE incident-response live memory triage with volatility/lime</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has_any (&quot;py-spy&quot;,&quot;pdb&quot;,&quot;gdb&quot;,&quot;criu&quot;,&quot;volatility&quot;,&quot;lime&quot;) and InitiatingProcessParentFileName !in~ (&quot;gdb&quot;,&quot;strace&quot;,&quot;perf&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the reading python&#x27;s command line and parent — legit profilers like py-spy declare themselves in argv; memdump.py runs from stdin (curl | python3) so cmdline shows only &#x27;python3&#x27;. Pull the full process tree back to the runner agent. 2) Contain: kill the python process, isolate the runner, revoke every secret the runner could touch (repo, environment, org, OIDC role assumptions). Snapshot /proc/&lt;pid&gt;/maps output if still resident — it contains the secrets harvested. 3) Hunt: pivot on DeviceId for the curl/wget that staged the script (UC #1), and search GitHub audit logs for workflow_run / push events on this runner in the dump window to enumerate which repos/secrets were exposed.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-953-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-953-uc1-sentinel">Sentinel KQL</button>
@@ -3869,6 +3426,7 @@ Cross-checked against:
   • https://github.com/advisories/ghsa-mrrh-fwg8-r2c3</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unix Shell">T1059.004</span> <span class="ind tech" title="Deobfuscate/Decode Files or Information">T1140</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>SOC purple-team exercise replaying CVE-2025-30066 in a lab</li><li>Detection-engineering unit test that embeds the payload string</li><li>Security researcher pasting the IOC into a notes file that gets indexed</li><li>Threat-intel report on disk being grepped by a scheduled job</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFolderPath !startswith &quot;/opt/security/redteam/&quot; and InitiatingProcessCommandLine !has &quot;detection-test&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the host (likely a self-hosted runner) and confirm whether the runner executed a workflow using tj-actions/changed-files between 2025-03-12 and 2025-03-15 UTC, or any time afterwards if the action is still pinned to a vulnerable tag/SHA. 2) Contain: immediately rotate every secret the runner could decrypt — repository-scoped, environment-scoped, org-scoped, OIDC-issued cloud credentials, npm/PyPI publish tokens, signing keys. Quarantine the runner. 3) Hunt: enumerate all workflows in the org that reference tj-actions/changed-files OR reviewdog/action-setup@v1 (CVE-2025-30154 same campaign); review public GitHub Actions logs for the leaked secret pattern; check git log for any commit signed/pushed by the affected runner identity during the window.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-953-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-953-uc2-sentinel">Sentinel KQL</button>
@@ -3955,6 +3513,7 @@ Cross-checked against:
   • https://github.com/advisories/ghsa-mrrh-fwg8-r2c3</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer reviewing the IOC report in a terminal session that gets logged</li><li>Detection-engineering test that echoes the SHA into a shell</li><li>SOAR enrichment job that queries the commit via git ls-remote</li><li>Legitimate inventory scanner enumerating action references in workflows (the &#x27;tj-actions/changed-files&#x27; branch of the OR — expected, NOT the SHA branch)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where AccountName !endswith &quot;$&quot; and InitiatingProcessCommandLine !has_any (&quot;detection-test&quot;,&quot;ioc-verify&quot;,&quot;threat-research&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: differentiate Critical (SHA matches) from Informational (tj-actions reference only). For Critical, treat as confirmed exposure — assume secrets harvested. 2) Contain (Critical only): rotate ALL secrets the runner could access; revoke runner registration token; pin the workflow to a SHA of v46.0.1 (NOT a tag) in every repo; block outbound to gist.githubusercontent.com from runner subnet pending review. 3) Hunt: build an org-wide inventory of every repo where the Informational branch hit; check workflow run histories for executions in the 2025-03-12 → 2025-03-15 window; correlate to UC #2 (memory dump) and UC #1 (gist fetch) on the same DeviceId.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-953-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-953-uc3-sentinel">Sentinel KQL</button>
@@ -4008,6 +3567,7 @@ union isfuzzy=true
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-953-uc4-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-953-uc4-sentinel">Sentinel KQL</button>
@@ -4060,6 +3620,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-953-uc5-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-953-uc5-sentinel">Sentinel KQL</button>
@@ -4160,6 +3721,7 @@ level: medium
     <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-953-uc6-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-953-uc6-sentinel">Sentinel KQL</button>
@@ -4267,6 +3829,7 @@ level: critical
     <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-953-uc7-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-953-uc7-spl">Splunk SPL (CIM)</button>
@@ -4412,6 +3975,7 @@ DeviceFileEvents
     <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-954-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-954-uc0-sentinel">Sentinel KQL</button>
@@ -4512,6 +4076,7 @@ level: medium
     <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-954-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-954-uc1-spl">Splunk SPL (CIM)</button>
@@ -4735,6 +4300,7 @@ DeviceFileEvents
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-956-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-956-uc0-sentinel">Sentinel KQL</button>
@@ -4787,6 +4353,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-956-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-956-uc1-sentinel">Sentinel KQL</button>
@@ -4881,6 +4448,7 @@ level: critical
     <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-956-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-956-uc2-sentinel">Sentinel KQL</button>
@@ -5061,6 +4629,7 @@ level: critical
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-957-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-957-uc0-sentinel">Sentinel KQL</button>
@@ -5261,6 +4830,7 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
     <div class="tabs">
       <button class="tab-btn active" data-target="art-959-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-959-uc0-sentinel">Sentinel KQL</button>
@@ -5300,4 +4870,78 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre></div></div>
   </div>
 </details></div>
+</article>
+<article class="card" id="art-960" data-art-slug="2025-03-11-ai-code-generation-code-security-quality-benefits-risks-top-"
+  data-phases="c2,exploit,install,recon" data-sev="med"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms=""
+  data-splunk-cats=""
+  data-targets=""
+  data-uc-count="0" data-llm-uc-count="0"
+  data-search="AI Code Generation: Code Security &amp; Quality, Benefits, Risks &amp; Top Tools AI code generation accelerates development, enhances productivity, and reduces coding fatigue. However, it also introduces security risks and challenges. Learn how AI-powered coding works, its benefits and limitations, and how to secure AI-generated code using Snyk’s security tools.  T1190 ">
+  <div class="sev-ribbon med">Medium</div>
+  <button class="share-btn card-share" data-share-art="2025-03-11-ai-code-generation-code-security-quality-benefits-risks-top-" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/ai-code-generation-code-security-quality-benefits-risks-top-tools/" target="_blank" rel="noopener">AI Code Generation: Code Security &amp; Quality, Benefits, Risks &amp; Top Tools</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2025-03-11</span>
+    <span>0 use cases</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">AI code generation accelerates development, enhances productivity, and reduces coding fatigue. However, it also introduces security risks and challenges. Learn how AI-powered coding works, its benefits and limitations, and how to secure AI-generated code using Snyk’s security tools.</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-960-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-960"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-960-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"></div>
 </article>

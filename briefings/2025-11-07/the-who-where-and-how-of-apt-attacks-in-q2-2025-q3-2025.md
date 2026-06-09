@@ -92,7 +92,7 @@ DeviceNetworkEvents
 
 ### Execution / write of ESET APT Q2-Q3 2025 known-bad SHA256 payload
 
-`UC_705_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_705_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

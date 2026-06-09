@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Telnyx PyPI compromise: malicious telnyx 4.87.1 / 4.87.2 hash on disk
 
-`UC_408_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_408_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceFileEvents
 
 ### TeamPCP C2 egress to 83.142.209.203:8080 (telnyx WAV-stego dropper)
 
-`UC_408_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_408_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

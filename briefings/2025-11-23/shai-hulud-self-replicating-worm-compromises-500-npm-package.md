@@ -96,7 +96,7 @@ DeviceProcessEvents
 
 ### Shai-Hulud bundle.js dropped on disk (SHA256 + filename hunt)
 
-`UC_681_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_681_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

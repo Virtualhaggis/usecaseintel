@@ -104,7 +104,7 @@ union
 
 ### Mini Shai-Hulud known SHA256 IOC match (setup.mjs / execution.js / runner-memory dumper)
 
-`UC_328_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_328_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

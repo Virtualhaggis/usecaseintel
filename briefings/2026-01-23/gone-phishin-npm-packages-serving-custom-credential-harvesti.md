@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### Aikido npm phishing: direct outbound connection to RackGenius C2 (163.123.236.118)
 
-`UC_589_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_589_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -112,7 +112,7 @@ DeviceFileEvents
 
 ### Known-bad tanstack 2.0.4-2.0.7 package tarball SHA256 file hash on disk
 
-`UC_329_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_329_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

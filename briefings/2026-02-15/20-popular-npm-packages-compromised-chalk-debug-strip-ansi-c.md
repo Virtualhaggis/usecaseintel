@@ -128,7 +128,7 @@ union CmdHits, FileHits
 
 ### Egress to Qix npm phishing/exfil infrastructure (npmjs.help, publicvm.com, BunnyCDN buckets)
 
-`UC_520_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_520_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

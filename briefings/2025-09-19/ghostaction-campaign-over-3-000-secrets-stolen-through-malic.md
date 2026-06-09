@@ -62,7 +62,7 @@ DeviceFileEvents
 
 ### GhostAction C2 egress to Plesk-hosted exfiltration infrastructure
 
-`UC_779_3` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_779_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

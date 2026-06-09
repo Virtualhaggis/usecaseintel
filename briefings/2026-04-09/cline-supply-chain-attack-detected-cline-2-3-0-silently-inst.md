@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### OpenClaw Gateway WebSocket listener / loopback connection on TCP 18789
 
-`UC_387_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_387_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Mini Shai-Hulud npm worm payload dropped under node_modules (router_init.js / tanstack_runner.js / known SHA256)
 
-`UC_295_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_295_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

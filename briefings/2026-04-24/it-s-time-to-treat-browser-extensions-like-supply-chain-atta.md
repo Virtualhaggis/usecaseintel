@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Cyberhaven compromised Chrome extension C2 callback (cyberhavenext.pro)
 
-`UC_337_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_337_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

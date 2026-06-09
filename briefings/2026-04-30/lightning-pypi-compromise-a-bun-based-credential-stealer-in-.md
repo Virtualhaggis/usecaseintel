@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### lightning PyPI compromise artifacts: start.py / router_runtime.js write
 
-`UC_326_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_326_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

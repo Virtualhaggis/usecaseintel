@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### C2 beacon or stage-2 fetch to updatenet[.]work / 172.86.73.139 / dothebest[.]store
 
-`UC_592_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_592_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

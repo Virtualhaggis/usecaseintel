@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### tj-actions/changed-files compromise: self-hosted runner egress to nikitastupin memdump gist (CVE-2025-30066)
 
-`UC_539_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_539_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -102,7 +102,7 @@ DeviceEvents
 
 ### Compromised bittensor-wallet 4.0.2 source-tarball SHA256 on disk
 
-`UC_414_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_414_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -94,7 +94,7 @@ union ProcSig, HashSig
 
 ### IoliteLabs IOC sweep: rraghh.com / oortt.com hostnames + campaign file hashes
 
-`UC_395_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_395_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

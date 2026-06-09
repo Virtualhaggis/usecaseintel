@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### ScreenConnect client beaconing to ClawdBot attacker relay (meeting.bulletmailer.net:8041)
 
-`UC_578_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_578_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ union isfuzzy=true
 
 ### DWrite.dll Rust sideloader dropped outside Windows directory (ClawdBot redundant payload)
 
-`UC_578_16` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_578_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

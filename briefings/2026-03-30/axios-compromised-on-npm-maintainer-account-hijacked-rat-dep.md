@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### axios npm RAT C2 beacon to sfrclak.com / 142.11.206.73:8000
 
-`UC_404_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_404_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -97,7 +97,7 @@ DeviceFileEvents
 
 ### WAV-disguised stager pull from TeamPCP loader 83.142.209.203:8080
 
-`UC_397_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_397_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceNetworkEvents
 
 ### TeamPCP C2 / exfil egress to models.litellm.cloud, checkmarx.zone and AS205759 nodes
 
-`UC_397_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_397_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

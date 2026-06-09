@@ -125,7 +125,7 @@ host_proc
 
 ### ScoringMathTea C2 beacon to compromised WordPress hosts (Lazarus DreamJob IOCs)
 
-`UC_725_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_725_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceNetworkEvents
 
 ### Lazarus DreamJob loader/dropper SHA1 sighting (DroneEXEHijackingLoader / NukeSped family)
 
-`UC_725_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_725_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Glassworm stage-2/stage-3 C2 callback to 45.32.150.251 or 217.69.3.152
 
-`UC_449_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_449_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

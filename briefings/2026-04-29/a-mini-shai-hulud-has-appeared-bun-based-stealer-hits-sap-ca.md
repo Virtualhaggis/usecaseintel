@@ -77,7 +77,7 @@ DeviceProcessEvents
 
 ### Mini Shai-Hulud payload file drop: setup.mjs/execution.js by hash & size in node_modules
 
-`UC_330_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_330_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

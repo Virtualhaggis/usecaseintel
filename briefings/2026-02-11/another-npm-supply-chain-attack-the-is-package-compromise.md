@@ -104,7 +104,7 @@ union _net, _dns
 
 ### Scavenger loader/install.js dropped into node_modules (known SHA256 or filename match)
 
-`UC_537_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_537_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

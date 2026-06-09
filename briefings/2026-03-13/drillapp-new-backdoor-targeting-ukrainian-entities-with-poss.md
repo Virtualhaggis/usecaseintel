@@ -184,7 +184,7 @@ CplLaunch
 
 ### DRILLAPP C2: msedge.exe egress to known DRILLAPP IPs or WebSocket to localhost:8000
 
-`UC_453_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_453_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

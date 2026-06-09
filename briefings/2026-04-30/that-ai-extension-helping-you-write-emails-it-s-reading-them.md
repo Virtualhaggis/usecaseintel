@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### Browser egress to Unit 42 'High-Risk GenAI Extension' C2 / exfil infrastructure
 
-`UC_321_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_321_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceNetworkEvents
 
 ### Installation of Unit 42-named malicious GenAI Chrome extension (by ID / SHA256)
 
-`UC_321_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_321_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

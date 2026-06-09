@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### GlassWorm hardcoded C2 IP egress (45.32.150.251 / 217.69.3.152) for Stage-2 fetch and exfil
 
-`UC_441_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_441_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

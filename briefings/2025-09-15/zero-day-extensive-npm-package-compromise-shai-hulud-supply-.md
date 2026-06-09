@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Shai-Hulud bundle.js postinstall payload by known SHA256 hash
 
-`UC_783_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_783_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

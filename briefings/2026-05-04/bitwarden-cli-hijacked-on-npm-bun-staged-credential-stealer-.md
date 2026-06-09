@@ -72,7 +72,7 @@ BunDownload
 
 ### TeamPCP @bitwarden/cli stealer exfil to audit.checkmarx.cx (94.154.172.43)
 
-`UC_316_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_316_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

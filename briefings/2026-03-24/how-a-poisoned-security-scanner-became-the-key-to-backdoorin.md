@@ -101,7 +101,7 @@ DeviceProcessEvents
 
 ### DNS / HTTPS egress to TeamPCP exfil infra (models.litellm.cloud, checkmarx.zone)
 
-`UC_426_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_426_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

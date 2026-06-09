@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### PlushDaemon EdgeStepper hijacking infrastructure (wcsset.com / 47.242.198.250 / 8.212.132.120) contact
 
-`UC_686_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_686_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

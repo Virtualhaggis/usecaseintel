@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### GlassWorm Zig dropper native node addon (win.node/mac.node) written to IDE extension bin/ folder
 
-`UC_388_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_388_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

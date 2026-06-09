@@ -104,7 +104,7 @@ DeviceProcessEvents
 
 ### ValleyRAT registry-resident shellcode (HKCU\Console\0|1) and MyPythonApp Run-key persistence
 
-`UC_409_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_409_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

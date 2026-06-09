@@ -52,7 +52,7 @@ DeviceNetworkEvents
 
 ### PromptSpy VNC C2 egress to 54.67.2.84
 
-`UC_502_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_502_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

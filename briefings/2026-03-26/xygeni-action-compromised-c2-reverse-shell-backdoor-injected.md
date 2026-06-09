@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Outbound C2 callback to xygeni-action backdoor IP 91.214.78.178 from CI runner
 
-`UC_418_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_418_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

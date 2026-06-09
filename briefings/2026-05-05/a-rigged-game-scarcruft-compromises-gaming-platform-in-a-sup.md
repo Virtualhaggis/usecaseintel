@@ -67,7 +67,7 @@ DeviceNetworkEvents
 
 ### BirdCall trojanized APK/mono.dll SHA1 match on Windows endpoints
 
-`UC_313_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_313_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Mini Shai-Hulud Wave 4 (TanStack/TeamPCP) worm payload file created in node_modules
 
-`UC_298_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_298_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
