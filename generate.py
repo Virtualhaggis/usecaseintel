@@ -3678,6 +3678,33 @@ def _llm_generate_actor_ucs(actor: dict):
     return out_ucs
 
 
+# IOC-grep detector — literal hash/IP matching with no behavioural logic.
+_UC_HEX_HASH_RE = re.compile(r"\b[a-fA-F0-9]{32,64}\b")
+_UC_IPV4_RE = re.compile(r"\b\d{1,3}(?:\.\d{1,3}){3}\b")
+_UC_BEHAVIOURAL_RE = re.compile(
+    # Correlation/threshold constructs only. Deliberately NOT bare
+    # stats/tstats/summarize/count — those appear in pure IOC sweeps too
+    # ("| tstats count ... where hash IN (...)" is still a grep).
+    r"(\bjoin\b|datetime_diff|series_|\bprev\s*\(|\btransaction\b|\bstdev|"
+    r"\bpercentile|\bstreamstats\b|\beventstats\b|\btimechart\b|"
+    r"\bmake_set\b|\bmake_list\b|\bdcount\b|\bbin\s*[\(_]|"
+    r"InitiatingProcessParent|ParentProcess|"
+    r"\b(?:count|cnt|files|hits|events|total)\s*(?:\(\s*\))?\s*[><]=?\s*\d)",
+    re.IGNORECASE)
+
+
+def _uc_is_ioc_grep(spl: str, kql: str, skql: str = "") -> bool:
+    """True when the query bodies amount to 'value in (list of literal
+    IOCs)' — 3+ literal hashes/IPs and zero aggregation / correlation /
+    parent-child constructs. Such queries are useful hunts for THIS
+    campaign but not durable detections."""
+    body = " ".join([spl or "", kql or "", skql or ""])
+    if not body.strip():
+        return False
+    ioc_literals = len(_UC_HEX_HASH_RE.findall(body)) + len(_UC_IPV4_RE.findall(body))
+    return ioc_literals >= 3 and not _UC_BEHAVIOURAL_RE.search(body)
+
+
 def _uc_from_llm_dict(d: dict):
     """Validate + coerce an LLM-emitted UC dict into a UseCase object."""
     if not isinstance(d, dict): return None
@@ -3733,6 +3760,18 @@ def _uc_from_llm_dict(d: dict):
     runbook = str(d.get("response_runbook") or "").strip()[:1000]
     fp_filters = str(d.get("false_positive_filters") or "").strip()[:1000]
 
+    # IOC-grep tier-down. A query that just matches a list of literal
+    # hashes/IPs with no behavioural correlation (joins, aggregation,
+    # thresholds, parent-child chains) only catches THIS campaign's exact
+    # artefacts — it goes stale the moment the actor rotates infra. The
+    # LLM routinely marks these "High" confidence / alerting tier, which
+    # would page a SOC on logic that deserves hunting status. Cap them.
+    confidence = (d.get("confidence") or "Medium")
+    if _uc_is_ioc_grep(spl, kql, d.get("sentinel_kql") or ""):
+        if str(confidence).lower() == "high":
+            confidence = "Medium"
+        tier = "hunting"
+
     return UseCase(
         title=f"[LLM] {title[:140]}",
         description="".join(desc_parts),
@@ -3746,7 +3785,7 @@ def _uc_from_llm_dict(d: dict):
         datadog_query=(d.get("datadog_query") or ""),
         falcon_logscale_query=(d.get("falcon_logscale_query") or ""),
         cloudwatch_query=(d.get("cloudwatch_query") or ""),
-        confidence=(d.get("confidence") or "Medium"),
+        confidence=confidence,
         tier=tier,
         fp_rate_estimate=fp_rate,
         required_telemetry=[str(t) for t in req_telem][:8],
@@ -5343,9 +5382,9 @@ HTML_HEAD = r"""<!doctype html>
 <meta property="og:site_name" content="Clankerusecase">
 <meta property="og:url" content="https://clankerusecase.com/">
 <meta property="og:title" content="Clankerusecase — Threat-led detection library for SOC teams">
-<meta property="og:description" content="2,000+ MITRE-mapped detections in Defender KQL, Sentinel KQL, Sigma, and Splunk SPL — generated continuously from current threat-intel feeds and ready to deploy.">
+<meta property="og:description" content="MITRE-mapped detections in Defender KQL, Sentinel KQL, Sigma, and Splunk SPL — generated continuously from current threat-intel feeds, schema-validated, and ready to tune for your environment.">
 <meta property="og:image" content="https://clankerusecase.com/logo.png">
-<meta property="og:image:alt" content="Clankerusecase — production-ready SOC detections from daily threat-intel">
+<meta property="og:image:alt" content="Clankerusecase — pre-validated SOC detections from daily threat-intel">
 <meta property="og:locale" content="en_GB">
 
 <!-- Twitter / X -->
@@ -5353,7 +5392,7 @@ HTML_HEAD = r"""<!doctype html>
 <meta name="twitter:title" content="Clankerusecase — Threat-led detection library">
 <meta name="twitter:description" content="2,000+ MITRE-mapped detections in Defender KQL, Sentinel KQL, Sigma, and Splunk SPL. Auto-generated from daily threat-intel.">
 <meta name="twitter:image" content="https://clankerusecase.com/logo.png">
-<meta name="twitter:image:alt" content="Clankerusecase — production-ready SOC detections">
+<meta name="twitter:image:alt" content="Clankerusecase — pre-validated SOC detections">
 
 <!-- Structured data — tells Google this is a SoftwareApplication / Dataset
      so search results can surface descriptive snippets and rich cards
@@ -7386,6 +7425,21 @@ details.uc[open] summary::before{transform:rotate(90deg);}
 /* "AI" / "Weekly" kind badge — replaces the raw "[LLM]"/"[WEEKLY]" title
    prefixes that used to leak pipeline jargon into reader-facing titles. */
 .uc-kind{color:#7170ff;border-color:rgba(113,112,255,0.35);}
+/* Per-UC false-positive guidance + response runbook — collapsed by
+   default so the card stays scannable; analysts expand when tuning. */
+.uc-fp{margin:8px 0;border:1px solid var(--border);border-radius:6px;
+  background:rgba(255,255,255,0.015);padding:6px 10px;}
+.uc-fp summary{cursor:pointer;font-size:11.5px;font-weight:600;
+  color:var(--muted);letter-spacing:0.02em;}
+.uc-fp summary:hover{color:var(--text);}
+.uc-fp-note{font-weight:400;color:var(--muted-2,#62656a);}
+.uc-fp ul{margin:8px 0 4px 18px;font-size:12px;line-height:1.55;
+  color:var(--text);opacity:0.85;}
+.uc-fp .uc-fp-filter{margin-top:6px;}
+.uc-fp .uc-fp-filter pre{margin:4px 0 2px;padding:8px 10px;font-size:11.5px;
+  overflow-x:auto;background:var(--panel-elev);border-radius:5px;}
+.uc-runbook{margin:8px 0 4px;font-size:12px;line-height:1.6;
+  color:var(--text);opacity:0.85;white-space:pre-wrap;}
 .uc-conf.high{color:#4cb782;}
 .uc-conf.medium{color:#e2a93f;}
 .uc-conf.low{color:var(--muted);}
@@ -9607,7 +9661,7 @@ body.view-home-active .stats-articles{display:none !important;}
       </button>
       <div class="brand-text">
         <span class="brand-name">Clankerusecase</span>
-        <span class="brand-tagline">A threat-led detection library — production-ready queries for SOC, threat hunters, and CTI teams.</span>
+        <span class="brand-tagline">A threat-led detection library — pre-validated queries for SOC, threat hunters, and CTI teams. Test before production.</span>
       </div>
     </div>
     <div class="stats-wrap">
@@ -9637,6 +9691,11 @@ body.view-home-active .stats-articles{display:none !important;}
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8 H16 M8 12 H16 M8 16 H13"/></svg>
       <span>SOC Cheat Sheet</span>
     </a>
+    <a href="https://github.com/Virtualhaggis/usecaseintel" target="_blank" rel="noopener" class="cheatsheet-btn"
+       title="Everything on this site is open source — clone the repo, grab the rule packs, or report a bad detection">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1.5a10.5 10.5 0 0 0-3.32 20.46c.53.1.72-.23.72-.5v-1.96c-2.92.63-3.54-1.24-3.54-1.24-.48-1.21-1.17-1.54-1.17-1.54-.95-.65.07-.64.07-.64 1.06.08 1.61 1.08 1.61 1.08.94 1.6 2.46 1.14 3.06.87.1-.68.37-1.14.66-1.4-2.33-.27-4.79-1.17-4.79-5.19 0-1.15.41-2.08 1.08-2.82-.11-.26-.47-1.33.1-2.78 0 0 .88-.28 2.89 1.08a10 10 0 0 1 5.26 0c2-1.36 2.88-1.08 2.88-1.08.58 1.45.22 2.52.11 2.78.67.74 1.08 1.67 1.08 2.82 0 4.03-2.46 4.91-4.81 5.17.38.33.72.97.72 1.96v2.9c0 .28.19.61.73.5A10.5 10.5 0 0 0 12 1.5z"/></svg>
+      <span>GitHub</span>
+    </a>
     <button type="button" class="tour-trigger" id="tourTrigger"
             title="Take the guided tour of the site (Esc to skip, ← → to navigate)">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.5 9 a3 3 0 1 1 4.5 2.5 c-1 0.7 -1.5 1 -1.5 2.5"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></svg>
@@ -9657,7 +9716,7 @@ body.view-home-active .stats-articles{display:none !important;}
 
 <div class="first-visit-banner" id="firstVisitBanner" role="region" aria-label="Welcome">
   <span class="banner-quote">“A go-to resource SOC engineers actually use daily.”</span>
-  <span class="banner-explainer"><b>New here?</b> We turn daily threat-intel articles into ready-to-deploy SOC detections — every 2 hours.</span>
+  <span class="banner-explainer"><b>New here?</b> We turn daily threat-intel articles into ready-to-tune SOC detections — every 2 hours.</span>
   <span class="banner-stats">__ARTICLE_COUNT__ articles · __USECASE_COUNT__ detections · MITRE ATT&amp;CK + Sigma · Defender · Sentinel · Splunk</span>
   <a href="#" class="banner-cta" id="firstVisitTour">Take the 30-second tour →</a>
 </div>
@@ -12549,11 +12608,13 @@ document.addEventListener('click', e => {
   if (!form || !input) return;
 
   // Submit handler — routes to the existing site-wide search overlay.
+  // An empty query still opens the (working) overlay rather than trying
+  // to re-focus the hero input — focusing back into a possibly-dead
+  // input was the silent-failure path.
   function submitQuery(q){
     q = (q || '').trim();
-    if (!q) { input.focus(); return; }
     try {
-      history.replaceState(null, '',
+      if (q) history.replaceState(null, '',
         '?q=' + encodeURIComponent(q) + location.hash);
     } catch (_) {}
     // Open the existing Ctrl-K palette with the query pre-applied. The
@@ -12565,8 +12626,10 @@ document.addEventListener('click', e => {
     if (trig) trig.click();           // opens overlay
     requestAnimationFrame(() => {
       if (pInput) {
-        pInput.value = q;
-        pInput.dispatchEvent(new Event('input', {bubbles: true}));
+        if (q) {
+          pInput.value = q;
+          pInput.dispatchEvent(new Event('input', {bubbles: true}));
+        }
         pInput.focus();
       }
     });
@@ -12581,6 +12644,17 @@ document.addEventListener('click', e => {
       e.preventDefault();
       submitQuery(input.value);
     }
+  });
+  // Belt-and-braces: clicking ANYWHERE on the hero search opens the
+  // palette immediately (same surface the navbar trigger opens). The
+  // submit/Enter flow above depended on the input actually holding
+  // focus; when an overlay/animation quirk swallowed the focus, typed
+  // text went nowhere and the most prominent element on the landing
+  // page silently ate input. Opening the palette on engagement removes
+  // that dead state entirely — typing continues in the overlay.
+  form.addEventListener('click', e => {
+    e.preventDefault();
+    submitQuery(input.value);
   });
 
   // Sample-chip clicks share the same submit path.
@@ -12878,7 +12952,7 @@ const TOUR_STEPS = [
     // Article cards are <article class="card" id="art-XX"> — NOT .article.
     target: "#articles article.card", fallback: "#articles",
     title: "Daily threat-intel feed",
-    body: "Each card is a security article auto-pulled from <b>11+ RSS sources</b>, parsed for IOCs and ATT&CK techniques, and enriched with ready-to-deploy detection queries. Refreshes every 2 hours.",
+    body: "Each card is a security article auto-pulled from <b>11+ RSS sources</b>, parsed for IOCs and ATT&CK techniques, and enriched with schema-validated detection queries you can lift, tune, and deploy. Refreshes every 2 hours.",
     preview: '<span class="tour-preview-meta">Sources →</span>' +
              '<span class="tour-preview-pill">The Hacker News</span>' +
              '<span class="tour-preview-pill">Bleeping Computer</span>' +
@@ -13263,6 +13337,22 @@ const __cardsPageP = {};   // promise per page index (de-duplicated)
 let __cardsAllLoaded = false;
 let __cardsObserver = null;
 
+// Debounced post-append housekeeping. _initChipCounts() re-scans the
+// ENTIRE cards DOM; calling it after every individual page append made a
+// jump-to-bottom (End key / deep link) quadratic — ~58 appends x a full
+// DOM scan each froze the renderer for 30s+. One trailing call after the
+// burst settles gives the same end state.
+let __cardsTallyTimer = null;
+function _scheduleCardsTally(lastIdx) {
+  if (__cardsTallyTimer) clearTimeout(__cardsTallyTimer);
+  __cardsTallyTimer = setTimeout(() => {
+    __cardsTallyTimer = null;
+    if (typeof _initChipCounts === 'function') _initChipCounts();
+    try { SEARCH_INDEX = null; } catch (_) {}
+    document.dispatchEvent(new CustomEvent('cards-page-ready', {detail: {page: lastIdx}}));
+  }, 250);
+}
+
 function loadCardsPage(idx) {
   if (__cardsPageP[idx]) return __cardsPageP[idx];
   const pages = (__MANIFEST__ && __MANIFEST__.cardPages) || [];
@@ -13270,7 +13360,7 @@ function loadCardsPage(idx) {
   const url = pages[idx];
   __cardsPageP[idx] = fetch(url)
     .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
-    .then(html => {
+    .then(async html => {
       const host = document.getElementById('cardsHost');
       if (!host) return;
       // Page 1 replaces the host content; subsequent pages append.
@@ -13278,6 +13368,15 @@ function loadCardsPage(idx) {
         host.innerHTML = html;
         host.dataset.loaded = '1';
       } else {
+        // Fetches run in parallel but APPENDS must land in page order —
+        // otherwise a slow page 2 arriving after page 3 puts article
+        // cards out of chronological order and shifts the layout under
+        // a deep-link scroll. Await the predecessor's full chain first.
+        const prev = __cardsPageP[idx - 1];
+        if (prev) { try { await prev; } catch (_) {} }
+        // Yield to the renderer between heavy innerHTML parses so a
+        // burst of appends can't lock the main thread end-to-end.
+        await new Promise(r => setTimeout(r, 0));
         // Use a doc fragment so the parsed nodes go in atomically.
         const tmpl = document.createElement('template');
         tmpl.innerHTML = html;
@@ -13287,12 +13386,9 @@ function loadCardsPage(idx) {
         __cardsAllLoaded = true;
         if (__cardsObserver) { __cardsObserver.disconnect(); __cardsObserver = null; }
       }
-      // Re-tally chip counts so the toolbar reflects the loaded subset.
-      // Search-palette index needs invalidation too -- the new cards
-      // bring fresh DOM data the palette indexer reads from.
-      if (typeof _initChipCounts === 'function') _initChipCounts();
-      try { SEARCH_INDEX = null; } catch (_) {}
-      document.dispatchEvent(new CustomEvent('cards-page-ready', {detail: {page: idx}}));
+      // Re-tally chip counts (debounced) so the toolbar reflects the
+      // loaded subset; also invalidates the search-palette index.
+      _scheduleCardsTally(idx);
     })
     .catch(e => {
       console.error('[loadCardsPage]', idx, e);
@@ -15106,6 +15202,30 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
                      'across multiple recent articles">Weekly</span>')
     else:
         kind_pill = ""
+    # FP guidance + response runbook — these fields have been generated
+    # for every AI UC all along but were only visible in the Library
+    # drawer. Surfacing them on the article card is what turns "here's a
+    # query" into "here's a query and how to tune it" for the analyst.
+    fp_rate = (getattr(uc, "fp_rate_estimate", "") or "unknown").lower()
+    fp_scen = getattr(uc, "expected_fp_scenarios", None) or []
+    fp_filters = getattr(uc, "false_positive_filters", "") or ""
+    runbook = getattr(uc, "response_runbook", "") or ""
+    fp_block = ""
+    if fp_scen or fp_filters:
+        items = "".join(f"<li>{html.escape(s)}</li>" for s in fp_scen[:5])
+        rate_lbl = f" · estimated rate: {html.escape(fp_rate)}" if fp_rate != "unknown" else ""
+        filt = ""
+        if fp_filters:
+            filt = ('<div class="uc-fp-filter"><span class="ind-label">Suppression filter</span>'
+                    f'<pre><code>{html.escape(fp_filters)}</code></pre></div>')
+        fp_block += (
+            f'<details class="uc-fp"><summary>Expected false positives{rate_lbl}'
+            '<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary>'
+            f'{f"<ul>{items}</ul>" if items else ""}{filt}</details>'
+        )
+    if runbook:
+        fp_block += ('<details class="uc-fp"><summary>Response runbook</summary>'
+                     f'<div class="uc-runbook">{html.escape(runbook)}</div></details>')
     return f"""
 <details class="uc" data-uc-slug="{uslug}" data-platforms="{uc_plats}" data-targets="{uc_targets_attr}"{ ' open' if idx == 0 else '' }>
   <summary>
@@ -15120,6 +15240,7 @@ def render_use_case(art_id: str, idx: int, uc: UseCase, ind: dict) -> str:
     <div class="uc-desc">{html.escape(uc.description)}</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span>{techs}</div>
     <div class="uc-meta"><span class="ind-label">Data sources</span>{dms}</div>
+    {fp_block}
     <div class="tabs">
       {tab_btns}
     </div>
@@ -16149,8 +16270,15 @@ def write_catalog_files(generated_iso):
             for tid, _ in uc.techniques:
                 coverage.setdefault(tid, []).append(uc_id)
     (CATALOG_DIR / "use_cases.json").write_text(
-        json_lib.dumps({"generated": generated_iso, "count": len(ucs_array), "use_cases": ucs_array},
-                       indent=2),
+        json_lib.dumps({
+            # Contract for programmatic consumers: bump schema_version on
+            # any breaking field change so scripts can detect drift
+            # instead of silently mis-parsing.
+            "schema_version": "1.0",
+            "generated": generated_iso,
+            "count": len(ucs_array),
+            "use_cases": ucs_array,
+        }, indent=2),
         encoding="utf-8",
     )
     rules_array = []
@@ -16258,8 +16386,18 @@ def _write_rule_packs(generated_iso):
     rp_dir.mkdir(exist_ok=True)
     splunk_dir = rp_dir / "splunk"; splunk_dir.mkdir(exist_ok=True)
     sentinel_dir = rp_dir / "sentinel"; sentinel_dir.mkdir(exist_ok=True)
-    elastic_dir = rp_dir / "elastic"; elastic_dir.mkdir(exist_ok=True)
     sigma_dir = rp_dir / "sigma"; sigma_dir.mkdir(exist_ok=True)
+    # Clean up the legacy Elastic stub rules (placeholder queries marked
+    # "translation TODO") — see the comment at the former emission site.
+    elastic_dir = rp_dir / "elastic"
+    if elastic_dir.exists():
+        try:
+            for _stale in elastic_dir.glob("*.json"):
+                _stale.unlink()
+            elastic_dir.rmdir()
+            print("[*] Removed legacy Elastic stub rules from rule_packs/")
+        except OSError:
+            pass
 
     splunk_lines = [
         "# Splunk savedsearches.conf — auto-generated by usecaseintel",
@@ -16344,45 +16482,15 @@ def _write_rule_packs(generated_iso):
             (sentinel_dir / f"{uc_id}.json").write_text(
                 json_lib.dumps(sentinel_rule, indent=2), encoding="utf-8")
 
-        # ---- Elastic detection rule ----
-        if uc.defender_kql or uc.splunk_spl:
-            # Elastic accepts EQL / KQL — Defender KQL is closer in shape.
-            elastic_rule = {
-                "name": uc.title,
-                "description": uc.description or uc.title,
-                "risk_score": 73 if tier == "alerting" else 21,
-                "severity": "high" if tier == "alerting" else "low",
-                "type": "query",
-                "language": "kuery",
-                "enabled": False,  # OFF until reviewed
-                "interval": "1h" if tier == "alerting" else "24h",
-                "from": "now-24h",
-                "index": ["logs-*", "winlogbeat-*", "endgame-*"],
-                "query": "event.action:* AND _exists_:host.name",  # placeholder — analyst port-over needed
-                "threat": [{
-                    "framework": "MITRE ATT&CK",
-                    "tactic": {"id": "", "name": uc.kill_chain, "reference": ""},
-                    "technique": [{"id": t, "name": n, "reference": f"https://attack.mitre.org/techniques/{t}/"}
-                                  for t, n in uc.techniques[:3]],
-                }],
-                "tags": ["usecaseintel", f"tier:{tier}", uc.kill_chain],
-                "note": (
-                    "**Auto-generated from usecaseintel — analyst port-over required.** "
-                    "Original Splunk SPL / Defender KQL bodies preserved in the "
-                    "`reference` URL. Translate the source query to Elastic's "
-                    "ECS / EQL syntax before enabling.\n\n"
-                    f"### Source query (Defender KQL)\n```\n{uc.defender_kql or '(none)'}\n```"
-                ),
-                "references": [
-                    f"https://clankerusecase.com/use_cases/{uc.kill_chain}/{uc_id}.yml",
-                ],
-                "meta": {
-                    "tier": tier,
-                    "fp_rate_estimate": getattr(uc, "fp_rate_estimate", "unknown"),
-                },
-            }
-            (elastic_dir / f"{uc_id}.json").write_text(
-                json_lib.dumps(elastic_rule, indent=2), encoding="utf-8")
+        # ---- Elastic detection rule: intentionally NOT emitted ----
+        # The previous exporter wrote stub rules whose query was the
+        # placeholder `event.action:* AND _exists_:host.name` — a rule
+        # that matches EVERYTHING if someone enables it, marked
+        # "translation TODO". Shipping a broken artifact is worse for
+        # credibility than shipping none: Elastic users got nothing
+        # usable AND the repo looked careless. The export returns when
+        # the KQL->ECS/EQL port is real. (Sigma rules below compile to
+        # Elastic dialects via sigma-cli in the meantime.)
 
         # ---- Sigma rule (universal interchange) ----
         sigma_yaml = _emit_sigma(uc_id, uc, tier)
@@ -16404,8 +16512,11 @@ default** — review each rule against your environment before enabling.
 |---|---|---|
 | `splunk/savedsearches.conf` | Splunk app config | Stanzas with full SPL embedded as comments. Enable per environment. |
 | `sentinel/<uc>.json` | ARM template | Microsoft Sentinel analytics rule. Deploy with `az deployment group create`. |
-| `elastic/<uc>.json` | Elastic detection rule | Translation TODO — KQL bodies need port to ECS/EQL. |
-| `sigma/<uc>.yml` | Sigma | Universal interchange — convert with sigma-cli to your SIEM dialect. |
+| `sigma/<uc>.yml` | Sigma | Universal interchange — convert with sigma-cli to your SIEM dialect (incl. Elastic). |
+
+Elastic-native rules are not exported yet — a previous version shipped
+placeholder stubs, which was worse than nothing. Until the KQL->ECS/EQL
+port lands, compile the Sigma rules to your Elastic dialect via sigma-cli.
 
 Tier-aware defaults:
 - `alerting` UCs schedule hourly, severity High
@@ -16414,7 +16525,7 @@ Tier-aware defaults:
 All exports include `tier`, `fp_rate_estimate`, `mitre_attack` annotations.
 """
     (rp_dir / "README.md").write_text(readme, encoding="utf-8")
-    print(f"[*] Rule packs: {len(_LOADED_UCS)} UCs  ->  rule_packs/{{splunk,sentinel,elastic,sigma}}/")
+    print(f"[*] Rule packs: {len(_LOADED_UCS)} UCs  ->  rule_packs/{{splunk,sentinel,sigma}}/")
 
 
 def _emit_sigma(uc_id, uc, tier):
@@ -16924,6 +17035,100 @@ def write_share_stubs(articles_meta, articles_raw_index, base_url: str = "https:
                              ucdesc, f"{base_url}/#uc-{usl}")
             uc_n += 1
     print(f"[*] Share stubs written: {art_n} articles + {uc_n} UCs  ->  share/")
+
+
+# =============================================================================
+# About & methodology page — the trust artifact. Security practitioners
+# check three things before relying on a free detection library: who runs
+# it, how the content is made, and what is (honestly) NOT guaranteed.
+# This page answers all three, including the limitations, on purpose:
+# overclaiming ("production-ready") is the fastest credibility killer
+# with this audience, while documented limitations read as engineering
+# maturity (the ESCU/SigmaHQ model).
+# =============================================================================
+
+_GITHUB_REPO_URL = "https://github.com/Virtualhaggis/usecaseintel"
+
+
+def write_about_page(generated_human: str, usecase_count: int = 0) -> None:
+    gen = html.escape(generated_human or "")
+    n = f"{usecase_count:,}" if usecase_count else "thousands of"
+    page = f"""<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About &amp; methodology · Clankerusecase</title>
+<meta name="description" content="Who runs Clankerusecase, how the detection pipeline works, what is validated, what is NOT guaranteed, and how to use or report the content.">
+<link rel="canonical" href="https://clankerusecase.com/about.html">
+<link rel="icon" type="image/png" href="logo.png">
+<style>{_TECH_PAGE_STYLE}</style>
+</head>
+<body>
+<div class="wrap" style="max-width:880px;margin:0 auto;padding:32px 20px;">
+  <p style="margin-bottom:18px;"><a href="index.html" style="color:var(--accent);text-decoration:none;">&larr; Back to the detection library</a></p>
+  <h1>About &amp; methodology</h1>
+  <p style="color:var(--muted);">Last updated {gen} &middot; this page is regenerated by the same pipeline it describes.</p>
+
+  <div class="section"><h2>What this is</h2>
+  <p>Clankerusecase is a free, continuously-updated detection engineering resource. A pipeline watches 11+ threat-intelligence sources (The Hacker News, BleepingComputer, Microsoft Security Blog, Cisco Talos, Securelist, SentinelLabs, Unit&nbsp;42, ESET, Lab52, CISA KEV, GitHub Security Advisories) and, within ~2 hours of an article publishing, turns it into MITRE ATT&amp;CK-mapped detection use cases with queries for Microsoft Defender (KQL), Microsoft Sentinel (KQL), Splunk (SPL/CIM), Sigma, Datadog Cloud SIEM, and CrowdStrike Falcon LogScale — plus extracted, defanged IOCs and kill-chain context.</p></div>
+
+  <div class="section"><h2>Who runs it</h2>
+  <p>This is a solo project by <strong>Virtualhaggis</strong> — a security practitioner building the tool they wanted on shift: a way to go from "I just read about this campaign" to "here is the query I run" in one click. It runs in spare time, with no company behind it, no SLA, and no warranty. The generator code, the detection content, and the full pipeline are open source: <a href="{_GITHUB_REPO_URL}" rel="noopener">github.com/Virtualhaggis/usecaseintel</a>.</p></div>
+
+  <div class="section"><h2>How detections are generated</h2>
+  <p>Two paths feed the library:</p>
+  <ul>
+    <li><strong>Curated catalogue</strong> — hand-built use cases (YAML in the repo) that fire when an article matches known behavioural triggers. Written and reviewed by a human.</li>
+    <li><strong>AI-generated use cases</strong> (badged <strong>AI</strong> on the site) — for each new article, Claude reads the full article text, code blocks, IOC tables and screenshots, cross-checks claims against vendor advisories via web search, and drafts detections specific to that campaign. These then go through the validation gauntlet below, with failed queries re-prompted and unsafe or malformed ones dropped.</li>
+  </ul>
+  <p>Every detection links back to its source article, so you can verify the logic against the original reporting in under a minute.</p></div>
+
+  <div class="section"><h2>What we validate — and what we don't</h2>
+  <p><strong>Every published query is checked for:</strong></p>
+  <ul>
+    <li>Defender / Sentinel KQL: real grammar parse (Microsoft Kusto.Language) + table and column names validated against a 58-table, 1,600+-column schema, with automatic near-miss correction.</li>
+    <li>Splunk SPL: structural validation (balanced quotes/parentheses/macros, CIM datamodel allowlist).</li>
+    <li>Sigma: parses via pySigma with required-field checks.</li>
+    <li>CloudWatch Logs Insights: keyword/field heuristics against the CloudTrail schema.</li>
+    <li>All platforms: a safety denylist — queries containing side-effectful commands (e.g. <code>outputlookup</code>, <code>sendemail</code>, <code>externaldata()</code>) are never published.</li>
+    <li>MITRE technique IDs validated against the current ATT&amp;CK release.</li>
+  </ul>
+  <p><strong>What we do NOT do (yet):</strong></p>
+  <ul>
+    <li>Execute queries against live telemetry or replayed attack data — <em>schema-valid is not the same as field-tested</em>.</li>
+    <li>Measure real-world false-positive rates. The per-UC confidence and FP guidance are model-assessed estimates, not measurements.</li>
+    <li>Guarantee performance — some hunting queries are expensive on large tenants.</li>
+  </ul>
+  <p><strong>Bottom line: treat everything here as a strong, context-rich starting point. Test in staging, tune the allowlists to your environment, then promote to production.</strong></p></div>
+
+  <div class="section"><h2>What the labels mean</h2>
+  <ul>
+    <li><strong>Alerting</strong> tier — specific enough (named binaries, hashes, thresholds, temporal correlation) that it is a candidate for alerting after tuning. <strong>Hunting</strong> tier — needs analyst review; expect noise.</li>
+    <li><strong>Confidence (High/Medium/Low)</strong> — the generator's assessment of how tightly the query matches the attack described in the source article. It is not a measured precision figure.</li>
+    <li><strong>AI badge</strong> — generated by the pipeline for a specific article, cross-checked against vendor advisories. <strong>Weekly</strong> — synthesised across the fortnight's articles.</li>
+    <li><strong>SVS (SOC Value Score)</strong> — a 0-100 composite of probability, impact, detectability, and effort, for ranking the library. Heuristic, not gospel.</li>
+  </ul></div>
+
+  <div class="section"><h2>Using the content</h2>
+  <p>Everything is MIT-licensed — code <em>and</em> detection content. Deploy the queries in your SOC, adapt them, ship them in internal detection libraries, use them commercially. Attribution is appreciated but not required. Machine-readable exports, refreshed every run:</p>
+  <ul>
+    <li><a href="intel/iocs.csv">IOC feed — CSV</a> &middot; <a href="intel/iocs.json">JSON</a> &middot; <a href="intel/iocs.stix.json">STIX 2.1</a> &middot; <a href="intel/iocs.rss.xml">RSS</a> &middot; <a href="intel/splunk_lookup_iocs.csv">Splunk lookup</a></li>
+    <li><a href="catalog/use_cases.json">Use-case catalogue (JSON)</a> and <a href="{_GITHUB_REPO_URL}/tree/main/rule_packs" rel="noopener">rule packs</a> — Splunk savedsearches.conf and Sentinel ARM templates</li>
+    <li><a href="{_GITHUB_REPO_URL}/tree/main/sigma_rules" rel="noopener">Sigma rules</a> (compile to KQL/SPL/Lucene via pySigma)</li>
+    <li><a href="{_GITHUB_REPO_URL}" rel="noopener">The full repo</a> — clone it, the briefings and use-case YAML are all in there</li>
+  </ul></div>
+
+  <div class="section"><h2>Found a bad detection?</h2>
+  <p>Tell us — that is how an AI-assisted library earns trust. <a href="{_GITHUB_REPO_URL}/issues/new?labels=bad-detection&amp;title=%5Bbad%20detection%5D%20" rel="noopener">Open a GitHub issue</a> with the UC title and what is wrong (false positives, broken syntax, wrong field, missed coverage). Reports get triaged and fixes ship through the normal pipeline runs.</p></div>
+
+  <p style="color:var(--muted2);font-size:12px;margin-top:28px;">No warranty of any kind. Detections are provided as-is; validate before relying on them in production. Defanged IOCs are intentionally not clickable.</p>
+</div>
+</body>
+</html>
+"""
+    Path(__file__).with_name("about.html").write_text(page, encoding="utf-8")
+    print("[*] Wrote about.html (methodology / trust page)")
 
 
 # =============================================================================
@@ -20952,7 +21157,7 @@ def render_home_value() -> str:
         '  <section class="home-section home-value" id="home-value">\n'
         '    <header class="home-section-head">\n'
         '      <h2>What Clankerusecase gives your SOC</h2>\n'
-        '      <p class="home-section-sub">Six things every detection on the site has, by default — written by practitioners, not generated to fill a compliance checklist.</p>\n'
+        '      <p class="home-section-sub">Six things every detection on the site has, by default — built for analysts who run real queues, not to fill a compliance checklist.</p>\n'
         '    </header>\n'
         '    <div class="home-value-grid">\n'
         + "\n".join(cards) +
@@ -21261,7 +21466,7 @@ def render_home_credibility(generated_human: str, article_count: int,
         '<h3>Built for operational use</h3>'
         '<p>Each detection ships with its source article, MITRE technique mapping, kill-chain phase, and IOC pivot — so an analyst can take the query, the context, and the rationale together.</p>'
         '<div class="home-cred-links">'
-        '<a href="pipeline.html">Pipeline run history →</a>'
+        '<a href="about.html">How detections are made &amp; validated →</a>'
         '<a href="#" data-home-action="matrix">MITRE ATT&amp;CK coverage map →</a>'
         '<a href="#" data-home-action="intel">Live IOC feeds →</a>'
         '</div>'
@@ -21302,7 +21507,9 @@ def render_home(articles_meta: list, usecase_count: int, tech_count: int,
             '    <a href="#" data-home-action="library">Detection library</a>\n'
             '    <a href="#" data-home-action="matrix">ATT&amp;CK coverage</a>\n'
             '    <a href="#" data-home-action="intel">Threat intel feeds</a>\n'
-            '    <a href="pipeline.html">Pipeline status</a>\n'
+            '    <a href="about.html">About &amp; methodology</a>\n'
+            '    <a href="https://github.com/Virtualhaggis/usecaseintel" rel="noopener">GitHub</a>\n'
+            '    <a href="https://github.com/Virtualhaggis/usecaseintel/issues/new?labels=bad-detection&amp;title=%5Bbad%20detection%5D%20" rel="noopener">Report a bad detection</a>\n'
             '  </nav>'
         ),
     ]
@@ -22200,6 +22407,7 @@ def main():
             ("https://clankerusecase.com/", "1.0", "hourly"),
             ("https://clankerusecase.com/index.html", "1.0", "hourly"),
             ("https://clankerusecase.com/cheatsheet.html", "0.9", "daily"),
+            ("https://clankerusecase.com/about.html", "0.8", "weekly"),
         ]
         briefings_root = _Path(__file__).with_name("briefings")
         if briefings_root.exists():
@@ -22253,6 +22461,13 @@ def main():
         print(f"[*] Wrote sitemap.xml ({len(sitemap_urls)} URLs)")
     except Exception as _e:
         print(f"[!] sitemap.xml write failed: {_e}")
+
+    # About & methodology page — the public trust artifact (who runs this,
+    # how detections are made, what is and is not validated).
+    try:
+        write_about_page(generated_human, total_ucs)
+    except Exception as _e:
+        print(f"[!] about.html write failed: {_e}")
 
     # Postcondition gates — run LAST so every artefact has been written.
     # Either can sys.exit non-zero, which makes run_once.bat skip the

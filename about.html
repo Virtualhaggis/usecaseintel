@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>About &amp; methodology · Clankerusecase</title>
+<meta name="description" content="Who runs Clankerusecase, how the detection pipeline works, what is validated, what is NOT guaranteed, and how to use or report the content.">
+<link rel="canonical" href="https://clankerusecase.com/about.html">
+<link rel="icon" type="image/png" href="logo.png">
+<style>
+:root{--bg:#08090a;--panel:#16171b;--panel2:#1f2024;--text:#f7f8f8;--muted:#8a8f98;
+--muted2:#62656a;--accent:#7170ff;--accent2:#9b8afb;--ok:#4cb782;--warn:#e2a93f;
+--bad:#eb5757;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+--code:#1a1b1e;--mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;}
+*{box-sizing:border-box}html,body{margin:0;height:100%}
+body{background:radial-gradient(1200px 500px at 50% -10%,rgba(113,112,255,0.06),transparent 60%),var(--bg);
+background-attachment:fixed;color:var(--text);
+font-family:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+font-size:14px;line-height:1.6;letter-spacing:-0.005em;
+-webkit-font-smoothing:antialiased}
+a{color:var(--accent2);text-decoration:none}a:hover{color:var(--accent);text-decoration:underline}
+header.tp{position:sticky;top:0;z-index:50;background:rgba(8,9,10,0.85);
+backdrop-filter:blur(16px) saturate(160%);border-bottom:1px solid var(--border);
+padding:14px 28px;display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;font-weight:600;font-size:17px}
+.brand img{width:32px;height:32px;border-radius:7px;border:1px solid var(--border2)}
+.brand .sub{color:var(--muted);font-weight:500;font-size:12px}
+.back{margin-left:auto;color:var(--muted);font-size:12.5px;border:1px solid var(--border);
+padding:6px 12px;border-radius:5px}
+.back:hover{color:var(--text);border-color:var(--border2);background:var(--panel)}
+main{max-width:1080px;margin:0 auto;padding:32px 28px}
+.crumb{font-size:11.5px;color:var(--muted2);font-family:var(--mono);
+letter-spacing:0.04em;text-transform:uppercase;margin-bottom:14px}
+.crumb a{color:var(--muted)}.crumb .sep{margin:0 8px;color:var(--border2)}
+h1.title{font-size:30px;line-height:1.18;margin:0 0 6px 0;font-weight:600;letter-spacing:-0.018em}
+h1 .tid{font-family:var(--mono);font-size:18px;color:var(--accent2);margin-right:12px;
+padding:4px 10px;border-radius:5px;background:rgba(113,112,255,0.10);
+border:1px solid rgba(113,112,255,0.30);vertical-align:middle}
+.lead{color:var(--muted);font-size:15px;margin:8px 0 18px 0;max-width:820px}
+.tactic-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
+.tactic-pill{font-size:11.5px;font-family:var(--mono);letter-spacing:0.02em;
+padding:5px 11px;border-radius:99px;background:rgba(113,112,255,0.10);
+color:var(--accent2);border:1px solid rgba(113,112,255,0.30)}
+.stats{display:flex;flex-wrap:wrap;gap:18px;padding:14px 18px;
+background:var(--panel);border:1px solid var(--border);border-radius:8px;
+margin-bottom:24px}
+.stats .stat{display:flex;flex-direction:column;gap:2px}
+.stats .n{font-size:22px;font-weight:600;color:var(--accent2)}
+.stats .l{font-size:11px;color:var(--muted2);font-family:var(--mono);
+letter-spacing:0.04em;text-transform:uppercase}
+.section{margin:28px 0}
+.section h2{font-size:13px;font-family:var(--mono);letter-spacing:0.06em;
+text-transform:uppercase;color:var(--muted);margin:0 0 14px 0;padding-bottom:8px;
+border-bottom:1px solid var(--border)}
+.uc-card{background:var(--panel);border:1px solid var(--border);border-radius:7px;
+padding:14px 16px;margin-bottom:10px;transition:border-color 0.12s,background 0.12s}
+.uc-card:hover{border-color:var(--accent);background:var(--panel2)}
+.uc-card .t{font-weight:500;font-size:14.5px;display:block;color:var(--text);margin-bottom:4px}
+.uc-card .meta{font-size:11.5px;color:var(--muted2);display:flex;flex-wrap:wrap;gap:10px;
+align-items:center;font-family:var(--mono);letter-spacing:0.02em}
+.uc-card .src{padding:1px 8px;border-radius:99px;font-weight:600;font-size:10px;
+text-transform:uppercase;letter-spacing:0.06em}
+.src.internal{background:rgba(76,183,130,0.16);color:#9bdfc1;border:1px solid rgba(76,183,130,0.40)}
+.src.bespoke{background:rgba(155,138,251,0.14);color:var(--accent2);border:1px solid rgba(155,138,251,0.36)}
+.src.escu{background:rgba(226,169,63,0.14);color:var(--warn);border:1px solid rgba(226,169,63,0.36)}
+.uc-card .pl{display:inline-flex;gap:3px;margin-left:auto}
+.uc-card .pl span{font-size:9.5px;font-weight:700;width:18px;height:18px;
+display:inline-flex;align-items:center;justify-content:center;border-radius:4px;
+font-family:var(--mono)}
+.pl .pl-d{background:rgba(80,200,160,0.18);color:#9bdfc1}
+.pl .pl-s{background:rgba(110,160,255,0.18);color:#a8c8ff}
+.pl .pl-g{background:rgba(255,170,90,0.18);color:#ffcc99}
+.pl .pl-p{background:rgba(220,120,200,0.18);color:#f5b8e0}
+.pl .pl-D{background:rgba(120,90,200,0.20);color:#c8aff8}
+.art-row{padding:10px 0;border-bottom:1px solid var(--border);font-size:13.5px}
+.art-row:last-child{border:0}
+.art-row .at{display:block;color:var(--text);margin-bottom:3px}
+.art-row .am{font-size:11.5px;color:var(--muted2);font-family:var(--mono)}
+.sev{display:inline-block;padding:1px 7px;border-radius:99px;font-size:10px;
+font-family:var(--mono);font-weight:700;text-transform:uppercase;
+letter-spacing:0.05em;margin-right:8px}
+.sev.crit{background:rgba(235,87,87,0.18);color:#ff8888;border:1px solid rgba(235,87,87,0.40)}
+.sev.high{background:rgba(226,169,63,0.16);color:var(--warn);border:1px solid rgba(226,169,63,0.36)}
+.sev.med{background:rgba(113,112,255,0.14);color:var(--accent2);border:1px solid rgba(113,112,255,0.34)}
+.sev.low{background:rgba(76,183,130,0.14);color:#9bdfc1;border:1px solid rgba(76,183,130,0.34)}
+.subs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 8px 0}
+.subs a{font-size:11.5px;font-family:var(--mono);padding:4px 10px;border-radius:5px;
+background:var(--panel);border:1px solid var(--border);color:var(--text)}
+.subs a:hover{border-color:var(--accent);text-decoration:none;background:var(--panel2)}
+.parent-link{font-size:12.5px;color:var(--muted);margin:8px 0}
+.cta{display:flex;gap:10px;margin:18px 0 24px 0;flex-wrap:wrap}
+.cta a{padding:8px 14px;border-radius:6px;font-size:12.5px;font-weight:500;
+border:1px solid var(--border2);background:var(--panel);color:var(--text)}
+.cta a.primary{background:rgba(113,112,255,0.16);border-color:rgba(113,112,255,0.40);
+color:var(--accent2)}
+.cta a:hover{border-color:var(--accent);text-decoration:none}
+.empty{padding:18px;text-align:center;color:var(--muted2);font-size:13px;
+background:var(--panel);border:1px dashed var(--border2);border-radius:7px}
+footer{padding:32px 28px;text-align:center;color:var(--muted2);font-size:11.5px;
+border-top:1px solid var(--border);margin-top:48px;font-family:var(--mono)}
+</style>
+</head>
+<body>
+<div class="wrap" style="max-width:880px;margin:0 auto;padding:32px 20px;">
+  <p style="margin-bottom:18px;"><a href="index.html" style="color:var(--accent);text-decoration:none;">&larr; Back to the detection library</a></p>
+  <h1>About &amp; methodology</h1>
+  <p style="color:var(--muted);">Last updated 2026-06-09 21:30 UTC &middot; this page is regenerated by the same pipeline it describes.</p>
+
+  <div class="section"><h2>What this is</h2>
+  <p>Clankerusecase is a free, continuously-updated detection engineering resource. A pipeline watches 11+ threat-intelligence sources (The Hacker News, BleepingComputer, Microsoft Security Blog, Cisco Talos, Securelist, SentinelLabs, Unit&nbsp;42, ESET, Lab52, CISA KEV, GitHub Security Advisories) and, within ~2 hours of an article publishing, turns it into MITRE ATT&amp;CK-mapped detection use cases with queries for Microsoft Defender (KQL), Microsoft Sentinel (KQL), Splunk (SPL/CIM), Sigma, Datadog Cloud SIEM, and CrowdStrike Falcon LogScale — plus extracted, defanged IOCs and kill-chain context.</p></div>
+
+  <div class="section"><h2>Who runs it</h2>
+  <p>This is a solo project by <strong>Virtualhaggis</strong> — a security practitioner building the tool they wanted on shift: a way to go from "I just read about this campaign" to "here is the query I run" in one click. It runs in spare time, with no company behind it, no SLA, and no warranty. The generator code, the detection content, and the full pipeline are open source: <a href="https://github.com/Virtualhaggis/usecaseintel" rel="noopener">github.com/Virtualhaggis/usecaseintel</a>.</p></div>
+
+  <div class="section"><h2>How detections are generated</h2>
+  <p>Two paths feed the library:</p>
+  <ul>
+    <li><strong>Curated catalogue</strong> — hand-built use cases (YAML in the repo) that fire when an article matches known behavioural triggers. Written and reviewed by a human.</li>
+    <li><strong>AI-generated use cases</strong> (badged <strong>AI</strong> on the site) — for each new article, Claude reads the full article text, code blocks, IOC tables and screenshots, cross-checks claims against vendor advisories via web search, and drafts detections specific to that campaign. These then go through the validation gauntlet below, with failed queries re-prompted and unsafe or malformed ones dropped.</li>
+  </ul>
+  <p>Every detection links back to its source article, so you can verify the logic against the original reporting in under a minute.</p></div>
+
+  <div class="section"><h2>What we validate — and what we don't</h2>
+  <p><strong>Every published query is checked for:</strong></p>
+  <ul>
+    <li>Defender / Sentinel KQL: real grammar parse (Microsoft Kusto.Language) + table and column names validated against a 58-table, 1,600+-column schema, with automatic near-miss correction.</li>
+    <li>Splunk SPL: structural validation (balanced quotes/parentheses/macros, CIM datamodel allowlist).</li>
+    <li>Sigma: parses via pySigma with required-field checks.</li>
+    <li>CloudWatch Logs Insights: keyword/field heuristics against the CloudTrail schema.</li>
+    <li>All platforms: a safety denylist — queries containing side-effectful commands (e.g. <code>outputlookup</code>, <code>sendemail</code>, <code>externaldata()</code>) are never published.</li>
+    <li>MITRE technique IDs validated against the current ATT&amp;CK release.</li>
+  </ul>
+  <p><strong>What we do NOT do (yet):</strong></p>
+  <ul>
+    <li>Execute queries against live telemetry or replayed attack data — <em>schema-valid is not the same as field-tested</em>.</li>
+    <li>Measure real-world false-positive rates. The per-UC confidence and FP guidance are model-assessed estimates, not measurements.</li>
+    <li>Guarantee performance — some hunting queries are expensive on large tenants.</li>
+  </ul>
+  <p><strong>Bottom line: treat everything here as a strong, context-rich starting point. Test in staging, tune the allowlists to your environment, then promote to production.</strong></p></div>
+
+  <div class="section"><h2>What the labels mean</h2>
+  <ul>
+    <li><strong>Alerting</strong> tier — specific enough (named binaries, hashes, thresholds, temporal correlation) that it is a candidate for alerting after tuning. <strong>Hunting</strong> tier — needs analyst review; expect noise.</li>
+    <li><strong>Confidence (High/Medium/Low)</strong> — the generator's assessment of how tightly the query matches the attack described in the source article. It is not a measured precision figure.</li>
+    <li><strong>AI badge</strong> — generated by the pipeline for a specific article, cross-checked against vendor advisories. <strong>Weekly</strong> — synthesised across the fortnight's articles.</li>
+    <li><strong>SVS (SOC Value Score)</strong> — a 0-100 composite of probability, impact, detectability, and effort, for ranking the library. Heuristic, not gospel.</li>
+  </ul></div>
+
+  <div class="section"><h2>Using the content</h2>
+  <p>Everything is MIT-licensed — code <em>and</em> detection content. Deploy the queries in your SOC, adapt them, ship them in internal detection libraries, use them commercially. Attribution is appreciated but not required. Machine-readable exports, refreshed every run:</p>
+  <ul>
+    <li><a href="intel/iocs.csv">IOC feed — CSV</a> &middot; <a href="intel/iocs.json">JSON</a> &middot; <a href="intel/iocs.stix.json">STIX 2.1</a> &middot; <a href="intel/iocs.rss.xml">RSS</a> &middot; <a href="intel/splunk_lookup_iocs.csv">Splunk lookup</a></li>
+    <li><a href="catalog/use_cases.json">Use-case catalogue (JSON)</a> and <a href="https://github.com/Virtualhaggis/usecaseintel/tree/main/rule_packs" rel="noopener">rule packs</a> — Splunk savedsearches.conf and Sentinel ARM templates</li>
+    <li><a href="https://github.com/Virtualhaggis/usecaseintel/tree/main/sigma_rules" rel="noopener">Sigma rules</a> (compile to KQL/SPL/Lucene via pySigma)</li>
+    <li><a href="https://github.com/Virtualhaggis/usecaseintel" rel="noopener">The full repo</a> — clone it, the briefings and use-case YAML are all in there</li>
+  </ul></div>
+
+  <div class="section"><h2>Found a bad detection?</h2>
+  <p>Tell us — that is how an AI-assisted library earns trust. <a href="https://github.com/Virtualhaggis/usecaseintel/issues/new?labels=bad-detection&amp;title=%5Bbad%20detection%5D%20" rel="noopener">Open a GitHub issue</a> with the UC title and what is wrong (false positives, broken syntax, wrong field, missed coverage). Reports get triaged and fixes ship through the normal pipeline runs.</p></div>
+
+  <p style="color:var(--muted2);font-size:12px;margin-top:28px;">No warranty of any kind. Detections are provided as-is; validate before relying on them in production. Defanged IOCs are intentionally not clickable.</p>
+</div>
+</body>
+</html>

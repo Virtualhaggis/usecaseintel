@@ -1,0 +1,58 @@
+name: Report a bad detection
+description: A query that's broken, noisy, wrong, or misleading — tell us and it gets fixed through the pipeline.
+title: "[bad detection] "
+labels: ["bad-detection"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks — reports like this are exactly how an AI-assisted detection library earns trust.
+        Paste as much or as little as you have; a UC title alone is enough to start.
+  - type: input
+    id: uc-title
+    attributes:
+      label: Use case title (or ID)
+      description: As shown on clankerusecase.com, e.g. "Unsanctioned RMM tool install or first execution" or UC_LATERAL_PSEXEC
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Defender KQL
+        - Sentinel KQL
+        - Splunk SPL
+        - Sigma
+        - Datadog
+        - Falcon LogScale
+        - CloudWatch Logs Insights
+        - Multiple / other
+    validations:
+      required: true
+  - type: dropdown
+    id: problem
+    attributes:
+      label: What's wrong?
+      options:
+        - Query errors / won't run
+        - Wrong table, field, or schema
+        - Too noisy (false positives)
+        - Logic doesn't detect what it claims
+        - Misleading confidence/tier label
+        - IOC is wrong or stale
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: detail
+    attributes:
+      label: Details
+      description: Error message, the FP pattern you saw, what you'd change — anything helps. Please defang any IOCs.
+    validations:
+      required: false
+  - type: textarea
+    id: fix
+    attributes:
+      label: Suggested fix (optional)
+      description: If you already tuned the query for your environment, paste the working version — credited fixes ship fastest.

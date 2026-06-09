@@ -68,7 +68,7 @@ py -u build_pipeline_docs.py 1>>"%LOG%" 2>>&1
 
 REM Stage just the regenerated outputs -- never sweep up unrelated edits.
 REM daily_digest.md is gitignored; sitemap.xml is regenerated each run.
-git add intel/ catalog/ briefings/ rule_packs/ share/ techniques/ actors/ targets/ data/ index.html sitemap.xml cheatsheet.html 1>>"%LOG%" 2>>&1
+git add intel/ catalog/ briefings/ rule_packs/ share/ techniques/ actors/ targets/ data/ index.html sitemap.xml cheatsheet.html about.html 1>>"%LOG%" 2>>&1
 git diff --cached --quiet
 if errorlevel 1 (
   >>"%LOG%" echo [git] changes detected -- committing
