@@ -8,6 +8,10 @@ _1260 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-06-09
+- [21 0 day vulnerabilities in ffmpeg enables remote code execu](./2026-06-09/21-0-day-vulnerabilities-in-ffmpeg-enables-remote-code-execu.md)
+- [new shai hulud attack compromises 23 pypi packages to target](./2026-06-09/new-shai-hulud-attack-compromises-23-pypi-packages-to-target.md)
+
 ## 2026-06-08
 - [ai brands as bait how threat actors are using the ai hype in](./2026-06-08/ai-brands-as-bait-how-threat-actors-are-using-the-ai-hype-in.md)
 - [ai phishing is crushing socs with alert volume how to reduce](./2026-06-08/ai-phishing-is-crushing-socs-with-alert-volume-how-to-reduce.md)
@@ -33,7 +37,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [unc3753 used vishing and physical intrusions in u s data the](./2026-06-08/unc3753-used-vishing-and-physical-intrusions-in-u-s-data-the.md)
 - [verdantbamboo deploys bsd variant of brickstorm on linux app](./2026-06-08/verdantbamboo-deploys-bsd-variant-of-brickstorm-on-linux-app.md)
 - [weekly recap instagram account hacks android zero day github](./2026-06-08/weekly-recap-instagram-account-hacks-android-zero-day-github.md)
-- [whatsapp disrupts nso linked cyberattack targeting users wit](./2026-06-08/whatsapp-disrupts-nso-linked-cyberattack-targeting-users-wit.md)
 - [whatsapp says it disrupted new nso spyware phishing attacks](./2026-06-08/whatsapp-says-it-disrupted-new-nso-spyware-phishing-attacks.md)
 - [when hi this is it comes through microsoft teams](./2026-06-08/when-hi-this-is-it-comes-through-microsoft-teams.md)
 
@@ -277,7 +280,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-12
 - [ghsa critical cve 2026 33117 security feature bypass vulnera](./2026-05-12/ghsa-critical-cve-2026-33117-security-feature-bypass-vulnera.md)
-- [ghsa critical cve 2026 44593 esm sh legacy route path traver](./2026-05-12/ghsa-critical-cve-2026-44593-esm-sh-legacy-route-path-traver.md)
 - [ghsa critical cve 2026 44650 sillytavern has a path traversa](./2026-05-12/ghsa-critical-cve-2026-44650-sillytavern-has-a-path-traversa.md)
 - [state sponsored actors better known as the friends you don t](./2026-05-12/state-sponsored-actors-better-known-as-the-friends-you-don-t.md)
 - [teampcp s mini shai hulud is back a self spreading supply ch](./2026-05-12/teampcp-s-mini-shai-hulud-is-back-a-self-spreading-supply-ch.md)

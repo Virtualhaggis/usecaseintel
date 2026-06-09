@@ -1,4 +1,4 @@
-<article class="card" id="art-284" data-art-slug="2026-05-12-ghsa-critical-cve-2026-33117-security-feature-bypass-vulnera"
+<article class="card" id="art-283" data-art-slug="2026-05-12-ghsa-critical-cve-2026-33117-security-feature-bypass-vulnera"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs=""
   data-sources="GitHub Security Advisories"
@@ -22,11 +22,11 @@
   <p class="summary">Security feature bypass vulnerability in Azure Key Vault Keys library for Java</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-33117</span></div>
   <div class="action-row">
-    <button class="btn btn-kc" data-target="art-284-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-284"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <button class="btn btn-kc" data-target="art-283-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-283"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
     <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
   </div>
-  <div class="killchain" id="art-284-kc">
+  <div class="killchain" id="art-283-kc">
   <div class="kc3d"><div class="kc-cell hit">
   <div class="num">Phase 1</div>
   <div class="name">Reconnaissance</div>
@@ -91,26 +91,26 @@ Cross-checked against:
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Visual Basic">T1059.005</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-284-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-284-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-284-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-283-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-283-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-283-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-284-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+    <div class="tab-content active" id="art-283-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
 | where CveId == &quot;CVE-2026-33117&quot;
    or (SoftwareVendor =~ &quot;microsoft&quot; and SoftwareName has &quot;azure-security-keyvault-keys&quot; and parse_version(SoftwareVersion) &lt; parse_version(&quot;4.10.6&quot;))
 | join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, OSPlatform, PublicIP, IsInternetFacing, MachineGroup) by DeviceId) on DeviceId
 | project Timestamp, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing, PublicIP, MachineGroup
 | order by IsInternetFacing desc, Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-284-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+    <div class="tab-content" id="art-283-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(7d)
 | where CveId == &quot;CVE-2026-33117&quot;
    or (SoftwareVendor =~ &quot;microsoft&quot; and SoftwareName has &quot;azure-security-keyvault-keys&quot; and SoftwareVersion &lt; &quot;4.10.6&quot;)
 | project TimeGenerated, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-284-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-284-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-284-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-284-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-33117&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.vendor_product
+    <div class="tab-content" id="art-283-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-283-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-283-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-283-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-33117&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.vendor_product
 | `drop_dm_object_name(Vulnerabilities)`
 | eval firstTime=strftime(firstTime,&quot;%F %T&quot;), lastTime=strftime(lastTime,&quot;%F %T&quot;)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-284-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-33117&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.vendor_product
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-283-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-33117&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.vendor_product
 | `drop_dm_object_name(Vulnerabilities)`
 | eval firstTime=strftime(firstTime,&quot;%F %T&quot;), lastTime=strftime(lastTime,&quot;%F %T&quot;)
 | sort - lastTime</code></pre></div></div>
@@ -137,28 +137,28 @@ Cross-checked against:
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-284-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-284-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-284-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-284-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-284-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-284-uc1-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-283-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-283-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-283-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-283-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-283-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-283-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-284-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+    <div class="tab-content active" id="art-283-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(30d)
 | where FileName matches regex @&quot;(?i)^azure-security-keyvault-keys-\d+\.\d+\.\d+(?:-[a-z0-9.]+)?\.jar$&quot;
 | extend Version = extract(@&quot;(?i)azure-security-keyvault-keys-(\d+\.\d+\.\d+(?:-[a-z0-9.]+)?)\.jar&quot;, 1, FileName)
 | where parse_version(Version) &lt; parse_version(&quot;4.10.6&quot;)
 | project Timestamp, DeviceName, DeviceId, ActionType, FileName, Version, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-284-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+    <div class="tab-content" id="art-283-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
 | where TimeGenerated &gt; ago(30d)
 | where TargetFileName matches regex @&quot;(?i)^azure-security-keyvault-keys-\d+\.\d+\.\d+(?:-[a-z0-9.]+)?\.jar$&quot;
 | extend Version = extract(@&quot;(?i)azure-security-keyvault-keys-(\d+\.\d+\.\d+(?:-[a-z0-9.]+)?)\.jar&quot;, 1, TargetFileName)
 | where parse_version(Version) &lt; parse_version(&quot;4.10.6&quot;)
 | project TimeGenerated, DvcHostname, EventType, TargetFileName, Version, TargetFilePath, ActingProcessName, ActingProcessCommandLine, ActorUsername, TargetFileSHA256
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-284-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Vulnerable Azure Key Vault Keys Java SDK JAR Written (CVE-2026-33117)
+    <div class="tab-content" id="art-283-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Vulnerable Azure Key Vault Keys Java SDK JAR Written (CVE-2026-33117)
 id: 8b1f3d5a-9c4e-4f6b-a2d1-7e0c4b9f8a12
 status: experimental
 description: Detects the on-disk presence of azure-security-keyvault-keys Java SDK JAR at a version below the fixed 4.10.6, indicating an application or build pipeline pulling in the vulnerable cryptographic-verification path.
@@ -183,8 +183,8 @@ falsepositives:
   - CI build agents pinning a vulnerable version for regression testing
   - Container image build stage with a transient stale copy later overwritten
 level: high</code></pre></div>
-    <div class="tab-content" id="art-284-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon @EventID:11 AND @TargetFilename:(*azure-security-keyvault-keys-* OR *Azure-Security-KeyVault-Keys-*)) OR (source:linux.auditd @auditd.type:PATH @file.path:*azure-security-keyvault-keys-*.jar*)</code></pre></div>
-    <div class="tab-content" id="art-284-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/azure-security-keyvault-keys-\d+\.\d+\.\d+(?:-[a-z0-9.]+)?\.jar$/i
+    <div class="tab-content" id="art-283-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon @EventID:11 AND @TargetFilename:(*azure-security-keyvault-keys-* OR *Azure-Security-KeyVault-Keys-*)) OR (source:linux.auditd @auditd.type:PATH @file.path:*azure-security-keyvault-keys-*.jar*)</code></pre></div>
+    <div class="tab-content" id="art-283-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/azure-security-keyvault-keys-\d+\.\d+\.\d+(?:-[a-z0-9.]+)?\.jar$/i
 | Version := regex(&quot;azure-security-keyvault-keys-(?&lt;Version&gt;\\d+\\.\\d+\\.\\d+)&quot;, field=TargetFileName, strict=false)
 | Major := splitString(Version, by=&quot;\\.&quot;, index=0)
 | Minor := splitString(Version, by=&quot;\\.&quot;, index=1)
@@ -192,13 +192,13 @@ level: high</code></pre></div>
 | Major := number(Major) | Minor := number(Minor) | Patch := number(Patch)
 | Major&lt;4 OR (Major=4 AND Minor&lt;10) OR (Major=4 AND Minor=10 AND Patch&lt;6)
 | groupBy([aid, ComputerName, TargetFileName, Version, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-284-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-284-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-284-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-284-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;azure-security-keyvault-keys-*.jar&quot; by Filesystem.dest Filesystem.file_name
+    <div class="tab-content" id="art-283-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-283-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-283-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-283-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;azure-security-keyvault-keys-*.jar&quot; by Filesystem.dest Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 | rex field=file_name &quot;azure-security-keyvault-keys-(?&lt;version&gt;\d+\.\d+\.\d+(?:-[a-z0-9.]+)?)\.jar&quot;
 | eval major=tonumber(mvindex(split(version,&quot;.&quot;),0)), minor=tonumber(mvindex(split(version,&quot;.&quot;),1)), patch=tonumber(mvindex(split(version,&quot;.&quot;),2))
 | where major&lt;4 OR (major=4 AND minor&lt;10) OR (major=4 AND minor=10 AND patch&lt;6)
 | eval firstTime=strftime(firstTime,&quot;%F %T&quot;), lastTime=strftime(lastTime,&quot;%F %T&quot;)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-284-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;azure-security-keyvault-keys-*.jar&quot; by Filesystem.dest Filesystem.file_name
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-283-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;azure-security-keyvault-keys-*.jar&quot; by Filesystem.dest Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 | rex field=file_name &quot;azure-security-keyvault-keys-(?&lt;version&gt;\d+\.\d+\.\d+(?:-[a-z0-9.]+)?)\.jar&quot;
 | eval major=tonumber(mvindex(split(version,&quot;.&quot;),0)), minor=tonumber(mvindex(split(version,&quot;.&quot;),1)), patch=tonumber(mvindex(split(version,&quot;.&quot;),2))
@@ -221,11 +221,11 @@ level: high</code></pre></div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-284-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-284-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-284-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-283-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-283-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-283-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-284-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-283-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -234,7 +234,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-284-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-283-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -246,12 +246,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-284-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-284-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-284-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-284-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-283-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-283-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-283-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-283-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-33117&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-284-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-283-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-33117&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve

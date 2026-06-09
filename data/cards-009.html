@@ -1,3 +1,267 @@
+<article class="card" id="art-250" data-art-slug="2026-05-14-ghsa-critical-cve-2026-45411-vm2-has-a-sandbox-breakout-usin"
+  data-phases="c2,exploit,install,recon,weapon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="linux,vcs,windows"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-45411: vm2 Has a Sandbox Breakout Using Async Generator vm2 Has a Sandbox Breakout Using Async Generator CVE-2026-45411 T1190 [LLM] Vulnerable vm2 npm package (&lt;= 3.11.2) present on host — CVE-2026-45411 [LLM] Node.js process spawning shell or system utility — likely vm2 sandbox escape Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-05-14-ghsa-critical-cve-2026-45411-vm2-has-a-sandbox-breakout-usin" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-248r-7h7q-cr24" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-45411: vm2 Has a Sandbox Breakout Using Async Generator</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-05-14</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">vm2 Has a Sandbox Breakout Using Async Generator</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-45411</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-250-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-250"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-250-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] Vulnerable vm2 npm package (&lt;= 3.11.2) present on host — CVE-2026-45411</em></div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Node.js process spawning shell or system utility — likely vm2 sandbox escape</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="88436f43a6" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <summary>
+    <span class="uc-title">[LLM] Vulnerable vm2 npm package (&lt;= 3.11.2) present on host — CVE-2026-45411</span>
+    <span class="uc-phase">Weaponization</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="88436f43a6" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Surfaces hosts that have the vulnerable vm2 package on disk (path-based hunt) and any Defender TVM finding for CVE-2026-45411. The vm2 sandbox is widely embedded in AI/LLM agent backends, low-code platforms, and form-evaluator services to run untrusted JS — locating instances &lt;= 3.11.2 is the prerequisite for prioritising patching against this async-generator escape.
+
+Rationale: Path-string `node_modules/vm2/package.json` is the unambiguous file-system footprint of the affected library (CVE only impacts the npm vm2 package). TVM coverage of npm packages is uneven on Windows, so combine TVM with a file-event hunt. Cross-checked against the GHSA advisory and Semgrep/Endor Labs corroboration.
+
+Cross-checked against:
+  • https://github.com/patriksimek/vm2/security/advisories/GHSA-248r-7h7q-cr24
+  • https://nvd.nist.gov/vuln/detail/CVE-2026-45411
+  • https://semgrep.dev/blog/2026/calling-back-to-vm2-and-escaping-sandbox/
+  • https://www.bleepingcomputer.com/news/security/critical-vm2-sandbox-bug-lets-attackers-execute-code-on-hosts/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-250-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-250-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-250-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-250-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-250-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-250-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-250-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let VulnByTvm = DeviceTvmSoftwareVulnerabilities | where Timestamp &gt; ago(7d) | where CveId =~ &quot;CVE-2026-45411&quot; | project Timestamp, DeviceId, DeviceName, SoftwareName, SoftwareVersion, CveId, Source=&quot;TVM&quot;; let VulnByDisk = DeviceFileEvents | where Timestamp &gt; ago(30d) | where FolderPath has @&quot;\node_modules\vm2\&quot; or FolderPath has &quot;/node_modules/vm2/&quot; | where FileName =~ &quot;package.json&quot; | project Timestamp, DeviceId, DeviceName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, Source=&quot;DiskPath&quot;; union VulnByTvm, VulnByDisk | order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-250-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let VulnByTvm = DeviceTvmSoftwareVulnerabilities | where TimeGenerated &gt; ago(7d) | where CveId =~ &quot;CVE-2026-45411&quot; | project TimeGenerated, DeviceId, DeviceName, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, Source=&quot;TVM&quot;; let VulnByDisk = ImFileEvent | where TimeGenerated &gt; ago(30d) | where EventType == &quot;FileCreated&quot; | where TargetFilePath matches regex @&quot;(?i)(\\|/)node_modules(\\|/)vm2(\\|/)package\.json$&quot; | project TimeGenerated, DvcHostname, TargetFilePath, ActingProcessName, ActingProcessCommandLine, Source=&quot;DiskPath&quot;; union isfuzzy=true VulnByTvm, VulnByDisk | order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-250-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: vm2 Vulnerable Package on Disk (CVE-2026-45411)
+id: 7c4d2b6a-9e1f-4e2a-9b3c-15a0e9d4f111
+description: Detects creation of the vm2 npm package package.json indicating a possibly-vulnerable vm2 install (&lt;= 3.11.2 affected by CVE-2026-45411 async-generator sandbox escape).
+references:
+  - https://github.com/advisories/GHSA-248r-7h7q-cr24
+  - https://nvd.nist.gov/vuln/detail/CVE-2026-45411
+author: thn-usecases
+date: 2026/05/20
+tags:
+  - attack.t1190
+  - attack.initial_access
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection:
+    TargetFilename|contains|all:
+      - &#x27;\node_modules\vm2\&#x27;
+      - &#x27;package.json&#x27;
+  condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-250-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:(*\\node_modules\\vm2\\package.json OR *\\node_modules\\vm2\\PACKAGE.JSON) OR source:linux.auditd @auditd.type:PATH @file.path:(*/node_modules/vm2/package.json)</code></pre></div>
+    <div class="tab-content" id="art-250-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/(\\|\/)node_modules(\\|\/)vm2(\\|\/)package\.json$/i | groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-250-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-250-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-250-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-250-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;*\\node_modules\\vm2\\package.json&quot; OR Filesystem.file_path=&quot;*/node_modules/vm2/package.json&quot;) by Filesystem.dest, Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-250-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;*\\node_modules\\vm2\\package.json&quot; OR Filesystem.file_path=&quot;*/node_modules/vm2/package.json&quot;) by Filesystem.dest, Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="b40fe75246" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">[LLM] Node.js process spawning shell or system utility — likely vm2 sandbox escape</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="b40fe75246" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects node.exe / node spawning cmd/powershell/sh/bash/touch — the post-escape behaviour shown in the CVE-2026-45411 PoC (`child_process.execSync(&#x27;touch pwned&#x27;)`). Server-side Node services that legitimately sandbox untrusted JS via vm2 should not be shelling out; any child-process spawn under such a service after exploit is a high-confidence RCE signal.
+
+Rationale: PoC literally invokes `require(&#x27;child_process&#x27;).execSync(&#x27;touch pwned&#x27;)` after the async-generator escape — `touch`, plus the broader shell/system-utility set, is exactly what an attacker reaches for next. node→shell is rare in production server workloads that exist specifically to sandbox untrusted JS; multiple vendor write-ups (Semgrep, Kodem, Endor Labs) confirm `child_process` spawning from node is the canonical post-vm2-escape behavioural signal.
+
+Cross-checked against:
+  • https://github.com/patriksimek/vm2/security/advisories/GHSA-248r-7h7q-cr24
+  • https://semgrep.dev/blog/2026/calling-back-to-vm2-and-escaping-sandbox/
+  • https://www.kodemsecurity.com/resources/vm2-sandbox-escape-vulnerabilities-the-2026-cve-wave-turning-ai-agents-into-host-rce-vectors
+  • https://www.endorlabs.com/learn/cve-2026-22709-critical-sandbox-escape-in-vm2-enables-arbitrary-code-execution</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter">T1059</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-250-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-250-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-250-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-250-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-250-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-250-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-250-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;node&quot;)
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;,&quot;wsl.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;touch&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;uname&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, ParentImage = InitiatingProcessFolderPath, ParentCmd = InitiatingProcessCommandLine, ChildImage = FolderPath, ChildCmd = ProcessCommandLine, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-250-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ParentProcessName matches regex @&quot;(?i)(\\|/)node(\.exe)?$&quot;
+| where ActingProcessName matches regex @&quot;(?i)(\\|/)(cmd|powershell|pwsh|bash|sh|dash|zsh|wsl|touch|curl|wget|whoami|id|uname)(\.exe)?$&quot;
+| where ActorUsername !endswith &quot;$&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-250-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Node.js Process Spawning Shell or System Utility (vm2 Sandbox Escape Post-Exploit)
+id: 4f8e3a2b-7d6c-4a91-93cf-22aa6e1b9d22
+description: Detects node.exe spawning cmd/powershell/sh/bash/touch/curl/wget/whoami — the post-escape behaviour from the CVE-2026-45411 PoC where `child_process.execSync()` is reached via `e.constructor.constructor(&quot;return process&quot;)()` after a vm2 async-generator sandbox break.
+references:
+  - https://github.com/advisories/GHSA-248r-7h7q-cr24
+  - https://semgrep.dev/blog/2026/calling-back-to-vm2-and-escaping-sandbox/
+author: thn-usecases
+date: 2026/05/20
+tags:
+  - attack.t1059
+  - attack.execution
+  - attack.t1190
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    ParentImage|endswith:
+      - &#x27;\node.exe&#x27;
+    Image|endswith:
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+      - &#x27;\bash.exe&#x27;
+      - &#x27;\sh.exe&#x27;
+      - &#x27;\wsl.exe&#x27;
+      - &#x27;\curl.exe&#x27;
+      - &#x27;\wget.exe&#x27;
+      - &#x27;\whoami.exe&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-250-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon @EventID:1 @ParentImage:(*\\node.exe OR *\\Node.exe OR *\\NODE.EXE) @Image:(*\\cmd.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\bash.exe OR *\\sh.exe OR *\\wsl.exe OR *\\curl.exe OR *\\wget.exe OR *\\whoami.exe)) OR (source:windows.security @EventID:4688 @ParentProcessName:(*\\node.exe OR *\\Node.exe) @Image:(*\\cmd.exe OR *\\powershell.exe OR *\\bash.exe OR *\\sh.exe)) OR (source:linux.auditd @auditd.type:EXECVE @process.parent.executable.path:(*/node OR */nodejs) @process.executable.path:(*/sh OR */bash OR */dash OR */zsh OR */touch OR */curl OR */wget OR */whoami OR */id OR */uname))</code></pre></div>
+    <div class="tab-content" id="art-250-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^node(\.exe)?$/i ImageFileName=/(\\|\/)(cmd|powershell|pwsh|bash|sh|dash|zsh|wsl|touch|curl|wget|whoami|id|uname)(\.exe)?$/i
+| UserName!=/\$$/
+| groupBy([aid, ComputerName, UserName, ParentImageFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-250-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-250-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-250-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-250-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process_cmd values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;node.exe&quot;,&quot;node&quot;) Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;,&quot;wsl.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;touch&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;uname&quot;) by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-250-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process_cmd values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;node.exe&quot;,&quot;node&quot;) Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;,&quot;wsl.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;touch&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;uname&quot;) by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-250-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-250-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-250-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-250-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-45411&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-250-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-45411&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-250-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-250-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-250-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-250-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-45411&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-250-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-45411&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-251" data-art-slug="2026-05-14-ghsa-critical-cve-2026-45369-utcp-cli-vulnerable-to-command-"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs="T1059.001,T1190"
@@ -12132,441 +12396,6 @@ DeviceTvmSoftwareVulnerabilities
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-282" data-art-slug="2026-05-12-ghsa-critical-cve-2026-44593-esm-sh-legacy-route-path-traver"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="linux,vcs,windows"
-  data-uc-count="4" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-44593: esm.sh: Legacy Route Path Traversal Can Lead to RCE esm.sh: Legacy Route Path Traversal Can Lead to RCE CVE-2026-44593 T1190 [LLM] esm.sh CVE-2026-44593 legacy router path-traversal exploitation in web logs [LLM] esm.sh server writes file outside legacy storage path (CVE-2026-44593 post-exploit artefact) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-44593: esm.sh: Legacy Route Path Traversal Can Lead t">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-05-12-ghsa-critical-cve-2026-44593-esm-sh-legacy-route-path-traver" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-3636-h3vx-6465" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-44593: esm.sh: Legacy Route Path Traversal Can Lead to RCE</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-05-12</span>
-    <span>4 use cases</span>
-    <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">esm.sh: Legacy Route Path Traversal Can Lead to RCE</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-44593</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-282-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-282"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-282-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] esm.sh CVE-2026-44593 legacy router path-traversal exploitation in web logs · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-44593: esm.sh: Legacy Route Path Traversal Can Lead t</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] esm.sh server writes file outside legacy storage path (CVE-2026-44593 post-exploit artefact)</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="4a2e4c0f78" data-platforms="def,sent,sigma,spl" data-targets="vcs,windows" open>
-  <summary>
-    <span class="uc-title">[LLM] esm.sh CVE-2026-44593 legacy router path-traversal exploitation in web logs</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="4a2e4c0f78" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts inbound HTTP requests targeting an esm.sh deployment that combine URL-encoded path traversal (`..%2f` / `%2e%2e%2f`) with the URL-encoded fragment-bypass (`%23%2f..`) used to coerce the legacy router into writing arbitrary files via `buildStorage.Put`. The double-pattern (traversal AND fragment) is the exact signature of the PoC and is extremely unusual in normal traffic.
-
-Rationale: Built on the exact URL pattern in the GHSA PoC: every exploit URL must combine URL-encoded `../` segments (`..%2f`/`%2e%2e%2f`) with the URL-encoded fragment (`%23`) followed by more `..%2f` — that&#x27;s how the path normaliser walks out of `legacy/v.../esnext/...` to `/tmp/pwned`. Either pattern alone has plausible legitimate uses (crawlers, raw fragment URIs); the combination on a single request is the exploit signature. Did not search the web — article is self-contained with a complete PoC and authoritative GHSA reference.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="File and Directory Discovery">T1083</span> <span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-282-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-282-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-282-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-282-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-282-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Defender XDR has no native inbound-HTTP-server table; this is best-effort
-// against outbound HTTP visibility on Defender-monitored clients that may be
-// internal red-teamers or attackers probing the org-hosted esm.sh.
-DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;HttpConnectionInspected&quot;,&quot;ConnectionSuccess&quot;)
-| where isnotempty(RemoteUrl)
-| where RemoteUrl has_any (&quot;..%2f&quot;,&quot;..%2F&quot;,&quot;%2e%2e%2f&quot;,&quot;%2e%2e%2F&quot;)
-| where RemoteUrl has_any (&quot;%23%2f..&quot;,&quot;%23%2F..&quot;,&quot;%23/..&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-282-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let traversal = dynamic([&quot;..%2f&quot;,&quot;..%2F&quot;,&quot;%2e%2e%2f&quot;,&quot;%2e%2e%2F&quot;]);
-let fragBypass = dynamic([&quot;%23%2f..&quot;,&quot;%23%2F..&quot;,&quot;%23/..&quot;]);
-union isfuzzy=true
-  ( W3CIISLog
-    | where TimeGenerated &gt; ago(7d)
-    | extend FullUri = strcat(csUriStem, iff(isempty(csUriQuery), &quot;&quot;, strcat(&quot;?&quot;, csUriQuery)))
-    | where FullUri has_any (traversal) and FullUri has_any (fragBypass)
-    | project TimeGenerated, Src=cIP, Host=Computer, Site=sSiteName, Uri=FullUri, Method=csMethod, Status=scStatus, UA=csUserAgent, _Source=&quot;IIS&quot;),
-  ( CommonSecurityLog
-    | where TimeGenerated &gt; ago(7d)
-    | where isnotempty(RequestURL)
-    | where RequestURL has_any (traversal) and RequestURL has_any (fragBypass)
-    | project TimeGenerated, Src=SourceIP, Host=DestinationHostName, Site=DeviceProduct, Uri=RequestURL, Method=RequestMethod, Status=tostring(EventOutcome), UA=RequestClientApplication, _Source=&quot;CEF&quot;),
-  ( ImWebSession
-    | where TimeGenerated &gt; ago(7d)
-    | where isnotempty(Url)
-    | where Url has_any (traversal) and Url has_any (fragBypass)
-    | project TimeGenerated, Src=SrcIpAddr, Host=DstHostname, Site=EventProduct, Uri=Url, Method=HttpMethod, Status=tostring(HttpStatusCode), UA=HttpRequestHeaderUserAgent, _Source=&quot;ASIM&quot;)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-282-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: esm.sh Legacy Router Path Traversal Exploitation (CVE-2026-44593)
-id: 4a3d8b1c-5f2e-4b8a-9c3d-1e7f6a2b8c9d
-status: experimental
-description: |
-  Detects inbound HTTP requests that combine URL-encoded path traversal sequences
-  with the URL-encoded fragment-bypass pattern used to exploit CVE-2026-44593 in
-  esm.sh. The vulnerable legacy router concatenates path components without
-  sanitisation, allowing the %23 (#) fragment plus repeated ..%2f segments to
-  normalise the storage key to arbitrary filesystem locations on the server.
-references:
-  - https://github.com/advisories/GHSA-3636-h3vx-6465
-  - https://github.com/esm-dev/esm.sh/blob/4312ae93e518121e764a18bb521af12e490ef137/server/legacy_router.go#L291
-author: SOC Detection Engineering
-date: 2026/05/13
-tags:
-  - attack.initial-access
-  - attack.t1190
-  - attack.t1505.003
-logsource:
-  category: webserver
-detection:
-  selection_traversal:
-    cs-uri-stem|contains:
-      - &#x27;..%2f&#x27;
-      - &#x27;..%2F&#x27;
-      - &#x27;%2e%2e%2f&#x27;
-      - &#x27;%2e%2e%2F&#x27;
-  selection_fragment_bypass:
-    cs-uri-stem|contains:
-      - &#x27;%23%2f..&#x27;
-      - &#x27;%23%2F..&#x27;
-      - &#x27;%23/..&#x27;
-  condition: selection_traversal and selection_fragment_bypass
-fields:
-  - c-ip
-  - cs-method
-  - cs-uri-stem
-  - cs-uri-query
-  - cs-user-agent
-  - sc-status
-falsepositives:
-  - Internal vulnerability scanners (Qualys, Nessus, Nuclei) testing for path traversal — allowlist scanner source IPs
-  - Security researchers exercising the PoC against a non-production esm.sh instance
-level: high</code></pre></div>
-    <div class="tab-content" id="art-282-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-282-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-282-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-282-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*..%2f*&quot; OR Web.url=&quot;*..%2F*&quot; OR Web.url=&quot;*%2e%2e%2f*&quot; OR Web.url=&quot;*%2e%2e%2F*&quot;) (Web.url=&quot;*%23%2f..*&quot; OR Web.url=&quot;*%23%2F..*&quot; OR Web.url=&quot;*#%2f..*&quot;) by Web.src Web.dest Web.url Web.http_method Web.http_user_agent Web.status
-| `drop_dm_object_name(Web)`
-| eval esmsh_route=if(match(url, &quot;(?i)/v\d+/|/legacy/|/gh/&quot;), &quot;yes&quot;, &quot;no&quot;)
-| where esmsh_route=&quot;yes&quot; OR like(dest, &quot;%esm%&quot;)
-| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-282-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*..%2f*&quot; OR Web.url=&quot;*..%2F*&quot; OR Web.url=&quot;*%2e%2e%2f*&quot; OR Web.url=&quot;*%2e%2e%2F*&quot;) (Web.url=&quot;*%23%2f..*&quot; OR Web.url=&quot;*%23%2F..*&quot; OR Web.url=&quot;*#%2f..*&quot;) by Web.src Web.dest Web.url Web.http_method Web.http_user_agent Web.status
-| `drop_dm_object_name(Web)`
-| eval esmsh_route=if(match(url, &quot;(?i)/v\d+/|/legacy/|/gh/&quot;), &quot;yes&quot;, &quot;no&quot;)
-| where esmsh_route=&quot;yes&quot; OR like(dest, &quot;%esm%&quot;)
-| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="19b7f7a0a0" data-platforms="datadog,def,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">[LLM] esm.sh server writes file outside legacy storage path (CVE-2026-44593 post-exploit artefact)</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="19b7f7a0a0" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts file writes performed by the esm.sh server binary (or its child processes) to sensitive Linux paths outside the legitimate storage directory — the visible artefact of the arbitrary-file-write exploit chain that leads to RCE via overwritten binaries / cron / SSH authorized_keys. Pairs with UC1 to catch successful exploitation after the inbound request lands.
-
-Rationale: The article&#x27;s mechanism is `buildStorage.Put` writing a normalised key like `/tmp/pwned` — i.e. ANY file landing on the host originated from the esm.sh process. Pinning to `InitiatingProcessFileName has &#x27;esm.sh&#x27;` and then anti-allowlisting the legitimate storage directory turns this into a deployment-aware alert that fires on the post-exploit artefact. PoC explicitly writes to `/tmp/pwned`; real attackers will pivot to `/root/.ssh/authorized_keys`, cron, or `/usr/local/bin/` for RCE — all covered. Did not search the web — the GHSA advisory is the canonical source and the exploit chain is unambiguous.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Hijack Execution Flow">T1574</span> <span class="ind tech" title="Account Manipulation: SSH Authorized Keys">T1098.004</span> <span class="ind tech" title="Scheduled Task/Job: Cron">T1053.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-282-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-282-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-282-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-282-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-282-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-282-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let _esmsh_storage = dynamic([@&quot;/var/lib/esm&quot;,@&quot;/var/cache/esm&quot;,@&quot;/data/esm&quot;,@&quot;/srv/esm&quot;,@&quot;/opt/esm/storage&quot;]);
-let _sensitive_prefixes = dynamic([@&quot;/tmp/&quot;,@&quot;/etc/&quot;,@&quot;/usr/bin/&quot;,@&quot;/usr/local/bin/&quot;,@&quot;/usr/sbin/&quot;,@&quot;/root/&quot;,@&quot;/var/spool/cron/&quot;,@&quot;/etc/cron.d/&quot;,@&quot;/etc/cron.daily/&quot;,@&quot;/etc/cron.hourly/&quot;,@&quot;/opt/&quot;]);
-DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where InitiatingProcessFileName =~ &quot;esm.sh&quot;
-    or InitiatingProcessFolderPath has &quot;esm.sh&quot;
-    or InitiatingProcessFolderPath has &quot;esm-dev&quot;
-    or InitiatingProcessCommandLine has &quot;esm.sh&quot;
-| where not(FolderPath has_any (_esmsh_storage))
-| where FolderPath has_any (_sensitive_prefixes) or FileName endswith &quot;authorized_keys&quot; or FolderPath has &quot;.ssh/&quot;
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
-          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessId
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-282-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let _esmsh_storage = dynamic([@&quot;/var/lib/esm&quot;,@&quot;/var/cache/esm&quot;,@&quot;/data/esm&quot;,@&quot;/srv/esm&quot;,@&quot;/opt/esm/storage&quot;]);
-let _sensitive_prefixes = dynamic([@&quot;/tmp/&quot;,@&quot;/etc/&quot;,@&quot;/usr/bin/&quot;,@&quot;/usr/local/bin/&quot;,@&quot;/usr/sbin/&quot;,@&quot;/root/&quot;,@&quot;/var/spool/cron/&quot;,@&quot;/etc/cron.d/&quot;,@&quot;/etc/cron.daily/&quot;,@&quot;/opt/&quot;]);
-ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where ActingProcessName has &quot;esm.sh&quot; or ActingProcessCommandLine has &quot;esm.sh&quot; or ActingProcessName has &quot;esm-dev&quot;
-| where not(TargetFilePath has_any (_esmsh_storage))
-| where TargetFilePath has_any (_sensitive_prefixes)
-    or TargetFileName =~ &quot;authorized_keys&quot;
-    or TargetFilePath has &quot;.ssh/&quot;
-| project TimeGenerated, DvcHostname, EventType, TargetFilePath, TargetFileName, TargetFileSHA256,
-          ActingProcessName, ActingProcessCommandLine, ActorUsername
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-282-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: esm.sh Server Writes Outside Storage Path (CVE-2026-44593 Post-Exploit)
-id: 7c2e9a4b-8d1f-4e5b-9a7c-3f2d8e1b4c5a
-status: experimental
-description: |
-  Detects the esm.sh Go server (vulnerable to CVE-2026-44593) writing files to
-  sensitive Linux paths outside its legitimate storage directory. The legacy
-  router path-traversal lets an attacker direct buildStorage.Put to overwrite
-  arbitrary files; flagging writes to /tmp, /etc, /usr/{,local}/bin, /root,
-  cron locations, or any .ssh/ directory catches the resulting filesystem
-  artefact regardless of which URL pattern smuggled the traversal.
-references:
-  - https://github.com/advisories/GHSA-3636-h3vx-6465
-author: SOC Detection Engineering
-date: 2026/05/13
-tags:
-  - attack.initial-access
-  - attack.persistence
-  - attack.t1190
-  - attack.t1098.004
-  - attack.t1053.003
-logsource:
-  category: file_event
-  product: linux
-detection:
-  selection_proc:
-    Image|contains:
-      - &#x27;esm.sh&#x27;
-      - &#x27;esm-dev&#x27;
-  selection_target:
-    TargetFilename|startswith:
-      - &#x27;/tmp/&#x27;
-      - &#x27;/etc/&#x27;
-      - &#x27;/usr/bin/&#x27;
-      - &#x27;/usr/sbin/&#x27;
-      - &#x27;/usr/local/bin/&#x27;
-      - &#x27;/root/&#x27;
-      - &#x27;/var/spool/cron/&#x27;
-      - &#x27;/etc/cron.&#x27;
-      - &#x27;/opt/&#x27;
-  selection_ssh:
-    TargetFilename|contains:
-      - &#x27;/.ssh/authorized_keys&#x27;
-      - &#x27;/.ssh/id_&#x27;
-  filter_storage:
-    TargetFilename|contains:
-      - &#x27;/var/lib/esm&#x27;
-      - &#x27;/var/cache/esm&#x27;
-      - &#x27;/data/esm&#x27;
-      - &#x27;/srv/esm&#x27;
-      - &#x27;/opt/esm/storage&#x27;
-      - &#x27;/cache/&#x27;
-      - &#x27;/storage/&#x27;
-  condition: selection_proc and (selection_target or selection_ssh) and not filter_storage
-fields:
-  - Image
-  - TargetFilename
-  - User
-  - CommandLine
-falsepositives:
-  - Legitimate operator restarting esm.sh and writing logs to /tmp or /opt — allowlist the deployment&#x27;s actual storage path in filter_storage
-level: high</code></pre></div>
-    <div class="tab-content" id="art-282-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @process.name:(*esm.sh* OR *esm-dev*) (@file.path:/tmp/* OR @file.path:/etc/* OR @file.path:/usr/bin/* OR @file.path:/usr/local/bin/* OR @file.path:/usr/sbin/* OR @file.path:/root/* OR @file.path:/var/spool/cron/* OR @file.path:/etc/cron.* OR @file.path:*/.ssh/authorized_keys OR @file.path:*/.ssh/id_*) -@file.path:*/storage/* -@file.path:*/cache/* -@file.path:/var/lib/esm/* -@file.path:/data/esm/*</code></pre></div>
-    <div class="tab-content" id="art-282-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-282-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-282-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-282-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name=&quot;esm.sh&quot; OR Filesystem.process_path=&quot;*esm.sh*&quot; OR Filesystem.process_path=&quot;*esm-dev*&quot; by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.process_path Filesystem.file_path Filesystem.file_name Filesystem.action
-| `drop_dm_object_name(Filesystem)`
-| where action IN (&quot;created&quot;,&quot;modified&quot;,&quot;renamed&quot;)
-| eval sensitive=case(
-    match(file_path, &quot;^(/tmp/|/etc/|/usr/bin/|/usr/local/bin/|/usr/sbin/|/root/|/home/[^/]+/\.ssh/|/var/spool/cron/|/etc/cron\.|/opt/)&quot;), &quot;yes&quot;,
-    1==1, &quot;no&quot;)
-| where sensitive=&quot;yes&quot;
-| where NOT match(file_path, &quot;(?i)/storage/|/cache/|/var/lib/esm|/var/cache/esm|/data/esm&quot;)
-| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-282-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name=&quot;esm.sh&quot; OR Filesystem.process_path=&quot;*esm.sh*&quot; OR Filesystem.process_path=&quot;*esm-dev*&quot; by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.process_path Filesystem.file_path Filesystem.file_name Filesystem.action
-| `drop_dm_object_name(Filesystem)`
-| where action IN (&quot;created&quot;,&quot;modified&quot;,&quot;renamed&quot;)
-| eval sensitive=case(
-    match(file_path, &quot;^(/tmp/|/etc/|/usr/bin/|/usr/local/bin/|/usr/sbin/|/root/|/home/[^/]+/\.ssh/|/var/spool/cron/|/etc/cron\.|/opt/)&quot;), &quot;yes&quot;,
-    1==1, &quot;no&quot;)
-| where sensitive=&quot;yes&quot;
-| where NOT match(file_path, &quot;(?i)/storage/|/cache/|/var/lib/esm|/var/cache/esm|/data/esm&quot;)
-| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-282-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-282-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-282-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-282-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-44593&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-282-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-44593&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-282-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-282-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-282-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-282-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-44593&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-282-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-44593&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="6da556800c" data-platforms="def,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-44593: esm.sh: Legacy Route Path Traversal Can Lead t</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="6da556800c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-282-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-282-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-282-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-44593: esm.sh: Legacy Route Path Traversal Can Lead t
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;esm.sh&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/tmp/pwned&quot;) or FileName in~ (&quot;esm.sh&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-282-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-282-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-282-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-282-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-44593: esm.sh: Legacy Route Path Traversal Can Lead t ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;esm.sh&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/pwned*&quot; OR Filesystem.file_name IN (&quot;esm.sh&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-282-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-44593: esm.sh: Legacy Route Path Traversal Can Lead t ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;esm.sh&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/pwned*&quot; OR Filesystem.file_name IN (&quot;esm.sh&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
   </div>
 </details></div>
 </article>

@@ -74,12 +74,144 @@ As threat actors operationalize AI to accelerate attacks, they are also l…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1656** — Impersonation
+- **T1566.001** — Phishing: Spearphishing Attachment
+- **T1557** — Adversary-in-the-Middle
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568** — Dynamic Resolution
+- **T1608.005** — Stage Capabilities: Link Target
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1102** — Web Service
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] ChatGPT Plus payment-update phishing emails (display-name + subject lure)
+
+`UC_18_12` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Email where (Email.src_user_display="ChatGPT*" OR Email.subject="*ChatGPT Plus*") (Email.subject="*payment method*" OR Email.subject="*continues to work*" OR Email.subject="*downgraded*") by Email.src_user, Email.src_user_display, Email.recipient, Email.subject, Email.message_id | `drop_dm_object_name(Email)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+EmailEvents
+| where Timestamp > ago(14d)
+| where (SenderDisplayName =~ "ChatGPT" or SenderFromAddress has "chatgpt")
+    and Subject has "ChatGPT Plus"
+    and Subject has_any ("payment method","continues to work","update your payment","downgraded","free plan")
+| where SenderFromDomain !endswith "openai.com"
+| join kind=leftouter (EmailUrlInfo | project NetworkMessageId, Url, UrlDomain) on NetworkMessageId
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderDisplayName, SenderFromDomain, RecipientEmailAddress, Subject, Url, UrlDomain, DeliveryAction, DeliveryLocation
+| order by Timestamp desc
+```
+
+### [LLM] Claude 'Appeal Request' phishing email with PDF attachment lure
+
+`UC_18_13` · phase: **delivery** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Email where (Email.src_user_display IN ("Anthropic Teams","Anthropic PBC") OR Email.subject="*Claude Appeal Request*" OR Email.file_name="Fill and Sign Claude Appeal Form.pdf") by Email.src_user, Email.src_user_display, Email.recipient, Email.subject, Email.file_name, Email.message_id | `drop_dm_object_name(Email)` | search (src_user_display IN ("Anthropic Teams","Anthropic PBC") OR file_name="Fill and Sign Claude Appeal Form.pdf") | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+let suspect_mail = EmailEvents
+    | where Timestamp > ago(30d)
+    | where SenderDisplayName in~ ("Anthropic Teams","Anthropic PBC")
+         or Subject matches regex @"(?i)Claude\s+Appeal\s+Request"
+    | where SenderFromDomain !endswith "anthropic.com";
+let suspect_attach = EmailAttachmentInfo
+    | where Timestamp > ago(30d)
+    | where FileType =~ "pdf"
+    | where FileName =~ "Fill and Sign Claude Appeal Form.pdf"
+         or FileName matches regex @"(?i)(Claude|Anthropic).{0,20}Appeal.{0,20}Form.*\.pdf$";
+suspect_mail
+| join kind=inner suspect_attach on NetworkMessageId
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderDisplayName, SenderFromDomain, RecipientEmailAddress, Subject, FileName, FileSize, SHA256, DeliveryAction, DeliveryLocation
+| order by Timestamp desc
+```
+
+### [LLM] Connection to AI-brand phishing / installer C2 infrastructure (MSTI June 2026 IOCs)
+
+`UC_18_14` · phase: **c2** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_ip) as dest_ip from datamodel=Network_Traffic where (All_Traffic.dest IN ("legendarytrendsbay.shop","dash.awaydouble.org","awaydouble.org","servicing.pureplantcravings.com","pureplantcravings.com","brokeapt.com","pan.ssffaa19.xyz","ssffaa19.xyz")) by All_Traffic.dest, All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let ioc_domains = dynamic(["legendarytrendsbay.shop","dash.awaydouble.org","awaydouble.org","servicing.pureplantcravings.com","pureplantcravings.com","brokeapt.com","pan.ssffaa19.xyz","ssffaa19.xyz"]);
+DeviceNetworkEvents
+| where Timestamp > ago(60d)
+| where isnotempty(RemoteUrl)
+| extend host = tolower(tostring(parse_url(RemoteUrl).Host))
+| where host in (ioc_domains)
+    or RemoteUrl has_any (ioc_domains)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, host, RemoteUrl, RemoteIP, RemotePort, ActionType
+| order by Timestamp desc
+```
+
+### [LLM] Execution or drop of fake AI-platform installer (DeepSeek/Manus/Seedance/GPT-5.5/Kimi)
+
+`UC_18_15` · phase: **install** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.parent_process_name) as parent values(Processes.process_path) as path from datamodel=Endpoint.Processes where (Processes.process_name IN ("deepseek-v4-pro_x64.exe","deepseek-v4-flash_x64.exe","Manus_AI_Desktop_x64.exe","seedance_x64.exe","gpt-5.5-Pro_x64.exe","gpt-5.5-Thinking_x64.exe","Kimi-Swarm-Station_x64.exe") OR Processes.process_hash IN ("791efb555eefb7215e96659a1353a97416743b66bdd72705493129c64057d40e","c7c5072df9f83f4c440a5c3bb4be1d5f6c67bbf78f196406ca20d27b43b975b8","0a26238f6c516de5885457c93042531aa59bc206a9537cebf5267cedc6c68531","8610d4fb0ec5b525071c2aaec4df0f8fcbb3673aba58a7e1959fc44e83c0e2ca","99231deb373997364381d1eb513d2d42231d418c3a2db9007c5af9bd56ab9371","25270cc429ada8028b5b33220ed412c47907ecceea7377d608fac5af01bed56a","56d722b0331bf0aaa86bb37483486c6dff6ad9427fc473ed7c3226c21a9bdd23","5455341ed1bbe75a664fca2dd0794c508e1874f75360253a7ff5bc119bc92d80")) by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+let lure_binaries = dynamic(["deepseek-v4-pro_x64.exe","deepseek-v4-flash_x64.exe","Manus_AI_Desktop_x64.exe","seedance_x64.exe","gpt-5.5-Pro_x64.exe","gpt-5.5-Thinking_x64.exe","Kimi-Swarm-Station_x64.exe"]);
+let ioc_sha256 = dynamic(["791efb555eefb7215e96659a1353a97416743b66bdd72705493129c64057d40e","c7c5072df9f83f4c440a5c3bb4be1d5f6c67bbf78f196406ca20d27b43b975b8","0a26238f6c516de5885457c93042531aa59bc206a9537cebf5267cedc6c68531","8610d4fb0ec5b525071c2aaec4df0f8fcbb3673aba58a7e1959fc44e83c0e2ca","99231deb373997364381d1eb513d2d42231d418c3a2db9007c5af9bd56ab9371","25270cc429ada8028b5b33220ed412c47907ecceea7377d608fac5af01bed56a","56d722b0331bf0aaa86bb37483486c6dff6ad9427fc473ed7c3226c21a9bdd23","5455341ed1bbe75a664fca2dd0794c508e1874f75360253a7ff5bc119bc92d80"]);
+let ai_lure_regex = @"(?i)^(deepseek-v\d+(-pro|-flash)?|manus_ai_desktop|seedance|gpt-\d+(\.\d+)?-(pro|thinking)|kimi-swarm-station)_x64\.exe$";
+union isfuzzy=false
+    (DeviceProcessEvents
+        | where Timestamp > ago(60d)
+        | where FileName in~ (lure_binaries)
+            or SHA256 in (ioc_sha256)
+            or (FileName matches regex ai_lure_regex and FolderPath has_any (@"\Downloads\",@"\Temp\",@"\AppData\Local\Temp\",@"\Public\"))
+        | project Timestamp, DeviceName, AccountName, EvtKind = "process", FileName, FolderPath, SHA256, ProcessCommandLine, ParentImage = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine),
+    (DeviceFileEvents
+        | where Timestamp > ago(60d)
+        | where ActionType in ("FileCreated","FileRenamed")
+        | where FileName in~ (lure_binaries) or SHA256 in (ioc_sha256)
+        | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, EvtKind = "file", FileName, FolderPath, SHA256, ProcessCommandLine = InitiatingProcessCommandLine, ParentImage = InitiatingProcessFileName, ParentCmd = InitiatingProcessParentFileName)
+| order by Timestamp desc
+```
+
+### [LLM] Phishing redirect chain via awstrack.me / Rebrandly into AI-themed landing path
+
+`UC_18_16` · phase: **delivery** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls from datamodel=Web where (Web.url="*awstrack.me*" OR Web.url="*rebrand.ly*" OR Web.url="*rebrandly.com*" OR Web.url="*bitrix24.com*") (Web.url="*ChatGPT*" OR Web.url="*Claude*" OR Web.url="*Anthropic*" OR Web.url="*DeepSeek*" OR Web.url="*legendarytrendsbay*" OR Web.url="*awaydouble*") by Web.src, Web.user, Web.dest | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+let phish_landings = dynamic(["legendarytrendsbay.shop","dash.awaydouble.org","awaydouble.org","servicing.pureplantcravings.com","pureplantcravings.com","brokeapt.com"]);
+UrlClickEvents
+| where Timestamp > ago(60d)
+| where ActionType in ("ClickAllowed","ClickedThrough")
+| where Url has_any (phish_landings)
+    or UrlChain has_any (phish_landings)
+    or (Url has_any ("awstrack.me","rebrand.ly","rebrandly.com","bitrix24.com") and Url matches regex @"(?i)(chatgpt|claude|anthropic|deepseek|manus|seedance|gpt-?5|kimi)")
+    or Url matches regex @"(?i)https?://[^/]+/(ChatGPT|Claude|Anthropic|DeepSeek)/"
+| project Timestamp, AccountUpn, NetworkMessageId, Url, UrlChain, ActionType, IsClickedThrough, IPAddress, Workload
+| order by Timestamp desc
+```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -400,7 +532,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — AI brands as bait: How threat actors are using the AI hype in social engineering
 
-`UC_15_11` · phase: **exploit** · confidence: **High**
+`UC_18_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -460,4 +592,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
