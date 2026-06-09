@@ -92,7 +92,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] ChatGPT Plus payment-update phishing emails (display-name + subject lure)
 
-`UC_22_12` · phase: **delivery** · confidence: **High**
+`UC_25_12` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ EmailEvents
 
 ### [LLM] Claude 'Appeal Request' phishing email with PDF attachment lure
 
-`UC_22_13` · phase: **delivery** · confidence: **High**
+`UC_25_13` · phase: **delivery** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ suspect_mail
 
 ### [LLM] Connection to AI-brand phishing / installer C2 infrastructure (MSTI June 2026 IOCs)
 
-`UC_22_14` · phase: **c2** · confidence: **High**
+`UC_25_14` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,7 +163,7 @@ DeviceNetworkEvents
 
 ### [LLM] Execution or drop of fake AI-platform installer (DeepSeek/Manus/Seedance/GPT-5.5/Kimi)
 
-`UC_22_15` · phase: **install** · confidence: **High**
+`UC_25_15` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -192,7 +192,7 @@ union isfuzzy=false
 
 ### [LLM] Phishing redirect chain via awstrack.me / Rebrandly into AI-themed landing path
 
-`UC_22_16` · phase: **delivery** · confidence: **Medium**
+`UC_25_16` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -532,7 +532,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — AI brands as bait: How threat actors are using the AI hype in social engineering
 
-`UC_22_11` · phase: **exploit** · confidence: **High**
+`UC_25_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

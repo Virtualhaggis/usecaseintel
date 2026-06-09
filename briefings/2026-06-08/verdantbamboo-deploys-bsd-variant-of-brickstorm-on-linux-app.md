@@ -73,7 +73,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] M365 / Entra sign-ins sourced from BRICKSTORM C2 IP 149.248.11.71
 
-`UC_30_9` · phase: **c2** · confidence: **High**
+`UC_33_9` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ AADSignInEventsBeta
 
 ### [LLM] VerdantBamboo BRICKSTORM / PLENET / AGENTPSD file-hash IOCs
 
-`UC_30_10` · phase: **install** · confidence: **High**
+`UC_33_10` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ union
 
 ### [LLM] AGENTPSD-style Python reverse shell spawned by sshd on Linux / NAS
 
-`UC_30_11` · phase: **install** · confidence: **Medium**
+`UC_33_11` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound endpoint connections to BRICKSTORM C2 IP 149.248.11.71
 
-`UC_30_12` · phase: **c2** · confidence: **High**
+`UC_33_12` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,7 +155,7 @@ DeviceNetworkEvents
 
 ### [LLM] pfSense / firewall config change enabling Web SSL VPN after admin login
 
-`UC_30_13` · phase: **install** · confidence: **Medium**
+`UC_33_13` · phase: **install** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### [LLM] Malicious AI coding-agent hook configs written to repo (.claude/.gemini/.cursor/.vscode)
 
-`UC_40_8` · phase: **install** · confidence: **High**
+`UC_42_8` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceFileEvents
 
 ### [LLM] node.exe spawned by Code/Cursor/Claude/Gemini executing .github/setup.js
 
-`UC_40_9` · phase: **exploit** · confidence: **High**
+`UC_42_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceProcessEvents
 
 ### [LLM] Outbound DNS / HTTP to Miasma C2 (git-service.com / m-kosche.com)
 
-`UC_40_10` · phase: **c2** · confidence: **High**
+`UC_42_10` · phase: **c2** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceNetworkEvents
 
 ### [LLM] Suspicious commit pattern: '[skip ci]' with backdated timestamp adding only IDE config files
 
-`UC_40_11` · phase: **delivery** · confidence: **Medium**
+`UC_42_11` · phase: **delivery** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -338,7 +338,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Miasma Worm Hits Microsoft Again: Azure Functions Action and 72 Other Repositori
 
-`UC_40_7` · phase: **exploit** · confidence: **High**
+`UC_42_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

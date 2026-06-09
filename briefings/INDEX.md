@@ -11,8 +11,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-09
 - [21 0 day vulnerabilities in ffmpeg enables remote code execu](./2026-06-09/21-0-day-vulnerabilities-in-ffmpeg-enables-remote-code-execu.md)
 - [cisa gives feds 3 days to patch check point vpn bug exploite](./2026-06-09/cisa-gives-feds-3-days-to-patch-check-point-vpn-bug-exploite.md)
+- [french govt messaging service breached in account hijacking ](./2026-06-09/french-govt-messaging-service-breached-in-account-hijacking-.md)
 - [google patches new chrome zero day flaw exploited in the wil](./2026-06-09/google-patches-new-chrome-zero-day-flaw-exploited-in-the-wil.md)
+- [hades pypi attack 19 packages poisoned to auto run bun crede](./2026-06-09/hades-pypi-attack-19-packages-poisoned-to-auto-run-bun-crede.md)
 - [litellm flaw cve 2026 42271 exploited in the wild chains to ](./2026-06-09/litellm-flaw-cve-2026-42271-exploited-in-the-wild-chains-to-.md)
+- [microsoft defender now monitors rpc protocol abuse by hacker](./2026-06-09/microsoft-defender-now-monitors-rpc-protocol-abuse-by-hacker.md)
+- [new frost attack lets websites track what sites and apps you](./2026-06-09/new-frost-attack-lets-websites-track-what-sites-and-apps-you.md)
 - [new shai hulud attack compromises 23 pypi packages to target](./2026-06-09/new-shai-hulud-attack-compromises-23-pypi-packages-to-target.md)
 - [threat actors abuse chatgpt claude and deepseek brands as ph](./2026-06-09/threat-actors-abuse-chatgpt-claude-and-deepseek-brands-as-ph.md)
 
@@ -29,7 +33,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [gogs patches critical zero day enabling remote code executio](./2026-06-08/gogs-patches-critical-zero-day-enabling-remote-code-executio.md)
 - [meta blocks nso group s new whatsapp phishing attack files c](./2026-06-08/meta-blocks-nso-group-s-new-whatsapp-phishing-attack-files-c.md)
 - [new china linked threat cluster op 512 targets iis servers w](./2026-06-08/new-china-linked-threat-cluster-op-512-targets-iis-servers-w.md)
-- [new pink hacking group attacking enterprise users to steal c](./2026-06-08/new-pink-hacking-group-attacking-enterprise-users-to-steal-c.md)
 - [new shai hulud attack trojanizes 19 science focused pypi pac](./2026-06-08/new-shai-hulud-attack-trojanizes-19-science-focused-pypi-pac.md)
 - [nfcshare android malware spreads via fake banking app update](./2026-06-08/nfcshare-android-malware-spreads-via-fake-banking-app-update.md)
 - [one character linux kernel flaw enables local root access ex](./2026-06-08/one-character-linux-kernel-flaw-enables-local-root-access-ex.md)
@@ -40,9 +43,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [weekly recap instagram account hacks android zero day github](./2026-06-08/weekly-recap-instagram-account-hacks-android-zero-day-github.md)
 - [whatsapp says it disrupted new nso spyware phishing attacks](./2026-06-08/whatsapp-says-it-disrupted-new-nso-spyware-phishing-attacks.md)
 - [when hi this is it comes through microsoft teams](./2026-06-08/when-hi-this-is-it-comes-through-microsoft-teams.md)
-
-## 2026-06-07
-- [c0xmo botnet spreads via dd wrt router flaw kills rival malw](./2026-06-07/c0xmo-botnet-spreads-via-dd-wrt-router-flaw-kills-rival-malw.md)
 
 ## 2026-06-06
 - [ai agent uncovers 21 zero days in ffmpeg chrome patches reco](./2026-06-06/ai-agent-uncovers-21-zero-days-in-ffmpeg-chrome-patches-reco.md)
@@ -102,7 +102,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-02
 - [cisa kev cve 2022 0492 linux kernel improper authentication ](./2026-06-02/cisa-kev-cve-2022-0492-linux-kernel-improper-authentication-.md)
 - [cisa kev cve 2025 48595 android framework integer overflow v](./2026-06-02/cisa-kev-cve-2025-48595-android-framework-integer-overflow-v.md)
-- [dashlane discloses brute force attack encrypted vaults of fe](./2026-06-02/dashlane-discloses-brute-force-attack-encrypted-vaults-of-fe.md)
 - [gamaredon exploits winrar to deliver gammaworm and gammastee](./2026-06-02/gamaredon-exploits-winrar-to-deliver-gammaworm-and-gammastee.md)
 - [google june 2026 android update patches 124 flaws one active](./2026-06-02/google-june-2026-android-update-patches-124-flaws-one-active.md)
 - [laravel lang supply chain attack every tag across multiple c](./2026-06-02/laravel-lang-supply-chain-attack-every-tag-across-multiple-c.md)
@@ -110,7 +109,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [multiple redhat cloud services npm packages compromised](./2026-06-02/multiple-redhat-cloud-services-npm-packages-compromised.md)
 - [nx console vs code extension compromised](./2026-06-02/nx-console-vs-code-extension-compromised.md)
 - [operation flutterbridge macos malvertising campaign spreads ](./2026-06-02/operation-flutterbridge-macos-malvertising-campaign-spreads-.md)
-- [pakistan linked sidecopy targets afghanistan finance ministr](./2026-06-02/pakistan-linked-sidecopy-targets-afghanistan-finance-ministr.md)
 - [protestware by open source maintainer to hinder agentic codi](./2026-06-02/protestware-by-open-source-maintainer-to-hinder-agentic-codi.md)
 - [the npm threat landscape attack surface and mitigations upda](./2026-06-02/the-npm-threat-landscape-attack-surface-and-mitigations-upda.md)
 - [why edr and proxy won t save you from supply chain malware](./2026-06-02/why-edr-and-proxy-won-t-save-you-from-supply-chain-malware.md)

@@ -1,19 +1,23 @@
-# [HIGH] Dashlane Discloses Brute-Force Attack, Encrypted Vaults of Fewer Than 20 Users Downloaded
+# [CRIT] New FROST Attack Lets Websites Track What Sites and Apps You Open via SSD Timing
 
 **Source:** The Hacker News
-**Published:** 2026-06-02
-**Article:** https://thehackernews.com/2026/06/dashlane-discloses-brute-force-attack.html
+**Published:** 2026-06-09
+**Article:** https://thehackernews.com/2026/06/new-frost-attack-lets-websites-track.html
 
 ## Threat Profile
 
-Dashlane Discloses Brute-Force Attack, Encrypted Vaults of Fewer Than 20 Users Downloaded 
- Ravie Lakshmanan  Jun 02, 2026 Identity Security / Data Protection 
-Password manager Dashlane has disclosed that "fewer than" 20 users on the personal subscription plan had their encrypted vaults downloaded following a brute-force attack launched by an unknown party.
-On May 31, 2026, the company said an "external" threat actor launched a brute-force attack against certain Dashlane user accounts with the…
+New FROST Attack Lets Websites Track What Sites and Apps You Open via SSD Timing 
+ Swati Khandelwal  Jun 09, 2026 Browser Security / Privacy 
+A malicious website can work out which sites you visit and which apps you open, using nothing but JavaScript and the timing of your SSD. The attack, called FROST , needs no native code, no extension, and no permission prompt.
+You open the page, leave the tab sitting there, and it watches the drive for contention in the background.
+Researchers at Graz Uni…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `https://malicious.app`
+- **Domain (defanged):** `https://victim.com`
+- **Domain (defanged):** `https://receiver.app`
+- **Domain (defanged):** `https://sender.app`
 
 ## MITRE ATT&CK Techniques
 
@@ -27,12 +31,35 @@ On May 31, 2026, the company said an "external" threat actor launched a brute-fo
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
+- **T1592.004** — Gather Victim Host Information: Client Configurations
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### [LLM] Browser writing oversized OPFS file (potential FROST SSD-timing side-channel)
+
+`UC_2_6` · phase: **recon** · confidence: **Low**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime, max(Filesystem.file_size) as max_size from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","Google Chrome","firefox","Safari","com.apple.WebKit.Networking") AND (Filesystem.file_path="*\\File System\\*" OR Filesystem.file_path="*/File System/*" OR Filesystem.file_path="*/storage/default/*/fs/*" OR Filesystem.file_path="*.mozilla/firefox/*/storage/default/*" OR Filesystem.file_path="*/Library/Safari/Storage/*" OR Filesystem.file_path="*/Library/WebKit/*/Storage/*") AND Filesystem.file_size>4000000000 by host, user, Filesystem.process_name, Filesystem.file_path, Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","Google Chrome","firefox","Safari","com.apple.WebKit.Networking")
+| where FolderPath has_any (@"\File System\", "/File System/", "/storage/default/", ".mozilla/firefox", "/Library/Safari/Storage", "/Library/WebKit")
+| where FileSize > 4000000000  // 4 GB — FROST requires file > physical RAM
+| project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, FolderPath, FileName, FileSize,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by FileSize desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -233,7 +260,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `https://malicious.app`, `https://victim.com`, `https://receiver.app`, `https://sender.app`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 5 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
