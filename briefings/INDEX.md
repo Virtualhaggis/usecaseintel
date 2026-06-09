@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1262 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1260 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -17,13 +17,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [google patches new chrome zero day flaw exploited in the wil](./2026-06-09/google-patches-new-chrome-zero-day-flaw-exploited-in-the-wil.md)
 - [hades pypi attack 19 packages poisoned to auto run bun crede](./2026-06-09/hades-pypi-attack-19-packages-poisoned-to-auto-run-bun-crede.md)
 - [litellm flaw cve 2026 42271 exploited in the wild chains to ](./2026-06-09/litellm-flaw-cve-2026-42271-exploited-in-the-wild-chains-to-.md)
-- [microsoft defender now monitors rpc protocol abuse by hacker](./2026-06-09/microsoft-defender-now-monitors-rpc-protocol-abuse-by-hacker.md)
+- [microsoft patch tuesday june 2026 198 vulnerabilities fixed ](./2026-06-09/microsoft-patch-tuesday-june-2026-198-vulnerabilities-fixed-.md)
+- [microsoft restores some github repos keeps others offline as](./2026-06-09/microsoft-restores-some-github-repos-keeps-others-offline-as.md)
 - [new frost attack lets websites track what sites and apps you](./2026-06-09/new-frost-attack-lets-websites-track-what-sites-and-apps-you.md)
 - [new nfcshare android malware delivered via weaponized versio](./2026-06-09/new-nfcshare-android-malware-delivered-via-weaponized-versio.md)
 - [new veeam vulnerability exposes backup servers to rce attack](./2026-06-09/new-veeam-vulnerability-exposes-backup-servers-to-rce-attack.md)
 - [new weedhack malware as a service targets minecraft players ](./2026-06-09/new-weedhack-malware-as-a-service-targets-minecraft-players-.md)
 - [researchers build self replicating ai worm that operates ent](./2026-06-09/researchers-build-self-replicating-ai-worm-that-operates-ent.md)
-- [threat actors abuse chatgpt claude and deepseek brands as ph](./2026-06-09/threat-actors-abuse-chatgpt-claude-and-deepseek-brands-as-ph.md)
 - [wait binding gyp can do what exploring npm s weirdest build ](./2026-06-09/wait-binding-gyp-can-do-what-exploring-npm-s-weirdest-build-.md)
 - [winrar flaw exploited by russia aligned groups to deploy ste](./2026-06-09/winrar-flaw-exploited-by-russia-aligned-groups-to-deploy-ste.md)
 
@@ -42,7 +42,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new shai hulud attack trojanizes 19 science focused pypi pac](./2026-06-08/new-shai-hulud-attack-trojanizes-19-science-focused-pypi-pac.md)
 - [nfcshare android malware spreads via fake banking app update](./2026-06-08/nfcshare-android-malware-spreads-via-fake-banking-app-update.md)
 - [one character linux kernel flaw enables local root access ex](./2026-06-08/one-character-linux-kernel-flaw-enables-local-root-access-ex.md)
-- [over 20 000 instagram accounts stolen in meta ai support hac](./2026-06-08/over-20-000-instagram-accounts-stolen-in-meta-ai-support-hac.md)
 - [sofi confirms third party data breach at hong kong subsidiar](./2026-06-08/sofi-confirms-third-party-data-breach-at-hong-kong-subsidiar.md)
 - [unc3753 used vishing and physical intrusions in u s data the](./2026-06-08/unc3753-used-vishing-and-physical-intrusions-in-u-s-data-the.md)
 - [verdantbamboo deploys bsd variant of brickstorm on linux app](./2026-06-08/verdantbamboo-deploys-bsd-variant-of-brickstorm-on-linux-app.md)
@@ -108,7 +107,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-02
 - [cisa kev cve 2022 0492 linux kernel improper authentication ](./2026-06-02/cisa-kev-cve-2022-0492-linux-kernel-improper-authentication-.md)
 - [cisa kev cve 2025 48595 android framework integer overflow v](./2026-06-02/cisa-kev-cve-2025-48595-android-framework-integer-overflow-v.md)
-- [google june 2026 android update patches 124 flaws one active](./2026-06-02/google-june-2026-android-update-patches-124-flaws-one-active.md)
 - [laravel lang supply chain attack every tag across multiple c](./2026-06-02/laravel-lang-supply-chain-attack-every-tag-across-multiple-c.md)
 - [microsoft build 2026 securing code agents and models across ](./2026-06-02/microsoft-build-2026-securing-code-agents-and-models-across-.md)
 - [multiple redhat cloud services npm packages compromised](./2026-06-02/multiple-redhat-cloud-services-npm-packages-compromised.md)
