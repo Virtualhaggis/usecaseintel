@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### ServiceNow unauthenticated /api/now/related_list_edit/create access from attacker IP 51.159.98.241
 
-`UC_33_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_36_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -54,7 +54,7 @@ DeviceNetworkEvents
 
 ### ServiceNow attacker IP 51.159.98.241 observed in CASB/proxy egress from corporate networks
 
-`UC_33_2` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_36_2` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceNetworkEvents
 
 ### ServiceNow audit log: anonymous/guest user reading sys_db_object tables via related_list_edit
 
-`UC_33_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_36_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

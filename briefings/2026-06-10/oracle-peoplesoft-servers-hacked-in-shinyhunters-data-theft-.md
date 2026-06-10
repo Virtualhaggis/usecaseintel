@@ -11,12 +11,8 @@ By Lawrence Abrams
 June 10, 2026
 02:31 PM
 0 
-
-
 Oracle PeopleSoft servers are being targeted in ongoing data theft attacks by the ShinyHunters extortion gang, which claims to have stolen data from over 100 organizations.
-
-
-PeopleSoft is an enterprise business software suite used by large organizations to manage business operations such as human resources, payroll, finance, supply chain management, procurement, and student a…
+PeopleSoft is an enterprise business software suite used by large organizations to manage business operations such as human resources, payroll, finance, supply chain management, procurement, and student administr…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -61,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### Network communication with ShinyHunters PeopleSoft attack infrastructure IPs
 
-`UC_1_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_4_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +76,7 @@ DeviceNetworkEvents
 
 ### ShinyHunters PeopleSoft ransom-note file write (README-IF-YOU-SEE-THIS-YOUVE-BEEN-HACKED.TXT)
 
-`UC_1_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_4_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +96,7 @@ DeviceFileEvents
 
 ### SSH credential spray against PeopleSoft administrative accounts (psoft, oracle, linuxadm)
 
-`UC_1_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_4_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +124,7 @@ DeviceLogonEvents
 
 ### MeshCentral agent installation on Oracle PeopleSoft Linux servers
 
-`UC_1_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_4_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +155,7 @@ union
 
 ### DNS lookup or TLS SNI for ShinyHunters azurenetfiles.net infrastructure
 
-`UC_1_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_4_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -285,7 +281,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Oracle PeopleSoft servers hacked in ShinyHunters data theft attacks
 
-`UC_1_5` · phase: **install** · confidence: **High**
+`UC_4_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

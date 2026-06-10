@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1259 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1260 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -15,6 +15,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [compromised rust crate onering performs code exfiltration](./2026-06-10/compromised-rust-crate-onering-performs-code-exfiltration.md)
 - [critical openssl vulnerabilities enable remote code executio](./2026-06-10/critical-openssl-vulnerabilities-enable-remote-code-executio.md)
 - [ghsa critical cve 2026 48031 go restful api boilerplate hard](./2026-06-10/ghsa-critical-cve-2026-48031-go-restful-api-boilerplate-hard.md)
+- [ghsa critical cve 2026 48063 baileys has message upsert hist](./2026-06-10/ghsa-critical-cve-2026-48063-baileys-has-message-upsert-hist.md)
 - [hackers abuse fake utility downloads to install screenconnec](./2026-06-10/hackers-abuse-fake-utility-downloads-to-install-screenconnec.md)
 - [hackers infect npm package dbmux with malware to fully compr](./2026-06-10/hackers-infect-npm-package-dbmux-with-malware-to-fully-compr.md)
 - [hackers use tax phishing emails to deploy in memory malware ](./2026-06-10/hackers-use-tax-phishing-emails-to-deploy-in-memory-malware-.md)
@@ -24,7 +25,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft patches exchange server zero day exploited in atta](./2026-06-10/microsoft-patches-exchange-server-zero-day-exploited-in-atta.md)
 - [microsoft patches record 206 flaws including three zero days](./2026-06-10/microsoft-patches-record-206-flaws-including-three-zero-days.md)
 - [oracle peoplesoft servers hacked in shinyhunters data theft ](./2026-06-10/oracle-peoplesoft-servers-hacked-in-shinyhunters-data-theft-.md)
+- [path traversal flaw in ai dev platform langflow exploited in](./2026-06-10/path-traversal-flaw-in-ai-dev-platform-langflow-exploited-in.md)
 - [servicenow confirms vulnerability allowing unauthorized acce](./2026-06-10/servicenow-confirms-vulnerability-allowing-unauthorized-acce.md)
+- [the miasma worm source code briefly leaked on github](./2026-06-10/the-miasma-worm-source-code-briefly-leaked-on-github.md)
 - [unpatched langflow flaw cve 2026 5027 exploited for unauthen](./2026-06-10/unpatched-langflow-flaw-cve-2026-5027-exploited-for-unauthen.md)
 - [windows collaborative translation framework 0 day vulnerabil](./2026-06-10/windows-collaborative-translation-framework-0-day-vulnerabil.md)
 
@@ -41,7 +44,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [meta to use off site business data for feed and ai personali](./2026-06-09/meta-to-use-off-site-business-data-for-feed-and-ai-personali.md)
 - [miasma worm hits microsoft again azure functions action and ](./2026-06-09/miasma-worm-hits-microsoft-again-azure-functions-action-and-.md)
 - [microsoft defender rogueplanet zero day grants system privil](./2026-06-09/microsoft-defender-rogueplanet-zero-day-grants-system-privil.md)
-- [microsoft june 2026 patch tuesday fixes 6 zero days 200 flaw](./2026-06-09/microsoft-june-2026-patch-tuesday-fixes-6-zero-days-200-flaw.md)
 - [microsoft patch tuesday for june 2026 snort rules and promin](./2026-06-09/microsoft-patch-tuesday-for-june-2026-snort-rules-and-promin.md)
 - [microsoft restores some github repos keeps others offline as](./2026-06-09/microsoft-restores-some-github-repos-keeps-others-offline-as.md)
 - [new frost attack lets websites track what sites and apps you](./2026-06-09/new-frost-attack-lets-websites-track-what-sites-and-apps-you.md)
@@ -281,7 +283,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-13
 - [ghsa critical cve 2026 22599 strapi vulnerable to sql inject](./2026-05-13/ghsa-critical-cve-2026-22599-strapi-vulnerable-to-sql-inject.md)
-- [ghsa critical cve 2026 44672 mapfish print remote code injec](./2026-05-13/ghsa-critical-cve-2026-44672-mapfish-print-remote-code-injec.md)
 - [ghsa critical cve 2026 45083 goobi viewer core unauthenticat](./2026-05-13/ghsa-critical-cve-2026-45083-goobi-viewer-core-unauthenticat.md)
 - [ghsa critical cve 2026 45375 siyuan bazaar marketplace rende](./2026-05-13/ghsa-critical-cve-2026-45375-siyuan-bazaar-marketplace-rende.md)
 - [ghsa critical ghsa vw82 7fv8 r6gp obot has an authorization ](./2026-05-13/ghsa-critical-ghsa-vw82-7fv8-r6gp-obot-has-an-authorization-.md)
