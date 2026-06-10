@@ -11,15 +11,9 @@ By Lawrence Abrams
 June 9, 2026
 05:34 PM
 0 
-
-
 ServiceNow is warning about a security incident after attackers exploited an unauthenticated access flaw through a vulnerable API endpoint, allowing them to query data from customer instances.
-
-
 The company quietly warned impacted customers through a support bulletin and direct support cases after detecting "anomalous activity" related to the issue.
-
-
-The bulletin, which is hidden …
+The bulletin, which is hidden behind Servi…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -41,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### ServiceNow unauthenticated /api/now/related_list_edit/create access from attacker IP 51.159.98.241
 
-`UC_4_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_13_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +54,7 @@ DeviceNetworkEvents
 
 ### ServiceNow attacker IP 51.159.98.241 observed in CASB/proxy egress from corporate networks
 
-`UC_4_2` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_13_2` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +72,7 @@ DeviceNetworkEvents
 
 ### ServiceNow audit log: anonymous/guest user reading sys_db_object tables via related_list_edit
 
-`UC_4_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_13_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

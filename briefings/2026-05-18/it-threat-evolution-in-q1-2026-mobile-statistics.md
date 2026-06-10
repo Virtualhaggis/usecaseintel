@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### Cisco Secure FMC anomalous outbound HTTP PUT (Interlock CVE-2026-20131 callback)
 
-`UC_252_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_253_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

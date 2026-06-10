@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### npx invocation of known phantom package names disclosed by Aikido
 
-`UC_561_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_562_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### File creation under npx cache for Aikido-claimed phantom package names
 
-`UC_561_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_562_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

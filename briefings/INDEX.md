@@ -1,12 +1,19 @@
 # Briefings — full archive
 
-_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1257 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-06-10
+- [hackers abuse tiktok and instagram reels to spread malware v](./2026-06-10/hackers-abuse-tiktok-and-instagram-reels-to-spread-malware-v.md)
+- [ivanti max severity sentry flaw allows code execution as roo](./2026-06-10/ivanti-max-severity-sentry-flaw-allows-code-execution-as-roo.md)
+- [microsoft defender rogueplanet zero day grants system access](./2026-06-10/microsoft-defender-rogueplanet-zero-day-grants-system-access.md)
+- [servicenow flaw exploited to gain unauthorized access to cus](./2026-06-10/servicenow-flaw-exploited-to-gain-unauthorized-access-to-cus.md)
+- [windows bitlocker 0 day vulnerability allows attackers to by](./2026-06-10/windows-bitlocker-0-day-vulnerability-allows-attackers-to-by.md)
 
 ## 2026-06-09
 - [blinding the watchmen abusing cloud logging services for def](./2026-06-09/blinding-the-watchmen-abusing-cloud-logging-services-for-def.md)
@@ -15,11 +22,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 11645 google chromium v8 out of bounds rea](./2026-06-09/cisa-kev-cve-2026-11645-google-chromium-v8-out-of-bounds-rea.md)
 - [cisa kev cve 2026 20245 cisco catalyst sd wan manager improp](./2026-06-09/cisa-kev-cve-2026-20245-cisco-catalyst-sd-wan-manager-improp.md)
 - [cisa kev cve 2026 7473 arista extensible operating system in](./2026-06-09/cisa-kev-cve-2026-7473-arista-extensible-operating-system-in.md)
-- [fortinet fortisandbox vulnerability allows attackers to exec](./2026-06-09/fortinet-fortisandbox-vulnerability-allows-attackers-to-exec.md)
 - [french govt messaging service breached in account hijacking ](./2026-06-09/french-govt-messaging-service-breached-in-account-hijacking-.md)
 - [ghsa critical cve 2026 48030 pheditor os command injection i](./2026-06-09/ghsa-critical-cve-2026-48030-pheditor-os-command-injection-i.md)
 - [ghsa critical cve 2026 8467 phoenixstorybook unauthenticated](./2026-06-09/ghsa-critical-cve-2026-8467-phoenixstorybook-unauthenticated.md)
-- [google chrome 0 day vulnerability exploited in the wild upda](./2026-06-09/google-chrome-0-day-vulnerability-exploited-in-the-wild-upda.md)
 - [google patches new chrome zero day flaw exploited in the wil](./2026-06-09/google-patches-new-chrome-zero-day-flaw-exploited-in-the-wil.md)
 - [hades pypi attack 19 packages poisoned to auto run bun crede](./2026-06-09/hades-pypi-attack-19-packages-poisoned-to-auto-run-bun-crede.md)
 - [litellm flaw cve 2026 42271 exploited in the wild chains to ](./2026-06-09/litellm-flaw-cve-2026-42271-exploited-in-the-wild-chains-to-.md)
@@ -49,9 +54,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47252 anyquery applescript jxa code i](./2026-06-08/ghsa-critical-cve-2026-47252-anyquery-applescript-jxa-code-i.md)
 - [ghsa critical cve 2026 47724 nebula mesh api endpoints lack ](./2026-06-08/ghsa-critical-cve-2026-47724-nebula-mesh-api-endpoints-lack-.md)
 - [meta blocks nso group s new whatsapp phishing attack files c](./2026-06-08/meta-blocks-nso-group-s-new-whatsapp-phishing-attack-files-c.md)
-- [nfcshare android malware spreads via fake banking app update](./2026-06-08/nfcshare-android-malware-spreads-via-fake-banking-app-update.md)
 - [one character linux kernel flaw enables local root access ex](./2026-06-08/one-character-linux-kernel-flaw-enables-local-root-access-ex.md)
-- [sofi confirms third party data breach at hong kong subsidiar](./2026-06-08/sofi-confirms-third-party-data-breach-at-hong-kong-subsidiar.md)
 - [unc3753 used vishing and physical intrusions in u s data the](./2026-06-08/unc3753-used-vishing-and-physical-intrusions-in-u-s-data-the.md)
 - [verdantbamboo deploys bsd variant of brickstorm on linux app](./2026-06-08/verdantbamboo-deploys-bsd-variant-of-brickstorm-on-linux-app.md)
 - [weekly recap instagram account hacks android zero day github](./2026-06-08/weekly-recap-instagram-account-hacks-android-zero-day-github.md)
@@ -107,7 +110,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft fixes one click github dev attack that let attacke](./2026-06-03/microsoft-fixes-one-click-github-dev-attack-that-let-attacke.md)
 - [preinstall to persistence inside the red hat npm miasma cred](./2026-06-03/preinstall-to-persistence-inside-the-red-hat-npm-miasma-cred.md)
 - [the new security risks of the agentic development lifecycle](./2026-06-03/the-new-security-risks-of-the-agentic-development-lifecycle.md)
-- [unpatched windows search uri vulnerability lets attackers st](./2026-06-03/unpatched-windows-search-uri-vulnerability-lets-attackers-st.md)
 
 ## 2026-06-02
 - [cisa kev cve 2022 0492 linux kernel improper authentication ](./2026-06-02/cisa-kev-cve-2022-0492-linux-kernel-improper-authentication-.md)
@@ -875,9 +877,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 47827 igel os use of a key past its expira](./2025-10-14/cisa-kev-cve-2025-47827-igel-os-use-of-a-key-past-its-expira.md)
 - [cisa kev cve 2025 59230 microsoft windows improper access co](./2025-10-14/cisa-kev-cve-2025-59230-microsoft-windows-improper-access-co.md)
 - [snyk named a leader in the 2025 gartner magic quadrant for a](./2025-10-14/snyk-named-a-leader-in-the-2025-gartner-magic-quadrant-for-a.md)
-
-## 2025-10-13
-- [ai aided malvertising exploiting a chatbot to spread scams](./2025-10-13/ai-aided-malvertising-exploiting-a-chatbot-to-spread-scams.md)
 
 ## 2025-10-09
 - [cisa kev cve 2021 43798 grafana path traversal vulnerability](./2025-10-09/cisa-kev-cve-2021-43798-grafana-path-traversal-vulnerability.md)

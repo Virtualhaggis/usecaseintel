@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### GitHub repo created with Miasma/Hades worm signature description
 
-`UC_65_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_68_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ CloudAppEvents
 
 ### AI coding agent spawning Bun runtime — Miasma loader detonation
 
-`UC_65_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_68_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceProcessEvents
 
 ### Bun runtime executed from random temp-dir path — Miasma staged loader artifact
 
-`UC_65_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_68_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceProcessEvents
 
 ### Multi-megabyte staged Miasma loader JS dropped to OS temp
 
-`UC_65_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_68_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceFileEvents
 
 ### Bun runtime contacting cloud instance-metadata endpoint — Miasma credential collection
 
-`UC_65_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_68_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
