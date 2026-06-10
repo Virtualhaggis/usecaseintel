@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1257 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,11 +10,20 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-10
 - [10 year old critical vulnerability in phpbb affecting tens o](./2026-06-10/10-year-old-critical-vulnerability-in-phpbb-affecting-tens-o.md)
+- [china linked jdy botnet expands targeting of u s military ne](./2026-06-10/china-linked-jdy-botnet-expands-targeting-of-u-s-military-ne.md)
+- [cloud security report finds fragmented tools widening the cl](./2026-06-10/cloud-security-report-finds-fragmented-tools-widening-the-cl.md)
+- [compromised rust crate onering performs code exfiltration](./2026-06-10/compromised-rust-crate-onering-performs-code-exfiltration.md)
+- [critical openssl vulnerabilities enable remote code executio](./2026-06-10/critical-openssl-vulnerabilities-enable-remote-code-executio.md)
+- [ghsa critical cve 2026 48031 go restful api boilerplate hard](./2026-06-10/ghsa-critical-cve-2026-48031-go-restful-api-boilerplate-hard.md)
 - [hackers abuse tiktok and instagram reels to spread malware v](./2026-06-10/hackers-abuse-tiktok-and-instagram-reels-to-spread-malware-v.md)
 - [hackers deploy mltbackdoor malware via multi stage clickfix ](./2026-06-10/hackers-deploy-mltbackdoor-malware-via-multi-stage-clickfix-.md)
+- [ivanti fortinet and sap release patches for multiple critica](./2026-06-10/ivanti-fortinet-and-sap-release-patches-for-multiple-critica.md)
 - [ivanti max severity sentry flaw allows code execution as roo](./2026-06-10/ivanti-max-severity-sentry-flaw-allows-code-execution-as-roo.md)
 - [microsoft defender rogueplanet zero day grants system access](./2026-06-10/microsoft-defender-rogueplanet-zero-day-grants-system-access.md)
+- [microsoft patches exchange server zero day exploited in atta](./2026-06-10/microsoft-patches-exchange-server-zero-day-exploited-in-atta.md)
 - [microsoft patches record 206 flaws including three zero days](./2026-06-10/microsoft-patches-record-206-flaws-including-three-zero-days.md)
+- [unpatched langflow flaw cve 2026 5027 exploited for unauthen](./2026-06-10/unpatched-langflow-flaw-cve-2026-5027-exploited-for-unauthen.md)
+- [windows collaborative translation framework 0 day vulnerabil](./2026-06-10/windows-collaborative-translation-framework-0-day-vulnerabil.md)
 
 ## 2026-06-09
 - [blinding the watchmen abusing cloud logging services for def](./2026-06-09/blinding-the-watchmen-abusing-cloud-logging-services-for-def.md)
@@ -22,7 +31,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 11645 google chromium v8 out of bounds rea](./2026-06-09/cisa-kev-cve-2026-11645-google-chromium-v8-out-of-bounds-rea.md)
 - [cisa kev cve 2026 20245 cisco catalyst sd wan manager improp](./2026-06-09/cisa-kev-cve-2026-20245-cisco-catalyst-sd-wan-manager-improp.md)
 - [cisa kev cve 2026 7473 arista extensible operating system in](./2026-06-09/cisa-kev-cve-2026-7473-arista-extensible-operating-system-in.md)
-- [french govt messaging service breached in account hijacking ](./2026-06-09/french-govt-messaging-service-breached-in-account-hijacking-.md)
 - [ghsa critical cve 2026 48030 pheditor os command injection i](./2026-06-09/ghsa-critical-cve-2026-48030-pheditor-os-command-injection-i.md)
 - [ghsa critical cve 2026 8467 phoenixstorybook unauthenticated](./2026-06-09/ghsa-critical-cve-2026-8467-phoenixstorybook-unauthenticated.md)
 - [hades pypi attack 19 packages poisoned to auto run bun crede](./2026-06-09/hades-pypi-attack-19-packages-poisoned-to-auto-run-bun-crede.md)
@@ -32,11 +40,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft defender rogueplanet zero day grants system privil](./2026-06-09/microsoft-defender-rogueplanet-zero-day-grants-system-privil.md)
 - [microsoft june 2026 patch tuesday fixes 3 zero day 200 flaws](./2026-06-09/microsoft-june-2026-patch-tuesday-fixes-3-zero-day-200-flaws.md)
 - [microsoft patch tuesday for june 2026 snort rules and promin](./2026-06-09/microsoft-patch-tuesday-for-june-2026-snort-rules-and-promin.md)
-- [microsoft patch tuesday june 2026 198 vulnerabilities fixed ](./2026-06-09/microsoft-patch-tuesday-june-2026-198-vulnerabilities-fixed-.md)
 - [microsoft restores some github repos keeps others offline as](./2026-06-09/microsoft-restores-some-github-repos-keeps-others-offline-as.md)
 - [new frost attack lets websites track what sites and apps you](./2026-06-09/new-frost-attack-lets-websites-track-what-sites-and-apps-you.md)
-- [new magicad android malware flood device with ads bypassing ](./2026-06-09/new-magicad-android-malware-flood-device-with-ads-bypassing-.md)
-- [new veeam vulnerability exposes backup servers to rce attack](./2026-06-09/new-veeam-vulnerability-exposes-backup-servers-to-rce-attack.md)
 - [openclaw ai agent found falling for phishing attacks spills ](./2026-06-09/openclaw-ai-agent-found-falling-for-phishing-attacks-spills-.md)
 - [pythagora io gpt pilot compromised on github shai hulud cred](./2026-06-09/pythagora-io-gpt-pilot-compromised-on-github-shai-hulud-cred.md)
 - [researchers build self replicating ai worm that operates ent](./2026-06-09/researchers-build-self-replicating-ai-worm-that-operates-ent.md)
@@ -100,7 +105,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-03
 - [argamal malware hidden in hentai games](./2026-06-03/argamal-malware-hidden-in-hentai-games.md)
-- [autonomous ai tool finds 2 year old rce flaw in redis cve 20](./2026-06-03/autonomous-ai-tool-finds-2-year-old-rce-flaw-in-redis-cve-20.md)
 - [cisa kev cve 2026 45247 mirasvit full page cache warmer dese](./2026-06-03/cisa-kev-cve-2026-45247-mirasvit-full-page-cache-warmer-dese.md)
 - [ghsa critical cve 2026 44180 jupyter enterprise gateway cont](./2026-06-03/ghsa-critical-cve-2026-44180-jupyter-enterprise-gateway-cont.md)
 - [ghsa critical cve 2026 44181 jupyter enterprise gateway jinj](./2026-06-03/ghsa-critical-cve-2026-44181-jupyter-enterprise-gateway-jinj.md)
@@ -281,7 +285,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa vw82 7fv8 r6gp obot has an authorization ](./2026-05-13/ghsa-critical-ghsa-vw82-7fv8-r6gp-obot-has-an-authorization-.md)
 
 ## 2026-05-12
-- [ghsa critical cve 2026 44650 sillytavern has a path traversa](./2026-05-12/ghsa-critical-cve-2026-44650-sillytavern-has-a-path-traversa.md)
 - [teampcp s mini shai hulud is back a self spreading supply ch](./2026-05-12/teampcp-s-mini-shai-hulud-is-back-a-self-spreading-supply-ch.md)
 
 ## 2026-05-11

@@ -79,7 +79,7 @@ _(none detected from narrative keywords)_
 
 ### MiniUpdate UpdateChecker.dll sideload via legitimate signed .NET host
 
-`UC_192_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_196_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ union imgLoads, fileWrites
 
 ### Screening Serpens AppDomainManager hijack via .NET app .config tampering
 
-`UC_192_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_196_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ DeviceFileEvents
 
 ### Screening Serpens C2 — DNS/network to UNC1549 infrastructure (Feb-Apr 2026)
 
-`UC_192_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_196_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +154,7 @@ DeviceNetworkEvents
 
 ### Screening Serpens recruitment lure — Hiring Portal.zip + job requisition PDFs
 
-`UC_192_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_196_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -502,7 +502,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Tracking Iranian APT Screening Serpens’ 2026 Espionage Campaigns
 
-`UC_192_11` · phase: **exploit** · confidence: **High**
+`UC_196_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

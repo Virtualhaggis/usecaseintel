@@ -1,6 +1,6 @@
 # [CRIT] Microsoft Defender RoguePlanet Zero-Day Grants SYSTEM Access on Updated Windows
 
-**Source:** The Hacker News, Cyber Security News
+**Source:** The Hacker News
 **Published:** 2026-06-10
 **Article:** https://thehackernews.com/2026/06/microsoft-defender-rogueplanet-zero-day.html
 
@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### DNS / network connection to RoguePlanet PoC publication domain (projectnightcrawler.dev)
 
-`UC_9_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_22_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ union isfuzzy=true
 
 ### Microsoft Defender service spawning interactive shell as SYSTEM (RoguePlanet exploit success signature)
 
-`UC_9_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_22_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

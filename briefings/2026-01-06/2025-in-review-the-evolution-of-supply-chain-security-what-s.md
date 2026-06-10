@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### tj-actions/changed-files compromised commit SHA referenced in workflow YAML or git history
 
-`UC_623_1` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_625_1` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ DeviceProcessEvents
 
 ### Nx s1ngularity-repository creation via GitHub API from developer or CI endpoint
 
-`UC_623_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_625_2` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceFileEvents
 
 ### AI CLI tool (claude/gemini/q) spawned non-interactively by node/npm/npx for recon
 
-`UC_623_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_625_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceProcessEvents
 
 ### Compromised Nx npm package version install on developer or CI host
 
-`UC_623_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_625_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

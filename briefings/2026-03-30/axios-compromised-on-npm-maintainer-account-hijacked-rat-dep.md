@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### axios npm RAT C2 beacon to sfrclak.com / 142.11.206.73:8000
 
-`UC_405_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_408_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ union isfuzzy=true
 
 ### axios RAT artifact dropped: com.apple.act.mond / wt.exe / ld.py with known SHA256
 
-`UC_405_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_408_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceFileEvents
 
 ### PowerShell copy masqueraded as Windows Terminal in %PROGRAMDATA% running 6202033.ps1
 
-`UC_405_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_408_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -256,7 +256,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — axios compromised on npm: maintainer account hijacked, RAT deployed
 
-`UC_405_6` · phase: **exploit** · confidence: **High**
+`UC_408_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

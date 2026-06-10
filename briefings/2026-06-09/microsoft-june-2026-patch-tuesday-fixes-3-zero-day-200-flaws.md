@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### BitLocker YellowKey (CVE-2026-50507) — Shell Spawned in WinRE/WinPE Context
 
-`UC_27_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_37_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceProcessEvents
 
 ### HTTP/2 Bomb (CVE-2026-49160) — MaxHeadersCount Mitigation Posture
 
-`UC_27_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_37_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceRegistryEvents
 
 ### June 2026 Patch Tuesday Zero-Day Exposure Inventory (CVE-2026-45586/49160/50507)
 
-`UC_27_9` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_37_9` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -266,7 +266,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft June 2026 Patch Tuesday fixes 3 zero-day, 200 flaws
 
-`UC_27_6` · phase: **exploit** · confidence: **High**
+`UC_37_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Compromised Microsoft durabletask PyPI Package Install (TeamPCP 1.4.1-1.4.3)
 
-`UC_223_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_227_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceProcessEvents
 
 ### TeamPCP rope.pyz Dropper Fetch from check.git-service.com C2
 
-`UC_223_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_227_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ union
 
 ### TeamPCP rope.pyz Dropper Infection Markers on Linux
 
-`UC_223_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_227_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ DeviceFileEvents
 
 ### AWS SSM SendCommand Fan-out from EC2 Instance Role (TeamPCP Worm Propagation)
 
-`UC_223_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_227_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceFileEvents
 
 ### Python Process Reading Multi-Cloud Credential Stores (durabletask Stealer Stage)
 
-`UC_223_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_227_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -220,7 +220,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The AntV Supply Chain Campaign Expands: Microsoft's `durabletask` PyPI Package C
 
-`UC_223_5` · phase: **exploit** · confidence: **High**
+`UC_227_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
