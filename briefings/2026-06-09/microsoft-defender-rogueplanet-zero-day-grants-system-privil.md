@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### SYSTEM cmd.exe spawned by Defender MsMpEng.exe (RoguePlanet LPE artifact)
 
-`UC_25_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_26_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceProcessEvents
 
 ### Defender engine reads .vhd/.vhdx/.iso from remote SMB share (RoguePlanet RCE vector)
 
-`UC_25_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_26_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceFileEvents
 
 ### Host resolves or connects to projectnightcrawler.dev (RoguePlanet PoC repository)
 
-`UC_25_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_26_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ union
 
 ### Junction or reparse point created targeting Defender ProgramData scan path
 
-`UC_25_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_26_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

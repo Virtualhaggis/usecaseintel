@@ -73,7 +73,7 @@ _(none detected from narrative keywords)_
 
 ### M365 / Entra sign-ins sourced from BRICKSTORM C2 IP 149.248.11.71
 
-`UC_66_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_67_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ AADSignInEventsBeta
 
 ### VerdantBamboo BRICKSTORM / PLENET / AGENTPSD file-hash IOCs
 
-`UC_66_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_67_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ union
 
 ### AGENTPSD-style Python reverse shell spawned by sshd on Linux / NAS
 
-`UC_66_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_67_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceProcessEvents
 
 ### Outbound endpoint connections to BRICKSTORM C2 IP 149.248.11.71
 
-`UC_66_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_67_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,7 +155,7 @@ DeviceNetworkEvents
 
 ### pfSense / firewall config change enabling Web SSL VPN after admin login
 
-`UC_66_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_67_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

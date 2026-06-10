@@ -19,12 +19,56 @@ July 31, 2024
 
 - **T1190** — Exploit Public-Facing Application
 - **T1204.002** — User Execution: Malicious File
+- **T1499.003** — Endpoint Denial of Service: Application Exhaustion Flood
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### CVE-2024-24762 python-multipart ReDoS payload via crafted Content-Type header
+
+`UC_1191_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.uri_path) as uri_path values(Web.http_content_type) as content_type from datamodel=Web.Web where Web.http_method="POST" AND (Web.http_content_type="*\\\\\\\\*" OR Web.http_content_type="*application/x-www-form-urlencoded;*!=*" OR Web.http_content_type="*multipart/form-data;*!=*") by Web.src Web.dest Web.http_content_type
+| `drop_dm_object_name(Web)`
+| eval ct_len=len(content_type)
+| where ct_len > 200 OR like(content_type,"%\\\\\\\\\\\\%")
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+### Inventory exposure: hosts running FastAPI / python-multipart vulnerable to CVE-2024-24762
+
+`UC_1191_3` · phase: **weapon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(Vulnerabilities.signature) as signature values(Vulnerabilities.severity) as severity from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2024-24762" by Vulnerabilities.dest Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| convert ctime(firstSeen) ctime(lastSeen)
+| sort - lastSeen
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
+| where CveId == "CVE-2024-24762"
+   or (SoftwareName has_any ("python-multipart","python_multipart") and SoftwareVersion matches regex @"^0\.0\.[0-6]$")
+   or (SoftwareName =~ "fastapi" and SoftwareVersion matches regex @"^0\.10[0-8]\.")
+   or (SoftwareName =~ "fastapi" and SoftwareVersion == "0.109.0")
+| join kind=leftouter (
+    DeviceInfo
+    | summarize arg_max(Timestamp, OSPlatform, PublicIP, IsInternetFacing, LoggedOnUsers) by DeviceId
+  ) on DeviceId
+| project Timestamp, DeviceName, DeviceId, SoftwareName, SoftwareVersion, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing, PublicIP
+| order by IsInternetFacing desc, Timestamp desc
+```
 
 ### Article-specific behavioural hunt — A denial of service Regex breaks FastAPI security
 
@@ -85,4 +129,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

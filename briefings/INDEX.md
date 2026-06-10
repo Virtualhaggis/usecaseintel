@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1257 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,18 +10,19 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-10
 - [10 year old critical vulnerability in phpbb affecting tens o](./2026-06-10/10-year-old-critical-vulnerability-in-phpbb-affecting-tens-o.md)
-- [china linked jdy botnet expands targeting of u s military ne](./2026-06-10/china-linked-jdy-botnet-expands-targeting-of-u-s-military-ne.md)
-- [cloud security report finds fragmented tools widening the cl](./2026-06-10/cloud-security-report-finds-fragmented-tools-widening-the-cl.md)
+- [china linked jdy botnet expands to 1 500 devices for cyber r](./2026-06-10/china-linked-jdy-botnet-expands-to-1-500-devices-for-cyber-r.md)
 - [compromised rust crate onering performs code exfiltration](./2026-06-10/compromised-rust-crate-onering-performs-code-exfiltration.md)
 - [critical openssl vulnerabilities enable remote code executio](./2026-06-10/critical-openssl-vulnerabilities-enable-remote-code-executio.md)
 - [ghsa critical cve 2026 48031 go restful api boilerplate hard](./2026-06-10/ghsa-critical-cve-2026-48031-go-restful-api-boilerplate-hard.md)
-- [hackers abuse tiktok and instagram reels to spread malware v](./2026-06-10/hackers-abuse-tiktok-and-instagram-reels-to-spread-malware-v.md)
-- [hackers deploy mltbackdoor malware via multi stage clickfix ](./2026-06-10/hackers-deploy-mltbackdoor-malware-via-multi-stage-clickfix-.md)
+- [hackers abuse fake utility downloads to install screenconnec](./2026-06-10/hackers-abuse-fake-utility-downloads-to-install-screenconnec.md)
+- [hackers infect npm package dbmux with malware to fully compr](./2026-06-10/hackers-infect-npm-package-dbmux-with-malware-to-fully-compr.md)
+- [hackers use tax phishing emails to deploy in memory malware ](./2026-06-10/hackers-use-tax-phishing-emails-to-deploy-in-memory-malware-.md)
 - [ivanti fortinet and sap release patches for multiple critica](./2026-06-10/ivanti-fortinet-and-sap-release-patches-for-multiple-critica.md)
 - [ivanti max severity sentry flaw allows code execution as roo](./2026-06-10/ivanti-max-severity-sentry-flaw-allows-code-execution-as-roo.md)
 - [microsoft defender rogueplanet zero day grants system access](./2026-06-10/microsoft-defender-rogueplanet-zero-day-grants-system-access.md)
 - [microsoft patches exchange server zero day exploited in atta](./2026-06-10/microsoft-patches-exchange-server-zero-day-exploited-in-atta.md)
 - [microsoft patches record 206 flaws including three zero days](./2026-06-10/microsoft-patches-record-206-flaws-including-three-zero-days.md)
+- [servicenow confirms vulnerability allowing unauthorized acce](./2026-06-10/servicenow-confirms-vulnerability-allowing-unauthorized-acce.md)
 - [unpatched langflow flaw cve 2026 5027 exploited for unauthen](./2026-06-10/unpatched-langflow-flaw-cve-2026-5027-exploited-for-unauthen.md)
 - [windows collaborative translation framework 0 day vulnerabil](./2026-06-10/windows-collaborative-translation-framework-0-day-vulnerabil.md)
 
@@ -38,7 +39,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [meta to use off site business data for feed and ai personali](./2026-06-09/meta-to-use-off-site-business-data-for-feed-and-ai-personali.md)
 - [miasma worm hits microsoft again azure functions action and ](./2026-06-09/miasma-worm-hits-microsoft-again-azure-functions-action-and-.md)
 - [microsoft defender rogueplanet zero day grants system privil](./2026-06-09/microsoft-defender-rogueplanet-zero-day-grants-system-privil.md)
-- [microsoft june 2026 patch tuesday fixes 3 zero day 200 flaws](./2026-06-09/microsoft-june-2026-patch-tuesday-fixes-3-zero-day-200-flaws.md)
+- [microsoft june 2026 patch tuesday fixes 6 zero days 200 flaw](./2026-06-09/microsoft-june-2026-patch-tuesday-fixes-6-zero-days-200-flaw.md)
 - [microsoft patch tuesday for june 2026 snort rules and promin](./2026-06-09/microsoft-patch-tuesday-for-june-2026-snort-rules-and-promin.md)
 - [microsoft restores some github repos keeps others offline as](./2026-06-09/microsoft-restores-some-github-repos-keeps-others-offline-as.md)
 - [new frost attack lets websites track what sites and apps you](./2026-06-09/new-frost-attack-lets-websites-track-what-sites-and-apps-you.md)
