@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### DNS / HTTP to holidaygifts.co.il gift card phishing domain (Varonis OpenClaw IOC)
 
-`UC_17_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_19_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ union isfuzzy=true
 
 ### AI-agent / service mailbox exfiltrating credentials or CRM data to external freemail
 
-`UC_17_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_19_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ EmailEvents
 
 ### OAuth consent grant to unverified timesheet-themed application (Varonis OpenClaw scenario 4)
 
-`UC_17_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_19_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

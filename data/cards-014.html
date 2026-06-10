@@ -1,929 +1,3 @@
-<article class="card" id="art-415" data-art-slug="2026-03-26-bittensor-wallet-4-0-2-compromised-on-pypi-backdoor-exfiltra"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
-  data-techs="T1027,T1190,T1195.002"
-  data-sources="StepSecurity"
-  data-platforms="datadog,def,sent,sigma,spl"
-  data-splunk-cats="endpoint,network"
-  data-targets="linux,windows"
-  data-uc-count="10" data-llm-uc-count="3"
-  data-search="bittensor-wallet 4.0.2 Compromised on PyPI - Backdoor Exfiltrates Private Keys On March 17, 2026, bittensor-wallet 4.0.2 was identified as a compromised PyPI package. The malicious release had been live on PyPI for approximately 48 hours before being yanked. This post is a ground-up technical breakdown based on a direct diff of the source tarballs for versions 4.0.1 and 4.0.2 — covering exactly what changed, how the backdoor works, and what defenders should do. We also ran the compromised package with StepSecurity Harden Runner and captured every C2 channel firing in real time.  T1027 T1190 T1195.002 [LLM] bittensor-wallet 4.0.2 backdoor C2 domain contact (opentensor-* lookalikes) [LLM] DNS tunneling exfiltration pattern to *.t.opentensor-cdn.com (hex chunk/index/total/session) [LLM] Compromised bittensor-wallet 4.0.2 source-tarball SHA256 on disk Beaconing — periodic outbound to small set of destinations Network connections to article IPs / domains DNS tunneling / TXT-heavy domain queries PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children File hash IOCs — endpoint file/process match Article-specific behavioural hunt — bittensor-wallet 4.0.2 Compromised on PyPI - Backdoor Exfiltrates Private Keys">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-03-26-bittensor-wallet-4-0-2-compromised-on-pypi-backdoor-exfiltra" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.stepsecurity.io/blog/bittensor-wallet-4-0-2-compromised-on-pypi---backdoor-exfiltrates-private-keys" target="_blank" rel="noopener">bittensor-wallet 4.0.2 Compromised on PyPI - Backdoor Exfiltrates Private Keys</a></h2>
-  <div class="source-badges"><span class="source-badge ">StepSecurity</span></div>
-  <div class="pubmeta">
-    <span>2026-03-26</span>
-    <span>10 use cases</span>
-    <span>3 techniques</span>
-    <span>6 kill-chain phases detected</span>
-  </div>
-  <p class="summary">On March 17, 2026, bittensor-wallet 4.0.2 was identified as a compromised PyPI package. The malicious release had been live on PyPI for approximately 48 hours before being yanked. This post is a ground-up technical breakdown based on a direct diff of the source tarballs for versions 4.0.1 and 4.0.2 — covering exactly what changed, how the backdoor works, and what defenders should do. We also ran the compromised package with StepSecurity Harden Runner and captured every C2 channel firing in real time.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">finney.opentensor-metrics.com</span> <span class="ind ">finney.subtensor-telemetry.com</span> <span class="ind ">finney.metagraph-stats.com</span> <span class="ind ">opentensor-cdn.com</span> <span class="ind ">tuwyqibtvy.opentensor-cdn.com</span> <span class="ind ">yccansiwfr.opentensor-cdn.com</span> <span class="ind ">tbqcbkpbhy.opentensor-cdn.com</span> <span class="ind ">t.opentensor-cdn.com</span></div>
-<div class="ind-group"><span class="ind-label">SHA256</span><span class="ind ">6a416b72ff24804a…</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-415-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-415"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-415-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Compromised bittensor-wallet 4.0.2 source-tarball SHA256 on disk</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ PowerShell encoded / obfuscated command · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — bittensor-wallet 4.0.2 Compromised on PyPI - Backdoor Exfiltrates Private Keys</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ File hash IOCs — endpoint file/process match</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] bittensor-wallet 4.0.2 backdoor C2 domain contact (opentensor-* lookalikes) · [LLM] DNS tunneling exfiltration pattern to *.t.opentensor-cdn.com (hex chunk/index/total/session) · Beaconing — periodic outbound to small set of destinations · Network connections to article IPs / domains · DNS tunneling / TXT-heavy domain queries</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="ee4c1b4e2d" data-platforms="datadog,def,sent,sigma,spl" data-targets="linux,windows" open>
-  <summary>
-    <span class="uc-title">bittensor-wallet 4.0.2 backdoor C2 domain contact (opentensor-* lookalikes)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ee4c1b4e2d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts DNS lookups and outbound connections to the four hard-coded / parent-zone C2 domains used by the bittensor-wallet 4.0.2 PyPI backdoor (opentensor-metrics.com, subtensor-telemetry.com, metagraph-stats.com, opentensor-cdn.com). These domains impersonate legitimate Bittensor infrastructure (opentensor.ai, subtensor, metagraph) and are contacted from python3.12 within ~2 seconds of any coldkey/hotkey decryption.
-
-Rationale: All four domains are explicitly named in the article as attacker-controlled lookalike infrastructure confirmed contacted by python3.12 during Harden Runner instrumentation; opentensor-cdn.com is the parent zone for both the DGA rotation (*.opentensor-cdn.com) and the DNS-tunnel egress (t.opentensor-cdn.com), so the suffix match covers all three C2 layers in one rule. No legitimate Bittensor service resolves under these squat zones.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/bittensor-wallet-4-0-2-compromised-on-pypi---backdoor-exfiltrates-private-keys</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Application Layer Protocol: DNS">T1071.004</span> <span class="ind tech" title="Dynamic Resolution: Domain Generation Algorithms">T1568.002</span> <span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-415-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-415-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-415-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-415-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-415-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-415-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let _c2_domains = dynamic([&quot;opentensor-metrics.com&quot;,&quot;subtensor-telemetry.com&quot;,&quot;metagraph-stats.com&quot;,&quot;opentensor-cdn.com&quot;]);
-union isfuzzy=true
-(DeviceNetworkEvents
-  | where Timestamp &gt; ago(7d)
-  | where isnotempty(RemoteUrl) and RemoteUrl has_any (_c2_domains)
-  | project Timestamp, DeviceName, EvtSource=&quot;NetConn&quot;, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, Indicator=RemoteUrl, RemoteIP, RemotePort),
-(DeviceEvents
-  | where Timestamp &gt; ago(7d)
-  | where ActionType == &quot;DnsQueryResponse&quot;
-  | extend QueryName = tolower(tostring(parse_json(AdditionalFields).QueryName))
-  | where isnotempty(QueryName) and QueryName has_any (_c2_domains)
-  | project Timestamp, DeviceName, EvtSource=&quot;DNS&quot;, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, Indicator=QueryName, RemoteIP=&quot;&quot;, RemotePort=int(0))
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-415-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let _c2_domains = dynamic([&quot;opentensor-metrics.com&quot;,&quot;subtensor-telemetry.com&quot;,&quot;metagraph-stats.com&quot;,&quot;opentensor-cdn.com&quot;]);
-union isfuzzy=true
-(ImDnsActivity
-  | where TimeGenerated &gt; ago(7d)
-  | where isnotempty(DnsQuery) and DnsQuery has_any (_c2_domains)
-  | project TimeGenerated, DvcHostname, SrcIpAddr, EvtSource=&quot;ImDns&quot;, Indicator=DnsQuery),
-(ImNetworkSession
-  | where TimeGenerated &gt; ago(7d)
-  | where (isnotempty(DstHostname) and DstHostname has_any (_c2_domains)) or (isnotempty(Url) and Url has_any (_c2_domains))
-  | extend Indicator = coalesce(DstHostname, Url)
-  | project TimeGenerated, DvcHostname, SrcIpAddr, EvtSource=&quot;ImNet&quot;, Indicator),
-(DnsEvents
-  | where TimeGenerated &gt; ago(7d)
-  | where Name has_any (_c2_domains)
-  | project TimeGenerated, DvcHostname=Computer, SrcIpAddr=ClientIP, EvtSource=&quot;DnsEvents&quot;, Indicator=Name)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-415-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: bittensor-wallet 4.0.2 Backdoor C2 Domain Lookup
-id: 7e3b9c12-1a45-4d8f-9b30-1c0d2e5a6f12
-description: Detects DNS queries to the lookalike opentensor-* domains used by the bittensor-wallet 4.0.2 PyPI backdoor for HTTPS C2 (finney.opentensor-metrics.com, finney.subtensor-telemetry.com, finney.metagraph-stats.com) and for DNS-based key exfiltration (opentensor-cdn.com).
-references:
-  - https://www.stepsecurity.io/blog/bittensor-wallet-4-0-2-compromised-on-pypi---backdoor-exfiltrates-private-keys
-author: SOC Detection Engineering
-date: 2026/05/13
-tags:
-  - attack.t1071.001
-  - attack.t1071.004
-  - attack.t1568.002
-  - attack.t1195.002
-logsource:
-  category: dns
-detection:
-  selection:
-    QueryName|endswith:
-      - .opentensor-metrics.com
-      - .subtensor-telemetry.com
-      - .metagraph-stats.com
-      - .opentensor-cdn.com
-  condition: selection
-falsepositives:
-  - None expected. These are squat domains; no legitimate Bittensor infrastructure resolves under them.
-level: critical</code></pre></div>
-    <div class="tab-content" id="art-415-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR windows.security OR linux.auditd OR linux.syslog OR gcp.audit) (@QueryName:(*.opentensor-metrics.com OR *.subtensor-telemetry.com OR *.metagraph-stats.com OR *.opentensor-cdn.com) OR @DestinationHostname:(*.opentensor-metrics.com OR *.subtensor-telemetry.com OR *.metagraph-stats.com OR *.opentensor-cdn.com) OR @dns.question.name:(*.opentensor-metrics.com OR *.subtensor-telemetry.com OR *.metagraph-stats.com OR *.opentensor-cdn.com))</code></pre></div>
-    <div class="tab-content" id="art-415-uc0-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-415-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-415-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-415-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (DNS.query=&quot;*opentensor-metrics.com&quot; OR DNS.query=&quot;*subtensor-telemetry.com&quot; OR DNS.query=&quot;*metagraph-stats.com&quot; OR DNS.query=&quot;*opentensor-cdn.com&quot;) by DNS.src DNS.dest DNS.query host | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [| tstats summariesonly=true count from datamodel=Network_Traffic where (All_Traffic.dest=&quot;*opentensor-metrics.com&quot; OR All_Traffic.dest=&quot;*subtensor-telemetry.com&quot; OR All_Traffic.dest=&quot;*metagraph-stats.com&quot; OR All_Traffic.dest=&quot;*opentensor-cdn.com&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)`]</code></pre><pre class="spl-mode-body" id="art-415-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (DNS.query=&quot;*opentensor-metrics.com&quot; OR DNS.query=&quot;*subtensor-telemetry.com&quot; OR DNS.query=&quot;*metagraph-stats.com&quot; OR DNS.query=&quot;*opentensor-cdn.com&quot;) by DNS.src DNS.dest DNS.query host | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [| tstats summariesonly=false count from datamodel=Network_Traffic where (All_Traffic.dest=&quot;*opentensor-metrics.com&quot; OR All_Traffic.dest=&quot;*subtensor-telemetry.com&quot; OR All_Traffic.dest=&quot;*metagraph-stats.com&quot; OR All_Traffic.dest=&quot;*opentensor-cdn.com&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)`]</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="2d0797b73d" data-platforms="datadog,def,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">DNS tunneling exfiltration pattern to *.t.opentensor-cdn.com (hex chunk/index/total/session)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="2d0797b73d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the chunked DNS-A exfiltration channel used by the bittensor-wallet 4.0.2 backdoor when its HTTPS C2 attempts fail. Each NaCl-sealed private-key payload is hex-encoded, split into 60-char chunks, and emitted as A queries shaped &lt;hex&gt;.&lt;index&gt;.&lt;total&gt;.&lt;session_id&gt;.t.opentensor-cdn.com. The regex shape is highly specific and a single match constitutes confirmed exfiltration.
-
-Rationale: The article shows 28 real chunks captured by Harden Runner with the exact &lt;hex&gt;.&lt;idx&gt;.&lt;total&gt;.&lt;session&gt;.t.opentensor-cdn.com label shape (session 52016, total 28). The regex matches that schema and only that schema, so a single query is enough to alert; the &gt;=3 chunk threshold in SPL/KQL is purely a noise-floor sanity guard.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/bittensor-wallet-4-0-2-compromised-on-pypi---backdoor-exfiltrates-private-keys</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: DNS">T1071.004</span> <span class="ind tech" title="Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted Non-C2 Protocol">T1048.003</span> <span class="ind tech" title="Exfiltration Over Web Service">T1567</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-415-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-415-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-415-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-415-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-415-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-415-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType == &quot;DnsQueryResponse&quot;
-| extend QueryName = tolower(tostring(parse_json(AdditionalFields).QueryName))
-| where QueryName endswith &quot;.t.opentensor-cdn.com&quot;
-| where QueryName matches regex @&quot;^[0-9a-f]{40,}\.[0-9]+\.[0-9]+\.[0-9]+\.t\.opentensor-cdn\.com$&quot;
-| extend SessionId = extract(@&quot;\.([0-9]+)\.t\.opentensor-cdn\.com$&quot;, 1, QueryName)
-| extend ChunkTotal = extract(@&quot;\.([0-9]+)\.[0-9]+\.t\.opentensor-cdn\.com$&quot;, 1, QueryName)
-| summarize ChunkCount = count(),
-            Sessions = make_set(SessionId, 10),
-            ExpectedTotal = make_set(ChunkTotal, 5),
-            SampleQueries = make_set(QueryName, 5),
-            FirstSeen = min(Timestamp),
-            LastSeen  = max(Timestamp)
-            by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName
-| where ChunkCount &gt;= 3
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-415-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
-(ImDnsActivity
-  | where TimeGenerated &gt; ago(7d)
-  | where DnsQuery endswith &quot;.t.opentensor-cdn.com&quot;
-  | where DnsQuery matches regex @&quot;^[0-9a-f]{40,}\.[0-9]+\.[0-9]+\.[0-9]+\.t\.opentensor-cdn\.com$&quot;
-  | project TimeGenerated, DvcHostname, SrcIpAddr, DnsQuery),
-(DnsEvents
-  | where TimeGenerated &gt; ago(7d)
-  | where Name endswith &quot;.t.opentensor-cdn.com&quot;
-  | where Name matches regex @&quot;^[0-9a-f]{40,}\.[0-9]+\.[0-9]+\.[0-9]+\.t\.opentensor-cdn\.com$&quot;
-  | project TimeGenerated, DvcHostname=Computer, SrcIpAddr=ClientIP, DnsQuery=Name)
-| extend SessionId = extract(@&quot;\.([0-9]+)\.t\.opentensor-cdn\.com$&quot;, 1, DnsQuery)
-| extend ChunkTotal = extract(@&quot;\.([0-9]+)\.[0-9]+\.t\.opentensor-cdn\.com$&quot;, 1, DnsQuery)
-| summarize ChunkCount = count(),
-            Sessions = make_set(SessionId, 10),
-            ExpectedTotal = make_set(ChunkTotal, 5),
-            SampleQueries = make_set(DnsQuery, 5),
-            FirstSeen = min(TimeGenerated),
-            LastSeen  = max(TimeGenerated)
-            by DvcHostname, SrcIpAddr
-| where ChunkCount &gt;= 3
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-415-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: bittensor-wallet 4.0.2 DNS Tunneling Exfiltration to opentensor-cdn.com
-id: 8a7f1d29-3e8b-4f2a-bc91-2e0f3a4b5c19
-description: Detects the chunked hex DNS-tunneling exfil pattern used by the bittensor-wallet 4.0.2 PyPI backdoor. Each query is structured as &lt;hex-chunk&gt;.&lt;index&gt;.&lt;total&gt;.&lt;session_id&gt;.t.opentensor-cdn.com and carries one fragment of a NaCl-sealed Bittensor coldkey/hotkey dump. A single match is sufficient to alert.
-references:
-  - https://www.stepsecurity.io/blog/bittensor-wallet-4-0-2-compromised-on-pypi---backdoor-exfiltrates-private-keys
-author: SOC Detection Engineering
-date: 2026/05/13
-tags:
-  - attack.t1071.004
-  - attack.t1048.003
-  - attack.t1567
-logsource:
-  category: dns
-detection:
-  selection:
-    QueryName|re: &#x27;^[0-9a-f]{40,}\.\d+\.\d+\.\d+\.t\.opentensor-cdn\.com$&#x27;
-  condition: selection
-falsepositives:
-  - None expected. The label shape is unique to this exfil channel.
-level: critical</code></pre></div>
-    <div class="tab-content" id="art-415-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.auditd OR linux.syslog) (@QueryName:*.t.opentensor-cdn.com OR @dns.question.name:*.t.opentensor-cdn.com OR @DestinationHostname:*.t.opentensor-cdn.com)</code></pre></div>
-    <div class="tab-content" id="art-415-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-415-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-415-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-415-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Network_Resolution where DNS.query=&quot;*.t.opentensor-cdn.com&quot; by DNS.src DNS.query host _time | `drop_dm_object_name(DNS)` | rex field=query &quot;^(?&lt;hex_chunk&gt;[0-9a-f]{40,})\.(?&lt;idx&gt;\d+)\.(?&lt;total&gt;\d+)\.(?&lt;session&gt;\d+)\.t\.opentensor-cdn\.com$&quot; | where isnotnull(hex_chunk) | stats count as chunk_count min(_time) as firstTime max(_time) as lastTime dc(session) as session_count values(session) as sessions values(total) as expected_total values(query) as sample_queries by src host | where chunk_count &gt;= 3 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-415-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Network_Resolution where DNS.query=&quot;*.t.opentensor-cdn.com&quot; by DNS.src DNS.query host _time | `drop_dm_object_name(DNS)` | rex field=query &quot;^(?&lt;hex_chunk&gt;[0-9a-f]{40,})\.(?&lt;idx&gt;\d+)\.(?&lt;total&gt;\d+)\.(?&lt;session&gt;\d+)\.t\.opentensor-cdn\.com$&quot; | where isnotnull(hex_chunk) | stats count as chunk_count min(_time) as firstTime max(_time) as lastTime dc(session) as session_count values(session) as sessions values(total) as expected_total values(query) as sample_queries by src host | where chunk_count &gt;= 3 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="d3d1854cac" data-platforms="datadog,def,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Compromised bittensor-wallet 4.0.2 source-tarball SHA256 on disk</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="d3d1854cac" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Identifies any host (developer workstation, CI runner, validator/miner box) that has the malicious bittensor-wallet 4.0.2 source tarball or its derived wheel artifacts on disk. Presence of either hash means the backdoored package was downloaded and almost certainly built/installed; any wallet decryption performed while it was active should be treated as a confirmed coldkey/hotkey compromise.
-
-Rationale: Both SHA256 values are the pre-extracted IOCs from the StepSecurity post for the malicious 4.0.2 source tarball (primary) and its derived artifact (secondary). Hash equality on a file or process event is a definitive supply-chain compromise indicator with effectively zero false-positive risk.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/bittensor-wallet-4-0-2-compromised-on-pypi---backdoor-exfiltrates-private-keys</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-415-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-415-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-415-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-415-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-415-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-415-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let _bad_hashes = dynamic([
-  &quot;6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e&quot;,
-  &quot;edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5&quot;]);
-union isfuzzy=true
-(DeviceFileEvents
-  | where Timestamp &gt; ago(30d)
-  | where SHA256 in (_bad_hashes)
-  | project Timestamp, DeviceName, Source=&quot;FileEvent&quot;, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
-(DeviceProcessEvents
-  | where Timestamp &gt; ago(30d)
-  | where SHA256 in (_bad_hashes) or InitiatingProcessSHA256 in (_bad_hashes)
-  | project Timestamp, DeviceName, Source=&quot;ProcessEvent&quot;, ActionType=&quot;ProcessCreated&quot;, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName=AccountName)
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-415-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let _bad_hashes = dynamic([
-  &quot;6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e&quot;,
-  &quot;edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5&quot;]);
-ImFileEvent
-| where TimeGenerated &gt; ago(30d)
-| where TargetFileSHA256 in (_bad_hashes) or Hash in (_bad_hashes)
-| project TimeGenerated, DvcHostname, EventType, TargetFileName, TargetFilePath, TargetFileSHA256, ActingProcessName, ActingProcessCommandLine, ActorUsername
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-415-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: bittensor-wallet 4.0.2 Compromised Source Tarball SHA256 Observed
-id: b3f4c8d7-2a1e-4b9c-8d52-3e2f1a0b9c87
-description: File-create or load-image event whose SHA256 matches the known-bad bittensor-wallet 4.0.2 source tarball / wheel hashes. Any host hitting this rule installed the backdoored package; assume any Bittensor coldkey/hotkey decrypted on that host is leaked.
-references:
-  - https://www.stepsecurity.io/blog/bittensor-wallet-4-0-2-compromised-on-pypi---backdoor-exfiltrates-private-keys
-author: SOC Detection Engineering
-date: 2026/05/13
-tags:
-  - attack.t1195.002
-  - attack.t1059.006
-logsource:
-  category: file_event
-detection:
-  selection:
-    Hashes|contains:
-      - &#x27;6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e&#x27;
-      - &#x27;edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5&#x27;
-  condition: selection
-falsepositives:
-  - None. Hash matches the malicious artifact only.
-level: critical</code></pre></div>
-    <div class="tab-content" id="art-415-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.auditd OR linux.syslog) (@Hashes:(*6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e* OR *edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5*) OR @file.hash:(6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e OR edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5) OR @process.executable.hash.sha256:(6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e OR edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5))</code></pre></div>
-    <div class="tab-content" id="art-415-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-415-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-415-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-415-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash=&quot;6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e&quot; OR Filesystem.file_hash=&quot;edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.user host | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [ | tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process_hash=&quot;6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e&quot; OR Processes.process_hash=&quot;edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5&quot;) by Processes.dest Processes.process Processes.process_hash Processes.user | `drop_dm_object_name(Processes)` ]</code></pre><pre class="spl-mode-body" id="art-415-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash=&quot;6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e&quot; OR Filesystem.file_hash=&quot;edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.user host | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [ | tstats summariesonly=false count from datamodel=Endpoint.Processes where (Processes.process_hash=&quot;6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e&quot; OR Processes.process_hash=&quot;edc2588d5e272835285e4171dd3daf862149f617015bf52e43d433d8e5c297c5&quot;) by Processes.dest Processes.process Processes.process_hash Processes.user | `drop_dm_object_name(Processes)` ]</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Beaconing — periodic outbound to small set of destinations</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="0bf69215de" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">C2 channel detection via inter-beacon-time stddev / fan-out to single dest.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Web Protocols">T1071.001</span> <span class="ind tech" title="DNS">T1071.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-415-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-415-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-415-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-415-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(1d)
-| where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
-| project DeviceName, RemoteIP, RemotePort, Timestamp
-| sort by DeviceName asc, RemoteIP asc, RemotePort asc, Timestamp asc
-| extend prev_dev = prev(DeviceName, 1), prev_ip = prev(RemoteIP, 1),
-         prev_port = prev(RemotePort, 1), prev_ts = prev(Timestamp, 1)
-| where DeviceName == prev_dev and RemoteIP == prev_ip and RemotePort == prev_port
-| extend delta_sec = datetime_diff(&#x27;second&#x27;, Timestamp, prev_ts)
-| summarize conn_count = count(), avg_delta = avg(delta_sec), stdev_delta = stdev(delta_sec)
-    by DeviceName, RemoteIP, RemotePort
-| where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
-| order by conn_count desc</code></pre></div>
-    <div class="tab-content" id="art-415-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
-| where TimeGenerated &gt; ago(2h)
-| where DvcAction != &quot;Block&quot;
-| where ipv4_is_private(DstIpAddr) == false
-| summarize ConnCount = count(),
-            DistinctMinutes = dcount(bin(TimeGenerated, 1m))
-            by DvcHostname, DstIpAddr, DstPortNumber
-| where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
-| order by ConnCount desc
-</code></pre></div>
-    <div class="tab-content" id="art-415-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-415-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-415-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-415-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre><pre class="spl-mode-body" id="art-415-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
-    by _time span=10s, All_Traffic.src, All_Traffic.dest
-| `drop_dm_object_name(All_Traffic)`
-| streamstats current=f last(_time) AS prev_time by src, dest
-| eval delta = _time - prev_time
-| stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
-| where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Network connections to article IPs / domains</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-415-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-415-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-415-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-415-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-415-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteIP in (&quot;&quot;) or RemoteUrl has_any (&quot;finney.opentensor-metrics.com&quot;, &quot;finney.subtensor-telemetry.com&quot;, &quot;finney.metagraph-stats.com&quot;, &quot;opentensor-cdn.com&quot;, &quot;tuwyqibtvy.opentensor-cdn.com&quot;, &quot;yccansiwfr.opentensor-cdn.com&quot;, &quot;tbqcbkpbhy.opentensor-cdn.com&quot;, &quot;t.opentensor-cdn.com&quot;)
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-415-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;&quot;]);
-let BadDomains = dynamic([&quot;finney.opentensor-metrics.com&quot;, &quot;finney.subtensor-telemetry.com&quot;, &quot;finney.metagraph-stats.com&quot;, &quot;opentensor-cdn.com&quot;, &quot;tuwyqibtvy.opentensor-cdn.com&quot;, &quot;yccansiwfr.opentensor-cdn.com&quot;, &quot;tbqcbkpbhy.opentensor-cdn.com&quot;, &quot;t.opentensor-cdn.com&quot;]);
-ImNetworkSession
-| where TimeGenerated &gt; ago(7d)
-| where DstIpAddr in (BadIPs)
-   or Url has_any (BadDomains)
-| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-415-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
-status: experimental
-description: |
-    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
-    article-specific destinations. For dynamic IOC management, use a
-    watchlist or external feed.
-references:
-    - https://attack.mitre.org/tactics/TA0011/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.command-and-control
-logsource:
-    category: network_connection
-    product: windows
-detection:
-    selection_ip:
-        DestinationIp:
-            - &#x27;__IP_PLACEHOLDER_1__&#x27;
-            - &#x27;__IP_PLACEHOLDER_2__&#x27;
-    selection_domain:
-        DestinationHostname:
-            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
-            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
-    condition: selection_ip or selection_domain
-falsepositives:
-    - None on a true-positive IOC match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-415-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-415-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-415-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-415-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN (&quot;finney.opentensor-metrics.com&quot;, &quot;finney.subtensor-telemetry.com&quot;, &quot;finney.metagraph-stats.com&quot;, &quot;opentensor-cdn.com&quot;, &quot;tuwyqibtvy.opentensor-cdn.com&quot;, &quot;yccansiwfr.opentensor-cdn.com&quot;, &quot;tbqcbkpbhy.opentensor-cdn.com&quot;, &quot;t.opentensor-cdn.com&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;finney.opentensor-metrics.com&quot;, &quot;finney.subtensor-telemetry.com&quot;, &quot;finney.metagraph-stats.com&quot;, &quot;opentensor-cdn.com&quot;, &quot;tuwyqibtvy.opentensor-cdn.com&quot;, &quot;yccansiwfr.opentensor-cdn.com&quot;, &quot;tbqcbkpbhy.opentensor-cdn.com&quot;, &quot;t.opentensor-cdn.com&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-415-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats summariesonly=false count from datamodel=Web
-        where Web.dest IN (&quot;finney.opentensor-metrics.com&quot;, &quot;finney.subtensor-telemetry.com&quot;, &quot;finney.metagraph-stats.com&quot;, &quot;opentensor-cdn.com&quot;, &quot;tuwyqibtvy.opentensor-cdn.com&quot;, &quot;yccansiwfr.opentensor-cdn.com&quot;, &quot;tbqcbkpbhy.opentensor-cdn.com&quot;, &quot;t.opentensor-cdn.com&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;finney.opentensor-metrics.com&quot;, &quot;finney.subtensor-telemetry.com&quot;, &quot;finney.metagraph-stats.com&quot;, &quot;opentensor-cdn.com&quot;, &quot;tuwyqibtvy.opentensor-cdn.com&quot;, &quot;yccansiwfr.opentensor-cdn.com&quot;, &quot;tbqcbkpbhy.opentensor-cdn.com&quot;, &quot;t.opentensor-cdn.com&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="2cc42b1dca" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">DNS tunneling / TXT-heavy domain queries</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="2cc42b1dca" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Long subdomain labels + frequent queries to a single 2LD = DNS C2/exfil.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="DNS">T1071.004</span> <span class="ind tech" title="Exfiltration Over Unencrypted Non-C2 Protocol">T1048.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-415-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-415-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-415-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-415-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(1d)
-| where RemotePort == 53 and isnotempty(RemoteUrl)
-| extend qlen = strlen(RemoteUrl)
-| where qlen &gt; 50
-| extend SecondLevelDomain = extract(@&quot;([\w-]+\.[a-zA-Z]{2,})$&quot;, 1, RemoteUrl)
-| summarize qcount = count(), uniqueSubs = dcount(RemoteUrl), maxLabel = max(qlen)
-    by DeviceName, SecondLevelDomain
-| where qcount &gt; 100 and uniqueSubs &gt; 20
-| order by qcount desc</code></pre></div>
-    <div class="tab-content" id="art-415-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImDnsActivity normalises Windows DNS, Sysmon EID 22, Linux dnsmasq, etc.
-ImDnsActivity
-| where TimeGenerated &gt; ago(24h)
-| where DnsQueryTypeName == &quot;TXT&quot;
-| summarize Queries = count(), DistinctNames = dcount(DnsQuery)
-            by SrcIpAddr, bin(TimeGenerated, 5m)
-| where Queries &gt; 200    // tune to TXT-query baseline for environment
-| order by Queries desc
-</code></pre></div>
-    <div class="tab-content" id="art-415-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-415-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-415-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-415-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-    where DNS.message_type=&quot;QUERY&quot;
-    by DNS.src, DNS.query
-| `drop_dm_object_name(DNS)`
-| eval qlen=len(query)
-| where qlen &gt; 50
-| rex field=query &quot;(?&lt;second_level_domain&gt;[\w-]+\.[\w-]+)$&quot;
-| stats sum(count) AS qcount, dc(query) AS unique_subs, max(qlen) AS max_label
-    by src, second_level_domain
-| where qcount &gt; 100 AND unique_subs &gt; 20
-| sort - qcount</code></pre><pre class="spl-mode-body" id="art-415-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
-    where DNS.message_type=&quot;QUERY&quot;
-    by DNS.src, DNS.query
-| `drop_dm_object_name(DNS)`
-| eval qlen=len(query)
-| where qlen &gt; 50
-| rex field=query &quot;(?&lt;second_level_domain&gt;[\w-]+\.[\w-]+)$&quot;
-| stats sum(count) AS qcount, dc(query) AS unique_subs, max(qlen) AS max_label
-    by src, second_level_domain
-| where qcount &gt; 100 AND unique_subs &gt; 20
-| sort - qcount</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="27f9f5bb66" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">PowerShell encoded / obfuscated command</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="27f9f5bb66" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Encoded or obfuscated PowerShell — common across loaders, recon, and post-exploitation.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-415-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-415-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-415-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-415-uc6-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-415-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-| where ProcessCommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-415-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\pwsh.exe&quot;
-| where CommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
-| project TimeGenerated, Computer, Account, NewProcessName,
-          CommandLine, ParentProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-415-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d08
-status: experimental
-description: |
-    PowerShell launched with -EncodedCommand, base64 strings, hidden
-    window, no-profile, bypass policy, IEX / Invoke-Expression / Net
-    .WebClient.DownloadString — combinations indicating evasion.
-references:
-    - https://attack.mitre.org/techniques/T1059/001/
-    - https://attack.mitre.org/techniques/T1027/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1059.001
-    - attack.t1027
-    - attack.execution
-    - attack.defense-evasion
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_image:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-    selection_args:
-        CommandLine|contains:
-            - &#x27;-enc &#x27;
-            - &#x27;EncodedCommand&#x27;
-            - &#x27;FromBase64String&#x27;
-            - &#x27;Invoke-Expression&#x27;
-            - &#x27;IEX(&#x27;
-            - &#x27;DownloadString&#x27;
-            - &#x27;Net.WebClient&#x27;
-            - &#x27;-w hidden&#x27;
-            - &#x27;-WindowStyle Hidden&#x27;
-            - &#x27;-nop&#x27;
-            - &#x27;-NoProfile&#x27;
-            - &#x27;-ep bypass&#x27;
-            - &#x27;-ExecutionPolicy Bypass&#x27;
-    condition: selection_image and selection_args
-falsepositives:
-    - DevOps tooling that legitimately uses encoded command for
-      cross-shell escaping
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-415-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-415-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-415-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-415-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-      AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
-        OR Processes.process=&quot;*FromBase64String*&quot; OR Processes.process=&quot;*-nop*&quot;
-        OR Processes.process=&quot;*-w hidden*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
-        OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
-        OR Processes.process=&quot;*Net.WebClient*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-415-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-      AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
-        OR Processes.process=&quot;*FromBase64String*&quot; OR Processes.process=&quot;*-nop*&quot;
-        OR Processes.process=&quot;*-w hidden*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
-        OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
-        OR Processes.process=&quot;*Net.WebClient*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-415-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-415-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-415-uc7-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-415-uc7-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-415-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-415-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-415-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-415-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-415-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-415-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-415-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-415-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-415-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-415-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-415-uc8-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-415-uc8-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-415-uc8-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
-// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
-// (Initiating only) so column-projection has to differ per side.
-union
-    ( DeviceFileEvents
-        | where Timestamp &gt; ago(7d)
-        | where InitiatingProcessAccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e&quot;) or SHA1 in~ (&quot;6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e&quot;) or MD5 in~ (&quot;6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
-    ( DeviceProcessEvents
-        | where Timestamp &gt; ago(7d)
-        | where AccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e&quot;) or SHA1 in~ (&quot;6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e&quot;) or MD5 in~ (&quot;6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
-| order by Timestamp desc
-</code></pre></div>
-    <div class="tab-content" id="art-415-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
-// Defender version so the engine can push hash predicates per-side.
-let BadHashes = dynamic([&quot;6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e&quot;]);
-union
-    ( ImFileEvent
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where TargetFileSHA256 in~ (BadHashes)
-           or TargetFileSHA1 in~ (BadHashes)
-           or TargetFileMD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType,
-                  TargetFileName, TargetFilePath, TargetFileSHA256,
-                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
-    ( ImProcessCreate
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
-                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
-                  TargetFileSHA256 = SHA256,
-                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-415-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
-status: experimental
-description: |
-    Replace `__HASH_LIST__` placeholder with article-specific SHA256
-    values. Use a watchlist or external indicator file for management
-    at scale.
-references:
-    - https://attack.mitre.org/techniques/T1027/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1027
-    - attack.defense-evasion
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection:
-        Hashes|contains:
-            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
-    condition: selection
-falsepositives:
-    - None on a true-positive hash match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-415-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-415-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-415-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-415-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-415-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;6a416b72ff24804abc12484a3b41413a8580acedd8a5f8c84224fcf0732c2f8e&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="0449ba147e" data-platforms="def,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — bittensor-wallet 4.0.2 Compromised on PyPI - Backdoor Exfiltrates Private Keys</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="0449ba147e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-415-uc9-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-415-uc9-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-415-uc9-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — bittensor-wallet 4.0.2 Compromised on PyPI - Backdoor Exfiltrates Private Keys
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;setup.py&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;setup.py&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-415-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-415-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-415-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-415-uc9-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — bittensor-wallet 4.0.2 Compromised on PyPI - Backdoor Exfiltrates Private Keys ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;setup.py&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;setup.py&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-415-uc9-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — bittensor-wallet 4.0.2 Compromised on PyPI - Backdoor Exfiltrates Private Keys ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;setup.py&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;setup.py&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-416" data-art-slug="2026-03-26-malicious-npm-releases-found-in-popular-react-native-package"
   data-phases="actions,c2,delivery,exploit,install" data-sev="high"
   data-techs="T1027,T1190,T1195.002"
@@ -13543,6 +12617,132 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-445-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2025-66376&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-446" data-art-slug="2026-03-18-cisa-kev-cve-2026-20963-microsoft-sharepoint-deserialization"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2026-20963 — Microsoft SharePoint Deserialization of Untrusted Data Vulnerability Microsoft SharePoint contains a deserialization of untrusted data vulnerability that allows an unauthorized attacker to execute code over a network. Vendor: Microsoft, Product: SharePoint. Federal patch due: 2026-03-21. CVE-2026-20963  Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-03-18-cisa-kev-cve-2026-20963-microsoft-sharepoint-deserialization" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2026-20963 — Microsoft SharePoint Deserialization of Untrusted Data Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2026-03-18</span>
+    <span>1 use case</span>
+    <span>0 techniques</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Microsoft SharePoint contains a deserialization of untrusted data vulnerability that allows an unauthorized attacker to execute code over a network. Vendor: Microsoft, Product: SharePoint. Federal patch due: 2026-03-21.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-20963</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-446-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-446"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-446-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-446-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-446-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-446-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-446-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-20963&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-446-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-20963&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-446-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-446-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-446-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-446-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-20963&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-446-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-20963&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>

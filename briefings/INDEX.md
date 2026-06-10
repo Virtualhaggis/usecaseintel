@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1254 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -19,7 +19,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-09
 - [blinding the watchmen abusing cloud logging services for def](./2026-06-09/blinding-the-watchmen-abusing-cloud-logging-services-for-def.md)
 - [chrome v8 zero day cve 2026 11645 exploited in the wild patc](./2026-06-09/chrome-v8-zero-day-cve-2026-11645-exploited-in-the-wild-patc.md)
-- [cisa gives feds 3 days to patch check point vpn bug exploite](./2026-06-09/cisa-gives-feds-3-days-to-patch-check-point-vpn-bug-exploite.md)
 - [cisa kev cve 2026 11645 google chromium v8 out of bounds rea](./2026-06-09/cisa-kev-cve-2026-11645-google-chromium-v8-out-of-bounds-rea.md)
 - [cisa kev cve 2026 20245 cisco catalyst sd wan manager improp](./2026-06-09/cisa-kev-cve-2026-20245-cisco-catalyst-sd-wan-manager-improp.md)
 - [cisa kev cve 2026 7473 arista extensible operating system in](./2026-06-09/cisa-kev-cve-2026-7473-arista-extensible-operating-system-in.md)
