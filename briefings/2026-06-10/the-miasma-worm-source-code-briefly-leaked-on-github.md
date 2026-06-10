@@ -11,15 +11,9 @@ By Bill Toulas
 June 10, 2026
 04:27 PM
 0 
-
-
 The Miasma credential-stealing attack framework, which has recently targeted open-source ecosystems through supply-chain attacks, was briefly open-sourced on GitHub.
-
-
 Miasma appears to be an evolution of the earlier Shai-Hulud worm, which was previously leaked on GitHub and shares much of the same features, techniques, and even code.
-
-
-The malware infects a developer machine, steals the bui…
+The malware infects a developer machine, steals the build environme…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -29,10 +23,6 @@ The malware infects a developer machine, steals the bui…
 - **SHA256:** `d5a97614d5319ce9c8e01fa0b4eb06fb5b9e54fa13b23d718174a1546444123b`
 - **SHA256:** `f88258e21592084a2f93a572ade8f9b91c0cd0e242f5cf6121ed7bad0f7bdd1f`
 - **SHA256:** `25e121e3b7d300c0d0075b33e5eca39a3e6a659fb9cfee52b70ef71686628f1b`
-- **SHA256:** `d630397de8b01af0f6f5cf4463da91b17f28195a2c50c8f3f38ad9f7873fdb8e`
-- **SHA256:** `3a9db5ba0c8cd4c91e91717df6b1a141fc1e0fbc0558b5a78d7f5c23f5b2a150`
-- **SHA256:** `633c8410ee0413ca4b090a19c30b20c03f31598c25247c484846fa34c1df5b64`
-- **SHA256:** `ef641e956f91d501b748085996303c96a64d67f63bfeef0dda175e5aa19cca90`
 
 ## MITRE ATT&CK Techniques
 
@@ -322,7 +312,7 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `396cac9e457ec54ff6d3f6311cb5cc1da8054d019ce3ffa1de5741506c7a4ea4`, `d8d170af3de17bb9b217c52aaaffdf9395f35ef015a57ef676e406c121e5e223`, `f0641e053e81f0d01fa46db35a83e0a34494886503086866d956d14e81fd3e1c`, `d5a97614d5319ce9c8e01fa0b4eb06fb5b9e54fa13b23d718174a1546444123b`, `f88258e21592084a2f93a572ade8f9b91c0cd0e242f5cf6121ed7bad0f7bdd1f`, `25e121e3b7d300c0d0075b33e5eca39a3e6a659fb9cfee52b70ef71686628f1b`, `d630397de8b01af0f6f5cf4463da91b17f28195a2c50c8f3f38ad9f7873fdb8e`, `3a9db5ba0c8cd4c91e91717df6b1a141fc1e0fbc0558b5a78d7f5c23f5b2a150` _(+2 more)_
+  - file hash IOC(s): `396cac9e457ec54ff6d3f6311cb5cc1da8054d019ce3ffa1de5741506c7a4ea4`, `d8d170af3de17bb9b217c52aaaffdf9395f35ef015a57ef676e406c121e5e223`, `f0641e053e81f0d01fa46db35a83e0a34494886503086866d956d14e81fd3e1c`, `d5a97614d5319ce9c8e01fa0b4eb06fb5b9e54fa13b23d718174a1546444123b`, `f88258e21592084a2f93a572ade8f9b91c0cd0e242f5cf6121ed7bad0f7bdd1f`, `25e121e3b7d300c0d0075b33e5eca39a3e6a659fb9cfee52b70ef71686628f1b`
 
 
 ## Why this matters
