@@ -499,7 +499,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — ⚡ Weekly Recap: Instagram Account Hacks, Android Zero-Day, GitHub Worm and More
 
-`UC_56_14` · phase: **exploit** · confidence: **High**
+`UC_57_14` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

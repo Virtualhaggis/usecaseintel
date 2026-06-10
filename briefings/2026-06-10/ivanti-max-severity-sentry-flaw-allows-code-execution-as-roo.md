@@ -11,12 +11,8 @@ By Sergiu Gatlan
 June 10, 2026
 02:26 AM
 0 
-
-
 Security software company Ivanti has released patches to address two critical vulnerabilities in its Sentry secure mobile gateway solution, including a maximum-severity flaw that enables remote attackers to execute code with root privileges.
-
-
-Formerly known as MobileIron Sentry, Ivanti Sentry is a security gateway appliance that secures traffic between back-end corporate systems and…
+Formerly known as MobileIron Sentry, Ivanti Sentry is a security gateway appliance that secures traffic between back-end corporate systems and remote …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -44,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Unpatched Ivanti Sentry exposing CVE-2026-10520 / CVE-2026-10523
 
-`UC_3_4` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_6_4` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +58,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Pre-auth command-injection probes against Ivanti Sentry /mics endpoint (CVE-2026-10520)
 
-`UC_3_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_6_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +67,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Anomalous outbound from Ivanti Sentry appliance subnet (post-RCE hunt)
 
-`UC_3_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_6_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

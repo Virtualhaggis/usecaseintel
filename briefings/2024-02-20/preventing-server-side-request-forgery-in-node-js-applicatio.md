@@ -20,6 +20,10 @@ Highly recommended: Take the interactive se…
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
+- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
+- **T1190** — Exploit Public-Facing Application
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
 
 ## Kill chain phases observed
 
@@ -27,9 +31,63 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
+### Web-server runtime connecting to AWS IMDS link-local endpoint (SSRF → cred theft)
+
+`UC_1280_1` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest_ip="169.254.169.254" AND All_Traffic.app IN ("node","node.exe","python","python.exe","python3","java","java.exe","ruby.exe","php-fpm","nginx","nginx.exe","httpd","httpd.exe","w3wp.exe","dotnet.exe","gunicorn") by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.user host
+| `drop_dm_object_name(All_Traffic)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteIP == "169.254.169.254"
+| where InitiatingProcessFileName in~ ("node.exe","python.exe","python3.exe","java.exe","ruby.exe","php-cgi.exe","php-fpm.exe","w3wp.exe","httpd.exe","nginx.exe","dotnet.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### EC2 instance-role session credentials used from non-AWS source IP (Capital One pattern)
+
+`UC_1280_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Authentication.action) as actions from datamodel=Authentication where Authentication.signature="AssumedRole" AND Authentication.user_type="AssumedRole" AND Authentication.app="sts.amazonaws.com" by Authentication.user Authentication.src Authentication.user_role
+| `drop_dm_object_name(Authentication)`
+| where NOT cidrmatch("10.0.0.0/8", src) AND NOT cidrmatch("172.16.0.0/12", src) AND NOT cidrmatch("192.168.0.0/16", src) AND src!="AWS Internal" AND NOT match(src, "\.amazonaws\.com$")
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application == "Amazon Web Services"
+| where ActionType in~ ("AssumeRole","GetSessionToken","AssumeRoleWithWebIdentity","GetCallerIdentity")
+| extend rawUserType = tostring(parse_json(tostring(RawEventData)).userIdentity.type)
+| where rawUserType == "AssumedRole" or AccountType == "AssumedRole"
+| where not(ipv4_is_private(IPAddress)) and IPAddress != "AWS Internal"
+| extend RoleArn = tostring(parse_json(tostring(RawEventData)).userIdentity.arn)
+| summarize ApiCalls = count(), DistinctActions = dcount(ActionType), Actions = make_set(ActionType, 25), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
+          by AccountDisplayName, RoleArn, IPAddress, CountryCode
+| where ApiCalls >= 3
+| order by LastSeen desc
+```
+
 ### Article-specific behavioural hunt — Preventing server-side request forgery in Node.js applications
 
-`UC_1281_0` · phase: **exploit** · confidence: **High**
+`UC_1280_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,4 +137,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 1 use case(s) fired, 1 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

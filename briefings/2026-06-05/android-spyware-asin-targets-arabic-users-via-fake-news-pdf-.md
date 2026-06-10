@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### PAN-OS CVE-2026-0257 GlobalProtect login from Unit 42 IOC IPs
 
-`UC_77_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_78_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceNetworkEvents
 
 ### PAN-OS GlobalProtect login with CVE-2026-0257 PoC hard-coded host-id / device-name
 
-`UC_77_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_78_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceEvents
 
 ### PAN-OS GlobalProtect login matching CVE-2026-0257 PoC client fingerprint
 
-`UC_77_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_78_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

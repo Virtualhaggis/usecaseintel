@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1257 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1255 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,11 +9,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-10
+- [10 year old critical vulnerability in phpbb affecting tens o](./2026-06-10/10-year-old-critical-vulnerability-in-phpbb-affecting-tens-o.md)
 - [hackers abuse tiktok and instagram reels to spread malware v](./2026-06-10/hackers-abuse-tiktok-and-instagram-reels-to-spread-malware-v.md)
+- [hackers deploy mltbackdoor malware via multi stage clickfix ](./2026-06-10/hackers-deploy-mltbackdoor-malware-via-multi-stage-clickfix-.md)
 - [ivanti max severity sentry flaw allows code execution as roo](./2026-06-10/ivanti-max-severity-sentry-flaw-allows-code-execution-as-roo.md)
 - [microsoft defender rogueplanet zero day grants system access](./2026-06-10/microsoft-defender-rogueplanet-zero-day-grants-system-access.md)
-- [servicenow flaw exploited to gain unauthorized access to cus](./2026-06-10/servicenow-flaw-exploited-to-gain-unauthorized-access-to-cus.md)
-- [windows bitlocker 0 day vulnerability allows attackers to by](./2026-06-10/windows-bitlocker-0-day-vulnerability-allows-attackers-to-by.md)
+- [microsoft patches record 206 flaws including three zero days](./2026-06-10/microsoft-patches-record-206-flaws-including-three-zero-days.md)
 
 ## 2026-06-09
 - [blinding the watchmen abusing cloud logging services for def](./2026-06-09/blinding-the-watchmen-abusing-cloud-logging-services-for-def.md)
@@ -25,7 +26,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [french govt messaging service breached in account hijacking ](./2026-06-09/french-govt-messaging-service-breached-in-account-hijacking-.md)
 - [ghsa critical cve 2026 48030 pheditor os command injection i](./2026-06-09/ghsa-critical-cve-2026-48030-pheditor-os-command-injection-i.md)
 - [ghsa critical cve 2026 8467 phoenixstorybook unauthenticated](./2026-06-09/ghsa-critical-cve-2026-8467-phoenixstorybook-unauthenticated.md)
-- [google patches new chrome zero day flaw exploited in the wil](./2026-06-09/google-patches-new-chrome-zero-day-flaw-exploited-in-the-wil.md)
 - [hades pypi attack 19 packages poisoned to auto run bun crede](./2026-06-09/hades-pypi-attack-19-packages-poisoned-to-auto-run-bun-crede.md)
 - [litellm flaw cve 2026 42271 exploited in the wild chains to ](./2026-06-09/litellm-flaw-cve-2026-42271-exploited-in-the-wild-chains-to-.md)
 - [meta to use off site business data for feed and ai personali](./2026-06-09/meta-to-use-off-site-business-data-for-feed-and-ai-personali.md)
@@ -106,8 +106,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44180 jupyter enterprise gateway cont](./2026-06-03/ghsa-critical-cve-2026-44180-jupyter-enterprise-gateway-cont.md)
 - [ghsa critical cve 2026 44181 jupyter enterprise gateway jinj](./2026-06-03/ghsa-critical-cve-2026-44181-jupyter-enterprise-gateway-jinj.md)
 - [ghsa critical cve 2026 44182 jupyter enterprise gateway kube](./2026-06-03/ghsa-critical-cve-2026-44182-jupyter-enterprise-gateway-kube.md)
-- [google doubleclick abused in new malspam campaign to deliver](./2026-06-03/google-doubleclick-abused-in-new-malspam-campaign-to-deliver.md)
-- [microsoft fixes one click github dev attack that let attacke](./2026-06-03/microsoft-fixes-one-click-github-dev-attack-that-let-attacke.md)
 - [preinstall to persistence inside the red hat npm miasma cred](./2026-06-03/preinstall-to-persistence-inside-the-red-hat-npm-miasma-cred.md)
 - [the new security risks of the agentic development lifecycle](./2026-06-03/the-new-security-risks-of-the-agentic-development-lifecycle.md)
 
