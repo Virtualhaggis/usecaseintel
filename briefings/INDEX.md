@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1259 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,6 +11,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-10
 - [10 year old critical vulnerability in phpbb affecting tens o](./2026-06-10/10-year-old-critical-vulnerability-in-phpbb-affecting-tens-o.md)
 - [china linked jdy botnet expands to 1 500 devices for cyber r](./2026-06-10/china-linked-jdy-botnet-expands-to-1-500-devices-for-cyber-r.md)
+- [code is being written everywhere and the device is the only ](./2026-06-10/code-is-being-written-everywhere-and-the-device-is-the-only-.md)
 - [compromised rust crate onering performs code exfiltration](./2026-06-10/compromised-rust-crate-onering-performs-code-exfiltration.md)
 - [critical openssl vulnerabilities enable remote code executio](./2026-06-10/critical-openssl-vulnerabilities-enable-remote-code-executio.md)
 - [ghsa critical cve 2026 48031 go restful api boilerplate hard](./2026-06-10/ghsa-critical-cve-2026-48031-go-restful-api-boilerplate-hard.md)
@@ -22,6 +23,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft defender rogueplanet zero day grants system access](./2026-06-10/microsoft-defender-rogueplanet-zero-day-grants-system-access.md)
 - [microsoft patches exchange server zero day exploited in atta](./2026-06-10/microsoft-patches-exchange-server-zero-day-exploited-in-atta.md)
 - [microsoft patches record 206 flaws including three zero days](./2026-06-10/microsoft-patches-record-206-flaws-including-three-zero-days.md)
+- [oracle peoplesoft servers hacked in shinyhunters data theft ](./2026-06-10/oracle-peoplesoft-servers-hacked-in-shinyhunters-data-theft-.md)
 - [servicenow confirms vulnerability allowing unauthorized acce](./2026-06-10/servicenow-confirms-vulnerability-allowing-unauthorized-acce.md)
 - [unpatched langflow flaw cve 2026 5027 exploited for unauthen](./2026-06-10/unpatched-langflow-flaw-cve-2026-5027-exploited-for-unauthen.md)
 - [windows collaborative translation framework 0 day vulnerabil](./2026-06-10/windows-collaborative-translation-framework-0-day-vulnerabil.md)
@@ -159,7 +161,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [eset apt activity report q4 2025 q1 2026](./2026-05-28/eset-apt-activity-report-q4-2025-q1-2026.md)
 - [less panic patching more precision](./2026-05-28/less-panic-patching-more-precision.md)
 - [pirates in the crosshairs how one cybercrime gang has been i](./2026-05-28/pirates-in-the-crosshairs-how-one-cybercrime-gang-has-been-i.md)
-- [the gentlemen ransomware dissecting a self propagating go en](./2026-05-28/the-gentlemen-ransomware-dissecting-a-self-propagating-go-en.md)
 - [what mdm can t protect on developer machines and what to do ](./2026-05-28/what-mdm-can-t-protect-on-developer-machines-and-what-to-do-.md)
 
 ## 2026-05-27

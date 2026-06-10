@@ -1,0 +1,83 @@
+{
+  "name": "Turla",
+  "ucs": [
+    {
+      "title": "[LLM] Secret Blizzard (Turla) ComRAT v4 \u2014 Gmail web-UI C2 from non-browser process",
+      "description": "ComRAT v4 (a.k.a. Chinch / Agent.BTZ lineage) uses the legacy Gmail HTML web interface as a covert C2 channel, polling an inbox for command emails via stolen session cookies. This UC hunts for non-browser, non-Outlook processes (PowerShell, wmiprvse, svchost-hosted, LOLBin script hosts) reaching mail.google.com or accounts.google.com \u2014 a fingerprint exclusive to Turla's ComRAT family rather than the Gmail API used by mainstream tooling.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1102.002",
+        "T1071.001",
+        "T1071.003",
+        "T1132.001"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as first_seen max(_time) as last_seen from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host IN (\"mail.google.com\",\"accounts.google.com\",\"googleusercontent.com\") OR All_Traffic.url IN (\"*mail.google.com*\",\"*accounts.google.com*\")) AND All_Traffic.app IN (\"powershell.exe\",\"pwsh.exe\",\"wmiprvse.exe\",\"svchost.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"cscript.exe\",\"wscript.exe\",\"cmd.exe\") AND NOT All_Traffic.app IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"iexplore.exe\",\"opera.exe\",\"outlook.exe\",\"thunderbird.exe\",\"msedgewebview2.exe\",\"vivaldi.exe\",\"tor.exe\") by host, All_Traffic.src, All_Traffic.user, All_Traffic.app, All_Traffic.dest_host | `drop_dm_object_name(All_Traffic)` | convert ctime(first_seen) ctime(last_seen) | sort - last_seen",
+      "kql": "let LookbackDays = 14d;\nlet Browsers = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"iexplore.exe\",\"opera.exe\",\"safari.exe\",\"msedgewebview2.exe\",\"vivaldi.exe\",\"tor.exe\"]);\nlet MailClients = dynamic([\"outlook.exe\",\"thunderbird.exe\",\"hxoutlook.exe\",\"hxtsr.exe\",\"communicator.exe\",\"olk.exe\"]);\nlet SuspectHosts = dynamic([\"powershell.exe\",\"pwsh.exe\",\"wmiprvse.exe\",\"svchost.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"cmd.exe\",\"cscript.exe\",\"wscript.exe\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(LookbackDays)\n| where RemoteUrl has_any (\"mail.google.com\",\"accounts.google.com\",\"googleusercontent.com\")\n| where InitiatingProcessFileName !in~ (Browsers)\n| where InitiatingProcessFileName !in~ (MailClients)\n| where InitiatingProcessAccountName !endswith \"$\"\n| where InitiatingProcessAccountName !in~ (\"system\",\"local service\",\"network service\")\n| where InitiatingProcessFileName in~ (SuspectHosts)\n   or InitiatingProcessFolderPath has_any (@\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\AppData\\Local\\Temp\\\", @\"\\AppData\\Roaming\\\")\n| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Hits = count(),\n            SampleCmd = any(InitiatingProcessCommandLine), SampleUrl = any(RemoteUrl), DistinctIPs = dcount(RemoteIP)\n            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath\n| order by FirstSeen desc",
+      "sentinel_kql": "let LookbackDays = 14d;\nlet Browsers = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"iexplore.exe\",\"opera.exe\",\"safari.exe\",\"msedgewebview2.exe\",\"vivaldi.exe\",\"tor.exe\"]);\nlet MailClients = dynamic([\"outlook.exe\",\"thunderbird.exe\",\"hxoutlook.exe\",\"hxtsr.exe\"]);\nlet SuspectHosts = dynamic([\"powershell.exe\",\"pwsh.exe\",\"wmiprvse.exe\",\"svchost.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"mshta.exe\",\"cmd.exe\",\"cscript.exe\",\"wscript.exe\"]);\nImWebSession\n| where TimeGenerated > ago(LookbackDays)\n| where Url has_any (\"mail.google.com\",\"accounts.google.com\",\"googleusercontent.com\")\n| extend Proc = tolower(tostring(split(ActingProcessName, @\"\\\")[-1]))\n| where Proc !in (Browsers)\n| where Proc !in (MailClients)\n| where Proc in (SuspectHosts)\n   or ActingProcessName has_any (@\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\AppData\\Local\\Temp\\\", @\"\\AppData\\Roaming\\\")\n| summarize FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), Hits = count(),\n            SampleUrl = any(Url), SampleCmd = any(ActingProcessCommandLine)\n            by DvcHostname, SrcUsername, Proc, ActingProcessName\n| order by FirstSeen desc",
+      "sigma_yaml": "title: Turla ComRAT v4 - Gmail Web UI C2 from Non-Browser Process\nid: 7d3c5b9e-c1c7-4b3a-9e1f-3a9c2b8a6f12\nstatus: experimental\ndescription: Detects non-browser/non-Mail processes connecting to Gmail web UI endpoints \u2014 the C2 channel used by Turla's ComRAT v4 (Secret Blizzard / Venomous Bear / G0010).\nreferences:\n  - https://www.welivesecurity.com/2020/05/26/agentbtz-comrat-evolution-russian-cyberespionage/\n  - https://attack.mitre.org/groups/G0010/\nauthor: SOC Detection Engineering\ndate: 2026/06/10\ntags:\n  - attack.command_and_control\n  - attack.t1102.002\n  - attack.t1071.001\n  - attack.t1071.003\n  - attack.g0010\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection_dest:\n    DestinationHostname:\n      - 'mail.google.com'\n      - 'accounts.google.com'\n  selection_proc:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\wmiprvse.exe'\n      - '\\svchost.exe'\n      - '\\rundll32.exe'\n      - '\\regsvr32.exe'\n      - '\\mshta.exe'\n      - '\\cscript.exe'\n      - '\\wscript.exe'\n      - '\\cmd.exe'\n  filter_browsers:\n    Image|endswith:\n      - '\\chrome.exe'\n      - '\\msedge.exe'\n      - '\\firefox.exe'\n      - '\\brave.exe'\n      - '\\outlook.exe'\n      - '\\thunderbird.exe'\n      - '\\msedgewebview2.exe'\n  condition: selection_dest and selection_proc and not filter_browsers\nfalsepositives:\n  - Custom automation using Gmail credentials from PowerShell\n  - Backup utilities that wrap the Gmail web UI\nlevel: high",
+      "datadog_query": "source:(windows.sysmon OR windows.security) (@EventID:3 OR @EventID:5156) @DestinationHostname:(mail.google.com OR accounts.google.com OR *.googleusercontent.com) @Image:(*\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\wmiprvse.exe OR *\\WmiPrvSE.exe OR *\\svchost.exe OR *\\rundll32.exe OR *\\RunDll32.exe OR *\\regsvr32.exe OR *\\RegSvr32.exe OR *\\mshta.exe OR *\\MSHTA.EXE OR *\\cscript.exe OR *\\wscript.exe OR *\\cmd.exe) -@Image:(*\\chrome.exe OR *\\msedge.exe OR *\\firefox.exe OR *\\brave.exe OR *\\outlook.exe OR *\\OUTLOOK.EXE OR *\\thunderbird.exe OR *\\msedgewebview2.exe)",
+      "falcon_logscale_query": "#event_simpleName=DnsRequest DomainName=/^(mail\\.google\\.com|accounts\\.google\\.com|.*\\.googleusercontent\\.com)$/i\n| ContextImageFileName=/\\\\(powershell|pwsh|wmiprvse|svchost|rundll32|regsvr32|mshta|cscript|wscript|cmd)\\.exe$/i\n| NOT (ContextImageFileName=/\\\\(chrome|msedge|firefox|brave|iexplore|opera|outlook|thunderbird|msedgewebview2|vivaldi|tor)\\.exe$/i)\n| groupBy([aid, ComputerName, ContextImageFileName, DomainName], function=count(field=ContextProcessId, distinct=true, as=ProcCount))\n| ProcCount >= 1",
+      "cloudwatch_query": "",
+      "rationale": "Mainstream tooling that needs Gmail uses the Gmail REST API (gmail.googleapis.com) or OAuth-mediated MAPI through Outlook \u2014 not the HTML web UI. ComRAT v4 is documented by ESET / Mandiant / Microsoft (Secret Blizzard) as polling mail.google.com directly from non-browser process contexts (often a CLR loaded by wmiprvse or a PowerShell stub) using stolen session cookies. Combining the non-browser pr",
+      "_sentinel_field_issues": [
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessName",
+          "tables_in_scope": [
+            "ImWebSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessName` is not a column of ImWebSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "ActingProcessCommandLine",
+          "tables_in_scope": [
+            "ImWebSession"
+          ],
+          "exists_on": [
+            "ImProcessCreate",
+            "ImFileEvent",
+            "ImRegistryEvent"
+          ],
+          "message": "`ActingProcessCommandLine` is not a column of ImWebSession; it does exist on ImProcessCreate, ImFileEvent, ImRegistryEvent."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] Turla (Iron Hunter) TinyTurla-NG ServiceDLL persistence outside System32",
+      "description": "TinyTurla and TinyTurla-NG persist by registering as a Windows service whose ServiceDll points to a payload DLL dropped in ProgramData / Public / AppData and is then loaded by svchost.exe -k. This UC hunts for ServiceDll registry writes pointing outside %SystemRoot%\\System32 / SysWOW64 and surfaces the masquerade service-name pattern Turla favors (W64Time, Sysmon, NetSetupSvc lookalikes).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1543.003",
+        "T1112",
+        "T1036.005",
+        "T1218"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as first_seen max(_time) as last_seen from datamodel=Endpoint.Registry where Registry.registry_path=\"*\\\\Services\\\\*\\\\Parameters\\\\ServiceDll\" AND NOT (Registry.registry_value_data=\"C:\\\\Windows\\\\System32\\\\*\" OR Registry.registry_value_data=\"C:\\\\Windows\\\\SysWOW64\\\\*\" OR Registry.registry_value_data=\"%SystemRoot%\\\\System32\\\\*\" OR Registry.registry_value_data=\"%SystemRoot%\\\\SysWOW64\\\\*\") by host, Registry.user, Registry.process_id, Registry.process_guid, Registry.registry_path, Registry.registry_value_data | `drop_dm_object_name(Registry)` | rex field=registry_path \"\\\\\\\\Services\\\\\\\\(?<svc_name>[^\\\\\\\\]+)\\\\\\\\Parameters\" | eval masquerade_hit=if(match(svc_name,\"(?i)^(W64Time|w32t1me|Sysmon[A-Z0-9]?|TaskFrame|NetSetup[Ss]vc|WindowsTime[A-Z0-9]?|WSDebug|HTTPSvc|FrameworkSvc|TimeService)$\"),\"yes\",\"no\") | convert ctime(first_seen) ctime(last_seen) | sort - last_seen",
+      "kql": "let LookbackDays = 14d;\nDeviceRegistryEvents\n| where Timestamp > ago(LookbackDays)\n| where ActionType in (\"RegistryValueSet\",\"RegistryKeyCreated\")\n| where RegistryKey matches regex @\"(?i)\\\\SYSTEM\\\\(CurrentControlSet|ControlSet\\d+)\\\\Services\\\\[^\\\\]+\\\\Parameters$\"\n| where RegistryValueName =~ \"ServiceDll\"\n| where isnotempty(RegistryValueData)\n| where RegistryValueData !startswith @\"C:\\Windows\\System32\\\"\n    and RegistryValueData !startswith @\"C:\\Windows\\SysWOW64\\\"\n    and RegistryValueData !startswith @\"%SystemRoot%\\System32\\\"\n    and RegistryValueData !startswith @\"%SystemRoot%\\SysWOW64\\\"\n| extend SvcName = extract(@\"(?i)\\\\Services\\\\([^\\\\]+)\\\\Parameters\", 1, RegistryKey)\n| extend MasqueradeHit = SvcName matches regex @\"(?i)^(W64Time|w32t1me|Sysmon[A-Z0-9]?|TaskFrame|NetSetup[Ss]vc|WindowsTime[A-Z0-9]?|WSDebug|HTTPSvc|FrameworkSvc|TimeService)$\"\n| extend SuspectDropPath = RegistryValueData has_any (@\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\AppData\\Local\\\", @\"\\AppData\\Roaming\\\", @\"\\Temp\\\")\n| where MasqueradeHit or SuspectDropPath\n| project Timestamp, DeviceName,\n          User = InitiatingProcessAccountName,\n          InitiatingProcess = InitiatingProcessFileName,\n          InitiatingCmd = InitiatingProcessCommandLine,\n          SvcName, MasqueradeHit, RegistryKey, RegistryValueName, RegistryValueData\n| order by Timestamp desc",
+      "sentinel_kql": "let LookbackDays = 14d;\nImRegistryEvent\n| where TimeGenerated > ago(LookbackDays)\n| where RegistryKey matches regex @\"(?i)\\\\SYSTEM\\\\(CurrentControlSet|ControlSet\\d+)\\\\Services\\\\[^\\\\]+\\\\Parameters$\"\n| where RegistryValue =~ \"ServiceDll\"\n| where isnotempty(RegistryValueData)\n| where RegistryValueData !startswith @\"C:\\Windows\\System32\\\"\n    and RegistryValueData !startswith @\"C:\\Windows\\SysWOW64\\\"\n    and RegistryValueData !startswith @\"%SystemRoot%\\System32\\\"\n    and RegistryValueData !startswith @\"%SystemRoot%\\SysWOW64\\\"\n| extend SvcName = extract(@\"(?i)\\\\Services\\\\([^\\\\]+)\\\\Parameters\", 1, RegistryKey)\n| extend MasqueradeHit = SvcName matches regex @\"(?i)^(W64Time|w32t1me|Sysmon[A-Z0-9]?|TaskFrame|NetSetup[Ss]vc|WindowsTime[A-Z0-9]?|WSDebug|HTTPSvc|FrameworkSvc|TimeService)$\"\n| extend SuspectDropPath = RegistryValueData has_any (@\"\\ProgramData\\\", @\"\\Users\\Public\\\", @\"\\AppData\\Local\\\", @\"\\AppData\\Roaming\\\", @\"\\Temp\\\")\n| where MasqueradeHit or SuspectDropPath\n| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, SvcName, MasqueradeHit, RegistryKey, RegistryValue, RegistryValueData\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Turla TinyTurla-NG - ServiceDLL Persistence Outside System Directories\nid: a2f6c0b8-2e34-45b9-9c7e-5f4e1a9d8c10\nstatus: experimental\ndescription: Detects creation of a Windows Service ServiceDll registry value pointing outside System32/SysWOW64 \u2014 the persistence mechanism used by Turla's TinyTurla and TinyTurla-NG implants (G0010 / Secret Blizzard).\nreferences:\n  - https://blog.talosintelligence.com/tinyturla-ng/\n  - https://attack.mitre.org/groups/G0010/\nauthor: SOC Detection Engineering\ndate: 2026/06/10\ntags:\n  - attack.persistence\n  - attack.defense_evasion\n  - attack.t1543.003\n  - attack.t1112\n  - attack.t1036.005\n  - attack.g0010\nlogsource:\n  category: registry_set\n  product: windows\ndetection:\n  selection:\n    TargetObject|contains: '\\Services\\'\n    TargetObject|endswith: '\\Parameters\\ServiceDll'\n  filter_system_path:\n    Details|startswith:\n      - 'C:\\Windows\\System32\\'\n      - 'C:\\Windows\\SysWOW64\\'\n      - '%SystemRoot%\\System32\\'\n      - '%SystemRoot%\\SysWOW64\\'\n  condition: selection and not filter_system_path\nfalsepositives:\n  - Legitimate third-party services installing DLLs in vendor directories under Program Files\nlevel: high",
+      "datadog_query": "source:windows.sysmon @EventID:13 @TargetObject:(*\\SYSTEM\\CurrentControlSet\\Services\\*\\Parameters\\ServiceDll OR *\\SYSTEM\\ControlSet001\\Services\\*\\Parameters\\ServiceDll OR *\\system\\currentcontrolset\\services\\*\\parameters\\servicedll) -@Details:(*\\System32\\* OR *\\SysWOW64\\* OR *\\system32\\* OR *\\syswow64\\* OR *%SystemRoot%\\System32\\*)",
+      "falcon_logscale_query": "#event_simpleName=AsepValueUpdate RegObjectName=/\\\\Services\\\\[^\\\\]+\\\\Parameters$/i RegValueName=/^ServiceDll$/i\n| NOT (RegStringValue=/^([A-Za-z]:)?\\\\Windows\\\\(System32|SysWOW64)\\\\/i)\n| NOT (RegStringValue=/^%SystemRoot%\\\\(System32|SysWOW64)\\\\/i)\n| regex(\"\\\\\\\\Services\\\\\\\\(?<SvcName>[^\\\\\\\\]+)\\\\\\\\Parameters\", field=RegObjectName)\n| MasqueradeHit := if(SvcName=/^(W64Time|w32t1me|Sysmon[A-Z0-9]?|TaskFrame|NetSetup[Ss]vc|WindowsTime[A-Z0-9]?|WSDebug|HTTPSvc|FrameworkSvc|TimeService)$/i, \"yes\", \"no\")\n| SuspectPath := if(RegStringValue=/\\\\(ProgramData|Users\\\\Public|AppData|Temp)\\\\/i, \"yes\", \"no\")\n| MasqueradeHit=\"yes\" OR SuspectPath=\"yes\"\n| groupBy([aid, ComputerName, SvcName, RegStringValue, ContextImageFileName, MasqueradeHit, SuspectPath], function=count())",
+      "cloudwatch_query": "",
+      "rationale": "Talos and Microsoft (Secret Blizzard) attribute TinyTurla and TinyTurla-NG specifically \u2014 and most other Turla service-DLL persistence (Carbon, Kazuar loaders) \u2014 to ServiceDll values pointing at DLLs dropped in ProgramData/Public/AppData, loaded by svchost -k with a service name that mimics a real Windows service (W64Time, NetSetupSvc and similar). Most legitimate Windows services keep ServiceDll "
+    }
+  ]
+}

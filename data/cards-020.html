@@ -1,3 +1,481 @@
+<article class="card" id="art-625" data-art-slug="2026-01-06-2025-in-review-the-evolution-of-supply-chain-security-what-s"
+  data-phases="actions,c2,delivery,exploit,install,recon,weapon" data-sev="high"
+  data-techs="T1190,T1195.002"
+  data-sources="StepSecurity"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="endpoint"
+  data-targets="linux,vcs,windows"
+  data-uc-count="5" data-llm-uc-count="4"
+  data-search="2025 in Review: The Evolution of Supply Chain Security &amp; What&#x27;s Next How StepSecurity achieved 5X ARR growth for the second year in a row while securing over 10,000 open-source repositories in 2025  T1190 T1195.002 [LLM] tj-actions/changed-files compromised commit SHA referenced in workflow YAML or git history [LLM] Nx s1ngularity-repository creation via GitHub API from developer or CI endpoint [LLM] AI CLI tool (claude/gemini/q) spawned non-interactively by node/npm/npx for recon [LLM] Compromised Nx npm package version install on developer or CI host Trusted vendor binary / installer launching unusual children">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2026-01-06-2025-in-review-the-evolution-of-supply-chain-security-what-s" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.stepsecurity.io/blog/2025-in-review-the-evolution-of-supply-chain-security-whats-next" target="_blank" rel="noopener">2025 in Review: The Evolution of Supply Chain Security &amp; What&#x27;s Next</a></h2>
+  <div class="source-badges"><span class="source-badge ">StepSecurity</span></div>
+  <div class="pubmeta">
+    <span>2026-01-06</span>
+    <span>5 use cases</span>
+    <span>2 techniques</span>
+    <span>5 kill-chain phases detected</span>
+  </div>
+  <p class="summary">How StepSecurity achieved 5X ARR growth for the second year in a row while securing over 10,000 open-source repositories in 2025</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-625-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-625"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-625-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] tj-actions/changed-files compromised commit SHA referenced in workflow YAML or git history</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Compromised Nx npm package version install on developer or CI host</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Nx s1ngularity-repository creation via GitHub API from developer or CI endpoint · [LLM] AI CLI tool (claude/gemini/q) spawned non-interactively by node/npm/npx for recon</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="0d4057a329" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
+  <summary>
+    <span class="uc-title">tj-actions/changed-files compromised commit SHA referenced in workflow YAML or git history</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="0d4057a329" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts for references to the known-compromised tj-actions/changed-files commit SHA (0e58ed8671d6b60d0890c21b07f8835ace038e67, March 2025) in process command lines that touch workflow YAML or perform git/checkout operations on developer or CI-runner endpoints. The compromised action dumped CI/CD secrets to workflow logs, so any post-incident reference to that SHA in a repo is grounds for secret rotation.
+
+Rationale: The compromised commit SHA 0e58ed8671d6b60d0890c21b07f8835ace038e67 is the canonical Indicator referenced across StepSecurity, GitHub Security Advisory, and CISA write-ups of the tj-actions/changed-files March 2025 compromise — any process cmdline still referencing it indicates a workflow has not been remediated or a developer is reproducing a vulnerable build.
+
+Cross-checked against:
+  • https://www.stepsecurity.io/blog/2025-in-review-the-evolution-of-supply-chain-security-whats-next
+  • https://attack.mitre.org/techniques/T1195/002/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researchers/red teamers replaying the IOC in a lab repo</li><li>Internal postmortem/training materials checked into the same repo containing the SHA in markdown</li><li>Forensic timeline scripts grep-ing repos for the SHA as part of remediation tooling</li><li>Existing detection-engineering content (Sigma rules, this rule itself) referencing the SHA when run from a code-editor host</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;code.exe&quot;, &quot;devenv.exe&quot;, &quot;sublime_text.exe&quot;) and ProcessCommandLine has_any (&quot;grep&quot;, &quot;rg&quot;, &quot;findstr&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: identify the user and repo; check whether the cmdline is `git checkout`, a CI Runner pulling the action, or a grep/forensic tool. Inspect the parent process (text editor / CI agent / shell) to gauge intent. Step 2 — Contain: if the host is a self-hosted GitHub runner or developer workstation that actually executed this version of the action, rotate every secret exposed to the affected workflow run (PATs, cloud keys, npm tokens) and disable any OIDC trust relationships for the workflow. Pin the repo to a SHA, not @v45, going forward. Step 3 — Hunt: search GitHub audit log for `workflows.completed_workflow_run` referencing the action in the last 90 days; pull workflow logs for any run that ran a pinned-version-on-or-before the compromise window; cross-check against AWS CloudTrail/Azure AAD for use of any of those secrets from anomalous IPs.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-625-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-625-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-625-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-625-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-625-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-625-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-625-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(90d)
+| where ProcessCommandLine has &quot;0e58ed8671d6b60d0890c21b07f8835ace038e67&quot;
+   or (ProcessCommandLine has &quot;tj-actions/changed-files&quot; and ProcessCommandLine has &quot;@0e58ed&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-625-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(90d)
+| where EventID == 4688
+| where CommandLine has &quot;0e58ed8671d6b60d0890c21b07f8835ace038e67&quot;
+   or (CommandLine has &quot;tj-actions/changed-files&quot; and CommandLine has &quot;@0e58ed&quot;)
+| project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-625-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: tj-actions changed-files Compromised Commit Reference
+id: 9e1a3c45-7b62-4f8d-9e12-c5b8a3d7f4e1
+description: Detects process command lines referencing the compromised tj-actions/changed-files commit SHA from the March 2025 supply chain compromise.
+references:
+  - https://www.stepsecurity.io/blog/2025-in-review-the-evolution-of-supply-chain-security-whats-next
+author: SOC
+date: 2026/06/09
+tags:
+  - attack.t1195.002
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    CommandLine|contains: &#x27;0e58ed8671d6b60d0890c21b07f8835ace038e67&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-625-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.security OR windows.sysmon OR linux.auditd) (@CommandLine:*0e58ed8671d6b60d0890c21b07f8835ace038e67* OR @process.command_line:*0e58ed8671d6b60d0890c21b07f8835ace038e67*)</code></pre></div>
+    <div class="tab-content" id="art-625-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 CommandLine=/0e58ed8671d6b60d0890c21b07f8835ace038e67/i
+| groupBy([aid, ComputerName, ImageFileName, CommandLine, ParentBaseFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-625-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-625-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-625-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-625-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*0e58ed8671d6b60d0890c21b07f8835ace038e67*&quot; OR (Processes.process=&quot;*tj-actions/changed-files*&quot; AND Processes.process=&quot;*@0e58ed*&quot;)) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-625-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process=&quot;*0e58ed8671d6b60d0890c21b07f8835ace038e67*&quot; OR (Processes.process=&quot;*tj-actions/changed-files*&quot; AND Processes.process=&quot;*@0e58ed*&quot;)) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="7fd5687951" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Nx s1ngularity-repository creation via GitHub API from developer or CI endpoint</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="7fd5687951" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts for the s1ngularity npm-supply-chain payload exfil pattern from August 2025: malicious nx postinstall scripts use a stolen GitHub token to create public repositories named `s1ngularity-repository[-N]` containing a base64-encoded `results.b64` blob of stolen credentials. Detect either the outbound GitHub API write call or the local results.b64 staging file.
+
+Rationale: `results.b64` and `telemetry.js` are the two filenames called out across StepSecurity and the GHSA-cxm3-wv7p-598c advisory as the s1ngularity payload&#x27;s exfil-staging and dropper artefacts; pairing them with a Node-family parent suppresses unrelated `results.b64` files (e.g. unit-test fixtures) and isolates the supply chain attack write path.
+
+Cross-checked against:
+  • https://www.stepsecurity.io/blog/2025-in-review-the-evolution-of-supply-chain-security-whats-next
+  • https://github.com/advisories/GHSA-cxm3-wv7p-598c</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exfiltration to Cloud Storage">T1567.002</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Nx workspaces writing telemetry.js as part of their own non-malicious code</li><li>Custom CI scripts that base64-encode test results into a results.b64 fixture</li><li>Open-source malware analysis sandboxes intentionally executing the payload</li><li>Detection-engineering hosts running this rule against captured samples</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FolderPath has_any (@&quot;\node_modules\@types\&quot;, @&quot;\node_modules\jest\&quot;, @&quot;\test\fixtures\&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: pull the parent command line — is it `npm install` / `npx nx` / `yarn add nx`? Check installed nx version in nearby package.json/package-lock.json. Step 2 — Contain: isolate the host; revoke every GitHub PAT, npm token, AWS/GCP key, and SSH key that lived in `~/.ssh`, `~/.aws`, `~/.gitconfig`, `~/.npmrc`, `~/.config/gh` on the box; rotate AI provider tokens (Anthropic/OpenAI/Google keys leak via the AI-CLI recon stage). Search GitHub Audit Log for `repo.create` events with name matching `s1ngularity-repository*` from the user&#x27;s PAT — delete those repos and treat anything they contained as exfiltrated. Step 3 — Hunt: pivot to UC `AI CLI tool spawned non-interactively` for same host within ±10 minutes; check `package-lock.json` history across all repos for the compromised Nx version pinning the host did between 2025-08-26 and 2025-08-28.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-625-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-625-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-625-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-625-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-625-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-625-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-625-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let SuspiciousFiles = dynamic([&quot;results.b64&quot;,&quot;telemetry.js&quot;]);
+let NodeBins = dynamic([&quot;node.exe&quot;,&quot;node&quot;,&quot;npm.exe&quot;,&quot;npm&quot;,&quot;npx.exe&quot;,&quot;npx&quot;,&quot;pnpm.exe&quot;,&quot;pnpm&quot;,&quot;yarn.exe&quot;,&quot;yarn&quot;]);
+DeviceFileEvents
+| where Timestamp &gt; ago(180d)
+| where FileName in~ (SuspiciousFiles)
+| where InitiatingProcessFileName in~ (NodeBins)
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-625-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let SuspiciousFiles = dynamic([&quot;results.b64&quot;,&quot;telemetry.js&quot;]);
+let NodeBins = dynamic([&quot;node.exe&quot;,&quot;node&quot;,&quot;npm.exe&quot;,&quot;npm&quot;,&quot;npx.exe&quot;,&quot;npx&quot;,&quot;pnpm.exe&quot;,&quot;pnpm&quot;,&quot;yarn.exe&quot;,&quot;yarn&quot;]);
+ImFileEvent
+| where TimeGenerated &gt; ago(180d)
+| where TargetFileName in~ (SuspiciousFiles)
+| where ActingProcessName has_any (NodeBins)
+| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, TargetFileName, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-625-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Nx s1ngularity Payload results.b64 Staging File
+id: 2f47bd91-6c3a-4d8e-91b2-7e9c4f1a5d23
+description: Detects creation of the results.b64 or telemetry.js artefact written by the August 2025 Nx (s1ngularity) npm supply chain compromise.
+references:
+  - https://www.stepsecurity.io/blog/2025-in-review-the-evolution-of-supply-chain-security-whats-next
+author: SOC
+date: 2026/06/09
+tags:
+  - attack.t1195.002
+  - attack.t1567.002
+logsource:
+  category: file_event
+  product: windows
+detection:
+  selection:
+    TargetFilename|endswith:
+      - &#x27;\results.b64&#x27;
+      - &#x27;\telemetry.js&#x27;
+    Image|endswith:
+      - &#x27;\node.exe&#x27;
+      - &#x27;\npm.exe&#x27;
+      - &#x27;\npx.exe&#x27;
+      - &#x27;\pnpm.exe&#x27;
+      - &#x27;\yarn.exe&#x27;
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-625-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.auditd) (@TargetFilename:(*\\results.b64 OR */results.b64 OR *\\telemetry.js OR */telemetry.js)) AND @Image:(*\\node.exe OR *\\Node.exe OR */node OR *\\npm.exe OR */npm OR *\\npx.exe OR */npx)</code></pre></div>
+    <div class="tab-content" id="art-625-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/(results\.b64|telemetry\.js)$/i ContextImageFileName=/(node|npm|npx|pnpm|yarn)(\.exe)?$/i
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-625-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-625-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-625-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-625-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;results.b64&quot; OR Filesystem.file_name=&quot;telemetry.js&quot;) AND (Filesystem.process_name=&quot;node.exe&quot; OR Filesystem.process_name=&quot;node&quot; OR Filesystem.process_name=&quot;npm.exe&quot; OR Filesystem.process_name=&quot;npm&quot;) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-625-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;results.b64&quot; OR Filesystem.file_name=&quot;telemetry.js&quot;) AND (Filesystem.process_name=&quot;node.exe&quot; OR Filesystem.process_name=&quot;node&quot; OR Filesystem.process_name=&quot;npm.exe&quot; OR Filesystem.process_name=&quot;npm&quot;) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="0317b51c5d" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">AI CLI tool (claude/gemini/q) spawned non-interactively by node/npm/npx for recon</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="0317b51c5d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the novel s1ngularity TTP from August 2025 where the malicious Nx postinstall script invoked locally-installed AI assistants (Claude CLI, Gemini CLI, Amazon Q CLI) with a prompt to enumerate sensitive files. The discriminator is the parent process: AI CLIs spawned by Node-family runtimes rather than by a developer&#x27;s interactive shell.
+
+Rationale: StepSecurity, Wiz, and Snyk all flagged the AI-CLI abuse as the s1ngularity payload&#x27;s signature recon move — invoking `claude`, `gemini`, or `q` with prompts like &quot;find files containing wallet/private key/.env&quot;. The Node-family parent is the deterministic discriminator from interactive developer use; a developer typing `claude` at their terminal has bash/zsh/powershell as parent, never npm.
+
+Cross-checked against:
+  • https://www.stepsecurity.io/blog/2025-in-review-the-evolution-of-supply-chain-security-whats-next
+  • https://attack.mitre.org/techniques/T1552/001/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter">T1059</span> <span class="ind tech" title="File and Directory Discovery">T1083</span> <span class="ind tech" title="Credentials in Files">T1552.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Node-based CLI wrappers (e.g. an internal `npx claude-helper` tool that shells to the Claude CLI)</li><li>Developer tooling like Backstage / Nx generators that legitimately call AI CLIs to scaffold code</li><li>CI workflow steps that intentionally invoke the Claude or Gemini CLI from a Node test runner</li><li>VS Code extensions installed as global npm packages that wrap AI CLIs</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessParentFileName in~ (&quot;explorer.exe&quot;, &quot;code.exe&quot;, &quot;WindowsTerminal.exe&quot;) and InitiatingProcessCommandLine has_any (&quot;--interactive&quot;, &quot;chat&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: capture the full child cmdline — prompts containing &quot;wallet&quot;, &quot;private key&quot;, &quot;ssh&quot;, &quot;.env&quot;, &quot;.aws/credentials&quot;, or piping output to a file are unambiguous; benign uses pass a chat message instead. Look at the InitiatingProcessParentFileName: a chain of `npm postinstall -&gt; node -&gt; claude` is the smoking gun. Step 2 — Contain: isolate the host, revoke every credential reachable from the user&#x27;s home dir (SSH, cloud creds, browser cookies, password manager exports), and rotate the AI provider API keys themselves (the malware exfils them). Step 3 — Hunt: pivot to the `s1ngularity-repository` UC and the compromised Nx-version UC for the same host within ±15 minutes; query GitHub audit log for repo-create events using the user&#x27;s PAT; check `~/.bash_history`, `~/.zsh_history` for the prompt text to confirm intent.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-625-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-625-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-625-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-625-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-625-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-625-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-625-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let AiCli = dynamic([&quot;claude&quot;,&quot;claude.exe&quot;,&quot;gemini&quot;,&quot;gemini.exe&quot;,&quot;q&quot;,&quot;q.exe&quot;]);
+let NodeParents = dynamic([&quot;node.exe&quot;,&quot;node&quot;,&quot;npm.exe&quot;,&quot;npm&quot;,&quot;npx.exe&quot;,&quot;npx&quot;,&quot;pnpm.exe&quot;,&quot;pnpm&quot;,&quot;yarn.exe&quot;,&quot;yarn&quot;]);
+DeviceProcessEvents
+| where Timestamp &gt; ago(90d)
+| where FileName in~ (AiCli)
+| where InitiatingProcessFileName in~ (NodeParents)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-625-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let AiCli = dynamic([&quot;claude&quot;,&quot;claude.exe&quot;,&quot;gemini&quot;,&quot;gemini.exe&quot;,&quot;q&quot;,&quot;q.exe&quot;]);
+let NodeParents = dynamic([&quot;node.exe&quot;,&quot;node&quot;,&quot;npm.exe&quot;,&quot;npm&quot;,&quot;npx.exe&quot;,&quot;npx&quot;,&quot;pnpm.exe&quot;,&quot;pnpm&quot;,&quot;yarn.exe&quot;,&quot;yarn&quot;]);
+ImProcessCreate
+| where TimeGenerated &gt; ago(90d)
+| where TargetProcessName has_any (AiCli) or ActingProcessName has_any (AiCli)
+| where ParentProcessName has_any (NodeParents)
+| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ParentProcessName, ParentProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-625-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: AI CLI Tool Spawned by Node Runtime (s1ngularity Recon)
+id: 7b9e8d4c-2f51-4a3b-b8c6-1a9d4e7f6b21
+description: Detects local AI CLI assistants (Claude / Gemini / Amazon Q) spawned by node/npm/npx/yarn/pnpm rather than an interactive shell — the s1ngularity Nx compromise novel TTP.
+references:
+  - https://www.stepsecurity.io/blog/2025-in-review-the-evolution-of-supply-chain-security-whats-next
+author: SOC
+date: 2026/06/09
+tags:
+  - attack.t1059
+  - attack.t1083
+  - attack.t1552.001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_child:
+    Image|endswith:
+      - &#x27;\claude.exe&#x27;
+      - &#x27;\gemini.exe&#x27;
+      - &#x27;\q.exe&#x27;
+  selection_parent:
+    ParentImage|endswith:
+      - &#x27;\node.exe&#x27;
+      - &#x27;\npm.exe&#x27;
+      - &#x27;\npx.exe&#x27;
+      - &#x27;\pnpm.exe&#x27;
+      - &#x27;\yarn.exe&#x27;
+  condition: selection_child and selection_parent
+level: high</code></pre></div>
+    <div class="tab-content" id="art-625-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR windows.security OR linux.auditd) @Image:(*\\claude.exe OR *\\Claude.exe OR */claude OR *\\gemini.exe OR */gemini OR *\\q.exe OR */q) AND @ParentImage:(*\\node.exe OR */node OR *\\npm.exe OR */npm OR *\\npx.exe OR */npx OR *\\pnpm.exe OR *\\yarn.exe)</code></pre></div>
+    <div class="tab-content" id="art-625-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\\(claude|gemini|q)(\.exe)?$/i ParentBaseFileName=/(node|npm|npx|pnpm|yarn)(\.exe)?$/i
+| groupBy([aid, ComputerName, ImageFileName, CommandLine, ParentBaseFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-625-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-625-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-625-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-625-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;claude&quot; OR Processes.process_name=&quot;claude.exe&quot; OR Processes.process_name=&quot;gemini&quot; OR Processes.process_name=&quot;gemini.exe&quot; OR Processes.process_name=&quot;q&quot; OR Processes.process_name=&quot;q.exe&quot;) AND (Processes.parent_process_name=&quot;node.exe&quot; OR Processes.parent_process_name=&quot;node&quot; OR Processes.parent_process_name=&quot;npm.exe&quot; OR Processes.parent_process_name=&quot;npm&quot; OR Processes.parent_process_name=&quot;npx.exe&quot; OR Processes.parent_process_name=&quot;npx&quot; OR Processes.parent_process_name=&quot;pnpm.exe&quot; OR Processes.parent_process_name=&quot;yarn.exe&quot;) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-625-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;claude&quot; OR Processes.process_name=&quot;claude.exe&quot; OR Processes.process_name=&quot;gemini&quot; OR Processes.process_name=&quot;gemini.exe&quot; OR Processes.process_name=&quot;q&quot; OR Processes.process_name=&quot;q.exe&quot;) AND (Processes.parent_process_name=&quot;node.exe&quot; OR Processes.parent_process_name=&quot;node&quot; OR Processes.parent_process_name=&quot;npm.exe&quot; OR Processes.parent_process_name=&quot;npm&quot; OR Processes.parent_process_name=&quot;npx.exe&quot; OR Processes.parent_process_name=&quot;npx&quot; OR Processes.parent_process_name=&quot;pnpm.exe&quot; OR Processes.parent_process_name=&quot;yarn.exe&quot;) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="d6adc6a085" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">Compromised Nx npm package version install on developer or CI host</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="d6adc6a085" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts for `npm install` / `yarn add` / `pnpm add` invocations that pin one of the known-compromised Nx versions (nx 20.9.0-20.12.0, 21.5.0-21.8.0; @nx/devkit/js/workspace/enterprise-cloud variants) published during the August 2025 s1ngularity supply chain compromise. Any install of these versions runs the malicious postinstall.
+
+Rationale: GHSA-cxm3-wv7p-598c (referenced in the StepSecurity article) enumerates the exact compromised Nx and @nx/* package versions; pinning to those strings in the install cmdline guarantees the postinstall payload ran, and the package-manager parent restricts hits to actual installs (vs. mere repo grep results).
+
+Cross-checked against:
+  • https://www.stepsecurity.io/blog/2025-in-review-the-evolution-of-supply-chain-security-whats-next
+  • https://github.com/advisories/GHSA-cxm3-wv7p-598c</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Installer Packages">T1546.016</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>IR / detection-engineering labs intentionally installing the IOC version for reproduction</li><li>Security researchers replaying the supply-chain sample in a sandbox</li><li>Vendor-mirrored copy of npm registry intentionally retaining the bad versions for forensic study</li><li>Repo cleanup PRs that downgrade-then-upgrade Nx in CI in the same job</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: confirm the install actually executed (look for child `node` running the nx postinstall lifecycle within seconds) vs an aborted attempt; collect the user, repo, branch, and whether the host is a developer workstation or CI runner. Step 2 — Contain: treat the host as fully compromised — every credential reachable to that user account (cloud keys, SSH keys, GitHub PATs, npm tokens, AI provider API keys) must be rotated; isolate the host; force-revoke active GitHub OAuth tokens. Step 3 — Hunt: pivot to the `s1ngularity-repository` exfil UC and the AI-CLI-spawn UC for the same host ±15 minutes; pull package-lock.json git blame across all repos that user committed to, looking for retention of the compromised pin; check internal npm registry for any cache of these versions and purge.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-625-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-625-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-625-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-625-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-625-uc3-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-625-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-625-uc3-kql"><pre><button class="copy-btn">COPY</button><code>let CompromisedRefs = dynamic([&quot;nx@20.9&quot;,&quot;nx@20.10&quot;,&quot;nx@20.11&quot;,&quot;nx@20.12&quot;,&quot;nx@21.5&quot;,&quot;nx@21.6&quot;,&quot;nx@21.7&quot;,&quot;nx@21.8&quot;,&quot;@nx/enterprise-cloud@3.2.0&quot;]);
+let NodePkgMgrs = dynamic([&quot;npm.exe&quot;,&quot;npm&quot;,&quot;npx.exe&quot;,&quot;npx&quot;,&quot;yarn.exe&quot;,&quot;yarn&quot;,&quot;pnpm.exe&quot;,&quot;pnpm&quot;]);
+DeviceProcessEvents
+| where Timestamp &gt; ago(365d)
+| where FileName in~ (NodePkgMgrs)
+| where ProcessCommandLine has_any (CompromisedRefs)
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-625-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let CompromisedRefs = dynamic([&quot;nx@20.9&quot;,&quot;nx@20.10&quot;,&quot;nx@20.11&quot;,&quot;nx@20.12&quot;,&quot;nx@21.5&quot;,&quot;nx@21.6&quot;,&quot;nx@21.7&quot;,&quot;nx@21.8&quot;,&quot;@nx/enterprise-cloud@3.2.0&quot;]);
+let NodePkgMgrs = dynamic([&quot;npm.exe&quot;,&quot;npm&quot;,&quot;npx.exe&quot;,&quot;npx&quot;,&quot;yarn.exe&quot;,&quot;yarn&quot;,&quot;pnpm.exe&quot;,&quot;pnpm&quot;]);
+SecurityEvent
+| where TimeGenerated &gt; ago(365d)
+| where EventID == 4688
+| where NewProcessName has_any (NodePkgMgrs)
+| where CommandLine has_any (CompromisedRefs)
+| project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-625-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Compromised Nx npm Version Install (s1ngularity)
+id: 4d8a6f12-9c5b-4e7d-a1f3-6b2e8c9d1a45
+description: Detects npm/yarn/pnpm installing one of the known-compromised Nx versions from the August 2025 s1ngularity npm supply chain attack.
+references:
+  - https://www.stepsecurity.io/blog/2025-in-review-the-evolution-of-supply-chain-security-whats-next
+  - https://github.com/advisories/GHSA-cxm3-wv7p-598c
+author: SOC
+date: 2026/06/09
+tags:
+  - attack.t1195.002
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_tool:
+    Image|endswith:
+      - &#x27;\npm.exe&#x27;
+      - &#x27;\npx.exe&#x27;
+      - &#x27;\yarn.exe&#x27;
+      - &#x27;\pnpm.exe&#x27;
+  selection_pkg:
+    CommandLine|contains:
+      - &#x27;nx@20.9&#x27;
+      - &#x27;nx@20.10&#x27;
+      - &#x27;nx@20.11&#x27;
+      - &#x27;nx@20.12&#x27;
+      - &#x27;nx@21.5&#x27;
+      - &#x27;nx@21.6&#x27;
+      - &#x27;nx@21.7&#x27;
+      - &#x27;nx@21.8&#x27;
+      - &#x27;@nx/enterprise-cloud@3.2.0&#x27;
+  condition: selection_tool and selection_pkg
+level: high</code></pre></div>
+    <div class="tab-content" id="art-625-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR windows.security OR linux.auditd) @Image:(*\\npm.exe OR */npm OR *\\npx.exe OR */npx OR *\\yarn.exe OR */yarn OR *\\pnpm.exe OR */pnpm) AND @CommandLine:(*nx@20.9* OR *nx@20.10* OR *nx@20.11* OR *nx@20.12* OR *nx@21.5* OR *nx@21.6* OR *nx@21.7* OR *nx@21.8* OR *@nx/enterprise-cloud@3.2.0*)</code></pre></div>
+    <div class="tab-content" id="art-625-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/(npm|npx|yarn|pnpm)(\.exe)?$/i CommandLine=/nx@(20\.(9|10|11|12)|21\.(5|6|7|8))|@nx\/enterprise-cloud@3\.2\.0/i
+| groupBy([aid, ComputerName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-625-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-625-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-625-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-625-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;npm.exe&quot; OR Processes.process_name=&quot;npm&quot; OR Processes.process_name=&quot;npx.exe&quot; OR Processes.process_name=&quot;npx&quot; OR Processes.process_name=&quot;yarn.exe&quot; OR Processes.process_name=&quot;pnpm.exe&quot;) AND (Processes.process=&quot;*nx@20.9*&quot; OR Processes.process=&quot;*nx@20.10*&quot; OR Processes.process=&quot;*nx@20.11*&quot; OR Processes.process=&quot;*nx@20.12*&quot; OR Processes.process=&quot;*nx@21.5*&quot; OR Processes.process=&quot;*nx@21.6*&quot; OR Processes.process=&quot;*nx@21.7*&quot; OR Processes.process=&quot;*nx@21.8*&quot; OR Processes.process=&quot;*@nx/enterprise-cloud@3.2.0*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-625-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=&quot;npm.exe&quot; OR Processes.process_name=&quot;npm&quot; OR Processes.process_name=&quot;npx.exe&quot; OR Processes.process_name=&quot;npx&quot; OR Processes.process_name=&quot;yarn.exe&quot; OR Processes.process_name=&quot;pnpm.exe&quot;) AND (Processes.process=&quot;*nx@20.9*&quot; OR Processes.process=&quot;*nx@20.10*&quot; OR Processes.process=&quot;*nx@20.11*&quot; OR Processes.process=&quot;*nx@20.12*&quot; OR Processes.process=&quot;*nx@21.5*&quot; OR Processes.process=&quot;*nx@21.6*&quot; OR Processes.process=&quot;*nx@21.7*&quot; OR Processes.process=&quot;*nx@21.8*&quot; OR Processes.process=&quot;*@nx/enterprise-cloud@3.2.0*&quot;) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-625-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-625-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-625-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-625-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-625-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-625-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+// article (matching shape with the Defender query).
+SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where NewProcessName endswith &quot;\powershell.exe&quot;
+   or NewProcessName endswith &quot;\cmd.exe&quot;
+   or NewProcessName endswith &quot;\rundll32.exe&quot;
+   or NewProcessName endswith &quot;\regsvr32.exe&quot;
+   or NewProcessName endswith &quot;\mshta.exe&quot;
+   or NewProcessName endswith &quot;\wscript.exe&quot;
+   or NewProcessName endswith &quot;\cscript.exe&quot;
+   or NewProcessName endswith &quot;\wmic.exe&quot;
+   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
+| project TimeGenerated, Computer, Account, ParentProcessName,
+          NewProcessName, CommandLine
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-625-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
+status: experimental
+description: |
+    A signed vendor binary (in the article&#x27;s named-vendors list)
+    spawning script-host or LOLBin children. Strongest signal when
+    paired with a recent CVE / supply-chain advisory naming the same
+    vendor.
+references:
+    - https://attack.mitre.org/techniques/T1195/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1195
+    - attack.initial-access
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_child:
+        Image|endswith:
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+            - &#x27;\cmd.exe&#x27;
+            - &#x27;\rundll32.exe&#x27;
+            - &#x27;\regsvr32.exe&#x27;
+            - &#x27;\mshta.exe&#x27;
+            - &#x27;\wscript.exe&#x27;
+            - &#x27;\cscript.exe&#x27;
+            - &#x27;\wmic.exe&#x27;
+            - &#x27;\bitsadmin.exe&#x27;
+    selection_parent_vendor:
+        ParentImage|contains:
+            - &#x27;\Program Files\&#x27;
+            - &#x27;\Program Files (x86)\&#x27;
+    condition: selection_child and selection_parent_vendor
+falsepositives:
+    - Many — installers and updaters legitimately spawn children. Pin
+      the parent path to specific vendor binaries observed in the
+      article before alerting.
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-625-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-625-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-625-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-625-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-625-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-627" data-art-slug="2025-12-29-the-holiday-whisper-shai-hulud-3-0"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
   data-techs="T1027,T1190,T1195.002"
@@ -8582,180 +9060,6 @@ DeviceTvmSoftwareVulnerabilities
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-657" data-art-slug="2025-12-09-how-snyk-helps-federal-agencies-prepare-for-the-genesis-miss"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="med"
-  data-techs="T1190,T1195.002"
-  data-sources="Snyk"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="endpoint"
-  data-targets="windows"
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="How Snyk Helps Federal Agencies Prepare for the Genesis Mission Era of AI-Driven Science Snyk helps Federal Agencies secure software for the White House&#x27;s Genesis Mission, accelerating AI-driven science. Implement Secure by Design for the supply chain, cloud, and pipelines.  T1190 T1195.002 Trusted vendor binary / installer launching unusual children">
-  <div class="sev-ribbon med">Medium</div>
-  <button class="share-btn card-share" data-share-art="2025-12-09-how-snyk-helps-federal-agencies-prepare-for-the-genesis-miss" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/snyk-genesis-mission/" target="_blank" rel="noopener">How Snyk Helps Federal Agencies Prepare for the Genesis Mission Era of AI-Driven Science</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2025-12-09</span>
-    <span>1 use case</span>
-    <span>2 techniques</span>
-    <span>4 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Snyk helps Federal Agencies secure software for the White House&#x27;s Genesis Mission, accelerating AI-driven science. Implement Secure by Design for the supply chain, cloud, and pipelines.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-657-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-657"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-657-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-657-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-657-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-657-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-657-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-657-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-657-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-657-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-657-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-657-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-657-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-657-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-657-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
   </div>
 </details></div>
 </article>

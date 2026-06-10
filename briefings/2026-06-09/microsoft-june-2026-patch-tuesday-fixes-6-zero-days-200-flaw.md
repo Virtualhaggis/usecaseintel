@@ -11,23 +11,18 @@ By Lawrence Abrams
 June 9, 2026
 01:57 PM
 0 
-
 Article and title updated as 3 additional zero-days were fixed in the June 2026 Patch Tuesday. 
-
-
 Today is Microsoft's June 2026 Patch Tuesday, with security updates for 200 flaws, including five publicly disclosed zero-day vulnerabilities and one actively exploited in attacks.
-
-
-This Patch Tuesday addresses 33 "Critical" vulnerabilities, 28 of which are remote code execution, 4 are…
+This Patch Tuesday addresses 33 "Critical" vulnerabilities, 28 of which are remote code execution, 4 are elevation…
 
 ## Indicators of Compromise (high-fidelity only)
 
+- **CVE:** `CVE-2026-42897`
+- **CVE:** `CVE-2026-45585`
 - **CVE:** `CVE-2026-45586`
 - **CVE:** `CVE-2026-49160`
-- **CVE:** `CVE-2026-45585`
 - **CVE:** `CVE-2026-50507`
 - **CVE:** `CVE-2020-17103`
-- **CVE:** `CVE-2026-42897`
 
 ## MITRE ATT&CK Techniques
 
@@ -55,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Hunt for unpatched hosts exposed to June 2026 Patch Tuesday zero-days
 
-`UC_38_7` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_41_7` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +79,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Suspicious reagentc.exe and WinRE boot configuration manipulation (YellowKey / bitskrieg context)
 
-`UC_38_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_41_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +110,7 @@ DeviceProcessEvents
 
 ### HTTP/2 Bomb mitigation posture - MaxHeadersCount registry baseline
 
-`UC_38_9` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_41_9` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -289,7 +284,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft June 2026 Patch Tuesday fixes 6 zero-days, 200 flaws
 
-`UC_38_6` · phase: **exploit** · confidence: **High**
+`UC_41_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -341,7 +336,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-45586`, `CVE-2026-49160`, `CVE-2026-45585`, `CVE-2026-50507`, `CVE-2020-17103`, `CVE-2026-42897`
+  - CVE(s): `CVE-2026-42897`, `CVE-2026-45585`, `CVE-2026-45586`, `CVE-2026-49160`, `CVE-2026-50507`, `CVE-2020-17103`
 
 
 ## Why this matters

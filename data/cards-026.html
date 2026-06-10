@@ -1,3 +1,465 @@
+<article class="card" id="art-808" data-art-slug="2025-08-15-suspicious-tag-movement-in-aws-s-github-action-what-happened"
+  data-phases="actions,c2,delivery,exploit,install,recon,weapon" data-sev="high"
+  data-techs="T1190,T1195.002"
+  data-sources="StepSecurity"
+  data-platforms="datadog,def,sent,sigma,spl"
+  data-splunk-cats="application,cloud,endpoint"
+  data-targets="vcs,windows"
+  data-uc-count="5" data-llm-uc-count="2"
+  data-search="Suspicious Tag Movement in AWS’s GitHub Action: What Happened and Why It Matters How an AWS release rollback triggered the same red flags as a supply chain attack — and why treating every tag movement as suspicious is key to protecting your CI/CD pipelines CVE-2025-30066 CVE-2025-30154 T1190 T1195.002 [LLM] Tag deletion/repointing on critical GitHub Action repositories (configure-aws-credentials v4.3.0 pattern) [LLM] Internal workflows pulling aws-actions/configure-aws-credentials@v4.3.0 during the buggy-release window Trusted vendor binary / installer launching unusual children Asset exposure — vulnerability matches article CVE(s) File hash IOCs — endpoint file/process match">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2025-08-15-suspicious-tag-movement-in-aws-s-github-action-what-happened" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.stepsecurity.io/blog/suspicious-tag-movement-in-aws-github-action" target="_blank" rel="noopener">Suspicious Tag Movement in AWS’s GitHub Action: What Happened and Why It Matters</a></h2>
+  <div class="source-badges"><span class="source-badge ">StepSecurity</span></div>
+  <div class="pubmeta">
+    <span>2025-08-15</span>
+    <span>5 use cases</span>
+    <span>2 techniques</span>
+    <span>6 kill-chain phases detected</span>
+  </div>
+  <p class="summary">How an AWS release rollback triggered the same red flags as a supply chain attack — and why treating every tag movement as suspicious is key to protecting your CI/CD pipelines</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2025-30066</span> <span class="ind cve">CVE-2025-30154</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+<div class="ind-group"><span class="ind-label">SHA1</span><span class="ind ">0e58ed8671d6b60d…</span> <span class="ind ">f0d342d24037bb11…</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-808-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-808"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-808-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] Tag deletion/repointing on critical GitHub Action repositories (configure-aws-credentials v4.3.0 pattern)</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Internal workflows pulling aws-actions/configure-aws-credentials@v4.3.0 during the buggy-release window</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ File hash IOCs — endpoint file/process match</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="167aff7852" data-platforms="datadog,sent,sigma,spl" data-targets="vcs" open>
+  <summary>
+    <span class="uc-title">Tag deletion/repointing on critical GitHub Action repositories (configure-aws-credentials v4.3.0 pattern)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="167aff7852" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts for `git.delete` or `git.ref.delete` events targeting semantic version tags on watched action repositories — the exact signal that flagged the aws-actions/configure-aws-credentials v4.3.0 incident. Version-tag deletions are vanishingly rare in healthy CI/CD and are the leading indicator of the tj-actions/changed-files and reviewdog/action-setup tag-tampering pattern.
+
+Rationale: Article-specific because we target the exact repo (aws-actions/configure-aws-credentials) and the tj-actions/reviewdog repos the article calls out as historical proof-cases. The signal — semantic-version tag deletion on a popular Action — is what StepSecurity&#x27;s Artifact Monitor flagged on v4.3.0 at ~18:34 UTC and what tj-actions used to compromise pipelines. Defender XDR Advanced Hunting has no native GitHub audit log table, so defender_kql is intentionally empty — port via Sentinel if the GitHub connector is shared. Image refs not fetched because the article images are workflow-run screenshots, not new IOC strings beyond what&#x27;s already in the text.
+
+Cross-checked against:
+  • https://github.com/aws-actions/configure-aws-credentials/issues/1419
+  • https://www.stepsecurity.io/blog/harden-runner-detection-tj-actions-changed-files-action-is-compromised
+  • https://nvd.nist.gov/vuln/detail/CVE-2025-30066</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Compromise Host Software Binary">T1554</span> <span class="ind tech" title="Trusted Relationship">T1199</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-808-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-808-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-808-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-808-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-808-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// GitHub audit logs land in a custom table via the Microsoft Sentinel GitHub solution.
+// Adjust the table name if your tenant uses GitHub_CL or a different connector schema.
+let WatchedRepos = dynamic([&quot;aws-actions/configure-aws-credentials&quot;,&quot;tj-actions/changed-files&quot;,&quot;reviewdog/action-setup&quot;]);
+GitHubAuditLogPolling_CL
+| where TimeGenerated &gt; ago(7d)
+| where action_s in (&quot;git.delete&quot;,&quot;repo.ref.delete&quot;,&quot;git.ref_delete&quot;)
+   or (action_s == &quot;git.push&quot; and isnotempty(deleted_b) and deleted_b == true)
+| where repo_s in (WatchedRepos) or repo_s startswith &quot;actions/&quot;
+| extend RefName = coalesce(ref_s, tostring(parse_json(tostring(data_s)).ref))
+| where RefName matches regex @&quot;^refs/tags/v?\d+(\.\d+){0,2}$&quot;
+| extend IsAwsV430 = (repo_s == &quot;aws-actions/configure-aws-credentials&quot; and RefName endswith &quot;v4.3.0&quot;)
+| project TimeGenerated, Actor=actor_s, Repo=repo_s, Action=action_s, Ref=RefName, IsAwsV430, ActorIP=actor_ip_s
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-808-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: GitHub Semantic Version Tag Deletion on Watched Action Repository
+id: 9a1f3b2c-4e6d-4f1a-b8a2-7d9e3c1f5b88
+description: Detects deletion of a semantic version tag (vX, vX.Y, vX.Y.Z) on critical GitHub Action repositories. Tag deletions are extremely rare in healthy release workflows and were the leading indicator of the tj-actions/changed-files (CVE-2025-30066) and reviewdog/action-setup compromises in March 2025, as well as the AWS configure-aws-credentials v4.3.0 incident on 4 Aug 2025.
+references:
+  - https://www.stepsecurity.io/blog/suspicious-tag-movement-in-aws-github-action
+  - https://github.com/aws-actions/configure-aws-credentials/issues/1419
+author: SOC Detection Engineering
+date: 2025/08/14
+tags:
+  - attack.initial_access
+  - attack.t1195.002
+  - attack.persistence
+  - attack.t1554
+logsource:
+  product: github
+  service: audit
+detection:
+  selection_action:
+    action:
+      - &#x27;git.delete&#x27;
+      - &#x27;repo.ref.delete&#x27;
+      - &#x27;git.ref_delete&#x27;
+  selection_ref:
+    ref|re: &#x27;^refs/tags/v?\d+(\.\d+){0,2}$&#x27;
+  selection_repo:
+    repo:
+      - &#x27;aws-actions/configure-aws-credentials&#x27;
+      - &#x27;tj-actions/changed-files&#x27;
+      - &#x27;reviewdog/action-setup&#x27;
+  condition: selection_action and selection_ref and selection_repo
+falsepositives:
+  - Maintainer-initiated hot-fix tag recreation (e.g. the AWS v4.3.0 Release-As re-publish) — must be reconciled against published release notes before closing
+level: high</code></pre></div>
+    <div class="tab-content" id="art-808-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:github (@action:git.delete OR @action:repo.ref.delete OR @action:git.ref_delete) @repo:(aws-actions/configure-aws-credentials OR tj-actions/changed-files OR reviewdog/action-setup) @ref:(refs/tags/v* OR refs/tags/V*)</code></pre></div>
+    <div class="tab-content" id="art-808-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-808-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-808-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-808-uc0-spl-acc"><button class="copy-btn">COPY</button><code>`summariesonly` | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Change.user) as actor values(Change.src) as src_ip values(Change.object) as ref from datamodel=Change where Change.vendor_product=&quot;GitHub&quot; (Change.action=&quot;deleted&quot; OR Change.action=&quot;delete&quot;) (Change.object_category=&quot;tag&quot; OR Change.object=&quot;refs/tags/*&quot;) Change.object_path IN (&quot;aws-actions/configure-aws-credentials&quot;,&quot;tj-actions/*&quot;,&quot;reviewdog/*&quot;,&quot;actions/*&quot;) by Change.object_path Change.object Change.action | `drop_dm_object_name(Change)` | rex field=object &quot;refs/tags/(?&lt;tag_name&gt;v?\d+(\.\d+){0,2})$&quot; | where isnotnull(tag_name) | eval _is_buggy_aws_v430=if(object_path=&quot;aws-actions/configure-aws-credentials&quot; AND tag_name=&quot;v4.3.0&quot;, 1, 0)</code></pre><pre class="spl-mode-body" id="art-808-uc0-spl-raw"><button class="copy-btn">COPY</button><code>summariesonly=false | tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Change.user) as actor values(Change.src) as src_ip values(Change.object) as ref from datamodel=Change where Change.vendor_product=&quot;GitHub&quot; (Change.action=&quot;deleted&quot; OR Change.action=&quot;delete&quot;) (Change.object_category=&quot;tag&quot; OR Change.object=&quot;refs/tags/*&quot;) Change.object_path IN (&quot;aws-actions/configure-aws-credentials&quot;,&quot;tj-actions/*&quot;,&quot;reviewdog/*&quot;,&quot;actions/*&quot;) by Change.object_path Change.object Change.action | `drop_dm_object_name(Change)` | rex field=object &quot;refs/tags/(?&lt;tag_name&gt;v?\d+(\.\d+){0,2})$&quot; | where isnotnull(tag_name) | eval _is_buggy_aws_v430=if(object_path=&quot;aws-actions/configure-aws-credentials&quot; AND tag_name=&quot;v4.3.0&quot;, 1, 0)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="eddf8e554c" data-platforms="datadog,sent,spl" data-targets="vcs">
+  <summary>
+    <span class="uc-title">Internal workflows pulling aws-actions/configure-aws-credentials@v4.3.0 during the buggy-release window</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="eddf8e554c" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts your org&#x27;s GitHub Actions workflow runs that resolved `aws-actions/configure-aws-credentials@v4.3.0` (or pinned commit `59b44184`) between 17:49 UTC and 20:47 UTC on 4 Aug 2025 — the precise window when v4.3.0 pointed at the broken commit before being retagged. While this incident proved benign, the same query template is the post-incident sweep you&#x27;d run if a future v4.3.0-style tag movement is confirmed malicious.
+
+Rationale: Article-specific via two exact strings from the timeline: the action coordinate `aws-actions/configure-aws-credentials@v4.3.0` and the buggy commit SHA `59b44184` (the original v4.3.0 release commit before retag to `d0834ad` at 20:47:54Z). The 17:49–20:47 UTC window is the article&#x27;s published timeline. Sigma omitted because the detection is a time-bounded cross-table join (workflow_run audit × workflow YAML content), not a single-event shape. Defender XDR has no GitHub workflow_run telemetry, hence empty. Bleeping Computer and GitGuardian writeups of the tj-actions compromise (cited below) validate that consumer-side sweeps keyed on the at-version coordinate plus commit SHA are the post-incident remediation pattern.
+
+Cross-checked against:
+  • https://github.com/aws-actions/configure-aws-credentials/releases/tag/v4.3.0
+  • https://github.com/aws-actions/configure-aws-credentials/issues/1419
+  • https://www.bleepingcomputer.com/news/security/supply-chain-attack-on-popular-github-action-exposes-ci-cd-secrets/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Valid Accounts">T1078</span> <span class="ind tech" title="Unsecured Credentials: Private Keys / CI Secrets">T1552.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span> <span class="ind">Web.Web</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-808-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-808-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-808-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-808-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sweeps GitHub workflow_run audit events in the buggy-v4.3.0 window. Adapt repo-content
+// match (uses_s) to your code-search ingestion table — many orgs ship workflow YAMLs via a
+// custom log table populated by `gh api search/code`.
+let WindowStart = datetime(2025-08-04T17:49:00Z);
+let WindowEnd   = datetime(2025-08-04T20:47:54Z);
+let BuggyCommit = &quot;59b44184&quot;;
+GitHubAuditLogPolling_CL
+| where TimeGenerated between (WindowStart .. WindowEnd)
+| where action_s in (&quot;workflows.completed_workflow_run&quot;,&quot;workflow_run&quot;,&quot;workflows.created_workflow_run&quot;)
+| extend Repo = repo_s, Actor = actor_s, RunId = tostring(workflow_run_id_d)
+| join kind=inner (
+    GitHubWorkflowContent_CL
+    | where uses_s has &quot;aws-actions/configure-aws-credentials&quot;
+    | where uses_s endswith &quot;@v4.3.0&quot; or uses_s contains BuggyCommit
+    | project Repo = repo_s, WorkflowFile = path_s, Uses = uses_s
+  ) on Repo
+| project TimeGenerated, Repo, Actor, WorkflowFile, Uses, RunId
+| order by TimeGenerated asc</code></pre></div>
+    <div class="tab-content" id="art-808-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:github @action:(workflows.completed_workflow_run OR workflow_run OR workflows.created_workflow_run) (@workflow.uses:*aws-actions/configure-aws-credentials@v4.3.0* OR @workflow.uses:*aws-actions/configure-aws-credentials@59b44184*)</code></pre></div>
+    <div class="tab-content" id="art-808-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-808-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-808-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-808-uc1-spl-acc"><button class="copy-btn">COPY</button><code>`summariesonly` | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Change.user) as triggered_by values(Change.object_path) as workflow_repo from datamodel=Change where Change.vendor_product=&quot;GitHub&quot; Change.action=&quot;workflow_run&quot; earliest=&quot;08/04/2025:17:49:00&quot; latest=&quot;08/04/2025:20:47:00&quot; by Change.object_path Change.object | `drop_dm_object_name(Change)` | join type=left object_path [ search index=github_workflows (&quot;aws-actions/configure-aws-credentials@v4.3.0&quot; OR &quot;aws-actions/configure-aws-credentials@59b44184&quot;) | stats values(uses) as pinned_uses by repo | rename repo as object_path ] | where isnotnull(pinned_uses)</code></pre><pre class="spl-mode-body" id="art-808-uc1-spl-raw"><button class="copy-btn">COPY</button><code>summariesonly=false | tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Change.user) as triggered_by values(Change.object_path) as workflow_repo from datamodel=Change where Change.vendor_product=&quot;GitHub&quot; Change.action=&quot;workflow_run&quot; earliest=&quot;08/04/2025:17:49:00&quot; latest=&quot;08/04/2025:20:47:00&quot; by Change.object_path Change.object | `drop_dm_object_name(Change)` | join type=left object_path [ search index=github_workflows (&quot;aws-actions/configure-aws-credentials@v4.3.0&quot; OR &quot;aws-actions/configure-aws-credentials@59b44184&quot;) | stats values(uses) as pinned_uses by repo | rename repo as object_path ] | where isnotnull(pinned_uses)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-808-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-808-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-808-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-808-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-808-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-808-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+// article (matching shape with the Defender query).
+SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where NewProcessName endswith &quot;\powershell.exe&quot;
+   or NewProcessName endswith &quot;\cmd.exe&quot;
+   or NewProcessName endswith &quot;\rundll32.exe&quot;
+   or NewProcessName endswith &quot;\regsvr32.exe&quot;
+   or NewProcessName endswith &quot;\mshta.exe&quot;
+   or NewProcessName endswith &quot;\wscript.exe&quot;
+   or NewProcessName endswith &quot;\cscript.exe&quot;
+   or NewProcessName endswith &quot;\wmic.exe&quot;
+   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
+| project TimeGenerated, Computer, Account, ParentProcessName,
+          NewProcessName, CommandLine
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-808-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
+status: experimental
+description: |
+    A signed vendor binary (in the article&#x27;s named-vendors list)
+    spawning script-host or LOLBin children. Strongest signal when
+    paired with a recent CVE / supply-chain advisory naming the same
+    vendor.
+references:
+    - https://attack.mitre.org/techniques/T1195/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1195
+    - attack.initial-access
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_child:
+        Image|endswith:
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+            - &#x27;\cmd.exe&#x27;
+            - &#x27;\rundll32.exe&#x27;
+            - &#x27;\regsvr32.exe&#x27;
+            - &#x27;\mshta.exe&#x27;
+            - &#x27;\wscript.exe&#x27;
+            - &#x27;\cscript.exe&#x27;
+            - &#x27;\wmic.exe&#x27;
+            - &#x27;\bitsadmin.exe&#x27;
+    selection_parent_vendor:
+        ParentImage|contains:
+            - &#x27;\Program Files\&#x27;
+            - &#x27;\Program Files (x86)\&#x27;
+    condition: selection_child and selection_parent_vendor
+falsepositives:
+    - Many — installers and updaters legitimately spawn children. Pin
+      the parent path to specific vendor binaries observed in the
+      article before alerting.
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-808-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-808-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-808-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-808-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-808-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-808-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-808-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-808-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-808-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2025-30066&quot;, &quot;CVE-2025-30154&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-808-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2025-30066&quot;, &quot;CVE-2025-30154&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-808-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-808-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-808-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-808-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2025-30066&quot;, &quot;CVE-2025-30154&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-808-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2025-30066&quot;, &quot;CVE-2025-30154&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-808-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-808-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-808-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-808-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-808-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
+// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
+// (Initiating only) so column-projection has to differ per side.
+union
+    ( DeviceFileEvents
+        | where Timestamp &gt; ago(7d)
+        | where InitiatingProcessAccountName !endswith &quot;$&quot;
+        | where SHA256 in~ (&quot;0e58ed8671d6b60d0890c21b07f8835ace038e67&quot;, &quot;f0d342d24037bb11d26b9bd8496e0808ba32e9ec&quot;) or SHA1 in~ (&quot;0e58ed8671d6b60d0890c21b07f8835ace038e67&quot;, &quot;f0d342d24037bb11d26b9bd8496e0808ba32e9ec&quot;) or MD5 in~ (&quot;0e58ed8671d6b60d0890c21b07f8835ace038e67&quot;, &quot;f0d342d24037bb11d26b9bd8496e0808ba32e9ec&quot;)
+        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
+    ( DeviceProcessEvents
+        | where Timestamp &gt; ago(7d)
+        | where AccountName !endswith &quot;$&quot;
+        | where SHA256 in~ (&quot;0e58ed8671d6b60d0890c21b07f8835ace038e67&quot;, &quot;f0d342d24037bb11d26b9bd8496e0808ba32e9ec&quot;) or SHA1 in~ (&quot;0e58ed8671d6b60d0890c21b07f8835ace038e67&quot;, &quot;f0d342d24037bb11d26b9bd8496e0808ba32e9ec&quot;) or MD5 in~ (&quot;0e58ed8671d6b60d0890c21b07f8835ace038e67&quot;, &quot;f0d342d24037bb11d26b9bd8496e0808ba32e9ec&quot;)
+        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
+| order by Timestamp desc
+</code></pre></div>
+    <div class="tab-content" id="art-808-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
+// Defender version so the engine can push hash predicates per-side.
+let BadHashes = dynamic([&quot;0e58ed8671d6b60d0890c21b07f8835ace038e67&quot;, &quot;f0d342d24037bb11d26b9bd8496e0808ba32e9ec&quot;]);
+union
+    ( ImFileEvent
+        | where TimeGenerated &gt; ago(7d)
+        | where ActorUsername !endswith &quot;$&quot;
+        | where TargetFileSHA256 in~ (BadHashes)
+           or TargetFileSHA1 in~ (BadHashes)
+           or TargetFileMD5 in~ (BadHashes)
+        | project TimeGenerated, DvcHostname, EventType,
+                  TargetFileName, TargetFilePath, TargetFileSHA256,
+                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
+    ( ImProcessCreate
+        | where TimeGenerated &gt; ago(7d)
+        | where ActorUsername !endswith &quot;$&quot;
+        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
+        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
+                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
+                  TargetFileSHA256 = SHA256,
+                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-808-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
+status: experimental
+description: |
+    Replace `__HASH_LIST__` placeholder with article-specific SHA256
+    values. Use a watchlist or external indicator file for management
+    at scale.
+references:
+    - https://attack.mitre.org/techniques/T1027/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1027
+    - attack.defense-evasion
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Hashes|contains:
+            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
+    condition: selection
+falsepositives:
+    - None on a true-positive hash match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-808-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-808-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-808-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-808-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (&quot;0e58ed8671d6b60d0890c21b07f8835ace038e67&quot;, &quot;f0d342d24037bb11d26b9bd8496e0808ba32e9ec&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| append
+    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
+        where Processes.process_hash IN (&quot;0e58ed8671d6b60d0890c21b07f8835ace038e67&quot;, &quot;f0d342d24037bb11d26b9bd8496e0808ba32e9ec&quot;)
+        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
+     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-808-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (&quot;0e58ed8671d6b60d0890c21b07f8835ace038e67&quot;, &quot;f0d342d24037bb11d26b9bd8496e0808ba32e9ec&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| append
+    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
+        where Processes.process_hash IN (&quot;0e58ed8671d6b60d0890c21b07f8835ace038e67&quot;, &quot;f0d342d24037bb11d26b9bd8496e0808ba32e9ec&quot;)
+        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
+     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-809" data-art-slug="2025-08-15-when-changed-files-changed-everything-our-black-hat-2025-pre"
   data-phases="actions,c2,delivery,exploit,install,recon,weapon" data-sev="crit"
   data-techs="T1190,T1195.002"
@@ -6687,132 +7149,6 @@ level: critical
         where Processes.process_hash IN (&quot;c68e42f416f482d43653f36cd14384270b54b68d6496a8e34ce887687de5b441&quot;)
         by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
      | `drop_dm_object_name(Processes)`]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-834" data-art-slug="2025-07-22-cisa-kev-cve-2025-2775-sysaid-on-prem-improper-restriction-o"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs=""
-  data-sources="CISA KEV"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application"
-  data-targets=""
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2025-2775 — SysAid On-Prem Improper Restriction of XML External Entity Reference Vulnerability SysAid On-Prem contains an improper restriction of XML external entity reference vulnerability in the Server URL processing functionality, allowing for administrator account takeover and file read primitives. Vendor: SysAid, Product: SysAid On-Prem. Federal patch due: 2025-08-12. CVE-2025-2775 CVE-2025-2776 CVE-2025-2777 CVE-2024-36394  Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2025-07-22-cisa-kev-cve-2025-2775-sysaid-on-prem-improper-restriction-o" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2025-2775 — SysAid On-Prem Improper Restriction of XML External Entity Reference Vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
-  <div class="pubmeta">
-    <span>2025-07-22</span>
-    <span>1 use case</span>
-    <span>0 techniques</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">SysAid On-Prem contains an improper restriction of XML external entity reference vulnerability in the Server URL processing functionality, allowing for administrator account takeover and file read primitives. Vendor: SysAid, Product: SysAid On-Prem. Federal patch due: 2025-08-12.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2025-2775</span> <span class="ind cve">CVE-2025-2776</span> <span class="ind cve">CVE-2025-2777</span> <span class="ind cve">CVE-2024-36394</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-834-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-834"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-834-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-834-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-834-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-834-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-834-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2025-2775&quot;, &quot;CVE-2025-2776&quot;, &quot;CVE-2025-2777&quot;, &quot;CVE-2024-36394&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-834-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2025-2775&quot;, &quot;CVE-2025-2776&quot;, &quot;CVE-2025-2777&quot;, &quot;CVE-2024-36394&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-834-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-834-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-834-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-834-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2025-2775&quot;, &quot;CVE-2025-2776&quot;, &quot;CVE-2025-2777&quot;, &quot;CVE-2024-36394&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-834-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2025-2775&quot;, &quot;CVE-2025-2776&quot;, &quot;CVE-2025-2777&quot;, &quot;CVE-2024-36394&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>
