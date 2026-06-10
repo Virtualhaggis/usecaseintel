@@ -11,16 +11,13 @@ By Bill Toulas
 June 9, 2026
 05:20 PM
 0 
-
-
 Phishing simulation on an OpenClaw email agent with various configuration profiles showed that it was susceptible to tactics commonly used to compromise human users.
-
-
-The OpenClaw open-source AI agent framework allows large language models (LLMs) to interact with real-world systems and perform actions autonomously. It can be used as an email agent for basic reasoning and operat…
+The OpenClaw open-source AI agent framework allows large language models (LLMs) to interact with real-world systems and perform actions autonomously. It can be used as an email agent for basic reasoning and operations.
+Re…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **Domain (defanged):** `holidaygifts.co.il`
 
 ## MITRE ATT&CK Techniques
 
@@ -34,12 +31,112 @@ The OpenClaw open-source AI agent framework allows large language models (LLMs) 
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1071** — Application Layer Protocol
+- **T1566.002** — Phishing: Spearphishing Link
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1213** — Data from Information Repositories
+- **T1567** — Exfiltration Over Web Service
+- **T1114.003** — Email Collection: Email Forwarding Rule
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### DNS / HTTP to holidaygifts.co.il gift card phishing domain (Varonis OpenClaw IOC)
+
+`UC_6_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where (DNS.query="holidaygifts.co.il" OR DNS.query="*.holidaygifts.co.il") by DNS.src DNS.query DNS.answer host
+| `drop_dm_object_name(DNS)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| append [| tstats summariesonly=t count from datamodel=Web where Web.url="*holidaygifts.co.il*" by Web.src Web.user Web.url Web.http_user_agent Web.status | `drop_dm_object_name(Web)`]
+```
+
+**Defender KQL:**
+```kql
+let IOC = dynamic(["holidaygifts.co.il"]);
+union isfuzzy=true
+  (DeviceNetworkEvents
+   | where Timestamp > ago(30d)
+   | where RemoteUrl has_any (IOC) or tostring(AdditionalFields) has_any (IOC)
+   | project Timestamp, Source="DeviceNetworkEvents", DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort),
+  (EmailUrlInfo
+   | where Timestamp > ago(30d)
+   | where Url has_any (IOC) or UrlDomain has_any (IOC)
+   | project Timestamp, Source="EmailUrlInfo", NetworkMessageId, Url, UrlDomain),
+  (UrlClickEvents
+   | where Timestamp > ago(30d)
+   | where Url has_any (IOC)
+   | project Timestamp, Source="UrlClickEvents", AccountUpn, Url, ActionType, IsClickedThrough, IPAddress)
+| order by Timestamp desc
+```
+
+### AI-agent / service mailbox exfiltrating credentials or CRM data to external freemail
+
+`UC_6_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Email.subject) as subjects values(Email.file_name) as attachments values(Email.message_id) as msgids from datamodel=Email where Email.direction="outbound" by Email.src Email.recipient host
+| `drop_dm_object_name(Email)`
+| where match(src, "(?i)(agent|bot|^ai[-_]|automation|assistant|pinchy|copilot|llm|service[-_]?account)") AND match(recipient, "(?i)@(gmail|outlook|yahoo|proton(mail)?|hotmail|aol|gmx|mail\.com)\.") AND (match(mvjoin(subjects,"|"), "(?i)(aws|iam|access[-_ ]?key|secret|credential|password|ssh|private[-_ ]?key|database|db[-_ ]?pass|crm|customer[-_ ]?export|contract|revenue)") OR match(mvjoin(attachments,"|"), "(?i)\.(csv|json|pem|ppk|env|sql|xlsx|key)$"))
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let AgentSenderPattern = @"(?i)(agent|bot|^ai[-_]|automation|assistant|pinchy|copilot|llm|service[-_]?account)";
+let FreeMailPattern = @"(?i)@(gmail|outlook|yahoo|proton(mail)?|hotmail|aol|gmx)\.";
+let SensitiveSubject = @"(?i)(aws|iam|access\s*key|secret|credential|password|ssh|private\s*key|database|db\s*pass|crm|customer\s*export|contract|revenue|staging)";
+let SensitiveExt = dynamic([".csv",".json",".pem",".ppk",".env",".sql",".xlsx",".key"]);
+EmailEvents
+| where Timestamp > ago(7d)
+| where EmailDirection == "Outbound"
+| where SenderFromAddress matches regex AgentSenderPattern
+| where RecipientEmailAddress matches regex FreeMailPattern
+| join kind=leftouter (
+    EmailAttachmentInfo
+    | where Timestamp > ago(7d)
+    | summarize Attachments = make_set(FileName), AttachmentSHA256 = make_set(SHA256) by NetworkMessageId
+  ) on NetworkMessageId
+| where Subject matches regex SensitiveSubject
+     or AttachmentCount > 0 and tostring(Attachments) has_any (SensitiveExt)
+| project Timestamp, NetworkMessageId, SenderFromAddress, RecipientEmailAddress, Subject, AttachmentCount, Attachments, AttachmentSHA256, DeliveryAction, DeliveryLocation
+| order by Timestamp desc
+```
+
+### OAuth consent grant to unverified timesheet-themed application (Varonis OpenClaw scenario 4)
+
+`UC_6_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Change.object) as app values(Change.user) as consenter values(Change.src) as src from datamodel=Change where Change.object_category="OAuthApplication" AND (Change.action="created" OR Change.action="updated" OR Change.action="granted") by Change.action host
+| `drop_dm_object_name(Change)`
+| where match(mvjoin(app,"|"), "(?i)(time[-_ ]?sheet|time[-_ ]?track|hour[-_ ]?log|hours[-_ ]?app|punch[-_ ]?clock|timeclock|workhours)")
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let TimesheetPattern = @"(?i)(time\s*sheet|time-sheet|timesheet|time\s*track|timetrack|hour\s*log|hours\s*app|punch\s*clock|timeclock|workhours)";
+CloudAppEvents
+| where Timestamp > ago(30d)
+| where ActionType has_any ("Consent to application.", "Consent to application", "Add OAuth2PermissionGrant.", "Add delegated permission grant.", "Add app role assignment grant to user.")
+| extend AppName = tostring(coalesce(ObjectName, tostring(parse_json(tostring(RawEventData)).ObjectName), tostring(parse_json(tostring(RawEventData)).Target[0].ID)))
+| extend ConsentScope = tostring(parse_json(tostring(RawEventData)).ModifiedProperties)
+| where AppName matches regex TimesheetPattern
+| project Timestamp, ActionType, AccountDisplayName, AccountObjectId, AccountUpn=AccountId, IPAddress, CountryCode, AppName, ApplicationId, ConsentScope, RawEventData
+| order by Timestamp desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -244,7 +341,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `holidaygifts.co.il`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 5 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

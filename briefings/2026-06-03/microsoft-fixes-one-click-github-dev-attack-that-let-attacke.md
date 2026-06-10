@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Mirasvit CacheWarmer cookie carrying base64 PHP object (CVE-2026-45247)
 
-`UC_101_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_104_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceNetworkEvents
 
 ### Magento/PHP webserver spawning shell post-CacheWarmer deserialization RCE
 
-`UC_101_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_104_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

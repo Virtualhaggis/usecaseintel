@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Mass /_matrix/media/ bulk download from tchap.gouv.fr to a single endpoint (Tchap exfil)
 
-`UC_29_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_34_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceNetworkEvents
 
 ### PowerShell script containing hardcoded LDAP bind with plaintext password (Tchap-leak vector)
 
-`UC_29_3` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_34_3` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### High-rate Matrix client API enumeration against tchap.gouv.fr (room/user/media scraping)
 
-`UC_29_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_34_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

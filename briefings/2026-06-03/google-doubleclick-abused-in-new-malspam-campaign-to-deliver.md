@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### HTML attachment with meta-refresh redirect via Google DoubleClick to malspam landing
 
-`UC_103_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_106_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ HtmlAttachments
 
 ### ZIP-borne JavaScript loader spawning PowerShell from user Downloads
 
-`UC_103_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_106_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceProcessEvents
 
 ### PowerShell fetching DesckVB .NET loader from pastee.dev
 
-`UC_103_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_106_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceNetworkEvents
 
 ### DesckVB Defender exclusion configuration via Add-MpPreference / WMIC
 
-`UC_103_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_106_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -167,7 +167,7 @@ DeviceProcessEvents
 
 ### DesckVB persistence via Run/RunOnce + Startup folder loader drop
 
-`UC_103_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_106_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -213,7 +213,7 @@ RunKeys
 
 ### DesckVB C2 raw TCP beacon to known infrastructure (IPs + DDNS + hostgator domain)
 
-`UC_103_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_106_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

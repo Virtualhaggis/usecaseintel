@@ -46,24 +46,6 @@ Out of 32 "critical" entries, 28 are remote code execution (RCE) vulnerabili
 - **CVE:** `CVE-2026-32193`
 - **CVE:** `CVE-2026-45648`
 - **CVE:** `CVE-2026-47288`
-- **CVE:** `CVE-2026-47654`
-- **CVE:** `CVE-2026-33828`
-- **CVE:** `CVE-2026-45460`
-- **CVE:** `CVE-2026-48567`
-- **CVE:** `CVE-2026-48579`
-- **CVE:** `CVE-2026-45497`
-- **CVE:** `CVE-2026-42824`
-- **CVE:** `CVE-2026-47655`
-- **CVE:** `CVE-2026-42905`
-- **CVE:** `CVE-2026-42980`
-- **CVE:** `CVE-2026-42986`
-- **CVE:** `CVE-2026-42989`
-- **CVE:** `CVE-2026-45481`
-- **CVE:** `CVE-2026-45586`
-- **CVE:** `CVE-2026-45658`
-- **CVE:** `CVE-2026-50507`
-- **CVE:** `CVE-2026-47634`
-- **CVE:** `CVE-2026-49160`
 
 ## MITRE ATT&CK Techniques
 
@@ -78,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Microsoft Patch Tuesday for June 2026 — Snort rules and prominent vulnerabilitie
 
-`UC_0_1` · phase: **exploit** · confidence: **High**
+`UC_5_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +112,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-42985`, `CVE-2026-47291`, `CVE-2026-44803`, `CVE-2026-44812`, `CVE-2026-42992`, `CVE-2026-44799`, `CVE-2026-44801`, `CVE-2026-47289` _(+40 more)_
+  - CVE(s): `CVE-2026-42985`, `CVE-2026-47291`, `CVE-2026-44803`, `CVE-2026-44812`, `CVE-2026-42992`, `CVE-2026-44799`, `CVE-2026-44801`, `CVE-2026-47289` _(+22 more)_
 
 
 ## Why this matters

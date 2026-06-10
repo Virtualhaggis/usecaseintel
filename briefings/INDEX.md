@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1257 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,6 +9,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-09
+- [blinding the watchmen abusing cloud logging services for def](./2026-06-09/blinding-the-watchmen-abusing-cloud-logging-services-for-def.md)
 - [chrome v8 zero day cve 2026 11645 exploited in the wild patc](./2026-06-09/chrome-v8-zero-day-cve-2026-11645-exploited-in-the-wild-patc.md)
 - [cisa gives feds 3 days to patch check point vpn bug exploite](./2026-06-09/cisa-gives-feds-3-days-to-patch-check-point-vpn-bug-exploite.md)
 - [cisa kev cve 2026 11645 google chromium v8 out of bounds rea](./2026-06-09/cisa-kev-cve-2026-11645-google-chromium-v8-out-of-bounds-rea.md)
@@ -16,12 +17,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 7473 arista extensible operating system in](./2026-06-09/cisa-kev-cve-2026-7473-arista-extensible-operating-system-in.md)
 - [fortinet fortisandbox vulnerability allows attackers to exec](./2026-06-09/fortinet-fortisandbox-vulnerability-allows-attackers-to-exec.md)
 - [french govt messaging service breached in account hijacking ](./2026-06-09/french-govt-messaging-service-breached-in-account-hijacking-.md)
+- [ghsa critical cve 2026 48030 pheditor os command injection i](./2026-06-09/ghsa-critical-cve-2026-48030-pheditor-os-command-injection-i.md)
+- [ghsa critical cve 2026 8467 phoenixstorybook unauthenticated](./2026-06-09/ghsa-critical-cve-2026-8467-phoenixstorybook-unauthenticated.md)
 - [google chrome 0 day vulnerability exploited in the wild upda](./2026-06-09/google-chrome-0-day-vulnerability-exploited-in-the-wild-upda.md)
 - [google patches new chrome zero day flaw exploited in the wil](./2026-06-09/google-patches-new-chrome-zero-day-flaw-exploited-in-the-wil.md)
 - [hades pypi attack 19 packages poisoned to auto run bun crede](./2026-06-09/hades-pypi-attack-19-packages-poisoned-to-auto-run-bun-crede.md)
 - [litellm flaw cve 2026 42271 exploited in the wild chains to ](./2026-06-09/litellm-flaw-cve-2026-42271-exploited-in-the-wild-chains-to-.md)
 - [meta to use off site business data for feed and ai personali](./2026-06-09/meta-to-use-off-site-business-data-for-feed-and-ai-personali.md)
 - [miasma worm hits microsoft again azure functions action and ](./2026-06-09/miasma-worm-hits-microsoft-again-azure-functions-action-and-.md)
+- [microsoft defender rogueplanet zero day grants system privil](./2026-06-09/microsoft-defender-rogueplanet-zero-day-grants-system-privil.md)
 - [microsoft june 2026 patch tuesday fixes 3 zero day 200 flaws](./2026-06-09/microsoft-june-2026-patch-tuesday-fixes-3-zero-day-200-flaws.md)
 - [microsoft patch tuesday for june 2026 snort rules and promin](./2026-06-09/microsoft-patch-tuesday-for-june-2026-snort-rules-and-promin.md)
 - [microsoft patch tuesday june 2026 198 vulnerabilities fixed ](./2026-06-09/microsoft-patch-tuesday-june-2026-198-vulnerabilities-fixed-.md)
@@ -32,7 +36,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [openclaw ai agent found falling for phishing attacks spills ](./2026-06-09/openclaw-ai-agent-found-falling-for-phishing-attacks-spills-.md)
 - [pythagora io gpt pilot compromised on github shai hulud cred](./2026-06-09/pythagora-io-gpt-pilot-compromised-on-github-shai-hulud-cred.md)
 - [researchers build self replicating ai worm that operates ent](./2026-06-09/researchers-build-self-replicating-ai-worm-that-operates-ent.md)
-- [sap fixes critical flaws in netweaver and commerce cloud](./2026-06-09/sap-fixes-critical-flaws-in-netweaver-and-commerce-cloud.md)
+- [servicenow discloses security incident exposing customer dat](./2026-06-09/servicenow-discloses-security-incident-exposing-customer-dat.md)
 - [wait binding gyp can do what exploring npm s weirdest build ](./2026-06-09/wait-binding-gyp-can-do-what-exploring-npm-s-weirdest-build-.md)
 - [winrar flaw exploited by russia aligned groups to deploy ste](./2026-06-09/winrar-flaw-exploited-by-russia-aligned-groups-to-deploy-ste.md)
 
@@ -45,7 +49,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47252 anyquery applescript jxa code i](./2026-06-08/ghsa-critical-cve-2026-47252-anyquery-applescript-jxa-code-i.md)
 - [ghsa critical cve 2026 47724 nebula mesh api endpoints lack ](./2026-06-08/ghsa-critical-cve-2026-47724-nebula-mesh-api-endpoints-lack-.md)
 - [meta blocks nso group s new whatsapp phishing attack files c](./2026-06-08/meta-blocks-nso-group-s-new-whatsapp-phishing-attack-files-c.md)
-- [new shai hulud attack trojanizes 19 science focused pypi pac](./2026-06-08/new-shai-hulud-attack-trojanizes-19-science-focused-pypi-pac.md)
 - [nfcshare android malware spreads via fake banking app update](./2026-06-08/nfcshare-android-malware-spreads-via-fake-banking-app-update.md)
 - [one character linux kernel flaw enables local root access ex](./2026-06-08/one-character-linux-kernel-flaw-enables-local-root-access-ex.md)
 - [sofi confirms third party data breach at hong kong subsidiar](./2026-06-08/sofi-confirms-third-party-data-breach-at-hong-kong-subsidiar.md)
@@ -279,7 +282,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa vw82 7fv8 r6gp obot has an authorization ](./2026-05-13/ghsa-critical-ghsa-vw82-7fv8-r6gp-obot-has-an-authorization-.md)
 
 ## 2026-05-12
-- [ghsa critical cve 2026 33117 security feature bypass vulnera](./2026-05-12/ghsa-critical-cve-2026-33117-security-feature-bypass-vulnera.md)
 - [ghsa critical cve 2026 44650 sillytavern has a path traversa](./2026-05-12/ghsa-critical-cve-2026-44650-sillytavern-has-a-path-traversa.md)
 - [teampcp s mini shai hulud is back a self spreading supply ch](./2026-05-12/teampcp-s-mini-shai-hulud-is-back-a-self-spreading-supply-ch.md)
 
@@ -320,7 +322,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 41940 webpros cpanel whm and wp2 wordpress](./2026-04-30/cisa-kev-cve-2026-41940-webpros-cpanel-whm-and-wp2-wordpress.md)
 - [lightning pypi compromise a bun based credential stealer in ](./2026-04-30/lightning-pypi-compromise-a-bun-based-credential-stealer-in-.md)
 - [popular pytorch lightning package compromised by mini shai h](./2026-04-30/popular-pytorch-lightning-package-compromised-by-mini-shai-h.md)
-- [that ai extension helping you write emails it s reading them](./2026-04-30/that-ai-extension-helping-you-write-emails-it-s-reading-them.md)
 
 ## 2026-04-29
 - [a mini shai hulud has appeared bun based stealer hits sap ca](./2026-04-29/a-mini-shai-hulud-has-appeared-bun-based-stealer-hits-sap-ca.md)
