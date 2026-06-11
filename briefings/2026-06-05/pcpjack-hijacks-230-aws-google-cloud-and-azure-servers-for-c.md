@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### Outbound C2 to PCPJack Sliver server 213.136.80.73 (esp. port 9000)
 
-`UC_93_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_94_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceNetworkEvents
 
 ### PCPJack SMTP quality-gate probe to smtp.gmail.com:587 from non-mail Linux workloads
 
-`UC_93_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_94_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceNetworkEvents
 
 ### SCP exfiltration of PCPJack proxy lists to downstream collector 38.242.204.245
 
-`UC_93_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_94_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ union
 
 ### PCPJack hidden Chisel implant drop at /var/tmp/.xs on Linux
 
-`UC_93_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_94_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceFileEvents
 
 ### PCPJack SOCKS5 listener bound to deterministic port 10000-14999 on Linux
 
-`UC_93_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_94_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,7 +158,7 @@ DeviceNetworkEvents
 
 ### PCPJack exit-IP enrichment lookups to api.ipify.org and ip-api.com from Linux workloads
 
-`UC_93_13` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_94_13` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -412,7 +412,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PCPJack Hijacks 230 AWS, Google Cloud, and Azure Servers for Covert SMTP Relay N
 
-`UC_93_7` · phase: **exploit** · confidence: **High**
+`UC_94_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

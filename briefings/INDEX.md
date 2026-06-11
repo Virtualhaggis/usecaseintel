@@ -1,12 +1,15 @@
 # Briefings — full archive
 
-_1259 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1260 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-06-11
+- [ivanti endpoint manager mobile vulnerability enables remote ](./2026-06-11/ivanti-endpoint-manager-mobile-vulnerability-enables-remote-.md)
 
 ## 2026-06-10
 - [10 year old critical vulnerability in phpbb affecting tens o](./2026-06-10/10-year-old-critical-vulnerability-in-phpbb-affecting-tens-o.md)

@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Aspose.Email/Aspose.Pst mailbox library loaded by non-Outlook process
 
-`UC_109_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_110_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceImageLoadEvents
 
 ### PST exported by non-Outlook binary with password and date-range CLI flags
 
-`UC_109_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_110_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceFileEvents
 
 ### Scheduled task masquerading as Adobe/Lenovo/OneDrive system service
 
-`UC_109_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_110_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### FRPC (Fast Reverse Proxy client) execution by config-file argument
 
-`UC_109_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_110_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceProcessEvents
 
 ### curl/non-browser binary uploading to Dropbox or OneDrive personal API endpoints
 
-`UC_109_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_110_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -431,7 +431,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hackers Spied on a Stock Exchange Executive's Outlook Mailbox for Five Months
 
-`UC_109_8` · phase: **exploit** · confidence: **High**
+`UC_110_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
