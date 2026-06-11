@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1260 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1261 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,7 +9,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-11
+- [github to disable npm install scripts by default to stop sup](./2026-06-11/github-to-disable-npm-install-scripts-by-default-to-stop-sup.md)
 - [ivanti endpoint manager mobile vulnerability enables remote ](./2026-06-11/ivanti-endpoint-manager-mobile-vulnerability-enables-remote-.md)
+- [max severity ivanti sentry vulnerability now exploited in at](./2026-06-11/max-severity-ivanti-sentry-vulnerability-now-exploited-in-at.md)
+- [nottingham university data breach affects over 450 000 stude](./2026-06-11/nottingham-university-data-breach-affects-over-450-000-stude.md)
 
 ## 2026-06-10
 - [10 year old critical vulnerability in phpbb affecting tens o](./2026-06-10/10-year-old-critical-vulnerability-in-phpbb-affecting-tens-o.md)
@@ -49,7 +52,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft patch tuesday for june 2026 snort rules and promin](./2026-06-09/microsoft-patch-tuesday-for-june-2026-snort-rules-and-promin.md)
 - [microsoft restores some github repos keeps others offline as](./2026-06-09/microsoft-restores-some-github-repos-keeps-others-offline-as.md)
 - [new frost attack lets websites track what sites and apps you](./2026-06-09/new-frost-attack-lets-websites-track-what-sites-and-apps-you.md)
-- [openclaw ai agent found falling for phishing attacks spills ](./2026-06-09/openclaw-ai-agent-found-falling-for-phishing-attacks-spills-.md)
 - [pythagora io gpt pilot compromised on github shai hulud cred](./2026-06-09/pythagora-io-gpt-pilot-compromised-on-github-shai-hulud-cred.md)
 - [researchers build self replicating ai worm that operates ent](./2026-06-09/researchers-build-self-replicating-ai-worm-that-operates-ent.md)
 - [servicenow discloses security incident exposing customer dat](./2026-06-09/servicenow-discloses-security-incident-exposing-customer-dat.md)
@@ -102,7 +104,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47708 mcp for stata command injection](./2026-06-04/ghsa-critical-cve-2026-47708-mcp-for-stata-command-injection.md)
 - [ghsa critical ghsa 8whc 2wmv ww35 wwbn avideo unauthenticate](./2026-06-04/ghsa-critical-ghsa-8whc-2wmv-ww35-wwbn-avideo-unauthenticate.md)
 - [ghsa critical ghsa jpvj wpmj h7rv supply chain compromise vi](./2026-06-04/ghsa-critical-ghsa-jpvj-wpmj-h7rv-supply-chain-compromise-vi.md)
-- [hackers spied on a stock exchange executive s outlook mailbo](./2026-06-04/hackers-spied-on-a-stock-exchange-executive-s-outlook-mailbo.md)
 - [hypotheses telemetry and human judgment inside cisco talos t](./2026-06-04/hypotheses-telemetry-and-human-judgment-inside-cisco-talos-t.md)
 - [miasma npm supply chain attack self spreading worm via phant](./2026-06-04/miasma-npm-supply-chain-attack-self-spreading-worm-via-phant.md)
 - [node gyp supply chain compromise a self propagating npm worm](./2026-06-04/node-gyp-supply-chain-compromise-a-self-propagating-npm-worm.md)

@@ -1,3 +1,129 @@
+<article class="card" id="art-511" data-art-slug="2026-02-18-cisa-kev-cve-2021-22175-gitlab-server-side-request-forgery-s"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2021-22175 — GitLab Server-Side Request Forgery (SSRF) Vulnerability GitLab contains a server-side request forgery (SSRF) vulnerability when requests to the internal network for webhooks are enabled. Vendor: GitLab, Product: GitLab. Federal patch due: 2026-03-11. CVE-2021-22175  Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-02-18-cisa-kev-cve-2021-22175-gitlab-server-side-request-forgery-s" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2021-22175 — GitLab Server-Side Request Forgery (SSRF) Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2026-02-18</span>
+    <span>1 use case</span>
+    <span>0 techniques</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">GitLab contains a server-side request forgery (SSRF) vulnerability when requests to the internal network for webhooks are enabled. Vendor: GitLab, Product: GitLab. Federal patch due: 2026-03-11.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-22175</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-511-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-511"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-511-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-511-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-511-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-511-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-511-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2021-22175&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-511-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2021-22175&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-511-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-511-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-511-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-511-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2021-22175&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-511-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2021-22175&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-512" data-art-slug="2026-02-18-cisa-kev-cve-2026-22769-dell-recoverpoint-for-virtual-machin"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs=""
@@ -8679,456 +8805,6 @@ DeviceTvmSoftwareVulnerabilities
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-541" data-art-slug="2026-02-11-stepsecurity-detects-early-supply-chain-risk-signals-in-kilo"
-  data-phases="actions,c2,delivery,exploit,install" data-sev="high"
-  data-techs="T1195.002"
-  data-sources="StepSecurity"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="endpoint,network"
-  data-targets="vcs,windows"
-  data-uc-count="4" data-llm-uc-count="3"
-  data-search="StepSecurity Detects Early Supply Chain Risk Signals in kilocode npm StepSecurity detected early supply chain risk signals in a legitimate kilocode npm release, showing how small behavior changes can quietly weaken trust before attacks happen  T1195.002 [LLM] Inventory: @kilocode/cli v1.0.0-v1.0.3 affected-release install on dev workstations [LLM] npm postinstall: @kilocode/cli platform-binary directory (cli-{platform}-{arch}) write [LLM] npm/yarn/pnpm postinstall: Node child egressing to non-registry public host Trusted vendor binary / installer launching unusual children">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2026-02-11-stepsecurity-detects-early-supply-chain-risk-signals-in-kilo" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.stepsecurity.io/blog/stepsecurity-detects-early-supply-chain-risk-signals-in-kilocode-npm" target="_blank" rel="noopener">StepSecurity Detects Early Supply Chain Risk Signals in kilocode npm</a></h2>
-  <div class="source-badges"><span class="source-badge ">StepSecurity</span></div>
-  <div class="pubmeta">
-    <span>2026-02-11</span>
-    <span>4 use cases</span>
-    <span>1 technique</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">StepSecurity detected early supply chain risk signals in a legitimate kilocode npm release, showing how small behavior changes can quietly weaken trust before attacks happen</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-541-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-541"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-541-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Inventory: @kilocode/cli v1.0.0-v1.0.3 affected-release install on dev workstations</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] npm postinstall: @kilocode/cli platform-binary directory (cli-{platform}-{arch}) write</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] npm/yarn/pnpm postinstall: Node child egressing to non-registry public host</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="9430b6d25e" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
-  <summary>
-    <span class="uc-title">Inventory: @kilocode/cli v1.0.0-v1.0.3 affected-release install on dev workstations</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="9430b6d25e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Identifies developer workstations that installed @kilocode/cli versions v1.0.0 through v1.0.3 — the releases StepSecurity flagged on 2026-01-29 for missing npm provenance attestations and a newly introduced postinstall script. Pure inventory hunt: package is benign but the affected window represents a weakened trust posture that should be tracked and re-installed once provenance is restored.
-
-Rationale: Uses the exact package name (@kilocode/cli) and node_modules path convention confirmed in the article body and GitHub issue #5547. Affected version range (v1.0.0-v1.0.3) corroborated by the maintainer thread on GitHub. Tier=hunting because the package itself is benign — this is inventory, not detection of malicious code.
-
-Cross-checked against:
-  • https://github.com/Kilo-Org/kilocode/issues/5547
-  • https://www.npmjs.com/package/@kilocode/cli</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developers legitimately using Kilo Code CLI for AI-assisted coding (treat as inventory, not alert)</li><li>CI/CD pipelines running `npm install @kilocode/cli` for testing or evaluation</li><li>Workstation imaging that pre-installs kilocode for AI engineering teams</li><li>Engineers running the kilocode binary directly after a clean install (post-install execution path looks similar)</li><li>Cached npm install replays during `npm ci` from package-lock</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;ci&quot; or InitiatingProcessParentFileName !in~ (&quot;agent.exe&quot;,&quot;runner.exe&quot;,&quot;actions-runner.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Confirm the version installed by reading the node_modules/@kilocode/cli/package.json on the host or via npm ls @kilocode/cli. If version is outside 1.0.0-1.0.3, close as expected. If inside, proceed. 2) Contain: No immediate isolation needed — package is benign per maintainer fix. Instruct user to `npm install @kilocode/cli@latest` to upgrade to a provenance-attested release, and clear any cached older version (`npm cache clean --force`). 3) Hunt: Pivot on same host for any unexpected outbound connections from node.exe during the install window (DeviceNetworkEvents joined by Timestamp ±5min); also check for new entries under @kilocode/cli-darwin-arm64, @kilocode/cli-linux-x64, @kilocode/cli-win32-x64 via UC2.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-541-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-541-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-541-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-541-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-541-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-541-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-541-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(60d)
-| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;node&quot;,&quot;npm.cmd&quot;,&quot;npm.exe&quot;,&quot;yarn.cmd&quot;,&quot;pnpm.cmd&quot;) or FileName in~ (&quot;node.exe&quot;,&quot;node&quot;)
-| where ProcessCommandLine has &quot;@kilocode/cli&quot; 
-    or InitiatingProcessCommandLine has &quot;@kilocode/cli&quot;
-    or FolderPath has @&quot;\node_modules\@kilocode\cli&quot;
-    or InitiatingProcessFolderPath has @&quot;\node_modules\@kilocode\cli&quot;
-    or ProcessCommandLine has &quot;node_modules/@kilocode/cli&quot;
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd   = InitiatingProcessCommandLine,
-          ChildImage  = FolderPath,
-          ChildCmd    = ProcessCommandLine,
-          SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-541-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(60d)
-| where ActingProcessName has_any (&quot;node.exe&quot;,&quot;node&quot;,&quot;npm.cmd&quot;,&quot;npm.exe&quot;,&quot;yarn.cmd&quot;,&quot;pnpm.cmd&quot;)
-   or ParentProcessName has_any (&quot;npm.cmd&quot;,&quot;npm.exe&quot;,&quot;node.exe&quot;,&quot;yarn.cmd&quot;,&quot;pnpm.cmd&quot;)
-| where ActingProcessCommandLine has &quot;@kilocode/cli&quot;
-    or ParentProcessCommandLine has &quot;@kilocode/cli&quot;
-    or ActingProcessCommandLine has &quot;node_modules/@kilocode/cli&quot;
-    or ActingProcessCommandLine has @&quot;node_modules\@kilocode\cli&quot;
-| where ActorUsername !endswith &quot;$&quot;
-| project TimeGenerated, DvcHostname, ActorUsername,
-          ParentCmd = ParentProcessCommandLine,
-          ChildCmd  = ActingProcessCommandLine,
-          SHA256
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-541-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Affected @kilocode/cli npm Package Install (v1.0.0-v1.0.3 Provenance-Loss Window)
-id: 7c2f3ab0-5e8d-4a91-9c4e-2d1a4f6b8c01
-description: |
-  Detects execution of Node.js or npm/yarn/pnpm tooling against the @kilocode/cli
-  package path. The Jan 2026 release moved repositories, lost provenance
-  attestations, and introduced a postinstall script that creates unsigned
-  platform-binary symlinks. Affected versions 1.0.0-1.0.3.
-references:
-  - https://www.stepsecurity.io/blog/stepsecurity-detects-early-supply-chain-risk-signals-in-kilocode-npm
-  - https://github.com/Kilo-Org/kilocode/issues/5547
-author: SOC Detection Engineering
-date: 2026/02/09
-tags:
-  - attack.initial_access
-  - attack.t1195.002
-  - attack.execution
-  - attack.t1059.007
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  selection_parent:
-    ParentImage|endswith:
-      - &#x27;\node.exe&#x27;
-      - &#x27;\npm.cmd&#x27;
-      - &#x27;\npm.exe&#x27;
-      - &#x27;\yarn.cmd&#x27;
-      - &#x27;\pnpm.cmd&#x27;
-  selection_path:
-    CommandLine|contains:
-      - &#x27;@kilocode/cli&#x27;
-      - &#x27;node_modules\@kilocode\cli&#x27;
-      - &#x27;node_modules/@kilocode/cli&#x27;
-  condition: selection_parent and selection_path
-falsepositives:
-  - Internal developers legitimately installing or running Kilo Code CLI (expected — this is an inventory hunt, not a malicious-activity alert)
-level: low</code></pre></div>
-    <div class="tab-content" id="art-541-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 (@ParentImage:(*\\node.exe OR *\\Node.exe OR *\\npm.cmd OR *\\NPM.CMD OR *\\npm.exe OR *\\yarn.cmd OR *\\pnpm.cmd) OR @Image:(*\\node.exe OR *\\Node.exe OR *\\NODE.EXE)) (@CommandLine:(*@kilocode/cli* OR *node_modules\\@kilocode\\cli* OR *node_modules/@kilocode/cli*) OR @ParentCommandLine:(*@kilocode/cli* OR *node_modules\\@kilocode\\cli*))</code></pre></div>
-    <div class="tab-content" id="art-541-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| (ImageFileName=/\\node\.exe$/i OR ParentBaseFileName=/^(node\.exe|npm\.cmd|npm\.exe|yarn\.cmd|pnpm\.cmd)$/i)
-| (CommandLine=/@kilocode\/cli/i OR CommandLine=/node_modules[\\\/]@kilocode[\\\/]cli/i OR regex(&quot;@kilocode/cli&quot;, field=ParentCommandLine))
-| groupBy([aid, ComputerName, UserName, ImageFileName, ParentBaseFileName, CommandLine], function=count())
-| sort(field=_count, order=desc)</code></pre></div>
-    <div class="tab-content" id="art-541-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-541-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-541-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-541-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;npm.exe&quot;,&quot;npm.cmd&quot;,&quot;node.exe&quot;,&quot;yarn.cmd&quot;,&quot;pnpm.cmd&quot;) OR Processes.process_name IN (&quot;node.exe&quot;,&quot;node&quot;)) AND (Processes.process=&quot;*@kilocode/cli*&quot; OR Processes.parent_process=&quot;*@kilocode/cli*&quot; OR Processes.process=&quot;*node_modules\\@kilocode\\cli*&quot; OR Processes.process=&quot;*node_modules/@kilocode/cli*&quot;) by host Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-541-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;npm.exe&quot;,&quot;npm.cmd&quot;,&quot;node.exe&quot;,&quot;yarn.cmd&quot;,&quot;pnpm.cmd&quot;) OR Processes.process_name IN (&quot;node.exe&quot;,&quot;node&quot;)) AND (Processes.process=&quot;*@kilocode/cli*&quot; OR Processes.parent_process=&quot;*@kilocode/cli*&quot; OR Processes.process=&quot;*node_modules\\@kilocode\\cli*&quot; OR Processes.process=&quot;*node_modules/@kilocode/cli*&quot;) by host Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="3990a85c90" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
-  <summary>
-    <span class="uc-title">npm postinstall: @kilocode/cli platform-binary directory (cli-{platform}-{arch}) write</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="3990a85c90" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts for the file-system signature of the postinstall script flagged in the article — creation of @kilocode/cli-darwin-arm64 (and sibling @kilocode/cli-linux-x64 / @kilocode/cli-win32-x64 / @kilocode/cli-darwin-x64) directories under node_modules, written by node.exe spawned from npm/yarn/pnpm. These platform-specific binary packages bypassed integrity verification (no checksum/signature). Pattern generalizes to the broader Shai-Hulud-class supply-chain risk where postinstall scripts drop unsigned native binaries.
-
-Rationale: Pins on the exact platform-binary naming pattern (@kilocode/cli-darwin-arm64 named in article, with sibling platform/arch variants inferred from standard npm platform-package convention). Requires the writer to be node/npm tooling, which collapses FPs from unrelated file ops. Tier=hunting because the goal is to surface the install-time behavior for review, not block a known-malicious chain.
-
-Cross-checked against:
-  • https://github.com/Kilo-Org/kilocode/issues/5547</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Compromise Host Software Binary">T1554</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate kilocode install on macOS dev laptop (expected on Apple Silicon Mac fleets)</li><li>CI runner installing kilocode for AI-coding-related test workflows</li><li>`npm ci` from a lockfile that still references the affected version range</li><li>Repository clones where node_modules was committed to the tree</li><li>Recovery of node_modules from a snapshot/backup process</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Stat the @kilocode/cli/package.json on the host to confirm version. If 1.0.4+ (post-fix), close — provenance has been restored. If 1.0.0-1.0.3, validate the platform binary by computing its SHA256 and comparing against the binary now hosted in the post-fix release on npm. 2) Contain: No isolation needed for confirmed-benign installs. Force-upgrade via `npm install @kilocode/cli@latest --force` and `npm cache clean --force`. Add @kilocode/cli&lt;1.0.4 to internal vulnerability tracker as &#x27;low — provenance gap&#x27;. 3) Hunt: Pull DeviceNetworkEvents for same DeviceId ±10min around the file event — confirm node.exe only talked to registry.npmjs.org during install (UC3 covers the generalization).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-541-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-541-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-541-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-541-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-541-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-541-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-541-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(60d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileRenamed&quot;,&quot;FileModified&quot;)
-| where FolderPath matches regex @&quot;(?i)\\node_modules\\@kilocode\\cli-(darwin|linux|win32|win64)-(arm64|x64|x86|ia32)\\&quot;
-    or FolderPath matches regex @&quot;(?i)/node_modules/@kilocode/cli-(darwin|linux|win32|win64)-(arm64|x64|x86|ia32)/&quot;
-| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;node&quot;,&quot;npm.cmd&quot;,&quot;npm.exe&quot;,&quot;yarn.cmd&quot;,&quot;pnpm.cmd&quot;)
-| project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName,
-          FolderPath, FileName, FileSize,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-541-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(60d)
-| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where TargetFilePath matches regex @&quot;(?i)[\\/]node_modules[\\/]@kilocode[\\/]cli-(darwin|linux|win32|win64)-(arm64|x64|x86|ia32)[\\/]&quot;
-| where ActingProcessName has_any (&quot;node.exe&quot;,&quot;node&quot;,&quot;npm.cmd&quot;,&quot;npm.exe&quot;,&quot;yarn.cmd&quot;,&quot;pnpm.cmd&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername,
-          TargetFilePath, TargetFileName, TargetFileSize,
-          ActingProcessName, ActingProcessCommandLine,
-          TargetFileSHA256
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-541-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: &#x27;@kilocode/cli Postinstall Platform-Binary Drop (unsigned native binary)&#x27;
-id: a3f1c728-4b2e-49d7-8a05-6f1e9d3c2b50
-description: |
-  Detects creation of platform-specific @kilocode/cli-&lt;platform&gt;-&lt;arch&gt;
-  directories under node_modules by node/npm tooling. The Jan 2026 release
-  introduced a postinstall script that symlinks/extracts these unsigned
-  binaries without checksum verification.
-references:
-  - https://www.stepsecurity.io/blog/stepsecurity-detects-early-supply-chain-risk-signals-in-kilocode-npm
-  - https://github.com/Kilo-Org/kilocode/issues/5547
-author: SOC Detection Engineering
-date: 2026/02/09
-tags:
-  - attack.initial_access
-  - attack.t1195.002
-  - attack.persistence
-  - attack.t1554
-logsource:
-  category: file_event
-  product: windows
-detection:
-  selection_proc:
-    Image|endswith:
-      - &#x27;\node.exe&#x27;
-      - &#x27;\npm.cmd&#x27;
-      - &#x27;\npm.exe&#x27;
-      - &#x27;\yarn.cmd&#x27;
-      - &#x27;\pnpm.cmd&#x27;
-  selection_path:
-    TargetFilename|contains:
-      - &#x27;\node_modules\@kilocode\cli-darwin-arm64\&#x27;
-      - &#x27;\node_modules\@kilocode\cli-darwin-x64\&#x27;
-      - &#x27;\node_modules\@kilocode\cli-linux-x64\&#x27;
-      - &#x27;\node_modules\@kilocode\cli-linux-arm64\&#x27;
-      - &#x27;\node_modules\@kilocode\cli-win32-x64\&#x27;
-  condition: selection_proc and selection_path
-falsepositives:
-  - Legitimate Kilo Code CLI install on a developer workstation
-level: low</code></pre></div>
-    <div class="tab-content" id="art-541-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@Image:(*\\node.exe OR *\\Node.exe OR *\\npm.cmd OR *\\NPM.CMD OR *\\npm.exe OR *\\yarn.cmd OR *\\pnpm.cmd)) (@TargetFilename:(*node_modules\\@kilocode\\cli-darwin-arm64* OR *node_modules\\@kilocode\\cli-darwin-x64* OR *node_modules\\@kilocode\\cli-linux-x64* OR *node_modules\\@kilocode\\cli-linux-arm64* OR *node_modules\\@kilocode\\cli-win32-x64* OR *node_modules/@kilocode/cli-darwin-arm64* OR *node_modules/@kilocode/cli-linux-x64* OR *node_modules/@kilocode/cli-win32-x64*))</code></pre></div>
-    <div class="tab-content" id="art-541-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| ContextImageFileName=/\\(node\.exe|npm\.cmd|npm\.exe|yarn\.cmd|pnpm\.cmd)$/i
-| TargetFileName=/[\\\/]node_modules[\\\/]@kilocode[\\\/]cli-(darwin|linux|win32|win64)-(arm64|x64|x86|ia32)[\\\/]/i
-| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())
-| sort(field=_count, order=desc)</code></pre></div>
-    <div class="tab-content" id="art-541-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-541-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-541-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-541-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;) AND (Filesystem.file_path=&quot;*node_modules\\@kilocode\\cli-darwin-arm64*&quot; OR Filesystem.file_path=&quot;*node_modules\\@kilocode\\cli-darwin-x64*&quot; OR Filesystem.file_path=&quot;*node_modules\\@kilocode\\cli-linux-x64*&quot; OR Filesystem.file_path=&quot;*node_modules\\@kilocode\\cli-linux-arm64*&quot; OR Filesystem.file_path=&quot;*node_modules\\@kilocode\\cli-win32-x64*&quot; OR Filesystem.file_path=&quot;*node_modules/@kilocode/cli-darwin-arm64*&quot; OR Filesystem.file_path=&quot;*node_modules/@kilocode/cli-linux-x64*&quot; OR Filesystem.file_path=&quot;*node_modules/@kilocode/cli-win32-x64*&quot;) by host Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-541-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;) AND (Filesystem.file_path=&quot;*node_modules\\@kilocode\\cli-darwin-arm64*&quot; OR Filesystem.file_path=&quot;*node_modules\\@kilocode\\cli-darwin-x64*&quot; OR Filesystem.file_path=&quot;*node_modules\\@kilocode\\cli-linux-x64*&quot; OR Filesystem.file_path=&quot;*node_modules\\@kilocode\\cli-linux-arm64*&quot; OR Filesystem.file_path=&quot;*node_modules\\@kilocode\\cli-win32-x64*&quot; OR Filesystem.file_path=&quot;*node_modules/@kilocode/cli-darwin-arm64*&quot; OR Filesystem.file_path=&quot;*node_modules/@kilocode/cli-linux-x64*&quot; OR Filesystem.file_path=&quot;*node_modules/@kilocode/cli-win32-x64*&quot;) by host Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="c945f60d00" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">npm/yarn/pnpm postinstall: Node child egressing to non-registry public host</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="c945f60d00" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Generalizes the article&#x27;s core warning (&#x27;binaries fetched during installation without integrity verification&#x27;) and the Shai-Hulud TTP (postinstall/preinstall hook pulls second-stage payload from an attacker-controlled URL). Hunts for node.exe spawned by an npm/yarn/pnpm parent process making outbound public connections to anything other than the canonical npm/yarn/registry/CDN hosts. Designed to catch arbitrary supply-chain postinstall fetches before they become known-bad, not @kilocode/cli specifically.
-
-Rationale: Operationalizes the article&#x27;s core risk thesis (&#x27;binaries fetched or linked during installation&#x27; without checksum verification) plus the Shai-Hulud preinstall/postinstall second-stage-fetch pattern documented by Microsoft and Datadog. The allowlist (npm/yarn/github/jsdelivr/unpkg) reflects the legitimate package-distribution surface; anything outside it during an npm install is the SOC pivot point.
-
-Cross-checked against:
-  • https://www.microsoft.com/en-us/security/blog/2025/12/09/shai-hulud-2-0-guidance-for-detecting-investigating-and-defending-against-the-supply-chain-attack/
-  • https://securitylabs.datadoghq.com/articles/shai-hulud-2.0-npm-worm/
-  • https://unit42.paloaltonetworks.com/monitoring-npm-supply-chain-attacks/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate platform-binary fetches from vendor CDNs not in allowlist (e.g. esbuild releases from registry.npmjs.org are covered, but a custom prebuilt-binary host like nodejs.bytecode.dev is not)</li><li>Cypress, Playwright, Puppeteer, electron-rebuild downloading browser/runtime binaries during install (cypress.io, playwright.azureedge.net, electronjs.org, googleapis.com)</li><li>Corporate npm registry proxies (Artifactory, Nexus, Verdaccio) on internal hostnames — add to allowlist</li><li>Telemetry pings from CLI tools sending install-time analytics</li><li>Devs running `npm test` against APIs from a project root (parent will be shell, not npm — covered by the parent-process filter, but worth noting)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(RemoteUrl has_any (&quot;cypress.io&quot;,&quot;download.cypress.io&quot;,&quot;playwright.azureedge.net&quot;,&quot;playwright.download.prss.microsoft.com&quot;,&quot;electronjs.org&quot;,&quot;github-releases.githubusercontent.com&quot;,&quot;nodejs.org&quot;,&quot;chromedriver.storage.googleapis.com&quot;,&quot;selenium-release.storage.googleapis.com&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: Pull the exact node.exe command line and the parent npm/yarn/pnpm invocation. Identify which package&#x27;s postinstall fired by reading package-lock.json for the project. Resolve the unknown remote host — WHOIS, abuse.ch ThreatFox, VirusTotal. 2) Contain: If the remote is a known-malicious or fresh domain, network-isolate the workstation, revoke any GitHub/npm/cloud credentials accessible from that user account (Shai-Hulud 2.0 specifically targets these per Microsoft 2025-12-09 guidance), and rotate the user&#x27;s npm token. 3) Hunt: Pull DeviceFileEvents for the same DeviceId ±15min — look for new files under ~/.npmrc, ~/.config/Code/User/, ~/.claude/, ~/.aws/, ~/.config/gh/, indicating the Shai-Hulud credential-theft + AI-agent-config persistence chain. Search EDR fleet-wide for the same package name in package-lock.json blobs.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-541-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-541-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-541-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-541-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-541-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-541-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let RegistryAllowlist = dynamic([&quot;registry.npmjs.org&quot;,&quot;npmjs.com&quot;,&quot;www.npmjs.com&quot;,&quot;registry.yarnpkg.com&quot;,&quot;yarnpkg.com&quot;,&quot;nodejs.org&quot;,&quot;github.com&quot;,&quot;objects.githubusercontent.com&quot;,&quot;raw.githubusercontent.com&quot;,&quot;codeload.github.com&quot;,&quot;cdn.jsdelivr.net&quot;,&quot;unpkg.com&quot;]);
-DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;node&quot;)
-| where InitiatingProcessParentFileName in~ (&quot;npm.cmd&quot;,&quot;npm.exe&quot;,&quot;yarn.cmd&quot;,&quot;pnpm.cmd&quot;,&quot;node.exe&quot;)
-   or InitiatingProcessCommandLine has_any (&quot;postinstall&quot;,&quot;preinstall&quot;,&quot;install.js&quot;,&quot;install.cjs&quot;,&quot;install.mjs&quot;,&quot;node_modules&quot;)
-| where RemoteIPType == &quot;Public&quot;
-| extend HostOnly = tolower(tostring(parse_url(strcat(&quot;https://&quot;, RemoteUrl)).Host))
-| where isnotempty(RemoteUrl)
-| where not(RemoteUrl has_any (RegistryAllowlist))
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| summarize FirstSeen = min(Timestamp), Hits = count(), SampleHosts = make_set(RemoteUrl, 10), SampleIPs = make_set(RemoteIP, 10), SampleCmd = any(InitiatingProcessCommandLine)
-            by DeviceName, InitiatingProcessAccountName, InitiatingProcessParentFileName
-| order by FirstSeen desc</code></pre></div>
-    <div class="tab-content" id="art-541-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let RegistryAllowlist = dynamic([&quot;registry.npmjs.org&quot;,&quot;npmjs.com&quot;,&quot;www.npmjs.com&quot;,&quot;registry.yarnpkg.com&quot;,&quot;yarnpkg.com&quot;,&quot;nodejs.org&quot;,&quot;github.com&quot;,&quot;objects.githubusercontent.com&quot;,&quot;raw.githubusercontent.com&quot;,&quot;codeload.github.com&quot;,&quot;cdn.jsdelivr.net&quot;,&quot;unpkg.com&quot;]);
-ImNetworkSession
-| where TimeGenerated &gt; ago(7d)
-| where SrcUsername !endswith &quot;$&quot;
-| where isnotempty(Url) or isnotempty(DstHostname)
-| extend Host = tolower(coalesce(DstHostname, tostring(parse_url(Url).Host)))
-| where isnotempty(Host)
-| where not(Host has_any (RegistryAllowlist))
-| join kind=inner (
-    ImProcessCreate
-    | where TimeGenerated &gt; ago(7d)
-    | where ActingProcessName has_any (&quot;node.exe&quot;,&quot;node&quot;)
-    | where ParentProcessName has_any (&quot;npm.cmd&quot;,&quot;npm.exe&quot;,&quot;yarn.cmd&quot;,&quot;pnpm.cmd&quot;,&quot;node.exe&quot;)
-       or ActingProcessCommandLine has_any (&quot;postinstall&quot;,&quot;preinstall&quot;,&quot;install.js&quot;,&quot;install.cjs&quot;,&quot;install.mjs&quot;,&quot;node_modules&quot;)
-    | project ProcTime = TimeGenerated, DvcHostname, ActorUsername, ActingProcessId, ActingProcessCommandLine, ParentProcessName
-) on $left.DvcHostname == $right.DvcHostname
-| where TimeGenerated between (ProcTime .. ProcTime + 5m)
-| summarize FirstSeen = min(TimeGenerated), Hits = count(), SampleHosts = make_set(Host, 10), SampleCmd = any(ActingProcessCommandLine)
-            by DvcHostname, ActorUsername, ParentProcessName
-| order by FirstSeen desc</code></pre></div>
-    <div class="tab-content" id="art-541-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 (@Image:(*\\node.exe OR *\\Node.exe OR *\\NODE.EXE)) -@DestinationHostname:(*.npmjs.org OR *.npmjs.com OR *.yarnpkg.com OR *.nodejs.org OR *.github.com OR *.githubusercontent.com OR *.jsdelivr.net OR *.unpkg.com) -CIDR(@DestinationIp, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 169.254.0.0/16, 127.0.0.0/8)</code></pre></div>
-    <div class="tab-content" id="art-541-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
-| ContextImageFileName=/\\node\.exe$/i
-| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;169.254.0.0/16&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;127.0.0.0/8&quot;, field=RemoteAddressIP4)
-| join({#event_simpleName=ProcessRollup2 | (ImageFileName=/\\node\.exe$/i) | (ParentBaseFileName=/^(npm\.cmd|npm\.exe|yarn\.cmd|pnpm\.cmd|node\.exe)$/i OR CommandLine=/(postinstall|preinstall|install\.(js|cjs|mjs)|node_modules)/i) | groupBy([aid, TargetProcessId, ComputerName, CommandLine, ParentBaseFileName], function=count())}, field=[aid, ContextProcessId], include=[ComputerName, CommandLine, ParentBaseFileName])
-| groupBy([aid, ComputerName, ParentBaseFileName, RemoteAddressIP4, RemotePort], function=count())
-| sort(field=_count, order=desc)</code></pre></div>
-    <div class="tab-content" id="art-541-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-541-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-541-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-541-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as remote_host from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name IN (&quot;node.exe&quot;,&quot;node&quot;) AND All_Traffic.dest_category=&quot;public&quot; by host All_Traffic.src All_Traffic.user All_Traffic.process_name All_Traffic.process | `drop_dm_object_name(All_Traffic)` | search NOT (remote_host=&quot;*.npmjs.org&quot; OR remote_host=&quot;*.npmjs.com&quot; OR remote_host=&quot;*.yarnpkg.com&quot; OR remote_host=&quot;*.nodejs.org&quot; OR remote_host=&quot;*.github.com&quot; OR remote_host=&quot;*.githubusercontent.com&quot; OR remote_host=&quot;*.jsdelivr.net&quot; OR remote_host=&quot;*.unpkg.com&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-541-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as remote_host from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name IN (&quot;node.exe&quot;,&quot;node&quot;) AND All_Traffic.dest_category=&quot;public&quot; by host All_Traffic.src All_Traffic.user All_Traffic.process_name All_Traffic.process | `drop_dm_object_name(All_Traffic)` | search NOT (remote_host=&quot;*.npmjs.org&quot; OR remote_host=&quot;*.npmjs.com&quot; OR remote_host=&quot;*.yarnpkg.com&quot; OR remote_host=&quot;*.nodejs.org&quot; OR remote_host=&quot;*.github.com&quot; OR remote_host=&quot;*.githubusercontent.com&quot; OR remote_host=&quot;*.jsdelivr.net&quot; OR remote_host=&quot;*.unpkg.com&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-541-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-541-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-541-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-541-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-541-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-541-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-541-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-541-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-541-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-541-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-541-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-541-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
   </div>
 </details></div>
 </article>

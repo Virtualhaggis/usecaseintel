@@ -1,3 +1,129 @@
+<article class="card" id="art-223" data-art-slug="2026-05-20-cisa-kev-cve-2008-4250-microsoft-windows-buffer-overflow-vul"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2008-4250 — Microsoft Windows Buffer Overflow Vulnerability Microsoft Windows contains a buffer overflow vulnerability in the Windows Server Service that allows remote attackers to execute arbitrary code via a crafted RPC request that triggers an overflow during path canonicalization. Vendor: Microsoft, Product: Windows. Federal patch due: 2026-06-03. CVE-2008-4250  Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-05-20-cisa-kev-cve-2008-4250-microsoft-windows-buffer-overflow-vul" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2008-4250 — Microsoft Windows Buffer Overflow Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2026-05-20</span>
+    <span>1 use case</span>
+    <span>0 techniques</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Microsoft Windows contains a buffer overflow vulnerability in the Windows Server Service that allows remote attackers to execute arbitrary code via a crafted RPC request that triggers an overflow during path canonicalization. Vendor: Microsoft, Product: Windows. Federal patch due: 2026-06-03.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2008-4250</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-223-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-223"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-223-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-223-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-223-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-223-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-223-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2008-4250&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-223-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2008-4250&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-223-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-223-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-223-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-223-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2008-4250&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-223-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2008-4250&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-224" data-art-slug="2026-05-20-cisa-kev-cve-2009-1537-microsoft-directx-null-byte-overwrite"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
@@ -13052,685 +13178,6 @@ DeviceTvmSoftwareVulnerabilities
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-253" data-art-slug="2026-05-18-ghsa-critical-ghsa-wx9m-wx4f-4cmg-malicious-dropper-in-mistr"
-  data-phases="actions,c2,delivery,exploit,install" data-sev="crit"
-  data-techs=""
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="endpoint,network"
-  data-targets="linux,vcs,windows"
-  data-uc-count="7" data-llm-uc-count="4"
-  data-search="[GHSA / CRITICAL] GHSA-wx9m-wx4f-4cmg: Malicious dropper in mistralai 2.4.6 PyPI package Malicious dropper in mistralai 2.4.6 PyPI package   [LLM] mistralai 2.4.6 dropper: curl downloading transformers.pyz from 83.142.209.194 [LLM] mistralai 2.4.6 dropper: Python interpreter executing /tmp/transformers.pyz as detached session [LLM] Outbound network connection to mistralai 2.4.6 dropper C2 (83.142.209.194) [LLM] Drop of /tmp/transformers.pyz on Linux endpoint Network connections to article IPs / domains File hash IOCs — endpoint file/process match Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-wx9m-wx4f-4cmg: Malicious dropper in mistralai 2.4.6 PyPI">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-05-18-ghsa-critical-ghsa-wx9m-wx4f-4cmg-malicious-dropper-in-mistr" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-wx9m-wx4f-4cmg" target="_blank" rel="noopener">[GHSA / CRITICAL] GHSA-wx9m-wx4f-4cmg: Malicious dropper in mistralai 2.4.6 PyPI package</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-05-18</span>
-    <span>7 use cases</span>
-    <span>0 techniques</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Malicious dropper in mistralai 2.4.6 PyPI package</p>
-  <div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">83.142.209.194</span></div>
-<div class="ind-group"><span class="ind-label">SHA256</span><span class="ind ">6dbaa43bf2f3c0d3…</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-253-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-253"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-253-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] mistralai 2.4.6 dropper: curl downloading transformers.pyz from 83.142.209.194</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-wx9m-wx4f-4cmg: Malicious dropper in mistralai 2.4.6 PyPI</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] mistralai 2.4.6 dropper: Python interpreter executing /tmp/transformers.pyz as detached session · [LLM] Drop of /tmp/transformers.pyz on Linux endpoint · File hash IOCs — endpoint file/process match</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Outbound network connection to mistralai 2.4.6 dropper C2 (83.142.209.194) · Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="01cf7cddd3" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
-  <summary>
-    <span class="uc-title">mistralai 2.4.6 dropper: curl downloading transformers.pyz from 83.142.209.194</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="01cf7cddd3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the first-stage download performed by the malicious _run_background_task function in mistralai 2.4.6 — a curl invocation with TLS verification disabled (-k) fetching transformers.pyz from the hard-coded attacker IP 83.142.209.194. The combination of binary, flags, target IP, and output filename is unique to this campaign.
-
-Rationale: Combines three high-fidelity strings from the article: the literal C2 IP (83.142.209.194), the dropped filename (transformers.pyz), and the curl binary. Each on its own would be specific; the conjunction is unique to this campaign. The python parent and -k (TLS-verify-off) flag are additional confirming pivots from the dropper code reproduced verbatim in GHSA-wx9m-wx4f-4cmg.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-wx9m-wx4f-4cmg
-  • https://github.com/mistralai/client-python/issues/523
-  • https://pypi.org/project/mistralai/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Symmetric Cryptography (TLS verification disabled)">T1573.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal CI/CD pipeline that intentionally downloads a python zipapp named transformers.pyz from an internal Hugging Face mirror (extremely unlikely with this exact IP)</li><li>Security researcher fetching the malicious sample for analysis in a sandbox environment</li><li>Threat-intel ingestion job pulling the IOC for retro-hunting (verify source IP is not the attacker&#x27;s)</li><li>Penetration test or purple-team replay of this advisory&#x27;s TTPs against the same host</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where AccountName !in~ (&quot;researcher-svc&quot;, &quot;malware-sandbox-svc&quot;) // tune to your malware-research / detection-engineering accounts</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Pull the parent-process tree for the curl invocation — confirm parent is python(N) and grandparent is the application that did `import mistralai`. Capture the running user&#x27;s home directory, identify which credential material lives in it (cloud SDK creds, SSH keys, .env files, ~/.aws/, ~/.config/gcloud, browser-data). Check `pip show mistralai` and lockfiles for version 2.4.6. Step 2 (contain): Isolate the host. Kill any process running /tmp/transformers.pyz. Treat the host as compromised — rotate every credential reachable from the importing process per the GHSA recommendation. Block 83.142.209.194 at the egress proxy/firewall. Step 3 (hunt): Search all Linux hosts in the estate for /tmp/transformers.pyz on disk and for any DNS/IP egress to 83.142.209.194 since 2026-05-12 00:05 UTC. Audit CI/CD pipeline images and base layers — anything that ran `pip install mistralai` without version pinning between 2026-05-12 and the PyPI quarantine is suspect.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-253-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-253-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-253-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-253-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-253-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-253-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-253-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where FileName =~ &quot;curl&quot;
-| where ProcessCommandLine has &quot;83.142.209.194&quot;
-     or (ProcessCommandLine has &quot;transformers.pyz&quot; and ProcessCommandLine has &quot;/tmp/&quot;)
-| extend TlsVerifyDisabled = ProcessCommandLine has &quot; -k&quot; or ProcessCommandLine has &quot;--insecure&quot;
-| project Timestamp, DeviceName, AccountName,
-          ProcessCommandLine,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentFile = InitiatingProcessFileName,
-          ParentCmd = InitiatingProcessCommandLine,
-          TlsVerifyDisabled, FolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-253-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where DvcOs has_any (&quot;linux&quot;, &quot;Linux&quot;)
-| where TargetProcessName has &quot;curl&quot;
-| where TargetProcessCommandLine has &quot;83.142.209.194&quot;
-     or (TargetProcessCommandLine has &quot;transformers.pyz&quot; and TargetProcessCommandLine has &quot;/tmp/&quot;)
-| extend TlsVerifyDisabled = TargetProcessCommandLine has &quot; -k&quot; or TargetProcessCommandLine has &quot;--insecure&quot;
-| project TimeGenerated, DvcHostname, ActorUsername,
-          TargetProcessName, TargetProcessCommandLine,
-          ActingProcessName, ActingProcessCommandLine,
-          TlsVerifyDisabled
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-253-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Malicious mistralai 2.4.6 PyPI Dropper - Curl Download of transformers.pyz from 83.142.209.194
-id: 9c4f8e2a-1b3d-4f5e-8a7b-2c9d0e1f3a4b
-description: Detects the first-stage curl download performed by the malicious _run_background_task function added to mistralai==2.4.6 on PyPI, which fetches /tmp/transformers.pyz from the attacker-controlled IP 83.142.209.194 with TLS verification disabled.
-references:
-  - https://github.com/advisories/GHSA-wx9m-wx4f-4cmg
-  - https://github.com/mistralai/client-python/issues/523
-author: detection-engineering
-date: 2026/05/20
-tags:
-  - attack.command_and_control
-  - attack.t1105
-  - attack.initial_access
-  - attack.t1195.002
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection_img:
-    Image|endswith: &#x27;/curl&#x27;
-  selection_indicators:
-    CommandLine|contains:
-      - &#x27;83.142.209.194&#x27;
-      - &#x27;transformers.pyz&#x27;
-  condition: selection_img and selection_indicators
-falsepositives:
-  - None expected — this is a hard IOC match against a campaign-specific IP and filename combination.
-level: critical</code></pre></div>
-    <div class="tab-content" id="art-253-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.name:curl OR @process.executable.path:(*/curl OR */CURL)) (@process.command_line:*83.142.209.194* OR @process.command_line:*transformers.pyz*)</code></pre></div>
-    <div class="tab-content" id="art-253-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\/curl$/i (CommandLine=/83\.142\.209\.194/ or CommandLine=/transformers\.pyz/)
-| ParentBaseFileName=/^python[0-9.]*$/i OR CommandLine=/\s-k\s/
-| groupBy([aid, ComputerName, UserName, ParentBaseFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-253-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-253-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-253-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-253-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.parent_process_name) as parent_process_name values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name=&quot;curl&quot; (Processes.process=&quot;*83.142.209.194*&quot; OR Processes.process=&quot;*transformers.pyz*&quot;) by Processes.dest Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | where (match(parent_process_name, &quot;^python[0-9.]*$&quot;) OR like(process, &quot;%-k%-L%-s%&quot;)) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-253-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.parent_process_name) as parent_process_name values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name=&quot;curl&quot; (Processes.process=&quot;*83.142.209.194*&quot; OR Processes.process=&quot;*transformers.pyz*&quot;) by Processes.dest Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | where (match(parent_process_name, &quot;^python[0-9.]*$&quot;) OR like(process, &quot;%-k%-L%-s%&quot;)) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="7cc3721172" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">mistralai 2.4.6 dropper: Python interpreter executing /tmp/transformers.pyz as detached session</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="7cc3721172" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the second stage of the mistralai 2.4.6 supply-chain dropper — a python interpreter (sys.executable) executing the dropped /tmp/transformers.pyz zipapp. The python-runs-pyz-from-tmp pattern is the actual code-execution moment; combined with /tmp/ the false-positive rate is near zero.
-
-Rationale: Built directly on the Popen invocation in the GHSA&#x27;s reproduced source: Popen([sys.executable, &#x27;/tmp/transformers.pyz&#x27;], start_new_session=True). Python interpreter running a .pyz from /tmp is itself unusual; the exact filename transformers.pyz makes this a campaign IOC. The python-parent-spawning-python relationship is the byproduct of subprocess.Popen with sys.executable.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-wx9m-wx4f-4cmg
-  • https://github.com/mistralai/client-python/issues/523</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Native API (Popen start_new_session)">T1106</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer manually testing a python zipapp packaged as transformers.pyz in /tmp (extremely unusual filename collision)</li><li>Custom internal tool that ships a python zipapp into /tmp during install — verify name and provenance</li><li>DFIR sandbox replaying this exact campaign for training (whitelist the sandbox host)</li><li>CI runner that downloads HuggingFace transformers as a zipapp (uncommon distribution mode for that library)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where AccountName !in~ (&quot;malware-research&quot;, &quot;dfir-sandbox&quot;) // accounts authorised to detonate the sample</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): On the firing host, capture /tmp/transformers.pyz (hash + retain), the parent python&#x27;s command-line and CWD, and the importing application identity (compare InitiatingProcessParentFileName and the python -c / -m flag). Confirm pip show mistralai reports 2.4.6. Step 2 (contain): Kill the detached zipapp process and any child it spawned. Isolate the host from the network. Delete /tmp/transformers.pyz only after capture. Rotate ALL credentials reachable from the python process (env vars, ~/.aws, ~/.config, ~/.netrc, ~/.ssh, kubeconfig, instance metadata role credentials). Step 3 (hunt): Sweep all Linux hosts for /tmp/transformers.pyz, for processes whose command-line contains &#x27;/tmp/&#x27; and &#x27;.pyz&#x27;, and for the mistralai 2.4.6 package in any Python venv since 2026-05-12. Pivot to network egress to 83.142.209.194 to find hosts where the download stage succeeded.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-253-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-253-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-253-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-253-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-253-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-253-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-253-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where FileName matches regex @&quot;^python[0-9.]*$&quot;
-| where ProcessCommandLine has &quot;/tmp/transformers.pyz&quot;
-     or (ProcessCommandLine matches regex @&quot;/tmp/[^\s]+\.pyz(\s|$)&quot;)
-| extend ParentIsPython = InitiatingProcessFileName matches regex @&quot;^python[0-9.]*$&quot;
-| project Timestamp, DeviceName, AccountName,
-          ProcessCommandLine, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName,
-          ParentIsPython
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-253-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where DvcOs has_any (&quot;linux&quot;, &quot;Linux&quot;)
-| where TargetProcessName matches regex @&quot;python[0-9.]*$&quot;
-| where TargetProcessCommandLine has &quot;/tmp/transformers.pyz&quot;
-     or (TargetProcessCommandLine matches regex @&quot;/tmp/[^\s]+\.pyz(\s|$)&quot;)
-| extend ParentIsPython = ActingProcessName matches regex @&quot;python[0-9.]*$&quot;
-| project TimeGenerated, DvcHostname, ActorUsername,
-          TargetProcessCommandLine, TargetProcessName,
-          ActingProcessName, ActingProcessCommandLine,
-          ParentIsPython
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-253-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Malicious mistralai 2.4.6 PyPI Dropper - Python Executing /tmp/transformers.pyz Zipapp
-id: 7d3e5b1c-8a2f-4c6d-9e0a-1f5b3c7d2e4a
-description: Detects the second-stage execution of the mistralai 2.4.6 supply-chain dropper — a python interpreter executing the dropped zipapp at /tmp/transformers.pyz. The function _run_background_task in src/mistralai/client/__init__.py invokes Popen([sys.executable, &#x27;/tmp/transformers.pyz&#x27;], start_new_session=True).
-references:
-  - https://github.com/advisories/GHSA-wx9m-wx4f-4cmg
-  - https://github.com/mistralai/client-python/issues/523
-author: detection-engineering
-date: 2026/05/20
-tags:
-  - attack.execution
-  - attack.t1059.006
-  - attack.initial_access
-  - attack.t1195.002
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection_python:
-    Image|re: &#x27;python[0-9.]*$&#x27;
-  selection_pyz:
-    CommandLine|contains: &#x27;/tmp/transformers.pyz&#x27;
-  condition: selection_python and selection_pyz
-falsepositives:
-  - Legitimate use of Python zipapps stored in /tmp is highly unusual and the file name &#x27;transformers.pyz&#x27; is campaign-specific.
-level: critical</code></pre></div>
-    <div class="tab-content" id="art-253-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.name:(python OR python2 OR python3 OR python3.* OR python2.*) OR @process.executable.path:(*/python OR */python3 OR */python2 OR */python3.* OR */python2.*)) @process.command_line:*/tmp/transformers.pyz*</code></pre></div>
-    <div class="tab-content" id="art-253-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\/python[0-9.]*$/i CommandLine=/\/tmp\/transformers\.pyz/
-| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine, ParentBaseFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-253-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-253-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-253-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-253-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.parent_process_name) as parent_process_name values(Processes.user) as user values(Processes.process_id) as pid from datamodel=Endpoint.Processes where Processes.process_name=&quot;python*&quot; (Processes.process=&quot;*/tmp/transformers.pyz*&quot; OR Processes.process=&quot;*/tmp/*.pyz*&quot;) by Processes.dest Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-253-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.parent_process_name) as parent_process_name values(Processes.user) as user values(Processes.process_id) as pid from datamodel=Endpoint.Processes where Processes.process_name=&quot;python*&quot; (Processes.process=&quot;*/tmp/transformers.pyz*&quot; OR Processes.process=&quot;*/tmp/*.pyz*&quot;) by Processes.dest Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="1d4659901c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">Outbound network connection to mistralai 2.4.6 dropper C2 (83.142.209.194)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="1d4659901c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects any host in the estate establishing an outbound connection to the attacker-controlled IP 83.142.209.194 referenced in GHSA-wx9m-wx4f-4cmg as the host serving the second-stage transformers.pyz payload. Any connection to this IP is high-confidence evidence the dropper-download stage ran.
-
-Rationale: Pure IOC-match on the C2 IP referenced verbatim in the GHSA-wx9m-wx4f-4cmg advisory and reproduced from public issue #523. Hardcoded into the dropper at https://83.142.209.194/transformers.pyz — any tenant connection to this IP is by definition this campaign. Pivot to InitiatingProcessFileName/Command to identify whether curl, python, or another binary did the call (telemetry vendor varies).
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-wx9m-wx4f-4cmg
-  • https://github.com/mistralai/client-python/issues/523</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel feeds or IOC-validation scanners pinging the IP from a dedicated sensor host</li><li>Vulnerability scanners (Tenable, Qualys) included in retro-hunt enrichment that touch the IOC for fingerprinting</li><li>DFIR responder reachability-testing the host (curl/nc/dig from a jump box)</li><li>Pre-existing legitimate use of the IP by a third-party SaaS that happens to share the address (very unlikely; verify ASN before discounting)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DeviceName !in (&quot;ti-sensor-01&quot;, &quot;sandbox-detonate-02&quot;) // tune to your IOC-validation hosts</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Identify the originating host and process from InitiatingProcessFileName / InitiatingProcessCommandLine — confirm curl/python lineage. Pull /tmp/transformers.pyz from the host if present; hash and retain. Confirm whether mistralai 2.4.6 is installed in any venv on that host (find / -path &#x27;*mistralai*&#x27; -name &#x27;METADATA&#x27; -o -name &#x27;PKG-INFO&#x27;). Step 2 (contain): Block 83.142.209.194 at the egress proxy, NGFW, and cloud-egress NACL/Security Group. Isolate the originating host. Force credential rotation per the GHSA recommendation. Step 3 (hunt): Sweep firewall and EDR network telemetry for any connection to 83.142.209.194 since 2026-05-12 00:05 UTC across the full estate (this is the campaign-start timestamp from issue #523). Pull DNS resolutions for that IP. Audit pip-installs, lockfiles, container images, and Docker layer caches built between 2026-05-12 and the PyPI quarantine for the mistralai==2.4.6 string.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-253-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-253-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-253-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-253-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-253-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-253-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-253-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteIP == &quot;83.142.209.194&quot;
-| project Timestamp, DeviceName, LocalIP, LocalPort,
-          RemoteIP, RemotePort, RemoteUrl, Protocol,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessFolderPath,
-          InitiatingProcessParentFileName
-| order by Timestamp asc</code></pre></div>
-    <div class="tab-content" id="art-253-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
-(
-  ImNetworkSession
-  | where TimeGenerated &gt; ago(30d)
-  | where DstIpAddr == &quot;83.142.209.194&quot;
-  | project TimeGenerated, SrcHostname, SrcIpAddr, SrcUsername,
-            DstIpAddr, DstPortNumber, NetworkProtocol, NetworkBytes,
-            Url, EventProduct
-),
-(
-  CommonSecurityLog
-  | where TimeGenerated &gt; ago(30d)
-  | where DestinationIP == &quot;83.142.209.194&quot;
-  | project TimeGenerated, SourceHostName=SourceHostName, SourceIP, DestinationIP,
-            DestinationPort, RequestURL, DeviceVendor, DeviceProduct
-)
-| order by TimeGenerated asc</code></pre></div>
-    <div class="tab-content" id="art-253-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to mistralai 2.4.6 Dropper C2 IP 83.142.209.194
-id: 2a6f9b4c-3d8e-4a1b-5c7d-9e2f0a3b4c5d
-description: Detects outbound network connections to 83.142.209.194 — the attacker-controlled host that serves the second-stage transformers.pyz zipapp dropped by the malicious mistralai 2.4.6 PyPI package per GHSA-wx9m-wx4f-4cmg.
-references:
-  - https://github.com/advisories/GHSA-wx9m-wx4f-4cmg
-  - https://github.com/mistralai/client-python/issues/523
-author: detection-engineering
-date: 2026/05/20
-tags:
-  - attack.command_and_control
-  - attack.t1071.001
-  - attack.t1105
-logsource:
-  category: network_connection
-  product: linux
-detection:
-  selection:
-    DestinationIp: &#x27;83.142.209.194&#x27;
-  condition: selection
-falsepositives:
-  - Threat-intel platforms or sandboxes that intentionally connect to the IOC IP for validation.
-level: critical</code></pre></div>
-    <div class="tab-content" id="art-253-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon @EventID:3 @DestinationIp:83.142.209.194) OR (source:linux.auditd @network.destination.ip:83.142.209.194) OR (source:linux.syslog @network.destination.ip:83.142.209.194)</code></pre></div>
-    <div class="tab-content" id="art-253-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>(#event_simpleName=NetworkConnectIP4 OR #event_simpleName=DnsRequest) (RemoteAddressIP4=&quot;83.142.209.194&quot; OR FirstIP4Record=&quot;83.142.209.194&quot; OR IpAddress=&quot;83.142.209.194&quot;)
-| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-253-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-253-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-253-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-253-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.bytes_in) as bytes_in values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;83.142.209.194&quot; by All_Traffic.src All_Traffic.user All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-253-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.bytes_in) as bytes_in values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=&quot;83.142.209.194&quot; by All_Traffic.src All_Traffic.user All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="09b7e16981" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
-  <summary>
-    <span class="uc-title">Drop of /tmp/transformers.pyz on Linux endpoint</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="09b7e16981" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects creation of the dropper artifact /tmp/transformers.pyz on disk — the specific filename and path written by the malicious mistralai 2.4.6 _run_background_task function. Even if the second-stage execution fails or is killed, the file write is a definitive forensic indicator the dropper ran.
-
-Rationale: Hard-IOC match on the exact filename + path written by the dropper code reproduced in the GHSA: curl ... -o /tmp/transformers.pyz. This persists on disk even if MISTRAL_INIT is set (which prevents re-download but doesn&#x27;t delete the file). The advisory explicitly recommends `ls -la /tmp/transformers.pyz` as the affected-host check — this UC is the telemetry-side equivalent.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-wx9m-wx4f-4cmg
-  • https://github.com/mistralai/client-python/issues/523</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Match Legitimate Name or Location (transformers — masquerades as HF library)">T1036.005</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>DFIR analyst manually placing the captured malicious sample at this path during analysis on a sandbox</li><li>Research host re-downloading the IOC for verification (whitelist the analyst&#x27;s UID/host)</li><li>Backup/restore tooling restoring a previously-quarantined sample to /tmp</li><li>Coincidental naming collision — an unrelated python zipapp legitimately named transformers.pyz (extremely unlikely given HF&#x27;s transformers library is not distributed as a zipapp)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessAccountName !in~ (&quot;malware-research&quot;, &quot;dfir-evidence-svc&quot;) // explicit research accounts</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Capture the file (cp /tmp/transformers.pyz to evidence store), record its SHA256 and size, confirm the writing process (InitiatingProcessFileName should be curl). Check `printenv | grep MISTRAL_INIT` on the host and the importing process&#x27;s env. Run `pip show mistralai` in every active Python venv on the host. Step 2 (contain): Isolate the host. Kill any running python process that has /tmp/transformers.pyz mapped or executing. Delete the file only after capture. Rotate every credential reachable from the importing process — env vars, ~/.aws/, ~/.config/, ~/.netrc, ~/.ssh/, kubeconfig, IMDS role tokens. Step 3 (hunt): Estate-wide sweep for /tmp/transformers.pyz on every Linux host. Cross-reference with the connection-to-83.142.209.194 detection to find hosts where the download succeeded but the file was already cleaned up. Pull all CI/CD job logs and container build histories since 2026-05-12 00:05 UTC that ran pip install of unpinned mistralai.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-253-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-253-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-253-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-253-uc3-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-253-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-253-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-253-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;, &quot;FileRenamed&quot;, &quot;FileModified&quot;)
-| where FileName =~ &quot;transformers.pyz&quot;
-| where FolderPath in~ (&quot;/tmp&quot;, &quot;/tmp/&quot;) or FolderPath startswith &quot;/tmp/&quot;
-| project Timestamp, DeviceName, FolderPath, FileName, SHA256, FileSize,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessParentFileName,
-          FileOriginIP, FileOriginUrl
-| order by Timestamp asc</code></pre></div>
-    <div class="tab-content" id="art-253-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(30d)
-| where EventType in (&quot;FileCreated&quot;, &quot;FileRenamed&quot;, &quot;FileModified&quot;)
-| where TargetFileName =~ &quot;transformers.pyz&quot;
-| where TargetFilePath startswith &quot;/tmp/&quot; or TargetFilePath == &quot;/tmp/transformers.pyz&quot;
-| project TimeGenerated, DvcHostname, ActorUsername,
-          TargetFilePath, TargetFileName, TargetFileSize, TargetFileSHA256,
-          ActingProcessName, ActingProcessCommandLine
-| order by TimeGenerated asc</code></pre></div>
-    <div class="tab-content" id="art-253-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Drop of /tmp/transformers.pyz - mistralai 2.4.6 Dropper Artifact
-id: 5e8b2c7a-4f3d-4e9b-8c1a-7d5f0b2e3c4d
-description: Detects creation of the file /tmp/transformers.pyz, the on-disk artifact written by curl -o /tmp/transformers.pyz in the malicious mistralai==2.4.6 _run_background_task dropper documented in GHSA-wx9m-wx4f-4cmg.
-references:
-  - https://github.com/advisories/GHSA-wx9m-wx4f-4cmg
-  - https://github.com/mistralai/client-python/issues/523
-author: detection-engineering
-date: 2026/05/20
-tags:
-  - attack.command_and_control
-  - attack.t1105
-  - attack.defense_evasion
-  - attack.t1036.005
-logsource:
-  category: file_event
-  product: linux
-detection:
-  selection:
-    TargetFilename: &#x27;/tmp/transformers.pyz&#x27;
-  condition: selection
-falsepositives:
-  - Manual placement of a python zipapp at this exact path is highly unusual; the filename collides with the Hugging Face transformers library name and is unique to this campaign.
-level: critical</code></pre></div>
-    <div class="tab-content" id="art-253-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>(source:linux.auditd @auditd.type:(SYSCALL OR PATH) @file.path:/tmp/transformers.pyz) OR (source:linux.syslog @file.path:/tmp/transformers.pyz) OR (source:windows.sysmon @EventID:11 @TargetFilename:*/tmp/transformers.pyz)</code></pre></div>
-    <div class="tab-content" id="art-253-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/\/tmp\/transformers\.pyz$/i
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName, WrittenBytes], function=count())</code></pre></div>
-    <div class="tab-content" id="art-253-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-253-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-253-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-253-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name values(Filesystem.user) as user values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.file_path=&quot;/tmp/transformers.pyz&quot; OR (Filesystem.file_name=&quot;transformers.pyz&quot; Filesystem.file_path=&quot;/tmp/*&quot;) by Filesystem.dest Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-253-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name values(Filesystem.user) as user values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.file_path=&quot;/tmp/transformers.pyz&quot; OR (Filesystem.file_name=&quot;transformers.pyz&quot; Filesystem.file_path=&quot;/tmp/*&quot;) by Filesystem.dest Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Network connections to article IPs / domains</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-253-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-253-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-253-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-253-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-253-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteIP in (&quot;83.142.209.194&quot;) or RemoteUrl has_any (&quot;&quot;)
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-253-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;83.142.209.194&quot;]);
-let BadDomains = dynamic([&quot;&quot;]);
-ImNetworkSession
-| where TimeGenerated &gt; ago(7d)
-| where DstIpAddr in (BadIPs)
-   or Url has_any (BadDomains)
-| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-253-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
-status: experimental
-description: |
-    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
-    article-specific destinations. For dynamic IOC management, use a
-    watchlist or external feed.
-references:
-    - https://attack.mitre.org/tactics/TA0011/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.command-and-control
-logsource:
-    category: network_connection
-    product: windows
-detection:
-    selection_ip:
-        DestinationIp:
-            - &#x27;__IP_PLACEHOLDER_1__&#x27;
-            - &#x27;__IP_PLACEHOLDER_2__&#x27;
-    selection_domain:
-        DestinationHostname:
-            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
-            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
-    condition: selection_ip or selection_domain
-falsepositives:
-    - None on a true-positive IOC match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-253-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-253-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-253-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-253-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;83.142.209.194&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN (&quot;&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-253-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;83.142.209.194&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats summariesonly=false count from datamodel=Web
-        where Web.dest IN (&quot;&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-253-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-253-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-253-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-253-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-253-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
-// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
-// (Initiating only) so column-projection has to differ per side.
-union
-    ( DeviceFileEvents
-        | where Timestamp &gt; ago(7d)
-        | where InitiatingProcessAccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;6dbaa43bf2f3c0d3cddbca74967e952da563fb974c1ef9d4ecbb2e58e41fe81b&quot;) or SHA1 in~ (&quot;6dbaa43bf2f3c0d3cddbca74967e952da563fb974c1ef9d4ecbb2e58e41fe81b&quot;) or MD5 in~ (&quot;6dbaa43bf2f3c0d3cddbca74967e952da563fb974c1ef9d4ecbb2e58e41fe81b&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
-    ( DeviceProcessEvents
-        | where Timestamp &gt; ago(7d)
-        | where AccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;6dbaa43bf2f3c0d3cddbca74967e952da563fb974c1ef9d4ecbb2e58e41fe81b&quot;) or SHA1 in~ (&quot;6dbaa43bf2f3c0d3cddbca74967e952da563fb974c1ef9d4ecbb2e58e41fe81b&quot;) or MD5 in~ (&quot;6dbaa43bf2f3c0d3cddbca74967e952da563fb974c1ef9d4ecbb2e58e41fe81b&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
-| order by Timestamp desc
-</code></pre></div>
-    <div class="tab-content" id="art-253-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
-// Defender version so the engine can push hash predicates per-side.
-let BadHashes = dynamic([&quot;6dbaa43bf2f3c0d3cddbca74967e952da563fb974c1ef9d4ecbb2e58e41fe81b&quot;]);
-union
-    ( ImFileEvent
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where TargetFileSHA256 in~ (BadHashes)
-           or TargetFileSHA1 in~ (BadHashes)
-           or TargetFileMD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType,
-                  TargetFileName, TargetFilePath, TargetFileSHA256,
-                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
-    ( ImProcessCreate
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
-                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
-                  TargetFileSHA256 = SHA256,
-                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-253-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
-status: experimental
-description: |
-    Replace `__HASH_LIST__` placeholder with article-specific SHA256
-    values. Use a watchlist or external indicator file for management
-    at scale.
-references:
-    - https://attack.mitre.org/techniques/T1027/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1027
-    - attack.defense-evasion
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection:
-        Hashes|contains:
-            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
-    condition: selection
-falsepositives:
-    - None on a true-positive hash match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-253-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-253-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-253-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-253-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;6dbaa43bf2f3c0d3cddbca74967e952da563fb974c1ef9d4ecbb2e58e41fe81b&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;6dbaa43bf2f3c0d3cddbca74967e952da563fb974c1ef9d4ecbb2e58e41fe81b&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-253-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;6dbaa43bf2f3c0d3cddbca74967e952da563fb974c1ef9d4ecbb2e58e41fe81b&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;6dbaa43bf2f3c0d3cddbca74967e952da563fb974c1ef9d4ecbb2e58e41fe81b&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="1f5aa91441" data-platforms="def,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-wx9m-wx4f-4cmg: Malicious dropper in mistralai 2.4.6 PyPI</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="1f5aa91441" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-253-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-253-uc6-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-253-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-wx9m-wx4f-4cmg: Malicious dropper in mistralai 2.4.6 PyPI
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;setup.py&quot;, &quot;__init__.py&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/tmp/transformers.pyz&quot;, &quot;/dev/null&quot;) or FileName in~ (&quot;setup.py&quot;, &quot;__init__.py&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-253-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-253-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-253-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-253-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-wx9m-wx4f-4cmg: Malicious dropper in mistralai 2.4.6 PyPI ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;setup.py&quot;,&quot;__init__.py&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/transformers.pyz*&quot; OR Filesystem.file_path=&quot;*/dev/null*&quot; OR Filesystem.file_name IN (&quot;setup.py&quot;,&quot;__init__.py&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-253-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] GHSA-wx9m-wx4f-4cmg: Malicious dropper in mistralai 2.4.6 PyPI ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;setup.py&quot;,&quot;__init__.py&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/transformers.pyz*&quot; OR Filesystem.file_path=&quot;*/dev/null*&quot; OR Filesystem.file_name IN (&quot;setup.py&quot;,&quot;__init__.py&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
   </div>
 </details></div>
 </article>

@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### Outbound contact to fake open-source tool / TDS / CloudFront staging domains
 
-`UC_109_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_110_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceNetworkEvents
 
 ### Browser-spawned executable/installer drop within 5 min of TDS site contact
 
-`UC_109_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_110_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceFileEvents
 
 ### SessionGate final-stage rundll32 spawning cmd.exe to fetch and silently execute next-stage payload
 
-`UC_109_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_110_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +133,7 @@ DeviceProcessEvents
 
 ### Remus/Lumma Stealer browser-credential and crypto-wallet directory enumeration
 
-`UC_109_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_110_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +160,7 @@ DeviceFileEvents
 
 ### AnimateClipper ClickFix paste-to-run via explorer.exe spawning mshta/powershell/cmd
 
-`UC_109_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_110_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

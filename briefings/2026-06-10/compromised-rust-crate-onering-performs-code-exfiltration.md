@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### DNS/URL egress to malicious onering Sentry org subdomain (o4511539639222272)
 
-`UC_24_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_27_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceNetworkEvents
 
 ### git diff HEAD^ HEAD spawned by Rust cargo build script (onering source-code collection)
 
-`UC_24_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_27_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### curl POSTing application/x-sentry-envelope from Rust cargo build tree (onering exfil)
 
-`UC_24_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_27_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
