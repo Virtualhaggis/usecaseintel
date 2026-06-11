@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### Network communication with ShinyHunters PeopleSoft attack infrastructure IPs
 
-`UC_37_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_38_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceNetworkEvents
 
 ### ShinyHunters PeopleSoft ransom-note file write (README-IF-YOU-SEE-THIS-YOUVE-BEEN-HACKED.TXT)
 
-`UC_37_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_38_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceFileEvents
 
 ### SSH credential spray against PeopleSoft administrative accounts (psoft, oracle, linuxadm)
 
-`UC_37_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_38_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceLogonEvents
 
 ### MeshCentral agent installation on Oracle PeopleSoft Linux servers
 
-`UC_37_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_38_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,7 +155,7 @@ union
 
 ### DNS lookup or TLS SNI for ShinyHunters azurenetfiles.net infrastructure
 
-`UC_37_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_38_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -281,7 +281,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Oracle PeopleSoft servers hacked in ShinyHunters data theft attacks
 
-`UC_37_5` · phase: **install** · confidence: **High**
+`UC_38_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

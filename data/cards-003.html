@@ -2033,7 +2033,7 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="4a4d3341ef" data-platforms="def,spl" data-targets="windows">
+<details class="uc" data-uc-slug="4a4d3341ef" data-platforms="def,sent,spl" data-targets="windows">
   <summary>
     <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47252: Anyquery: AppleScript/JXA Code Injection via U</span>
     <span class="uc-phase">Exploitation</span>
@@ -2049,6 +2049,7 @@ DeviceTvmSoftwareVulnerabilities
     
     <div class="tabs">
       <button class="tab-btn active" data-target="art-79-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-79-uc2-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-79-uc2-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-79-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47252: Anyquery: AppleScript/JXA Code Injection via U
@@ -2071,6 +2072,29 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-79-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47252: Anyquery: AppleScript/JXA Code Injection via U
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;seturl.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;seturl.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
     <div class="tab-content" id="art-79-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-79-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-79-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-79-uc2-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47252: Anyquery: AppleScript/JXA Code Injection via U ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
@@ -3544,7 +3568,7 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="046516e5ce" data-platforms="def,spl" data-targets="windows">
+<details class="uc" data-uc-slug="046516e5ce" data-platforms="def,sent,spl" data-targets="windows">
   <summary>
     <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-45034: PHPSpreadsheet has a patch bypass for CVE-2026</span>
     <span class="uc-phase">Exploitation</span>
@@ -3560,6 +3584,7 @@ DeviceTvmSoftwareVulnerabilities
     
     <div class="tabs">
       <button class="tab-btn active" data-target="art-81-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-81-uc4-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-81-uc4-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-81-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45034: PHPSpreadsheet has a patch bypass for CVE-2026
@@ -3582,6 +3607,29 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-81-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45034: PHPSpreadsheet has a patch bypass for CVE-2026
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;run.sh&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;run.sh&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
     <div class="tab-content" id="art-81-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-81-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-81-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-81-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45034: PHPSpreadsheet has a patch bypass for CVE-2026 ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
@@ -4521,7 +4569,7 @@ level: medium
 | `drop_dm_object_name(Processes)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="cbe405026f" data-platforms="def,spl" data-targets="windows">
+<details class="uc" data-uc-slug="cbe405026f" data-platforms="def,sent,spl" data-targets="windows">
   <summary>
     <span class="uc-title">Article-specific behavioural hunt — One-Character Linux Kernel Flaw Enables Local Root Access, Exploits Now Public</span>
     <span class="uc-phase">Installation</span>
@@ -4537,6 +4585,7 @@ level: medium
     
     <div class="tabs">
       <button class="tab-btn active" data-target="art-82-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-82-uc9-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-82-uc9-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-82-uc9-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — One-Character Linux Kernel Flaw Enables Local Root Access, Exploits Now Public
@@ -4552,6 +4601,22 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-82-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — One-Character Linux Kernel Flaw Enables Local Root Access, Exploits Now Public
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/etc/shadow&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
     <div class="tab-content" id="art-82-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-82-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-82-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-82-uc9-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — One-Character Linux Kernel Flaw Enables Local Root Access, Exploits Now Public ```
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
@@ -7570,7 +7635,7 @@ level: critical
      | `drop_dm_object_name(Processes)`]</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="aec13dc58d" data-platforms="def,spl" data-targets="windows">
+<details class="uc" data-uc-slug="aec13dc58d" data-platforms="def,sent,spl" data-targets="windows">
   <summary>
     <span class="uc-title">Article-specific behavioural hunt — AI brands as bait: How threat actors are using the AI hype in social engineering</span>
     <span class="uc-phase">Exploitation</span>
@@ -7586,6 +7651,7 @@ level: critical
     
     <div class="tabs">
       <button class="tab-btn active" data-target="art-84-uc16-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-84-uc16-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-84-uc16-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-84-uc16-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — AI brands as bait: How threat actors are using the AI hype in social engineering
@@ -7608,6 +7674,29 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-84-uc16-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — AI brands as bait: How threat actors are using the AI hype in social engineering
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;profluxeflowai-win-setup.exe&quot;, &quot;pythonw.exe&quot;, &quot;deepseek-v4-flash_x64.exe&quot;, &quot;tradeai.exe&quot;, &quot;deepseek-v4-pro_x64.exe&quot;, &quot;manus_ai_desktop_x64.exe&quot;, &quot;seedance_x64.exe&quot;, &quot;gpt-5.5-pro_x64.exe&quot;, &quot;gpt-5.5-thinking_x64.exe&quot;, &quot;kimi-swarm-station_x64.exe&quot;, &quot;fraudgpt_x64.exe&quot;, &quot;grokcli_x64.exe&quot;, &quot;gemma-4-omni_x64.exe&quot;, &quot;ltx-2.3_x64.exe&quot;, &quot;win-setup.exe&quot;) or FolderPath has_any (&quot;\AppData\Local\&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;\AppData\Local\&quot;) or FileName in~ (&quot;profluxeflowai-win-setup.exe&quot;, &quot;pythonw.exe&quot;, &quot;deepseek-v4-flash_x64.exe&quot;, &quot;tradeai.exe&quot;, &quot;deepseek-v4-pro_x64.exe&quot;, &quot;manus_ai_desktop_x64.exe&quot;, &quot;seedance_x64.exe&quot;, &quot;gpt-5.5-pro_x64.exe&quot;, &quot;gpt-5.5-thinking_x64.exe&quot;, &quot;kimi-swarm-station_x64.exe&quot;, &quot;fraudgpt_x64.exe&quot;, &quot;grokcli_x64.exe&quot;, &quot;gemma-4-omni_x64.exe&quot;, &quot;ltx-2.3_x64.exe&quot;, &quot;win-setup.exe&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
     <div class="tab-content" id="art-84-uc16-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-84-uc16-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-84-uc16-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-84-uc16-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — AI brands as bait: How threat actors are using the AI hype in social engineering ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
@@ -9839,7 +9928,7 @@ level: medium
 | `drop_dm_object_name(Processes)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="5284823fac" data-platforms="def,spl" data-targets="windows">
+<details class="uc" data-uc-slug="5284823fac" data-platforms="def,sent,spl" data-targets="windows">
   <summary>
     <span class="uc-title">Article-specific behavioural hunt — ⚡ Weekly Recap: Instagram Account Hacks, Android Zero-Day, GitHub Worm and More</span>
     <span class="uc-phase">Exploitation</span>
@@ -9855,6 +9944,7 @@ level: medium
     
     <div class="tabs">
       <button class="tab-btn active" data-target="art-86-uc14-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-86-uc14-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-86-uc14-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-86-uc14-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — ⚡ Weekly Recap: Instagram Account Hacks, Android Zero-Day, GitHub Worm and More
@@ -9877,6 +9967,29 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-86-uc14-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — ⚡ Weekly Recap: Instagram Account Hacks, Android Zero-Day, GitHub Worm and More
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;pctcore64.sys&quot;, &quot;skills.sh&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;pctcore64.sys&quot;, &quot;skills.sh&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
     <div class="tab-content" id="art-86-uc14-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-86-uc14-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-86-uc14-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-86-uc14-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — ⚡ Weekly Recap: Instagram Account Hacks, Android Zero-Day, GitHub Worm and More ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
@@ -18290,7 +18403,7 @@ level: medium
 | `drop_dm_object_name(Processes)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="389264a91e" data-platforms="def,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="389264a91e" data-platforms="def,sent,spl" data-targets="linux,windows">
   <summary>
     <span class="uc-title">Article-specific behavioural hunt — Cisco Catalyst SD-WAN Manager CVE-2026-20245 Flaw Actively Exploited – No Patch</span>
     <span class="uc-phase">Installation</span>
@@ -18306,6 +18419,7 @@ level: medium
     
     <div class="tabs">
       <button class="tab-btn active" data-target="art-99-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-99-uc9-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-99-uc9-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-99-uc9-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Cisco Catalyst SD-WAN Manager CVE-2026-20245 Flaw Actively Exploited – No Patch
@@ -18321,6 +18435,22 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-99-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — Cisco Catalyst SD-WAN Manager CVE-2026-20245 Flaw Actively Exploited – No Patch
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/var/log/scripts.log&quot;, &quot;/usr/bin/vconfd_script_upload_tenant_list.sh&quot;, &quot;/home/admin/malicious.csv&quot;, &quot;/usr/bin/vconfd_script_upload_vsmart_serial_numbers.sh&quot;, &quot;/home/admin/vsmart_serial_numbers_safe.csv&quot;, &quot;/usr/bin/vconfd_script_upload_chassis_number_file.sh&quot;, &quot;/home/admin/chassis_numbers_safe.csv&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
     <div class="tab-content" id="art-99-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-99-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-99-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-99-uc9-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Cisco Catalyst SD-WAN Manager CVE-2026-20245 Flaw Actively Exploited – No Patch ```
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
@@ -18864,7 +18994,7 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="d0a65bf29d" data-platforms="def,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="d0a65bf29d" data-platforms="def,sent,spl" data-targets="linux,windows">
   <summary>
     <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47731: NASA AMMOS Instrument Toolkit: Path traversal</span>
     <span class="uc-phase">Exploitation</span>
@@ -18880,6 +19010,7 @@ DeviceTvmSoftwareVulnerabilities
     
     <div class="tabs">
       <button class="tab-btn active" data-target="art-101-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-101-uc3-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-101-uc3-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-101-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47731: NASA AMMOS Instrument Toolkit: Path traversal
@@ -18902,6 +19033,29 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-101-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47731: NASA AMMOS Instrument Toolkit: Path traversal
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;python_poc.py&quot;, &quot;attacker_tcp.py&quot;, &quot;dmc.py&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/home/user/...&quot;, &quot;/home/elias/ait-venv/...&quot;, &quot;/home/elias/ait-venv/.../dmc.py&quot;, &quot;/var/opt/ait-bsc/logs&quot;, &quot;/usr/bin/env&quot;, &quot;/home/elias/ait-venv/lib/python3.10/site-packages/ait/core/&quot;) or FileName in~ (&quot;python_poc.py&quot;, &quot;attacker_tcp.py&quot;, &quot;dmc.py&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
     <div class="tab-content" id="art-101-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47731: NASA AMMOS Instrument Toolkit: Path traversal ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
@@ -20372,7 +20526,7 @@ level: critical
      | `drop_dm_object_name(Processes)`]</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="4241e9c0a8" data-platforms="def,spl" data-targets="windows">
+<details class="uc" data-uc-slug="4241e9c0a8" data-platforms="def,sent,spl" data-targets="windows">
   <summary>
     <span class="uc-title">Article-specific behavioural hunt — IronWorm and New Miasma Worm Variant Hit npm in Supply Chain Attacks</span>
     <span class="uc-phase">Exploitation</span>
@@ -20388,6 +20542,7 @@ level: critical
     
     <div class="tabs">
       <button class="tab-btn active" data-target="art-102-uc15-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-102-uc15-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-102-uc15-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-102-uc15-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — IronWorm and New Miasma Worm Variant Hit npm in Supply Chain Attacks
@@ -20410,6 +20565,29 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-102-uc15-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — IronWorm and New Miasma Worm Variant Hit npm in Supply Chain Attacks
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;index.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;index.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
     <div class="tab-content" id="art-102-uc15-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-102-uc15-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-102-uc15-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-102-uc15-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — IronWorm and New Miasma Worm Variant Hit npm in Supply Chain Attacks ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes

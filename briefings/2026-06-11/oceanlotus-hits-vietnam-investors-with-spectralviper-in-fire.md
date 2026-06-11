@@ -50,12 +50,16 @@ The campaigns involve a prolonged cyber espionage operation aimed at a Vietnames
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1059** — Command and Scripting Interpreter
+- **T1105** — Ingress Tool Transfer
 - **T1574.002** — DLL Side-Loading
-- **T1055.001** — Dynamic-link Library Injection
-- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1055** — Process Injection
-- **T1071.004** — Application Layer Protocol: DNS
+- **T1055.012** — Process Hollowing
+- **T1055.002** — Portable Executable Injection
+- **T1190** — Exploit Public-Facing Application
+- **T1059.003** — Windows Command Shell
+- **T1505.001** — SQL Stored Procedures
+- **T1204.002** — Malicious File
+- **T1547.001** — Registry Run Keys / Startup Folder
 
 ## Kill chain phases observed
 
@@ -63,155 +67,132 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### FireAnt Metakit supply-chain update: Metakit.exe spawns setup.exe (SPECTRALVIPER downloader)
+### FireAnt Metakit.exe pulling tampered setup.exe from update server
 
-`UC_27_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_28_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="Metakit.exe" Processes.process_name="setup.exe" by Processes.dest Processes.user Processes.parent_process_path Processes.process_path Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.dest) as dest from datamodel=Web where Web.src_user_agent=* (Web.url="*metakit.fireant.vn/Software/*" OR Web.url="*metakit.fireant.vn/Software/version.xml" OR Web.url="*metakit.fireant.vn/Software/setup.exe") by Web.src Web.user Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let StagingDomains = dynamic(["financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com"]);
-let Drops = DeviceProcessEvents
-| where Timestamp > ago(60d)
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
 | where InitiatingProcessFileName =~ "Metakit.exe"
-| where FileName =~ "setup.exe"
-| project Timestamp, DeviceId, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd   = InitiatingProcessCommandLine,
-          ChildImage  = FolderPath,
-          ChildCmd    = ProcessCommandLine,
-          SHA1, SHA256;
-Drops
-| join kind=leftouter (
-    DeviceNetworkEvents
-    | where Timestamp > ago(60d)
-    | where InitiatingProcessFileName =~ "setup.exe" or InitiatingProcessFileName =~ "Metakit.exe"
-    | where RemoteUrl has "metakit.fireant.vn" or RemoteUrl has_any (StagingDomains)
-    | project DeviceId, NetTime = Timestamp, RemoteIP, RemoteUrl
-  ) on DeviceId
-| where isnull(NetTime) or NetTime between (Timestamp - 10m .. Timestamp + 10m)
+| where RemoteUrl has_any ("metakit.fireant.vn/Software/setup.exe","metakit.fireant.vn/Software/version.xml")
+| join kind=inner (
+    DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FileName =~ "setup.exe"
+    | where InitiatingProcessFileName =~ "Metakit.exe"
+    | project Timestamp, DeviceId, DeviceName, FileName, FolderPath, SHA256, SHA1
+) on DeviceId
+| project Timestamp, DeviceName, RemoteUrl, RemoteIP, InitiatingProcessCommandLine, FileName, FolderPath, SHA256, SHA1
 | order by Timestamp desc
 ```
 
-### SPECTRALVIPER DLL side-load: DtlCrashCatch.dll image load or write
+### DtlCrashCatch.dll side-loaded by signed binary (SPECTRALVIPER loader)
 
-`UC_27_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_28_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="DtlCrashCatch.dll" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="DtlCrashCatch.dll" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-union
-  (DeviceImageLoadEvents
-    | where Timestamp > ago(180d)
-    | where FileName =~ "DtlCrashCatch.dll"
-    | project Timestamp, DeviceName, EventClass = "ImageLoad", FilePath = FolderPath, FileName, SHA1, SHA256,
-              LoadingProcess = InitiatingProcessFileName, LoadingProcessPath = InitiatingProcessFolderPath,
-              LoadingProcessCmd = InitiatingProcessCommandLine),
-  (DeviceFileEvents
-    | where Timestamp > ago(180d)
-    | where FileName =~ "DtlCrashCatch.dll"
-    | project Timestamp, DeviceName, EventClass = "FileWrite", FilePath = FolderPath, FileName, SHA1, SHA256,
-              LoadingProcess = InitiatingProcessFileName, LoadingProcessPath = InitiatingProcessFolderPath,
-              LoadingProcessCmd = InitiatingProcessCommandLine)
-| where LoadingProcessPath !startswith @"C:\Program Files\Windows Defender\"
-     and LoadingProcessPath !startswith @"C:\ProgramData\Microsoft\Windows Defender\"
+DeviceImageLoadEvents
+| where Timestamp > ago(60d)
+| where FileName =~ "DtlCrashCatch.dll"
+| project Timestamp, DeviceName, FolderPath, SHA1, SHA256,
+          LoaderImage = InitiatingProcessFileName,
+          LoaderPath  = InitiatingProcessFolderPath,
+          LoaderCmd   = InitiatingProcessCommandLine,
+          InitiatingProcessAccountName
+| where LoaderPath !startswith @"C:\Program Files\" and LoaderPath !startswith @"C:\Program Files (x86)\"
 | order by Timestamp desc
 ```
 
-### OneDrive.Sync.Service.exe beaconing to SPECTRALVIPER C2 infrastructure
+### OneDrive.Sync.Service.exe injection target for SPECTRALVIPER
 
-`UC_27_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_28_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name="OneDrive.Sync.Service.exe" AND (All_Traffic.dest_ip IN ("38.60.245.37","139.99.33.239","139.162.11.152","139.180.128.42","142.91.98.77","166.88.77.186","194.68.26.241","103.119.47.104") OR All_Traffic.dest IN ("financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com")) by All_Traffic.src All_Traffic.user All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as port from datamodel=Network_Traffic where All_Traffic.app="OneDrive.Sync.Service.exe" (All_Traffic.dest_host IN ("financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com") OR All_Traffic.dest IN ("38.60.245.37","139.99.33.239","139.162.11.152","139.180.128.42","142.91.98.77","166.88.77.186","194.68.26.241","103.119.47.104")) by All_Traffic.src All_Traffic.user All_Traffic.dest_host | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let C2Domains = dynamic(["financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com"]);
-let C2IPs = dynamic(["38.60.245.37","139.99.33.239","139.162.11.152","139.180.128.42","142.91.98.77","166.88.77.186","194.68.26.241","103.119.47.104"]);
 DeviceNetworkEvents
-| where Timestamp > ago(180d)
+| where Timestamp > ago(60d)
 | where InitiatingProcessFileName =~ "OneDrive.Sync.Service.exe"
-| where RemoteIPType == "Public"
-| where RemoteUrl has_any (C2Domains) or RemoteIP in (C2IPs)
-     or (isempty(RemoteUrl) and not(RemoteUrl endswith ".live.com") and not(RemoteUrl endswith ".microsoft.com") and not(RemoteUrl endswith ".office.com") and not(RemoteUrl endswith ".sharepoint.com") and not(RemoteUrl endswith ".onedrive.com"))
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessParentFileName,
-          RemoteIP, RemotePort, RemoteUrl, Protocol
+| where RemoteUrl has_any ("financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com")
+   or RemoteIP in ("38.60.245.37","139.99.33.239","139.162.11.152","139.180.128.42","142.91.98.77","166.88.77.186","194.68.26.241","103.119.47.104")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
 | order by Timestamp desc
 ```
 
-### SPECTRALVIPER C2 infrastructure callout (any process)
+### sqlservr.exe spawning shells (OceanLotus MSSQL initial access)
 
-`UC_27_13` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_28_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.process_name) as process values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("38.60.245.37","139.99.33.239","139.162.11.152","139.180.128.42","142.91.98.77","166.88.77.186","194.68.26.241","103.119.47.104") OR All_Traffic.dest IN ("financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.process_path) as path from datamodel=Endpoint.Processes where Processes.parent_process_name="sqlservr.exe" Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe") by Processes.dest Processes.user Processes.parent_process Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let C2Domains = dynamic(["financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com"]);
-let C2IPs = dynamic(["38.60.245.37","139.99.33.239","139.162.11.152","139.180.128.42","142.91.98.77","166.88.77.186","194.68.26.241","103.119.47.104"]);
-DeviceNetworkEvents
-| where Timestamp > ago(180d)
-| where RemoteUrl has_any (C2Domains) or RemoteIP in (C2IPs)
-| where InitiatingProcessFileName !in~ ("MsMpEng.exe","MpCmdRun.exe","SenseIR.exe","MsSense.exe")
-| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
-            HitCount = count(),
-            Procs = make_set(InitiatingProcessFileName, 32),
-            Cmds = make_set(InitiatingProcessCommandLine, 32),
-            Ports = make_set(RemotePort, 16),
-            Destinations = make_set(coalesce(RemoteUrl, tostring(RemoteIP)), 16)
-            by DeviceName, InitiatingProcessAccountName
-| order by FirstSeen asc
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "sqlservr.exe"
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, ParentImage = InitiatingProcessFolderPath, ParentCmd = InitiatingProcessCommandLine, ChildImage = FolderPath, ChildCmd = ProcessCommandLine, SHA256
+| order by Timestamp desc
 ```
 
-### SPECTRALVIPER / FireAnt downloader SHA1 IOC hash hunt
+### SPECTRALVIPER known-bad file hash on host
 
-`UC_27_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_28_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("865A1739337D3303B3AB02C5E694C22B79C42B7D","B0FEA981D02F6F76DE81EBAEFCB68B7D205D6194","48FEBB91A10D1462461A012FAFC0918BB028E947","511B77459673EC42163F19E300FF1D233B6C39FB","8CD78B8DB76563E4F972ABE817CEEE9CF9B00037") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("865A1739337D3303B3AB02C5E694C22B79C42B7D","B0FEA981D02F6F76DE81EBAEFCB68B7D205D6194","48FEBB91A10D1462461A012FAFC0918BB028E947","511B77459673EC42163F19E300FF1D233B6C39FB","8CD78B8DB76563E4F972ABE817CEEE9CF9B00037") by Processes.dest Processes.user Processes.process_name Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let KnownSha1 = dynamic([
-  "865A1739337D3303B3AB02C5E694C22B79C42B7D",
-  "B0FEA981D02F6F76DE81EBAEFCB68B7D205D6194",
-  "48FEBB91A10D1462461A012FAFC0918BB028E947",
-  "511B77459673EC42163F19E300FF1D233B6C39FB",
-  "8CD78B8DB76563E4F972ABE817CEEE9CF9B00037"
-]);
+let badSha1 = dynamic(["865A1739337D3303B3AB02C5E694C22B79C42B7D","B0FEA981D02F6F76DE81EBAEFCB68B7D205D6194","48FEBB91A10D1462461A012FAFC0918BB028E947","511B77459673EC42163F19E300FF1D233B6C39FB","8CD78B8DB76563E4F972ABE817CEEE9CF9B00037"]);
 union
-  (DeviceProcessEvents
-    | where Timestamp > ago(365d)
-    | where SHA1 in (KnownSha1)
-    | project Timestamp, DeviceName, EventClass = "ProcessCreate", FileName, FolderPath, SHA1, AccountName, ProcessCommandLine,
-              ParentImage = InitiatingProcessFileName, ParentPath = InitiatingProcessFolderPath),
-  (DeviceFileEvents
-    | where Timestamp > ago(365d)
-    | where SHA1 in (KnownSha1)
-    | project Timestamp, DeviceName, EventClass = "FileWrite", FileName, FolderPath, SHA1, AccountName = InitiatingProcessAccountName, ProcessCommandLine = InitiatingProcessCommandLine,
-              ParentImage = InitiatingProcessFileName, ParentPath = InitiatingProcessFolderPath),
-  (DeviceImageLoadEvents
-    | where Timestamp > ago(365d)
-    | where SHA1 in (KnownSha1)
-    | project Timestamp, DeviceName, EventClass = "ImageLoad", FileName, FolderPath, SHA1, AccountName = InitiatingProcessAccountName, ProcessCommandLine = InitiatingProcessCommandLine,
-              ParentImage = InitiatingProcessFileName, ParentPath = InitiatingProcessFolderPath)
+  (DeviceProcessEvents | where Timestamp > ago(90d) | where SHA1 in (badSha1) | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA1, ProcessCommandLine, Surface="Process"),
+  (DeviceFileEvents | where Timestamp > ago(90d) | where SHA1 in (badSha1) | project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA1, InitiatingProcessCommandLine, Surface="FileWrite"),
+  (DeviceImageLoadEvents | where Timestamp > ago(90d) | where SHA1 in (badSha1) | project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA1, InitiatingProcessCommandLine, Surface="ImageLoad")
+| order by Timestamp desc
+```
+
+### Run-key persistence pointing at SPECTRALVIPER staging paths
+
+`UC_28_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as data from datamodel=Endpoint.Registry where (Registry.registry_key_name="*\\CurrentVersion\\Run\\*" OR Registry.registry_key_name="*\\CurrentVersion\\RunOnce\\*") (Registry.registry_value_data="*\\AppData\\*" OR Registry.registry_value_data="*\\ProgramData\\*" OR Registry.registry_value_data="*\\Temp\\*" OR Registry.registry_value_data="*\\Public\\*" OR Registry.registry_value_data="*DtlCrashCatch*") by Registry.dest Registry.user Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+| where RegistryKey has_any (@"\CurrentVersion\Run", @"\CurrentVersion\RunOnce")
+| where RegistryValueData has_any (@"\AppData\", @"\ProgramData\", @"\Temp\", @"\Public\", "DtlCrashCatch")
+| where InitiatingProcessFileName !in~ ("msiexec.exe","setup.exe","OneDriveSetup.exe","TeamsSetup.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RegistryKey, RegistryValueName, RegistryValueData
 | order by Timestamp desc
 ```
 
@@ -468,7 +449,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus Hits Vietnam Investors With SPECTRALVIPER in FireAnt Attack
 
-`UC_27_9` · phase: **exploit** · confidence: **High**
+`UC_28_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -528,4 +509,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

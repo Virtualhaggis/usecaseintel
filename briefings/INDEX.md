@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1260 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1259 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,7 +11,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-11
 - [a tale of two eras](./2026-06-11/a-tale-of-two-eras.md)
 - [ai broke vulnerability management that s why cisos are movin](./2026-06-11/ai-broke-vulnerability-management-that-s-why-cisos-are-movin.md)
-- [authorities dismantle audia6 ransomware crypto laundering se](./2026-06-11/authorities-dismantle-audia6-ransomware-crypto-laundering-se.md)
 - [cisa kev cve 2026 10520 ivanti sentry os command injection v](./2026-06-11/cisa-kev-cve-2026-10520-ivanti-sentry-os-command-injection-v.md)
 - [cisa warns of check point security gateway vulnerability act](./2026-06-11/cisa-warns-of-check-point-security-gateway-vulnerability-act.md)
 - [cybersecurity stars awards 2026 winners announced across 95 ](./2026-06-11/cybersecurity-stars-awards-2026-winners-announced-across-95-.md)
@@ -30,6 +29,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [npm v12 delivers one of the biggest security improvements in](./2026-06-11/npm-v12-delivers-one-of-the-biggest-security-improvements-in.md)
 - [oceanlotus apt compromises fireant metakit in supply chain a](./2026-06-11/oceanlotus-apt-compromises-fireant-metakit-in-supply-chain-a.md)
 - [oceanlotus hits vietnam investors with spectralviper in fire](./2026-06-11/oceanlotus-hits-vietnam-investors-with-spectralviper-in-fire.md)
+- [shinyhunters exploits oracle peoplesoft zero day cve 2026 35](./2026-06-11/shinyhunters-exploits-oracle-peoplesoft-zero-day-cve-2026-35.md)
 - [the gentlemen ransomware claims 478 victims can spread like ](./2026-06-11/the-gentlemen-ransomware-claims-478-victims-can-spread-like-.md)
 
 ## 2026-06-10
@@ -102,7 +102,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hackers exploit critical everest forms pro wordpress plugin ](./2026-06-05/hackers-exploit-critical-everest-forms-pro-wordpress-plugin-.md)
 - [ironworm and new miasma worm variant hit npm in supply chain](./2026-06-05/ironworm-and-new-miasma-worm-variant-hit-npm-in-supply-chain.md)
 - [new threat cluster op 512 targets microsoft iis servers with](./2026-06-05/new-threat-cluster-op-512-targets-microsoft-iis-servers-with.md)
-- [pcpjack hijacks 230 aws google cloud and azure servers for c](./2026-06-05/pcpjack-hijacks-230-aws-google-cloud-and-azure-servers-for-c.md)
 - [securing ci cd in an agentic world claude code github action](./2026-06-05/securing-ci-cd-in-an-agentic-world-claude-code-github-action.md)
 
 ## 2026-06-04
