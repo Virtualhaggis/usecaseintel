@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1260 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1259 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -13,7 +13,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [china linked jdy botnet expands to 1 500 devices for cyber r](./2026-06-10/china-linked-jdy-botnet-expands-to-1-500-devices-for-cyber-r.md)
 - [code is being written everywhere and the device is the only ](./2026-06-10/code-is-being-written-everywhere-and-the-device-is-the-only-.md)
 - [compromised rust crate onering performs code exfiltration](./2026-06-10/compromised-rust-crate-onering-performs-code-exfiltration.md)
-- [critical openssl vulnerabilities enable remote code executio](./2026-06-10/critical-openssl-vulnerabilities-enable-remote-code-executio.md)
 - [ghsa critical cve 2026 48031 go restful api boilerplate hard](./2026-06-10/ghsa-critical-cve-2026-48031-go-restful-api-boilerplate-hard.md)
 - [ghsa critical cve 2026 48063 baileys has message upsert hist](./2026-06-10/ghsa-critical-cve-2026-48063-baileys-has-message-upsert-hist.md)
 - [hackers abuse fake utility downloads to install screenconnec](./2026-06-10/hackers-abuse-fake-utility-downloads-to-install-screenconnec.md)
