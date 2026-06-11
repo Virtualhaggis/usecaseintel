@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### PromptSpy / MorganArg Android banker — distribution domain DNS/proxy hits
 
-`UC_510_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_511_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ DeviceNetworkEvents
 
 ### PromptSpy VNC C2 egress to 54.67.2.84
 
-`UC_510_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_511_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

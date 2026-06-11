@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### ScreenConnect client beaconing to ClawdBot attacker relay (meeting.bulletmailer.net:8041)
 
-`UC_585_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_586_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceNetworkEvents
 
 ### Weaponised ScreenConnect install path with attacker instance GUID 083e4d30c7ea44f7
 
-`UC_585_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_586_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ union isfuzzy=true
 
 ### DWrite.dll Rust sideloader dropped outside Windows directory (ClawdBot redundant payload)
 
-`UC_585_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_586_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -152,7 +152,7 @@ union isfuzzy=true
 
 ### VS Code (Code.exe/node) drops payload to %TEMP%\Lightshot staging directory
 
-`UC_585_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_586_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -558,7 +558,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Fake Clawdbot VS Code Extension Installs ScreenConnect RAT
 
-`UC_585_13` · phase: **exploit** · confidence: **High**
+`UC_586_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

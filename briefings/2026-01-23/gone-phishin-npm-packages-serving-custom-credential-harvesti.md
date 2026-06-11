@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### Aikido npm phishing: direct outbound connection to RackGenius C2 (163.123.236.118)
 
-`UC_596_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_597_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceNetworkEvents
 
 ### Aikido npm phishing: DNS / web request to siemens-energy.icu or siemensergy.icu typosquats
 
-`UC_596_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_597_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceNetworkEvents
 
 ### Aikido campaign: jsDelivr CDN fetch of weaponised flockiali/opresc/prndn/oprnm/operni npm package
 
-`UC_596_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_597_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceNetworkEvents
 
 ### Aikido npm phishing: user clicked phishing URL hosting /DIVzTaSF credential capture
 
-`UC_596_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_597_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ UrlClickEvents
 
 ### Aikido npm phishing: inbound email containing jsDelivr link to flockiali/opresc/prndn/oprnm/operni
 
-`UC_596_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_597_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -443,7 +443,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Gone Phishin': npm Packages Serving Custom Credential Harvesting Pages
 
-`UC_596_10` · phase: **exploit** · confidence: **High**
+`UC_597_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

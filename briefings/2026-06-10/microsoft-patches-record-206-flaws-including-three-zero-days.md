@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### RoguePlanet Defender race condition - MsMpEng.exe spawns SYSTEM shell
 
-`UC_38_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_41_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceProcessEvents
 
 ### CTFMON privilege escalation (GreenPlasma / CVE-2026-45586) - ctfmon.exe spawning shells or elevated
 
-`UC_38_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_41_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ union CtfmonAsParent, CtfmonElevated
 
 ### HTTP/2 Bomb DoS against IIS (CVE-2026-49160) - rapid w3wp.exe churn and HTTP.sys errors
 
-`UC_38_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_41_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ WorkerChurn
 
 ### SYSTEM-level shell from network-service host (CVE-2026-45657 / 47291 / 44815 post-RCE)
 
-`UC_38_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_41_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -180,7 +180,7 @@ Candidates
 
 ### Patch compliance hunt - June 2026 critical zero-day and network-RCE CVEs
 
-`UC_38_11` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_41_11` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -405,7 +405,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft Patches Record 206 Flaws, Including Three Zero-Days and Critical RCE B
 
-`UC_38_6` · phase: **exploit** · confidence: **High**
+`UC_41_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

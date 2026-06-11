@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1256 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,15 +11,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-11
 - [ai broke vulnerability management that s why cisos are movin](./2026-06-11/ai-broke-vulnerability-management-that-s-why-cisos-are-movin.md)
 - [china linked jdy botnet uses 1 500 soho and iot devices for ](./2026-06-11/china-linked-jdy-botnet-uses-1-500-soho-and-iot-devices-for-.md)
+- [cybersecurity stars awards 2026 winners announced across 95 ](./2026-06-11/cybersecurity-stars-awards-2026-winners-announced-across-95-.md)
 - [ghsa critical cve 2026 48039 meta ads mcp unauthenticated ht](./2026-06-11/ghsa-critical-cve-2026-48039-meta-ads-mcp-unauthenticated-ht.md)
 - [github to disable npm install scripts by default to stop sup](./2026-06-11/github-to-disable-npm-install-scripts-by-default-to-stop-sup.md)
 - [greatxml bitlocker bypass 0 day exploited via windows defend](./2026-06-11/greatxml-bitlocker-bypass-0-day-exploited-via-windows-defend.md)
 - [hackers abuse vmware signed binary to sideload nightforge lo](./2026-06-11/hackers-abuse-vmware-signed-binary-to-sideload-nightforge-lo.md)
-- [ivanti endpoint manager mobile vulnerability enables remote ](./2026-06-11/ivanti-endpoint-manager-mobile-vulnerability-enables-remote-.md)
 - [max severity ivanti sentry vulnerability now exploited in at](./2026-06-11/max-severity-ivanti-sentry-vulnerability-now-exploited-in-at.md)
-- [microsoft exchange server 0 day vulnerability exploited in a](./2026-06-11/microsoft-exchange-server-0-day-vulnerability-exploited-in-a.md)
 - [multiple splunk enterprise vulnerabilities allow attackers t](./2026-06-11/multiple-splunk-enterprise-vulnerabilities-allow-attackers-t.md)
 - [nottingham university data breach affects over 450 000 stude](./2026-06-11/nottingham-university-data-breach-affects-over-450-000-stude.md)
+- [npm v12 delivers one of the biggest security improvements in](./2026-06-11/npm-v12-delivers-one-of-the-biggest-security-improvements-in.md)
 - [oceanlotus hits vietnam investors with spectralviper in fire](./2026-06-11/oceanlotus-hits-vietnam-investors-with-spectralviper-in-fire.md)
 - [oracle emergency security update to fix critical rce vulnera](./2026-06-11/oracle-emergency-security-update-to-fix-critical-rce-vulnera.md)
 
@@ -31,7 +31,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 48031 go restful api boilerplate hard](./2026-06-10/ghsa-critical-cve-2026-48031-go-restful-api-boilerplate-hard.md)
 - [ghsa critical cve 2026 48063 baileys has message upsert hist](./2026-06-10/ghsa-critical-cve-2026-48063-baileys-has-message-upsert-hist.md)
 - [ivanti fortinet and sap release patches for multiple critica](./2026-06-10/ivanti-fortinet-and-sap-release-patches-for-multiple-critica.md)
-- [ivanti max severity sentry flaw allows code execution as roo](./2026-06-10/ivanti-max-severity-sentry-flaw-allows-code-execution-as-roo.md)
 - [microsoft defender rogueplanet zero day grants system access](./2026-06-10/microsoft-defender-rogueplanet-zero-day-grants-system-access.md)
 - [microsoft patches exchange server zero day exploited in atta](./2026-06-10/microsoft-patches-exchange-server-zero-day-exploited-in-atta.md)
 - [microsoft patches record 206 flaws including three zero days](./2026-06-10/microsoft-patches-record-206-flaws-including-three-zero-days.md)
@@ -98,7 +97,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [securing ci cd in an agentic world claude code github action](./2026-06-05/securing-ci-cd-in-an-agentic-world-claude-code-github-action.md)
 
 ## 2026-06-04
-- [china linked ta4922 expands phishing attacks to u k germany ](./2026-06-04/china-linked-ta4922-expands-phishing-attacks-to-u-k-germany-.md)
 - [cisco patches cve 2026 20230 in unified cm as exploit code g](./2026-06-04/cisco-patches-cve-2026-20230-in-unified-cm-as-exploit-code-g.md)
 - [claude code github action flaw let one malicious issue hijac](./2026-06-04/claude-code-github-action-flaw-let-one-malicious-issue-hijac.md)
 - [ghsa critical cve 2026 47708 mcp for stata command injection](./2026-06-04/ghsa-critical-cve-2026-47708-mcp-for-stata-command-injection.md)

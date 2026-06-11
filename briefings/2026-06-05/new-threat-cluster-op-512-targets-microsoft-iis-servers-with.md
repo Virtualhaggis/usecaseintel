@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### OP-512 C2 beacon to ashx.lhlsjcb[.]com from IIS host
 
-`UC_98_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_100_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### IIS worker w3wp.exe writes .aspx/.ashx handler to upload/temp directory (OP-512 web shell drop)
 
-`UC_98_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_100_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceFileEvents
 
 ### IIS w3wp.exe spawns whoami /priv or cmd.exe — OP-512 web shell command execution
 
-`UC_98_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_100_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceProcessEvents
 
 ### OP-512 Potato Suite SYSTEM escalation from IIS worker (SeImpersonate token abuse)
 
-`UC_98_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_100_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -328,7 +328,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — New Threat Cluster OP-512 Targets Microsoft IIS Servers with Custom Web Shell Fr
 
-`UC_98_6` · phase: **exploit** · confidence: **High**
+`UC_100_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Ivanti Sentry handleMessage endpoint exploitation (CVE-2026-10520)
 
-`UC_29_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_32_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceNetworkEvents
 
 ### Vulnerable Ivanti / Fortinet / SAP versions exposed to June 2026 critical CVEs
 
-`UC_29_7` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_32_7` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
