@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### Node/npm parent spawning network or scripting child during package install
 
-`UC_13_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_17_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### Outbound to Shai-Hulud / npm-worm C2 (webhook.site, sfrclak.com, 142.11.206.73) from node/npm process tree
 
-`UC_13_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_17_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceNetworkEvents
 
 ### TruffleHog secret-scanner binary execution on developer or CI endpoint
 
-`UC_13_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_17_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ DeviceProcessEvents
 
 ### Node/npm/bun process touching SSH, npm or GitHub credential files
 
-`UC_13_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_17_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -161,7 +161,7 @@ DeviceFileEvents
 
 ### Known malicious npm-supply-chain package SHA256 observed on disk or executed
 
-`UC_13_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_17_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -432,7 +432,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — npm v12 delivers one of the biggest security improvements in years
 
-`UC_13_8` · phase: **exploit** · confidence: **High**
+`UC_17_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Miasma/Hades dev-tool config dropped by non-IDE process (.claude/.cursor/.vscode/.gemini/.github)
 
-`UC_8_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_11_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceFileEvents
 
 ### Phantom Gyp - tiny binding.gyp dropped into node_modules during npm install
 
-`UC_8_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_11_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceFileEvents
 
 ### Hades on-import: python.exe spawns bun.exe / downloads Bun runtime from oven-sh
 
-`UC_8_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_11_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ BunDownloads
 
 ### IDE auto-load: VSCode/Cursor/Claude/Gemini spawns scripting host referencing Miasma persistence config
 
-`UC_8_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_11_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ DeviceProcessEvents
 
 ### Worm self-propagation: burst of npm publish / git push from a single developer host
 
-`UC_8_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_11_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -221,7 +221,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Miasma and Hades Are Spreading Now: Detect Them on Developer Machines with Suspi
 
-`UC_8_3` · phase: **exploit** · confidence: **High**
+`UC_11_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

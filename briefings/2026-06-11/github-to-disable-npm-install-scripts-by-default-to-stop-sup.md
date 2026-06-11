@@ -235,7 +235,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GitHub to Disable npm Install Scripts by Default to Stop Supply Chain Attacks
 
-`UC_21_5` · phase: **exploit** · confidence: **High**
+`UC_30_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

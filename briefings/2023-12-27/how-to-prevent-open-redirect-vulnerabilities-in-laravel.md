@@ -181,7 +181,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — How to prevent open redirect vulnerabilities in Laravel
 
-`UC_1289_3` · phase: **exploit** · confidence: **High**
+`UC_1302_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

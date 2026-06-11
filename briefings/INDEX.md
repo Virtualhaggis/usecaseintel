@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1252 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1260 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,7 +9,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-11
+- [a tale of two eras](./2026-06-11/a-tale-of-two-eras.md)
 - [ai broke vulnerability management that s why cisos are movin](./2026-06-11/ai-broke-vulnerability-management-that-s-why-cisos-are-movin.md)
+- [authorities dismantle audia6 ransomware crypto laundering se](./2026-06-11/authorities-dismantle-audia6-ransomware-crypto-laundering-se.md)
+- [cisa kev cve 2026 10520 ivanti sentry os command injection v](./2026-06-11/cisa-kev-cve-2026-10520-ivanti-sentry-os-command-injection-v.md)
 - [cisa warns of check point security gateway vulnerability act](./2026-06-11/cisa-warns-of-check-point-security-gateway-vulnerability-act.md)
 - [cybersecurity stars awards 2026 winners announced across 95 ](./2026-06-11/cybersecurity-stars-awards-2026-winners-announced-across-95-.md)
 - [ghsa critical cve 2026 48039 meta ads mcp unauthenticated ht](./2026-06-11/ghsa-critical-cve-2026-48039-meta-ads-mcp-unauthenticated-ht.md)
@@ -19,7 +22,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [goflateloader uses massive pe overlay to deliver lumma vidar](./2026-06-11/goflateloader-uses-massive-pe-overlay-to-deliver-lumma-vidar.md)
 - [hackers abuse sniperdz phaas ecosystem for brand impersonati](./2026-06-11/hackers-abuse-sniperdz-phaas-ecosystem-for-brand-impersonati.md)
 - [hackers use weaponized dmg files to target macos users with ](./2026-06-11/hackers-use-weaponized-dmg-files-to-target-macos-users-with-.md)
+- [max severity ivanti sentry vulnerability now exploited in at](./2026-06-11/max-severity-ivanti-sentry-vulnerability-now-exploited-in-at.md)
 - [miasma and hades are spreading now detect them on developer ](./2026-06-11/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)
+- [new attacks trick openclaw ai agent into running code and le](./2026-06-11/new-attacks-trick-openclaw-ai-agent-into-running-code-and-le.md)
+- [new greatxml exploit bypasses windows bitlocker via recovery](./2026-06-11/new-greatxml-exploit-bypasses-windows-bitlocker-via-recovery.md)
+- [nottingham university data breach affects over 450 000 stude](./2026-06-11/nottingham-university-data-breach-affects-over-450-000-stude.md)
 - [npm v12 delivers one of the biggest security improvements in](./2026-06-11/npm-v12-delivers-one-of-the-biggest-security-improvements-in.md)
 - [oceanlotus apt compromises fireant metakit in supply chain a](./2026-06-11/oceanlotus-apt-compromises-fireant-metakit-in-supply-chain-a.md)
 - [oceanlotus hits vietnam investors with spectralviper in fire](./2026-06-11/oceanlotus-hits-vietnam-investors-with-spectralviper-in-fire.md)
@@ -33,9 +40,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 48031 go restful api boilerplate hard](./2026-06-10/ghsa-critical-cve-2026-48031-go-restful-api-boilerplate-hard.md)
 - [ghsa critical cve 2026 48063 baileys has message upsert hist](./2026-06-10/ghsa-critical-cve-2026-48063-baileys-has-message-upsert-hist.md)
 - [ivanti fortinet and sap release patches for multiple critica](./2026-06-10/ivanti-fortinet-and-sap-release-patches-for-multiple-critica.md)
+- [langflow vulnerability cve 2026 5027 exploited for unauthent](./2026-06-10/langflow-vulnerability-cve-2026-5027-exploited-for-unauthent.md)
 - [microsoft defender rogueplanet zero day grants system access](./2026-06-10/microsoft-defender-rogueplanet-zero-day-grants-system-access.md)
+- [microsoft patches exchange server zero day exploited in atta](./2026-06-10/microsoft-patches-exchange-server-zero-day-exploited-in-atta.md)
 - [microsoft patches record 206 flaws including three zero days](./2026-06-10/microsoft-patches-record-206-flaws-including-three-zero-days.md)
-- [unpatched langflow flaw cve 2026 5027 exploited for unauthen](./2026-06-10/unpatched-langflow-flaw-cve-2026-5027-exploited-for-unauthen.md)
+- [oracle peoplesoft servers hacked in shinyhunters data theft ](./2026-06-10/oracle-peoplesoft-servers-hacked-in-shinyhunters-data-theft-.md)
+- [path traversal flaw in ai dev platform langflow exploited in](./2026-06-10/path-traversal-flaw-in-ai-dev-platform-langflow-exploited-in.md)
+- [the miasma worm source code briefly leaked on github](./2026-06-10/the-miasma-worm-source-code-briefly-leaked-on-github.md)
 
 ## 2026-06-09
 - [blinding the watchmen abusing cloud logging services for def](./2026-06-09/blinding-the-watchmen-abusing-cloud-logging-services-for-def.md)
@@ -95,8 +106,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [securing ci cd in an agentic world claude code github action](./2026-06-05/securing-ci-cd-in-an-agentic-world-claude-code-github-action.md)
 
 ## 2026-06-04
-- [cisco patches cve 2026 20230 in unified cm as exploit code g](./2026-06-04/cisco-patches-cve-2026-20230-in-unified-cm-as-exploit-code-g.md)
-- [claude code github action flaw let one malicious issue hijac](./2026-06-04/claude-code-github-action-flaw-let-one-malicious-issue-hijac.md)
 - [ghsa critical cve 2026 47708 mcp for stata command injection](./2026-06-04/ghsa-critical-cve-2026-47708-mcp-for-stata-command-injection.md)
 - [ghsa critical ghsa 8whc 2wmv ww35 wwbn avideo unauthenticate](./2026-06-04/ghsa-critical-ghsa-8whc-2wmv-ww35-wwbn-avideo-unauthenticate.md)
 - [ghsa critical ghsa jpvj wpmj h7rv supply chain compromise vi](./2026-06-04/ghsa-critical-ghsa-jpvj-wpmj-h7rv-supply-chain-compromise-vi.md)
@@ -1805,9 +1814,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2024-06-04
 - [secure ai tool adoption perceptions and realities](./2024-06-04/secure-ai-tool-adoption-perceptions-and-realities.md)
 - [snyk sponsors snowflake summit](./2024-06-04/snyk-sponsors-snowflake-summit.md)
-
-## 2024-06-03
-- [cisa kev cve 2017 3506 oracle weblogic server os command inj](./2024-06-03/cisa-kev-cve-2017-3506-oracle-weblogic-server-os-command-inj.md)
 
 ## 2024-05-30
 - [5 tips for adopting ai code assistance securely](./2024-05-30/5-tips-for-adopting-ai-code-assistance-securely.md)

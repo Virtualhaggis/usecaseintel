@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Web-server runtime connecting to AWS IMDS link-local endpoint (SSRF → cred theft)
 
-`UC_1269_1` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_1282_1` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceNetworkEvents
 
 ### EC2 instance-role session credentials used from non-AWS source IP (Capital One pattern)
 
-`UC_1269_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_1282_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — Preventing server-side request forgery in Node.js applications
 
-`UC_1269_0` · phase: **exploit** · confidence: **High**
+`UC_1282_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

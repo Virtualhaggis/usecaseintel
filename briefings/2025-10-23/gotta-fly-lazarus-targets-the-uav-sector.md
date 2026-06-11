@@ -96,7 +96,7 @@ _(none detected from narrative keywords)_
 
 ### Lazarus DreamJob DLL side-load: wksprt.exe loading webservices.dll from ProgramData
 
-`UC_716_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_730_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ host_proc
 
 ### ScoringMathTea C2 beacon to compromised WordPress hosts (Lazarus DreamJob IOCs)
 
-`UC_716_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_730_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceNetworkEvents
 
 ### Lazarus DreamJob loader/dropper SHA1 sighting (DroneEXEHijackingLoader / NukeSped family)
 
-`UC_716_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_730_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -174,7 +174,7 @@ union isfuzzy=true
 
 ### DreamJob trojanized PDF/installer execution from job-lure decoy folder
 
-`UC_716_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_730_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -290,7 +290,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Gotta fly: Lazarus targets the UAV sector
 
-`UC_716_5` · phase: **exploit** · confidence: **High**
+`UC_730_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
