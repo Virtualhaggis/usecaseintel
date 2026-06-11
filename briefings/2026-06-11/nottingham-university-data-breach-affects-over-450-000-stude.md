@@ -11,15 +11,9 @@ By Sergiu Gatlan
 June 11, 2026
 03:27 AM
 0 
-
-
 The University of Nottingham confirmed on Wednesday that a hacking group gained access to its student records system in a breach affecting both current students and alums.
-
-
 Nottingham University is a public research university with 7,000 staff and over 46,000 students, ranking in the Top 20 in the United Kingdom and the Top 100 worldwide.
-
-
-The university told BleepingComputer in…
+The university told BleepingComputer in an emailed …
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -54,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### HTTP POST to Oracle PeopleSoft deserialization endpoints (gadget chain initial access)
 
-`UC_0_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +69,7 @@ DeviceNetworkEvents
 
 ### PeopleSoft Tuxedo / Java app-server spawning shells (post-exploit RCE)
 
-`UC_0_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +89,7 @@ DeviceProcessEvents
 
 ### Outbound connection or DNS to ShinyHunters PeopleSoft campaign infrastructure
 
-`UC_0_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_3_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +114,7 @@ let CampaignDomains = dynamic(["azurenetfiles.net"]);
 
 ### Large outbound HTTPS upload from PeopleSoft application or database server
 
-`UC_0_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +135,7 @@ DeviceNetworkEvents
 
 ### Bulk SELECT or export from PeopleSoft student / finance tables
 
-`UC_0_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

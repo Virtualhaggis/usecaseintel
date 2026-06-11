@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1261 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1262 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,9 +9,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-11
+- [china linked jdy botnet uses 1 500 soho and iot devices for ](./2026-06-11/china-linked-jdy-botnet-uses-1-500-soho-and-iot-devices-for-.md)
 - [github to disable npm install scripts by default to stop sup](./2026-06-11/github-to-disable-npm-install-scripts-by-default-to-stop-sup.md)
 - [ivanti endpoint manager mobile vulnerability enables remote ](./2026-06-11/ivanti-endpoint-manager-mobile-vulnerability-enables-remote-.md)
 - [max severity ivanti sentry vulnerability now exploited in at](./2026-06-11/max-severity-ivanti-sentry-vulnerability-now-exploited-in-at.md)
+- [microsoft exchange server 0 day vulnerability exploited in a](./2026-06-11/microsoft-exchange-server-0-day-vulnerability-exploited-in-a.md)
 - [nottingham university data breach affects over 450 000 stude](./2026-06-11/nottingham-university-data-breach-affects-over-450-000-stude.md)
 
 ## 2026-06-10
@@ -54,7 +56,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new frost attack lets websites track what sites and apps you](./2026-06-09/new-frost-attack-lets-websites-track-what-sites-and-apps-you.md)
 - [pythagora io gpt pilot compromised on github shai hulud cred](./2026-06-09/pythagora-io-gpt-pilot-compromised-on-github-shai-hulud-cred.md)
 - [researchers build self replicating ai worm that operates ent](./2026-06-09/researchers-build-self-replicating-ai-worm-that-operates-ent.md)
-- [servicenow discloses security incident exposing customer dat](./2026-06-09/servicenow-discloses-security-incident-exposing-customer-dat.md)
 - [wait binding gyp can do what exploring npm s weirdest build ](./2026-06-09/wait-binding-gyp-can-do-what-exploring-npm-s-weirdest-build-.md)
 - [winrar flaw exploited by russia aligned groups to deploy ste](./2026-06-09/winrar-flaw-exploited-by-russia-aligned-groups-to-deploy-ste.md)
 

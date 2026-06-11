@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### GPT-Proxy backdoor C2 / Stage-2 download (sync.geeker.indevs.in, gibunxi4201/kube-node-diag)
 
-`UC_355_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_356_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceNetworkEvents
 
 ### Stage-2 implant masquerading as node-health-check daemon (/tmp/.kh, /tmp/.ns)
 
-`UC_355_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_356_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceProcessEvents
 
 ### npm/PyPI dropper self-cleanup: find rm -rf of kube-health-tools in node_modules
 
-`UC_355_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_356_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -260,7 +260,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GPT-Proxy Backdoor in npm and PyPI turns Servers into Chinese LLM Relays
 
-`UC_355_7` · phase: **exploit** · confidence: **High**
+`UC_356_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

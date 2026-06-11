@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### JDY Linux shell dropper — architecture-aware MIPS/MIPSEL payload retrieval
 
-`UC_15_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_18_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceProcessEvents
 
 ### JDY botnet self-delete — Linux ELF executes then unlinks its own image
 
-`UC_15_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_18_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ ExecEvents
 
 ### JDY-style reconnaissance — internal host high-fanout mixed-protocol scanning
 
-`UC_15_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_18_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
