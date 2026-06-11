@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### Quick Assist launched followed by remote interactive session (UNC3753 vishing pretext)
 
-`UC_73_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_75_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceProcessEvents
 
 ### AnyDesk, Bomgar, SuperOps or Zoho Assist installer execution (UNC3753 RMM foothold)
 
-`UC_73_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_75_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### Privnote[.]com self-destructing-note URL access from corporate endpoint
 
-`UC_73_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_75_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### Outbound connection to UNC3753 (Luna Moth) infrastructure IPs
 
-`UC_73_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_75_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceNetworkEvents
 
 ### WinSCP or Rclone exfiltration from end-user workstations
 
-`UC_73_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_75_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +160,7 @@ DeviceProcessEvents
 
 ### USB mass-storage attached followed by bulk file copy (UNC3753 physical intrusion)
 
-`UC_73_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_75_16` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -188,7 +188,7 @@ USBAttach
 
 ### Outbound mail to or domain lookup of business-data-leaks[.]com (UNC3753 extortion infrastructure)
 
-`UC_73_17` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_75_17` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

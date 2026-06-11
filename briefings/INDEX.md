@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1262 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1261 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,10 +11,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-11
 - [china linked jdy botnet uses 1 500 soho and iot devices for ](./2026-06-11/china-linked-jdy-botnet-uses-1-500-soho-and-iot-devices-for-.md)
 - [github to disable npm install scripts by default to stop sup](./2026-06-11/github-to-disable-npm-install-scripts-by-default-to-stop-sup.md)
+- [greatxml bitlocker bypass 0 day exploited via windows defend](./2026-06-11/greatxml-bitlocker-bypass-0-day-exploited-via-windows-defend.md)
+- [hackers abuse vmware signed binary to sideload nightforge lo](./2026-06-11/hackers-abuse-vmware-signed-binary-to-sideload-nightforge-lo.md)
 - [ivanti endpoint manager mobile vulnerability enables remote ](./2026-06-11/ivanti-endpoint-manager-mobile-vulnerability-enables-remote-.md)
 - [max severity ivanti sentry vulnerability now exploited in at](./2026-06-11/max-severity-ivanti-sentry-vulnerability-now-exploited-in-at.md)
 - [microsoft exchange server 0 day vulnerability exploited in a](./2026-06-11/microsoft-exchange-server-0-day-vulnerability-exploited-in-a.md)
+- [multiple splunk enterprise vulnerabilities allow attackers t](./2026-06-11/multiple-splunk-enterprise-vulnerabilities-allow-attackers-t.md)
 - [nottingham university data breach affects over 450 000 stude](./2026-06-11/nottingham-university-data-breach-affects-over-450-000-stude.md)
+- [oceanlotus hits vietnam investors with spectralviper in fire](./2026-06-11/oceanlotus-hits-vietnam-investors-with-spectralviper-in-fire.md)
 
 ## 2026-06-10
 - [10 year old critical vulnerability in phpbb affecting tens o](./2026-06-10/10-year-old-critical-vulnerability-in-phpbb-affecting-tens-o.md)
@@ -24,7 +28,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 48031 go restful api boilerplate hard](./2026-06-10/ghsa-critical-cve-2026-48031-go-restful-api-boilerplate-hard.md)
 - [ghsa critical cve 2026 48063 baileys has message upsert hist](./2026-06-10/ghsa-critical-cve-2026-48063-baileys-has-message-upsert-hist.md)
 - [hackers abuse fake utility downloads to install screenconnec](./2026-06-10/hackers-abuse-fake-utility-downloads-to-install-screenconnec.md)
-- [hackers infect npm package dbmux with malware to fully compr](./2026-06-10/hackers-infect-npm-package-dbmux-with-malware-to-fully-compr.md)
 - [hackers use tax phishing emails to deploy in memory malware ](./2026-06-10/hackers-use-tax-phishing-emails-to-deploy-in-memory-malware-.md)
 - [ivanti fortinet and sap release patches for multiple critica](./2026-06-10/ivanti-fortinet-and-sap-release-patches-for-multiple-critica.md)
 - [ivanti max severity sentry flaw allows code execution as roo](./2026-06-10/ivanti-max-severity-sentry-flaw-allows-code-execution-as-roo.md)
@@ -33,10 +36,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft patches record 206 flaws including three zero days](./2026-06-10/microsoft-patches-record-206-flaws-including-three-zero-days.md)
 - [oracle peoplesoft servers hacked in shinyhunters data theft ](./2026-06-10/oracle-peoplesoft-servers-hacked-in-shinyhunters-data-theft-.md)
 - [path traversal flaw in ai dev platform langflow exploited in](./2026-06-10/path-traversal-flaw-in-ai-dev-platform-langflow-exploited-in.md)
-- [servicenow confirms vulnerability allowing unauthorized acce](./2026-06-10/servicenow-confirms-vulnerability-allowing-unauthorized-acce.md)
 - [the miasma worm source code briefly leaked on github](./2026-06-10/the-miasma-worm-source-code-briefly-leaked-on-github.md)
 - [unpatched langflow flaw cve 2026 5027 exploited for unauthen](./2026-06-10/unpatched-langflow-flaw-cve-2026-5027-exploited-for-unauthen.md)
-- [windows collaborative translation framework 0 day vulnerabil](./2026-06-10/windows-collaborative-translation-framework-0-day-vulnerabil.md)
 
 ## 2026-06-09
 - [blinding the watchmen abusing cloud logging services for def](./2026-06-09/blinding-the-watchmen-abusing-cloud-logging-services-for-def.md)
@@ -100,7 +101,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [china linked ta4922 expands phishing attacks to u k germany ](./2026-06-04/china-linked-ta4922-expands-phishing-attacks-to-u-k-germany-.md)
 - [cisco patches cve 2026 20230 in unified cm as exploit code g](./2026-06-04/cisco-patches-cve-2026-20230-in-unified-cm-as-exploit-code-g.md)
 - [claude code github action flaw let one malicious issue hijac](./2026-06-04/claude-code-github-action-flaw-let-one-malicious-issue-hijac.md)
-- [fake sites mimicking open source tools rank high on google t](./2026-06-04/fake-sites-mimicking-open-source-tools-rank-high-on-google-t.md)
 - [fluttershell backdoor spreads to macos via malicious google ](./2026-06-04/fluttershell-backdoor-spreads-to-macos-via-malicious-google-.md)
 - [ghsa critical cve 2026 47708 mcp for stata command injection](./2026-06-04/ghsa-critical-cve-2026-47708-mcp-for-stata-command-injection.md)
 - [ghsa critical ghsa 8whc 2wmv ww35 wwbn avideo unauthenticate](./2026-06-04/ghsa-critical-ghsa-8whc-2wmv-ww35-wwbn-avideo-unauthenticate.md)
@@ -325,7 +325,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-01
 - [cisa kev cve 2026 31431 linux kernel incorrect resource tran](./2026-05-01/cisa-kev-cve-2026-31431-linux-kernel-incorrect-resource-tran.md)
-- [essential data sources for detection beyond the endpoint](./2026-05-01/essential-data-sources-for-detection-beyond-the-endpoint.md)
 
 ## 2026-04-30
 - [cisa kev cve 2026 41940 webpros cpanel whm and wp2 wordpress](./2026-04-30/cisa-kev-cve-2026-41940-webpros-cpanel-whm-and-wp2-wordpress.md)

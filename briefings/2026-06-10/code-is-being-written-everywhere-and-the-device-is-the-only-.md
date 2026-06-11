@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Installation of Aikido-flagged malicious npm packages on developer endpoints
 
-`UC_11_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_17_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceProcessEvents
 
 ### npm postinstall hook spawning a shell interpreter on a developer device
 
-`UC_11_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_17_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### Execution of binaries matching Aikido article SHA1 hashes
 
-`UC_11_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_17_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ union
 
 ### Developer-host beacon to GlassWorm / TeamPCP C2 infrastructure
 
-`UC_11_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_17_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceNetworkEvents
 
 ### Postinstall-driven read of cloud credentials and SSH keys from developer home
 
-`UC_11_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_17_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

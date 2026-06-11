@@ -1,316 +1,3 @@
-<article class="card" id="art-1281" data-art-slug="2024-02-20-preventing-server-side-request-forgery-in-node-js-applicatio"
-  data-phases="actions,c2,exploit,install" data-sev="high"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="cloud,endpoint"
-  data-targets="aws,web-app,windows"
-  data-uc-count="3" data-llm-uc-count="2"
-  data-search="Preventing server-side request forgery in Node.js applications This article will explore SSRF, its potential risks, and the strategies to mitigate SSRF in Node.js applications.  T1190 [LLM] Web-server runtime connecting to AWS IMDS link-local endpoint (SSRF → cred theft) [LLM] EC2 instance-role session credentials used from non-AWS source IP (Capital One pattern) Article-specific behavioural hunt — Preventing server-side request forgery in Node.js applications">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2024-02-20-preventing-server-side-request-forgery-in-node-js-applicatio" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/preventing-server-side-request-forgery-node-js/" target="_blank" rel="noopener">Preventing server-side request forgery in Node.js applications</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2024-02-20</span>
-    <span>3 use cases</span>
-    <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">This article will explore SSRF, its potential risks, and the strategies to mitigate SSRF in Node.js applications.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-1281-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-1281"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-1281-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — Preventing server-side request forgery in Node.js applications</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Web-server runtime connecting to AWS IMDS link-local endpoint (SSRF → cred theft) · [LLM] EC2 instance-role session credentials used from non-AWS source IP (Capital One pattern)</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="4c3bc86d53" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="web-app,windows" open>
-  <summary>
-    <span class="uc-title">Web-server runtime connecting to AWS IMDS link-local endpoint (SSRF → cred theft)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="4c3bc86d53" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts node.exe and other web-server runtimes making outbound connections to 169.254.169.254 (AWS Instance Metadata Service). The article&#x27;s vulnerable Express/Axios /upload-image-url endpoint accepts attacker-controlled URLs server-side; the explicit weaponisation example is submitting http://169.254.169.254 or http://instance-data to exfiltrate EC2 role credentials.
-
-Rationale: Anchored on the article&#x27;s specific weaponisation strings (`http://169.254.169.254` and `http://instance-data`) cited as the SSRF payload and the Capital One reference. Runtime list (node.exe, python.exe, etc.) covers the Express/Axios stack the article walks through plus common siblings. CWLI left empty — IMDS access is host-network telemetry, CloudTrail does not record the metadata fetch itself.
-
-Cross-checked against:
-  • https://attack.mitre.org/techniques/T1552/005/
-  • https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Cloud Instance Metadata API">T1552.005</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>AWS SDK boot-time region/AZ probe from the application runtime (typically one-shot, GET /latest/meta-data/placement/region)</li><li>cloud-init / EC2 user-data scripts running ruby/python during instance launch</li><li>Monitoring agents (Datadog, New Relic, CloudWatch agent) querying IMDS for instance identity tags</li><li>Application code legitimately fetching IAM role credentials via IMDSv2 for downstream AWS calls</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and not (InitiatingProcessFileName in~ (&quot;datadog-agent.exe&quot;,&quot;newrelic-infra.exe&quot;,&quot;amazon-ssm-agent.exe&quot;,&quot;amazon-cloudwatch-agent.exe&quot;,&quot;ec2launch.exe&quot;)) and not (InitiatingProcessParentFileName in~ (&quot;cloud-init&quot;,&quot;ec2launch.exe&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Pull the full InitiatingProcessCommandLine and the parent process tree — confirm it is a public-facing web runtime listening on 80/443 and not a sidecar agent (Datadog/CloudWatch/SSM). Check whether the host is configured for IMDSv2 (session tokens) — if so, also look for prior PUT to /latest/api/token from the same PID. Step 2 (contain): Quarantine the host or detach the IAM instance role; rotate the role&#x27;s credentials immediately via aws iam update-assume-role-policy or instance reboot with new role. Block 169.254.169.254 egress from the webapp&#x27;s container with a hop-limit=1 iptables rule. Step 3 (hunt): Search CloudTrail for AssumedRole sessions issued from the role within ±2h of the IMDS hit, then pivot on sourceIPAddress to find downstream AWS abuse (see companion UC). Grep the app logs for the inbound HTTP request that triggered the SSRF (look for `169.254` / `instance-data` / `metadata` in user-controlled URL params).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-1281-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1281-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1281-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-1281-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-1281-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-1281-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-1281-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteIP == &quot;169.254.169.254&quot;
-| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;java.exe&quot;,&quot;ruby.exe&quot;,&quot;php-cgi.exe&quot;,&quot;php-fpm.exe&quot;,&quot;w3wp.exe&quot;,&quot;httpd.exe&quot;,&quot;nginx.exe&quot;,&quot;dotnet.exe&quot;)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName, InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-1281-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let WebRuntimes = dynamic([&quot;node.exe&quot;,&quot;node&quot;,&quot;python.exe&quot;,&quot;python3&quot;,&quot;python&quot;,&quot;java.exe&quot;,&quot;java&quot;,&quot;ruby.exe&quot;,&quot;php-fpm&quot;,&quot;w3wp.exe&quot;,&quot;httpd.exe&quot;,&quot;httpd&quot;,&quot;nginx.exe&quot;,&quot;nginx&quot;,&quot;dotnet.exe&quot;]);
-let IMDSConns = ImNetworkSession
-    | where TimeGenerated &gt; ago(7d)
-    | where DstIpAddr == &quot;169.254.169.254&quot;
-    | project ConnTime = TimeGenerated, DvcHostname, SrcIpAddr, DstIpAddr, DstPortNumber, NetworkBytes, Url;
-let WebProcs = ImProcessCreate
-    | where TimeGenerated &gt; ago(7d)
-    | extend ProcLeaf = tostring(split(ActingProcessName, &quot;\\&quot;)[-1])
-    | where ProcLeaf in~ (WebRuntimes)
-    | project ProcTime = TimeGenerated, DvcHostname, ActingProcessName, ActingProcessCommandLine, ActorUsername;
-IMDSConns
-| join kind=inner WebProcs on DvcHostname
-| where ProcTime between (ConnTime - 4h .. ConnTime + 5m)
-| project ConnTime, DvcHostname, SrcIpAddr, DstIpAddr, DstPortNumber, Url, ActingProcessName, ActingProcessCommandLine, ActorUsername
-| order by ConnTime desc</code></pre></div>
-    <div class="tab-content" id="art-1281-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Web-Server Runtime Connecting to AWS IMDS Link-Local Endpoint
-id: 6c5d8f4a-3b7e-4d2a-9e1f-8c3a7b1d5e9f
-description: Detects web-server runtimes (node.exe, python, java, w3wp etc.) making outbound network connections to 169.254.169.254, the AWS instance-metadata service. This is the SSRF -&gt; credential-theft pattern (Capital One) called out in the article when /upload-image-url is fed an IMDS URL.
-references:
-  - https://snyk.io/blog/preventing-server-side-request-forgery-node-js/
-author: Detection Engineering
-date: 2026/06/10
-tags:
-  - attack.credential_access
-  - attack.t1552.005
-  - attack.initial_access
-  - attack.t1190
-logsource:
-  category: network_connection
-  product: windows
-detection:
-  selection_runtime:
-    Image|endswith:
-      - &#x27;\node.exe&#x27;
-      - &#x27;\python.exe&#x27;
-      - &#x27;\python3.exe&#x27;
-      - &#x27;\java.exe&#x27;
-      - &#x27;\ruby.exe&#x27;
-      - &#x27;\php-cgi.exe&#x27;
-      - &#x27;\php-fpm.exe&#x27;
-      - &#x27;\w3wp.exe&#x27;
-      - &#x27;\httpd.exe&#x27;
-      - &#x27;\nginx.exe&#x27;
-      - &#x27;\dotnet.exe&#x27;
-  selection_dest:
-    DestinationIp: &#x27;169.254.169.254&#x27;
-  condition: selection_runtime and selection_dest
-falsepositives:
-  - Legitimate AWS SDK calls from the application requesting region/AZ metadata
-  - EC2 user-data / cloud-init bootstrap scripts
-level: high</code></pre></div>
-    <div class="tab-content" id="art-1281-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @DestinationIp:169.254.169.254 @Image:(*\node.exe OR *\Node.exe OR *\NODE.EXE OR *\python.exe OR *\Python.exe OR *\python3.exe OR *\java.exe OR *\Java.exe OR *\w3wp.exe OR *\W3WP.EXE OR *\dotnet.exe OR *\DotNet.exe OR *\nginx.exe OR *\httpd.exe OR *\ruby.exe OR *\php-fpm.exe)</code></pre></div>
-    <div class="tab-content" id="art-1281-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemoteAddressIP4=&quot;169.254.169.254&quot;
-| ContextImageFileName=/\\(node|python|python3|java|ruby|php-fpm|php-cgi|w3wp|nginx|httpd|dotnet|gunicorn)(\.exe)?$/i
-| groupBy([aid, ComputerName, ContextImageFileName, RemotePort], function=count())
-| _count &gt; 0</code></pre></div>
-    <div class="tab-content" id="art-1281-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1281-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1281-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1281-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest_ip=&quot;169.254.169.254&quot; AND All_Traffic.app IN (&quot;node&quot;,&quot;node.exe&quot;,&quot;python&quot;,&quot;python.exe&quot;,&quot;python3&quot;,&quot;java&quot;,&quot;java.exe&quot;,&quot;ruby.exe&quot;,&quot;php-fpm&quot;,&quot;nginx&quot;,&quot;nginx.exe&quot;,&quot;httpd&quot;,&quot;httpd.exe&quot;,&quot;w3wp.exe&quot;,&quot;dotnet.exe&quot;,&quot;gunicorn&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.user host
-| `drop_dm_object_name(All_Traffic)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-1281-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest_ip=&quot;169.254.169.254&quot; AND All_Traffic.app IN (&quot;node&quot;,&quot;node.exe&quot;,&quot;python&quot;,&quot;python.exe&quot;,&quot;python3&quot;,&quot;java&quot;,&quot;java.exe&quot;,&quot;ruby.exe&quot;,&quot;php-fpm&quot;,&quot;nginx&quot;,&quot;nginx.exe&quot;,&quot;httpd&quot;,&quot;httpd.exe&quot;,&quot;w3wp.exe&quot;,&quot;dotnet.exe&quot;,&quot;gunicorn&quot;) by All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.user host
-| `drop_dm_object_name(All_Traffic)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="87cc57a942" data-platforms="cloudwatch,datadog,def,spl" data-targets="aws">
-  <summary>
-    <span class="uc-title">EC2 instance-role session credentials used from non-AWS source IP (Capital One pattern)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="87cc57a942" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Companion to the IMDS-egress UC. Once an attacker exfiltrates EC2 role credentials via SSRF (as in the Capital One incident the article cites — 106M records, $250M damages), they use those STS-issued tokens from their own infrastructure. CloudTrail records AssumedRole calls with sourceIPAddress = attacker IP outside AWS/corporate ranges. Hunts that exact post-exfil pattern.
-
-Rationale: Anchored directly on the article&#x27;s named Capital One breach reference (140k SSNs, 80k bank accounts, 106M people) — the canonical SSRF-to-IMDS-to-CloudTrail attack chain. The detection targets the third step (post-exfil use of stolen role credentials) which is what investigators retroactively used to attribute the Capital One incident. sentinel_kql / sigma_yaml / falcon_logscale_query left empty: CloudTrail does not have a first-class table in the Sentinel schema list provided here (would require AWSCloudTrail custom connector), Sigma cloud-product mapping for STS AssumedRole is brittle, and CloudTrail is rarely shipped to Falcon FDR.
-
-Cross-checked against:
-  • https://krebsonsecurity.com/2019/08/what-we-can-learn-from-the-capital-one-hack/
-  • https://attack.mitre.org/techniques/T1552/005/
-  • https://docs.aws.amazon.com/IAM/latest/UserGuide/cloudtrail-integration.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Cloud Instance Metadata API">T1552.005</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span> <span class="ind tech" title="Use Alternate Authentication Material: Application Access Token">T1550.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developers using `aws sts assume-role` from a laptop on a coffee-shop / home IP not in the corporate CIDR allowlist</li><li>CI/CD runners (GitHub Actions, CircleCI) assuming a deployment role from public cloud IP ranges</li><li>Cross-account access from a partner&#x27;s AWS account where the egress IP is their NAT, not yours</li><li>Federated identity providers (Okta, Auth0) initiating role assumptions from their SaaS IP ranges</li><li>Site-to-site VPN failover causing legitimate corp traffic to egress from a backup ISP IP</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and not (sourceIPAddress like /^203\.0\.113\./)
-      and not (userIdentity.sessionContext.sessionIssuer.userName like /^github-actions/)
-      and not (userAgent like /aws-cli/ and userIdentity.sessionContext.sessionIssuer.userName like /-deploy$/)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Identify the role ARN (`userIdentity.sessionContext.sessionIssuer.userName`) and check whether it is an EC2 instance role — if yes, this is high-priority IMDS-exfil suspicion. Cross-reference the source IP against threat-intel and known corporate egress. List every API call made by that session (filter same sessionContext) to gauge blast radius. Step 2 (contain): Revoke the role&#x27;s active sessions with `aws iam put-role-policy` denying all (or attach AWSDenyAll), then rotate the instance&#x27;s role. If an EC2 instance is the issuer, snapshot the volume for forensics before terminating — the SSRF entry point is in app logs. Step 3 (hunt): Pivot on the role ARN across the last 30 days of CloudTrail for reconnaissance (ListBuckets, GetCallerIdentity, DescribeInstances) and exfiltration (GetObject on sensitive prefixes, CreateSnapshot, ModifyDBInstance --publicly-accessible). Correlate the source IP back to web-app logs for the originating SSRF request (look for `169.254` or `i</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-1281-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1281-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-1281-uc1-cloudwatch">CloudWatch Logs Insights</button>
-      <button class="tab-btn" data-target="art-1281-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-1281-uc1-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
-| where Timestamp &gt; ago(7d)
-| where Application == &quot;Amazon Web Services&quot;
-| where ActionType in~ (&quot;AssumeRole&quot;,&quot;GetSessionToken&quot;,&quot;AssumeRoleWithWebIdentity&quot;,&quot;GetCallerIdentity&quot;)
-| extend rawUserType = tostring(parse_json(tostring(RawEventData)).userIdentity.type)
-| where rawUserType == &quot;AssumedRole&quot; or AccountType == &quot;AssumedRole&quot;
-| where not(ipv4_is_private(IPAddress)) and IPAddress != &quot;AWS Internal&quot;
-| extend RoleArn = tostring(parse_json(tostring(RawEventData)).userIdentity.arn)
-| summarize ApiCalls = count(), DistinctActions = dcount(ActionType), Actions = make_set(ActionType, 25), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
-          by AccountDisplayName, RoleArn, IPAddress, CountryCode
-| where ApiCalls &gt;= 3
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-1281-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @userIdentity.type:AssumedRole -@evt.outcome:failure -CIDR(@network.client.ip, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16) -@network.client.ip:&quot;AWS Internal&quot;</code></pre></div>
-    <div class="tab-content" id="art-1281-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
-fields @timestamp, eventName, eventSource, sourceIPAddress, userIdentity.type, userIdentity.arn, userIdentity.sessionContext.sessionIssuer.userName, userAgent, awsRegion
-| filter userIdentity.type = &quot;AssumedRole&quot;
-      and not isPresent(errorCode)
-      and sourceIPAddress != &quot;AWS Internal&quot;
-      and not (sourceIPAddress like /\.amazonaws\.com$/)
-      and not (sourceIPAddress like /^10\./)
-      and not (sourceIPAddress like /^172\.(1[6-9]|2[0-9]|3[01])\./)
-      and not (sourceIPAddress like /^192\.168\./)
-| stats count() as api_calls, count_distinct(eventName) as distinct_apis, earliest(@timestamp) as first_seen, latest(@timestamp) as last_seen by userIdentity.sessionContext.sessionIssuer.userName, sourceIPAddress, awsRegion
-| sort api_calls desc
-| limit 200</code></pre></div>
-    <div class="tab-content" id="art-1281-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1281-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1281-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1281-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Authentication.action) as actions from datamodel=Authentication where Authentication.signature=&quot;AssumedRole&quot; AND Authentication.user_type=&quot;AssumedRole&quot; AND Authentication.app=&quot;sts.amazonaws.com&quot; by Authentication.user Authentication.src Authentication.user_role
-| `drop_dm_object_name(Authentication)`
-| where NOT cidrmatch(&quot;10.0.0.0/8&quot;, src) AND NOT cidrmatch(&quot;172.16.0.0/12&quot;, src) AND NOT cidrmatch(&quot;192.168.0.0/16&quot;, src) AND src!=&quot;AWS Internal&quot; AND NOT match(src, &quot;\.amazonaws\.com$&quot;)
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-1281-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Authentication.action) as actions from datamodel=Authentication where Authentication.signature=&quot;AssumedRole&quot; AND Authentication.user_type=&quot;AssumedRole&quot; AND Authentication.app=&quot;sts.amazonaws.com&quot; by Authentication.user Authentication.src Authentication.user_role
-| `drop_dm_object_name(Authentication)`
-| where NOT cidrmatch(&quot;10.0.0.0/8&quot;, src) AND NOT cidrmatch(&quot;172.16.0.0/12&quot;, src) AND NOT cidrmatch(&quot;192.168.0.0/16&quot;, src) AND src!=&quot;AWS Internal&quot; AND NOT match(src, &quot;\.amazonaws\.com$&quot;)
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="5204bf9bf4" data-platforms="def,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Preventing server-side request forgery in Node.js applications</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="5204bf9bf4" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-1281-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1281-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-1281-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Preventing server-side request forgery in Node.js applications
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;, &quot;index.js&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;, &quot;index.js&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-1281-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1281-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1281-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1281-uc2-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Preventing server-side request forgery in Node.js applications ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;,&quot;index.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;,&quot;index.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-1281-uc2-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Preventing server-side request forgery in Node.js applications ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;,&quot;index.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;,&quot;index.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-1282" data-art-slug="2024-02-20-preventing-sql-injection-attacks-in-node-js"
   data-phases="c2,exploit,install,recon" data-sev="high"
   data-techs="T1190"
@@ -4657,6 +4344,184 @@ level: medium
         &quot;Add delegated permission grant&quot;)
     by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
 | `drop_dm_object_name(Authentication)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-1306" data-art-slug="2023-12-18-top-3-security-best-practices-for-handling-jwts"
+  data-phases="actions,c2,exploit,install,recon" data-sev="med"
+  data-techs="T1190,T1539"
+  data-sources="Snyk"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="endpoint"
+  data-targets="windows"
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="Top 3 security best practices for handling JWTs In this blog post, we will discuss the top three security best practices for handling JWTs. We will also provide practical examples using Python and show how Snyk can help you identify and remediate security vulnerabilities in your application.  T1190 T1539 Infostealer — non-browser process accessing browser cookie/login DBs">
+  <div class="sev-ribbon med">Medium</div>
+  <button class="share-btn card-share" data-share-art="2023-12-18-top-3-security-best-practices-for-handling-jwts" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/top-3-security-best-practices-for-handling-jwts/" target="_blank" rel="noopener">Top 3 security best practices for handling JWTs</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2023-12-18</span>
+    <span>1 use case</span>
+    <span>2 techniques</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">In this blog post, we will discuss the top three security best practices for handling JWTs. We will also provide practical examples using Python and show how Snyk can help you identify and remediate security vulnerabilities in your application.</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Steal Web Session Cookie">T1539</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-1306-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-1306"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-1306-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Infostealer — non-browser process accessing browser cookie/login DBs</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="6a7bf050fd" data-platforms="def,sent,sigma,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Infostealer — non-browser process accessing browser cookie/login DBs</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="6a7bf050fd" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies SQLite from Chrome/Edge/Firefox.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1306-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1306-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1306-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1306-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1306-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessAccountName !endswith &quot;$&quot;
+| where FolderPath has_any (@&quot;\Google\Chrome\User Data\&quot;, @&quot;\Microsoft\Edge\User Data\&quot;, @&quot;\Mozilla\Firefox\Profiles\&quot;)
+| where FileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
+| where InitiatingProcessFileName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+</code></pre></div>
+    <div class="tab-content" id="art-1306-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// ASIM ImFileEvent — covers MDE, Sysmon, AuditD, Defender for Cloud, etc.
+ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where ActorUsername !endswith &quot;$&quot;
+| where TargetFilePath has_any (@&quot;\Google\Chrome\User Data\&quot;,
+                                  @&quot;\Microsoft\Edge\User Data\&quot;,
+                                  @&quot;\Mozilla\Firefox\Profiles\&quot;)
+| where TargetFileName in~ (&quot;Login Data&quot;,&quot;Cookies&quot;,&quot;logins.json&quot;,&quot;cookies.sqlite&quot;)
+| where ActingProcessName !in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
+          TargetFilePath, TargetFileName, EventType
+</code></pre></div>
+    <div class="tab-content" id="art-1306-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Infostealer - Non-Browser Process Accessing Browser Credential Stores
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d01
+status: experimental
+description: |
+    Stealers (RedLine, Lumma, Vidar, Atomic) read Login Data / cookies
+    SQLite databases from Chrome/Edge/Firefox profile directories. Any
+    non-browser process touching these files is a high-fidelity signal.
+references:
+    - https://attack.mitre.org/techniques/T1539/
+    - https://attack.mitre.org/techniques/T1555/003/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1539
+    - attack.t1555.003
+    - attack.credential-access
+logsource:
+    category: file_access
+    product: windows
+detection:
+    selection_path:
+        TargetFilename|contains:
+            - &#x27;\Google\Chrome\User Data\&#x27;
+            - &#x27;\Microsoft\Edge\User Data\&#x27;
+            - &#x27;\Mozilla\Firefox\Profiles\&#x27;
+    selection_file:
+        TargetFilename|endswith:
+            - &#x27;\Login Data&#x27;
+            - &#x27;\Cookies&#x27;
+            - &#x27;\logins.json&#x27;
+            - &#x27;\cookies.sqlite&#x27;
+    filter_browser:
+        Image|endswith:
+            - &#x27;\chrome.exe&#x27;
+            - &#x27;\msedge.exe&#x27;
+            - &#x27;\firefox.exe&#x27;
+            - &#x27;\brave.exe&#x27;
+            - &#x27;\opera.exe&#x27;
+    condition: selection_path and selection_file and not filter_browser
+falsepositives:
+    - Backup utilities reading user profile files
+    - Browser sync agents from non-stock vendors
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-1306-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1306-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1306-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1306-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
+        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
+      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-1306-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Google\Chrome\User Data\*\Cookies*&quot;
+        OR Filesystem.file_path=&quot;*\Microsoft\Edge\User Data\*\Login Data*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\logins.json*&quot;
+        OR Filesystem.file_path=&quot;*\Mozilla\Firefox\Profiles\*\cookies.sqlite*&quot;)
+      AND NOT Filesystem.process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,&quot;brave.exe&quot;,&quot;opera.exe&quot;)
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
   </div>
 </details></div>
 </article>

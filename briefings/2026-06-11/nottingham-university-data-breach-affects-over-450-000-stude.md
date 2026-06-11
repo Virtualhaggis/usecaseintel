@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### HTTP POST to Oracle PeopleSoft deserialization endpoints (gadget chain initial access)
 
-`UC_3_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_9_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceNetworkEvents
 
 ### PeopleSoft Tuxedo / Java app-server spawning shells (post-exploit RCE)
 
-`UC_3_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_9_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### Outbound connection or DNS to ShinyHunters PeopleSoft campaign infrastructure
 
-`UC_3_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_9_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ let CampaignDomains = dynamic(["azurenetfiles.net"]);
 
 ### Large outbound HTTPS upload from PeopleSoft application or database server
 
-`UC_3_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_9_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -135,7 +135,7 @@ DeviceNetworkEvents
 
 ### Bulk SELECT or export from PeopleSoft student / finance tables
 
-`UC_3_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_9_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

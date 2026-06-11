@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### AWS CloudTrail StopLogging — trail disabled via API
 
-`UC_40_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_42_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### AWS S3 bucket deletion targeting a CloudTrail log destination
 
-`UC_40_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_42_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### GCP Cloud Logging sink disabled via UpdateSink
 
-`UC_40_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_42_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ _(none detected from narrative keywords)_
 
 ### GCP log bucket deletion entering DELETE_REQUESTED state
 
-`UC_40_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_42_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

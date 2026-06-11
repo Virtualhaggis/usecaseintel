@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### Miasma dead-man-switch destructive home directory wipe
 
-`UC_9_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_15_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceProcessEvents
 
 ### Miasma 72-hour monitor persistence via systemd user service or LaunchAgent
 
-`UC_9_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_15_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ PersistenceDrops
 
 ### Miasma AI coding tool config poisoning via non-IDE writer
 
-`UC_9_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_15_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceFileEvents
 
 ### Miasma developer credential file harvest fan-out
 
-`UC_9_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_15_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -185,7 +185,7 @@ DeviceFileEvents
 
 ### Miasma-Open-Source-Release repository fetch via git clone or HTTP download
 
-`UC_9_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_15_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -214,7 +214,7 @@ union
 
 ### AWS SSM cross-host fan-out from a developer IAM principal
 
-`UC_9_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_15_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

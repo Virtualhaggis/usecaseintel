@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### DNS / network connection to RoguePlanet PoC publication domain (projectnightcrawler.dev)
 
-`UC_35_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_37_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ union isfuzzy=true
 
 ### Microsoft Defender service spawning interactive shell as SYSTEM (RoguePlanet exploit success signature)
 
-`UC_35_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_37_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
