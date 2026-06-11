@@ -27,13 +27,14 @@ PostHog's engineering team is merging roughly as many pull requests through Slac
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
 - **T1059.007** — JavaScript
-- **T1204.002** — Malicious File
-- **T1546.016** — Installer Packages
-- **T1071.001** — Web Protocols
-- **T1105** — Ingress Tool Transfer
-- **T1552.001** — Credentials In Files
-- **T1555** — Credentials from Password Stores
-- **T1528** — Steal Application Access Token
+- **T1567** — Exfiltration Over Web Service
+- **T1071.003** — Mail Protocols
+- **T1020** — Automated Exfiltration
+- **T1176** — Browser Extensions
+- **T1554** — Compromise Host Software Binary
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102** — Web Service
+- **T1568** — Dynamic Resolution
 
 ## Kill chain phases observed
 
@@ -41,125 +42,95 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Installation of Aikido-flagged malicious npm packages on developer endpoints
+### Postmark-MCP supply-chain backdoor: npm install of postmark-mcp package
 
-`UC_37_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("npm.exe","npm-cli.js","yarn.exe","pnpm.exe","node.exe") (Processes.process="*axios@0.30.4*" OR Processes.process="*axios@1.14.1*" OR Processes.process="*postmark-mcp@1.0.16*" OR Processes.process="*postmark-mcp@1.0.17*" OR Processes.process="*postmark-mcp@1.0.18*" OR Processes.process="*plain-crypto-js@4.2.1*" OR Processes.process="*@bitwarden/cli@2026.4.0*") by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let BadSpecs = dynamic(["axios@0.30.4","axios@1.14.1","postmark-mcp@1.0.16","postmark-mcp@1.0.17","postmark-mcp@1.0.18","plain-crypto-js@4.2.1","@bitwarden/cli@2026.4.0"]);
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("npm.exe","yarn.exe","pnpm.exe","node.exe")
-   or InitiatingProcessFileName in~ ("npm.exe","yarn.exe","pnpm.exe","node.exe")
-| where ProcessCommandLine has_any (BadSpecs) or InitiatingProcessCommandLine has_any (BadSpecs)
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
-| order by Timestamp desc
-```
-
-### npm postinstall hook spawning a shell interpreter on a developer device
-
-`UC_37_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_39_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node.exe","npm.exe","yarn.exe","pnpm.exe") (Processes.parent_process="*postinstall*" OR Processes.parent_process="*preinstall*" OR Processes.parent_process="*install.js*" OR Processes.parent_process="*install.cjs*" OR Processes.parent_process="*node_modules*") Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","bash.exe","sh.exe","wscript.exe","cscript.exe","mshta.exe","curl.exe","certutil.exe") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("node.exe","npm.exe","yarn.exe","pnpm.exe")
-| where InitiatingProcessCommandLine has_any ("postinstall","preinstall","install.js","install.cjs","node_modules\\.bin")
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","bash.exe","sh.exe","wscript.exe","cscript.exe","mshta.exe","curl.exe","certutil.exe","bitsadmin.exe")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName,
-  ParentImage = InitiatingProcessFolderPath,
-  ParentCmd   = InitiatingProcessCommandLine,
-  ChildImage  = FolderPath,
-  ChildCmd    = ProcessCommandLine,
-  SHA256
-| order by Timestamp desc
-```
-
-### Execution of binaries matching Aikido article SHA1 hashes
-
-`UC_37_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("2553649f2322049666871cea80a5d0d6adc700ca","d6f3f62fd3b9f5432f5782b62d8cfd5247d5ee71","07d889e2dadce6f3910dcbc253317d28ca61c766") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let BadHashes = dynamic(["2553649f2322049666871cea80a5d0d6adc700ca","d6f3f62fd3b9f5432f5782b62d8cfd5247d5ee71","07d889e2dadce6f3910dcbc253317d28ca61c766"]);
-union
-  (DeviceProcessEvents
-   | where Timestamp > ago(90d)
-   | where SHA1 in (BadHashes) or InitiatingProcessSHA1 in (BadHashes)
-   | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA1, ProcessCommandLine, InitiatingProcessFileName, Source="Process"),
-  (DeviceFileEvents
-   | where Timestamp > ago(90d)
-   | where SHA1 in (BadHashes)
-   | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, SHA1, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, Source="File")
-| order by Timestamp desc
-```
-
-### Developer-host beacon to GlassWorm / TeamPCP C2 infrastructure
-
-`UC_37_6` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("142.11.206.73","45.32.150.251","45.32.151.157","70.34.242.255") OR All_Traffic.dest IN ("giftshop.club","sfrclak.com") OR All_Traffic.url="*giftshop.club*" OR All_Traffic.url="*sfrclak.com*" by All_Traffic.src All_Traffic.src_user All_Traffic.dest_ip All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let BadIPs = dynamic(["142.11.206.73","45.32.150.251","45.32.151.157","70.34.242.255"]);
-let BadDomains = dynamic(["giftshop.club","sfrclak.com"]);
-DeviceNetworkEvents
-| where Timestamp > ago(90d)
-| where RemoteIP in (BadIPs)
-   or RemoteUrl has_any (BadDomains)
-| extend Suspect_NodeOrIDE = InitiatingProcessFileName in~ ("node.exe","npm.exe","Code.exe","electron.exe","chrome.exe","msedge.exe")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, InitiatingProcessAccountName, RemoteIP, RemoteUrl, RemotePort, Suspect_NodeOrIDE
-| order by Timestamp desc
-```
-
-### Postinstall-driven read of cloud credentials and SSH keys from developer home
-
-`UC_37_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("node.exe","npm.exe","yarn.exe","pnpm.exe") (Filesystem.file_path="*\\.aws\\credentials*" OR Filesystem.file_path="*\\.aws\\config*" OR Filesystem.file_path="*\\.ssh\\id_*" OR Filesystem.file_path="*\\.npmrc*" OR Filesystem.file_path="*\\.kube\\config*" OR Filesystem.file_path="*\\Bitwarden*\\data.json*" OR Filesystem.file_name=".env") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.process_name Filesystem.process | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*node_modules*postmark-mcp*") AND (Filesystem.process_name="npm.exe" OR Filesystem.process_name="node.exe" OR Filesystem.process_name="yarn.exe" OR Filesystem.process_name="pnpm.exe" OR Filesystem.process_name="npx.exe" OR Filesystem.process_name="bun.exe") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-   or ActionType has "Open"
-| where (FolderPath has_any (@"\.aws\credentials", @"\.aws\config", @"\.ssh\", @"\.npmrc", @"\.kube\config", @"Bitwarden\data.json", @"@bitwarden\")
-     or FileName in~ ("credentials","id_rsa","id_ed25519","id_ecdsa",".npmrc","kubeconfig","data.json",".env"))
-| where InitiatingProcessFileName in~ ("node.exe","npm.exe","yarn.exe","pnpm.exe")
-| where InitiatingProcessParentFileName in~ ("node.exe","npm.exe","yarn.exe","pnpm.exe","Code.exe","electron.exe")
-   or InitiatingProcessCommandLine has_any ("postinstall","preinstall","node_modules","install.js")
+| where Timestamp > ago(30d)
+| where FolderPath has @"\node_modules\postmark-mcp" or FolderPath has "/node_modules/postmark-mcp"
+| where InitiatingProcessFileName in~ ("npm.exe","npm.cmd","node.exe","yarn.exe","yarn.cmd","pnpm.exe","npx.exe","npx.cmd","bun.exe")
 | where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, FolderPath, FileName, ActionType,
-  InitiatingProcessFileName, InitiatingProcessCommandLine,
-  InitiatingProcessParentFileName, InitiatingProcessAccountName, SHA256
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
 | order by Timestamp desc
+```
+
+### Postmark-MCP exfiltration: BCC mail or DNS lookup for giftshop.club
+
+`UC_39_4` · phase: **exfil** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*giftshop.club*" by DNS.src DNS.query DNS.answer DNS.process_name | `drop_dm_object_name(DNS)` | append [| tstats summariesonly=true count from datamodel=Email.All_Email where (All_Email.recipient="*@giftshop.club" OR All_Email.bcc="*@giftshop.club" OR All_Email.src_user="*@giftshop.club") by All_Email.src_user All_Email.recipient All_Email.subject | `drop_dm_object_name(All_Email)`] | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+union
+  (EmailEvents
+   | where Timestamp > ago(30d)
+   | where RecipientEmailAddress endswith "@giftshop.club" or SenderFromAddress endswith "@giftshop.club" or SenderMailFromAddress endswith "@giftshop.club"
+   | extend Signal = "EmailEvents", Detail = strcat("sender=", SenderFromAddress, " recipient=", RecipientEmailAddress, " subject=", Subject)
+   | project Timestamp, Signal, Detail, NetworkMessageId, EmailDirection, DeliveryAction),
+  (DeviceNetworkEvents
+   | where Timestamp > ago(30d)
+   | where RemoteUrl has "giftshop.club" or AdditionalFields has "giftshop.club"
+   | extend Signal = "DeviceNetworkEvents", Detail = strcat("url=", RemoteUrl, " ip=", RemoteIP, " proc=", InitiatingProcessFileName)
+   | project Timestamp, Signal, Detail, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort)
+| order by Timestamp desc
+```
+
+### GlassWorm: install of known Open VSX extensions (otoboss / federicanc / oigotm / twilkbilk / crotoapp)
+
+`UC_39_5` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\.vscode\\extensions\\otoboss.autoimport-extension*" OR Filesystem.file_path="*\\.vscode\\extensions\\federicanc.dotenv-syntax-highlighting*" OR Filesystem.file_path="*\\.vscode\\extensions\\oigotm.my-command-palette-extension*" OR Filesystem.file_path="*\\.vscode\\extensions\\twilkbilk.color-highlight-css*" OR Filesystem.file_path="*\\.vscode\\extensions\\crotoapp.vscode-xml-extension*" OR Filesystem.file_path="*/.vscode/extensions/otoboss.autoimport-extension*" OR Filesystem.file_path="*/.vscode/extensions/federicanc.dotenv-syntax-highlighting*" OR Filesystem.file_path="*/.vscode/extensions/oigotm.my-command-palette-extension*" OR Filesystem.file_path="*/.vscode/extensions/twilkbilk.color-highlight-css*" OR Filesystem.file_path="*/.vscode/extensions/crotoapp.vscode-xml-extension*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+let glasswormExtensions = dynamic(["otoboss.autoimport-extension","federicanc.dotenv-syntax-highlighting","oigotm.my-command-palette-extension","twilkbilk.color-highlight-css","crotoapp.vscode-xml-extension"]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath has @"\.vscode\extensions\" or FolderPath has "/.vscode/extensions/" or FolderPath has @"\.vscode-server\extensions\" or FolderPath has "/.vscode-server/extensions/"
+| extend ExtDir = tolower(extract(@"[\\/]\.?vscode(?:-server)?[\\/]extensions[\\/]([^\\/]+?)(?:-\d+\.\d+\.\d+)?[\\/]", 1, FolderPath))
+| where isnotempty(ExtDir)
+| where ExtDir in~ (glasswormExtensions) or ExtDir has_any (glasswormExtensions)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, SHA256, ExtDir, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### GlassWorm C2 beacon to Vultr-hosted infrastructure (45.32.150.251 / 45.32.151.157 / 70.34.242.255)
+
+`UC_39_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_ports values(All_Traffic.app) as apps values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest in ("45.32.150.251","45.32.151.157","70.34.242.255") AND All_Traffic.src_category!="perimeter_scanner" by All_Traffic.src All_Traffic.dest All_Traffic.user All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+let glasswormC2 = dynamic(["45.32.150.251","45.32.151.157","70.34.242.255"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (glasswormC2)
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt","InboundConnectionAccepted")
+| where InitiatingProcessAccountName !endswith "$"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Connections=count(),
+           Ports=make_set(RemotePort, 16), Processes=make_set(InitiatingProcessFileName, 16),
+           Cmds=make_set(InitiatingProcessCommandLine, 8)
+           by DeviceName, RemoteIP, InitiatingProcessAccountName
+| order by FirstSeen desc
 ```
 
 ### Trusted vendor binary / installer launching unusual children
@@ -199,4 +170,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

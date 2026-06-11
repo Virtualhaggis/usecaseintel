@@ -27,14 +27,12 @@ Cybersecurity researchers have warned of a "resurgence and expansion" of JDY , a
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
+- **T1090.003** — Multi-hop Proxy
+- **T1071** — Application Layer Protocol
+- **T1059.004** — Unix Shell
 - **T1105** — Ingress Tool Transfer
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1027.002** — Obfuscated Files or Information: Software Packing
-- **T1070.004** — Indicator Removal: File Deletion
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1595.002** — Active Scanning: Vulnerability Scanning
+- **T1595.002** — Vulnerability Scanning
 - **T1046** — Network Service Discovery
-- **T1584.005** — Compromise Infrastructure: Botnet
 
 ## Kill chain phases observed
 
@@ -42,92 +40,103 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### JDY Linux shell dropper — architecture-aware MIPS/MIPSEL payload retrieval
+### SOHO/IoT/router device outbound connection to known Tor entry/relay infrastructure
 
-`UC_39_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_41_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN ("curl","wget","ftpget","tftp","busybox") (Processes.process="*mips*" OR Processes.process="*mipsel*" OR Processes.process="*mips64*" OR Processes.process="*mipsel64*") (Processes.process="*http*" OR Processes.process="*://*" OR Processes.process="*.sh*") by host Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | rename host as dest | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count, values(All_Traffic.dest_port) as dest_ports, min(_time) as firstTime, max(_time) as lastTime from datamodel=Network_Traffic where (All_Traffic.dest_ip in ("128.31.0.39","86.59.21.38","45.66.33.45","131.188.40.189","193.23.244.244","171.25.193.9","199.58.81.140","204.13.164.118","154.35.175.225")) OR (All_Traffic.dest_port in (9001,9030) AND All_Traffic.action=allowed) by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+let TorDirAuth = dynamic(["128.31.0.39","86.59.21.38","45.66.33.45","131.188.40.189","193.23.244.244","171.25.193.9","199.58.81.140","204.13.164.118","154.35.175.225"]);
+let TorPorts = dynamic([9001, 9030]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteIPType == "Public"
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt")
+| where RemoteIP in (TorDirAuth) or RemotePort in (TorPorts)
+| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), ConnCount = count(),
+            Processes = make_set(InitiatingProcessFileName, 8)
+            by DeviceName, DeviceId, RemoteIP, RemotePort
+| order by FirstSeen desc
+```
+
+### Internet-facing edge device with unpatched CVE-2026-35616 vulnerability
+
+`UC_41_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+search index=vuln_mgmt sourcetype=tenable* OR sourcetype=qualys* CVE_ID="CVE-2026-35616" | join type=left dest [search index=asset_inventory internet_facing=true | fields dest, vendor, model, firmware_version] | where isnotnull(vendor) | stats min(_time) as firstSeen, max(_time) as lastSeen, values(vendor) as vendor, values(model) as model, values(firmware_version) as firmware by dest | convert ctime(firstSeen) ctime(lastSeen) | sort - lastSeen
+```
+
+**Defender KQL:**
+```kql
+let Vuln = DeviceTvmSoftwareVulnerabilities
+    | where Timestamp > ago(7d)
+    | where CveId == "CVE-2026-35616"
+    | summarize arg_max(Timestamp, *) by DeviceId, CveId, SoftwareName, SoftwareVersion;
+let Devs = DeviceInfo
+    | where Timestamp > ago(7d)
+    | summarize arg_max(Timestamp, *) by DeviceId;
+Vuln
+| join kind=inner Devs on DeviceId
+| where IsInternetFacing == true
+   or DeviceCategory in~ ("NetworkDevice","IoT")
+   or Vendor in~ ("Cisco","Araknis","Mimosa","Ubiquiti","Draytek","Hikvision","Linksys")
+| project Timestamp, DeviceName, DeviceId, Vendor, Model, OSPlatform, OSVersion,
+          SoftwareName, SoftwareVersion, PublicIP, IsInternetFacing, RecommendedSecurityUpdate
+| order by Timestamp desc
+```
+
+### Architecture-specific MIPS/MIPSEL payload download via shell-script dropper
+
+`UC_41_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count, values(Processes.process) as cmdline, values(Processes.parent_process_name) as parent, min(_time) as firstTime from datamodel=Endpoint.Processes where (Processes.process_name="wget" OR Processes.process_name="curl" OR Processes.process_name="busybox") (Processes.process="*/mips*" OR Processes.process="*/mipsel*" OR Processes.process="*/mips64*" OR Processes.process="*/mipsel64*" OR Processes.process="*mips.bin*" OR Processes.process="*mipsel.bin*") (Processes.parent_process_name="sh" OR Processes.parent_process_name="bash" OR Processes.parent_process_name="dash" OR Processes.parent_process_name="ash" OR Processes.parent_process_name="busybox") by host, Processes.user, Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where FileName in~ ("curl","wget","ftpget","tftp","busybox")
-| where ProcessCommandLine matches regex @"(?i)\b(mips64|mipsel64|mipsel|mips)\b"
-| where ProcessCommandLine has_any ("http://","https://","://",".onion")
-| project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFileName,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildImage = FileName,
-          ChildCmd = ProcessCommandLine,
-          SHA256
+| where FileName in~ ("wget","curl","busybox")
+| where ProcessCommandLine has_any ("/mips","/mipsel","/mips64","/mipsel64","mips.bin","mipsel.bin",".mips",".mipsel")
+| where InitiatingProcessFileName in~ ("sh","bash","dash","ash","busybox","zsh")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### JDY botnet self-delete — Linux ELF executes then unlinks its own image
+### High-fanout outbound scanning from internal host — potential JDY bot reconnaissance
 
-`UC_39_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_path IN ("/tmp/*","/var/tmp/*","/dev/shm/*","/var/run/*","/run/*") by _time host Processes.process_path Processes.process_name Processes.user | `drop_dm_object_name(Processes)` | rename _time as procTime process_path as targetPath | join type=inner host targetPath [ | tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Filesystem.action="deleted" Filesystem.file_path IN ("/tmp/*","/var/tmp/*","/dev/shm/*","/var/run/*","/run/*") by _time host Filesystem.file_path | `drop_dm_object_name(Filesystem)` | rename _time as delTime file_path as targetPath ] | eval gapSec=delTime-procTime | where gapSec >= 0 AND gapSec <= 30 | table procTime delTime gapSec host user process_name targetPath
-```
-
-**Defender KQL:**
-```kql
-let WindowSec = 30;
-let ExecEvents = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where FolderPath has_any ("/tmp/","/var/tmp/","/dev/shm/","/var/run/","/run/")
-    | project ExecTime = Timestamp, DeviceId, DeviceName, AccountName,
-              ImagePath = FolderPath, ImageName = FileName,
-              SHA256, ProcessCommandLine, ParentName = InitiatingProcessFileName;
-let DeleteEvents = DeviceFileEvents
-    | where Timestamp > ago(7d)
-    | where ActionType in ("FileDeleted","FileRenamed")
-    | where FolderPath has_any ("/tmp/","/var/tmp/","/dev/shm/","/var/run/","/run/")
-    | project DelTime = Timestamp, DeviceId, DelPath = FolderPath, DelName = FileName,
-              DelInitiator = InitiatingProcessFileName;
-ExecEvents
-| join kind=inner DeleteEvents on DeviceId
-| where ImagePath == DelPath and ImageName == DelName
-| extend GapSec = datetime_diff('second', DelTime, ExecTime)
-| where GapSec between (0 .. WindowSec)
-| project ExecTime, DelTime, GapSec, DeviceName, AccountName,
-          ImagePath, ImageName, SHA256, ParentName, DelInitiator, ProcessCommandLine
-| order by ExecTime desc
-```
-
-### JDY-style reconnaissance — internal host high-fanout mixed-protocol scanning
-
-`UC_39_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_41_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count dc(All_Traffic.dest_ip) as distinctDsts dc(All_Traffic.dest_port) as distinctPorts dc(All_Traffic.transport) as distinctProtos values(All_Traffic.transport) as protos values(All_Traffic.dest_port) as ports from datamodel=Network_Traffic.All_Traffic where All_Traffic.action!="blocked" by _time span=5m All_Traffic.src_ip All_Traffic.src | `drop_dm_object_name(All_Traffic)` | where distinctDsts >= 200 AND distinctProtos >= 3 AND distinctPorts >= 20 | rename src_ip as src_endpoint | table _time src_endpoint distinctDsts distinctPorts distinctProtos protos count
+| tstats summariesonly=t dc(All_Traffic.dest_ip) as distinctDestIPs, dc(All_Traffic.dest_port) as distinctDestPorts, count from datamodel=Network_Traffic where All_Traffic.src_category=internal NOT All_Traffic.src_category=scanner by All_Traffic.src, _time span=5m | `drop_dm_object_name(All_Traffic)` | where distinctDestIPs > 200 AND distinctDestPorts > 20 AND count > 500 | sort - distinctDestIPs
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(1h)
-| where ActionType in ("ConnectionAttempt","ConnectionSuccess","ConnectionFailed","InboundConnectionAccepted")
+| where Timestamp > ago(1d)
+| where ActionType in ("ConnectionAttempt","ConnectionSuccess","ConnectionFailed")
 | where RemoteIPType == "Public"
-| summarize 
-    DistinctDsts = dcount(RemoteIP),
-    DistinctPorts = dcount(RemotePort),
-    DistinctProtos = dcount(Protocol),
-    Protos = make_set(Protocol, 10),
-    SamplePorts = make_set(RemotePort, 20),
-    TotalConns = count()
-    by DeviceName, DeviceId, bin(Timestamp, 5m)
-| where DistinctDsts >= 200 and DistinctProtos >= 3 and DistinctPorts >= 20
-| extend MeanConnsPerDst = TotalConns * 1.0 / DistinctDsts
-| where MeanConnsPerDst < 5     // scanner shape: many destinations, few packets each
-| order by Timestamp desc
+| summarize DistinctRemoteIPs = dcount(RemoteIP),
+            DistinctRemotePorts = dcount(RemotePort),
+            ConnCount = count(),
+            SamplePorts = make_set(RemotePort, 25),
+            SampleProcs = make_set(InitiatingProcessFileName, 10)
+            by DeviceName, DeviceId, bin(Timestamp, 5m)
+| where DistinctRemoteIPs > 200 and DistinctRemotePorts > 20 and ConnCount > 500
+| order by DistinctRemoteIPs desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -339,4 +348,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

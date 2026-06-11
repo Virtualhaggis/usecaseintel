@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### PeopleSoft Internet Architecture gadget-chain deserialization exploitation
 
-`UC_30_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_32_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceNetworkEvents
 
 ### Bulk export of PSOPRDEFN / PERSONAL_DATA rows by PeopleSoft service account
 
-`UC_30_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_32_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### Outbound C2 / staging to ShinyHunters PeopleSoft campaign IOC infrastructure
 
-`UC_30_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_32_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceNetworkEvents
 
 ### Suspicious archiving of PeopleSoft data on DB / app tier prior to exfiltration
 
-`UC_30_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_32_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceProcessEvents
 
 ### PeopleSoft service account privileged use across federated campus instances
 
-`UC_30_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_32_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

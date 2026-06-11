@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Editor/AI-tool auto-execute config dropped in developer project (Miasma/Hades)
 
-`UC_12_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_14_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceFileEvents
 
 ### Miasma Phantom Gyp: tiny binding.gyp triggers native build code execution
 
-`UC_12_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_14_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### Hades on-import: Bun runtime downloaded by Python or Node
 
-`UC_12_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_14_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceNetworkEvents
 
 ### Obfuscated one-line hook injected into __init__.py (Hades persistence)
 
-`UC_12_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_14_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,7 +148,7 @@ DeviceFileEvents
 
 ### npm/PyPI publishing credentials read by package-manager or shell process
 
-`UC_12_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_14_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -169,7 +169,7 @@ DeviceFileEvents
 
 ### Worm propagation: npm publish or twine upload from non-interactive parent
 
-`UC_12_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_14_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -245,7 +245,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Miasma and Hades Are Spreading Now: Detect Them on Developer Machines with Suspi
 
-`UC_12_3` · phase: **exploit** · confidence: **High**
+`UC_14_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

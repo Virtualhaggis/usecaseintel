@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Talos weekly prevalent malware hash match (2026-06-11): coinminer/injector/dropper/procpatcher
 
-`UC_1_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ union
 
 ### Coinminer Stratum-protocol egress to known mining pools (Talos prevalent malware impact stage)
 
-`UC_1_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -222,7 +222,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A tale of two eras
 
-`UC_1_5` · phase: **exploit** · confidence: **High**
+`UC_3_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

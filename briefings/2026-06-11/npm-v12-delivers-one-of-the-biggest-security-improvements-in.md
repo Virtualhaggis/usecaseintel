@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### Bun runtime spawned by npm/node install context (Shai-Hulud / Mini Shai-Hulud)
 
-`UC_18_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_20_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceProcessEvents
 
 ### TruffleHog credential scanner spawned from npm install (Shai-Hulud signature)
 
-`UC_18_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_20_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceProcessEvents
 
 ### Nx s1ngularity telemetry.js postinstall script execution
 
-`UC_18_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_20_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceProcessEvents
 
 ### Implicit node-gyp rebuild from binding.gyp during npm install
 
-`UC_18_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_20_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -166,7 +166,7 @@ DeviceProcessEvents
 
 ### Git publish-to-public-GitHub from npm install context (Shai-Hulud exfil)
 
-`UC_18_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_20_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -428,7 +428,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — npm v12 delivers one of the biggest security improvements in years
 
-`UC_18_8` · phase: **exploit** · confidence: **High**
+`UC_20_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

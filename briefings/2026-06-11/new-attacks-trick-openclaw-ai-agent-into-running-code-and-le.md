@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Outbound DNS/HTTP to imperva_artifactory.com from any host (OpenClaw PoC payload domain)
 
-`UC_2_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_4_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ union isfuzzy=true
 
 ### OpenClaw / AI agent runtime spawning shell or scripting interpreter with download command
 
-`UC_2_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_4_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceProcessEvents
 
 ### Agent-driven outbound email containing AWS / SSH / DB credentials to external recipient
 
-`UC_2_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_4_12` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ EmailEvents
 
 ### Unpatched OpenClaw (<2026.4.23) in software inventory — message-object prompt-injection exposure
 
-`UC_2_13` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_4_13` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -161,7 +161,7 @@ DeviceTvmSoftwareInventory
 
 ### OpenClaw agent process reading cloud / SSH credential files prior to outbound network or mail
 
-`UC_2_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_4_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

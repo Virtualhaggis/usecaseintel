@@ -36,18 +36,19 @@ PeopleSoft is an enterprise business software suite used by large organizations 
 - **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
 - **T1190** — Exploit Public-Facing Application
-- **T1078** — Valid Accounts
+- **T1021.004** — Remote Services: SSH
+- **T1110.003** — Brute Force: Password Spraying
+- **T1078.003** — Valid Accounts: Local Accounts
+- **T1485** — Data Destruction
+- **T1491.001** — Defacement: Internal Defacement
 - **T1657** — Financial Theft
-- **T1565.001** — Stored Data Manipulation
-- **T1110.003** — Password Spraying
-- **T1078.003** — Local Accounts
-- **T1021.004** — SSH
+- **T1018** — Remote System Discovery
+- **T1087.001** — Account Discovery: Local Account
 - **T1219** — Remote Access Software
-- **T1543.002** — Systemd Service
 - **T1105** — Ingress Tool Transfer
-- **T1071.001** — Web Protocols
-- **T1071.004** — DNS
-- **T1573** — Encrypted Channel
+- **T1543.002** — Create or Modify System Process: Systemd Service
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1573.002** — Encrypted Channel: Asymmetric Cryptography
 
 ## Kill chain phases observed
 
@@ -55,119 +56,151 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Network communication with ShinyHunters PeopleSoft attack infrastructure IPs
+### ShinyHunters PeopleSoft attacker IPs — inbound SSH/HTTPS connections
 
-`UC_38_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_40_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_ports values(All_Traffic.app) as app values(All_Traffic.action) as action from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest in ("142.11.200.186","142.11.200.187","142.11.200.188","142.11.200.189","142.11.200.190","108.174.202.99","176.120.22.24") OR All_Traffic.src in ("142.11.200.186","142.11.200.187","142.11.200.188","142.11.200.189","142.11.200.190","108.174.202.99","176.120.22.24")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port host index sourcetype | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(All_Traffic.src) as src values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where All_Traffic.src_ip IN ("142.11.200.186","142.11.200.187","142.11.200.188","142.11.200.189","142.11.200.190","108.174.202.99","176.120.22.24") (All_Traffic.dest_port=22 OR All_Traffic.dest_port=8000 OR All_Traffic.dest_port=8443 OR All_Traffic.dest_port=443 OR All_Traffic.dest_port=7777) by All_Traffic.dest All_Traffic.src_ip | `drop_dm_object_name(All_Traffic)` | convert ctime(firstSeen) ctime(lastSeen)
 ```
 
 **Defender KQL:**
 ```kql
-let badIPs = dynamic(["142.11.200.186","142.11.200.187","142.11.200.188","142.11.200.189","142.11.200.190","108.174.202.99","176.120.22.24"]);
+let IOC = dynamic(["142.11.200.186","142.11.200.187","142.11.200.188","142.11.200.189","142.11.200.190","108.174.202.99","176.120.22.24"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in (badIPs) or LocalIP in (badIPs)
-| project Timestamp, DeviceName, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemotePort, LocalIP, LocalPort, Protocol, RemoteUrl
+| where RemoteIP in (IOC)
+| where LocalPort in (22, 8000, 8443, 443, 7777)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, LocalIP, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### ShinyHunters PeopleSoft ransom-note file write (README-IF-YOU-SEE-THIS-YOUVE-BEEN-HACKED.TXT)
+### SSH credential spray to PeopleSoft accounts (psoft / oracle / linuxadm)
 
-`UC_38_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_40_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_paths values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_name="README-IF-YOU-SEE-THIS-YOUVE-BEEN-HACKED.TXT" OR Filesystem.file_path="*README-IF-YOU-SEE-THIS-YOUVE-BEEN-HACKED.TXT") by Filesystem.dest Filesystem.user Filesystem.file_name host | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count(eval('Authentication.action'="failure")) as failures count(eval('Authentication.action'="success")) as successes values(Authentication.src) as src values(Authentication.dest) as dest from datamodel=Authentication.Authentication where Authentication.user IN ("psoft","oracle","linuxadm") Authentication.app="sshd" by Authentication.user Authentication.src _time span=10m | `drop_dm_object_name(Authentication)` | where failures >= 5 AND successes >= 1 | sort - _time
 ```
 
 **Defender KQL:**
 ```kql
+let TargetAccounts = dynamic(["psoft","oracle","linuxadm"]);
+let Failures =
+    DeviceLogonEvents
+    | where Timestamp > ago(7d)
+    | where ActionType == "LogonFailed"
+    | where AccountName in~ (TargetAccounts)
+    | where Protocol == "Ssh" or InitiatingProcessFileName =~ "sshd"
+    | summarize FailCount = count(), FirstFail = min(Timestamp), LastFail = max(Timestamp), SourceIPs = make_set(RemoteIP, 20) by DeviceName, AccountName, bin(Timestamp, 10m)
+    | where FailCount >= 5;
+DeviceLogonEvents
+| where Timestamp > ago(7d)
+| where ActionType == "LogonSuccess"
+| where AccountName in~ (TargetAccounts)
+| where Protocol == "Ssh" or InitiatingProcessFileName =~ "sshd"
+| join kind=inner Failures on DeviceName, AccountName
+| where Timestamp between (FirstFail .. LastFail + 5m)
+| project Timestamp, DeviceName, AccountName, RemoteIP, FailCount, SourceIPs, LogonType
+| order by Timestamp desc
+```
+
+### ShinyHunters ransom note file creation in PeopleSoft directories
+
+`UC_40_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(Filesystem.process_name) as process values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_name="README-IF-YOU-SEE-THIS-YOUVE-BEEN-HACKED.TXT" OR Filesystem.file_name="README-IF-YOU-SEE-THIS-YOUVE-BEEN-HACKED.txt" OR Filesystem.file_path="*README-IF-YOU-SEE-THIS-YOUVE-BEEN-HACKED*") Filesystem.action=created by Filesystem.dest Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstSeen) ctime(lastSeen)
+```
+
+**Defender KQL:**
+```kql
+let PSPaths = dynamic(["/opt/oracle","/u01/app","/opt/psoft","/PS_HOME","/PS_APP_HOME","/PS_CFG_HOME","/weblogic","/tuxedo","\\PS_HOME\\","\\PT8"]);
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileRenamed")
-| where FileName =~ "README-IF-YOU-SEE-THIS-YOUVE-BEEN-HACKED.TXT"
-   or FolderPath has "README-IF-YOU-SEE-THIS-YOUVE-BEEN-HACKED.TXT"
-| project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256
+| where ActionType in ("FileCreated", "FileRenamed", "FileModified")
+| where FileName matches regex @"(?i)README-IF-YOU-SEE-THIS-YOUVE-BEEN-HACKED\.(txt|md|html?)"
+| extend InPeopleSoftPath = iff(FolderPath has_any (PSPaths), true, false)
+| project Timestamp, DeviceName, FolderPath, FileName, InPeopleSoftPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
-### SSH credential spray against PeopleSoft administrative accounts (psoft, oracle, linuxadm)
+### /etc/hosts enumeration followed by SSH lateral movement on PeopleSoft host
 
-`UC_38_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_40_9` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count values(Authentication.action) as actions values(Authentication.dest) as dest_hosts dc(Authentication.dest) as host_count dc(Authentication.user) as user_count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.app="sshd" AND Authentication.user IN ("psoft","oracle","linuxadm") by Authentication.src Authentication.user | `drop_dm_object_name(Authentication)` | where host_count>=2 OR (user_count>=2) | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process_name="cat" OR Processes.process_name="grep" OR Processes.process_name="awk" OR Processes.process_name="cut" OR Processes.process_name="sed") (Processes.process="*\/etc\/hosts*") by Processes.dest Processes.user Processes.parent_process_name _time span=5m | `drop_dm_object_name(Processes)` | rename count as hosts_reads | join type=inner dest user [| tstats summariesonly=true count as ssh_targets dc(Processes.process) as cmd_count from datamodel=Endpoint.Processes where Processes.process_name="ssh" by Processes.dest Processes.user _time span=5m | `drop_dm_object_name(Processes)` | where ssh_targets >= 3] | where hosts_reads >= 1 AND ssh_targets >= 3
 ```
 
 **Defender KQL:**
 ```kql
-DeviceLogonEvents
-| where Timestamp > ago(24h)
-| where Protocol =~ "Ssh" or InitiatingProcessFileName in~ ("sshd","sshd-session")
-| where AccountName in~ ("psoft","oracle","linuxadm")
-| summarize Attempts = count(),
-            Successes = countif(ActionType =~ "LogonSuccess"),
-            Failures = countif(ActionType =~ "LogonFailed"),
-            TargetHosts = dcount(DeviceName),
-            HostList = make_set(DeviceName, 25),
-            UserList = make_set(AccountName, 10),
-            FirstSeen = min(Timestamp),
-            LastSeen = max(Timestamp)
-            by RemoteIP
-| where TargetHosts >= 2 or (Failures >= 5 and Successes >= 1)
-| order by LastSeen desc
+let Window = 5m;
+let HostsReads =
+    DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where ProcessCommandLine has "/etc/hosts"
+    | where FileName in~ ("cat","grep","awk","cut","sed","sort","head","tail")
+    | project HostsReadTime = Timestamp, DeviceId, DeviceName, AccountName, HostsReader = ProcessCommandLine;
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "ssh" or ProcessCommandLine matches regex @"(?i)\bssh\s+[\w\.\-]+@"
+| join kind=inner HostsReads on DeviceId
+| where Timestamp between (HostsReadTime .. HostsReadTime + Window)
+| summarize SshTargets = dcount(ProcessCommandLine), Targets = make_set(ProcessCommandLine, 10), FirstSsh = min(Timestamp) by DeviceName, AccountName, HostsReadTime, HostsReader
+| where SshTargets >= 3
+| order by HostsReadTime desc
 ```
 
-### MeshCentral agent installation on Oracle PeopleSoft Linux servers
+### MeshCentral agent deployment on PeopleSoft hosts (ShinyHunters staging)
 
-`UC_38_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_40_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process_name) as parents values(Processes.user) as users from datamodel=Endpoint.Processes where (Processes.process_name IN ("meshagent","MeshAgent","MeshService","meshcmd") OR Processes.process IN ("*meshagent*","*MeshCentral*","*meshcentral.com*","*meshcentral2*") OR Processes.process="*--meshServiceName*") by Processes.dest Processes.process_name host | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(Processes.process) as cmd values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name="meshagent" OR Processes.process_name="meshcentral-agent" OR Processes.process="*meshagent*" OR Processes.process="*meshcentral*" OR Processes.process="*MeshCentralRouter*") by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstSeen) ctime(lastSeen)
 ```
 
 **Defender KQL:**
 ```kql
-let MeshIndicators = dynamic(["meshagent","meshservice","meshcmd","meshcentral","meshcentral.com","meshcentral2"]);
-union
-  (DeviceProcessEvents
-   | where Timestamp > ago(30d)
-   | where FileName in~ ("meshagent","meshagent.exe","meshservice","meshservice.exe","meshcmd","meshcmd.exe")
-        or ProcessCommandLine has_any (MeshIndicators)
-        or InitiatingProcessCommandLine has_any (MeshIndicators)
-   | project Timestamp, EventType = "Process", DeviceName, AccountName,
-             Image = FolderPath, Cmd = ProcessCommandLine,
-             ParentImage = InitiatingProcessFolderPath, ParentCmd = InitiatingProcessCommandLine, SHA256),
-  (DeviceFileEvents
-   | where Timestamp > ago(30d)
-   | where FileName in~ ("meshagent","meshagent.exe","meshservice","meshservice.exe","meshcmd")
-        or FolderPath has_any ("/usr/local/mesh","/opt/meshcentral","meshagent","MeshCentral")
-   | project Timestamp, EventType = "File", DeviceName, AccountName = InitiatingProcessAccountName,
-             Image = FolderPath, Cmd = InitiatingProcessCommandLine,
-             ParentImage = InitiatingProcessParentFileName, ParentCmd = "", SHA256)
+let IOC = dynamic(["142.11.200.186","142.11.200.187","142.11.200.188","142.11.200.189","142.11.200.190","108.174.202.99","176.120.22.24"]);
+let MeshExec =
+    DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where FileName matches regex @"(?i)^mesh(agent|central[-_]?agent|centralrouter)"
+        or ProcessCommandLine matches regex @"(?i)\bmesh(agent|central[-_]?agent)\b"
+        or InitiatingProcessCommandLine matches regex @"(?i)\b(curl|wget)\b.*meshagent"
+    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256;
+let MeshDownload =
+    DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FileName matches regex @"(?i)^mesh(agent|central)"
+        or FileOriginUrl matches regex @"(?i)mesh(agent|central)"
+        or FileOriginIP in (IOC)
+    | project Timestamp, DeviceName, FileName, FolderPath, FileOriginUrl, FileOriginIP, InitiatingProcessCommandLine;
+union MeshExec, MeshDownload
 | order by Timestamp desc
 ```
 
-### DNS lookup or TLS SNI for ShinyHunters azurenetfiles.net infrastructure
+### TLS connections to azurenetfiles.net or matching SAN/CN (ShinyHunters infra)
 
-`UC_38_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_40_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src_hosts values(DNS.answer) as answers from datamodel=Network_Resolution.DNS where (DNS.query="azurenetfiles.net" OR DNS.query="*.azurenetfiles.net") by DNS.src DNS.query host | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(DNS.src) as src values(DNS.answer) as answer from datamodel=Network_Resolution.DNS where DNS.query="*azurenetfiles.net*" by DNS.query | `drop_dm_object_name(DNS)` | append [| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(All_Traffic.src) as src from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_url="*azurenetfiles.net*" OR All_Traffic.ssl_subject="*azurenetfiles.net*" OR All_Traffic.ssl_issuer_common_name="*azurenetfiles.net*") by All_Traffic.dest All_Traffic.ssl_subject] | convert ctime(firstSeen) ctime(lastSeen)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has "azurenetfiles.net" or RemoteUrl endswith ".azurenetfiles.net"
-| project Timestamp, DeviceName, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl
+| where RemoteUrl has "azurenetfiles.net" or RemoteUrl endswith "azurenetfiles.net"
+| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
@@ -281,7 +314,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Oracle PeopleSoft servers hacked in ShinyHunters data theft attacks
 
-`UC_38_5` · phase: **install** · confidence: **High**
+`UC_40_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -322,4 +355,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

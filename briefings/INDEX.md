@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1259 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -42,7 +42,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ivanti fortinet and sap release patches for multiple critica](./2026-06-10/ivanti-fortinet-and-sap-release-patches-for-multiple-critica.md)
 - [langflow vulnerability cve 2026 5027 exploited for unauthent](./2026-06-10/langflow-vulnerability-cve-2026-5027-exploited-for-unauthent.md)
 - [microsoft defender rogueplanet zero day grants system access](./2026-06-10/microsoft-defender-rogueplanet-zero-day-grants-system-access.md)
-- [microsoft patches exchange server zero day exploited in atta](./2026-06-10/microsoft-patches-exchange-server-zero-day-exploited-in-atta.md)
 - [microsoft patches record 206 flaws including three zero days](./2026-06-10/microsoft-patches-record-206-flaws-including-three-zero-days.md)
 - [oracle peoplesoft servers hacked in shinyhunters data theft ](./2026-06-10/oracle-peoplesoft-servers-hacked-in-shinyhunters-data-theft-.md)
 - [path traversal flaw in ai dev platform langflow exploited in](./2026-06-10/path-traversal-flaw-in-ai-dev-platform-langflow-exploited-in.md)

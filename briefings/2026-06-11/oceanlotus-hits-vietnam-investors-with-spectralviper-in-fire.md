@@ -69,7 +69,7 @@ _(none detected from narrative keywords)_
 
 ### FireAnt Metakit.exe pulling tampered setup.exe from update server
 
-`UC_28_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_30_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceNetworkEvents
 
 ### DtlCrashCatch.dll side-loaded by signed binary (SPECTRALVIPER loader)
 
-`UC_28_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_30_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceImageLoadEvents
 
 ### OneDrive.Sync.Service.exe injection target for SPECTRALVIPER
 
-`UC_28_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_30_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceNetworkEvents
 
 ### sqlservr.exe spawning shells (OceanLotus MSSQL initial access)
 
-`UC_28_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_30_13` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,7 +158,7 @@ DeviceProcessEvents
 
 ### SPECTRALVIPER known-bad file hash on host
 
-`UC_28_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_30_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -177,7 +177,7 @@ union
 
 ### Run-key persistence pointing at SPECTRALVIPER staging paths
 
-`UC_28_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_30_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -449,7 +449,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus Hits Vietnam Investors With SPECTRALVIPER in FireAnt Attack
 
-`UC_28_9` · phase: **exploit** · confidence: **High**
+`UC_30_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
