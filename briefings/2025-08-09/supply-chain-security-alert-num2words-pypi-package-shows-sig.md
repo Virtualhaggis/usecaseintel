@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### PyPI install footprint of num2words v0.5.15/0.5.16 (Scavenger supply-chain compromise)
 
-`UC_818_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_807_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ union
 
 ### Scavenger C2 callback: ifyouseethisyouareultragay[.]com / pokerainteasy[.]su
 
-`UC_818_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_807_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ union
 
 ### Scavenger loader/stealer SHA256 execution or drop on endpoint
 
-`UC_818_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_807_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

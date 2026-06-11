@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### CVE-2024-24762 python-multipart ReDoS payload via crafted Content-Type header
 
-`UC_1191_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_1179_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Inventory exposure: hosts running FastAPI / python-multipart vulnerable to CVE-2024-24762
 
-`UC_1191_3` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_1179_3` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Article-specific behavioural hunt — A denial of service Regex breaks FastAPI security
 
-`UC_1191_1` · phase: **exploit** · confidence: **High**
+`UC_1179_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

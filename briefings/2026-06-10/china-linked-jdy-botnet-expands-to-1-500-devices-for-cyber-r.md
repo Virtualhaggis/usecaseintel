@@ -1,6 +1,6 @@
 # [CRIT] China-Linked JDY Botnet Expands to 1,500+ Devices for Cyber Reconnaissance
 
-**Source:** The Hacker News, BleepingComputer
+**Source:** The Hacker News
 **Published:** 2026-06-10
 **Article:** https://thehackernews.com/2026/06/china-linked-jdy-botnet-expands-to-1500.html
 
@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### JDY Linux shell dropper — architecture-aware MIPS/MIPSEL payload retrieval
 
-`UC_30_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_24_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceProcessEvents
 
 ### JDY botnet self-delete — Linux ELF executes then unlinks its own image
 
-`UC_30_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_24_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ ExecEvents
 
 ### JDY-style reconnaissance — internal host high-fanout mixed-protocol scanning
 
-`UC_30_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_24_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

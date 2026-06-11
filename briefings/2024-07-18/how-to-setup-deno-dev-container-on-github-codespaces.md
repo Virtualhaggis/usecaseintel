@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — How to setup Deno Dev Container on GitHub Codespaces?
 
-`UC_1200_0` · phase: **exploit** · confidence: **High**
+`UC_1188_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

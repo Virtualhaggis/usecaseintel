@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Snyk Studio brings security scanning and automated fixes to Factory's Droids
 
-`UC_710_0` · phase: **install** · confidence: **High**
+`UC_699_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

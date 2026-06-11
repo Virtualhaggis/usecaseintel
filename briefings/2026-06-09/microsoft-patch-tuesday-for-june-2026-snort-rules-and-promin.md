@@ -65,7 +65,7 @@ _(none detected from narrative keywords)_
 
 ### Microsoft June 2026 Patch Tuesday — exposure to 'exploitation more likely' critical CVEs
 
-`UC_50_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_41_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### mstsc.exe spawns unexpected child process — RDP Client RCE post-exploit (CVE-2026-42985 + 5 related)
 
-`UC_50_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_41_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ DeviceProcessEvents
 
 ### AKS pod with hostNetwork:true in non-system namespace — CVE-2026-32193 container escape risk
 
-`UC_50_4` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_41_4` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft Patch Tuesday for June 2026 — Snort rules and prominent vulnerabilitie
 
-`UC_50_1` · phase: **exploit** · confidence: **High**
+`UC_41_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
