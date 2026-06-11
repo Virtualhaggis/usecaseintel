@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1261 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,7 +9,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-11
+- [ai broke vulnerability management that s why cisos are movin](./2026-06-11/ai-broke-vulnerability-management-that-s-why-cisos-are-movin.md)
 - [china linked jdy botnet uses 1 500 soho and iot devices for ](./2026-06-11/china-linked-jdy-botnet-uses-1-500-soho-and-iot-devices-for-.md)
+- [ghsa critical cve 2026 48039 meta ads mcp unauthenticated ht](./2026-06-11/ghsa-critical-cve-2026-48039-meta-ads-mcp-unauthenticated-ht.md)
 - [github to disable npm install scripts by default to stop sup](./2026-06-11/github-to-disable-npm-install-scripts-by-default-to-stop-sup.md)
 - [greatxml bitlocker bypass 0 day exploited via windows defend](./2026-06-11/greatxml-bitlocker-bypass-0-day-exploited-via-windows-defend.md)
 - [hackers abuse vmware signed binary to sideload nightforge lo](./2026-06-11/hackers-abuse-vmware-signed-binary-to-sideload-nightforge-lo.md)
@@ -19,6 +21,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [multiple splunk enterprise vulnerabilities allow attackers t](./2026-06-11/multiple-splunk-enterprise-vulnerabilities-allow-attackers-t.md)
 - [nottingham university data breach affects over 450 000 stude](./2026-06-11/nottingham-university-data-breach-affects-over-450-000-stude.md)
 - [oceanlotus hits vietnam investors with spectralviper in fire](./2026-06-11/oceanlotus-hits-vietnam-investors-with-spectralviper-in-fire.md)
+- [oracle emergency security update to fix critical rce vulnera](./2026-06-11/oracle-emergency-security-update-to-fix-critical-rce-vulnera.md)
 
 ## 2026-06-10
 - [10 year old critical vulnerability in phpbb affecting tens o](./2026-06-10/10-year-old-critical-vulnerability-in-phpbb-affecting-tens-o.md)
@@ -27,8 +30,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [compromised rust crate onering performs code exfiltration](./2026-06-10/compromised-rust-crate-onering-performs-code-exfiltration.md)
 - [ghsa critical cve 2026 48031 go restful api boilerplate hard](./2026-06-10/ghsa-critical-cve-2026-48031-go-restful-api-boilerplate-hard.md)
 - [ghsa critical cve 2026 48063 baileys has message upsert hist](./2026-06-10/ghsa-critical-cve-2026-48063-baileys-has-message-upsert-hist.md)
-- [hackers abuse fake utility downloads to install screenconnec](./2026-06-10/hackers-abuse-fake-utility-downloads-to-install-screenconnec.md)
-- [hackers use tax phishing emails to deploy in memory malware ](./2026-06-10/hackers-use-tax-phishing-emails-to-deploy-in-memory-malware-.md)
 - [ivanti fortinet and sap release patches for multiple critica](./2026-06-10/ivanti-fortinet-and-sap-release-patches-for-multiple-critica.md)
 - [ivanti max severity sentry flaw allows code execution as roo](./2026-06-10/ivanti-max-severity-sentry-flaw-allows-code-execution-as-roo.md)
 - [microsoft defender rogueplanet zero day grants system access](./2026-06-10/microsoft-defender-rogueplanet-zero-day-grants-system-access.md)
@@ -51,7 +52,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [litellm flaw cve 2026 42271 exploited in the wild chains to ](./2026-06-09/litellm-flaw-cve-2026-42271-exploited-in-the-wild-chains-to-.md)
 - [meta to use off site business data for feed and ai personali](./2026-06-09/meta-to-use-off-site-business-data-for-feed-and-ai-personali.md)
 - [miasma worm hits microsoft again azure functions action and ](./2026-06-09/miasma-worm-hits-microsoft-again-azure-functions-action-and-.md)
-- [microsoft defender rogueplanet zero day grants system privil](./2026-06-09/microsoft-defender-rogueplanet-zero-day-grants-system-privil.md)
 - [microsoft patch tuesday for june 2026 snort rules and promin](./2026-06-09/microsoft-patch-tuesday-for-june-2026-snort-rules-and-promin.md)
 - [microsoft restores some github repos keeps others offline as](./2026-06-09/microsoft-restores-some-github-repos-keeps-others-offline-as.md)
 - [new frost attack lets websites track what sites and apps you](./2026-06-09/new-frost-attack-lets-websites-track-what-sites-and-apps-you.md)
@@ -101,7 +101,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [china linked ta4922 expands phishing attacks to u k germany ](./2026-06-04/china-linked-ta4922-expands-phishing-attacks-to-u-k-germany-.md)
 - [cisco patches cve 2026 20230 in unified cm as exploit code g](./2026-06-04/cisco-patches-cve-2026-20230-in-unified-cm-as-exploit-code-g.md)
 - [claude code github action flaw let one malicious issue hijac](./2026-06-04/claude-code-github-action-flaw-let-one-malicious-issue-hijac.md)
-- [fluttershell backdoor spreads to macos via malicious google ](./2026-06-04/fluttershell-backdoor-spreads-to-macos-via-malicious-google-.md)
 - [ghsa critical cve 2026 47708 mcp for stata command injection](./2026-06-04/ghsa-critical-cve-2026-47708-mcp-for-stata-command-injection.md)
 - [ghsa critical ghsa 8whc 2wmv ww35 wwbn avideo unauthenticate](./2026-06-04/ghsa-critical-ghsa-8whc-2wmv-ww35-wwbn-avideo-unauthenticate.md)
 - [ghsa critical ghsa jpvj wpmj h7rv supply chain compromise vi](./2026-06-04/ghsa-critical-ghsa-jpvj-wpmj-h7rv-supply-chain-compromise-vi.md)
@@ -289,7 +288,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 22599 strapi vulnerable to sql inject](./2026-05-13/ghsa-critical-cve-2026-22599-strapi-vulnerable-to-sql-inject.md)
 - [ghsa critical cve 2026 45083 goobi viewer core unauthenticat](./2026-05-13/ghsa-critical-cve-2026-45083-goobi-viewer-core-unauthenticat.md)
 - [ghsa critical cve 2026 45375 siyuan bazaar marketplace rende](./2026-05-13/ghsa-critical-cve-2026-45375-siyuan-bazaar-marketplace-rende.md)
-- [ghsa critical ghsa vw82 7fv8 r6gp obot has an authorization ](./2026-05-13/ghsa-critical-ghsa-vw82-7fv8-r6gp-obot-has-an-authorization-.md)
 
 ## 2026-05-12
 - [teampcp s mini shai hulud is back a self spreading supply ch](./2026-05-12/teampcp-s-mini-shai-hulud-is-back-a-self-spreading-supply-ch.md)
@@ -692,7 +690,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-01-08
 - [beyond detection building a resilient software supply chain ](./2026-01-08/beyond-detection-building-a-resilient-software-supply-chain-.md)
-- [critical n8n vulnerability allows unauthenticated remote cod](./2026-01-08/critical-n8n-vulnerability-allows-unauthenticated-remote-cod.md)
 
 ## 2026-01-07
 - [cisa kev cve 2009 0556 microsoft office powerpoint code inje](./2026-01-07/cisa-kev-cve-2009-0556-microsoft-office-powerpoint-code-inje.md)

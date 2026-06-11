@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### Check Point Remote Access VPN inbound auth from CVE-2026-50751 actor VPS IPs
 
-`UC_69_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_73_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceNetworkEvents
 
 ### Qilin Linux ransomware ELF payload (CVE-2026-50751 campaign) — known MD5 file event
 
-`UC_69_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_73_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ union
 
 ### Rclone exfiltration from Check Point VPN gateway or post-bypass internal host
 
-`UC_69_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_73_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ DeviceProcessEvents
 
 ### Internal host outbound to CVE-2026-50751 Qilin actor IPs (post-bypass C2 / staging)
 
-`UC_69_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_73_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Unpatched Ivanti Sentry exposing CVE-2026-10520 / CVE-2026-10523
 
-`UC_36_4` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_42_4` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Pre-auth command-injection probes against Ivanti Sentry /mics endpoint (CVE-2026-10520)
 
-`UC_36_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_42_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Anomalous outbound from Ivanti Sentry appliance subnet (post-RCE hunt)
 
-`UC_36_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_42_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
