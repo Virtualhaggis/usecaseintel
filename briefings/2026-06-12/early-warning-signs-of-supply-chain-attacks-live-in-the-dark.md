@@ -11,29 +11,21 @@ Sponsored by Flare
 June 12, 2026
 10:01 AM
 0 
-
-
 Supply-chain attacks are usually discussed after they become visible: a malicious package, a compromised software update, a malicious extension, or a breach involving a trusted vendor. But before an incident reaches that stage, the early warning signs may look much less obvious.
-
-
-In underground forums and marketplaces, supply-chain relevance does not always appear under a clear …
+In underground forums and marketplaces, supply-chain relevance does not always appear under a clear label. A…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-33634`
-- **CVE:** `CVE-2026-48027`
-- **Domain (defanged):** `scan.aquasecurtiy.org`
-- **Domain (defanged):** `checkmarx.zone`
-- **Domain (defanged):** `models.litellm.cloud`
-- **Domain (defanged):** `git-tanstack.com`
-- **Domain (defanged):** `t.m-kosche.com`
-- **Domain (defanged):** `check.git-service.com`
-- **Domain (defanged):** `nsa.cat`
+- **Domain (defanged):** `webhook.site`
 - **SHA256:** `46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09`
 - **SHA256:** `62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0`
 - **SHA256:** `f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068`
 - **SHA256:** `cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd`
 - **SHA256:** `a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a`
+- **SHA256:** `b74caeaa75e077c99f7d44f46daaf9796a3be43ecf24f2a1fd381844669da777`
+- **SHA256:** `dc67467a39b70d1cd4c1f7f7a459b35058163592f4a9e8fb4dffcbba98ef210c`
+- **SHA256:** `4b2399646573bb737c4969563303d8ee2e9ddbd1b271f1ca9e35ea78062538db`
 
 ## MITRE ATT&CK Techniques
 
@@ -61,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### Outbound network to TeamPCP / Shai-Hulud / LiteLLM supply-chain C2 domains
 
-`UC_3_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_5_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +73,7 @@ DeviceNetworkEvents
 
 ### Known TeamPCP / Shai-Hulud payload SHA256 observed on disk or executing
 
-`UC_3_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_5_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +97,7 @@ union isfuzzy=true
 
 ### npm/pip install lifecycle script spawning credential / token harvest
 
-`UC_3_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_5_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +119,7 @@ DeviceProcessEvents
 
 ### VS Code extension host (Code.exe) child process reaching attacker C2
 
-`UC_3_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_5_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -258,13 +250,13 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-33634`, `CVE-2026-48027`
+  - CVE(s): `CVE-2026-33634`
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `scan.aquasecurtiy.org`, `checkmarx.zone`, `models.litellm.cloud`, `git-tanstack.com`, `t.m-kosche.com`, `check.git-service.com`, `nsa.cat`
+  - IP / domain IOC(s): `webhook.site`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09`, `62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0`, `f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068`, `cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd`, `a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a`
+  - file hash IOC(s): `46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09`, `62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0`, `f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068`, `cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd`, `a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a`, `b74caeaa75e077c99f7d44f46daaf9796a3be43ecf24f2a1fd381844669da777`, `dc67467a39b70d1cd4c1f7f7a459b35058163592f4a9e8fb4dffcbba98ef210c`, `4b2399646573bb737c4969563303d8ee2e9ddbd1b271f1ca9e35ea78062538db`
 
 
 ## Why this matters

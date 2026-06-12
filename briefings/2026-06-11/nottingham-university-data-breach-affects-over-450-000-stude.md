@@ -32,18 +32,15 @@ The university told BleepingComputer in an emailed …
 - **T1071** — Application Layer Protocol
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1041** — Exfiltration Over C2 Channel
+- **T1071.004** — Application Layer Protocol: DNS
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1190** — Exploit Public-Facing Application
+- **T1203** — Exploitation for Client Execution
 - **T1005** — Data from Local System
 - **T1213** — Data from Information Repositories
 - **T1020** — Automated Exfiltration
-- **T1190** — Exploit Public-Facing Application
-- **T1203** — Exploitation for Client Execution
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 - **T1560.001** — Archive Collected Data: Archive via Utility
-- **T1074.001** — Data Staged: Local Data Staging
-- **T1021.002** — Remote Services: SMB/Windows Admin Shares
-- **T1078.002** — Valid Accounts: Domain Accounts
-- **T1570** — Lateral Tool Transfer
+- **T1074.001** — Local Data Staging
 
 ## Kill chain phases observed
 
@@ -51,140 +48,118 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Outbound connection to known ShinyHunters PeopleSoft campaign infrastructure
+### Outbound connection to ShinyHunters PeopleSoft-campaign egress IPs (142.11.200.186-190 / 108.174.202.99 / 176.120.22.24)
 
-`UC_43_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_44_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest in ("142.11.200.186","142.11.200.187","142.11.200.188","142.11.200.189","142.11.200.190","108.174.202.99","176.120.22.24") OR All_Traffic.dest_host="azurenetfiles.net" by All_Traffic.src All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("142.11.200.186","142.11.200.187","142.11.200.188","142.11.200.189","142.11.200.190","108.174.202.99","176.120.22.24") by All_Traffic.dest All_Traffic.src_category | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let ShinyIPs = dynamic(["142.11.200.186","142.11.200.187","142.11.200.188","142.11.200.189","142.11.200.190","108.174.202.99","176.120.22.24"]);
+let ShinyHuntersIPs = dynamic(["142.11.200.186","142.11.200.187","142.11.200.188","142.11.200.189","142.11.200.190","108.174.202.99","176.120.22.24"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in (ShinyIPs) or RemoteUrl has "azurenetfiles.net"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl, Protocol
+| where RemoteIP in (ShinyHuntersIPs)
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt")
+| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
-### Bulk SELECT against PeopleSoft student / personal-data tables outside business hours
+### DNS resolution or connection to ShinyHunters staging domain azurenetfiles.net
 
-`UC_43_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_44_3` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=oracle_audit OR index=peoplesoft_audit OR sourcetype=oracle:audit:unified
-| eval table_lc=lower(coalesce(OBJECT_NAME, object_name, table_name))
-| where (action="SELECT" OR ACTION_NAME="SELECT") AND (table_lc IN ("ps_personal_data","ps_names","ps_addresses","ps_phones","ps_email_addresses","ps_stdnt_enrl","ps_acad_prog","ps_stdnt_car_term","ps_payment_tbl","ps_item_sf","ps_account_sf","psoprdefn"))
-| eval hour=tonumber(strftime(_time,"%H"))
-| where hour<6 OR hour>20
-| stats count as queries sum(coalesce(ROWS_PROCESSED,rows_returned,0)) as total_rows values(table_lc) as tables values(CLIENT_IP) as client_ips by DBUSERNAME OS_USERNAME HOST
-| where total_rows>10000 OR queries>50
-| sort - total_rows
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.answer) as answer from datamodel=Network_Resolution.DNS where DNS.query="azurenetfiles.net" OR DNS.query="*.azurenetfiles.net" by DNS.query DNS.src | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let MaintenanceStart = 22h; let MaintenanceEnd = 5h;
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName in~ ("sqlplus.exe","sqlplus","psae.exe","psqry.exe","sqlcmd.exe","oraagent.exe")
-   or InitiatingProcessFileName in~ ("sqlplus.exe","psae.exe","psqry.exe")
-| where ProcessCommandLine has_any ("PS_PERSONAL_DATA","PS_NAMES","PS_ADDRESSES","PS_PHONES","PS_EMAIL_ADDRESSES","PS_STDNT_ENRL","PS_ACAD_PROG","PS_PAYMENT_TBL","PSOPRDEFN","SELECT * FROM PS_")
-| extend hour = datetime_part("hour", Timestamp)
-| where hour < 6 or hour > 20
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessParentFileName
+union
+(DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl endswith "azurenetfiles.net"
+| project Timestamp, DeviceName, EventTable="DeviceNetworkEvents", RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
+(DeviceEvents
+| where Timestamp > ago(30d)
+| where ActionType == "DnsQueryResponse"
+| where AdditionalFields has "azurenetfiles.net"
+| project Timestamp, DeviceName, EventTable="DeviceEvents", RemoteUrl=tostring(parse_json(AdditionalFields).DnsQueryString), RemoteIP=tostring(parse_json(AdditionalFields).IpResponse), InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName)
 | order by Timestamp desc
 ```
 
-### PeopleSoft IB/PSIGW gadget-chain deserialization exploitation
+### PeopleSoft web-tier exploitation pattern — suspicious POST to /psp/ /psc/ /psigw/ from external IP
 
-`UC_43_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_44_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.user_agent) as ua values(Web.status) as status values(Web.dest) as dest values(Web.url) as url from datamodel=Web.Web where Web.http_method=POST AND (Web.url IN ("*/psigw/*","*/pls/*","*/psp/*","*/psc/*","*/PSIGW/HttpListeningConnector*","*/PSIGW/PeopleSoftServiceListeningConnector*","*/psreports/*")) AND (Web.url="*rO0AB*" OR Web.url="*aced0005*" OR Web.http_user_agent="*ysoserial*" OR Web.http_content_type="application/x-java-serialized-object") by Web.src Web.dest Web.url Web.http_user_agent Web.http_method | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.user_agent) as ua values(Web.status) as status values(Web.bytes_in) as bytes_in from datamodel=Web.Web where Web.http_method="POST" AND (Web.url="*/psp/*" OR Web.url="*/psc/*" OR Web.url="*/psigw/*" OR Web.url="*PSIGW/peoplesoftserviceslistening*" OR Web.url="*/pspc/*") by Web.src Web.dest Web.url | `drop_dm_object_name(Web)` | where bytes_in > 50000 OR like(ua, "%java%") OR like(ua, "%python-requests%") OR like(ua, "%curl%") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-// Requires PeopleSoft web tier shipping IIS/WebLogic logs to Defender via custom connector
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("w3wp.exe","java.exe","javaw.exe","PSAPPSRV.exe","PSWEBSRV.exe")
-| where AdditionalFields has_any ("/psigw/","/pls/","/psp/","/psc/","HttpListeningConnector")
-| where AdditionalFields has_any ("rO0AB","aced0005","ysoserial","CommonsCollections","application/x-java-serialized-object")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, AdditionalFields
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("java.exe","javaw.exe","PSAPPSRV.EXE","PSPRCSRV.EXE","httpd.exe","w3wp.exe","nginx.exe")
+| where RemotePort in (443,80,8000,8080,7000,7777,10200)
+| where RemoteIPType == "Public"
+| join kind=inner (
+    DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where ProcessCommandLine has_any ("psp","psc","psigw","peoplesoftserviceslistening","PSEMHUB")
+) on DeviceId
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, ProcessCommandLine
 | order by Timestamp desc
 ```
 
-### PeopleSoft AppServer or WebLogic spawning shell / LOLBin child
+### Bulk PeopleSoft student / finance table export — anomalous SELECT volumes from PS_* tables
 
-`UC_43_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_44_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.user) as user values(Processes.parent_process) as parent_cmdline from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("PSAPPSRV.exe","PSWEBSRV.exe","PSPRCSRV.exe","java.exe","javaw.exe","w3wp.exe")) AND (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","sh","bash","/bin/sh","/bin/bash")) by Processes.dest Processes.parent_process_name Processes.process_name Processes.process Processes.user | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name IN ("sqlplus.exe","sqlcmd.exe","psql.exe","mysql.exe","sqldeveloper.exe","sqlplus","sqlcmd","psql") AND (Processes.process="*PS_PERSONAL_DATA*" OR Processes.process="*PS_PERS_NID*" OR Processes.process="*PS_STDNT_ENRL*" OR Processes.process="*PS_ACCOUNT_RCV*" OR Processes.process="*PS_SF_BILLING*" OR Processes.process="*spool*" OR Processes.process="*-o*.csv*" OR Processes.process="*outfile*") by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+let DbClients = dynamic(["sqlplus.exe","sqlcmd.exe","psql.exe","mysql.exe","sqldeveloper.exe","SSMS.exe","bcp.exe"]);
+let PSDataTables = dynamic(["PS_PERSONAL_DATA","PS_PERS_NID","PS_NAMES","PS_STDNT_ENRL","PS_ACCOUNT_RCV","PS_SF_BILLING_HDR","PS_SF_PAYMENT","PS_ADDRESSES","PS_PERS_DATA_EFFDT","PS_EMPLOYMENT"]);
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("PSAPPSRV.exe","PSWEBSRV.exe","PSPRCSRV.exe","java.exe","javaw.exe","w3wp.exe")
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","sh","bash")
-| where InitiatingProcessCommandLine has_any ("PeopleSoft","PS_HOME","weblogic","PIA") or InitiatingProcessFolderPath has_any ("PT8","PeopleSoft","weblogic","PIA")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| where FileName in~ (DbClients)
+| where ProcessCommandLine has_any (PSDataTables) or ProcessCommandLine has_any ("spool ","OUTFILE"," -o ","-out=","INTO OUTFILE","bcp out")
+| extend HourUTC = datetime_part("hour", Timestamp)
+| extend OutOfHours = iff(HourUTC < 6 or HourUTC > 19, "yes", "")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, OutOfHours
 | order by Timestamp desc
 ```
 
-### PeopleSoft tier archiving / compression preceding outbound transfer
+### Archive creation containing PeopleSoft / student-record data — staging for ShinyHunters publication
 
-`UC_43_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_44_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN ("7z.exe","7za.exe","WinRAR.exe","rar.exe","zip.exe","tar.exe","makecab.exe","compact.exe")) AND (Processes.process IN ("*PS_HOME*","*PeopleSoft*","*student*","*finance*","*payment*","*portal*","*PSREPORTS*","*PS_APP_HOME*","*Bursar*","*Registrar*")) by Processes.dest Processes.process_name Processes.process Processes.parent_process_name Processes.user | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name IN ("7z.exe","7za.exe","winrar.exe","rar.exe","tar.exe","makecab.exe") AND (Processes.process="*ps_*" OR Processes.process="*peoplesoft*" OR Processes.process="*student*" OR Processes.process="*finance*" OR Processes.process="*payroll*" OR Processes.process="*export*" OR Processes.process="*billing*" OR Processes.process="*passport*") by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+let Archivers = dynamic(["7z.exe","7za.exe","winrar.exe","rar.exe","tar.exe","makecab.exe","WinZip32.exe","WinZip64.exe"]);
+let DataKeywords = dynamic(["PS_","peoplesoft","student","enrol","finance","payroll","billing","passport","campus_portal","PSREPORTS"]);
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FileName in~ ("7z.exe","7za.exe","WinRAR.exe","rar.exe","zip.exe","tar.exe","makecab.exe","compact.exe")
-| where ProcessCommandLine has_any ("PS_HOME","PeopleSoft","student","finance","payment","portal","PSREPORTS","PS_APP_HOME","Bursar","Registrar","transcript","enrol")
-| where AccountName !endswith "$"
-| join kind=inner (DeviceInfo | summarize arg_max(Timestamp,*) by DeviceId | where MachineGroup has_any ("PeopleSoft","SIS","Campus","Bursar","Finance")) on DeviceId
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where FileName in~ (Archivers)
+| where ProcessCommandLine has_any (DataKeywords)
+| extend HourUTC = datetime_part("hour", Timestamp)
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, HourUTC
 | order by Timestamp desc
-```
-
-### PeopleSoft service-account cross-campus authentication / lateral movement
-
-`UC_43_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.dest) as dest values(Authentication.src_nt_domain) as src_domain from datamodel=Authentication.Authentication where (Authentication.user IN ("PS","PSAPPSRV","PSADMIN","PEOPLE","VP1","SAMPLE","PTWEBSERVER","PSEM_AGENT","PSCNVRT") OR Authentication.user="*svc_psft*" OR Authentication.user="*svc_peoplesoft*") by Authentication.user Authentication.src Authentication.dest Authentication.app | `drop_dm_object_name(Authentication)` | stats values(src) as src_ips dc(src) as src_ip_count values(dest) as dest_hosts dc(dest) as dest_host_count by user | where src_ip_count>3 OR dest_host_count>5 | sort - dest_host_count
-```
-
-**Defender KQL:**
-```kql
-let PSAccounts = dynamic(["ps","psappsrv","psadmin","people","vp1","sample","ptwebserver","psem_agent","pscnvrt"]);
-let PSSubnets = toscalar(DeviceInfo | where MachineGroup has_any ("PeopleSoft","SIS","Campus") | summarize make_set(PublicIP));
-DeviceLogonEvents
-| where Timestamp > ago(7d)
-| where AccountName has_any (PSAccounts) or AccountName startswith "svc_psft" or AccountName startswith "svc_peoplesoft"
-| where ActionType == "LogonSuccess"
-| where LogonType in (3,10) // network or RDP
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), DistinctDests=dcount(DeviceName), DistinctSrcs=dcount(RemoteIP), Devices=make_set(DeviceName, 50), SrcIPs=make_set(RemoteIP, 50) by AccountName, AccountDomain
-| where DistinctDests > 5 or DistinctSrcs > 3
-| order by DistinctDests desc
 ```
 
 ### Trusted vendor binary / installer launching unusual children
@@ -221,4 +196,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
