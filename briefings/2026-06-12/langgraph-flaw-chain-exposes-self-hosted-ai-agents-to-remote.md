@@ -30,8 +30,15 @@ LangGraph is an open-source framework created by LangChain to build complex, sta
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1059** — Command and Scripting Interpreter
-- **T1212** — Exploitation for Credential Access
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1203** — Exploitation for Client Execution
+- **T1592.002** — Gather Victim Host Information: Software
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
+- **T1105** — Ingress Tool Transfer
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1098.004** — Account Manipulation: SSH Authorized Keys
 
 ## Kill chain phases observed
 
@@ -39,47 +46,35 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### SQL injection pattern targeting LangGraph get_state_history checkpoint endpoint
+### LangGraph get_state_history SQLi via metadata filter (CVE-2025-67644)
 
-`UC_3_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*get_state_history*" Web.url IN ("*UNION*SELECT*", "*sqlite_master*", "*--*", "*%27%20OR%20*", "*xp_cmdshell*", "*' OR *", "*'%3B*") by Web.src Web.dest Web.url Web.user_agent Web.status Web.http_method
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url="*get_state_history*" AND Web.url="*filter*" AND (Web.url="*UNION*" OR Web.url="*SELECT*" OR Web.url="*%27*" OR Web.url="*--*" OR Web.url="*DROP*" OR Web.url="*sqlite_master*") by Web.src Web.dest Web.url Web.http_method Web.status
 | `drop_dm_object_name(Web)`
-| where status<500
-| stats count values(url) as urls values(user_agent) as agents by src dest
+| sort - lastTime
 ```
 
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemotePort in (80, 443, 8000, 8080, 2024)
-| where InitiatingProcessFileName in~ ("python.exe", "python3.exe", "uvicorn.exe", "gunicorn.exe")
-| where RemoteUrl has "get_state_history"
-   and (RemoteUrl has_any ("UNION", "sqlite_master", "--", "xp_cmdshell") or RemoteUrl matches regex @"%27|%22|%3B|'\s*OR\s*'")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
-| order by Timestamp desc
-```
+### Shell/LOLBin spawned by LangGraph Python or Node runtime
 
-### LangGraph Python runtime spawning shell/interpreter post-deserialization RCE
-
-`UC_3_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python.exe", "python3.exe", "python3", "python", "uvicorn", "uvicorn.exe", "gunicorn", "gunicorn.exe") OR Processes.parent_process IN ("*langgraph*", "*langchain*")) AND Processes.process_name IN ("sh", "bash", "dash", "zsh", "cmd.exe", "powershell.exe", "pwsh.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("python.exe","python3.exe","pythonw.exe","python","python3","uvicorn","uvicorn.exe","node.exe","node") AND (Processes.parent_process IN ("*langgraph*","*langchain*","*checkpoint*") OR Processes.process IN ("*langgraph*","*langchain*","*checkpoint*")) AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","bash.exe","sh","bash","curl.exe","wget.exe","curl","wget","nc","ncat.exe","certutil.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
 | `drop_dm_object_name(Processes)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("python.exe", "python3.exe", "uvicorn.exe", "gunicorn.exe")
-   or InitiatingProcessCommandLine has_any ("langgraph", "langchain", "get_state_history")
-| where FileName in~ ("cmd.exe", "powershell.exe", "pwsh.exe", "sh", "bash", "dash", "zsh", "wscript.exe", "cscript.exe")
+| where InitiatingProcessFileName in~ ("python.exe","python3.exe","pythonw.exe","python","python3","uvicorn","uvicorn.exe","node.exe","node")
+| where InitiatingProcessCommandLine has_any ("langgraph","langchain","checkpoint","get_state_history")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","bash.exe","sh","bash","curl.exe","wget.exe","curl","wget","nc","ncat.exe","certutil.exe","chmod","chmod.exe")
 | where AccountName !endswith "$"
 | project Timestamp, DeviceName, AccountName,
           ParentImage = InitiatingProcessFolderPath,
@@ -90,34 +85,85 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### RediSearch FT.SEARCH query injection in LangGraph Redis checkpointer (CVE-2026-27022)
+### Vulnerable langgraph / langgraph-checkpoint package version inventory
 
-`UC_3_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_7_8` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=redis OR sourcetype=redis_slowlog OR sourcetype=redis_monitor
-| search command="FT.SEARCH*" OR command="ft.search*"
-| rex field=command "FT\.SEARCH\s+(?<index_name>\S+)\s+(?<query_body>.+)"
-| where match(query_body, "(?i)checkpoint|langgraph")
-| where match(query_body, "(\||\}\s*\{|\=\>|@\w+:\{|\*\s*\}|\-@)")
-| stats count values(query_body) as injected_queries by host src index_name
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2025-67644","CVE-2026-28277","CVE-2026-27022") by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.cvss
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - cvss
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareInventory
+| where SoftwareName has "langgraph"
+| extend Vulnerable = case(
+    SoftwareName has "langgraph-checkpoint-sqlite" and SoftwareVersion matches regex @"^([0-2]\.|3\.0\.0$)", "CVE-2025-67644",
+    SoftwareName has "langgraph-checkpoint-redis"  and SoftwareVersion matches regex @"^(0\.|1\.0\.0$)",   "CVE-2026-27022",
+    SoftwareName == "langgraph"                    and SoftwareVersion matches regex @"^1\.0\.[0-9]$",     "CVE-2026-28277",
+    "")
+| where isnotempty(Vulnerable)
+| project DeviceId, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, Vulnerable
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, IsInternetFacing) by DeviceId) on DeviceId
+| order by IsInternetFacing desc, DeviceName asc
+```
+
+### Outbound public network from LangGraph runtime to non-allowlisted destination
+
+`UC_7_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("python.exe","python3.exe","python","python3","uvicorn","uvicorn.exe","node.exe","node") AND All_Traffic.dest_category!="internal" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
+| `drop_dm_object_name(All_Traffic)`
+| search dest!="*.pypi.org" dest!="*.pythonhosted.org" dest!="*.openai.com" dest!="*.anthropic.com" dest!="*.huggingface.co" dest!="*.githubusercontent.com"
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where RemotePort == 6379
-| where InitiatingProcessFileName in~ ("python.exe", "python3.exe", "node.exe", "uvicorn.exe", "gunicorn.exe")
-| join kind=inner (
-    DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where InitiatingProcessCommandLine has_any ("langgraph", "langchain", "checkpoint-redis")
-    | project DeviceId, ProcessStartTime = Timestamp
-  ) on DeviceId
-| where Timestamp between (ProcessStartTime .. ProcessStartTime + 1h)
-| project Timestamp, DeviceName, InitiatingProcessFileName, RemoteIP, RemotePort, InitiatingProcessCommandLine
+| where InitiatingProcessFileName in~ ("python.exe","python3.exe","pythonw.exe","python","python3","uvicorn","uvicorn.exe","node.exe","node")
+| where InitiatingProcessCommandLine has_any ("langgraph","langchain","checkpoint")
+| where RemoteIPType == "Public"
+| where RemoteUrl !endswith "pypi.org"
+   and RemoteUrl !endswith "files.pythonhosted.org"
+   and RemoteUrl !endswith "openai.com"
+   and RemoteUrl !endswith "anthropic.com"
+   and RemoteUrl !endswith "huggingface.co"
+   and RemoteUrl !endswith "githubusercontent.com"
+   and RemoteUrl !endswith "github.com"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, Protocol
+| order by Timestamp desc
+```
+
+### File writes to sensitive paths by LangGraph Python/Node runtime
+
+`UC_7_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("python.exe","python3.exe","pythonw.exe","python","python3","uvicorn","uvicorn.exe","node.exe","node") AND Filesystem.action IN ("created","modified") AND (Filesystem.file_path IN ("*\\Windows\\Temp\\*","*\\Users\\Public\\*","*\\ProgramData\\*","*\\Startup\\*","/tmp/*","/var/tmp/*","/etc/cron*","/root/.ssh/*","*/.ssh/authorized_keys","*/.bashrc","*/.bash_profile","*/.profile")) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where InitiatingProcessFileName in~ ("python.exe","python3.exe","pythonw.exe","python","python3","uvicorn","uvicorn.exe","node.exe","node")
+| where InitiatingProcessCommandLine has_any ("langgraph","langchain","checkpoint","get_state_history")
+| where (FolderPath has_any (@"\Windows\Temp\", @"\Users\Public\", @"\ProgramData\", @"\Start Menu\Programs\Startup", "/tmp/", "/var/tmp/", "/etc/cron", "/root/.ssh/", "/.ssh/", "/etc/systemd/system/"))
+   or FileName in~ ("authorized_keys",".bashrc",".bash_profile",".profile",".zshrc")
+   or FileName endswith ".sh" or FileName endswith ".py" or FileName endswith ".dll" or FileName endswith ".exe" or FileName endswith ".so"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FolderPath, FileName, SHA256
 | order by Timestamp desc
 ```
 
@@ -330,4 +376,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

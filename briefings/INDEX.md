@@ -10,7 +10,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-12
 - [5 socket security alternatives and why they are better](./2026-06-12/5-socket-security-alternatives-and-why-they-are-better.md)
+- [agentjacking attack tricks ai coding agents into running mal](./2026-06-12/agentjacking-attack-tricks-ai-coding-agents-into-running-mal.md)
 - [cisa orders feds to patch actively exploited ivanti flaw by ](./2026-06-12/cisa-orders-feds-to-patch-actively-exploited-ivanti-flaw-by-.md)
+- [critical vulnerability chain in langgraph allows attackers t](./2026-06-12/critical-vulnerability-chain-in-langgraph-allows-attackers-t.md)
 - [europol disrupts audia6 crypto laundering service used by ra](./2026-06-12/europol-disrupts-audia6-crypto-laundering-service-used-by-ra.md)
 - [hackers use free spotify premium hacks on tiktok and instagr](./2026-06-12/hackers-use-free-spotify-premium-hacks-on-tiktok-and-instagr.md)
 - [interpol operation takes down sniper dz phishing platform ar](./2026-06-12/interpol-operation-takes-down-sniper-dz-phishing-platform-ar.md)
@@ -20,6 +22,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [over 73 000 french govt employees affected in tchap messenge](./2026-06-12/over-73-000-french-govt-employees-affected-in-tchap-messenge.md)
 - [palo alto pan os vulnerability allows attackers to execute a](./2026-06-12/palo-alto-pan-os-vulnerability-allows-attackers-to-execute-a.md)
 - [rethinking mdr as attackers and defenders embrace ai](./2026-06-12/rethinking-mdr-as-attackers-and-defenders-embrace-ai.md)
+- [sheetcreep c rat abuses google sheets api as c2 to target di](./2026-06-12/sheetcreep-c-rat-abuses-google-sheets-api-as-c2-to-target-di.md)
 - [solana fakefix campaign uses 25 malicious npm and pypi packa](./2026-06-12/solana-fakefix-campaign-uses-25-malicious-npm-and-pypi-packa.md)
 
 ## 2026-06-11
@@ -36,7 +39,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new greatxml exploit bypasses windows bitlocker via recovery](./2026-06-11/new-greatxml-exploit-bypasses-windows-bitlocker-via-recovery.md)
 - [nottingham university data breach affects over 450 000 stude](./2026-06-11/nottingham-university-data-breach-affects-over-450-000-stude.md)
 - [npm v12 delivers one of the biggest security improvements in](./2026-06-11/npm-v12-delivers-one-of-the-biggest-security-improvements-in.md)
-- [oceanlotus apt compromises fireant metakit in supply chain a](./2026-06-11/oceanlotus-apt-compromises-fireant-metakit-in-supply-chain-a.md)
 - [oceanlotus from external espionage to domestic targeting](./2026-06-11/oceanlotus-from-external-espionage-to-domestic-targeting.md)
 - [oceanlotus hits vietnam investors with spectralviper in fire](./2026-06-11/oceanlotus-hits-vietnam-investors-with-spectralviper-in-fire.md)
 - [shinyhunters exploits oracle peoplesoft zero day cve 2026 35](./2026-06-11/shinyhunters-exploits-oracle-peoplesoft-zero-day-cve-2026-35.md)
@@ -54,7 +56,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft defender rogueplanet zero day grants system access](./2026-06-10/microsoft-defender-rogueplanet-zero-day-grants-system-access.md)
 - [microsoft patches record 206 flaws including three zero days](./2026-06-10/microsoft-patches-record-206-flaws-including-three-zero-days.md)
 - [path traversal flaw in ai dev platform langflow exploited in](./2026-06-10/path-traversal-flaw-in-ai-dev-platform-langflow-exploited-in.md)
-- [the miasma worm source code briefly leaked on github](./2026-06-10/the-miasma-worm-source-code-briefly-leaked-on-github.md)
 
 ## 2026-06-09
 - [blinding the watchmen abusing cloud logging services for def](./2026-06-09/blinding-the-watchmen-abusing-cloud-logging-services-for-def.md)
@@ -99,7 +100,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [miasma worm hits 73 microsoft github repositories in major s](./2026-06-06/miasma-worm-hits-73-microsoft-github-repositories-in-major-s.md)
 
 ## 2026-06-05
-- [android spyware asin targets arabic users via fake news pdf ](./2026-06-05/android-spyware-asin-targets-arabic-users-via-fake-news-pdf-.md)
 - [cisa kev cve 2026 28318 solarwinds serv u uncontrolled resou](./2026-06-05/cisa-kev-cve-2026-28318-solarwinds-serv-u-uncontrolled-resou.md)
 - [ghsa critical cve 2026 47668 dbgate unauthenticated remote c](./2026-06-05/ghsa-critical-cve-2026-47668-dbgate-unauthenticated-remote-c.md)
 - [ghsa critical cve 2026 47669 dbgate zip slip in archive unzi](./2026-06-05/ghsa-critical-cve-2026-47669-dbgate-zip-slip-in-archive-unzi.md)

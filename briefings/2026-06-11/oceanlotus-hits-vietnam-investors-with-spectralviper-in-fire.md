@@ -68,7 +68,7 @@ _(none detected from narrative keywords)_
 
 ### FireAnt Metakit.exe spawns unsigned setup.exe update payload
 
-`UC_38_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_40_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### SPECTRALVIPER DLL side-load via DtlCrashCatch.dll
 
-`UC_38_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_40_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ union
 
 ### SPECTRALVIPER injection into OneDrive.Sync.Service.exe
 
-`UC_38_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_40_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceProcessEvents
 
 ### SPECTRALVIPER C2 domain or IP resolution/connection (FireAnt + MSSQL campaigns)
 
-`UC_38_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_40_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceNetworkEvents
 
 ### OceanLotus SPECTRALVIPER known-bad SHA1 execution / file write
 
-`UC_38_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_40_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,7 +164,7 @@ union
 
 ### OneDrive.Sync.Service.exe beaconing to non-Microsoft destination
 
-`UC_38_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_40_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +184,7 @@ DeviceNetworkEvents
 
 ### MSSQL service spawning interactive shell or LOLBin (initial access into Transport Construction Corp cluster)
 
-`UC_38_16` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_40_16` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -203,7 +203,7 @@ DeviceProcessEvents
 
 ### FireAnt Metakit downloader HTTP POST to staging server with host recon
 
-`UC_38_17` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_40_17` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -479,7 +479,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus Hits Vietnam Investors With SPECTRALVIPER in FireAnt Attack
 
-`UC_38_9` · phase: **exploit** · confidence: **High**
+`UC_40_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

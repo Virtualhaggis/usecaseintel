@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### ShinyHunters CVE-2026-35273 exploit POST to PeopleSoft /PSEMHUB/hub
 
-`UC_41_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_43_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceNetworkEvents
 
 ### WebLogic/Java spawning Linux recon shell after PSEMHUB exploit
 
-`UC_41_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_43_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### JSP webshell drop under PeopleSoft PSEMHUB.war
 
-`UC_41_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_43_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceFileEvents
 
 ### MeshCentral Azure-disguised agent + azurenetfiles.net C2 channel
 
-`UC_41_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_43_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,7 +148,7 @@ union ProcHits, NetHits
 
 ### ShinyHunters fanout.sh SSH credential spray from PeopleSoft host
 
-`UC_41_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_43_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -173,7 +173,7 @@ DeviceProcessEvents
 
 ### zstd / pv archive staging of PeopleSoft exfil on application host
 
-`UC_41_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_43_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -195,7 +195,7 @@ DeviceProcessEvents
 
 ### ShinyHunters defacement README drop on PeopleSoft hosts
 
-`UC_41_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_43_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

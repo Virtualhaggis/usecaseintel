@@ -47,11 +47,10 @@ Includ…
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
+- **T1568** — Dynamic Resolution
 - **T1056.003** — Web Portal Capture
-- **T1566.002** — Phishing: Spearphishing Link
+- **T1204.001** — Malicious Link
 - **T1583.001** — Acquire Infrastructure: Domains
-- **T1656** — Impersonation
-- **T1566.003** — Phishing: Spearphishing via Service
 
 ## Kill chain phases observed
 
@@ -59,96 +58,110 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Outbound POST to Sniper Dz credential-exfil endpoint raviral.com/k_fac.php
+### Sniper Dz seized phishing infrastructure callback (post-takedown beacons)
 
-`UC_7_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_11_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user values(Web.http_method) as method from datamodel=Web where (Web.url="*raviral.com/k_fac.php*" OR (Web.dest="raviral.com" AND Web.url="*k_fac.php*")) by Web.src Web.dest Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count, min(_time) as firstSeen, max(_time) as lastSeen, values(DNS.src) as src_hosts from datamodel=Network_Resolution.DNS where DNS.query IN ("sniperdz.com","*.sniperdz.com","raviral.com","*.raviral.com","dev-cdn370.pantheonsite.io","facebookbusiness0078.blogspot.be","instagram-cutequeen57.netlify.app","v0tingsystem.github.io","freefirefff.github.io","ff-rewards-redeem-codes-org.github.io","automaticgiveaway.000webhostapp.com","climbing-green-botany.glitch.me","free-fire-reward-garena-bd-nepazl.epizy.com","pubg-tournament-official.github.io","pro.riccardomalisano.com") by DNS.query, DNS.src, host | `drop_dm_object_name(DNS)` | eval campaign="SniperDz_OperationRamz" | sort - lastSeen
 ```
 
 **Defender KQL:**
 ```kql
-let SniperDzHost = "raviral.com";
+let SniperDzInfra = dynamic(["sniperdz.com","raviral.com","dev-cdn370.pantheonsite.io","facebookbusiness0078.blogspot.be","instagram-cutequeen57.netlify.app","v0tingsystem.github.io","freefirefff.github.io","ff-rewards-redeem-codes-org.github.io","automaticgiveaway.000webhostapp.com","climbing-green-botany.glitch.me","free-fire-reward-garena-bd-nepazl.epizy.com","pubg-tournament-official.github.io","pro.riccardomalisano.com"]);
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has SniperDzHost
-   or RemoteUrl has "k_fac.php"
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","safari.exe","curl.exe","wget.exe","powershell.exe","pwsh.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| where Timestamp > ago(14d)
+| where isnotempty(RemoteUrl)
+| where RemoteUrl has_any (SniperDzInfra)
+| project Timestamp, DeviceName, DeviceId,
+          AccountName = InitiatingProcessAccountName,
+          RemoteUrl, RemoteIP, RemotePort,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
-### Sniper Dz victim-tracking script load (raviral.com/host_style/style/js-track/track.js)
+### Raviral.com Sniper Dz kit endpoints accessed (k_fac.php / track.js)
 
-`UC_7_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_11_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_referrer) as lureUrl from datamodel=Web where Web.url="*raviral.com/host_style/style/js-track/track.js*" OR Web.url="*raviral.com/host_style/*" by Web.src Web.user Web.dest | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count, values(Web.user) as users, values(Web.src) as src_hosts, max(_time) as lastSeen from datamodel=Web.Web where (Web.url="*/k_fac.php*" OR Web.url="*/host_style/style/js-track/track.js*" OR Web.dest="raviral.com" OR Web.dest="*.raviral.com") by Web.url, Web.dest, Web.http_method, Web.http_user_agent | `drop_dm_object_name(Web)` | eval campaign="SniperDz_kit_fingerprint" | sort - lastSeen
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has "raviral.com/host_style"
-   or RemoteUrl has "js-track/track.js"
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP
+| where Timestamp > ago(14d)
+| where isnotempty(RemoteUrl)
+| where RemoteUrl has_any ("/k_fac.php", "/host_style/style/js-track/track.js")
+   or RemoteUrl has "raviral.com"
+| project Timestamp, DeviceName, DeviceId,
+          AccountName = InitiatingProcessAccountName,
+          RemoteUrl, RemoteIP,
+          Browser = InitiatingProcessFileName,
+          InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
-### Inbound email delivering links to Sniper Dz lookalike phishing infrastructure
+### Phishing email click landing on Sniper Dz infrastructure (URL/click correlation)
 
-`UC_7_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_11_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Email.subject) as subjects values(All_Email.url) as urls from datamodel=Email where All_Email.message_direction="inbound" AND (All_Email.url="*raviral.com*" OR All_Email.url="*v0tingsystem.github.io*" OR All_Email.url="*freefirefff.github.io*" OR All_Email.url="*ff-rewards-redeem-codes-org.github.io*" OR All_Email.url="*pubg-tournament-official.github.io*" OR All_Email.url="*instagram-cutequeen57.netlify.app*" OR All_Email.url="*facebookbusiness0078.blogspot.be*" OR All_Email.url="*automaticgiveaway.000webhostapp.com*" OR All_Email.url="*climbing-green-botany.glitch.me*" OR All_Email.url="*free-fire-reward-garena-bd-nepazl.epizy.com*" OR All_Email.url="*dev-cdn370.pantheonsite.io*" OR All_Email.url="*pro.riccardomalisano.com*") by All_Email.recipient All_Email.src_user All_Email.message_id | `drop_dm_object_name(All_Email)`
+| tstats summariesonly=true count, values(All_Email.recipient) as recipients, values(All_Email.subject) as subjects from datamodel=Email.All_Email where (All_Email.url="*sniperdz.com*" OR All_Email.url="*raviral.com*" OR All_Email.url="*dev-cdn370.pantheonsite.io*" OR All_Email.url="*facebookbusiness0078.blogspot.be*" OR All_Email.url="*instagram-cutequeen57.netlify.app*" OR All_Email.url="*v0tingsystem.github.io*" OR All_Email.url="*freefirefff.github.io*" OR All_Email.url="*ff-rewards-redeem-codes-org.github.io*" OR All_Email.url="*automaticgiveaway.000webhostapp.com*" OR All_Email.url="*climbing-green-botany.glitch.me*" OR All_Email.url="*free-fire-reward-garena-bd-nepazl.epizy.com*" OR All_Email.url="*pubg-tournament-official.github.io*" OR All_Email.url="*pro.riccardomalisano.com*") by All_Email.src_user, All_Email.recipient, All_Email.message_id, All_Email.url | `drop_dm_object_name(All_Email)` | eval campaign="SniperDz_OperationRamz" | sort - count
 ```
 
 **Defender KQL:**
 ```kql
-let SniperDzDomains = dynamic(["raviral.com","sniperdz.com","v0tingsystem.github.io","freefirefff.github.io","ff-rewards-redeem-codes-org.github.io","pubg-tournament-official.github.io","instagram-cutequeen57.netlify.app","facebookbusiness0078.blogspot.be","automaticgiveaway.000webhostapp.com","climbing-green-botany.glitch.me","free-fire-reward-garena-bd-nepazl.epizy.com","dev-cdn370.pantheonsite.io","pro.riccardomalisano.com"]);
-EmailUrlInfo
-| where Timestamp > ago(30d)
-| where UrlDomain has_any (SniperDzDomains) or Url has_any (SniperDzDomains)
-| join kind=inner (
-    EmailEvents
+let SniperDzInfra = dynamic(["sniperdz.com","raviral.com","dev-cdn370.pantheonsite.io","facebookbusiness0078.blogspot.be","instagram-cutequeen57.netlify.app","v0tingsystem.github.io","freefirefff.github.io","ff-rewards-redeem-codes-org.github.io","automaticgiveaway.000webhostapp.com","climbing-green-botany.glitch.me","free-fire-reward-garena-bd-nepazl.epizy.com","pubg-tournament-official.github.io","pro.riccardomalisano.com"]);
+let PhishingMail = EmailEvents
     | where Timestamp > ago(30d)
     | where EmailDirection == "Inbound"
-    | where DeliveryAction in ("Delivered","DeliveredAsSpam")
-  ) on NetworkMessageId
-| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress, Subject, Url, UrlDomain, DeliveryAction, DeliveryLocation
-| order by Timestamp desc
+    | join kind=inner (
+        EmailUrlInfo
+        | where Url has_any (SniperDzInfra) or UrlDomain has_any (SniperDzInfra)
+      ) on NetworkMessageId
+    | project NetworkMessageId, EmailTime=Timestamp, SenderFromAddress, RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation, Url, UrlDomain;
+UrlClickEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("ClickAllowed","ClickedThrough")
+| where Url has_any (SniperDzInfra)
+| join kind=leftouter PhishingMail on $left.NetworkMessageId == $right.NetworkMessageId
+| project ClickTime=Timestamp, AccountUpn, IPAddress, ClickedUrl=Url, ActionType, IsClickedThrough,
+          EmailTime, SenderFromAddress, RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation
+| order by ClickTime desc
 ```
 
-### Browser navigation to free-hosted brand-impersonation lures matching Sniper Dz lure patterns
+### Brand-impersonating phishing pages on abused free-hosting platforms (Sniper Dz pattern)
 
-`UC_7_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_11_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls from datamodel=Web where (Web.url="*v0tingsystem.github.io*" OR Web.url="*freefirefff.github.io*" OR Web.url="*ff-rewards-redeem-codes-org.github.io*" OR Web.url="*pubg-tournament-official.github.io*" OR Web.url="*instagram-cutequeen57.netlify.app*" OR Web.url="*facebookbusiness0078.blogspot.be*" OR Web.url="*automaticgiveaway.000webhostapp.com*" OR Web.url="*climbing-green-botany.glitch.me*" OR Web.url="*free-fire-reward-garena-bd-nepazl.epizy.com*" OR Web.url="*dev-cdn370.pantheonsite.io*" OR Web.url="*pro.riccardomalisano.com*" OR (Web.dest="*.github.io" AND Web.url IN ("*free-fire*","*freefire*","*pubg*reward*","*garena*reward*","*redeem-code*")) OR (Web.dest="*.netlify.app" AND Web.url IN ("*instagram*","*facebook*","*paypal*")) OR (Web.dest="*.000webhostapp.com" AND Web.url="*giveaway*")) by Web.src Web.user Web.dest Web.http_referrer | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)`
+| tstats summariesonly=true count, min(_time) as firstSeen, dc(Web.src) as host_count from datamodel=Web.Web where (Web.dest="*.github.io" OR Web.dest="*.netlify.app" OR Web.dest="*.glitch.me" OR Web.dest="*.pantheonsite.io" OR Web.dest="*.000webhostapp.com" OR Web.dest="*.epizy.com" OR Web.dest="*.blogspot.com" OR Web.dest="*.blogspot.be" OR Web.dest="*.web.app" OR Web.dest="*.herokuapp.com") by Web.dest, Web.url | `drop_dm_object_name(Web)` | where match(dest,"(?i)(paypal|facebook|fbpage|instagram|netflix|steam|yahoo|freefire|free-fire|garena|pubg|whatsapp|tiktok|gov|bank|signin|login|secure|verify|reward|giveaway|prize)") | eval pattern="SniperDz_freeHost_brandImpersonation" | sort - firstSeen
 ```
 
 **Defender KQL:**
 ```kql
-let KnownLures = dynamic(["v0tingsystem.github.io","freefirefff.github.io","ff-rewards-redeem-codes-org.github.io","pubg-tournament-official.github.io","instagram-cutequeen57.netlify.app","facebookbusiness0078.blogspot.be","automaticgiveaway.000webhostapp.com","climbing-green-botany.glitch.me","free-fire-reward-garena-bd-nepazl.epizy.com","dev-cdn370.pantheonsite.io","pro.riccardomalisano.com"]);
-let BrandKeywords = dynamic(["free-fire","freefire","garena","pubg","redeem-code","redeem_codes","reward","giveaway","votingsystem","v0ting","facebookbusiness","instagram-cute","paypal-verify","netflix-account","steam-gift"]);
-let FreeHostingTlds = dynamic([".github.io",".netlify.app",".glitch.me",".000webhostapp.com",".epizy.com",".pantheonsite.io",".blogspot.",".web.app"]);
+let BrandKeywords = dynamic(["paypal","facebook","fbpage","instagram","netflix","steam","yahoo","freefire","free-fire","garena","pubg","whatsapp","tiktok","signin","login","secure","verify","reward","giveaway","prize","redeem","voting","v0ting"]);
+let FreeHostingTLDs = dynamic([".github.io",".netlify.app",".glitch.me",".pantheonsite.io",".000webhostapp.com",".epizy.com",".blogspot.com",".blogspot.be",".web.app",".herokuapp.com",".pages.dev",".vercel.app",".workers.dev"]);
+let Baseline = DeviceNetworkEvents
+    | where Timestamp between (ago(60d) .. ago(2d))
+    | where isnotempty(RemoteUrl)
+    | where RemoteUrl has_any (FreeHostingTLDs)
+    | summarize by RemoteUrl;
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+| where Timestamp > ago(2d)
 | where isnotempty(RemoteUrl)
-| extend LowerUrl = tolower(RemoteUrl)
-| where (RemoteUrl has_any (KnownLures))
-     or (LowerUrl has_any (FreeHostingTlds) and LowerUrl has_any (BrandKeywords))
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP
-| summarize Hits=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Devices=dcount(DeviceName), SampleUrl=any(RemoteUrl)
-         by InitiatingProcessAccountName, RemoteUrl
+| where RemoteUrl has_any (FreeHostingTLDs)
+| where RemoteUrl has_any (BrandKeywords)
+| join kind=leftanti Baseline on RemoteUrl
+| summarize FirstSeen = min(Timestamp), HostCount = dcount(DeviceName), AnyAccount = any(InitiatingProcessAccountName), AnyBrowser = any(InitiatingProcessFileName) by RemoteUrl
+| where HostCount >= 1
 | order by FirstSeen desc
 ```
 
@@ -424,4 +437,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

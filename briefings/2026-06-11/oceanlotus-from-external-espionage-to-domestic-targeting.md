@@ -81,7 +81,7 @@ _(none detected from narrative keywords)_
 
 ### OceanLotus SPECTRALVIPER C2 callback to known infrastructure (IPs + domains)
 
-`UC_39_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_41_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ union
 
 ### SPECTRALVIPER known-bad SHA1 hash on file write or process execution
 
-`UC_39_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_41_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ union
 
 ### FireAnt Metakit updater spawning script/LOLBin or writing PE to user-writable path (supply-chain)
 
-`UC_39_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_41_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -172,7 +172,7 @@ union
 
 ### Sustained low-rate beaconing from single host to OceanLotus C2 IP set (long-tail intrusion signal)
 
-`UC_39_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_41_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -375,7 +375,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus: From external espionage to domestic targeting
 
-`UC_39_8` · phase: **exploit** · confidence: **High**
+`UC_41_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

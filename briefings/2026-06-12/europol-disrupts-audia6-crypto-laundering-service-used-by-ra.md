@@ -53,8 +53,10 @@ Europol, in a statement issued Thursday, said the dismantling of AudiA6 cut off 
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1583.001** — Acquire Infrastructure: Domains
-- **T1568** — Dynamic Resolution
+- **T1585.002** — Establish Accounts: Email Accounts
+- **T1566** — Phishing
 
 ## Kill chain phases observed
 
@@ -62,27 +64,44 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### DNS / web egress to AudiA6 money-mule registration infrastructure domains
+### DNS/network contact with AudiA6 money-mule registration domains
 
-`UC_13_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_17_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.dest) as resolver from datamodel=Network_Resolution where DNS.query IN ("designli.pictures","pheontx.eu","smplfy.in","sumato-soft.org","technobrains.dev","lett.email","trayo.app","deliverly.top","inboxly.top","postfast.eu","postino.click","inboxally.agency","mailora.eu","postify.email","quix.express","flowcomm.click","qube.black","deliverlett.com","lettermail.eu","*.designli.pictures","*.pheontx.eu","*.smplfy.in","*.sumato-soft.org","*.technobrains.dev","*.lett.email","*.trayo.app","*.deliverly.top","*.inboxly.top","*.postfast.eu","*.postino.click","*.inboxally.agency","*.mailora.eu","*.postify.email","*.quix.express","*.flowcomm.click","*.qube.black","*.deliverlett.com","*.lettermail.eu") by DNS.query DNS.src host | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.query IN ("*designli.pictures","*pheontx.eu","*smplfy.in","*sumato-soft.org","*technobrains.dev","*lett.email","*trayo.app","*deliverly.top","*inboxly.top","*postfast.eu","*postino.click","*inboxally.agency","*mailora.eu","*postify.email","*quix.express","*flowcomm.click","*qube.black","*deliverlett.com","*lettermail.eu") by DNS.src DNS.query DNS.dest | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let MuleDomains = dynamic(["designli.pictures","pheontx.eu","smplfy.in","sumato-soft.org","technobrains.dev","lett.email","trayo.app","deliverly.top","inboxly.top","postfast.eu","postino.click","inboxally.agency","mailora.eu","postify.email","quix.express","flowcomm.click","qube.black","deliverlett.com","lettermail.eu"]);
+let AudiA6Domains = dynamic(["designli.pictures","pheontx.eu","smplfy.in","sumato-soft.org","technobrains.dev","lett.email","trayo.app","deliverly.top","inboxly.top","postfast.eu","postino.click","inboxally.agency","mailora.eu","postify.email","quix.express","flowcomm.click","qube.black","deliverlett.com","lettermail.eu"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where isnotempty(RemoteUrl)
-| extend Host = tolower(tostring(split(RemoteUrl, "/")[0]))
-| where Host has_any (MuleDomains)
-   or RemoteUrl has_any (MuleDomains)
-| project Timestamp, DeviceName, DeviceId, AccountName=InitiatingProcessAccountName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          RemoteIP, RemotePort, RemoteUrl, Host
+| extend HostLower = tolower(RemoteUrl)
+| where HostLower has_any (AudiA6Domains)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Inbound or outbound email involving AudiA6 mule-recruitment domains
+
+`UC_17_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Email where (All_Email.src IN ("*@designli.pictures","*@pheontx.eu","*@smplfy.in","*@sumato-soft.org","*@technobrains.dev","*@lett.email","*@trayo.app","*@deliverly.top","*@inboxly.top","*@postfast.eu","*@postino.click","*@inboxally.agency","*@mailora.eu","*@postify.email","*@quix.express","*@flowcomm.click","*@qube.black","*@deliverlett.com","*@lettermail.eu") OR All_Email.recipient IN ("*@designli.pictures","*@pheontx.eu","*@smplfy.in","*@sumato-soft.org","*@technobrains.dev","*@lett.email","*@trayo.app","*@deliverly.top","*@inboxly.top","*@postfast.eu","*@postino.click","*@inboxally.agency","*@mailora.eu","*@postify.email","*@quix.express","*@flowcomm.click","*@qube.black","*@deliverlett.com","*@lettermail.eu")) by All_Email.src All_Email.recipient All_Email.subject | `drop_dm_object_name(All_Email)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let AudiA6Domains = dynamic(["designli.pictures","pheontx.eu","smplfy.in","sumato-soft.org","technobrains.dev","lett.email","trayo.app","deliverly.top","inboxly.top","postfast.eu","postino.click","inboxally.agency","mailora.eu","postify.email","quix.express","flowcomm.click","qube.black","deliverlett.com","lettermail.eu"]);
+EmailEvents
+| where Timestamp > ago(30d)
+| extend SenderDom = tolower(SenderFromDomain), SenderMailDom = tolower(SenderMailFromDomain), RcptDom = tolower(tostring(split(RecipientEmailAddress, "@")[1]))
+| where SenderDom in (AudiA6Domains) or SenderMailDom in (AudiA6Domains) or RcptDom in (AudiA6Domains)
+| project Timestamp, NetworkMessageId, EmailDirection, SenderFromAddress, SenderFromDomain, RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation, ThreatTypes, UrlCount, AttachmentCount
 | order by Timestamp desc
 ```
 
@@ -438,4 +457,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 12 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

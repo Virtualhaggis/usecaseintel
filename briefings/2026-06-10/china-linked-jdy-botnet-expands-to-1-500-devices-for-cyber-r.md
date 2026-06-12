@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### JDY-style outbound recon scanning originating from internal IoT / network appliances
 
-`UC_49_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_50_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceNetworkEvents
 
 ### Outbound Tor (9001/9030/9050) from network appliance / IoT subnet — JDY C2 beaconing
 
-`UC_49_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_50_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceNetworkEvents
 
 ### MIPS shell-script dropper on Linux edge device — JDY architecture-aware payload fetch
 
-`UC_49_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_50_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceProcessEvents
 
 ### CVE-2026-35616 exploitation attempt against edge SOHO/IoT devices — JDY initial access
 
-`UC_49_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_50_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
