@@ -1,0 +1,32 @@
+{
+  "rule_id": "usecaseintel-UC_WEEKLY_DEVELOPER_DATA_TOOLING_DAEMON_SPAWNS_SHELL_CHILD_S",
+  "name": "[WEEKLY] Developer/Data-tooling Daemon Spawns Shell Child Seconds After POST to Runner/Exec Endpoint",
+  "description": "Detects the joint pattern across this fortnight's GHSA critical-severity disclosures where a long-running developer or data-tooling daemon (Node.js, Python, Jupyter kernel/Enterprise Gateway, Stata) receives an inbound HTTP POST to a code-execution-adjacent endpoint (`/runners/start`, `/runners/load-reader`, `/api/kernels`, `/start`, `/stata_do`, `/workspaces/*/members`, etc.) and within seconds spawns an OS shell, LOLBin, or alternate interpreter as a child \u2014 the universal post-condition of code injection (DbGate CVE-2026-47668/47670), arbitrary-file-write turned RCE (DbGate Zip Slip CVE-2026-47669), command injection (MCP-for-Stata CVE-2026-47708), SSTI (Jupyter EG CVE-2026-44181), YAML manifest injection (Jupyter EG CVE-2026-44182), and path-traversal-to-exec (NASA AMMOS CVE-2026-47731). It spans the exploit -> install kill-chain boundary by correlating the network ingress (vulnerable endpoint hit) with the host-side proof of code execution (parent-child anomaly) inside a 2-minute window on the same host. Fires when a vulnerable runner endpoint is POSTed AND the same daemon process spawns sh/bash/cmd/powershell/curl/wget/python/perl within 120s; does NOT fire on the routine background tasks these daemons spawn (helper Node workers, child Python kernels of the same family, scheduled cron-jobs) nor on POSTs to read-only endpoints, keeping FP rate low even in noisy CI/MLOps environments.",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*node* OR *node.exe* OR *python* OR *python.exe* OR *python3* OR *jupyter\\-kernel* OR *enterprise_gateway* OR *stata* OR *stata.exe* OR *stata\\-mp* OR *stata\\-mp.exe* OR *xstata* OR *xstata.exe* OR *php* OR *php\\-fpm*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.exploit",
+    "attack.T1190",
+    "attack.T1059.004",
+    "attack.T1059.003",
+    "attack.T1059.006",
+    "attack.T1059.007",
+    "attack.T1505.003"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_DEVELOPER_DATA_TOOLING_DAEMON_SPAWNS_SHELL_CHILD_S.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

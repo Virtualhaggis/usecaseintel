@@ -1,0 +1,33 @@
+{
+  "rule_id": "usecaseintel-UC_WEEKLY_PACKAGE_MANAGER_LIFECYCLE_HOOK_SPAWNS_RUNTIME_WITH",
+  "name": "[WEEKLY] Package manager lifecycle hook spawns runtime with outbound egress to non-registry host within 5 minutes",
+  "description": "Detects the joint TTP that every May 2026 supply-chain campaign shares: a package manager (npm/yarn/pnpm, pip, cargo, nuget/dotnet, composer, gem) invokes a preinstall/postinstall lifecycle script that spawns a script-host or downloader child (node, python, sh/bash, powershell, bun, curl/wget, certutil/bitsadmin), and that child \u2014 or an immediate sibling \u2014 initiates an outbound connection to a host that is NOT a known package registry or VCS within ~5 minutes. This fortnight that chain is the engine of Mini Shai-Hulud's @antv burst, the node-ipc beaconing to sh.azurestaticprovider.net, the durabletask PyPI dropper calling git-service.com, TrapDoor's cross-ecosystem (npm/PyPI/Crates) credential theft, vpmdhaj typosquats exfiltrating to aab.sportsontheweb.net, and Microsoft's dependency-confusion recon to moika.tech / cloudplatform-single-spa.io / t-in-one.io (per Snyk 2026-05-18, StepSecurity 2026-05-19, Aikido 2026-05-19, Microsoft 2026-05-20, Unit 42 2026-05-21, THN 2026-05-23/25/27/29, Microsoft 2026-05-29/30). Kill-chain coverage spans delivery (compromised package pulled), install (lifecycle hook fires), and the first C2/exfil hop \u2014 the early-warning window before credential dumping happens. FIRES on developer / CI hosts when an `npm install`-class command produces a script-host child that immediately egresses to a non-registry public host. DOES NOT fire on plain `npm install` traffic to npmjs/yarnpkg/pypi/crates/nuget/rubygems/packagist registries or to github/gitlab/bitbucket VCS, nor on script-host child processes that produce no outbound public connection within the window.",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*npm.exe* OR *npm* OR *npm\\-cli.js* OR *yarn.exe* OR *yarn* OR *pnpm.exe* OR *pnpm* OR *pip.exe* OR *pip* OR *pip3* OR *pip3.exe* OR *cargo.exe* OR *cargo* OR *nuget.exe* OR *nuget*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.install",
+    "attack.T1195.002",
+    "attack.T1546.016",
+    "attack.T1059.007",
+    "attack.T1059.006",
+    "attack.T1059.001",
+    "attack.T1071.001",
+    "attack.T1204.002"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_MANAGER_LIFECYCLE_HOOK_SPAWNS_RUNTIME_WITH.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

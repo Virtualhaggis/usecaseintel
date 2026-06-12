@@ -1,0 +1,33 @@
+{
+  "rule_id": "usecaseintel-UC_WEEKLY_WEB_APP_INTERPRETER_NODE_PYTHON_JAVA_PHP_SPAWNS_SH",
+  "name": "[WEEKLY] Web App Interpreter (Node/Python/Java/PHP) Spawns Shell or Net-Download LOLBin on Internet-Facing Host",
+  "description": "Detects the post-exploitation execution tail of the May 11-16 2026 wave of authentication/authorization bypass disclosures in internet-facing application runtimes \u2014 Node.js, Python (uvicorn/gunicorn), Java, PHP-FPM, Ruby, .NET \u2014 where the application's own interpreter process unexpectedly spawns a shell (sh/bash/cmd/pwsh) or a network-staging LOLBin (curl/wget/nc/python -c). This fortnight the pattern is being driven by CVE-2026-44791 (n8n XML-node prototype pollution \u2192 RCE), CVE-2026-44338 (PraisonAI missing-auth, exploited within 4 hours of disclosure), CVE-2026-42074 (OpenClaude `dangerouslyDisableSandbox` model-controlled escape), CVE-2026-44849 (Portainer Swarm endpoint-security bypass to privileged container), and the Obot `/mcp-connect/{id}` ACR bypass \u2014 together with the Cisco SD-WAN CVE-2026-20182 and Burst Statistics CVE-2026-8181 auth bypasses whose follow-on stages share the same interpreter-spawns-shell shape. Kill-chain stages spanned: exploit \u2192 execution \u2192 ingress tool transfer / discovery, correlated to recent inbound public traffic on the same host. The rule fires when a baseline-rare interpreter\u2192shell-or-LOLBin parent-child pair lands on a host that has received external inbound HTTP traffic in the same window; it does NOT fire on CI/CD runners, build agents, or developer workstations where node/python legitimately spawn shells as part of routine workflow \u2014 those parents should be added to the per-environment allowlist.",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*node* OR *node.exe* OR *python* OR *python.exe* OR *python3* OR *java* OR *java.exe* OR *php\\-fpm* OR *php\\-fpm7* OR *php\\-fpm8* OR *ruby* OR *gunicorn* OR *uvicorn* OR *n8n* OR *n8n.exe*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.exploit",
+    "attack.T1190",
+    "attack.T1059",
+    "attack.T1059.004",
+    "attack.T1059.001",
+    "attack.T1059.006",
+    "attack.T1105",
+    "attack.T1068"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_WEB_APP_INTERPRETER_NODE_PYTHON_JAVA_PHP_SPAWNS_SH.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

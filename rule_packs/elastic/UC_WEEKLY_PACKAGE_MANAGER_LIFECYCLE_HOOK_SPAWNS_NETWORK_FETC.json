@@ -1,0 +1,35 @@
+{
+  "rule_id": "usecaseintel-UC_WEEKLY_PACKAGE_MANAGER_LIFECYCLE_HOOK_SPAWNS_NETWORK_FETC",
+  "name": "[WEEKLY] Package manager lifecycle hook spawns network-fetching shell or runtime",
+  "description": "Detects the joint TTP behind every npm/PyPI/Composer supply-chain compromise of the last fortnight: a package manager process (npm/npx/yarn/pnpm/node/pip/python/composer) \u2014 invoked through an install or lifecycle hook (preinstall/postinstall) \u2014 spawns a script interpreter or downloader (powershell/pwsh/bash/sh/cmd/curl/wget/bun/bitsadmin/certutil) which then reaches a non-registry public destination within a 5-minute window. This fortnight the pattern drove the Mini Shai-Hulud Wave 4 worm in @tanstack and @antv packages (Snyk, Aikido, StepSecurity, Microsoft), the node-ipc maintainer compromise (Snyk, StepSecurity), the art-template watering-hole backdoor (Cyber Security News), the durabletask PyPI compromise (Microsoft), and the Packagist composer worm (The Hacker News) \u2014 all of which used lifecycle scripts to pull a secondary payload (typically the Bun runtime or a Linux ELF from GitHub Releases) before exfil'ing CI/CD secrets to git-tanstack.com, azurestaticprovider.net, m-kosche.com, git-service.com, or getsession.org. Kill-chain spans install (T1195.002, T1546.016, T1204.002) into c2 (T1071.001, T1105). Fires when a package install's lifecycle script spawns a fetcher AND that host beacons to a public non-registry host within 5 minutes; does NOT fire on interactive developer shells started outside an install context, nor on CI pipelines whose only egress is registry.npmjs.org / pypi.org / files.pythonhosted.org / repo.packagist.org / github.com/oven-sh release URLs that the org has explicitly whitelisted.",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*npm.exe* OR *npm\\-cli.js* OR *node.exe* OR *node* OR *npx.exe* OR *yarn.exe* OR *pnpm.exe* OR *python.exe* OR *python* OR *python3* OR *pip.exe* OR *pip* OR *pip3* OR *composer* OR *composer.phar*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.install",
+    "attack.T1195.002",
+    "attack.T1546.016",
+    "attack.T1204.002",
+    "attack.T1059.007",
+    "attack.T1059.001",
+    "attack.T1059.004",
+    "attack.T1105",
+    "attack.T1071.001",
+    "attack.T1552.001"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_MANAGER_LIFECYCLE_HOOK_SPAWNS_NETWORK_FETC.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

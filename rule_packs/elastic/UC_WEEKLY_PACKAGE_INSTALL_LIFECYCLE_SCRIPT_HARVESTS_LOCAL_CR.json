@@ -1,0 +1,33 @@
+{
+  "rule_id": "usecaseintel-UC_WEEKLY_PACKAGE_INSTALL_LIFECYCLE_SCRIPT_HARVESTS_LOCAL_CR",
+  "name": "[WEEKLY] Package-install lifecycle script harvests local credentials and beacons to a non-baselined domain",
+  "description": "Detects the cross-platform supply-chain pattern where a package manager or installer (npm/yarn/pnpm/npx, VS Code extension host, MSI/PKG installer) spawns a child during pre/postinstall that reads developer or cloud credential stores (.npmrc, ~/.aws/credentials, ~/.ssh/id_*, .env, /proc/<pid>/environ, browser Login Data, GitHub/NPM/Anthropic token env vars, macOS keychain) and within ~5 minutes the same host beacons to an external host that has not been seen in the 30-day org-wide baseline. This fortnight is dominated by exactly this chain: CISA KEV CVE-2026-48027 (Nx Console malicious extension), CVE-2026-8398 (Daemon Tools Lite embedded malicious code), Microsoft's 33 malicious npm packages abusing dependency confusion, Snyk's Miasma compromise of @redhat-cloud-services, The Hacker News' Claude Code GitHub Action prompt-injection reading /proc/<pid>/environ on self-hosted runners, FlutterShell macOS malvertising, and GHSA-jpvj-wpmj-h7rv (@cap-js/openapi). It spans install (lifecycle hook), credential-access (file/env scrape), and exfiltration/C2 (new-domain egress) stages, so it gives one alert per real chain rather than one per IOC. It fires when a node/npm/yarn/pnpm/installer-rooted process reads a credential artefact AND the host then talks to a fresh external host within the window; it does NOT fire on a credential read alone (CLI workflows), nor on package-manager network activity to known baselined registries (npmjs, github, vscode CDN, cloud provider endpoints).",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*node.exe* OR *node* OR *npm.cmd* OR *npm* OR *yarn.cmd* OR *yarn* OR *pnpm.cmd* OR *pnpm* OR *npx.cmd* OR *npx* OR *Code.exe* OR *code* OR *msiexec.exe* OR *setup.exe* OR *installer*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.install",
+    "attack.T1195.002",
+    "attack.T1546.016",
+    "attack.T1552.001",
+    "attack.T1552.004",
+    "attack.T1059.007",
+    "attack.T1041",
+    "attack.T1027"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_INSTALL_LIFECYCLE_SCRIPT_HARVESTS_LOCAL_CR.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

@@ -1,0 +1,32 @@
+{
+  "rule_id": "usecaseintel-UC_WEEKLY_SELF_HOSTED_APPLICATION_SERVICE_SPAWNS_SHELL_OR_SS",
+  "name": "[WEEKLY] Self-hosted application service spawns shell or SSH within seconds of inbound unauthenticated API write",
+  "description": "Detects the recurring pattern across this fortnight's GHSA-Critical drop where a self-hosted Go/Node/Python/PHP service receives an unauthenticated (or low-privileged) POST/PATCH/PUT to an internal API path and within ~120s the same service process spawns a shell, ssh, or scripting interpreter child \u2014 the universal smoking-gun of in-process RCE primitives. This catches the chain in Nezha cron-RCE (CVE-2026-46716), Kopia SSH ProxyCommand injection (CVE-2026-45695), Algernon handler.lua escape (CVE-2026-45721), Fission router unauthenticated function invoke (CVE-2026-46614), Twig {% use %} PHP injection (CVE-2026-46633), FileBrowser Quantum path-traversal PATCH (GHSA-qqqm-5547-774x), Boxlite OCI symlink escape (CVE-2026-46703), YesWiki Bazar SQLi follow-on (CVE-2026-46670), zrok ProxyShare SSRF (CVE-2026-45568), and the @cap-js / guardrails-ai supply-chain stage-2 payloads (CVE-2026-46421, CVE-2026-45758). It spans Delivery (the HTTP request) into Exploit / Execute (the unexpected interpreter child). It fires when one of the listed service binaries is the immediate parent of /bin/sh, ssh, powershell, python, etc., correlated to an inbound listener connection in the prior 120s \u2014 it does NOT fire on the service's normal supervisor/health-check child processes, on container-runtime forks (containerd-shim, runc), or when the parent is a CI/dev image (`*-dev`, `*-test`).",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*nezha* OR *nezha\\-dashboard* OR *kopia* OR *kopia.exe* OR *kopia\\-ui* OR *kopia\\-ui.exe* OR *algernon* OR *filebrowser* OR *fission\\-router* OR *fission\\-bundle* OR *boxlite* OR *zrok* OR *yeswiki* OR *php\\-fpm* OR *php\\-fpm8.1*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.exploit",
+    "attack.T1190",
+    "attack.T1059.004",
+    "attack.T1059.001",
+    "attack.T1505.003",
+    "attack.T1133",
+    "attack.T1071.001"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_SELF_HOSTED_APPLICATION_SERVICE_SPAWNS_SHELL_OR_SS.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

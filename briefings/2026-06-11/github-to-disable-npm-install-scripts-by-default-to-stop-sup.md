@@ -28,11 +28,10 @@ The changes aim to combat attack techniques that abuse the "npm install" command
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
 - **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1105** — Ingress Tool Transfer
-- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
-- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1195.001** — Compromise Software Dependencies and Development Tools
+- **T1562** — Impair Defenses
+- **T1197** — BITS Jobs
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
@@ -40,83 +39,153 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Suspicious child process spawned during 'npm install' (lifecycle-script abuse)
+### npm Post-Install Script Execution from Untrusted Package
 
-`UC_35_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_37_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("npm.exe","node.exe","npm.cmd") OR Processes.parent_process IN ("*npm install*","*npm ci*","*npm-cli.js*")) (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","wget.exe","bitsadmin.exe","certutil.exe","mshta.exe","rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe","bash.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.process_path) as image from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("npm.exe","npm-cli.js","node.exe","npx.exe") OR Processes.parent_process IN ("*\\npm-cli.js*","*npm install*","*npm ci*","*npm add*","*node-gyp*")) Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","bash.exe","sh.exe","wscript.exe","cscript.exe","curl.exe","wget.exe","certutil.exe","bitsadmin.exe","mshta.exe") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where (InitiatingProcessFileName in~ ("npm.exe","node.exe","npm.cmd"))
-    or InitiatingProcessCommandLine has_any ("npm install","npm ci","npm-cli.js")
-| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","wget.exe","bitsadmin.exe","certutil.exe","mshta.exe","rundll32.exe","regsvr32.exe","wscript.exe","cscript.exe","bash.exe")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName,
-          ParentName = InitiatingProcessFileName,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildName = FileName,
-          ChildCmd = ProcessCommandLine,
-          SHA256
+| where InitiatingProcessFileName in~ ("npm.exe","node.exe","npx.exe","yarn.exe","pnpm.exe")
+   or InitiatingProcessCommandLine has_any ("npm install","npm ci","npm add","npm i ","node-gyp rebuild","binding.gyp")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","bash.exe","sh.exe","wscript.exe","cscript.exe","curl.exe","wget.exe","certutil.exe","bitsadmin.exe","mshta.exe","regsvr32.exe")
+| where ProcessCommandLine has_any ("DownloadString","Invoke-WebRequest","IEX","-enc ","-EncodedCommand","http://","https://","FromBase64String","WebClient")
+   or InitiatingProcessCommandLine has_any ("preinstall","postinstall","node-gyp")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### npm install resolving Git or remote-URL dependency (--allow-git / --allow-remote vector)
+### Dependency Confusion or Typosquatting Installation
 
-`UC_35_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_37_7` · phase: **delivery** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("npm.exe","node.exe","npm.cmd") OR Processes.process IN ("*npm install*","*npm ci*","*npm-cli.js*")) (Processes.process IN ("*git+*","*git://*","*git+ssh*","*git+https*","*git+http*","*.tgz*","*.tar.gz*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process
-| `drop_dm_object_name(Processes)`
-| search process!="*registry.npmjs.org*"
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd from datamodel=Endpoint.Processes where Processes.process_name IN ("npm.exe","node.exe","npx.exe","yarn.exe","pnpm.exe") (Processes.process="*--registry*" OR Processes.process="*https://*" OR Processes.process="*git+*" OR Processes.process="*github:*" OR Processes.process="*--allow-remote*" OR Processes.process="*--allow-git*") by host Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where (FileName in~ ("npm.exe","node.exe","npm.cmd") or ProcessCommandLine has_any ("npm install","npm ci","npm-cli.js"))
-| where ProcessCommandLine has_any ("git+","git://","git+ssh","git+https","git+http",".tgz",".tar.gz")
-| where ProcessCommandLine !contains "registry.npmjs.org"
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where FileName in~ ("npm.exe","node.exe","npx.exe","yarn.exe","pnpm.exe")
+   or InitiatingProcessFileName in~ ("npm.exe","node.exe")
+| where ProcessCommandLine has_any ("--registry","--allow-remote","--allow-git","git+ssh://","git+https://","github:","gitlab:","bitbucket:")
+   or ProcessCommandLine matches regex @"https?://[^/\s]+\.tgz"
+| where not (ProcessCommandLine has_any ("registry.npmjs.org","registry.yarnpkg.com","npm.pkg.github.com"))
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Attempt to re-enable npm install lifecycle scripts (--no-ignore-scripts / NPM_CONFIG override)
+### Suspicious npm Registry Authentication or Publish Activity
 
-`UC_35_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_37_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("npm.exe","node.exe","npm.cmd") OR Processes.process IN ("*npm install*","*npm ci*","*npm-cli.js*")) (Processes.process IN ("*--ignore-scripts=false*","*--no-ignore-scripts*","*--allow-scripts*","*--allow-git*","*--allow-remote*") OR Processes.parent_process="*NPM_CONFIG_IGNORE_SCRIPTS=false*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd from datamodel=Endpoint.Processes where Processes.process_name IN ("npm.exe","node.exe","npx.exe") (Processes.process="*npm publish*" OR Processes.process="*npm login*" OR Processes.process="*npm token*" OR Processes.process="*npm adduser*" OR Processes.process="*--otp*") by host Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+let PublishEvents = DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where AccountName !endswith "$"
+| where FileName in~ ("npm.exe","node.exe","npx.exe")
+| where ProcessCommandLine has_any ("npm publish","npm login","npm adduser","npm token create","npm token revoke","--otp");
+let NpmrcWrites = DeviceFileEvents
+| where Timestamp > ago(14d)
+| where FileName == ".npmrc"
+| where ActionType in ("FileCreated","FileModified")
+| where InitiatingProcessAccountName !endswith "$";
+union PublishEvents, NpmrcWrites
+| project Timestamp, DeviceName, AccountName=coalesce(AccountName, InitiatingProcessAccountName), FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType
+| order by Timestamp desc
+```
+
+### Lateral Movement via Compromised Transitive Dependency
+
+`UC_37_9` · phase: **install** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd from datamodel=Endpoint.Processes where Processes.process_path="*\\node_modules\\*" (Processes.parent_process_name NOT IN ("npm.exe","node.exe","npx.exe","yarn.exe","pnpm.exe","code.exe") OR Processes.process IN ("*powershell*","*cmd /c*","*-Command*","*curl *","*wget *")) by host Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process | `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where (FileName in~ ("npm.exe","node.exe","npm.cmd") or ProcessCommandLine has_any ("npm install","npm ci","npm-cli.js"))
-| where ProcessCommandLine has_any ("--ignore-scripts=false","--no-ignore-scripts","--allow-scripts","--allow-git","--allow-remote")
-    or InitiatingProcessCommandLine has "NPM_CONFIG_IGNORE_SCRIPTS=false"
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
+| where FolderPath has "\\node_modules\\"
+   or InitiatingProcessFolderPath has "\\node_modules\\"
+| where FolderPath has_any ("\\node_modules\\.bin\\","\\node_modules\\")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","bash.exe","wscript.exe","cscript.exe","curl.exe","wget.exe","certutil.exe","mshta.exe","rundll32.exe")
+   or ProcessCommandLine has_any ("DownloadString","Invoke-WebRequest","IEX","FromBase64String","-EncodedCommand")
+   or (InitiatingProcessFolderPath has "\\node_modules\\" and FileName !in~ ("node.exe","npm.exe","npx.exe","esbuild.exe","webpack.exe","tsc.exe","eslint.exe"))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, FolderPath, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### npm pre/post-install Script Disabling Bypass Attempt
+
+`UC_37_10` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd from datamodel=Endpoint.Processes where Processes.process_name IN ("npm.exe","node.exe","npx.exe") (Processes.process="*--ignore-scripts=false*" OR Processes.process="*--foreground-scripts*" OR Processes.process="*--scripts-prepend-node-path*" OR Processes.process="*approve-scripts*" OR Processes.process="*--allow-scripts-pending*" OR Processes.process="*NPM_CONFIG_IGNORE_SCRIPTS=false*") by host Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+let CmdlineBypass = DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where FileName in~ ("npm.exe","node.exe","npx.exe")
+   or InitiatingProcessFileName in~ ("npm.exe","node.exe")
+| where ProcessCommandLine has_any ("--ignore-scripts=false","--foreground-scripts","approve-scripts","--allow-scripts-pending","NPM_CONFIG_IGNORE_SCRIPTS=false","npm_config_ignore_scripts=false","--scripts=true");
+let NpmrcEnables = DeviceFileEvents
+| where Timestamp > ago(7d)
+| where FileName == ".npmrc"
+| where ActionType in ("FileCreated","FileModified")
+| where InitiatingProcessAccountName !endswith "$";
+union CmdlineBypass, NpmrcEnables
+| project Timestamp, DeviceName, AccountName=coalesce(AccountName, InitiatingProcessAccountName), FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType
+| order by Timestamp desc
+```
+
+### npm registry traffic to non-allowlisted registry host during install
+
+`UC_37_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as port from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("npm.exe","node.exe","npx.exe","yarn.exe","pnpm.exe") All_Traffic.dest_port IN (443,80) NOT (All_Traffic.dest="*registry.npmjs.org" OR All_Traffic.dest="*registry.yarnpkg.com" OR All_Traffic.dest="*npm.pkg.github.com" OR All_Traffic.dest="*registry.npm.taobao.org") by host All_Traffic.user All_Traffic.app All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("npm.exe","node.exe","npx.exe","yarn.exe","pnpm.exe")
+   or InitiatingProcessCommandLine has_any ("npm install","npm ci","npm add","node-gyp")
+| where RemoteIPType == "Public"
+| where isnotempty(RemoteUrl)
+| where not (RemoteUrl endswith "registry.npmjs.org"
+        or RemoteUrl endswith "registry.yarnpkg.com"
+        or RemoteUrl endswith "npm.pkg.github.com"
+        or RemoteUrl endswith "nodejs.org"
+        or RemoteUrl endswith "objects.githubusercontent.com"
+        or RemoteUrl endswith "registry.npm.taobao.org")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
@@ -321,7 +390,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GitHub to Disable npm Install Scripts by Default to Stop Supply Chain Attacks
 
-`UC_35_5` · phase: **exploit** · confidence: **High**
+`UC_37_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -371,4 +440,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 12 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

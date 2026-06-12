@@ -1,0 +1,32 @@
+{
+  "rule_id": "usecaseintel-UC_WEEKLY_SCRIPT_INTERPRETER_OR_PACKAGE_INSTALL_HOOK_EGRESS_",
+  "name": "[WEEKLY] Script Interpreter or Package-Install Hook Egress to Free-Tier Edge SaaS Within 5 Minutes of Process Start",
+  "description": "Detects a script-host or package-manager process (node, npm/npx/yarn, python, ruby, mshta, wscript, cscript, powershell/pwsh, bash) opening an outbound connection to free-tier edge SaaS that adversaries are increasingly using as living-off-trusted-services (LOTS) staging / C2 / exfiltration channels \u2014 *.workers.dev, *.trycloudflare.com, *.supabase.co, *.pages.dev, *.web.app, *.r2.dev, *.vercel.app, raw.githubusercontent.com, gist.githubusercontent.com \u2014 within five minutes of the process spawning. This fortnight's driver is the convergence of three campaigns onto this same delivery topology: Gamaredon's WinRAR-delivered GammaPhish HTA payloads call back to bold.zsjtn41091.workers.dev, efficiency-planes-emotions-fascinating.trycloudflare.com and iiwdsxwamylbwwsoyrmj.supabase.co (\"Gamaredon Exploits WinRAR to Deliver GammaWorm and GammaSteel Against Ukraine\"); the @redhat-cloud-services npm supply-chain compromise exfiltrates credentials from preinstall hooks to attacker-controlled code repositories (\"Preinstall to persistence: Inside the Red Hat npm Miasma credential-stealing campaign\"); and TA4922's ValleyRAT/Atlas RAT downloaders use the same disposable CDN frontends to stage second-stage payloads across the U.K., Germany, Italy and South Africa (\"China-Linked TA4922 Expands Phishing Attacks to U.K., Germany, Italy, and South Africa\"). Adjacent CVE-driven RCEs that drop into a Node interpreter \u2014 e.g. the LiquidJS template-injection chain (\"GHSA CVE-2026-45618: LiquidJS is Vulnerable to Remote Code Execution\") \u2014 also land squarely in this detection because the post-exploitation interpreter is the egress source. Spans the install \u2192 C2 \u2192 exfiltration kill-chain phases. It will fire when an interpreter or package manager makes its first egress to one of these tenant-style domains within the correlation window; it will NOT fire on browsers / curl / wget hitting these CDNs (intentionally excluded \u2014 those are dominant legitimate consumers) nor on cached/baseline domains the org already routinely calls.",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*node.exe* OR *npm.cmd* OR *npx.cmd* OR *yarn.cmd* OR *python.exe* OR *python3.exe* OR *ruby.exe* OR *mshta.exe* OR *wscript.exe* OR *cscript.exe* OR *powershell.exe* OR *pwsh.exe* OR *bash.exe* OR *wsl.exe* OR *Processes*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.c2",
+    "attack.T1102.002",
+    "attack.T1567.001",
+    "attack.T1071.001",
+    "attack.T1195.002",
+    "attack.T1059.007",
+    "attack.T1059.001"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/c2/UC_WEEKLY_SCRIPT_INTERPRETER_OR_PACKAGE_INSTALL_HOOK_EGRESS_.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

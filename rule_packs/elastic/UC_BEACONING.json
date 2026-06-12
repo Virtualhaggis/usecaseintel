@@ -1,0 +1,28 @@
+{
+  "rule_id": "usecaseintel-UC_BEACONING",
+  "name": "Beaconing \u2014 periodic outbound to small set of destinations",
+  "description": "C2 channel detection via inter-beacon-time stddev / fan-out to single dest.",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*allowed* OR *internal* OR *Public* OR *ConnectionSuccess*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.c2",
+    "attack.T1071.001",
+    "attack.T1071.004"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/c2/UC_BEACONING.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

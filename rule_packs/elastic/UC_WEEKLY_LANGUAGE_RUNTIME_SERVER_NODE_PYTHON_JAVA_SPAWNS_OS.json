@@ -1,0 +1,33 @@
+{
+  "rule_id": "usecaseintel-UC_WEEKLY_LANGUAGE_RUNTIME_SERVER_NODE_PYTHON_JAVA_SPAWNS_OS",
+  "name": "[WEEKLY] Language-runtime server (node/python/java) spawns OS shell shortly after inbound request \u2014 eval / sandbox-escape exploitation chain",
+  "description": "Detects the joint pattern across this fortnight's wave of server-side code-injection and sandbox-escape CVEs: a language-runtime process that hosts a network listener (Node.js, Python/uvicorn/gunicorn, Java/Yamcs) spawns an OS interpreter or LOLBin within ~5 minutes of accepting an inbound HTTP/JSON-RPC request. The pattern is the common terminal step across the five vm2 sandbox escapes ('CVE-2026-47131 vm2 Sandbox Escape', 'CVE-2026-47137 vm2 nesting:true patch bypass', 'CVE-2026-47140 NodeVM builtin denylist bypass', 'CVE-2026-47208 vm2 Promise species sandbox breakout', 'CVE-2026-47210 vm2 JSPI .finally() species bypass'), the PraisonAI eval/exec chain ('CVE-2026-47391 PraisonAI unauthenticated A2A eval()', 'CVE-2026-47392 PraisonAI print.__self__ builtins leak', 'CVE-2026-47393 PraisonAI deploy --type api auth-disabled Flask'), and the Yamcs Janino server-side code injection ('CVE-2026-44632'). It spans the exploit \u2192 install kill-chain transition: a sandboxed evaluator inside the runtime is bypassed, runtime gains arbitrary code execution in-process, and the very first observable artefact is a child OS shell or downloader. Fires when the runtime is reachable from an external IP and produces a shell/curl/wget/certutil child within the correlation window; does NOT fire on developer workstations running `npm test`/`pytest` (no inbound public connection) nor on legitimate uvicorn worker forks (filtered by child filename), and does NOT fire on a runtime child-shell with no preceding inbound request.",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*node.exe* OR *node* OR *python.exe* OR *python* OR *python3* OR *java.exe* OR *java* OR *uvicorn* OR *uvicorn.exe* OR *gunicorn* OR *yamcsd* OR *yamcs* OR *cmd.exe* OR *powershell.exe* OR *pwsh.exe*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.exploit",
+    "attack.T1190",
+    "attack.T1059",
+    "attack.T1059.006",
+    "attack.T1059.007",
+    "attack.T1068",
+    "attack.T1611",
+    "attack.T1211"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_LANGUAGE_RUNTIME_SERVER_NODE_PYTHON_JAVA_SPAWNS_OS.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

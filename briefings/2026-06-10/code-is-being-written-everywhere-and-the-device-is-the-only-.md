@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Beaconing from developer endpoint to known TeamPCP/GlassWorm IOC infrastructure
 
-`UC_41_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_43_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ union isfuzzy=true
 
 ### NPM/Yarn/PNPM postinstall hook spawning credential-access tools
 
-`UC_41_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_43_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceProcessEvents
 
 ### Malicious MCP server / node process opening outbound SMTP to non-corporate mail relay
 
-`UC_41_5` · phase: **exfil** · confidence: **Medium** · AI-generated for this article
+`UC_43_5` · phase: **exfil** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceNetworkEvents
 
 ### Known SHA1 IOC from Aikido June-2026 supply chain advisory observed on endpoint
 
-`UC_41_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_43_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

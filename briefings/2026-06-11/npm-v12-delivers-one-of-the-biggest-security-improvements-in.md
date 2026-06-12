@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### Bun runtime install spawned by npm/node during package install (Shai-Hulud 2.0 signature)
 
-`UC_21_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_23_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### TruffleHog secret scanner execution from .truffler-cache (Shai-Hulud credential harvest)
 
-`UC_21_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_23_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceProcessEvents
 
 ### npm/node spawning git or gh to create/push public GitHub repo (Nx s1ngularity & Shai-Hulud exfil)
 
-`UC_21_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_23_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -148,7 +148,7 @@ DeviceProcessEvents
 
 ### node-gyp rebuild spawning unexpected non-build child process (binding.gyp implicit execution path)
 
-`UC_21_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_23_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -408,7 +408,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — npm v12 delivers one of the biggest security improvements in years
 
-`UC_21_8` · phase: **exploit** · confidence: **High**
+`UC_23_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,0 +1,31 @@
+{
+  "rule_id": "usecaseintel-UC_WEEKLY_INTERNET_FACING_SERVICE_PROCESS_SPAWNING_UNIX_SHEL",
+  "name": "[WEEKLY] Internet-Facing Service Process Spawning Unix Shell or Ingress-Tool LOLBin (Edge Zero-Day Post-Exploit)",
+  "description": "Detects the canonical post-exploit transition on internet-facing edge appliances and Linux servers: a service process (PAN-OS sslmgr/useridd/authd, Ivanti EPMM mifs/tomcat/java/catalina, Apache/Nginx, sshd, generic node/python application servers) directly spawns a Unix shell interpreter or an ingress-tool LOLBin (bash/sh/python/perl/curl/wget/nc/socat/busybox) with a non-automation parent. This fortnight three high-severity zero-days dominated the briefings \u2014 CVE-2026-0300 PAN-OS Captive Portal unauthenticated RCE exploited in-the-wild since April (Unit 42 'Threat Brief: Exploitation of PAN-OS Captive Portal Zero-Day', Cyber Security News 'Palo Alto Networks Firewall Zero-Day RCE', BleepingComputer 'Palo Alto Networks firewall zero-day exploited for nearly a month'), CVE-2026-6973 Ivanti EPMM remote-code-execution under CISA four-day emergency directive (BleepingComputer 'CISA gives feds four days to patch Ivanti flaw', 'Ivanti warns of new EPMM flaw'), and the Linux kernel 'Dirty Frag' LPE (BleepingComputer 8 May) \u2014 all set against the 'Patient Zero', 'Day Zero Readiness', and 'After Mythos' essays from The Hacker News framing edge compromise as the new front door, plus the 'Zero-Auth' Schemata API and Android CVE-2026-0073 RCE pieces that share the same exploit\u2192post-exploit shape. The chain spans MITRE exploit (T1190) \u2192 install (T1505.003 webshell or T1059.004 shell) \u2192 C2 staging (T1105 / T1572 reverse-tunnel like the EarthWorm reversesocks5 dropper described by Unit 42); the inbound exploit is invisible at the endpoint, but the resulting service\u2192shell parentage is unmistakable. It fires when sslmgr/useridd/mifs/tomcat/java/sshd/httpd/nginx are the direct parent of bash/sh/python/curl/wget/nc with non-trivial command lines; it does NOT fire on routine sysadmin maintenance (interactive parents like login/sudo), on configuration-management tools (puppet/ansible/chef/salt-minion explicitly excluded), or on health-check style invocations (`status`, `--version`, `health`).",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*httpd* OR *nginx* OR *apache2* OR *java* OR *tomcat* OR *sslmgr* OR *useridd* OR *authd* OR *mifs* OR *node* OR *python* OR *python3* OR *sshd* OR *pan_comm_mgr* OR *panlogd*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.install",
+    "attack.T1190",
+    "attack.T1505.003",
+    "attack.T1059.004",
+    "attack.T1105",
+    "attack.T1572"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/install/UC_WEEKLY_INTERNET_FACING_SERVICE_PROCESS_SPAWNING_UNIX_SHEL.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

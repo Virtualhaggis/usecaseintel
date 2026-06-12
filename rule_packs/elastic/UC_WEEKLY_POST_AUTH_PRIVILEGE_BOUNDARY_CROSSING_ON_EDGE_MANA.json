@@ -1,0 +1,32 @@
+{
+  "rule_id": "usecaseintel-UC_WEEKLY_POST_AUTH_PRIVILEGE_BOUNDARY_CROSSING_ON_EDGE_MANA",
+  "name": "[WEEKLY] Post-Auth Privilege Boundary Crossing on Edge/Management Appliances (low-priv -> admin within 10m)",
+  "description": "Detects a single source IP + user-agent that, within a ~10 minute window, transitions from hitting a low-privilege authenticated endpoint (registration, onboard-customer, login, peering, auth API) to executing admin-only HTTP verbs (POST/PUT/PATCH/DELETE) against admin paths (/admin*, /api/admin*, /configuration*, /vmanage*, authorized_keys, or the Grav-style data[access][admin]/data[groups] injection markers) on the same management plane. This is the joint TTP across this fortnight's wave of post-auth privilege-escalation flaws: CVE-2026-42613 (Grav Login plugin missing server-side validation of groups/access), CVE-2026-6973 (Ivanti EPMM remotely-authenticated admin RCE), CVE-2026-20127/20182 (Cisco Catalyst SD-WAN Controller auth bypass \u2014 added to CISA KEV with confirmed in-the-wild exploitation), and GHSA-9h64-2846-7x7f (Axonflow multi-tenant isolation / access-control bypass). It spans the exploit phase between initial low-privilege authentication and the install phase (web shell drop, account creation, SSH key write); firing here catches the attacker before the persistence handoff. Will fire on the rapid low-priv->admin pivot pattern characteristic of these CVEs; will NOT fire when an admin session is preceded by an admin-tier authentication event from an allowlisted jump host, when only one stage is present, or on background management traffic that lacks the admin verb on a sensitive path.",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*POST* OR *PUT* OR *PATCH* OR *DELETE* OR *low_priv* OR *admin* OR *other* OR *user_register* OR *\\/register* OR *onboard\\-customer* OR *\\/peering* OR *\\/auth\\/login* OR *\\/login.action* OR *\\/api\\/v1\\/auth* OR *\\/sessions\\/new*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.exploit",
+    "attack.T1190",
+    "attack.T1068",
+    "attack.T1078",
+    "attack.T1136.001",
+    "attack.T1098.004",
+    "attack.T1505.003"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_POST_AUTH_PRIVILEGE_BOUNDARY_CROSSING_ON_EDGE_MANA.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

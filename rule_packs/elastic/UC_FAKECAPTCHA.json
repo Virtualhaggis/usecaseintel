@@ -1,0 +1,28 @@
+{
+  "rule_id": "usecaseintel-UC_FAKECAPTCHA",
+  "name": "Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)",
+  "description": "Browser-pasted PowerShell launched from explorer/Run dialog \u2014 ClickFix social engineering.",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*explorer.exe* OR *RuntimeBroker.exe* OR *powershell.exe* OR *pwsh.exe* OR *mshta.exe*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.exploit",
+    "attack.T1204.004",
+    "attack.T1059.001"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/exploit/UC_FAKECAPTCHA.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

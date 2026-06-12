@@ -1,6 +1,6 @@
 # Rule packs — auto-generated SIEM-native exports
 
-Generated: 2026-06-12T08:32:03Z
+Generated: 2026-06-12T10:49:28Z
 
 This directory contains per-platform versions of every internal use case
 in the catalogue. Drop-in for the named SIEM, but **always disabled by
@@ -10,11 +10,8 @@ default** — review each rule against your environment before enabling.
 |---|---|---|
 | `splunk/savedsearches.conf` | Splunk app config | Stanzas with full SPL embedded as comments. Enable per environment. |
 | `sentinel/<uc>.json` | ARM template | Microsoft Sentinel analytics rule. Deploy with `az deployment group create`. |
-| `sigma/<uc>.yml` | Sigma | Universal interchange — convert with sigma-cli to your SIEM dialect (incl. Elastic). |
-
-Elastic-native rules are not exported yet — a previous version shipped
-placeholder stubs, which was worse than nothing. Until the KQL->ECS/EQL
-port lands, compile the Sigma rules to your Elastic dialect via sigma-cli.
+| `sigma/<uc>.yml` | Sigma | Universal interchange — convert with sigma-cli to your SIEM dialect. |
+| `elastic/<uc>.json` | Kibana detection rule | Lucene query compiled from the Sigma rule via pySigma. Keyword-seeded hunting logic — tune before enabling. |
 
 Tier-aware defaults:
 - `alerting` UCs schedule hourly, severity High

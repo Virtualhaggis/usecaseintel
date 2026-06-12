@@ -1,0 +1,33 @@
+{
+  "rule_id": "usecaseintel-UC_WEEKLY_PACKAGE_MANAGER_INSTALL_HOOK_SPAWNS_SCRIPTING_INTE",
+  "name": "[WEEKLY] Package Manager Install Hook Spawns Scripting Interpreter Then Touches Credential Files or Egresses Off-Registry",
+  "description": "Detects the joint pattern shared across the May 2026 npm/PyPI/Packagist compromise wave: a package-manager process (npm/yarn/pnpm/pip/uv/poetry/composer/php) spawns a generic scripting interpreter (node/python/sh/bash/powershell/curl/wget) as part of a postinstall/setup.py hook, and that child either reads developer credential material (.npmrc, .pypirc, ~/.aws/credentials, ~/.ssh/id_rsa, .env, GH_TOKEN-bearing files) or beacons to a non-registry public destination within a 5-minute window on the same host. This matters this fortnight because TeamPCP's self-spreading 'Mini Shai-Hulud' worm hit @tanstack ('TanStack Npm Packages Compromised Inside The Mini Shai Hulud Supply Chain Attack', 'TeamPCP's Mini Shai-Hulud Is Back') and @beproduct/nestjs-auth, Microsoft's durabletask PyPI was trojanised ('The AntV Supply Chain Campaign Expands'), node-ipc, guardrails-ai==0.10.1 (CVE-2026-45758), @cap-js/sqlite|postgres|db-service (CVE-2026-46421), and the Laravel-Lang Composer namespace ('Laravel-Lang Supply Chain Advisory', 'Every Tag\u2026Rewritten', 'Supply Chain Attack Targets Laravel-Lang') were all compromised in a 14-day window \u2014 and the '5 Supply Chain Attacks in 48 Hours' write-up plus the npm 2FA-gating response confirm this is the dominant fortnightly TTP. The detection spans install (package hook drops/runs payload), credential-access (T1552.001 / T1555 / T1539), and exfil/C2 (T1041 / T1071) \u2014 the IOCs (getsession.org, masscan.cloud, azurestaticprovider.net, flipboxstudio.info, git-tanstack.com, m-kosche.com) rotate package-by-package but the chain is invariant. It fires when a developer or CI runner installs a package and the install lifecycle script reaches outside the registry, including first-install on dev laptops and `npm ci`/`pip install -r`/`composer update` in pipelines. It deliberately does NOT fire on package managers contacting only registry/CDN destinations (registry.npmjs.org, pypi.org, files.pythonhosted.org, packagist.org, codeload.github.com, ghcr.io), on machine-account contexts, or on interpreter spawns that lack the package-manager parent ancestry.",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*npm* OR *npm.exe* OR *npm\\-cli.js* OR *yarn* OR *yarn.exe* OR *pnpm* OR *pnpm.exe* OR *pip* OR *pip.exe* OR *pip3* OR *pip3.exe* OR *poetry* OR *poetry.exe* OR *uv.exe* OR *composer*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.install",
+    "attack.T1195.002",
+    "attack.T1059.007",
+    "attack.T1059.006",
+    "attack.T1552.001",
+    "attack.T1041",
+    "attack.T1071.001",
+    "attack.T1027"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_MANAGER_INSTALL_HOOK_SPAWNS_SCRIPTING_INTE.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

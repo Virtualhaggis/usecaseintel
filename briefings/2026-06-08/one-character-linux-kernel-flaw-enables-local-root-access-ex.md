@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Unprivileged user namespace + nf_tables manipulation chain (CVE-2026-23111 exploitation)
 
-`UC_84_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_85_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ NsCreate
 
 ### nft (nftables) ruleset manipulation by non-root account on Linux endpoints
 
-`UC_84_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_85_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceProcessEvents
 
 ### Linux assets carrying vulnerable kernel for CVE-2026-23111 (nf_tables UAF)
 
-`UC_84_9` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_85_9` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -323,7 +323,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — One-Character Linux Kernel Flaw Enables Local Root Access, Exploits Now Public
 
-`UC_84_6` · phase: **install** · confidence: **High**
+`UC_85_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

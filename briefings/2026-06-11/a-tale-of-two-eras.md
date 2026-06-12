@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Talos prevalent-malware IOC hit: Coinminer/Injector/Dropper hashes + VID001.exe lure
 
-`UC_6_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_13_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +184,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A tale of two eras
 
-`UC_6_5` · phase: **exploit** · confidence: **High**
+`UC_13_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

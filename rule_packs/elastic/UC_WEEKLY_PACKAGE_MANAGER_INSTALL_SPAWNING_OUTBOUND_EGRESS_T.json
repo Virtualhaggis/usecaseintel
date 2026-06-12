@@ -1,0 +1,32 @@
+{
+  "rule_id": "usecaseintel-UC_WEEKLY_PACKAGE_MANAGER_INSTALL_SPAWNING_OUTBOUND_EGRESS_T",
+  "name": "[WEEKLY] Package Manager Install Spawning Outbound Egress to Non-Registry Infrastructure Within 5 Minutes",
+  "description": "Detects the joint pattern across this fortnight's wave of dev-toolchain supply-chain compromises: a package-install command (npm/yarn/pnpm/bun/pip/uv/poetry/cargo or a node/python interpreter invoked by them) is followed within 5 minutes by an outbound public network connection from the same host that does NOT land on a known package registry CDN (npmjs.org, pypi.org / pythonhosted.org, crates.io, github.com/raw.githubusercontent.com, jsdelivr/unpkg/ghcr). This is the post-install detonation step shared by node-ipc 9.1.6/9.2.3/12.0.1 (azurestaticprovider[.]net), Mini Shai-Hulud / TeamPCP across the @antv ecosystem (t.m-kosche[.]com), mistralai 2.4.6 (83.142.209[.]194 / transformers.pyz), guardrails-ai 0.10.1 (git-tanstack[.]com, CVE-2026-45758), @cap-js/sqlite|postgres|db-service (zero.masscan.cloud / 94.154.172[.]43, CVE-2026-46421), the Nx Console VS Code extension breach of GitHub internal repos, Megalodon's 5,561-repo malicious GitHub Actions push (polymarketbot.polymarketdev.workers.dev), and DeepSeek TUI's auto-approved `run_tests` \u2192 cargo test RCE (CVE-2026-45311). Kill-chain coverage: install (the package-manager invocation) into c2/actions (the unsanctioned beacon). FIRES when an npm/pip/yarn-style install (incl. postinstall/preinstall hooks and `cargo test`) is followed by an HTTP/HTTPS/DNS-resolved beacon to a public destination outside the registry allowlist within the temporal window; does NOT fire on installs that only fetch from registry CDNs, on offline `npm ci` against a local mirror, or on installs occurring on a build agent whose registry mirror is allowlisted at the egress proxy.",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*npm.exe* OR *npm* OR *npx.exe* OR *npx* OR *yarn.exe* OR *yarn* OR *pnpm.exe* OR *pnpm* OR *bun.exe* OR *bun* OR *pip.exe* OR *pip* OR *pip3.exe* OR *pip3* OR *uv.exe*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.install",
+    "attack.T1195.002",
+    "attack.T1059.007",
+    "attack.T1059.006",
+    "attack.T1071.001",
+    "attack.T1105",
+    "attack.T1204.002"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_MANAGER_INSTALL_SPAWNING_OUTBOUND_EGRESS_T.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

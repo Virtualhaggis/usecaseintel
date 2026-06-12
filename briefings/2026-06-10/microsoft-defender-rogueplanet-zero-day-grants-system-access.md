@@ -31,13 +31,12 @@ The anonymous security researcher going by the name Chaotic Eclipse (aka Nightma
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1588.005** — Obtain Capabilities: Exploits
-- **T1071.004** — Application Layer Protocol: DNS
-- **T1105** — Ingress Tool Transfer
+- **T1553.005** — Subvert Trust Controls: Mark-of-the-Web Bypass
+- **T1566.001** — Phishing: Spearphishing Attachment
 - **T1068** — Exploitation for Privilege Escalation
-- **T1211** — Exploitation for Defense Evasion
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1134.001** — Access Token Manipulation: Token Impersonation/Theft
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1568** — Dynamic Resolution
 
 ## Kill chain phases observed
 
@@ -45,59 +44,95 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### DNS / network connection to RoguePlanet PoC publication domain (projectnightcrawler.dev)
+### ISO File Dropped to Downloads — RoguePlanet Defender Exploit Precursor
 
-`UC_55_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_56_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.answer) as answers values(DNS.src) as src_hosts from datamodel=Network_Resolution where (DNS.query="projectnightcrawler.dev" OR DNS.query="*.projectnightcrawler.dev") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | append [| tstats `summariesonly` count from datamodel=Web where (Web.url="*projectnightcrawler.dev*" OR Web.site="projectnightcrawler.dev") by Web.src Web.dest Web.url Web.user | `drop_dm_object_name(Web)`] | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name="*.iso" Filesystem.file_path="*\\Downloads\\*" Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","outlook.exe","thunderbird.exe") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let SuspiciousDomain = "projectnightcrawler.dev";
-union isfuzzy=true
-(DeviceNetworkEvents
-  | where Timestamp > ago(30d)
-  | where RemoteUrl has SuspiciousDomain
-  | project Timestamp, DeviceName, DeviceId, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort),
-(DeviceEvents
-  | where Timestamp > ago(30d)
-  | where ActionType in ("DnsQueryResponse", "ConnectionSuccess")
-  | where RemoteUrl has SuspiciousDomain or AdditionalFields has SuspiciousDomain
-  | project Timestamp, DeviceName, DeviceId, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, AdditionalFields),
-(DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where FileOriginUrl has SuspiciousDomain or FileOriginReferrerUrl has SuspiciousDomain
-  | project Timestamp, DeviceName, DeviceId, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, FolderPath, FileOriginUrl, SHA256)
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where FileName endswith ".iso"
+| where FolderPath has @"\Downloads\"
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","outlook.exe","thunderbird.exe","olk.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA256, FileSize, FileOriginUrl, InitiatingProcessFileName
 | order by Timestamp desc
 ```
 
-### Microsoft Defender service spawning interactive shell as SYSTEM (RoguePlanet exploit success signature)
+### Defender Component (MsMpEng/NisSrv) Spawns Interactive Shell with SYSTEM Integrity
 
-`UC_55_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_56_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.user) as users from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("MsMpEng.exe", "MpDefenderCoreService.exe", "NisSrv.exe", "MpCmdRun.exe", "SecurityHealthService.exe")) AND (Processes.process_name IN ("cmd.exe", "powershell.exe", "pwsh.exe", "conhost.exe")) by Processes.dest Processes.parent_process_name Processes.process_name Processes.user Processes.process_integrity_level | `drop_dm_object_name(Processes)` | where (user="SYSTEM" OR user="NT AUTHORITY\\SYSTEM" OR process_integrity_level="System") | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("MsMpEng.exe","NisSrv.exe","MpDefenderCoreService.exe") Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","bash.exe","sh.exe") Processes.user IN ("SYSTEM","NT AUTHORITY\\SYSTEM") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_integrity_level | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("MsMpEng.exe", "MpDefenderCoreService.exe", "NisSrv.exe", "MpCmdRun.exe", "SecurityHealthService.exe", "MsSense.exe")
-| where FileName in~ ("cmd.exe", "powershell.exe", "pwsh.exe", "conhost.exe", "wscript.exe", "cscript.exe", "rundll32.exe")
-| where ProcessIntegrityLevel in ("System", "High") or AccountSid == "S-1-5-18" or AccountName =~ "system"
-| extend ParentDir = tostring(split(InitiatingProcessFolderPath, "\\")[-2])
-| project Timestamp, DeviceName, DeviceId, AccountName, AccountSid, ProcessIntegrityLevel,
+| where InitiatingProcessFileName in~ ("MsMpEng.exe","NisSrv.exe","MpDefenderCoreService.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","bash.exe","sh.exe")
+| where ProcessIntegrityLevel =~ "System"
+// Filter legitimate Defender housekeeping children
+| where not (FileName =~ "conhost.exe" and InitiatingProcessParentFileName =~ "MpCmdRun.exe")
+| project Timestamp, DeviceName, AccountName,
           ParentImage = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
+          ParentSHA256 = InitiatingProcessSHA256,
           ChildImage = FolderPath,
           ChildCmd = ProcessCommandLine,
-          SHA256, InitiatingProcessSHA256
+          ChildSHA256 = SHA256,
+          ProcessIntegrityLevel
 | order by Timestamp desc
+```
+
+### Connection to RoguePlanet PoC C2 Domain projectnightcrawler.dev
+
+`UC_56_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*projectnightcrawler.dev*" by DNS.src DNS.dest DNS.query DNS.answer | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+union
+(DeviceNetworkEvents
+  | where Timestamp > ago(30d)
+  | where RemoteUrl has "projectnightcrawler.dev"
+  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, ProcessName=InitiatingProcessFileName, ProcessCmd=InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, Source="NetworkEvents"),
+(DeviceEvents
+  | where Timestamp > ago(30d)
+  | where ActionType == "DnsQueryResponse"
+  | where AdditionalFields has "projectnightcrawler.dev" or RemoteUrl has "projectnightcrawler.dev"
+  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, ProcessName=InitiatingProcessFileName, ProcessCmd=InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort=int(null), Source="DnsQuery")
+| order by Timestamp desc
+```
+
+### Unpatched Assets Vulnerable to Chaotic Eclipse Defender CVE Cluster
+
+`UC_56_10` · phase: **recon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-33825","CVE-2026-45498","CVE-2026-41091") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId in ("CVE-2026-33825","CVE-2026-45498","CVE-2026-41091")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), OpenCVEs=make_set(CveId) by DeviceId, DeviceName, OSPlatform, OSVersion, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate
+| extend ExposureCount=array_length(OpenCVEs)
+| order by ExposureCount desc, LastSeen desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -312,4 +347,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1260 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,8 +9,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-12
+- [cisa orders feds to patch actively exploited ivanti flaw by ](./2026-06-12/cisa-orders-feds-to-patch-actively-exploited-ivanti-flaw-by-.md)
+- [europol disrupts audia6 crypto laundering service used by ra](./2026-06-12/europol-disrupts-audia6-crypto-laundering-service-used-by-ra.md)
+- [hackers use free spotify premium hacks on tiktok and instagr](./2026-06-12/hackers-use-free-spotify-premium-hacks-on-tiktok-and-instagr.md)
+- [microsoft outlook and word vulnerabilities allow attackers t](./2026-06-12/microsoft-outlook-and-word-vulnerabilities-allow-attackers-t.md)
 - [oracle peoplesoft 0 day rce vulnerability exploited in attac](./2026-06-12/oracle-peoplesoft-0-day-rce-vulnerability-exploited-in-attac.md)
 - [over 73 000 french govt employees affected in tchap messenge](./2026-06-12/over-73-000-french-govt-employees-affected-in-tchap-messenge.md)
+- [palo alto pan os vulnerability allows attackers to execute a](./2026-06-12/palo-alto-pan-os-vulnerability-allows-attackers-to-execute-a.md)
+- [solana fakefix campaign uses 25 malicious npm and pypi packa](./2026-06-12/solana-fakefix-campaign-uses-25-malicious-npm-and-pypi-packa.md)
 
 ## 2026-06-11
 - [a tale of two eras](./2026-06-11/a-tale-of-two-eras.md)
@@ -19,10 +25,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cybersecurity stars awards 2026 winners announced across 95 ](./2026-06-11/cybersecurity-stars-awards-2026-winners-announced-across-95-.md)
 - [ghsa critical cve 2026 48039 meta ads mcp unauthenticated ht](./2026-06-11/ghsa-critical-cve-2026-48039-meta-ads-mcp-unauthenticated-ht.md)
 - [ghsa critical cve 2026 48062 codeigniter4 has a validation b](./2026-06-11/ghsa-critical-cve-2026-48062-codeigniter4-has-a-validation-b.md)
-- [github to automate disable npm script installs to block supp](./2026-06-11/github-to-automate-disable-npm-script-installs-to-block-supp.md)
 - [github to disable npm install scripts by default to stop sup](./2026-06-11/github-to-disable-npm-install-scripts-by-default-to-stop-sup.md)
 - [goflateloader uses massive pe overlay to deliver lumma vidar](./2026-06-11/goflateloader-uses-massive-pe-overlay-to-deliver-lumma-vidar.md)
-- [hackers abuse sniperdz phaas ecosystem for brand impersonati](./2026-06-11/hackers-abuse-sniperdz-phaas-ecosystem-for-brand-impersonati.md)
 - [max severity ivanti sentry vulnerability now exploited in at](./2026-06-11/max-severity-ivanti-sentry-vulnerability-now-exploited-in-at.md)
 - [miasma and hades are spreading now detect them on developer ](./2026-06-11/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)
 - [new attacks trick openclaw ai agent into running code and le](./2026-06-11/new-attacks-trick-openclaw-ai-agent-into-running-code-and-le.md)
@@ -46,7 +50,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [langflow vulnerability cve 2026 5027 exploited for unauthent](./2026-06-10/langflow-vulnerability-cve-2026-5027-exploited-for-unauthent.md)
 - [microsoft defender rogueplanet zero day grants system access](./2026-06-10/microsoft-defender-rogueplanet-zero-day-grants-system-access.md)
 - [microsoft patches record 206 flaws including three zero days](./2026-06-10/microsoft-patches-record-206-flaws-including-three-zero-days.md)
-- [oracle peoplesoft servers hacked in shinyhunters data theft ](./2026-06-10/oracle-peoplesoft-servers-hacked-in-shinyhunters-data-theft-.md)
 - [path traversal flaw in ai dev platform langflow exploited in](./2026-06-10/path-traversal-flaw-in-ai-dev-platform-langflow-exploited-in.md)
 - [the miasma worm source code briefly leaked on github](./2026-06-10/the-miasma-worm-source-code-briefly-leaked-on-github.md)
 
@@ -95,7 +98,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-05
 - [android spyware asin targets arabic users via fake news pdf ](./2026-06-05/android-spyware-asin-targets-arabic-users-via-fake-news-pdf-.md)
 - [cisa kev cve 2026 28318 solarwinds serv u uncontrolled resou](./2026-06-05/cisa-kev-cve-2026-28318-solarwinds-serv-u-uncontrolled-resou.md)
-- [fifa world cup 2026 scams are already live fake sites bankin](./2026-06-05/fifa-world-cup-2026-scams-are-already-live-fake-sites-bankin.md)
 - [ghsa critical cve 2026 47668 dbgate unauthenticated remote c](./2026-06-05/ghsa-critical-cve-2026-47668-dbgate-unauthenticated-remote-c.md)
 - [ghsa critical cve 2026 47669 dbgate zip slip in archive unzi](./2026-06-05/ghsa-critical-cve-2026-47669-dbgate-zip-slip-in-archive-unzi.md)
 - [ghsa critical cve 2026 47670 authenticated remote code execu](./2026-06-05/ghsa-critical-cve-2026-47670-authenticated-remote-code-execu.md)

@@ -1,0 +1,33 @@
+{
+  "rule_id": "usecaseintel-UC_WEEKLY_NPM_INSTALL_TIME_LIFECYCLE_HOOK_TRIGGERS_OUTBOUND_",
+  "name": "[WEEKLY] npm Install-Time Lifecycle Hook Triggers Outbound Egress to Newly-Seen Domain (Shai-Hulud/Miasma/IronWorm pattern)",
+  "description": "Detects the joint pattern across the fortnight's npm supply-chain wave \u2014 Miasma/@redhat-cloud-services, IronWorm, codexui-android, vpmdhaj typosquats, and the binding.gyp self-propagating worm \u2014 where an npm/yarn/pnpm install spawns a node (or node-gyp/python build helper) child process that within ~5 minutes egresses to a domain or IP never seen before in the org. The chain spans delivery (malicious package landing on a dev/CI host) and C2/exfil (preinstall/binding.gyp payload beaconing harvested AWS, GCP, Azure, GitHub, npm, and CircleCI secrets). Kill-chain stages covered: install (lifecycle-hook execution) \u2192 c2/actions (credential exfil to attacker infrastructure). It will fire when a developer or CI runner installs a poisoned package and the payload reaches out to fresh attacker infra; it will NOT fire on normal npm installs that only contact already-baselined registries/CDNs (registry.npmjs.org, github.com, well-known mirrors), nor on lifecycle scripts that stay local. IOC slots (`<c2_domain_list>`, `<c2_ip_list>`, `<sha256_list>`) are referenced as substitution points so the rule survives weekly IOC rotation.",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*npm* OR *npm.exe* OR *npm\\-cli.js* OR *node* OR *node.exe* OR *yarn* OR *yarn.exe* OR *pnpm* OR *pnpm.exe* OR *npx* OR *npx.exe* OR *node\\-gyp* OR *node\\-gyp.exe* OR *python* OR *python.exe*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.install",
+    "attack.T1195.002",
+    "attack.T1546.016",
+    "attack.T1059.007",
+    "attack.T1071.001",
+    "attack.T1552.001",
+    "attack.T1552.005",
+    "attack.T1567"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/install/UC_WEEKLY_NPM_INSTALL_TIME_LIFECYCLE_HOOK_TRIGGERS_OUTBOUND_.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}
