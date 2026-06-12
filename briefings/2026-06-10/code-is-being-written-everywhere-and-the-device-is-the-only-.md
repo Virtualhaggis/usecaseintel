@@ -26,15 +26,13 @@ PostHog's engineering team is merging roughly as many pull requests through Slac
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
-- **T1059.007** — JavaScript
-- **T1567** — Exfiltration Over Web Service
-- **T1071.003** — Mail Protocols
-- **T1020** — Automated Exfiltration
-- **T1176** — Browser Extensions
-- **T1554** — Compromise Host Software Binary
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1102** — Web Service
 - **T1568** — Dynamic Resolution
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1071.003** — Application Layer Protocol: Mail Protocols
+- **T1567** — Exfiltration Over Web Service
+- **T1204.002** — User Execution: Malicious File
 
 ## Kill chain phases observed
 
@@ -42,95 +40,104 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Postmark-MCP supply-chain backdoor: npm install of postmark-mcp package
+### Beaconing from developer endpoint to known TeamPCP/GlassWorm IOC infrastructure
 
-`UC_39_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_40_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*node_modules*postmark-mcp*") AND (Filesystem.process_name="npm.exe" OR Filesystem.process_name="node.exe" OR Filesystem.process_name="yarn.exe" OR Filesystem.process_name="pnpm.exe" OR Filesystem.process_name="npx.exe" OR Filesystem.process_name="bun.exe") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("142.11.206.73","45.32.150.251","45.32.151.157","70.34.242.255") OR All_Traffic.dest IN ("giftshop.club","sfrclak.com","*.giftshop.club","*.sfrclak.com")) by host All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [ | tstats summariesonly=t count from datamodel=Network_Resolution.DNS where DNS.query IN ("giftshop.club","sfrclak.com","*.giftshop.club","*.sfrclak.com") by host DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)`]
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FolderPath has @"\node_modules\postmark-mcp" or FolderPath has "/node_modules/postmark-mcp"
-| where InitiatingProcessFileName in~ ("npm.exe","npm.cmd","node.exe","yarn.exe","yarn.cmd","pnpm.exe","npx.exe","npx.cmd","bun.exe")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### Postmark-MCP exfiltration: BCC mail or DNS lookup for giftshop.club
-
-`UC_39_4` · phase: **exfil** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*giftshop.club*" by DNS.src DNS.query DNS.answer DNS.process_name | `drop_dm_object_name(DNS)` | append [| tstats summariesonly=true count from datamodel=Email.All_Email where (All_Email.recipient="*@giftshop.club" OR All_Email.bcc="*@giftshop.club" OR All_Email.src_user="*@giftshop.club") by All_Email.src_user All_Email.recipient All_Email.subject | `drop_dm_object_name(All_Email)`] | `security_content_ctime(firstTime)`
-```
-
-**Defender KQL:**
-```kql
-union
-  (EmailEvents
-   | where Timestamp > ago(30d)
-   | where RecipientEmailAddress endswith "@giftshop.club" or SenderFromAddress endswith "@giftshop.club" or SenderMailFromAddress endswith "@giftshop.club"
-   | extend Signal = "EmailEvents", Detail = strcat("sender=", SenderFromAddress, " recipient=", RecipientEmailAddress, " subject=", Subject)
-   | project Timestamp, Signal, Detail, NetworkMessageId, EmailDirection, DeliveryAction),
+let IOC_IPs = dynamic(["142.11.206.73","45.32.150.251","45.32.151.157","70.34.242.255"]);
+let IOC_Domains = dynamic(["giftshop.club","sfrclak.com"]);
+union isfuzzy=true
   (DeviceNetworkEvents
-   | where Timestamp > ago(30d)
-   | where RemoteUrl has "giftshop.club" or AdditionalFields has "giftshop.club"
-   | extend Signal = "DeviceNetworkEvents", Detail = strcat("url=", RemoteUrl, " ip=", RemoteIP, " proc=", InitiatingProcessFileName)
-   | project Timestamp, Signal, Detail, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort)
+    | where Timestamp > ago(30d)
+    | where RemoteIP in (IOC_IPs) or RemoteUrl has_any (IOC_Domains)
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, Source="DeviceNetworkEvents"),
+  (DeviceEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "DnsQueryResponse"
+    | where RemoteUrl has_any (IOC_Domains) or AdditionalFields has_any (IOC_IPs)
+    | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort=int(null), Source="DeviceEvents-Dns")
 | order by Timestamp desc
 ```
 
-### GlassWorm: install of known Open VSX extensions (otoboss / federicanc / oigotm / twilkbilk / crotoapp)
+### NPM/Yarn/PNPM postinstall hook spawning credential-access tools
 
-`UC_39_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_40_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\.vscode\\extensions\\otoboss.autoimport-extension*" OR Filesystem.file_path="*\\.vscode\\extensions\\federicanc.dotenv-syntax-highlighting*" OR Filesystem.file_path="*\\.vscode\\extensions\\oigotm.my-command-palette-extension*" OR Filesystem.file_path="*\\.vscode\\extensions\\twilkbilk.color-highlight-css*" OR Filesystem.file_path="*\\.vscode\\extensions\\crotoapp.vscode-xml-extension*" OR Filesystem.file_path="*/.vscode/extensions/otoboss.autoimport-extension*" OR Filesystem.file_path="*/.vscode/extensions/federicanc.dotenv-syntax-highlighting*" OR Filesystem.file_path="*/.vscode/extensions/oigotm.my-command-palette-extension*" OR Filesystem.file_path="*/.vscode/extensions/twilkbilk.color-highlight-css*" OR Filesystem.file_path="*/.vscode/extensions/crotoapp.vscode-xml-extension*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("npm.exe","yarn.exe","pnpm.exe","node.exe","npx.exe","corepack.exe") AND (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","wget.exe","certutil.exe","bitsadmin.exe","bash.exe","sh.exe") OR Processes.process IN ("*\\.aws\\credentials*","*\\.ssh\\id_*","*\\.npmrc*","*\\.docker\\config.json*","*kube\\config*","*aws s3*","*aws iam*","*aws sts*","*Invoke-WebRequest*","*DownloadString*","*GITHUB_TOKEN*","*NPM_TOKEN*")) by host Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let glasswormExtensions = dynamic(["otoboss.autoimport-extension","federicanc.dotenv-syntax-highlighting","oigotm.my-command-palette-extension","twilkbilk.color-highlight-css","crotoapp.vscode-xml-extension"]);
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FolderPath has @"\.vscode\extensions\" or FolderPath has "/.vscode/extensions/" or FolderPath has @"\.vscode-server\extensions\" or FolderPath has "/.vscode-server/extensions/"
-| extend ExtDir = tolower(extract(@"[\\/]\.?vscode(?:-server)?[\\/]extensions[\\/]([^\\/]+?)(?:-\d+\.\d+\.\d+)?[\\/]", 1, FolderPath))
-| where isnotempty(ExtDir)
-| where ExtDir in~ (glasswormExtensions) or ExtDir has_any (glasswormExtensions)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, SHA256, ExtDir, InitiatingProcessFileName, InitiatingProcessCommandLine
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("npm.exe","yarn.exe","pnpm.exe","node.exe","npx.exe","corepack.exe")
+| where (FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","curl.exe","wget.exe","certutil.exe","bitsadmin.exe","bash.exe","sh.exe"))
+   or ProcessCommandLine has_any (@"\.aws\credentials", @"\.ssh\id_", @"\.npmrc", @"\.docker\config.json", @"kube\config", "aws s3 ", "aws iam ", "aws sts ", "Invoke-WebRequest", "DownloadString", "GITHUB_TOKEN", "NPM_TOKEN", "gh auth token")
+| where AccountName !endswith "$"
+| where InitiatingProcessParentFileName !in~ ("explorer.exe")
+| project Timestamp, DeviceName, AccountName, ParentImage=InitiatingProcessFolderPath, ParentCmd=InitiatingProcessCommandLine, ChildImage=FolderPath, ChildCmd=ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### GlassWorm C2 beacon to Vultr-hosted infrastructure (45.32.150.251 / 45.32.151.157 / 70.34.242.255)
+### Malicious MCP server / node process opening outbound SMTP to non-corporate mail relay
 
-`UC_39_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_40_5` · phase: **exfil** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_ports values(All_Traffic.app) as apps values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest in ("45.32.150.251","45.32.151.157","70.34.242.255") AND All_Traffic.src_category!="perimeter_scanner" by All_Traffic.src All_Traffic.dest All_Traffic.user All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ips from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("node.exe","node") AND All_Traffic.dest_port IN (25,465,587,2525,993,995) AND NOT (All_Traffic.dest_ip IN ("10.0.0.0/8","192.168.0.0/16","172.16.0.0/12") OR All_Traffic.dest IN ("smtp.corp.local","mail-relay-01.corp.local")) by host All_Traffic.user All_Traffic.app All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | where count > 0 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let glasswormC2 = dynamic(["45.32.150.251","45.32.151.157","70.34.242.255"]);
+let CorpMailRelays = dynamic(["smtp.corp.local","mail-relay-01.corp.local","outbound.protection.outlook.com","smtp.office365.com"]);
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (glasswormC2)
-| where ActionType in ("ConnectionSuccess","ConnectionAttempt","InboundConnectionAccepted")
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "node.exe"
+| where RemotePort in (25, 465, 587, 2525, 993, 995)
+| where RemoteIPType == "Public"
+| where not (RemoteUrl has_any (CorpMailRelays))
 | where InitiatingProcessAccountName !endswith "$"
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Connections=count(),
-           Ports=make_set(RemotePort, 16), Processes=make_set(InitiatingProcessFileName, 16),
-           Cmds=make_set(InitiatingProcessCommandLine, 8)
-           by DeviceName, RemoteIP, InitiatingProcessAccountName
-| order by FirstSeen desc
+| summarize Connections=count(), DistinctRemotes=dcount(RemoteIP), Remotes=make_set(RemoteIP, 20), Urls=make_set(RemoteUrl, 20), SampleCmd=any(InitiatingProcessCommandLine) by DeviceName, AccountName=InitiatingProcessAccountName, RemotePort, bin(Timestamp, 1h)
+| where Connections > 0
+| order by Timestamp desc
+```
+
+### Known SHA1 IOC from Aikido June-2026 supply chain advisory observed on endpoint
+
+`UC_40_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("2553649f2322049666871cea80a5d0d6adc700ca","d6f3f62fd3b9f5432f5782b62d8cfd5247d5ee71","07d889e2dadce6f3910dcbc253317d28ca61c766") by host Processes.user Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | append [ | tstats summariesonly=t count from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("2553649f2322049666871cea80a5d0d6adc700ca","d6f3f62fd3b9f5432f5782b62d8cfd5247d5ee71","07d889e2dadce6f3910dcbc253317d28ca61c766") by host Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)`]
+```
+
+**Defender KQL:**
+```kql
+let IOC_SHA1 = dynamic(["2553649f2322049666871cea80a5d0d6adc700ca","d6f3f62fd3b9f5432f5782b62d8cfd5247d5ee71","07d889e2dadce6f3910dcbc253317d28ca61c766"]);
+union isfuzzy=true
+  (DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where SHA1 in~ (IOC_SHA1)
+    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA1, Cmdline=ProcessCommandLine, Source="DeviceProcessEvents"),
+  (DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where SHA1 in~ (IOC_SHA1)
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, SHA1, Cmdline=InitiatingProcessCommandLine, Source="DeviceFileEvents"),
+  (DeviceImageLoadEvents
+    | where Timestamp > ago(30d)
+    | where SHA1 in~ (IOC_SHA1)
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, SHA1, Cmdline=InitiatingProcessCommandLine, Source="DeviceImageLoadEvents")
+| order by Timestamp desc
 ```
 
 ### Trusted vendor binary / installer launching unusual children
@@ -170,4 +177,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

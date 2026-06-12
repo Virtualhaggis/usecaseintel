@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### ShinyHunters PeopleSoft attacker IPs — inbound SSH/HTTPS connections
 
-`UC_40_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_41_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceNetworkEvents
 
 ### SSH credential spray to PeopleSoft accounts (psoft / oracle / linuxadm)
 
-`UC_40_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_41_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceLogonEvents
 
 ### ShinyHunters ransom note file creation in PeopleSoft directories
 
-`UC_40_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_41_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ DeviceFileEvents
 
 ### /etc/hosts enumeration followed by SSH lateral movement on PeopleSoft host
 
-`UC_40_9` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_41_9` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,7 +158,7 @@ DeviceProcessEvents
 
 ### MeshCentral agent deployment on PeopleSoft hosts (ShinyHunters staging)
 
-`UC_40_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_41_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -188,7 +188,7 @@ union MeshExec, MeshDownload
 
 ### TLS connections to azurenetfiles.net or matching SAN/CN (ShinyHunters infra)
 
-`UC_40_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_41_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -314,7 +314,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Oracle PeopleSoft servers hacked in ShinyHunters data theft attacks
 
-`UC_40_5` · phase: **install** · confidence: **High**
+`UC_41_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -33,7 +33,9 @@ The security flaw patched by Fortinet relates to a command injection vulnerabili
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1210** — Exploitation of Remote Services
+- **T1059** — Command and Scripting Interpreter
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1556** — Modify Authentication Process
 
 ## Kill chain phases observed
 
@@ -41,91 +43,93 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Ivanti Sentry CVE-2026-10520 handleMessage endpoint exploitation
+### Ivanti Sentry CVE-2026-10520 RCE via /mics/api/v2/sentry/mics-config/handleMessage
 
-`UC_43_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_44_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(Web.http_method) as method values(Web.status) as status values(Web.http_user_agent) as ua values(Web.src) as src from datamodel=Web where Web.url="*/mics/api/v2/sentry/mics-config/handleMessage*" OR Web.uri_path="*/mics/api/v2/sentry/mics-config/handleMessage*" by Web.dest, Web.url
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as methods values(Web.http_user_agent) as user_agents values(Web.status) as statuses from datamodel=Web where (Web.url="*/mics/api/v2/sentry/mics-config/handleMessage*" OR Web.uri_path="*/mics/api/v2/sentry/mics-config/handleMessage*") by Web.src, Web.dest, Web.url
 | `drop_dm_object_name(Web)`
-| eval firstSeen=strftime(firstSeen,"%Y-%m-%d %H:%M:%S"), lastSeen=strftime(lastSeen,"%Y-%m-%d %H:%M:%S")
-| sort - lastSeen
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-// CVE-2026-10520 — Ivanti Sentry MICS handleMessage unauth RCE
-// Defender only catches this if an endpoint (e.g. admin workstation, jumpbox) initiates the request and the URL traverses Defender-monitored egress.
-let SuspectPath = "/mics/api/v2/sentry/mics-config/handleMessage";
+// Catches internal-origin exploitation (red-team / insider / lateral) since Defender does not see external attacker traffic to the appliance itself
 DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where RemoteUrl has SuspectPath
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFolderPath
+| where Timestamp > ago(7d)
+| where RemoteUrl has "/mics/api/v2/sentry/mics-config/handleMessage"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
 | order by Timestamp desc
 ```
 
-### Unpatched Ivanti/Fortinet/SAP assets exposed to June 2026 critical CVEs
+### Fortinet FortiSandbox WEB UI command injection (CVE-2026-25089)
 
-`UC_43_7` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_44_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(Vulnerabilities.severity) as severity values(Vulnerabilities.cvss) as cvss values(Vulnerabilities.signature) as signature from datamodel=Vulnerabilities where Vulnerabilities.signature_id IN ("CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128") OR Vulnerabilities.cve IN ("CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128") by Vulnerabilities.dest, Vulnerabilities.signature_id, Vulnerabilities.category
-| `drop_dm_object_name(Vulnerabilities)`
-| eval firstSeen=strftime(firstSeen,"%Y-%m-%d"), lastSeen=strftime(lastSeen,"%Y-%m-%d")
-| sort - cvss
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as methods values(Web.status) as statuses from datamodel=Web where (Web.dest_host="*fortisandbox*" OR Web.dest_host="fsa-*" OR Web.site="*fortisandbox*") AND (Web.url="*%3B*" OR Web.url="*%7C*" OR Web.url="*%24%28*" OR Web.url="*%60*" OR Web.url="*;*" OR Web.url="*|*" OR Web.url="*$(*" OR Web.url="*`*") by Web.src, Web.dest, Web.dest_host, Web.url, Web.http_user_agent
+| `drop_dm_object_name(Web)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-// June 2026 critical-vuln advisory — Ivanti / Fortinet / SAP
-let AdvisoryCves = dynamic(["CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128"]);
-DeviceTvmSoftwareVulnerabilities
-| where CveId in (AdvisoryCves)
-| join kind=leftouter (
-    DeviceTvmSoftwareVulnerabilitiesKB
-    | project CveId, CvssScore, IsExploitAvailable, PublishedDate, VulnerabilityDescription
-  ) on CveId
-| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion,
-          CveId, CvssScore, VulnerabilitySeverityLevel, IsExploitAvailable,
-          RecommendedSecurityUpdate, RecommendedSecurityUpdateId
-| order by CvssScore desc, DeviceName asc
-```
-
-### SAP NetWeaver RFC gateway accessed from non-app-server / public source (CVE-2026-27671)
-
-`UC_43_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count sum(All_Traffic.bytes_in) as bytes_in min(_time) as firstSeen max(_time) as lastSeen from datamodel=Network_Traffic where (All_Traffic.dest_port>=3300 AND All_Traffic.dest_port<=3399) OR (All_Traffic.dest_port>=3200 AND All_Traffic.dest_port<=3299) by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.transport
-| `drop_dm_object_name(All_Traffic)`
-| search NOT [| inputlookup sap_appserver_inventory.csv | fields src]
-| eval firstSeen=strftime(firstSeen,"%Y-%m-%d %H:%M:%S"), lastSeen=strftime(lastSeen,"%Y-%m-%d %H:%M:%S")
-| where bytes_in > 1000
-| sort - bytes_in
-```
-
-**Defender KQL:**
-```kql
-// CVE-2026-27671 — crafted RFC request to SAP NetWeaver ABAP kernel
-// SAP RFC gateway = 33xx, dispatcher = 32xx (xx = instance number)
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where ActionType in ("InboundConnectionAccepted","ListeningConnectionCreated","ConnectionAcknowledged")
-| where (LocalPort between (3300 .. 3399)) or (LocalPort between (3200 .. 3299))
-| where RemoteIPType == "Public" or not(ipv4_is_private(RemoteIP))
-| extend SapPortClass = case(LocalPort between (3300 .. 3399), "RFC_Gateway",
-                             LocalPort between (3200 .. 3299), "Dispatcher",
-                             "Other")
-| summarize ConnectionCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp),
-            RemotePorts=make_set(RemotePort, 25)
-  by DeviceName, LocalIP, LocalPort, SapPortClass, RemoteIP
-| where ConnectionCount > 0
-| order by LastSeen desc
+| where RemoteUrl matches regex @"(?i)(fortisandbox|fsa-[a-z0-9-]+)"
+| where RemoteUrl has_any (";", "|", "$(", "`", "%3B", "%7C", "%24%28", "%60")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
+| order by Timestamp desc
+```
+
+### SAP NetWeaver SAML XML Signature Wrapping pattern (CVE-2026-44748)
+
+`UC_44_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as methods avg(Web.bytes_in) as avg_bytes_in max(Web.bytes_in) as max_bytes_in from datamodel=Web where (Web.uri_path="*/sap/saml2/sp/*" OR Web.uri_path="*/saml2/sp/acs*" OR Web.uri_path="*/sap/public/bc/saml*") AND Web.http_method="POST" by Web.src, Web.dest, Web.uri_path, Web.user
+| `drop_dm_object_name(Web)`
+| where max_bytes_in > 8192
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has_any ("/sap/saml2/sp/", "/saml2/sp/acs", "/sap/public/bc/saml")
+| where InitiatingProcessFileName !in~ ("chrome.exe", "msedge.exe", "firefox.exe", "iexplore.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
+| order by Timestamp desc
+```
+
+### Unpatched Ivanti Sentry / FortiSandbox / SAP NetWeaver matching disclosed CVE IDs
+
+`UC_44_9` · phase: **recon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(Vulnerabilities.signature) as signatures values(Vulnerabilities.severity) as severities from datamodel=Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128") by Vulnerabilities.dest, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| `security_content_ctime(firstSeen)`
+| `security_content_ctime(lastSeen)`
+| sort 0 cve, dest
+```
+
+**Defender KQL:**
+```kql
+let TargetCves = dynamic(["CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128"]);
+DeviceTvmSoftwareVulnerabilities
+| where CveId in (TargetCves)
+| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceId, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, LastSeen desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -337,4 +341,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

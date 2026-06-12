@@ -1,0 +1,104 @@
+{
+  "name": "APT32",
+  "ucs": [
+    {
+      "title": "[LLM] APT32 (OceanLotus) DLL side-loading via abused signed Symantec/McAfee/Avast binaries from user-writable paths",
+      "description": "Hunts OceanLotus's signature initial-execution chain: dropping a legitimate signed third-party security/utility binary (rastlsc.exe, McOmonHost.exe, wsc_proxy.exe, SyLog.exe, gup.exe, GoogleUpdate.exe) into %APPDATA%, %TEMP%, %PUBLIC%, %ProgramData% or Downloads alongside a malicious sibling DLL that the signed loader resolves first. APT32 has used this pattern persistently across Denis/KOMPROGO/METALJACK campaigns to evade application-control and signature-based detection.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.002",
+        "T1036.005",
+        "T1027.013",
+        "T1218"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (\"rastlsc.exe\",\"mcomonhost.exe\",\"wsc_proxy.exe\",\"sylog.exe\",\"gup.exe\",\"googleupdate.exe\",\"mcoemcpy.exe\",\"mctray.exe\",\"goopdate.exe\") AND NOT (Processes.process_path IN (\"*\\\\Program Files\\\\*\",\"*\\\\Program Files (x86)\\\\*\",\"*\\\\Windows\\\\System32\\\\*\",\"*\\\\Windows\\\\SysWOW64\\\\*\")) AND (Processes.process_path IN (\"*\\\\Users\\\\*\\\\AppData\\\\*\",\"*\\\\Users\\\\*\\\\Downloads\\\\*\",\"*\\\\Windows\\\\Temp\\\\*\",\"*\\\\Users\\\\Public\\\\*\",\"*\\\\ProgramData\\\\*\",\"*\\\\Temp\\\\*\")) by host Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | where firstTime != \"\"",
+      "kql": "// APT32 abused signed binaries \u2014 names normalised to lower case\nlet ApacheList = dynamic([\"rastlsc.exe\",\"mcomonhost.exe\",\"wsc_proxy.exe\",\"sylog.exe\",\"gup.exe\",\"googleupdate.exe\",\"mcoemcpy.exe\",\"mctray.exe\",\"goopdate.exe\"]);\nlet SuspectProcs = DeviceProcessEvents\n    | where Timestamp > ago(14d)\n    | where FileName in~ (ApacheList)\n    | where FolderPath !startswith @\"C:\\Program Files\"\n    | where FolderPath !startswith @\"C:\\Program Files (x86)\"\n    | where FolderPath !startswith @\"C:\\Windows\\System32\"\n    | where FolderPath !startswith @\"C:\\Windows\\SysWOW64\"\n    | where FolderPath has_any (@\"\\AppData\\\", @\"\\Downloads\\\", @\"\\Temp\\\", @\"\\Public\\\", @\"\\ProgramData\\\")\n    | where AccountName !endswith \"$\"\n    | project Timestamp, DeviceId, DeviceName, AccountName, FileName, FolderPath, ProcessId, ProcessCommandLine,\n              ParentFile = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine, SHA256;\n// Confirm the side-loaded DLL is a sibling in the same writable directory and NOT a Microsoft path\nSuspectProcs\n| join kind=inner (\n    DeviceImageLoadEvents\n    | where Timestamp > ago(14d)\n    | where FileName endswith \".dll\"\n    | project DllTime = Timestamp, DeviceId, InitiatingProcessId, LoadedDll = FileName,\n              LoadedDllPath = FolderPath, LoadedDllSHA256 = SHA256\n) on DeviceId, $left.ProcessId == $right.InitiatingProcessId\n| where LoadedDllPath !startswith @\"C:\\Windows\\\"\n| where LoadedDllPath !startswith @\"C:\\Program Files\"\n| where tolower(LoadedDllPath) == tolower(FolderPath)        // sibling DLL \u2014 classic side-load layout\n| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,\n          ParentFile, ParentCmd, LoadedDll, LoadedDllPath, LoadedDllSHA256, SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "// Sentinel \u2014 SecurityEvent 4688 lacks reliable image-load context, so we score on signed-binary launch from writable path + non-system parent\nlet ApacheList = dynamic([\"rastlsc.exe\",\"mcomonhost.exe\",\"wsc_proxy.exe\",\"sylog.exe\",\"gup.exe\",\"googleupdate.exe\",\"mcoemcpy.exe\",\"mctray.exe\",\"goopdate.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(14d)\n| where EventID == 4688\n| extend ProcLower = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| where ProcLower in (ApacheList)\n| where NewProcessName !startswith @\"C:\\Program Files\"\n| where NewProcessName !startswith @\"C:\\Windows\\System32\"\n| where NewProcessName !startswith @\"C:\\Windows\\SysWOW64\"\n| where NewProcessName has_any (@\"\\AppData\\\", @\"\\Downloads\\\", @\"\\Temp\\\", @\"\\Public\\\", @\"\\ProgramData\\\")\n| where SubjectUserName !endswith \"$\"\n| project TimeGenerated, Computer, Account = SubjectUserName, NewProcessName, CommandLine,\n          ParentProcessName, ParentImage = ParentProcessName, LogonId = SubjectLogonId\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT32 OceanLotus DLL Side-Load Via Signed Vendor Binary From User-Writable Path\nid: 9e3e0c12-3a8e-4d6a-bd31-7ab0f6c8e151\nstatus: experimental\ndescription: |\n  Detects execution of a small set of legitimate signed third-party binaries\n  (Symantec rastlsc.exe, McAfee McOmonHost.exe, Avast wsc_proxy.exe,\n  Sygate SyLog.exe, Notepad++ gup.exe, GoogleUpdate.exe) from user-writable\n  directories such as %APPDATA%, %TEMP%, %PUBLIC% or Downloads. APT32 /\n  OceanLotus drops these binaries together with a sibling malicious DLL\n  (commonly rastls.dll, McUtil.dll, wsc.dll, goopdate.dll) to abuse the\n  side-loading order and bypass signature controls.\nreferences:\n  - https://attack.mitre.org/groups/G0050/\n  - https://www.welivesecurity.com/2018/03/13/oceanlotus-ships-new-backdoor/\n  - https://www.microsoft.com/security/blog/2020/11/30/threat-actor-leverages-coin-miner-techniques-to-stay-under-the-radar/\nauthor: SOC Detection Engineering\ndate: 2026/06/12\ntags:\n  - attack.execution\n  - attack.defense_evasion\n  - attack.t1574.002\n  - attack.t1036.005\n  - attack.g0050\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_image:\n    Image|endswith:\n      - '\\rastlsc.exe'\n      - '\\McOmonHost.exe'\n      - '\\wsc_proxy.exe'\n      - '\\SyLog.exe'\n      - '\\gup.exe'\n      - '\\GoogleUpdate.exe'\n      - '\\mcoemcpy.exe'\n      - '\\McTray.exe'\n      - '\\goopdate.exe'\n  selection_path:\n    Image|contains:\n      - '\\AppData\\'\n      - '\\Downloads\\'\n      - '\\Temp\\'\n      - '\\Users\\Public\\'\n      - '\\ProgramData\\'\n  filter_legit:\n    Image|startswith:\n      - 'C:\\Program Files\\'\n      - 'C:\\Program Files (x86)\\'\n      - 'C:\\Windows\\System32\\'\n      - 'C:\\Windows\\SysWOW64\\'\n  condition: selection_image and selection_path and not filter_legit\nfalsepositives:\n  - Software installers staging signed updaters in %TEMP%/%ProgramData% (verify the sibling DLL signature)\nlevel: high",
+      "datadog_query": "source:windows.sysmon @EventID:1 @Image:(*\\\\rastlsc.exe OR *\\\\RastlsC.exe OR *\\\\McOmonHost.exe OR *\\\\mcomonhost.exe OR *\\\\wsc_proxy.exe OR *\\\\WSC_Proxy.exe OR *\\\\SyLog.exe OR *\\\\sylog.exe OR *\\\\gup.exe OR *\\\\GUP.exe OR *\\\\GoogleUpdate.exe OR *\\\\googleupdate.exe OR *\\\\goopdate.exe OR *\\\\Goopdate.exe OR *\\\\mcoemcpy.exe OR *\\\\McTray.exe) AND @Image:(*\\\\AppData\\\\* OR *\\\\Downloads\\\\* OR *\\\\Temp\\\\* OR *\\\\Users\\\\Public\\\\* OR *\\\\ProgramData\\\\*) -@Image:(*\\\\Program Files\\\\* OR *\\\\Program Files (x86)\\\\* OR *\\\\Windows\\\\System32\\\\* OR *\\\\Windows\\\\SysWOW64\\\\*) -@User:*$",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ImageFileName=/\\\\(rastlsc|mcomonhost|wsc_proxy|sylog|gup|googleupdate|goopdate|mcoemcpy|mctray)\\.exe$/i\n| regex(\"\\\\\\\\(AppData|Downloads|Temp|Public|ProgramData)\\\\\\\\\", field=ImageFileName)\n| NOT regex(\"\\\\\\\\Program Files( \\\\(x86\\\\))?\\\\\\\\\", field=ImageFileName)\n| NOT regex(\"\\\\\\\\Windows\\\\\\\\(System32|SysWOW64)\\\\\\\\\", field=ImageFileName)\n| join({#event_simpleName=ImageHash ImageFileName=/\\.dll$/i | NOT regex(\"\\\\\\\\(Windows|Program Files)\\\\\\\\\", field=ImageFileName)}, field=[aid, TargetProcessId], include=[ImageFileName])\n| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine, ParentBaseFileName, SHA256HashData], function=count(as=Hits))\n| sort(Hits, order=desc)",
+      "cloudwatch_query": "",
+      "rationale": "DLL side-loading via signed third-party security vendor binaries is OceanLotus's most distinctive and persistently reused tradecraft \u2014 documented by ESET, FireEye/Mandiant, Cybereason (Operation Cobalt Kitty) and Microsoft (BISMUTH). The specific binary set (rastlsc.exe + rastls.dll, McOmonHost + McUtil, wsc_proxy + wsc.dll, SyLog/gup/GoogleUpdate variants) is consistently observed across Denis, K"
+    },
+    {
+      "title": "[LLM] APT32 (OceanLotus) Outlook Home Page WebView persistence via HKCU Office registry hijack",
+      "description": "Hunts OceanLotus's characteristic post-compromise persistence trick of writing an attacker-controlled HTTP(S) URL into the Outlook WebView / Today folder-home-page registry keys so that opening Outlook silently fetches and executes remote JScript/VBScript next-stage. This T1137-style abuse of the Office HKCU hive was documented by Volexity and ESET for APT32's Denis/KOMPROGO chains and is rarely seen outside Vietnam-aligned activity.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "medium",
+      "techs": [
+        "T1137",
+        "T1112",
+        "T1059.007",
+        "T1102"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path=\"*\\\\Software\\\\Microsoft\\\\Office\\\\*\" AND (Registry.registry_path IN (\"*\\\\Outlook\\\\WebView\\\\*\",\"*\\\\Outlook\\\\Today\\\\*\",\"*\\\\Word\\\\Resiliency\\\\*\",\"*\\\\Common\\\\Open Find\\\\*\") OR Registry.registry_value_name IN (\"URL\",\"Page\",\"Folder Home Page\",\"WebView URL\")) AND (Registry.registry_value_data=\"http://*\" OR Registry.registry_value_data=\"https://*\") by host Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name Registry.process_path | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)",
+      "kql": "DeviceRegistryEvents\n| where Timestamp > ago(30d)\n| where ActionType in (\"RegistryValueSet\",\"RegistryKeySet\",\"RegistryKeyCreated\")\n| where RegistryKey has @\"\\Software\\Microsoft\\Office\\\"\n| where RegistryKey has_any (@\"\\Outlook\\WebView\", @\"\\Outlook\\Today\", @\"\\Word\\Resiliency\", @\"\\Common\\Open Find\")\n      or RegistryValueName in~ (\"URL\",\"Page\",\"Folder Home Page\",\"WebView URL\")\n| where RegistryValueData startswith \"http://\" or RegistryValueData startswith \"https://\"\n// OceanLotus typically writes the value from a non-Office process (PowerShell/script host)\n// or from Office itself spawned by an exploited document\n| where InitiatingProcessFileName !in~ (\"OUTLOOK.EXE\",\"WINWORD.EXE\",\"EXCEL.EXE\",\"POWERPNT.EXE\")\n   or InitiatingProcessParentFileName in~ (\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"cmd.exe\")\n| project Timestamp, DeviceName, InitiatingProcessAccountName,\n          InitiatingProcessFileName, InitiatingProcessCommandLine,\n          InitiatingProcessParentFileName,\n          RegistryKey, RegistryValueName, RegistryValueData\n| order by Timestamp desc",
+      "sentinel_kql": "ImRegistryEvent\n| where TimeGenerated > ago(30d)\n| where EventType =~ \"RegistryValueSet\"\n| where RegistryKey has @\"\\Software\\Microsoft\\Office\\\"\n| where RegistryKey has_any (@\"\\Outlook\\WebView\", @\"\\Outlook\\Today\", @\"\\Word\\Resiliency\", @\"\\Common\\Open Find\")\n      or RegistryValue in~ (\"URL\",\"Page\",\"Folder Home Page\",\"WebView URL\")\n| where RegistryValueData startswith \"http://\" or RegistryValueData startswith \"https://\"\n| where ActingProcessName !has_any (\"OUTLOOK.EXE\",\"outlook.exe\")\n   or ActingProcessCommandLine has_any (\"powershell\",\"wscript\",\"cscript\",\"mshta\",\"rundll32\",\"regsvr32\")\n| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,\n          ActingProcessCommandLine, RegistryKey, RegistryValue, RegistryValueData\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT32 OceanLotus Outlook Home Page Persistence Via Office HKCU Registry\nid: 6c8b7f02-eb5b-4d77-9d3e-2adf76e07c44\nstatus: experimental\ndescription: |\n  Detects writes to Outlook WebView / Today / Word Resiliency / Office Common\n  registry values under HKCU\\Software\\Microsoft\\Office that point at an http(s)\n  URL. Used by APT32 (OceanLotus) to persist the Denis / KOMPROGO downloader\n  family by abusing Outlook's folder-home-page feature so the next Outlook\n  launch silently fetches remote JScript.\nreferences:\n  - https://attack.mitre.org/techniques/T1137/\n  - https://www.volexity.com/blog/2017/11/06/oceanlotus-blossoms-mass-digital-surveillance/\n  - https://attack.mitre.org/groups/G0050/\nauthor: SOC Detection Engineering\ndate: 2026/06/12\ntags:\n  - attack.persistence\n  - attack.t1137\n  - attack.t1112\n  - attack.g0050\nlogsource:\n  category: registry_set\n  product: windows\ndetection:\n  selection_key:\n    TargetObject|contains:\n      - '\\Software\\Microsoft\\Office\\'\n  selection_subkey:\n    TargetObject|contains:\n      - '\\Outlook\\WebView'\n      - '\\Outlook\\Today'\n      - '\\Word\\Resiliency'\n      - '\\Common\\Open Find'\n  selection_value:\n    Details|startswith:\n      - 'http://'\n      - 'https://'\n  condition: selection_key and selection_subkey and selection_value\nfalsepositives:\n  - Legitimate intranet Outlook folder home page pointing at an internal SharePoint URL (verify domain)\nlevel: high",
+      "datadog_query": "source:windows.sysmon @EventID:13 @TargetObject:(*\\\\Software\\\\Microsoft\\\\Office\\\\* AND (*\\\\Outlook\\\\WebView\\\\* OR *\\\\Outlook\\\\Today\\\\* OR *\\\\outlook\\\\webview\\\\* OR *\\\\outlook\\\\today\\\\* OR *\\\\Word\\\\Resiliency\\\\* OR *\\\\Common\\\\Open Find\\\\*)) @Details:(http://* OR https://*)",
+      "falcon_logscale_query": "#event_simpleName=AsepValueUpdate RegObjectName=/\\\\Software\\\\Microsoft\\\\Office\\\\.*\\\\(Outlook\\\\WebView|Outlook\\\\Today|Word\\\\Resiliency|Common\\\\Open Find)/i\n| regex(\"^https?://\", field=RegStringValue)\n| groupBy([aid, ComputerName, UserName, RegObjectName, RegValueName, RegStringValue, ContextImageFileName], function=count(as=Hits))\n| sort(Hits, order=desc)",
+      "cloudwatch_query": "",
+      "rationale": "Outlook WebView / folder-home-page persistence via HKCU registry is a niche T1137 sub-pattern that Volexity and ESET specifically attributed to APT32/OceanLotus during the Denis/KOMPROGO campaigns against ASEAN governments and Vietnamese dissidents. Most other crews favour Run-key or scheduled-task persistence; the Office registry path with an http(s) value is a high-purity OceanLotus tell. Generi",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "OUTLOOK",
+          "tables_in_scope": [
+            "DeviceRegistryEvents"
+          ],
+          "suggestion": null,
+          "message": "`OUTLOOK` is not a canonical column of DeviceRegistryEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "WINWORD",
+          "tables_in_scope": [
+            "DeviceRegistryEvents"
+          ],
+          "suggestion": null,
+          "message": "`WINWORD` is not a canonical column of DeviceRegistryEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "EXCEL",
+          "tables_in_scope": [
+            "DeviceRegistryEvents"
+          ],
+          "suggestion": null,
+          "message": "`EXCEL` is not a canonical column of DeviceRegistryEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "POWERPNT",
+          "tables_in_scope": [
+            "DeviceRegistryEvents"
+          ],
+          "suggestion": null,
+          "message": "`POWERPNT` is not a canonical column of DeviceRegistryEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "OUTLOOK",
+          "tables_in_scope": [
+            "ImRegistryEvent"
+          ],
+          "suggestion": null,
+          "message": "`OUTLOOK` is not a canonical column of ImRegistryEvent."
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1257 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -15,7 +15,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [a tale of two eras](./2026-06-11/a-tale-of-two-eras.md)
 - [ai broke vulnerability management that s why cisos are movin](./2026-06-11/ai-broke-vulnerability-management-that-s-why-cisos-are-movin.md)
 - [cisa kev cve 2026 10520 ivanti sentry os command injection v](./2026-06-11/cisa-kev-cve-2026-10520-ivanti-sentry-os-command-injection-v.md)
-- [cisa warns of check point security gateway vulnerability act](./2026-06-11/cisa-warns-of-check-point-security-gateway-vulnerability-act.md)
 - [cybersecurity stars awards 2026 winners announced across 95 ](./2026-06-11/cybersecurity-stars-awards-2026-winners-announced-across-95-.md)
 - [ghsa critical cve 2026 48039 meta ads mcp unauthenticated ht](./2026-06-11/ghsa-critical-cve-2026-48039-meta-ads-mcp-unauthenticated-ht.md)
 - [ghsa critical cve 2026 48062 codeigniter4 has a validation b](./2026-06-11/ghsa-critical-cve-2026-48062-codeigniter4-has-a-validation-b.md)
@@ -30,6 +29,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [nottingham university data breach affects over 450 000 stude](./2026-06-11/nottingham-university-data-breach-affects-over-450-000-stude.md)
 - [npm v12 delivers one of the biggest security improvements in](./2026-06-11/npm-v12-delivers-one-of-the-biggest-security-improvements-in.md)
 - [oceanlotus apt compromises fireant metakit in supply chain a](./2026-06-11/oceanlotus-apt-compromises-fireant-metakit-in-supply-chain-a.md)
+- [oceanlotus from external espionage to domestic targeting](./2026-06-11/oceanlotus-from-external-espionage-to-domestic-targeting.md)
 - [oceanlotus hits vietnam investors with spectralviper in fire](./2026-06-11/oceanlotus-hits-vietnam-investors-with-spectralviper-in-fire.md)
 - [shinyhunters exploits oracle peoplesoft zero day cve 2026 35](./2026-06-11/shinyhunters-exploits-oracle-peoplesoft-zero-day-cve-2026-35.md)
 - [the gentlemen ransomware claims 478 victims can spread like ](./2026-06-11/the-gentlemen-ransomware-claims-478-victims-can-spread-like-.md)
@@ -874,7 +874,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-10-15
 - [cisa kev cve 2025 54253 adobe experience manager forms code ](./2025-10-15/cisa-kev-cve-2025-54253-adobe-experience-manager-forms-code-.md)
-- [it service desks the security blind spot that may put your b](./2025-10-15/it-service-desks-the-security-blind-spot-that-may-put-your-b.md)
 - [snyk and cognition partner to enhance security for ai native](./2025-10-15/snyk-and-cognition-partner-to-enhance-security-for-ai-native.md)
 
 ## 2025-10-14

@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### Miasma dead-man switch — `rm -rf ~/; rm -rf ~/Documents` from systemd user service or launchd
 
-`UC_37_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_38_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceProcessEvents
 
 ### Systemd user service or LaunchAgent dropped by node / npm / pip / gem
 
-`UC_37_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_38_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceFileEvents
 
 ### Miasma AI tool config poisoning — writes to Claude / Cursor / Copilot / Gemini / Kiro / Cline configs
 
-`UC_37_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_38_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceFileEvents
 
 ### Miasma credential harvesting — package-manager child reads ~/.aws, ~/.ssh, ~/.kube, ~/.npmrc, password vaults
 
-`UC_37_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_38_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -161,7 +161,7 @@ DeviceFileEvents
 
 ### Miasma GitHub-as-C2 — outbound api.github.com from a systemd/launchd-spawned process or clone of 'Miasma-Open-Source-Release'
 
-`UC_37_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_38_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -193,7 +193,7 @@ DeviceNetworkEvents
 
 ### Miasma supply-chain propagation — npm publish / twine upload / gem push / jfrog upload from non-CI/CD context
 
-`UC_37_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_38_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -222,7 +222,7 @@ DeviceProcessEvents
 
 ### Miasma lateral movement — AWS SSM StartSession or SendCommand from a developer access key outside business hours / VPC
 
-`UC_37_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_38_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

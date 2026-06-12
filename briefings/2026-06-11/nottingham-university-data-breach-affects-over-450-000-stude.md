@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### ShinyHunters PeopleSoft Campaign C2/Exfil Infrastructure Match
 
-`UC_32_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_33_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceNetworkEvents
 
 ### Oracle PeopleSoft Gadget Chain Exploitation Detection
 
-`UC_32_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_33_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceProcessEvents
 
 ### Bulk Export of Student Records and Financial Data
 
-`UC_32_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_33_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceProcessEvents
 
 ### Data Staging and Archiving for Dark Web Publication
 
-`UC_32_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_33_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ DeviceProcessEvents
 
 ### ShinyHunters uon_fanout.sh SSH Lateral Spread
 
-`UC_32_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_33_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -166,7 +166,7 @@ DeviceProcessEvents
 
 ### ShinyHunters README Defacement Marker File Write
 
-`UC_32_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_33_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -187,7 +187,7 @@ DeviceFileEvents
 
 ### Cross-Campus PeopleSoft Lateral Movement
 
-`UC_32_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_33_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

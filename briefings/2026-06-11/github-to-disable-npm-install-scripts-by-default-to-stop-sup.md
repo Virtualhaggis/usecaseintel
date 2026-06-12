@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Suspicious child process spawned during 'npm install' (lifecycle-script abuse)
 
-`UC_33_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_34_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceProcessEvents
 
 ### npm install resolving Git or remote-URL dependency (--allow-git / --allow-remote vector)
 
-`UC_33_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_34_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceProcessEvents
 
 ### Attempt to re-enable npm install lifecycle scripts (--no-ignore-scripts / NPM_CONFIG override)
 
-`UC_33_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_34_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -321,7 +321,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GitHub to Disable npm Install Scripts by Default to Stop Supply Chain Attacks
 
-`UC_33_5` · phase: **exploit** · confidence: **High**
+`UC_34_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

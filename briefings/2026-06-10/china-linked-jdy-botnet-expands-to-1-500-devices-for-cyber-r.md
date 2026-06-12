@@ -27,12 +27,13 @@ Cybersecurity researchers have warned of a "resurgence and expansion" of JDY , a
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1090.003** — Multi-hop Proxy
-- **T1071** — Application Layer Protocol
-- **T1059.004** — Unix Shell
-- **T1105** — Ingress Tool Transfer
-- **T1595.002** — Vulnerability Scanning
+- **T1595.002** — Active Scanning: Vulnerability Scanning
 - **T1046** — Network Service Discovery
+- **T1090.003** — Multi-hop Proxy
+- **T1571** — Non-Standard Port
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1105** — Ingress Tool Transfer
+- **T1070.004** — File Deletion
 
 ## Kill chain phases observed
 
@@ -40,103 +41,83 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### SOHO/IoT/router device outbound connection to known Tor entry/relay infrastructure
+### JDY-style outbound recon scanning originating from internal IoT / network appliances
 
-`UC_41_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_42_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count, values(All_Traffic.dest_port) as dest_ports, min(_time) as firstTime, max(_time) as lastTime from datamodel=Network_Traffic where (All_Traffic.dest_ip in ("128.31.0.39","86.59.21.38","45.66.33.45","131.188.40.189","193.23.244.244","171.25.193.9","199.58.81.140","204.13.164.118","154.35.175.225")) OR (All_Traffic.dest_port in (9001,9030) AND All_Traffic.action=allowed) by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | sort - firstTime
+| tstats `summariesonly` count dc(All_Traffic.dest_ip) as DistinctDsts dc(All_Traffic.dest_port) as DistinctPorts values(All_Traffic.dest_port) as Ports values(All_Traffic.transport) as Protos from datamodel=Network_Traffic.All_Traffic where All_Traffic.action=allowed All_Traffic.dest_category=external All_Traffic.src_category IN ("iot","network_appliance","soho") earliest=-1h by All_Traffic.src_ip, _time span=10m | `drop_dm_object_name(All_Traffic)` | where DistinctDsts >= 200 AND DistinctPorts >= 5 | sort - DistinctDsts
 ```
 
 **Defender KQL:**
 ```kql
-let TorDirAuth = dynamic(["128.31.0.39","86.59.21.38","45.66.33.45","131.188.40.189","193.23.244.244","171.25.193.9","199.58.81.140","204.13.164.118","154.35.175.225"]);
-let TorPorts = dynamic([9001, 9030]);
+DeviceNetworkEvents
+| where Timestamp > ago(24h)
+| where ActionType in ("ConnectionSuccess","ConnectionAttempt","ConnectionRequest")
+| where RemoteIPType == "Public"
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","outlook.exe","teams.exe","slack.exe")
+| summarize DistinctDsts = dcount(RemoteIP), DistinctPorts = dcount(RemotePort), Ports = make_set(RemotePort, 50), Protos = make_set(Protocol, 10), Hits = count() by DeviceName, DeviceId, bin(Timestamp, 10m)
+| where DistinctDsts >= 200 and DistinctPorts >= 5  // JDY-style fan-out (Black Lotus Labs: high-volume TCP/SSL/UDP/ICMP probing)
+| order by DistinctDsts desc
+```
+
+### Outbound Tor (9001/9030/9050) from network appliance / IoT subnet — JDY C2 beaconing
+
+`UC_42_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(All_Traffic.dest_ip) as DstIPs values(All_Traffic.dest_port) as Ports from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (9001,9030,9050) All_Traffic.action=allowed earliest=-7d by All_Traffic.src_ip, All_Traffic.src_category | `drop_dm_object_name(All_Traffic)` | where src_category IN ("iot","network_appliance","soho","camera") | sort - count
+```
+
+**Defender KQL:**
+```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
+| where RemotePort in (9001, 9030, 9050)  // Tor ORPort / DirPort / SOCKS — JDY uses Tor for C2 + payload (Black Lotus Labs)
 | where RemoteIPType == "Public"
 | where ActionType in ("ConnectionSuccess","ConnectionAttempt")
-| where RemoteIP in (TorDirAuth) or RemotePort in (TorPorts)
-| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), ConnCount = count(),
-            Processes = make_set(InitiatingProcessFileName, 8)
-            by DeviceName, DeviceId, RemoteIP, RemotePort
-| order by FirstSeen desc
-```
-
-### Internet-facing edge device with unpatched CVE-2026-35616 vulnerability
-
-`UC_41_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-search index=vuln_mgmt sourcetype=tenable* OR sourcetype=qualys* CVE_ID="CVE-2026-35616" | join type=left dest [search index=asset_inventory internet_facing=true | fields dest, vendor, model, firmware_version] | where isnotnull(vendor) | stats min(_time) as firstSeen, max(_time) as lastSeen, values(vendor) as vendor, values(model) as model, values(firmware_version) as firmware by dest | convert ctime(firstSeen) ctime(lastSeen) | sort - lastSeen
-```
-
-**Defender KQL:**
-```kql
-let Vuln = DeviceTvmSoftwareVulnerabilities
-    | where Timestamp > ago(7d)
-    | where CveId == "CVE-2026-35616"
-    | summarize arg_max(Timestamp, *) by DeviceId, CveId, SoftwareName, SoftwareVersion;
-let Devs = DeviceInfo
-    | where Timestamp > ago(7d)
-    | summarize arg_max(Timestamp, *) by DeviceId;
-Vuln
-| join kind=inner Devs on DeviceId
-| where IsInternetFacing == true
-   or DeviceCategory in~ ("NetworkDevice","IoT")
-   or Vendor in~ ("Cisco","Araknis","Mimosa","Ubiquiti","Draytek","Hikvision","Linksys")
-| project Timestamp, DeviceName, DeviceId, Vendor, Model, OSPlatform, OSVersion,
-          SoftwareName, SoftwareVersion, PublicIP, IsInternetFacing, RecommendedSecurityUpdate
+| project Timestamp, DeviceName, DeviceId, LocalIP, RemoteIP, RemotePort, Protocol, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
-### Architecture-specific MIPS/MIPSEL payload download via shell-script dropper
+### MIPS shell-script dropper on Linux edge device — JDY architecture-aware payload fetch
 
-`UC_41_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_42_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count, values(Processes.process) as cmdline, values(Processes.parent_process_name) as parent, min(_time) as firstTime from datamodel=Endpoint.Processes where (Processes.process_name="wget" OR Processes.process_name="curl" OR Processes.process_name="busybox") (Processes.process="*/mips*" OR Processes.process="*/mipsel*" OR Processes.process="*/mips64*" OR Processes.process="*/mipsel64*" OR Processes.process="*mips.bin*" OR Processes.process="*mipsel.bin*") (Processes.parent_process_name="sh" OR Processes.parent_process_name="bash" OR Processes.parent_process_name="dash" OR Processes.parent_process_name="ash" OR Processes.parent_process_name="busybox") by host, Processes.user, Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime)
+| tstats `summariesonly` count values(Processes.process) as Cmds values(Processes.parent_process_name) as Parents from datamodel=Endpoint.Processes where (Processes.process_name IN ("sh","ash","busybox","bash")) (Processes.process="*mipsel*" OR Processes.process="*mips64*" OR Processes.process="*uname -m*") (Processes.process="*wget*" OR Processes.process="*curl*" OR Processes.process="*tftp*") earliest=-7d by host, Processes.user | `drop_dm_object_name(Processes)` | sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where FileName in~ ("wget","curl","busybox")
-| where ProcessCommandLine has_any ("/mips","/mipsel","/mips64","/mipsel64","mips.bin","mipsel.bin",".mips",".mipsel")
-| where InitiatingProcessFileName in~ ("sh","bash","dash","ash","busybox","zsh")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
+| where FileName in~ ("sh","ash","busybox","bash","dash")
+| where ProcessCommandLine has_any ("mipsel","mips64","mipsel64")  // JDY architecture-aware dropper (Black Lotus Labs)
+| where ProcessCommandLine has_any ("wget","curl","tftp")
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
 | order by Timestamp desc
 ```
 
-### High-fanout outbound scanning from internal host — potential JDY bot reconnaissance
+### CVE-2026-35616 exploitation attempt against edge SOHO/IoT devices — JDY initial access
 
-`UC_41_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_42_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t dc(All_Traffic.dest_ip) as distinctDestIPs, dc(All_Traffic.dest_port) as distinctDestPorts, count from datamodel=Network_Traffic where All_Traffic.src_category=internal NOT All_Traffic.src_category=scanner by All_Traffic.src, _time span=5m | `drop_dm_object_name(All_Traffic)` | where distinctDestIPs > 200 AND distinctDestPorts > 20 AND count > 500 | sort - distinctDestIPs
+| tstats `summariesonly` count values(Web.url) as URLs values(Web.http_user_agent) as UAs from datamodel=Web.Web where (Web.url="*cgi-bin*" OR Web.url="*setup.cgi*" OR Web.url="*35616*") Web.dest_category IN ("soho","network_appliance","iot") earliest=-7d by Web.src, Web.dest | `drop_dm_object_name(Web)` | sort - count
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where ActionType in ("ConnectionAttempt","ConnectionSuccess","ConnectionFailed")
-| where RemoteIPType == "Public"
-| summarize DistinctRemoteIPs = dcount(RemoteIP),
-            DistinctRemotePorts = dcount(RemotePort),
-            ConnCount = count(),
-            SamplePorts = make_set(RemotePort, 25),
-            SampleProcs = make_set(InitiatingProcessFileName, 10)
-            by DeviceName, DeviceId, bin(Timestamp, 5m)
-| where DistinctRemoteIPs > 200 and DistinctRemotePorts > 20 and ConnCount > 500
-| order by DistinctRemoteIPs desc
+DeviceTvmSoftwareVulnerabilities
+| where CveId == "CVE-2026-35616"
+| join kind=inner (DeviceInfo | where DeviceCategory in ("NetworkDevice","IoT") or Vendor in~ ("Cisco","Araknis","Mimosa","Ubiquiti","DrayTek","Hikvision","Linksys")) on DeviceId
+| project DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, OSPlatform, Vendor, Model, IsInternetFacing
+| order by IsInternetFacing desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -348,4 +329,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

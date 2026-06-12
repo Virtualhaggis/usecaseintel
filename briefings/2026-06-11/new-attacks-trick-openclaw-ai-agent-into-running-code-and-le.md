@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### OpenClaw AI agent process spawning shell or script interpreter (post prompt-injection RCE)
 
-`UC_5_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_6_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### Network egress to imperva_artifactory.com (OpenClaw prompt-injection payload host)
 
-`UC_5_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_6_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceNetworkEvents
 
 ### Agent-mailbox outbound email to personal address containing credential / customer-export indicators (Varonis agent phishing)
 
-`UC_5_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_6_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ EmailEvents
 
 ### OpenClaw agent reading credential stores then egressing to public destination (lethal trifecta)
 
-`UC_5_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_6_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

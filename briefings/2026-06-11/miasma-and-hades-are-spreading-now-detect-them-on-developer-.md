@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Miasma 'Phantom Gyp' — 157-byte binding.gyp drop in node_modules
 
-`UC_15_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_16_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceFileEvents
 
 ### Auto-execute editor/AI-tool config file dropped in repository
 
-`UC_15_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_16_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceFileEvents
 
 ### VS Code / Cursor / Claude Code spawning script interpreter on project open
 
-`UC_15_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_16_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceProcessEvents
 
 ### Hades — python.exe child process downloads standalone Bun runtime on import
 
-`UC_15_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_16_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ DeviceProcessEvents
 
 ### Miasma/Hades worm credential theft — npm/PyPI publishing token access
 
-`UC_15_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_16_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -168,7 +168,7 @@ DeviceProcessEvents
 
 ### Known Miasma/Hades payload SHA256 hash observed on developer machine
 
-`UC_15_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_16_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -258,7 +258,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Miasma and Hades Are Spreading Now: Detect Them on Developer Machines with Suspi
 
-`UC_15_3` · phase: **exploit** · confidence: **High**
+`UC_16_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

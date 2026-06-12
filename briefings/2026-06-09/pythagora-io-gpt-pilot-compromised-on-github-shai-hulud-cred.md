@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Hades Campaign: Python drops Bun runtime to /tmp/b/ from oven-sh release
 
-`UC_60_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_61_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceFileEvents
 
 ### Hades Campaign: Bun binary in /tmp/b/ executes _index.js payload
 
-`UC_60_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_61_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceProcessEvents
 
 ### Hades Campaign: .bun_ran flag file created in temp directory
 
-`UC_60_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_61_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceFileEvents
 
 ### Hades Campaign: process reads /proc/<Runner.Worker>/mem on GitHub Actions runner
 
-`UC_60_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_61_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,7 +164,7 @@ DeviceFileEvents
 
 ### Hades Campaign: pip install of compromised PyPI packages and versions
 
-`UC_60_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_61_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -452,7 +452,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blo
 
-`UC_60_7` · phase: **exploit** · confidence: **High**
+`UC_61_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

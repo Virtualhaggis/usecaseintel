@@ -39,12 +39,15 @@ Of the 206 flaws, 39 are rated Critical, and 167 are rated Important in severity
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1068** — Exploitation for Privilege Escalation
+- **T1588.006** — Obtain Capabilities: Vulnerabilities
 - **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1134.001** — Access Token Manipulation: Token Impersonation/Theft
-- **T1499.002** — Endpoint Denial of Service: Service Exhaustion Flood
+- **T1112** — Modify Registry
+- **T1059** — Command and Scripting Interpreter
 - **T1203** — Exploitation for Client Execution
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1505.003** — Server Software Component: Web Shell
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1068** — Exploitation for Privilege Escalation
+- **T1588.005** — Obtain Capabilities: Exploits
 
 ## Kill chain phases observed
 
@@ -52,156 +55,160 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### RoguePlanet Defender race condition - MsMpEng.exe spawns SYSTEM shell
+### Unpatched June 2026 Patch Tuesday CVE inventory (kernel TCP/IP, DHCP, HTTP.sys, BitLocker)
 
-`UC_49_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_50_7` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.user) as user values(Processes.process_integrity_level) as integrity_level from datamodel=Endpoint.Processes where Processes.parent_process_name="MsMpEng.exe" Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","rundll32.exe","regsvr32.exe","mshta.exe","wmic.exe","wscript.exe","cscript.exe") by Processes.dest Processes.parent_process_name Processes.process_name Processes.process_id _time span=1m | `drop_dm_object_name(Processes)` | where match(user,"(?i)SYSTEM") OR match(integrity_level,"(?i)System") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-45657","CVE-2026-47291","CVE-2026-44815","CVE-2026-45585","CVE-2026-45655","CVE-2026-45658","CVE-2026-50507","CVE-2026-45586","CVE-2026-49160","CVE-2026-8863","CVE-2025-10263") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | sort 0 - severity
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
+| where CveId in ("CVE-2026-45657","CVE-2026-47291","CVE-2026-44815","CVE-2026-45585","CVE-2026-45655","CVE-2026-45658","CVE-2026-50507","CVE-2026-45586","CVE-2026-49160","CVE-2026-8863","CVE-2025-10263")
+| join kind=leftouter DeviceTvmSoftwareVulnerabilitiesKB on CveId
+| summarize ExposedDevices = dcount(DeviceId),
+            SampleDevices  = make_set(DeviceName, 25),
+            FirstSeen      = min(Timestamp),
+            MaxCvss        = max(CvssScore),
+            ExploitAvailable = max(tostring(IsExploitAvailable))
+            by CveId, SoftwareName, RecommendedSecurityUpdate, VulnerabilitySeverityLevel
+| order by MaxCvss desc, ExposedDevices desc
+```
+
+### HTTP/2 Bomb mitigation tampering — MaxHeadersCount registry value (CVE-2026-49160)
+
+`UC_50_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as value_data values(Registry.registry_previous_value_data) as previous_value_data values(Registry.process_name) as process_name values(Registry.user) as user from datamodel=Endpoint.Registry where Registry.registry_path="*\\SYSTEM\\CurrentControlSet\\Services\\HTTP\\Parameters*" Registry.registry_value_name="MaxHeadersCount" Registry.action IN ("modified","deleted","created") by Registry.dest Registry.registry_path Registry.registry_value_name Registry.action | `drop_dm_object_name(Registry)` | where action!="created" OR (action="created" AND value_data IN ("0","0x0"))
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(7d)
+| where RegistryKey has @"\SYSTEM\CurrentControlSet\Services\HTTP\Parameters"
+| where RegistryValueName =~ "MaxHeadersCount"
+| where ActionType in~ ("RegistryValueSet","RegistryValueDeleted","RegistryKeyDeleted")
+| extend NewVal = tostring(RegistryValueData), PrevVal = tostring(PreviousRegistryValueData)
+| where ActionType != "RegistryValueSet" or NewVal in ("0","0x0","") or toint(NewVal) < toint(coalesce(PrevVal,"0"))
+| project Timestamp, DeviceName, ActionType, RegistryKey, RegistryValueName, NewVal, PrevVal,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName,
+          InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### DHCP Client svchost anomalous child process (CVE-2026-44815 post-exploit)
+
+`UC_50_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process) as parent_cmd values(Processes.process_integrity_level) as integrity from datamodel=Endpoint.Processes where Processes.parent_process_name="svchost.exe" Processes.parent_process IN ("*-k LocalServiceNetworkRestricted*","*-s Dhcp*","*-s dhcp*") Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","net.exe","whoami.exe","nltest.exe","ipconfig.exe") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName =~ "MsMpEng.exe"
-| where FileName has_any ("cmd.exe","powershell.exe","pwsh.exe","rundll32.exe","regsvr32.exe","mshta.exe","wmic.exe","wscript.exe","cscript.exe")
-| where AccountName =~ "system" or ProcessIntegrityLevel =~ "System"
-| project Timestamp, DeviceName, AccountName,
-          ParentFile = InitiatingProcessFileName,
-          ParentCmd  = InitiatingProcessCommandLine,
-          ChildFile  = FileName,
-          ChildCmd   = ProcessCommandLine,
-          ChildIntegrity = ProcessIntegrityLevel,
+| where InitiatingProcessFileName =~ "svchost.exe"
+| where InitiatingProcessCommandLine has_any ("-s Dhcp", "-s dhcp", "LocalServiceNetworkRestricted")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","net.exe","net1.exe","whoami.exe","nltest.exe","ipconfig.exe","hostname.exe")
+| project Timestamp, DeviceName, AccountName, AccountDomain,
+          ParentImage=InitiatingProcessFolderPath,
+          ParentCmd=InitiatingProcessCommandLine,
+          ChildImage=FolderPath,
+          ChildCmd=ProcessCommandLine,
+          ProcessIntegrityLevel,
           SHA256
 | order by Timestamp desc
 ```
 
-### CTFMON privilege escalation (GreenPlasma / CVE-2026-45586) - ctfmon.exe spawning shells or elevated
+### HTTP.sys / IIS w3wp.exe spawning shell or LOLBin (CVE-2026-47291 post-exploit)
 
-`UC_49_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_50_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user values(Processes.process_integrity_level) as integrity_level from datamodel=Endpoint.Processes where (Processes.parent_process_name="ctfmon.exe" Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","rundll32.exe","regsvr32.exe","mshta.exe")) OR (Processes.process_name="ctfmon.exe" Processes.process_integrity_level IN ("high","system")) by Processes.dest Processes.parent_process_name Processes.process_name Processes.process_id _time span=1m | `drop_dm_object_name(Processes)` | where NOT match(user,"^.*\$$") | `security_content_ctime(firstTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.user) as user values(Processes.process_integrity_level) as integrity from datamodel=Endpoint.Processes where Processes.parent_process_name="w3wp.exe" Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","net.exe","net1.exe","whoami.exe","nltest.exe","systeminfo.exe","tasklist.exe") by Processes.dest Processes.process_name Processes.parent_process Processes.user | `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
-let CtfmonAsParent = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where InitiatingProcessFileName =~ "ctfmon.exe"
-    | where FileName has_any ("cmd.exe","powershell.exe","pwsh.exe","rundll32.exe","regsvr32.exe","mshta.exe")
-    | project Timestamp, DeviceName, AccountName,
-              Signal = "CtfmonSpawnedShell",
-              ParentCmd = InitiatingProcessCommandLine,
-              ChildFile = FileName,
-              ChildCmd = ProcessCommandLine,
-              ParentIntegrity = InitiatingProcessIntegrityLevel,
-              ChildIntegrity = ProcessIntegrityLevel;
-let CtfmonElevated = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where FileName =~ "ctfmon.exe"
-    | where ProcessIntegrityLevel in ("High","System")
-    | where AccountName !endswith "$" and AccountName !in~ ("system","local service","network service")
-    | project Timestamp, DeviceName, AccountName,
-              Signal = "CtfmonElevatedIntegrity",
-              ParentCmd = InitiatingProcessCommandLine,
-              ChildFile = FileName,
-              ChildCmd = ProcessCommandLine,
-              ParentIntegrity = InitiatingProcessIntegrityLevel,
-              ChildIntegrity = ProcessIntegrityLevel;
-union CtfmonAsParent, CtfmonElevated
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "w3wp.exe"
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","net.exe","net1.exe","whoami.exe","nltest.exe","systeminfo.exe","tasklist.exe","ipconfig.exe","hostname.exe")
+| project Timestamp, DeviceName, AccountName, AccountDomain,
+          ParentCmd=InitiatingProcessCommandLine,
+          ParentIntegrity=InitiatingProcessIntegrityLevel,
+          ChildImage=FolderPath,
+          ChildCmd=ProcessCommandLine,
+          ChildIntegrity=ProcessIntegrityLevel,
+          SHA256
 | order by Timestamp desc
 ```
 
-### HTTP/2 Bomb DoS against IIS (CVE-2026-49160) - rapid w3wp.exe churn and HTTP.sys errors
+### CTFMON spawning elevated child or CTFMON-hosted privilege escalation (CVE-2026-45586 / GreenPlasma)
 
-`UC_49_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_50_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count as request_count, dc(Web.src) as src_count, max(Web.response_time) as max_resp, sum(eval(if(Web.status>=500,1,0))) as error_5xx from datamodel=Web.Web where Web.app="IIS" by Web.dest, _time span=1m | `drop_dm_object_name(Web)` | where request_count > 500 AND (error_5xx > 50 OR max_resp > 30000) | join type=inner dest [ | tstats `summariesonly` count as w3wp_starts from datamodel=Endpoint.Processes where Processes.process_name="w3wp.exe" by Processes.dest, _time span=5m | `drop_dm_object_name(Processes)` | where w3wp_starts > 3 | rename Processes.dest as dest ]
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.process_integrity_level) as child_integrity values(Processes.parent_process_integrity_level) as parent_integrity from datamodel=Endpoint.Processes where Processes.parent_process_name="ctfmon.exe" Processes.process_integrity_level IN ("high","system") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | where parent_integrity!="high" AND parent_integrity!="system"
 ```
 
 **Defender KQL:**
 ```kql
-let WindowMin = 5m;
-let WorkerChurn = DeviceProcessEvents
-    | where Timestamp > ago(1h)
-    | where FileName =~ "w3wp.exe"
-    | summarize StartCount = count(), AnyCmd = any(ProcessCommandLine) by bin(Timestamp, WindowMin), DeviceName
-    | where StartCount >= 4;
-let PoolCrash = DeviceEvents
-    | where Timestamp > ago(1h)
-    | where ActionType has_any ("AppPoolRecycle","ProcessCrash")
-    | where FileName =~ "w3wp.exe" or InitiatingProcessFileName =~ "w3wp.exe"
-    | summarize CrashCount = count() by bin(Timestamp, WindowMin), DeviceName;
-WorkerChurn
-| join kind=leftouter PoolCrash on DeviceName, $left.Timestamp == $right.Timestamp
-| project Timestamp, DeviceName, StartCount, CrashCount, SampleCmd = AnyCmd
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "ctfmon.exe"
+| where FileName !in~ ("ctfmon.exe","conhost.exe","wermgr.exe","WerFault.exe")
+| where ProcessIntegrityLevel in~ ("High","System")
+| where InitiatingProcessIntegrityLevel !in~ ("High","System")
+| project Timestamp, DeviceName, AccountName, AccountDomain,
+          ParentImage=InitiatingProcessFolderPath,
+          ParentIntegrity=InitiatingProcessIntegrityLevel,
+          ParentCmd=InitiatingProcessCommandLine,
+          ChildImage=FolderPath,
+          ChildIntegrity=ProcessIntegrityLevel,
+          ChildCmd=ProcessCommandLine,
+          SHA256
 | order by Timestamp desc
 ```
 
-### SYSTEM-level shell from network-service host (CVE-2026-45657 / 47291 / 44815 post-RCE)
+### PoC artefact drop — Chaotic Eclipse named exploits (YellowKey, GreenPlasma, MiniPlasma, RoguePlanet, bitskrieg)
 
-`UC_49_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_50_12` · phase: **install** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("svchost.exe","w3wp.exe") Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","rundll32.exe","regsvr32.exe","mshta.exe","wmic.exe","certutil.exe","bitsadmin.exe","curl.exe") by Processes.dest Processes.parent_process_name Processes.process_name Processes.process_id _time span=1m | `drop_dm_object_name(Processes)` | where match(user,"(?i)SYSTEM") | where (parent_process_name="svchost.exe" AND match(parent_cmd,"(?i)(Dhcp|tcpip|http)")) OR parent_process_name="w3wp.exe"
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("*YellowKey*","*yellowkey*","*GreenPlasma*","*greenplasma*","*MiniPlasma*","*miniplasma*","*RoguePlanet*","*rogueplanet*","*bitskrieg*","*BitSkrieg*") OR Filesystem.file_path IN ("*YellowKey*","*GreenPlasma*","*MiniPlasma*","*RoguePlanet*","*bitskrieg*")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)`
 ```
 
 **Defender KQL:**
 ```kql
-let SuspiciousChildren = dynamic(["cmd.exe","powershell.exe","pwsh.exe","rundll32.exe","regsvr32.exe","mshta.exe","wmic.exe","certutil.exe","bitsadmin.exe","curl.exe","wget.exe"]);
-let Candidates = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where InitiatingProcessFileName in~ ("svchost.exe","w3wp.exe")
-    | where FileName has_any (SuspiciousChildren)
-    | where AccountSid =~ "S-1-5-18" or AccountName =~ "system"
-    | where (InitiatingProcessFileName =~ "svchost.exe" and InitiatingProcessCommandLine has_any ("Dhcp","dhcp","DHCP","tcpip","Tcpip","TcpIp","http")) or InitiatingProcessFileName =~ "w3wp.exe";
-let PriorLogon = DeviceLogonEvents
-    | where Timestamp > ago(7d)
-    | where LogonType in (2, 10, 7)
-    | summarize InteractiveLogons = count() by DeviceName, bin(Timestamp, 10m);
-Candidates
-| join kind=leftouter PriorLogon on DeviceName, $left.Timestamp == $right.Timestamp
-| where isnull(InteractiveLogons) or InteractiveLogons == 0
-| project Timestamp, DeviceName, AccountName,
-          ParentFile = InitiatingProcessFileName,
-          ParentCmd  = InitiatingProcessCommandLine,
-          ChildFile  = FileName,
-          ChildCmd   = ProcessCommandLine,
-          ChildIntegrity = ProcessIntegrityLevel
+let Codenames = dynamic(["yellowkey","greenplasma","miniplasma","rogueplanet","bitskrieg"]);
+let FileHits = DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where ActionType in~ ("FileCreated","FileRenamed","FileModified")
+    | extend low_name = tolower(FileName), low_path = tolower(FolderPath)
+    | where low_name has_any (Codenames) or low_path has_any (Codenames)
+    | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+              InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName;
+let ProcHits = DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | extend low_cmd = tolower(ProcessCommandLine), low_img = tolower(FolderPath), low_name = tolower(FileName)
+    | where low_name has_any (Codenames) or low_img has_any (Codenames) or low_cmd has_any (Codenames)
+    | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256,
+              InitiatingProcessFileName, InitiatingProcessCommandLine;
+union FileHits, ProcHits
 | order by Timestamp desc
-```
-
-### Patch compliance hunt - June 2026 critical zero-day and network-RCE CVEs
-
-`UC_49_11` · phase: **weapon** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen values(Vulnerabilities.severity) as severity values(Vulnerabilities.signature) as recommendation from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-45657","CVE-2026-47291","CVE-2026-44815","CVE-2026-45585","CVE-2026-50507","CVE-2026-45586","CVE-2026-49160","CVE-2026-45655","CVE-2026-45658","CVE-2026-8863","CVE-2025-10263") by Vulnerabilities.dest Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | sort - severity dest
-```
-
-**Defender KQL:**
-```kql
-let CriticalCVEs = dynamic(["CVE-2026-45657","CVE-2026-47291","CVE-2026-44815","CVE-2026-45585","CVE-2026-50507","CVE-2026-45586","CVE-2026-49160","CVE-2026-45655","CVE-2026-45658","CVE-2026-8863","CVE-2025-10263"]);
-let ExposureSet = DeviceInfo
-    | summarize arg_max(Timestamp, IsInternetFacing, OSPlatform, OSVersion, MachineGroup) by DeviceId, DeviceName;
-DeviceTvmSoftwareVulnerabilities
-| where CveId in (CriticalCVEs)
-| join kind=leftouter ExposureSet on DeviceId
-| extend Priority = case(
-    IsInternetFacing == true and CveId in ("CVE-2026-45657","CVE-2026-47291","CVE-2026-44815","CVE-2026-49160"), "P1-InternetFacingRCE",
-    CveId in ("CVE-2026-45657","CVE-2026-47291","CVE-2026-44815"), "P2-UnauthRCE",
-    CveId in ("CVE-2026-50507","CVE-2026-49160","CVE-2026-45586"), "P3-PublicZeroDay",
-    "P4")
-| project DeviceName, OSPlatform, OSVersion, IsInternetFacing, MachineGroup, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, Priority
-| order by Priority asc, DeviceName asc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -405,7 +412,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft Patches Record 206 Flaws, Including Three Zero-Days and Critical RCE B
 
-`UC_49_6` · phase: **exploit** · confidence: **High**
+`UC_50_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -462,4 +469,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 13 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

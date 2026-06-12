@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Talos prevalent-week malware execution — Coinminer/Injector/Dropper hash match (incl. VID001.exe)
 
-`UC_4_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceProcessEvents
 
 ### Talos prevalent-week malware drop to disk — Coinminer/Injector/Dropper hash on file write
 
-`UC_4_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_5_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -201,7 +201,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A tale of two eras
 
-`UC_4_5` · phase: **exploit** · confidence: **High**
+`UC_5_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
