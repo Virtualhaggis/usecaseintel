@@ -36,7 +36,7 @@ To the surprise of absolutely no one who has seen my face, I’m one of the yo
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
 - **T1496** — Resource Hijacking
-- **T1055** — Process Injection
+- **T1105** — Ingress Tool Transfer
 
 ## Kill chain phases observed
 
@@ -44,51 +44,47 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Talos weekly prevalent malware: Win.Worm.Coinminer (VID001.exe) execution hunt
+### Talos prevalent-week malware execution — Coinminer/Injector/Dropper hash match (incl. VID001.exe)
 
-`UC_3_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_4_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process_name) as process_name values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name from datamodel=Endpoint.Processes where (Processes.process_hash IN ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","2915b3f8b703eb744fc54c81f4a9c67f") OR Processes.process_name="VID001.exe") by Processes.dest Processes.user Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash IN ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","9896a6fcb9bb5ac1ec5297b4a65be3f647589adf7c37b45f3f7466decd6a4a7f","2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","7bdbd180c081fa63ca94f9c22c457376","38de5b216c33833af710e88f7f64fc98")) OR Processes.process_name="VID001.exe" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime), ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let CoinminerHashes = dynamic(["9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","2915b3f8b703eb744fc54c81f4a9c67f"]);
-let ProcHits = DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where SHA256 in (CoinminerHashes) or MD5 in (CoinminerHashes) or FileName =~ "VID001.exe"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine, EventTable="DeviceProcessEvents";
-let FileHits = DeviceFileEvents
-| where Timestamp > ago(30d)
-| where SHA256 in (CoinminerHashes) or MD5 in (CoinminerHashes) or FileName =~ "VID001.exe"
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, ProcessCommandLine=InitiatingProcessCommandLine, SHA256, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine, EventTable="DeviceFileEvents";
-union ProcHits, FileHits
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where SHA256 in~ ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","9896a6fcb9bb5ac1ec5297b4a65be3f647589adf7c37b45f3f7466decd6a4a7f")
+   or MD5 in~ ("2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","7bdbd180c081fa63ca94f9c22c457376","38de5b216c33833af710e88f7f64fc98")
+   or FileName =~ "VID001.exe"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, MD5, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Talos weekly prevalent malware: W32.Injector / Win.Dropper.Miner sample-pair execution hunt
+### Talos prevalent-week malware drop to disk — Coinminer/Injector/Dropper hash on file write
 
-`UC_3_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_4_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process_name) as process_name values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name from datamodel=Endpoint.Processes where (Processes.process_hash IN ("96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","aac3165ece2959f39ff98334618d10d9","7bdbd180c081fa63ca94f9c22c457376") OR Processes.process_name="d4aa3e7010220ad1b458fac17039c274_*_Exe.exe") by Processes.dest Processes.user Processes.process_hash Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","9896a6fcb9bb5ac1ec5297b4a65be3f647589adf7c37b45f3f7466decd6a4a7f","2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","7bdbd180c081fa63ca94f9c22c457376","38de5b216c33833af710e88f7f64fc98")) OR Filesystem.file_name="VID001.exe" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime), ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let DropperHashes = dynamic(["96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","aac3165ece2959f39ff98334618d10d9","7bdbd180c081fa63ca94f9c22c457376"]);
-let ProcHits = DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where SHA256 in (DropperHashes) or MD5 in (DropperHashes) or FileName matches regex @"(?i)^d4aa3e7010220ad1b458fac17039c274_\d+_Exe\.exe$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, EventTable="DeviceProcessEvents";
-let FileHits = DeviceFileEvents
-| where Timestamp > ago(30d)
-| where SHA256 in (DropperHashes) or MD5 in (DropperHashes) or FileName matches regex @"(?i)^d4aa3e7010220ad1b458fac17039c274_\d+_Exe\.exe$"
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, ProcessCommandLine=InitiatingProcessCommandLine, SHA256, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, EventTable="DeviceFileEvents";
-union ProcHits, FileHits
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| where SHA256 in~ ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","9896a6fcb9bb5ac1ec5297b4a65be3f647589adf7c37b45f3f7466decd6a4a7f")
+   or MD5 in~ ("2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","7bdbd180c081fa63ca94f9c22c457376","38de5b216c33833af710e88f7f64fc98")
+   or FileName =~ "VID001.exe"
+| project Timestamp, DeviceName, FileName, FolderPath, SHA256, MD5, FileOriginUrl, FileOriginIP, FileOriginReferrerUrl,
+          InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
@@ -205,7 +201,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A tale of two eras
 
-`UC_3_5` · phase: **exploit** · confidence: **High**
+`UC_4_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

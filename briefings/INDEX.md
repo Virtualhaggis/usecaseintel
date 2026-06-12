@@ -8,6 +8,9 @@ _1258 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-06-12
+- [oracle peoplesoft 0 day rce vulnerability exploited in attac](./2026-06-12/oracle-peoplesoft-0-day-rce-vulnerability-exploited-in-attac.md)
+
 ## 2026-06-11
 - [a tale of two eras](./2026-06-11/a-tale-of-two-eras.md)
 - [ai broke vulnerability management that s why cisos are movin](./2026-06-11/ai-broke-vulnerability-management-that-s-why-cisos-are-movin.md)
@@ -20,7 +23,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [github to disable npm install scripts by default to stop sup](./2026-06-11/github-to-disable-npm-install-scripts-by-default-to-stop-sup.md)
 - [goflateloader uses massive pe overlay to deliver lumma vidar](./2026-06-11/goflateloader-uses-massive-pe-overlay-to-deliver-lumma-vidar.md)
 - [hackers abuse sniperdz phaas ecosystem for brand impersonati](./2026-06-11/hackers-abuse-sniperdz-phaas-ecosystem-for-brand-impersonati.md)
-- [hackers use weaponized dmg files to target macos users with ](./2026-06-11/hackers-use-weaponized-dmg-files-to-target-macos-users-with-.md)
 - [max severity ivanti sentry vulnerability now exploited in at](./2026-06-11/max-severity-ivanti-sentry-vulnerability-now-exploited-in-at.md)
 - [miasma and hades are spreading now detect them on developer ](./2026-06-11/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)
 - [new attacks trick openclaw ai agent into running code and le](./2026-06-11/new-attacks-trick-openclaw-ai-agent-into-running-code-and-le.md)

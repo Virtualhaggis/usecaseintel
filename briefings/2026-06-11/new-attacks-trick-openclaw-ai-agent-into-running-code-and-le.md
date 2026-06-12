@@ -34,15 +34,17 @@ Imperva buried instructions inside shared contacts, vCards, and location pins th
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1059** — Command and Scripting Interpreter
-- **T1059.003** — Windows Command Shell
-- **T1059.006** — Python
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1059.006** — Command and Scripting Interpreter: Python
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1105** — Ingress Tool Transfer
+- **T1114.003** — Email Collection: Email Forwarding Rule
+- **T1567** — Exfiltration Over Web Service
 - **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1552.004** — Unsecured Credentials: Private Keys
 - **T1005** — Data from Local System
-- **T1566.002** — Phishing: Spearphishing Link
+- **T1041** — Exfiltration Over C2 Channel
+- **T1020** — Automated Exfiltration
 
 ## Kill chain phases observed
 
@@ -50,81 +52,116 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### OpenClaw AI agent process spawning shells or script interpreters
+### OpenClaw AI agent process spawning shell or script interpreter (post prompt-injection RCE)
 
-`UC_4_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("openclaw.exe","openclaw","openclaw-agent","openclaw-agent.exe","openclaw-runtime") AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","bash.exe","wscript.exe","cscript.exe","mshta.exe","curl.exe","wget.exe","certutil.exe","bitsadmin.exe","python.exe","python3.exe","node.exe") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_hash) as hashes from datamodel=Endpoint.Processes where (Processes.parent_process_name="openclaw*" OR Processes.parent_process="*openclaw*" OR Processes.parent_process="*open-claw*") Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","python.exe","python3.exe","bash.exe","sh.exe","node.exe","curl.exe","wget.exe","certutil.exe","bitsadmin.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName has_any ("openclaw.exe","openclaw","openclaw-agent","openclaw-agent.exe","openclaw-runtime")
-| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","bash.exe","wscript.exe","cscript.exe","mshta.exe","curl.exe","wget.exe","certutil.exe","bitsadmin.exe","python.exe","python3.exe","node.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FolderPath, ProcessCommandLine, SHA256
+| where InitiatingProcessFileName has "openclaw"
+    or InitiatingProcessParentFileName has "openclaw"
+    or InitiatingProcessCommandLine has_any ("openclaw", "open-claw")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","python.exe","python3.exe","bash.exe","sh.exe","node.exe","curl.exe","wget.exe","certutil.exe","bitsadmin.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          AgentImage = InitiatingProcessFolderPath,
+          AgentCmd   = InitiatingProcessCommandLine,
+          ChildImage = FolderPath,
+          ChildCmd   = ProcessCommandLine,
+          SHA256
 | order by Timestamp desc
 ```
 
-### OpenClaw agent network egress to attacker payload server imperva_artifactory.com
+### Network egress to imperva_artifactory.com (OpenClaw prompt-injection payload host)
 
-`UC_4_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_5_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*imperva_artifactory.com" OR DNS.query="*imperva-artifactory.com" by host DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.app) as process from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_host IN ("imperva_artifactory.com","*.imperva_artifactory.com","imperva-artifactory.com","*.imperva-artifactory.com") by All_Traffic.src All_Traffic.dest_host | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+let ImpervaC2 = dynamic(["imperva_artifactory.com","imperva-artifactory.com"]);
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has "imperva_artifactory.com" or RemoteUrl has "imperva-artifactory.com" or RemoteUrl matches regex @"imperva[-_]artifactory\.com"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| where Timestamp > ago(90d)
+| where RemoteUrl has_any (ImpervaC2)
+    or tostring(parse_url(RemoteUrl).Host) in~ (ImpervaC2)
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### OpenClaw agent process touching cloud-credential, SSH, or .env secret files
+### Agent-mailbox outbound email to personal address containing credential / customer-export indicators (Varonis agent phishing)
 
-`UC_4_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_5_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("openclaw.exe","openclaw","openclaw-agent","openclaw-agent.exe","openclaw-runtime","pinchy.exe","pinchy") AND (Filesystem.file_path="*aws/credentials*" OR Filesystem.file_path="*aws\\credentials*" OR Filesystem.file_path="*.ssh/id_rsa*" OR Filesystem.file_path="*.ssh/id_ed25519*" OR Filesystem.file_path="*.ssh/config*" OR Filesystem.file_path="*.env" OR Filesystem.file_path="*.env.local" OR Filesystem.file_path="*.env.production" OR Filesystem.file_path="*kube/config*" OR Filesystem.file_path="*docker/config.json*" OR Filesystem.file_path="*.npmrc" OR Filesystem.file_path="*.pypirc" OR Filesystem.file_path="*gcloud-token.json*" OR Filesystem.file_path="*credentials.json*") by host Filesystem.user Filesystem.process_name Filesystem.action Filesystem.file_path | `drop_dm_object_name(Filesystem)`
+`email` direction=outbound (src_user="*openclaw*" OR src_user="*pinchy*" OR src_user="*agent*" OR src_user="*assistant*") (recipient="*@gmail.com" OR recipient="*@outlook.com" OR recipient="*@yahoo.com" OR recipient="*@proton.me" OR recipient="*@protonmail.com" OR recipient="*@icloud.com") (subject="*QBR*" OR subject="*customer export*" OR subject="*staging access*" OR subject="*production incident*" OR subject="*credentials*" OR subject="*access key*" OR subject="*connection string*" OR subject="*urgent*") | stats count min(_time) as firstTime max(_time) as lastTime values(subject) as subjects values(file_name) as attachments by src_user recipient | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName has_any ("openclaw.exe","openclaw","openclaw-agent","openclaw-agent.exe","openclaw-runtime","pinchy","pinchy.exe")
-| where (FolderPath has_any (@"\.aws\credentials", @"\.ssh\id_rsa", @"\.ssh\id_ed25519", @"\.ssh\id_ecdsa", @"\.ssh\config", @"\.kube\config", @"\.docker\config.json", @"\.gnupg\", @"\AppData\Roaming\gcloud\"))
-   or FileName in~ (".env",".env.local",".env.production","credentials","id_rsa","id_ed25519","id_ecdsa",".pypirc",".npmrc","gcloud-token.json","credentials.json","application_default_credentials.json")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FolderPath, FileName
+let AgentMailboxes = dynamic(["openclaw","pinchy","agent","assistant","copilot","bot"]);
+let PersonalDomains = dynamic(["gmail.com","outlook.com","hotmail.com","yahoo.com","proton.me","protonmail.com","icloud.com","aol.com","yandex.com","mail.ru"]);
+let LureSubjects = dynamic(["QBR","customer export","staging access","production incident","connection string","access key","AWS IAM","SSH key","urgent","weekly export","credentials"]);
+EmailEvents
+| where Timestamp > ago(14d)
+| where EmailDirection == "Outbound" and DeliveryAction == "Delivered"
+| where (SenderFromAddress has_any (AgentMailboxes) or SenderDisplayName has_any (AgentMailboxes))
+| extend RecipientDomain = tostring(split(RecipientEmailAddress, "@")[1])
+| where RecipientDomain in~ (PersonalDomains)
+| where Subject has_any (LureSubjects) or AttachmentCount > 0
+| join kind=leftouter (EmailAttachmentInfo | project NetworkMessageId, FileName, FileType, SHA256) on NetworkMessageId
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderDisplayName,
+          RecipientEmailAddress, RecipientDomain, Subject,
+          AttachmentCount, FileName, FileType
 | order by Timestamp desc
 ```
 
-### Embedded prompt-injection payload inside contact name / vCard / location label in OpenClaw audit logs
+### OpenClaw agent reading credential stores then egressing to public destination (lethal trifecta)
 
-`UC_4_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_5_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-search (sourcetype="openclaw:audit" OR sourcetype="openclaw:agent" OR sourcetype="openclaw_agent" OR source="*openclaw*.log") | regex _raw="<\s*contact\s*:[^>]*(curl|wget|Invoke-WebRequest|powershell|bash|imperva_artifactory)" | stats count min(_time) as firstTime max(_time) as lastTime values(_raw) as payloads by host source sourcetype
+| tstats `summariesonly` count min(_time) as fileTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\.env" OR Filesystem.file_path="*\\.aws\\credentials*" OR Filesystem.file_path="*\\.ssh\\id_rsa*" OR Filesystem.file_path="*\\.npmrc" OR Filesystem.file_path="*\\.docker\\config.json") (Filesystem.process_name="openclaw*" OR Filesystem.process_path="*openclaw*") by Filesystem.dest Filesystem.process_guid Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | rename process_guid as agent_guid | join type=inner dest agent_guid [| tstats `summariesonly` count min(_time) as netTime values(All_Traffic.dest_ip) as remote_ip values(All_Traffic.dest_host) as remote_host from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_category="public" (All_Traffic.app="openclaw*" OR All_Traffic.process_name="openclaw*") by All_Traffic.src All_Traffic.process_guid | `drop_dm_object_name(All_Traffic)` | rename src as dest, process_guid as agent_guid] | where netTime >= fileTime AND netTime <= fileTime + 300 | table fileTime netTime dest process_name file_path remote_ip remote_host
 ```
 
 **Defender KQL:**
 ```kql
+let LookbackDays = 7d;
+let WindowSeconds = 300;
+let CredAccess = DeviceFileEvents
+    | where Timestamp > ago(LookbackDays)
+    | where InitiatingProcessFileName has "openclaw" or InitiatingProcessCommandLine has "openclaw"
+    | where FolderPath has_any (".aws\\credentials",".aws/credentials",".ssh\\id_rsa",".ssh/id_rsa",".docker\\config.json",".docker/config.json",".npmrc",".kube\\config",".kube/config")
+        or FileName in~ (".env","credentials","id_rsa",".npmrc",".pypirc")
+    | project FileTime = Timestamp, DeviceId, DeviceName,
+              InitiatingProcessId, InitiatingProcessCreationTime,
+              InitiatingProcessFileName, InitiatingProcessAccountName,
+              CredFile = strcat(FolderPath, "\\", FileName);
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName has_any ("openclaw.exe","openclaw","openclaw-agent","openclaw-agent.exe","openclaw-runtime")
-| where RemoteUrl matches regex @"imperva[-_]artifactory" or RemoteUrl matches regex @"\.(sh|ps1|py|vbs|hta|bat)(\?|$)"
-| where RemoteUrl !startswith "https://github.com/" and RemoteUrl !startswith "https://raw.githubusercontent.com/"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP
-| order by Timestamp desc
+| where Timestamp > ago(LookbackDays)
+| where RemoteIPType == "Public"
+| where InitiatingProcessFileName has "openclaw" or InitiatingProcessCommandLine has "openclaw"
+| join kind=inner CredAccess on DeviceId, InitiatingProcessId
+| where Timestamp between (FileTime .. FileTime + WindowSeconds * 1s)
+| project FileTime, NetTime = Timestamp,
+          DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, CredFile,
+          RemoteIP, RemoteUrl, RemotePort
+| order by NetTime desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -452,4 +489,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
