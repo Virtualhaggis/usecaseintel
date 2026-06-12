@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Miasma/Hades: AI-agent or editor config file written outside the IDE (auto-exec on project open)
 
-`UC_21_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_26_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceFileEvents
 
 ### Hades PyPI worm: Python interpreter spawns Bun runtime or downloads it from bun.sh/oven-sh
 
-`UC_21_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_26_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceProcessEvents
 
 ### Miasma Phantom Gyp: ~157-byte binding.gyp file dropped in package root (npm install code-exec primitive)
 
-`UC_21_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_26_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceFileEvents
 
 ### Known Miasma/Hades payload SHA256 observed in file write or process execution
 
-`UC_21_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_26_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ union
 
 ### Worm propagation signal: rapid serial npm publish or twine upload from a single developer host
 
-`UC_21_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_26_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -220,7 +220,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Miasma and Hades Are Spreading Now: Detect Them on Developer Machines with Suspi
 
-`UC_21_3` · phase: **exploit** · confidence: **High**
+`UC_26_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

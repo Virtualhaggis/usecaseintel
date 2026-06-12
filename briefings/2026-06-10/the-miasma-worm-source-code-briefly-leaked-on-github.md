@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### Miasma 'Miasma-Open-Source-Release' GitHub repo creation across dev accounts
 
-`UC_41_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_46_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ CloudAppEvents
 
 ### Miasma persistence: systemd user service or macOS LaunchAgent dropped by dev run
 
-`UC_41_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_46_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceFileEvents
 
 ### Miasma dead-man switch: rm -rf ~/ ; rm -rf ~/Documents on token revocation
 
-`UC_41_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_46_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceProcessEvents
 
 ### Miasma credential fan-out: single process reading 3+ developer secret stores
 
-`UC_41_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_46_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ DeviceFileEvents
 
 ### Miasma AI coding tool config poisoning (Claude/Gemini/Cursor/Copilot/Kiro/Cline)
 
-`UC_41_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_46_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -166,7 +166,7 @@ DeviceFileEvents
 
 ### AWS SSM StartSession or aws-cli ssm from non-bastion / new caller
 
-`UC_41_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_46_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -194,7 +194,7 @@ CloudAppEvents
 
 ### Package publish (npm/PyPI/RubyGems) from compromised developer endpoint
 
-`UC_41_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_46_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

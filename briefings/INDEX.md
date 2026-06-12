@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1260 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1261 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,13 +9,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-12
+- [5 socket security alternatives and why they are better](./2026-06-12/5-socket-security-alternatives-and-why-they-are-better.md)
 - [cisa orders feds to patch actively exploited ivanti flaw by ](./2026-06-12/cisa-orders-feds-to-patch-actively-exploited-ivanti-flaw-by-.md)
 - [europol disrupts audia6 crypto laundering service used by ra](./2026-06-12/europol-disrupts-audia6-crypto-laundering-service-used-by-ra.md)
 - [hackers use free spotify premium hacks on tiktok and instagr](./2026-06-12/hackers-use-free-spotify-premium-hacks-on-tiktok-and-instagr.md)
+- [interpol operation takes down sniper dz phishing platform ar](./2026-06-12/interpol-operation-takes-down-sniper-dz-phishing-platform-ar.md)
+- [langgraph flaw chain exposes self hosted ai agents to remote](./2026-06-12/langgraph-flaw-chain-exposes-self-hosted-ai-agents-to-remote.md)
 - [microsoft outlook and word vulnerabilities allow attackers t](./2026-06-12/microsoft-outlook-and-word-vulnerabilities-allow-attackers-t.md)
 - [oracle peoplesoft 0 day rce vulnerability exploited in attac](./2026-06-12/oracle-peoplesoft-0-day-rce-vulnerability-exploited-in-attac.md)
 - [over 73 000 french govt employees affected in tchap messenge](./2026-06-12/over-73-000-french-govt-employees-affected-in-tchap-messenge.md)
 - [palo alto pan os vulnerability allows attackers to execute a](./2026-06-12/palo-alto-pan-os-vulnerability-allows-attackers-to-execute-a.md)
+- [rethinking mdr as attackers and defenders embrace ai](./2026-06-12/rethinking-mdr-as-attackers-and-defenders-embrace-ai.md)
 - [solana fakefix campaign uses 25 malicious npm and pypi packa](./2026-06-12/solana-fakefix-campaign-uses-25-malicious-npm-and-pypi-packa.md)
 
 ## 2026-06-11
@@ -26,7 +30,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 48039 meta ads mcp unauthenticated ht](./2026-06-11/ghsa-critical-cve-2026-48039-meta-ads-mcp-unauthenticated-ht.md)
 - [ghsa critical cve 2026 48062 codeigniter4 has a validation b](./2026-06-11/ghsa-critical-cve-2026-48062-codeigniter4-has-a-validation-b.md)
 - [github to disable npm install scripts by default to stop sup](./2026-06-11/github-to-disable-npm-install-scripts-by-default-to-stop-sup.md)
-- [goflateloader uses massive pe overlay to deliver lumma vidar](./2026-06-11/goflateloader-uses-massive-pe-overlay-to-deliver-lumma-vidar.md)
 - [max severity ivanti sentry vulnerability now exploited in at](./2026-06-11/max-severity-ivanti-sentry-vulnerability-now-exploited-in-at.md)
 - [miasma and hades are spreading now detect them on developer ](./2026-06-11/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)
 - [new attacks trick openclaw ai agent into running code and le](./2026-06-11/new-attacks-trick-openclaw-ai-agent-into-running-code-and-le.md)
@@ -103,9 +106,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47670 authenticated remote code execu](./2026-06-05/ghsa-critical-cve-2026-47670-authenticated-remote-code-execu.md)
 - [ghsa critical cve 2026 47731 nasa ammos instrument toolkit p](./2026-06-05/ghsa-critical-cve-2026-47731-nasa-ammos-instrument-toolkit-p.md)
 - [ghsa critical cve 2026 47744 shopper authorization bypass an](./2026-06-05/ghsa-critical-cve-2026-47744-shopper-authorization-bypass-an.md)
-- [hackers exploit critical everest forms pro wordpress plugin ](./2026-06-05/hackers-exploit-critical-everest-forms-pro-wordpress-plugin-.md)
 - [ironworm and new miasma worm variant hit npm in supply chain](./2026-06-05/ironworm-and-new-miasma-worm-variant-hit-npm-in-supply-chain.md)
-- [new threat cluster op 512 targets microsoft iis servers with](./2026-06-05/new-threat-cluster-op-512-targets-microsoft-iis-servers-with.md)
 - [securing ci cd in an agentic world claude code github action](./2026-06-05/securing-ci-cd-in-an-agentic-world-claude-code-github-action.md)
 
 ## 2026-06-04

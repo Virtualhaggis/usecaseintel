@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — The SecurityManager is getting removed in Java: What that means for you
 
-`UC_1434_0` · phase: **install** · confidence: **High**
+`UC_1435_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

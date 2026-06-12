@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### npm Post-Install Script Execution from Untrusted Package
 
-`UC_37_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_42_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceProcessEvents
 
 ### Dependency Confusion or Typosquatting Installation
 
-`UC_37_7` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+`UC_42_7` · phase: **delivery** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### Suspicious npm Registry Authentication or Publish Activity
 
-`UC_37_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_42_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ union PublishEvents, NpmrcWrites
 
 ### Lateral Movement via Compromised Transitive Dependency
 
-`UC_37_9` · phase: **install** · confidence: **Low** · AI-generated for this article
+`UC_42_9` · phase: **install** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceProcessEvents
 
 ### npm pre/post-install Script Disabling Bypass Attempt
 
-`UC_37_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_42_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,7 +164,7 @@ union CmdlineBypass, NpmrcEnables
 
 ### npm registry traffic to non-allowlisted registry host during install
 
-`UC_37_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_42_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -390,7 +390,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GitHub to Disable npm Install Scripts by Default to Stop Supply Chain Attacks
 
-`UC_37_5` · phase: **exploit** · confidence: **High**
+`UC_42_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### PowerShell invoked with hardcoded LDAP bind credentials (Tchap leaked-script pattern)
 
-`UC_6_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_12_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceProcessEvents
 
 ### Outbound traffic to Tchap/Matrix government domains from non-baseline endpoint (breach reuse / phishing-infra check)
 
-`UC_6_3` · phase: **c2** · confidence: **Low** · AI-generated for this article
+`UC_12_3` · phase: **c2** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

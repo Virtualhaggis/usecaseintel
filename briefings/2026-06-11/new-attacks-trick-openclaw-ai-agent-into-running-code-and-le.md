@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### OpenClaw agent outbound to Imperva PoC domain imperva_artifactory.com
 
-`UC_14_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_20_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceNetworkEvents
 
 ### OpenClaw agent process spawns script interpreter or download LOLBin
 
-`UC_14_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_20_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceProcessEvents
 
 ### AI agent mailbox auto-forward of credentials or bulk customer data to external recipient
 
-`UC_14_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_20_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ EmailEvents
 
 ### AI agent process reads cloud credential stores or .env secrets before egress
 
-`UC_14_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_20_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

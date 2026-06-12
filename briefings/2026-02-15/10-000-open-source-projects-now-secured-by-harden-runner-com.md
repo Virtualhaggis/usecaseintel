@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### s1ngularity Nx postinstall — `gh auth token` spawned by node/npm on CI runner
 
-`UC_532_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_534_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceProcessEvents
 
 ### AI CLI weaponized for recon — claude/gemini/q invoked under npm install lineage
 
-`UC_532_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_534_2` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceProcessEvents
 
 ### CI runner anomalous outbound to raw.githubusercontent.com / gist.githubusercontent.com
 
-`UC_532_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_534_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceNetworkEvents
 
 ### s1ngularity collection artifact — `/tmp/inventory.txt` written by node/npm on runner
 
-`UC_532_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_534_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceFileEvents
 
 ### GitHub Actions runner — process reads runner worker memory to extract GITHUB_TOKEN
 
-`UC_532_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_534_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

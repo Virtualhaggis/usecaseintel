@@ -64,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### DNS / web egress to AudiA6 money-mule registration infrastructure domains
 
-`UC_7_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_13_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
