@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Ivanti Sentry CVE-2026-10520 RCE via /mics/api/v2/sentry/mics-config/handleMessage
 
-`UC_44_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_45_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceNetworkEvents
 
 ### Fortinet FortiSandbox WEB UI command injection (CVE-2026-25089)
 
-`UC_44_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_45_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceNetworkEvents
 
 ### SAP NetWeaver SAML XML Signature Wrapping pattern (CVE-2026-44748)
 
-`UC_44_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_45_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceNetworkEvents
 
 ### Unpatched Ivanti Sentry / FortiSandbox / SAP NetWeaver matching disclosed CVE IDs
 
-`UC_44_9` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_45_9` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

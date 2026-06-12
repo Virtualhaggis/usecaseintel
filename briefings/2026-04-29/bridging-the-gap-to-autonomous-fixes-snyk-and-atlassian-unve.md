@@ -27,7 +27,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Bridging the Gap to Autonomous Fixes: Snyk and Atlassian Unveil Intelligent Reme
 
-`UC_343_0` · phase: **exploit** · confidence: **High**
+`UC_344_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

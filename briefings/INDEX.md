@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1257 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1258 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-12
 - [oracle peoplesoft 0 day rce vulnerability exploited in attac](./2026-06-12/oracle-peoplesoft-0-day-rce-vulnerability-exploited-in-attac.md)
+- [over 73 000 french govt employees affected in tchap messenge](./2026-06-12/over-73-000-french-govt-employees-affected-in-tchap-messenge.md)
 
 ## 2026-06-11
 - [a tale of two eras](./2026-06-11/a-tale-of-two-eras.md)

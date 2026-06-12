@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### Unpatched June 2026 Patch Tuesday CVE inventory (kernel TCP/IP, DHCP, HTTP.sys, BitLocker)
 
-`UC_50_7` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_51_7` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### HTTP/2 Bomb mitigation tampering — MaxHeadersCount registry value (CVE-2026-49160)
 
-`UC_50_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_51_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceRegistryEvents
 
 ### DHCP Client svchost anomalous child process (CVE-2026-44815 post-exploit)
 
-`UC_50_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_51_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceProcessEvents
 
 ### HTTP.sys / IIS w3wp.exe spawning shell or LOLBin (CVE-2026-47291 post-exploit)
 
-`UC_50_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_51_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +156,7 @@ DeviceProcessEvents
 
 ### CTFMON spawning elevated child or CTFMON-hosted privilege escalation (CVE-2026-45586 / GreenPlasma)
 
-`UC_50_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_51_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +184,7 @@ DeviceProcessEvents
 
 ### PoC artefact drop — Chaotic Eclipse named exploits (YellowKey, GreenPlasma, MiniPlasma, RoguePlanet, bitskrieg)
 
-`UC_50_12` · phase: **install** · confidence: **Low** · AI-generated for this article
+`UC_51_12` · phase: **install** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -412,7 +412,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft Patches Record 206 Flaws, Including Three Zero-Days and Critical RCE B
 
-`UC_50_6` · phase: **exploit** · confidence: **High**
+`UC_51_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -25,14 +25,12 @@ The Miasma worm and its PyPI branch, Hades, are spreading across the npm and PyP
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1547.013** — Boot or Logon Autostart Execution: XDG Autostart Entries
 - **T1546** — Event Triggered Execution
-- **T1059.007** — JavaScript
-- **T1059.006** — Python
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1105** — Ingress Tool Transfer
+- **T1027.013** — Encrypted/Encoded File
 - **T1552.001** — Credentials In Files
-- **T1528** — Steal Application Access Token
+- **T1567** — Exfiltration Over Web Service
 
 ## Kill chain phases observed
 
@@ -40,139 +38,81 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Miasma 'Phantom Gyp' — 157-byte binding.gyp drop in node_modules
+### Miasma/Hades: AI-agent or editor config file written outside the IDE (auto-exec on project open)
 
-`UC_16_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_17_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="binding.gyp" AND Filesystem.file_path="*\\node_modules\\*" AND Filesystem.file_size<220 by host, Filesystem.user, Filesystem.file_path, Filesystem.file_size, Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.file_path) as file_path values(Filesystem.file_hash) as file_hash from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\.vscode\\tasks.json" OR Filesystem.file_path="*\\.vscode\\setup.mjs" OR Filesystem.file_path="*\\.claude\\setup.mjs" OR Filesystem.file_path="*\\.claude\\settings.json" OR Filesystem.file_path="*\\.cursor\\rules\\setup.mdc" OR Filesystem.file_path="*\\.gemini\\settings.json" OR Filesystem.file_path="*\\.github\\setup.js") (Filesystem.action=created OR Filesystem.action=modified) NOT (Filesystem.process_name IN ("Code.exe","Code - Insiders.exe","cursor.exe","claude.exe","gemini.exe","windsurf.exe","devenv.exe")) by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.user | `drop_dm_object_name(Filesystem)` | rename firstTime as first_time lastTime as last_time | convert ctime(first_time) ctime(last_time) | sort - last_time
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where (FolderPath has @"\.vscode" and FileName in~ ("tasks.json","setup.mjs"))
+   or (FolderPath has @"\.claude" and FileName in~ ("setup.mjs","settings.json"))
+   or (FolderPath has @"\.cursor\rules" and FileName =~ "setup.mdc")
+   or (FolderPath has @"\.gemini" and FileName =~ "settings.json")
+   or (FolderPath has @"\.github" and FileName =~ "setup.js")
+| where InitiatingProcessFileName !in~ ("Code.exe","Code - Insiders.exe","cursor.exe","claude.exe","gemini.exe","windsurf.exe","devenv.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FolderPath, FileName, FileSize, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### Hades PyPI worm: Python interpreter spawns Bun runtime or downloads it from bun.sh/oven-sh
+
+`UC_17_5` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd values(Processes.process_hash) as hash from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("python.exe","pythonw.exe","python3.exe","python3.11.exe","python3.12.exe","python3.13.exe") AND (Processes.process_name="bun.exe" OR Processes.process IN ("*bun.sh*","*bun.com/install*","*oven-sh/bun*","*bun-windows-*","*bun-linux-*","*bun-darwin-*")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | rename firstTime as first_time lastTime as last_time | convert ctime(first_time) ctime(last_time) | sort - last_time
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","python3.exe","python3.11.exe","python3.12.exe","python3.13.exe")
+| where FileName =~ "bun.exe"
+   or (FileName in~ ("curl.exe","wget.exe","powershell.exe","pwsh.exe","bitsadmin.exe") and ProcessCommandLine has_any ("bun.sh","bun.com/install","oven-sh/bun","bun-windows-","bun-linux-","bun-darwin-"))
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, ParentImage=InitiatingProcessFolderPath, ParentCmd=InitiatingProcessCommandLine, ChildImage=FolderPath, ChildCmd=ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Miasma Phantom Gyp: ~157-byte binding.gyp file dropped in package root (npm install code-exec primitive)
+
+`UC_17_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_size) as file_size values(Filesystem.process_name) as process_name values(Filesystem.file_hash) as file_hash from datamodel=Endpoint.Filesystem where Filesystem.file_name="binding.gyp" Filesystem.file_size<400 (Filesystem.action=created OR Filesystem.action=modified) NOT Filesystem.file_path="*\\node_modules\\node-gyp\\*" by Filesystem.dest Filesystem.user Filesystem.file_path | `drop_dm_object_name(Filesystem)` | rename firstTime as first_time lastTime as last_time | convert ctime(first_time) ctime(last_time) | sort - last_time
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("FileCreated","FileModified")
 | where FileName =~ "binding.gyp"
-| where FolderPath has "node_modules"
-| where FileSize between (50 .. 220)
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          FileName, FolderPath, FileSize, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName
+| where FileSize < 400
+| where FolderPath !has @"\node_modules\node-gyp\"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FolderPath, FileName, FileSize, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
-### Auto-execute editor/AI-tool config file dropped in repository
+### Known Miasma/Hades payload SHA256 observed in file write or process execution
 
-`UC_16_5` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\.vscode\\*" OR Filesystem.file_path="*\\.claude\\*" OR Filesystem.file_path="*\\.cursor\\*" OR Filesystem.file_path="*\\.gemini\\*" OR Filesystem.file_path="*\\.github\\*") AND Filesystem.file_name IN ("tasks.json","setup.mjs","setup.mdc","setup.js","settings.json") AND Filesystem.process_name IN ("node.exe","npm.exe","yarn.exe","pnpm.exe","python.exe","python3.exe","pip.exe","pip3.exe") by host, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.process_name | `drop_dm_object_name(Filesystem)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where (FolderPath contains ".vscode" and FileName in~ ("tasks.json", "setup.mjs"))
-     or (FolderPath contains ".claude" and FileName in~ ("setup.mjs", "settings.json"))
-     or (FolderPath contains ".cursor" and FileName =~ "setup.mdc")
-     or (FolderPath contains ".gemini" and FileName =~ "settings.json")
-     or (FolderPath contains ".github" and FileName =~ "setup.js")
-| where InitiatingProcessFileName in~ ("node.exe", "npm.exe", "yarn.exe", "pnpm.exe", "python.exe", "python3.exe", "pip.exe", "pip3.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          FileName, FolderPath, FileSize, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### VS Code / Cursor / Claude Code spawning script interpreter on project open
-
-`UC_16_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_17_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("code.exe","cursor.exe","claude.exe","gemini.exe","windsurf.exe") AND Processes.process_name IN ("node.exe","python.exe","python3.exe","pwsh.exe","powershell.exe","cmd.exe","bun.exe","wsl.exe","bash.exe") by host, Processes.user, Processes.parent_process, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | search process="*setup.mjs*" OR process="*setup.js*" OR process="*setup.mdc*" OR process="*tasks.json*" OR process="*.claude\\*" OR process="*.cursor\\*" OR process="*.vscode\\*" OR process="*bun.sh*" OR process="*oven-sh/bun*"
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("code.exe", "cursor.exe", "claude.exe", "gemini.exe", "windsurf.exe")
-| where FileName in~ ("node.exe", "python.exe", "python3.exe", "pwsh.exe", "powershell.exe", "cmd.exe", "bun.exe", "wsl.exe", "bash.exe")
-| where ProcessCommandLine has_any ("setup.mjs", "setup.js", "setup.mdc", "tasks.json", ".claude", ".cursor", ".vscode", ".gemini", "bun.sh", "oven-sh/bun", "DownloadString", "child_process")
-| project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          SHA256
-| order by Timestamp desc
-```
-
-### Hades — python.exe child process downloads standalone Bun runtime on import
-
-`UC_16_7` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("python.exe","python3.exe","pythonw.exe") AND (Processes.process_name IN ("curl.exe","powershell.exe","pwsh.exe","cmd.exe","bun.exe") OR Processes.process_name="bun.exe") by host, Processes.user, Processes.parent_process, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | search (process="*bun.sh*" OR process="*oven-sh/bun*" OR process="*bun-windows*" OR process="*bun-linux*" OR process_name="bun.exe")
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("python.exe", "python3.exe", "pythonw.exe")
-| where (FileName in~ ("curl.exe", "powershell.exe", "pwsh.exe", "cmd.exe", "wget.exe")
-         and ProcessCommandLine has_any ("bun.sh", "oven-sh/bun", "bun-windows", "bun-linux", "bun-darwin"))
-   or FileName =~ "bun.exe"
-| project Timestamp, DeviceName, AccountName,
-          ParentCmd = InitiatingProcessCommandLine,
-          ParentImage = InitiatingProcessFolderPath,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          SHA256
-| order by Timestamp desc
-```
-
-### Miasma/Hades worm credential theft — npm/PyPI publishing token access
-
-`UC_16_8` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.process IN ("*.npmrc*","*.pypirc*","*_authToken*","*NPM_TOKEN*","*PYPI_TOKEN*","*NPM_AUTH_TOKEN*","*twine upload*","*npm publish*","*__token__*","*registry.npmjs.org/-/npm/v1/tokens*") AND Processes.parent_process_name IN ("code.exe","cursor.exe","claude.exe","gemini.exe","python.exe","python3.exe","node.exe","bun.exe","npm.exe") by host, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where ProcessCommandLine has_any (".npmrc", ".pypirc", "_authToken", "NPM_TOKEN", "PYPI_TOKEN", "NPM_AUTH_TOKEN", "registry.npmjs.org/-/npm/v1/tokens", "username = __token__", "twine upload", "npm publish", "__token__")
-| where InitiatingProcessFileName in~ ("node.exe", "bun.exe", "python.exe", "python3.exe", "pwsh.exe", "powershell.exe", "cmd.exe", "npm.exe")
-| where InitiatingProcessParentFileName in~ ("code.exe", "cursor.exe", "claude.exe", "gemini.exe", "python.exe", "node.exe", "npm.exe", "bun.exe")
-| project Timestamp, DeviceName, AccountName,
-          GrandparentImage = InitiatingProcessParentFileName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          SHA256
-| order by Timestamp desc
-```
-
-### Known Miasma/Hades payload SHA256 hash observed on developer machine
-
-`UC_16_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.process_hash IN ("dc48b09b2a5954f7ff79ab8a2fd80202bd3b59c08c7cdbc6025aa923cb4c0efe","e1342a80d4b5e83d2c7c22e1e0aaa95f2d88e3dbf0d853a4994b180c93a4b17d","c539766062555d47716f8432e73adbe3a0c0c954a0b6c4005017a668975e275c","7069e28a5806db4ab0273639667d203f5e31b401d403af7e36d9f360c1f6d655","b86c5ae9e95bd841a595440faa3eb6317441e746f241ae8fd641ab59ed1d1966") by host, Processes.user, Processes.process_name, Processes.process, Processes.process_hash | `drop_dm_object_name(Processes)` | append [| tstats summariesonly=t count from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("dc48b09b2a5954f7ff79ab8a2fd80202bd3b59c08c7cdbc6025aa923cb4c0efe","e1342a80d4b5e83d2c7c22e1e0aaa95f2d88e3dbf0d853a4994b180c93a4b17d","c539766062555d47716f8432e73adbe3a0c0c954a0b6c4005017a668975e275c","7069e28a5806db4ab0273639667d203f5e31b401d403af7e36d9f360c1f6d655","b86c5ae9e95bd841a595440faa3eb6317441e746f241ae8fd641ab59ed1d1966") by host, Filesystem.user, Filesystem.file_name, Filesystem.file_path, Filesystem.file_hash | `drop_dm_object_name(Filesystem)`]
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_name) as process_name from datamodel=Endpoint.Processes where Processes.process_hash IN ("dc48b09b2a5954f7ff79ab8a2fd80202bd3b59c08c7cdbc6025aa923cb4c0efe","e1342a80d4b5e83d2c7c22e1e0aaa95f2d88e3dbf0d853a4994b180c93a4b17d","c539766062555d47716f8432e73adbe3a0c0c954a0b6c4005017a668975e275c","7069e28a5806db4ab0273639667d203f5e31b401d403af7e36d9f360c1f6d655","b86c5ae9e95bd841a595440faa3eb6317441e746f241ae8fd641ab59ed1d1966") by Processes.dest Processes.user Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [| tstats summariesonly=t count from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("dc48b09b2a5954f7ff79ab8a2fd80202bd3b59c08c7cdbc6025aa923cb4c0efe","e1342a80d4b5e83d2c7c22e1e0aaa95f2d88e3dbf0d853a4994b180c93a4b17d","c539766062555d47716f8432e73adbe3a0c0c954a0b6c4005017a668975e275c","7069e28a5806db4ab0273639667d203f5e31b401d403af7e36d9f360c1f6d655","b86c5ae9e95bd841a595440faa3eb6317441e746f241ae8fd641ab59ed1d1966") by Filesystem.dest Filesystem.user Filesystem.file_hash Filesystem.file_path | `drop_dm_object_name(Filesystem)`] | rename firstTime as first_time lastTime as last_time | convert ctime(first_time) ctime(last_time) | sort - last_time
 ```
 
 **Defender KQL:**
@@ -185,22 +125,44 @@ let MiasmaHashes = dynamic([
     "b86c5ae9e95bd841a595440faa3eb6317441e746f241ae8fd641ab59ed1d1966"
 ]);
 union
-  (DeviceProcessEvents
-   | where Timestamp > ago(30d)
-   | where SHA256 in (MiasmaHashes)
-   | project Timestamp, DeviceName, EventType="ProcessExec", FileName, FolderPath, SHA256,
-             InitiatingProcessFileName, CmdLine=ProcessCommandLine, AccountName),
   (DeviceFileEvents
    | where Timestamp > ago(30d)
    | where SHA256 in (MiasmaHashes)
-   | project Timestamp, DeviceName, EventType="FileWrite", FileName, FolderPath, SHA256,
-             InitiatingProcessFileName, CmdLine=InitiatingProcessCommandLine, AccountName=InitiatingProcessAccountName),
-  (DeviceImageLoadEvents
+   | project Timestamp, Source="FileEvent", DeviceName, AccountName=InitiatingProcessAccountName, Path=FolderPath, FileName, SHA256, ParentImage=InitiatingProcessFileName, Cmd=InitiatingProcessCommandLine),
+  (DeviceProcessEvents
    | where Timestamp > ago(30d)
-   | where SHA256 in (MiasmaHashes)
-   | project Timestamp, DeviceName, EventType="ImageLoad", FileName, FolderPath, SHA256,
-             InitiatingProcessFileName, CmdLine=InitiatingProcessCommandLine, AccountName=InitiatingProcessAccountName)
+   | where SHA256 in (MiasmaHashes) or InitiatingProcessSHA256 in (MiasmaHashes)
+   | project Timestamp, Source="ProcessEvent", DeviceName, AccountName, Path=FolderPath, FileName, SHA256, ParentImage=InitiatingProcessFileName, Cmd=ProcessCommandLine)
 | order by Timestamp desc
+```
+
+### Worm propagation signal: rapid serial npm publish or twine upload from a single developer host
+
+`UC_17_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count values(Processes.process) as cmdlines values(Processes.parent_process_name) as parents from datamodel=Endpoint.Processes where ((Processes.process_name="npm.exe" AND Processes.process="*publish*") OR (Processes.process_name="twine.exe" AND Processes.process="*upload*") OR (Processes.process_name="python.exe" AND Processes.process="*twine*upload*") OR (Processes.process_name="node.exe" AND Processes.process="*npm-cli*publish*")) by Processes.dest Processes.user _time span=30m | `drop_dm_object_name(Processes)` | where count >= 3 | sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(1d)
+| where (FileName =~ "npm.exe" and ProcessCommandLine has " publish")
+     or (FileName in~ ("twine.exe","twine") and ProcessCommandLine has "upload")
+     or (FileName in~ ("python.exe","pythonw.exe") and ProcessCommandLine matches regex @"(?i)twine\s+upload")
+     or (FileName =~ "node.exe" and ProcessCommandLine has_any ("npm-cli.js publish","npm publish"))
+| where InitiatingProcessAccountName !endswith "$"
+| summarize PublishCount = count(),
+            DistinctCmds = dcount(ProcessCommandLine),
+            SampleCmds = make_set(ProcessCommandLine, 10),
+            Parents = make_set(InitiatingProcessFileName, 5),
+            FirstSeen = min(Timestamp),
+            LastSeen = max(Timestamp)
+            by DeviceName, AccountName, bin(Timestamp, 30m)
+| where PublishCount >= 3 and DistinctCmds >= 3
+| order by LastSeen desc
 ```
 
 ### PowerShell encoded / obfuscated command
@@ -258,7 +220,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Miasma and Hades Are Spreading Now: Detect Them on Developer Machines with Suspi
 
-`UC_16_3` · phase: **exploit** · confidence: **High**
+`UC_17_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -315,4 +277,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

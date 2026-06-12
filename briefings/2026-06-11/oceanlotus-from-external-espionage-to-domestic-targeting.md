@@ -84,7 +84,7 @@ _(none detected from narrative keywords)_
 
 ### OceanLotus SPECTRALVIPER C2 infrastructure (domains/IPs from 2024-2026 campaigns)
 
-`UC_31_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_32_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceNetworkEvents
 
 ### SPECTRALVIPER DLL side-load: DtlCrashCatch.dll injecting OneDrive.Sync.Service.exe
 
-`UC_31_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_32_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ LoadEvents
 
 ### OceanLotus renamed SysInternals ProcDump masquerading as windbg.exe
 
-`UC_31_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_32_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -152,7 +152,7 @@ DeviceProcessEvents
 
 ### SPECTRALVIPER sample hash hunt across process and file telemetry
 
-`UC_31_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_32_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -171,7 +171,7 @@ union isfuzzy=true
 
 ### FireAnt Metakit updater spawning unexpected child processes (supply-chain hunt)
 
-`UC_31_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_32_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -365,7 +365,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus: From external espionage to domestic targeting
 
-`UC_31_8` · phase: **exploit** · confidence: **High**
+`UC_32_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

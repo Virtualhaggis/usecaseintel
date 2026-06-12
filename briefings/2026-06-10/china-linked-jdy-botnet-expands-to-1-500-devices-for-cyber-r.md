@@ -1,6 +1,6 @@
 # [CRIT] China-Linked JDY Botnet Expands to 1,500+ Devices for Cyber Reconnaissance
 
-**Source:** The Hacker News, BleepingComputer
+**Source:** The Hacker News
 **Published:** 2026-06-10
 **Article:** https://thehackernews.com/2026/06/china-linked-jdy-botnet-expands-to-1500.html
 
@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### JDY-style outbound recon scanning originating from internal IoT / network appliances
 
-`UC_42_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_43_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceNetworkEvents
 
 ### Outbound Tor (9001/9030/9050) from network appliance / IoT subnet — JDY C2 beaconing
 
-`UC_42_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_43_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceNetworkEvents
 
 ### MIPS shell-script dropper on Linux edge device — JDY architecture-aware payload fetch
 
-`UC_42_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_43_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceProcessEvents
 
 ### CVE-2026-35616 exploitation attempt against edge SOHO/IoT devices — JDY initial access
 
-`UC_42_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_43_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

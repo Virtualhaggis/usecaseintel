@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Mini Shai-Hulud C2 exfil to t.m-kosche.com disguised as OpenTelemetry collector
 
-`UC_259_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_260_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceNetworkEvents
 
 ### Mini Shai-Hulud npm worm payload by SHA256
 
-`UC_259_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_260_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceFileEvents
 
 ### GitHub Actions Runner.Worker process-memory secret scraping via /proc
 
-`UC_259_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_260_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### Mini Shai-Hulud persistence hooks written into .vscode/ and .claude/ configs
 
-`UC_259_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_260_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -390,7 +390,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mini Shai-Hulud strikes again: npm worm compromises hundreds of @antv packages
 
-`UC_259_9` · phase: **exploit** · confidence: **High**
+`UC_260_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
