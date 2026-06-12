@@ -35,11 +35,8 @@ To the surprise of absolutely no one who has seen my face, I’m one of the yo
 - **T1219** — Remote Access Software
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1204.002** — Malicious File
 - **T1496** — Resource Hijacking
 - **T1055** — Process Injection
-- **T1562.001** — Disable or Modify Tools
-- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
@@ -47,66 +44,52 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Talos weekly prevalent malware hash match (2026-06-11): coinminer/injector/dropper/procpatcher
+### Talos weekly prevalent malware: Win.Worm.Coinminer (VID001.exe) execution hunt
 
 `UC_3_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as path values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_hash IN ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","9896a6fcb9bb5ac1ec5297b4a65be3f647589adf7c37b45f3f7466decd6a4a7f","2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","7bdbd180c081fa63ca94f9c22c457376","38de5b216c33833af710e88f7f64fc98") by Processes.dest Processes.user Processes.process_name Processes.process_hash | `drop_dm_object_name("Processes")` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process_name) as process_name values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name from datamodel=Endpoint.Processes where (Processes.process_hash IN ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","2915b3f8b703eb744fc54c81f4a9c67f") OR Processes.process_name="VID001.exe") by Processes.dest Processes.user Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let badSHA256 = dynamic(["9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","9896a6fcb9bb5ac1ec5297b4a65be3f647589adf7c37b45f3f7466decd6a4a7f"]);
-let badMD5 = dynamic(["2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","7bdbd180c081fa63ca94f9c22c457376","38de5b216c33833af710e88f7f64fc98"]);
-union
-(DeviceProcessEvents
-  | where Timestamp > ago(7d)
-  | where SHA256 in (badSHA256) or MD5 in (badMD5)
-  | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, EventTable="DeviceProcessEvents"),
-(DeviceFileEvents
-  | where Timestamp > ago(7d)
-  | where SHA256 in (badSHA256) or MD5 in (badMD5)
-  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, ProcessCommandLine="", SHA256, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, EventTable="DeviceFileEvents"),
-(DeviceImageLoadEvents
-  | where Timestamp > ago(7d)
-  | where SHA256 in (badSHA256) or MD5 in (badMD5)
-  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, ProcessCommandLine="", SHA256, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine="", InitiatingProcessFolderPath, EventTable="DeviceImageLoadEvents")
+let CoinminerHashes = dynamic(["9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","2915b3f8b703eb744fc54c81f4a9c67f"]);
+let ProcHits = DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where SHA256 in (CoinminerHashes) or MD5 in (CoinminerHashes) or FileName =~ "VID001.exe"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine, EventTable="DeviceProcessEvents";
+let FileHits = DeviceFileEvents
+| where Timestamp > ago(30d)
+| where SHA256 in (CoinminerHashes) or MD5 in (CoinminerHashes) or FileName =~ "VID001.exe"
+| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, ProcessCommandLine=InitiatingProcessCommandLine, SHA256, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine, EventTable="DeviceFileEvents";
+union ProcHits, FileHits
 | order by Timestamp desc
 ```
 
-### Coinminer Stratum-protocol egress to known mining pools (Talos prevalent malware impact stage)
+### Talos weekly prevalent malware: W32.Injector / Win.Dropper.Miner sample-pair execution hunt
 
-`UC_3_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest_hosts values(All_Traffic.dest_port) as dest_ports values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (3333,4444,5555,7777,8333,9999,14444,14433,5730) AND All_Traffic.transport=tcp AND All_Traffic.dest_category!="internal" by All_Traffic.src All_Traffic.user | `drop_dm_object_name("All_Traffic")` | where count > 5 | append [| tstats summariesonly=t count from datamodel=Network_Resolution.DNS where DNS.query IN ("*xmr.nanopool.org","*pool.minexmr.com","*xmrpool.eu","*supportxmr.com","*monerohash.com","*minexmr.com","*moneroocean.stream","*2miners.com","*nicehash.com","*unmineable.com","*ethermine.org","*f2pool.com","*herominers.com") by DNS.src DNS.query | `drop_dm_object_name("DNS")` | rename src as src ] | sort - count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process_name) as process_name values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name from datamodel=Endpoint.Processes where (Processes.process_hash IN ("96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","aac3165ece2959f39ff98334618d10d9","7bdbd180c081fa63ca94f9c22c457376") OR Processes.process_name="d4aa3e7010220ad1b458fac17039c274_*_Exe.exe") by Processes.dest Processes.user Processes.process_hash Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let StratumPorts = dynamic([3333,4444,5555,7777,8333,9999,14444,14433,5730]);
-let PoolDomains = dynamic(["xmr.nanopool.org","pool.minexmr.com","xmrpool.eu","supportxmr.com","monerohash.com","minexmr.com","moneroocean.stream","2miners.com","nicehash.com","unmineable.com","ethermine.org","f2pool.com","herominers.com","randomx","stratum."]);
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteIPType == "Public"
-| where (RemotePort in (StratumPorts) and Protocol == "Tcp")
-      or (isnotempty(RemoteUrl) and RemoteUrl has_any (PoolDomains))
-| where InitiatingProcessFileName !in~ ("msedge.exe","chrome.exe","firefox.exe","brave.exe","teams.exe","slack.exe","zoom.exe")
-| summarize ConnCount = count(),
-            FirstSeen = min(Timestamp),
-            LastSeen = max(Timestamp),
-            Ports = make_set(RemotePort, 20),
-            Pools = make_set(RemoteUrl, 20),
-            IPs = make_set(RemoteIP, 20),
-            Processes = make_set(InitiatingProcessFileName, 10),
-            CmdLines = make_set(InitiatingProcessCommandLine, 10),
-            Hashes = make_set(InitiatingProcessSHA256, 10)
-            by DeviceName, InitiatingProcessAccountName
-| where ConnCount > 5
-| order by LastSeen desc
+let DropperHashes = dynamic(["96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","aac3165ece2959f39ff98334618d10d9","7bdbd180c081fa63ca94f9c22c457376"]);
+let ProcHits = DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where SHA256 in (DropperHashes) or MD5 in (DropperHashes) or FileName matches regex @"(?i)^d4aa3e7010220ad1b458fac17039c274_\d+_Exe\.exe$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, EventTable="DeviceProcessEvents";
+let FileHits = DeviceFileEvents
+| where Timestamp > ago(30d)
+| where SHA256 in (DropperHashes) or MD5 in (DropperHashes) or FileName matches regex @"(?i)^d4aa3e7010220ad1b458fac17039c274_\d+_Exe\.exe$"
+| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, ProcessCommandLine=InitiatingProcessCommandLine, SHA256, MD5, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, EventTable="DeviceFileEvents";
+union ProcHits, FileHits
+| order by Timestamp desc
 ```
 
 ### Ransomware-style mass file rename / extension change
@@ -279,4 +262,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
