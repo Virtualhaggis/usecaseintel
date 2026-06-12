@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### LinkedIn-delivered 'Drive' phishing link followed by AWS CloudFront-hosted M365 lookalike navigation
 
-`UC_93_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_97_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceNetworkEvents
 
 ### Browser navigation to *.cloudfront.net Microsoft 365 login lookalike
 
-`UC_93_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_97_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Snyk Fetch the Flag CTF 2023 writeup: Honey Baked Messages
 
-`UC_1320_0` · phase: **exploit** · confidence: **High**
+`UC_1319_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

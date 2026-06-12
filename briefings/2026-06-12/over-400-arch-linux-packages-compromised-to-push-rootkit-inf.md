@@ -11,22 +11,16 @@ By Bill Toulas
 June 12, 2026
 01:03 PM
 0 
-
-
 More than 400 packages in the Arch User Repository (AUR) are distributing a Linux rootkit and infostealer malware targeting credentials and access tokens.
-
-
 A report from the open-source intelligence community Independent Federated Intelligence Network (IFIN) notes that a new maintainer is spoofing a trusted publisher on the AUR platform to push infected packages.
-
-
-The Arch L…
+The Arch Linux distrib…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **Domain (defanged):** `olrh4mibs62l6kkuvvjyc5lrercqg5tz543r4lsw3o6mh5qb7g7sneid.onion`
 - **Domain (defanged):** `temp.sh`
-- **SHA256:** `6144d433f8a0316869877b5f834c801251bbb936e5f1577c5680878c7443c98b`
-- **MD5:** `42b59fdbe1b72895b2951412222ebf40`
+- **SHA256:** `6144D433F8A0316869877B5F834C801251BBB936E5F1577C5680878C7443C98B`
+- **MD5:** `42B59FDBE1B72895B2951412222EBF40`
 
 ## MITRE ATT&CK Techniques
 
@@ -58,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Atomic Arch — pacman/makepkg post-install spawning npm install of atomic-lockfile
 
-`UC_0_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_8_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +72,7 @@ DeviceProcessEvents
 
 ### Atomic Arch — ELF payload 'deps' written or executed under build/cache directories after AUR install
 
-`UC_0_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_8_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +92,7 @@ DeviceFileEvents
 
 ### Atomic Arch rootkit — eBPF program load by AUR-build-chain descendant
 
-`UC_0_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_8_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +115,7 @@ DeviceEvents
 
 ### Atomic Arch infostealer — bulk reads of SSH/npmrc/Vault/browser-cookie files by non-shell process
 
-`UC_0_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_8_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +137,7 @@ DeviceFileEvents
 
 ### Atomic Arch — DNS resolution and HTTP POST to temp.sh from non-browser developer workstation process
 
-`UC_0_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_8_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +156,7 @@ DeviceNetworkEvents
 
 ### Atomic Arch — Tor client spawn or .onion endpoint contact from AUR-installing developer host
 
-`UC_0_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_8_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -298,7 +292,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
   - IP / domain IOC(s): `olrh4mibs62l6kkuvvjyc5lrercqg5tz543r4lsw3o6mh5qb7g7sneid.onion`, `temp.sh`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `6144d433f8a0316869877b5f834c801251bbb936e5f1577c5680878c7443c98b`, `42b59fdbe1b72895b2951412222ebf40`
+  - file hash IOC(s): `6144D433F8A0316869877B5F834C801251BBB936E5F1577C5680878C7443C98B`, `42B59FDBE1B72895B2951412222EBF40`
 
 
 ## Why this matters

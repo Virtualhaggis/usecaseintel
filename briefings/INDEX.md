@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1194 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1193 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,12 +9,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-12
+- [400 arch linux aur packages hijacked to install rust credent](./2026-06-12/400-arch-linux-aur-packages-hijacked-to-install-rust-credent.md)
 - [agentjacking attack tricks ai coding agents into running mal](./2026-06-12/agentjacking-attack-tricks-ai-coding-agents-into-running-mal.md)
+- [china linked hackers backdoored linux login software to hide](./2026-06-12/china-linked-hackers-backdoored-linux-login-software-to-hide.md)
 - [cisa orders feds to patch actively exploited ivanti flaw by ](./2026-06-12/cisa-orders-feds-to-patch-actively-exploited-ivanti-flaw-by-.md)
 - [critical vulnerability chain in langgraph allows attackers t](./2026-06-12/critical-vulnerability-chain-in-langgraph-allows-attackers-t.md)
 - [early warning signs of supply chain attacks live in the dark](./2026-06-12/early-warning-signs-of-supply-chain-attacks-live-in-the-dark.md)
 - [europol disrupts audia6 crypto laundering service used by ra](./2026-06-12/europol-disrupts-audia6-crypto-laundering-service-used-by-ra.md)
-- [hackers use free spotify premium hacks on tiktok and instagr](./2026-06-12/hackers-use-free-spotify-premium-hacks-on-tiktok-and-instagr.md)
+- [fancy bear hackers abuse edgerouters and cloud services to l](./2026-06-12/fancy-bear-hackers-abuse-edgerouters-and-cloud-services-to-l.md)
+- [ghsa critical cve 2026 48150 budibase workspace scoped build](./2026-06-12/ghsa-critical-cve-2026-48150-budibase-workspace-scoped-build.md)
+- [google sues chinese smishing network accused of using gemini](./2026-06-12/google-sues-chinese-smishing-network-accused-of-using-gemini.md)
+- [hackers abuse legitimate ninjaone rmm software to bypass tra](./2026-06-12/hackers-abuse-legitimate-ninjaone-rmm-software-to-bypass-tra.md)
 - [hackers use onyxc2 malware as a service to steal credentials](./2026-06-12/hackers-use-onyxc2-malware-as-a-service-to-steal-credentials.md)
 - [interpol operation takes down sniper dz phishing platform ar](./2026-06-12/interpol-operation-takes-down-sniper-dz-phishing-platform-ar.md)
 - [langgraph flaw chain exposes self hosted ai agents to remote](./2026-06-12/langgraph-flaw-chain-exposes-self-hosted-ai-agents-to-remote.md)
@@ -23,7 +28,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [over 73 000 french govt employees affected in tchap messenge](./2026-06-12/over-73-000-french-govt-employees-affected-in-tchap-messenge.md)
 - [rethinking mdr as attackers and defenders embrace ai](./2026-06-12/rethinking-mdr-as-attackers-and-defenders-embrace-ai.md)
 - [sheetcreep c rat abuses google sheets api as c2 to target di](./2026-06-12/sheetcreep-c-rat-abuses-google-sheets-api-as-c2-to-target-di.md)
-- [solana fakefix campaign uses 25 malicious npm and pypi packa](./2026-06-12/solana-fakefix-campaign-uses-25-malicious-npm-and-pypi-packa.md)
+- [shinyhunters exploits oracle peoplesoft zero day cve 2026 35](./2026-06-12/shinyhunters-exploits-oracle-peoplesoft-zero-day-cve-2026-35.md)
+- [ukrainian national pleads guilty to role in conti ransomware](./2026-06-12/ukrainian-national-pleads-guilty-to-role-in-conti-ransomware.md)
 
 ## 2026-06-11
 - [a tale of two eras](./2026-06-11/a-tale-of-two-eras.md)
@@ -36,11 +42,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [miasma and hades are spreading now detect them on developer ](./2026-06-11/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)
 - [new attacks trick openclaw ai agent into running code and le](./2026-06-11/new-attacks-trick-openclaw-ai-agent-into-running-code-and-le.md)
 - [new greatxml exploit bypasses windows bitlocker via recovery](./2026-06-11/new-greatxml-exploit-bypasses-windows-bitlocker-via-recovery.md)
-- [nottingham university data breach affects over 450 000 stude](./2026-06-11/nottingham-university-data-breach-affects-over-450-000-stude.md)
 - [npm v12 delivers one of the biggest security improvements in](./2026-06-11/npm-v12-delivers-one-of-the-biggest-security-improvements-in.md)
 - [oceanlotus from external espionage to domestic targeting](./2026-06-11/oceanlotus-from-external-espionage-to-domestic-targeting.md)
 - [oceanlotus hits vietnam investors with spectralviper in fire](./2026-06-11/oceanlotus-hits-vietnam-investors-with-spectralviper-in-fire.md)
-- [shinyhunters exploits oracle peoplesoft zero day cve 2026 35](./2026-06-11/shinyhunters-exploits-oracle-peoplesoft-zero-day-cve-2026-35.md)
 - [the gentlemen ransomware claims 478 victims can spread like ](./2026-06-11/the-gentlemen-ransomware-claims-478-victims-can-spread-like-.md)
 
 ## 2026-06-10
@@ -92,9 +96,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-06
 - [ai agent uncovers 21 zero days in ffmpeg chrome patches reco](./2026-06-06/ai-agent-uncovers-21-zero-days-in-ffmpeg-chrome-patches-reco.md)
 - [cisa adds actively exploited solarwinds serv u dos flaw to k](./2026-06-06/cisa-adds-actively-exploited-solarwinds-serv-u-dos-flaw-to-k.md)
-- [cisco catalyst sd wan manager cve 2026 20245 flaw actively e](./2026-06-06/cisco-catalyst-sd-wan-manager-cve-2026-20245-flaw-actively-e.md)
 - [free apps are quietly turning smart tvs into web scraping pr](./2026-06-06/free-apps-are-quietly-turning-smart-tvs-into-web-scraping-pr.md)
-- [miasma worm hits 73 microsoft github repositories in major s](./2026-06-06/miasma-worm-hits-73-microsoft-github-repositories-in-major-s.md)
 
 ## 2026-06-05
 - [cisa kev cve 2026 28318 solarwinds serv u uncontrolled resou](./2026-06-05/cisa-kev-cve-2026-28318-solarwinds-serv-u-uncontrolled-resou.md)
@@ -103,7 +105,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47670 authenticated remote code execu](./2026-06-05/ghsa-critical-cve-2026-47670-authenticated-remote-code-execu.md)
 - [ghsa critical cve 2026 47731 nasa ammos instrument toolkit p](./2026-06-05/ghsa-critical-cve-2026-47731-nasa-ammos-instrument-toolkit-p.md)
 - [ghsa critical cve 2026 47744 shopper authorization bypass an](./2026-06-05/ghsa-critical-cve-2026-47744-shopper-authorization-bypass-an.md)
-- [ironworm and new miasma worm variant hit npm in supply chain](./2026-06-05/ironworm-and-new-miasma-worm-variant-hit-npm-in-supply-chain.md)
 - [securing ci cd in an agentic world claude code github action](./2026-06-05/securing-ci-cd-in-an-agentic-world-claude-code-github-action.md)
 
 ## 2026-06-04
@@ -292,7 +293,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-13
 - [ghsa critical cve 2026 22599 strapi vulnerable to sql inject](./2026-05-13/ghsa-critical-cve-2026-22599-strapi-vulnerable-to-sql-inject.md)
-- [ghsa critical cve 2026 45375 siyuan bazaar marketplace rende](./2026-05-13/ghsa-critical-cve-2026-45375-siyuan-bazaar-marketplace-rende.md)
 
 ## 2026-05-12
 - [teampcp s mini shai hulud is back a self spreading supply ch](./2026-05-12/teampcp-s-mini-shai-hulud-is-back-a-self-spreading-supply-ch.md)
@@ -1761,7 +1761,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2024-06-12
 - [cisa kev cve 2024 4577 php cgi os command injection vulnerab](./2024-06-12/cisa-kev-cve-2024-4577-php-cgi-os-command-injection-vulnerab.md)
-- [cisa kev cve 2024 4610 arm mali gpu kernel driver use after ](./2024-06-12/cisa-kev-cve-2024-4610-arm-mali-gpu-kernel-driver-use-after-.md)
 - [essential node js backend examples for developers in 2024](./2024-06-12/essential-node-js-backend-examples-for-developers-in-2024.md)
 - [snyk and aws announce native amazon eks support directly fro](./2024-06-12/snyk-and-aws-announce-native-amazon-eks-support-directly-fro.md)
 

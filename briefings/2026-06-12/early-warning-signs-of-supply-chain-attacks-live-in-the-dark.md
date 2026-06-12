@@ -38,12 +38,16 @@ In underground forums and marketplaces, supply-chain relevance does not always a
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1568** — Dynamic Resolution
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1059** — Command and Scripting Interpreter
-- **T1552.001** — Credentials In Files
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1546** — Event Triggered Execution
+- **T1567** — Exfiltration Over Web Service
+- **T1102** — Web Service
+- **T1041** — Exfiltration Over C2 Channel
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1555** — Credentials from Password Stores
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1199** — Trusted Relationship
+- **T1078.004** — Valid Accounts: Cloud Accounts
 
 ## Kill chain phases observed
 
@@ -51,92 +55,161 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Outbound network to TeamPCP / Shai-Hulud / LiteLLM supply-chain C2 domains
+### Shai-Hulud npm worm — shai-hulud-workflow.yml dropped into .github/workflows/
 
-`UC_5_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_13_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("scan.aquasecurtiy.org","checkmarx.zone","models.litellm.cloud","git-tanstack.com","t.m-kosche.com","check.git-service.com","nsa.cat") by All_Traffic.src host All_Traffic.dest All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="shai-hulud-workflow.yml" OR Filesystem.file_path="*\\.github\\workflows\\shai-hulud*" OR Filesystem.file_path="*/.github/workflows/shai-hulud*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_path
+| `drop_dm_object_name(Filesystem)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let badDomains = dynamic(["scan.aquasecurtiy.org","checkmarx.zone","models.litellm.cloud","git-tanstack.com","t.m-kosche.com","check.git-service.com","nsa.cat"]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| where FileName =~ "shai-hulud-workflow.yml"
+   or FolderPath has @"\.github\workflows\shai-hulud"
+   or FolderPath has "/.github/workflows/shai-hulud"
+| project Timestamp, DeviceName,
+          AccountName = InitiatingProcessAccountName,
+          FolderPath, FileName, SHA256,
+          ParentImage = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          GrandParent = InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### Shai-Hulud worm exfil — outbound to webhook.site/bb8ca5f6 from developer or CI process
+
+`UC_13_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.url) as url from datamodel=Network_Traffic.All_Traffic where (All_Traffic.url="*webhook.site/bb8ca5f6-4175-45d2-b042-fc9ebb8170b7*" OR (All_Traffic.url="*webhook.site*" AND All_Traffic.process_name IN ("node.exe","npm.exe","npm-cli.js","yarn.exe","pnpm.exe","git.exe","runner.exe","Runner.Worker.exe"))) by All_Traffic.src All_Traffic.user All_Traffic.process_name All_Traffic.dest All_Traffic.url
+| `drop_dm_object_name(All_Traffic)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let ShaiHuludUuid = "bb8ca5f6-4175-45d2-b042-fc9ebb8170b7";
+let DevProcs = dynamic(["node.exe","npm.exe","yarn.exe","pnpm.exe","git.exe","runner.exe","Runner.Worker.exe","powershell.exe","pwsh.exe","bash.exe"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has_any (badDomains)
-   or tostring(parse_url(strcat("http://", tostring(RemoteUrl)))["Host"]) in~ (badDomains)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
+| where isnotempty(RemoteUrl)
+| where RemoteUrl has "webhook.site"
+| where RemoteUrl has ShaiHuludUuid
+      or InitiatingProcessFileName in~ (DevProcs)
+| project Timestamp, DeviceName,
+          AccountName = InitiatingProcessAccountName,
+          InitiatingProcessFileName,
+          InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName,
+          RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### Known TeamPCP / Shai-Hulud payload SHA256 observed on disk or executing
+### TruffleHog binary spawned by npm/node — Shai-Hulud secret harvest
 
-`UC_5_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_hash IN ("46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09","62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0","f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068","cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd","a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a") by Processes.dest Processes.user Processes.process_name Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let badHashes = dynamic(["46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09","62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0","f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068","cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd","a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a"]);
-union isfuzzy=true
-(DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where SHA256 in~ (badHashes) or InitiatingProcessSHA256 in~ (badHashes)
-  | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessSHA256),
-(DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where SHA256 in~ (badHashes)
-  | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, FolderPath, SHA256, ActionType)
-| order by Timestamp desc
-```
-
-### npm/pip install lifecycle script spawning credential / token harvest
-
-`UC_5_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_13_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("npm.exe","npm-cli.js","node.exe","yarn.exe","pnpm.exe","pip.exe","pip3.exe","pip3","poetry.exe","poetry") AND Processes.process_name IN ("node.exe","python.exe","python3.exe","sh","bash","cmd.exe","powershell.exe","curl.exe","wget.exe") AND (Processes.process="*GITHUB_TOKEN*" OR Processes.process="*NPM_TOKEN*" OR Processes.process="*PYPI_TOKEN*" OR Processes.process="*AWS_ACCESS_KEY*" OR Processes.process="*.npmrc*" OR Processes.process="*.pypirc*" OR Processes.process="*.aws/credentials*" OR Processes.process="*.git-credentials*" OR Processes.process="*id_rsa*" OR Processes.process="*preinstall*" OR Processes.process="*postinstall*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("trufflehog","trufflehog.exe","trufflehog3","trufflehog3.exe") OR Processes.process="*trufflehog*filesystem*" OR Processes.process="*trufflehog*git*") AND Processes.parent_process_name IN ("node.exe","npm.exe","yarn.exe","pnpm.exe","runner.exe","Runner.Worker.exe","bash.exe","sh.exe","cmd.exe") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("npm.exe","npm","node.exe","node","yarn.exe","yarn","pnpm.exe","pnpm","pip.exe","pip","pip3.exe","pip3","poetry.exe","poetry")
-   or InitiatingProcessCommandLine has_any ("npm install","npm ci","yarn install","pnpm install","pip install","poetry install")
-| where FileName in~ ("node.exe","python.exe","python3.exe","sh.exe","bash.exe","cmd.exe","powershell.exe","pwsh.exe","curl.exe","wget.exe")
-| where ProcessCommandLine has_any ("GITHUB_TOKEN","GH_TOKEN","NPM_TOKEN","PYPI_TOKEN","HF_TOKEN","OPENAI_API_KEY","ANTHROPIC_API_KEY","AWS_ACCESS_KEY","AWS_SECRET","GOOGLE_APPLICATION_CREDENTIALS",".npmrc",".pypirc",".aws/credentials",".git-credentials","id_rsa","id_ed25519","preinstall","postinstall","prepublish")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| where Timestamp > ago(30d)
+| where (FileName matches regex @"(?i)^trufflehog([0-9])?(\.exe)?$"
+        or ProcessCommandLine has "trufflehog filesystem"
+        or ProcessCommandLine has "trufflehog git"
+        or ProcessCommandLine has "trufflehog --json")
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe","npm-cli.js","yarn.exe","pnpm.exe","runner.exe","Runner.Worker.exe","bash.exe","sh.exe","cmd.exe","powershell.exe","pwsh.exe")
+     or InitiatingProcessParentFileName in~ ("node.exe","npm.exe","yarn.exe","runner.exe")
+| project Timestamp, DeviceName,
+          AccountName, ProcessCommandLine, FolderPath, SHA256,
+          ParentImage = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          GrandParent = InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
-### VS Code extension host (Code.exe) child process reaching attacker C2
+### Shai-Hulud bundle.js — known-bad SHA256 written to disk
 
-`UC_5_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_13_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name IN ("Code.exe","code","code-server","Cursor.exe","cursor","node.exe") OR All_Traffic.parent_process_name IN ("Code.exe","code","code-server","Cursor.exe","cursor")) AND All_Traffic.dest IN ("scan.aquasecurtiy.org","checkmarx.zone","models.litellm.cloud","git-tanstack.com","t.m-kosche.com","check.git-service.com","nsa.cat") by All_Traffic.src host All_Traffic.user All_Traffic.dest All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09","62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0","f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068","cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd","a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a","b74caeaa75e077c99f7d44f46daaf9796a3be43ecf24f2a1fd381844669da777","dc67467a39b70d1cd4c1f7f7a459b35058163592f4a9e8fb4dffcbba98ef210c","4b2399646573bb737c4969563303d8ee2e9ddbd1b271f1ca9e35ea78062538db") OR (Filesystem.file_name="bundle.js" AND Filesystem.file_path="*\\node_modules\\*" AND Filesystem.process_name IN ("node.exe","npm.exe","yarn.exe","pnpm.exe")) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.file_hash Filesystem.process_name
+| `drop_dm_object_name(Filesystem)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let badDomains = dynamic(["scan.aquasecurtiy.org","checkmarx.zone","models.litellm.cloud","git-tanstack.com","t.m-kosche.com","check.git-service.com","nsa.cat"]);
-let codeHosts = dynamic(["code.exe","code","code-server","cursor.exe","cursor","codium.exe"]);
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ (codeHosts)
-   or InitiatingProcessParentFileName in~ (codeHosts)
-   or (InitiatingProcessFileName in~ ("node.exe","node") and InitiatingProcessParentFileName in~ (codeHosts))
-| where RemoteUrl has_any (badDomains) or tostring(parse_url(strcat("http://", tostring(RemoteUrl)))["Host"]) in~ (badDomains)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessParentFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+let KnownHashes = dynamic([
+    "46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09",
+    "62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0",
+    "f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068",
+    "cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd",
+    "a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a",
+    "b74caeaa75e077c99f7d44f46daaf9796a3be43ecf24f2a1fd381844669da777",
+    "dc67467a39b70d1cd4c1f7f7a459b35058163592f4a9e8fb4dffcbba98ef210c",
+    "4b2399646573bb737c4969563303d8ee2e9ddbd1b271f1ca9e35ea78062538db"]);
+union isfuzzy=true
+(DeviceFileEvents
+   | where Timestamp > ago(30d)
+   | where SHA256 in (KnownHashes)
+        or (FileName =~ "bundle.js" and FolderPath has @"\node_modules\" and InitiatingProcessFileName in~ ("node.exe","npm.exe","yarn.exe","pnpm.exe"))
+   | project Timestamp, DeviceName, EventTable="FileEvent",
+             AccountName=InitiatingProcessAccountName,
+             FolderPath, FileName, SHA256,
+             ParentImage=InitiatingProcessFileName,
+             ParentCmd=InitiatingProcessCommandLine),
+(DeviceProcessEvents
+   | where Timestamp > ago(30d)
+   | where SHA256 in (KnownHashes) or InitiatingProcessSHA256 in (KnownHashes)
+   | project Timestamp, DeviceName, EventTable="ProcessEvent",
+             AccountName, FolderPath, FileName=FileName, SHA256,
+             ParentImage=InitiatingProcessFileName,
+             ParentCmd=InitiatingProcessCommandLine)
+| order by Timestamp desc
+```
+
+### OAuth consent grant to unfamiliar third-party AI / SaaS app — Vercel-style trust chain attack
+
+`UC_13_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+let Lookback = 30d;
+let KnownApps = AADSignInEventsBeta
+    | where Timestamp between (ago(Lookback) .. ago(2d))
+    | summarize by ApplicationId;
+CloudAppEvents
+| where Timestamp > ago(2d)
+| where ActionType has_any ("Consent to application","Add app role assignment grant to user","Add delegated permission grant")
+| extend AppName = tostring(parse_json(tostring(RawEventData)).Target[0].ID)
+| extend ConsentedApp = tostring(ActivityObjects[0].Name),
+         ConsentedAppId = tostring(ActivityObjects[0].Id),
+         GrantedScopes = tostring(parse_json(tostring(RawEventData)).ModifiedProperties)
+| where ConsentedAppId !in (KnownApps)
+| where GrantedScopes has_any ("Mail.Read","Mail.ReadWrite","Files.Read.All","Files.ReadWrite.All","Sites.Read.All","User.Read.All","Directory.Read.All","offline_access")
+| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, CountryCode,
+          IsAdminOperation, ConsentedApp, ConsentedAppId, GrantedScopes,
+          UserAgent, ActionType
 | order by Timestamp desc
 ```
 
@@ -261,4 +334,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

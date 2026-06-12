@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### npm install lifecycle script spawns interpreter or network-fetcher child
 
-`UC_45_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_49_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceProcessEvents
 
 ### npm install with --allow-git / --allow-remote / --allow-scripts bypass flag
 
-`UC_45_7` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_49_7` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### npm install pointing at non-default registry via --registry or config
 
-`UC_45_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_49_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceProcessEvents
 
 ### npm publish / login / auth-token write from a developer endpoint
 
-`UC_45_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_49_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ NpmAuth
 
 ### npm install with --ignore-scripts=false or NPM_CONFIG_IGNORE_SCRIPTS override
 
-`UC_45_10` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_49_10` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -351,7 +351,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GitHub to Disable npm Install Scripts by Default to Stop Supply Chain Attacks
 
-`UC_45_5` · phase: **exploit** · confidence: **High**
+`UC_49_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### Python interpreter downloads oven-sh Bun runtime v1.3.14 from GitHub releases at import time
 
-`UC_68_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_72_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ NetSide | union FileSide
 
 ### Bun runtime executed from temp directory by Python interpreter (Hades vF203 loader)
 
-`UC_68_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_72_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceProcessEvents
 
 ### Cross-platform memory scraping of GitHub Actions Runner.Worker process
 
-`UC_68_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_72_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -127,7 +127,7 @@ LinuxScrape | union MacScrape | union RunnerContext
 
 ### Malicious _hooks.py / _runtime.bin files created in Pythagora gpt-pilot checkout
 
-`UC_68_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_72_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,7 +149,7 @@ DeviceFileEvents
 
 ### pip / uv install of known-compromised Hades Campaign PyPI package versions
 
-`UC_68_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_72_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -432,7 +432,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blo
 
-`UC_68_7` · phase: **exploit** · confidence: **High**
+`UC_72_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
