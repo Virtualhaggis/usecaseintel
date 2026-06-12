@@ -9,7 +9,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-12
-- [400 arch linux aur packages hijacked to install rust credent](./2026-06-12/400-arch-linux-aur-packages-hijacked-to-install-rust-credent.md)
 - [agentjacking attack tricks ai coding agents into running mal](./2026-06-12/agentjacking-attack-tricks-ai-coding-agents-into-running-mal.md)
 - [china linked hackers backdoored linux login software to hide](./2026-06-12/china-linked-hackers-backdoored-linux-login-software-to-hide.md)
 - [cisa orders feds to patch actively exploited ivanti flaw by ](./2026-06-12/cisa-orders-feds-to-patch-actively-exploited-ivanti-flaw-by-.md)
@@ -24,6 +23,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [interpol operation takes down sniper dz phishing platform ar](./2026-06-12/interpol-operation-takes-down-sniper-dz-phishing-platform-ar.md)
 - [langgraph flaw chain exposes self hosted ai agents to remote](./2026-06-12/langgraph-flaw-chain-exposes-self-hosted-ai-agents-to-remote.md)
 - [malicious npm campaign steals ssh keys api tokens cloud cred](./2026-06-12/malicious-npm-campaign-steals-ssh-keys-api-tokens-cloud-cred.md)
+- [over 400 arch linux aur packages hijacked to deploy infostea](./2026-06-12/over-400-arch-linux-aur-packages-hijacked-to-deploy-infostea.md)
 - [over 400 arch linux packages compromised to push rootkit inf](./2026-06-12/over-400-arch-linux-packages-compromised-to-push-rootkit-inf.md)
 - [over 73 000 french govt employees affected in tchap messenge](./2026-06-12/over-73-000-french-govt-employees-affected-in-tchap-messenge.md)
 - [rethinking mdr as attackers and defenders embrace ai](./2026-06-12/rethinking-mdr-as-attackers-and-defenders-embrace-ai.md)
@@ -86,6 +86,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 50751 check point security gateway imprope](./2026-06-08/cisa-kev-cve-2026-50751-check-point-security-gateway-imprope.md)
 - [ghsa critical cve 2026 45034 phpspreadsheet has a patch bypa](./2026-06-08/ghsa-critical-cve-2026-45034-phpspreadsheet-has-a-patch-bypa.md)
 - [ghsa critical cve 2026 47252 anyquery applescript jxa code i](./2026-06-08/ghsa-critical-cve-2026-47252-anyquery-applescript-jxa-code-i.md)
+- [ghsa critical cve 2026 47430 cordova plugin inappbrowser ios](./2026-06-08/ghsa-critical-cve-2026-47430-cordova-plugin-inappbrowser-ios.md)
 - [ghsa critical cve 2026 47724 nebula mesh api endpoints lack ](./2026-06-08/ghsa-critical-cve-2026-47724-nebula-mesh-api-endpoints-lack-.md)
 - [meta blocks nso group s new whatsapp phishing attack files c](./2026-06-08/meta-blocks-nso-group-s-new-whatsapp-phishing-attack-files-c.md)
 - [one character linux kernel flaw enables local root access ex](./2026-06-08/one-character-linux-kernel-flaw-enables-local-root-access-ex.md)
@@ -290,9 +291,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [kimsuky targets organizations with pebbledash based tools](./2026-05-14/kimsuky-targets-organizations-with-pebbledash-based-tools.md)
 - [ongoing exploitation of cisco catalyst sd wan vulnerabilitie](./2026-05-14/ongoing-exploitation-of-cisco-catalyst-sd-wan-vulnerabilitie.md)
 - [the time of much patching is coming](./2026-05-14/the-time-of-much-patching-is-coming.md)
-
-## 2026-05-13
-- [ghsa critical cve 2026 22599 strapi vulnerable to sql inject](./2026-05-13/ghsa-critical-cve-2026-22599-strapi-vulnerable-to-sql-inject.md)
 
 ## 2026-05-12
 - [teampcp s mini shai hulud is back a self spreading supply ch](./2026-05-12/teampcp-s-mini-shai-hulud-is-back-a-self-spreading-supply-ch.md)

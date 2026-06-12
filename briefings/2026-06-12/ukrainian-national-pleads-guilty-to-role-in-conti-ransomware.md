@@ -11,12 +11,9 @@ By Lawrence Abrams
 June 12, 2026
 01:54 PM
 0 
-
-
 A Ukrainian national extradited from Ireland to the United States last year has pleaded guilty to conspiracy charges tied to the Conti ransomware operation.
-
-
-The U.S. Department of Justice announced Thursday that 44-year-old Oleksii Oleksiyovych Lytvynenko pleaded guilty to conspiracy to commit wire fraud for his role in Conti ransomware attacks conducted between 2021 and …
+The U.S. Department of Justice announced Thursday that 44-year-old Oleksii Oleksiyovych Lytvynenko pleaded guilty to conspiracy to commit wire fraud for his role in Conti ransomware attacks conducted between 2021 and 2022.
+Ac…
 
 ## Indicators of Compromise (high-fidelity only)
 

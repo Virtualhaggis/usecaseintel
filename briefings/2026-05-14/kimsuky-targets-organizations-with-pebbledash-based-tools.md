@@ -79,7 +79,7 @@ _(none detected from narrative keywords)_
 
 ### Kimsuky HelloDoor 'tdll' Run-key persistence with regsvr32 loader
 
-`UC_303_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_304_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceRegistryEvents
 
 ### Kimsuky httpMalice persistence: 'Everything 1.9a-/1.8a-' Run-key or CacheDB service install
 
-`UC_303_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_304_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ union
 
 ### Kimsuky JSE dropper: wscript -> powershell hidden + certutil -decode chain
 
-`UC_303_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_304_15` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -529,7 +529,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Kimsuky targets organizations with PebbleDash-based tools
 
-`UC_303_12` · phase: **exploit** · confidence: **High**
+`UC_304_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
