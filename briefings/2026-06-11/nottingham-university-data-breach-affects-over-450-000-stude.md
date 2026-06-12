@@ -30,21 +30,20 @@ The university told BleepingComputer in an emailed …
 
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1190** — Exploit Public-Facing Application
-- **T1059.004** — Unix Shell
-- **T1082** — System Information Discovery
-- **T1083** — File and Directory Discovery
-- **T1505.003** — Server Software Component: Web Shell
-- **T1219** — Remote Access Software
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1021.004** — Remote Services: SSH
-- **T1110.004** — Credential Stuffing
-- **T1570** — Lateral Tool Transfer
+- **T1041** — Exfiltration Over C2 Channel
+- **T1005** — Data from Local System
+- **T1213** — Data from Information Repositories
+- **T1020** — Automated Exfiltration
+- **T1190** — Exploit Public-Facing Application
+- **T1203** — Exploitation for Client Execution
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 - **T1560.001** — Archive Collected Data: Archive via Utility
-- **T1074.001** — Local Data Staging
-- **T1491.001** — Defacement: Internal Defacement
-- **T1657** — Financial Theft
+- **T1074.001** — Data Staged: Local Data Staging
+- **T1021.002** — Remote Services: SMB/Windows Admin Shares
+- **T1078.002** — Valid Accounts: Domain Accounts
+- **T1570** — Lateral Tool Transfer
 
 ## Kill chain phases observed
 
@@ -52,166 +51,140 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### ShinyHunters CVE-2026-35273 exploit POST to PeopleSoft /PSEMHUB/hub
+### Outbound connection to known ShinyHunters PeopleSoft campaign infrastructure
 
-`UC_43_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_43_2` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src_ip values(Web.status) as status from datamodel=Web where (Web.url="*/PSEMHUB/hub*" OR Web.url="*/PSEMHUB/envmetadata/*" OR Web.url="*/PSIGW/HttpListeningConnector*") Web.http_method=POST by Web.dest Web.src Web.user_agent | `drop_dm_object_name(Web)` | where status<500 OR src="142.11.200.186" OR src="142.11.200.187" OR src="142.11.200.188" OR src="142.11.200.189" OR src="142.11.200.190" OR src="108.174.202.99" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest in ("142.11.200.186","142.11.200.187","142.11.200.188","142.11.200.189","142.11.200.190","108.174.202.99","176.120.22.24") OR All_Traffic.dest_host="azurenetfiles.net" by All_Traffic.src All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-// CVE-2026-35273 staging-IP touch on PeopleSoft web tier — Defender can't see HTTP path, so pivot on the published staging /29 hitting PeopleSoft hosts on 80/443.
+let ShinyIPs = dynamic(["142.11.200.186","142.11.200.187","142.11.200.188","142.11.200.189","142.11.200.190","108.174.202.99","176.120.22.24"]);
 DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where ActionType in ("InboundConnectionAccepted","ConnectionAccepted","ConnectionSuccess")
-| where LocalPort in (80,443,8000,8443,7777,7778)   // PeopleTools/WebLogic default listeners
-| where RemoteIP in ("142.11.200.186","142.11.200.187","142.11.200.188","142.11.200.189","142.11.200.190","108.174.202.99")
-| project Timestamp, DeviceName, DeviceId, LocalIP, LocalPort, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where Timestamp > ago(30d)
+| where RemoteIP in (ShinyIPs) or RemoteUrl has "azurenetfiles.net"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl, Protocol
 | order by Timestamp desc
 ```
 
-### WebLogic/Java spawning Linux recon shell after PSEMHUB exploit
+### Bulk SELECT against PeopleSoft student / personal-data tables outside business hours
 
-`UC_43_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_43_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("java","weblogic","java.exe") AND (Processes.process="*psappsrv.cfg*" OR Processes.process="*ps_config_homes*" OR Processes.process="*WebLogic*config.xml*" OR Processes.process="*hostname*id*" OR Processes.process="*mount*psoft*" OR Processes.process_name IN ("hostname","id","whoami","uname")) by host Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+index=oracle_audit OR index=peoplesoft_audit OR sourcetype=oracle:audit:unified
+| eval table_lc=lower(coalesce(OBJECT_NAME, object_name, table_name))
+| where (action="SELECT" OR ACTION_NAME="SELECT") AND (table_lc IN ("ps_personal_data","ps_names","ps_addresses","ps_phones","ps_email_addresses","ps_stdnt_enrl","ps_acad_prog","ps_stdnt_car_term","ps_payment_tbl","ps_item_sf","ps_account_sf","psoprdefn"))
+| eval hour=tonumber(strftime(_time,"%H"))
+| where hour<6 OR hour>20
+| stats count as queries sum(coalesce(ROWS_PROCESSED,rows_returned,0)) as total_rows values(table_lc) as tables values(CLIENT_IP) as client_ips by DBUSERNAME OS_USERNAME HOST
+| where total_rows>10000 OR queries>50
+| sort - total_rows
 ```
 
 **Defender KQL:**
 ```kql
+let MaintenanceStart = 22h; let MaintenanceEnd = 5h;
 DeviceProcessEvents
 | where Timestamp > ago(14d)
-| where InitiatingProcessFileName has_any ("java","weblogic.Server","startWebLogic.sh") or InitiatingProcessParentFileName has_any ("java","weblogic.Server")
-| where FileName in ("hostname","id","whoami","uname","mount","cat","grep","sh","bash")
-| where ProcessCommandLine has_any ("psappsrv.cfg","ps_config_homes","/u01/app/psoft","WebLogic","config.xml","/etc/hosts","Address=","HostName=")
-   or (FileName in ("hostname","id") and InitiatingProcessFileName has "java")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName
+| where FileName in~ ("sqlplus.exe","sqlplus","psae.exe","psqry.exe","sqlcmd.exe","oraagent.exe")
+   or InitiatingProcessFileName in~ ("sqlplus.exe","psae.exe","psqry.exe")
+| where ProcessCommandLine has_any ("PS_PERSONAL_DATA","PS_NAMES","PS_ADDRESSES","PS_PHONES","PS_EMAIL_ADDRESSES","PS_STDNT_ENRL","PS_ACAD_PROG","PS_PAYMENT_TBL","PSOPRDEFN","SELECT * FROM PS_")
+| extend hour = datetime_part("hour", Timestamp)
+| where hour < 6 or hour > 20
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
-### JSP webshell drop under PeopleSoft PSEMHUB.war
+### PeopleSoft IB/PSIGW gadget-chain deserialization exploitation
 
-`UC_43_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_43_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/PSEMHUB.war/*" OR Filesystem.file_path="*/peoplesoft/PSEMHUB*" OR Filesystem.file_path="*envmetadata/transactions*" OR Filesystem.file_path="*envmetadata/data/environment*") AND (Filesystem.file_name="*.jsp" OR Filesystem.file_name="*.class" OR Filesystem.file_name="*.war" OR Filesystem.file_name="*.xml") by host Filesystem.user Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.user_agent) as ua values(Web.status) as status values(Web.dest) as dest values(Web.url) as url from datamodel=Web.Web where Web.http_method=POST AND (Web.url IN ("*/psigw/*","*/pls/*","*/psp/*","*/psc/*","*/PSIGW/HttpListeningConnector*","*/PSIGW/PeopleSoftServiceListeningConnector*","*/psreports/*")) AND (Web.url="*rO0AB*" OR Web.url="*aced0005*" OR Web.http_user_agent="*ysoserial*" OR Web.http_content_type="application/x-java-serialized-object") by Web.src Web.dest Web.url Web.http_user_agent Web.http_method | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
-| where Timestamp > ago(14d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FolderPath has_any ("/PSEMHUB.war/","/peoplesoft/PSEMHUB","envmetadata/transactions","envmetadata/data/environment","PSEMHUB.war/persistantstorage","PSEMHUB.war/scratchpad")
-| where FileName endswith ".jsp" or FileName endswith ".class" or FileName endswith ".war" or (FileName endswith ".xml" and FolderPath has "envmetadata/data/environment")
-| where InitiatingProcessFileName !in~ ("oracle-installer","psadmin","pside")
-| project Timestamp, DeviceName, FolderPath, FileName, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName
+// Requires PeopleSoft web tier shipping IIS/WebLogic logs to Defender via custom connector
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("w3wp.exe","java.exe","javaw.exe","PSAPPSRV.exe","PSWEBSRV.exe")
+| where AdditionalFields has_any ("/psigw/","/pls/","/psp/","/psc/","HttpListeningConnector")
+| where AdditionalFields has_any ("rO0AB","aced0005","ysoserial","CommonsCollections","application/x-java-serialized-object")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, AdditionalFields
 | order by Timestamp desc
 ```
 
-### MeshCentral Azure-disguised agent + azurenetfiles.net C2 channel
+### PeopleSoft AppServer or WebLogic spawning shell / LOLBin child
 
-`UC_43_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-(`tstats` `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process_name IN ("meshagent64-azure-ops.exe","meshagent64-v2.exe","meshagent32-azure-ops.exe","meshagent") OR Processes.process="*azurenetfiles.net*" OR Processes.process="*agent.ashx*") OR Processes.process_hash IN ("f02a924c9ff92a8780ce812511341182c6b509d45bc59f3f7b522e37225d24fc","d83fdb9e53c5ff03c4cb0451ea1bebd79b53f29eadc1e2fa394c7af13a86ce2f","c7e9332731b06644fc73e0046a2a89eaa59b09f54250e9bd622467187351711f","68257a6f9ff196179ec03624e849927f26599eb180a7c82e14ef5bc4e93bc309") by host Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)`) | append [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS where DNS.query="*azurenetfiles.net" by DNS.src DNS.query | `drop_dm_object_name(DNS)`]
-```
-
-**Defender KQL:**
-```kql
-let StagingIPs = dynamic(["142.11.200.186","142.11.200.187","142.11.200.188","142.11.200.189","142.11.200.190"]);
-let AgentHashes = dynamic(["f02a924c9ff92a8780ce812511341182c6b509d45bc59f3f7b522e37225d24fc","d83fdb9e53c5ff03c4cb0451ea1bebd79b53f29eadc1e2fa394c7af13a86ce2f","c7e9332731b06644fc73e0046a2a89eaa59b09f54250e9bd622467187351711f","68257a6f9ff196179ec03624e849927f26599eb180a7c82e14ef5bc4e93bc309"]);
-let ProcHits = DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where FileName in~ ("meshagent64-azure-ops.exe","meshagent64-v2.exe","meshagent32-azure-ops.exe","meshagent")
-     or SHA256 in (AgentHashes)
-     or ProcessCommandLine has_any ("azurenetfiles.net","agent.ashx","meshctrl.js")
-  | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName;
-let NetHits = DeviceNetworkEvents
-  | where Timestamp > ago(30d)
-  | where RemoteUrl has "azurenetfiles.net" or RemoteIP in (StagingIPs) or RemoteUrl endswith "agent.ashx"
-  | project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine;
-union ProcHits, NetHits
-| order by Timestamp desc
-```
-
-### ShinyHunters fanout.sh SSH credential spray from PeopleSoft host
-
-`UC_43_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_43_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.dest) as targets dc(Processes.process) as cmd_count from datamodel=Endpoint.Processes where Processes.process_name="sshpass" OR (Processes.process_name="ssh" AND Processes.process="*StrictHostKeyChecking=no*") OR Processes.process="*_fanout.sh*" by host Processes.user Processes.parent_process_name | `drop_dm_object_name(Processes)` | where cmd_count > 5 OR cmdline="*_fanout.sh*" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let Window = 10m;
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName in~ ("sshpass","ssh") or ProcessCommandLine has_any ("_fanout.sh","StrictHostKeyChecking=no")
-| where ProcessCommandLine has_any ("sshpass -p","StrictHostKeyChecking=no","webserv/CSPRD","appserv/prcs","_fanout.sh")
-| where InitiatingProcessAccountName !in~ ("root","ansible") or ProcessCommandLine has "_fanout.sh"
-| summarize FanoutTargets = dcount(ProcessCommandLine),
-            Hosts = make_set(ProcessCommandLine, 50),
-            FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
-            by DeviceName, AccountName, bin(Timestamp, Window)
-| where FanoutTargets >= 5 or Hosts has "_fanout.sh"
-| order by LastSeen desc
-```
-
-### zstd / pv archive staging of PeopleSoft exfil on application host
-
-`UC_43_7` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where (Processes.process_name="zstd" OR Processes.process_name="tar" OR Processes.process_name="pv" OR Processes.process_name="7z") AND (Processes.process="*exfil*" OR Processes.process="*ps_config_homes*" OR Processes.process="*/u01/app/psoft*" OR Processes.process="*.tar.zst*" OR Processes.process="*-T0*" OR Processes.process="*PSEMHUB*") by host Processes.user Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.user) as user values(Processes.parent_process) as parent_cmdline from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("PSAPPSRV.exe","PSWEBSRV.exe","PSPRCSRV.exe","java.exe","javaw.exe","w3wp.exe")) AND (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","sh","bash","/bin/sh","/bin/bash")) by Processes.dest Processes.parent_process_name Processes.process_name Processes.process Processes.user | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where FileName in~ ("zstd","tar","pv","7z","7za","7zz")
-| where ProcessCommandLine has_any ("exfil",".tar.zst","/u01/app/psoft","ps_config_homes","PSEMHUB","-T0","webserv/CSPRD")
-   or (FileName =~ "zstd" and ProcessCommandLine has "-T0")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName
+| where InitiatingProcessFileName in~ ("PSAPPSRV.exe","PSWEBSRV.exe","PSPRCSRV.exe","java.exe","javaw.exe","w3wp.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","sh","bash")
+| where InitiatingProcessCommandLine has_any ("PeopleSoft","PS_HOME","weblogic","PIA") or InitiatingProcessFolderPath has_any ("PT8","PeopleSoft","weblogic","PIA")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### ShinyHunters defacement README drop on PeopleSoft hosts
+### PeopleSoft tier archiving / compression preceding outbound transfer
 
-`UC_43_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_43_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where Filesystem.file_name="README-IF-YOU-SEE-THIS-YOUVE-BEEN-HACKED.TXT" OR Filesystem.file_name="README-IF-YOU-SEE-THIS-YOUVE-BEEN-HACKED*" by host Filesystem.user Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN ("7z.exe","7za.exe","WinRAR.exe","rar.exe","zip.exe","tar.exe","makecab.exe","compact.exe")) AND (Processes.process IN ("*PS_HOME*","*PeopleSoft*","*student*","*finance*","*payment*","*portal*","*PSREPORTS*","*PS_APP_HOME*","*Bursar*","*Registrar*")) by Processes.dest Processes.process_name Processes.process Processes.parent_process_name Processes.user | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
+DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileRenamed")
-| where FileName =~ "README-IF-YOU-SEE-THIS-YOUVE-BEEN-HACKED.TXT"
-   or FileName startswith "README-IF-YOU-SEE-THIS-YOUVE-BEEN-HACKED"
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FolderPath, FileName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
+| where FileName in~ ("7z.exe","7za.exe","WinRAR.exe","rar.exe","zip.exe","tar.exe","makecab.exe","compact.exe")
+| where ProcessCommandLine has_any ("PS_HOME","PeopleSoft","student","finance","payment","portal","PSREPORTS","PS_APP_HOME","Bursar","Registrar","transcript","enrol")
+| where AccountName !endswith "$"
+| join kind=inner (DeviceInfo | summarize arg_max(Timestamp,*) by DeviceId | where MachineGroup has_any ("PeopleSoft","SIS","Campus","Bursar","Finance")) on DeviceId
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
+```
+
+### PeopleSoft service-account cross-campus authentication / lateral movement
+
+`UC_43_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.dest) as dest values(Authentication.src_nt_domain) as src_domain from datamodel=Authentication.Authentication where (Authentication.user IN ("PS","PSAPPSRV","PSADMIN","PEOPLE","VP1","SAMPLE","PTWEBSERVER","PSEM_AGENT","PSCNVRT") OR Authentication.user="*svc_psft*" OR Authentication.user="*svc_peoplesoft*") by Authentication.user Authentication.src Authentication.dest Authentication.app | `drop_dm_object_name(Authentication)` | stats values(src) as src_ips dc(src) as src_ip_count values(dest) as dest_hosts dc(dest) as dest_host_count by user | where src_ip_count>3 OR dest_host_count>5 | sort - dest_host_count
+```
+
+**Defender KQL:**
+```kql
+let PSAccounts = dynamic(["ps","psappsrv","psadmin","people","vp1","sample","ptwebserver","psem_agent","pscnvrt"]);
+let PSSubnets = toscalar(DeviceInfo | where MachineGroup has_any ("PeopleSoft","SIS","Campus") | summarize make_set(PublicIP));
+DeviceLogonEvents
+| where Timestamp > ago(7d)
+| where AccountName has_any (PSAccounts) or AccountName startswith "svc_psft" or AccountName startswith "svc_peoplesoft"
+| where ActionType == "LogonSuccess"
+| where LogonType in (3,10) // network or RDP
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), DistinctDests=dcount(DeviceName), DistinctSrcs=dcount(RemoteIP), Devices=make_set(DeviceName, 50), SrcIPs=make_set(RemoteIP, 50) by AccountName, AccountDomain
+| where DistinctDests > 5 or DistinctSrcs > 3
+| order by DistinctDests desc
 ```
 
 ### Trusted vendor binary / installer launching unusual children
@@ -248,4 +221,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

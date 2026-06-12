@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1261 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1194 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,18 +9,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-12
-- [5 socket security alternatives and why they are better](./2026-06-12/5-socket-security-alternatives-and-why-they-are-better.md)
 - [agentjacking attack tricks ai coding agents into running mal](./2026-06-12/agentjacking-attack-tricks-ai-coding-agents-into-running-mal.md)
 - [cisa orders feds to patch actively exploited ivanti flaw by ](./2026-06-12/cisa-orders-feds-to-patch-actively-exploited-ivanti-flaw-by-.md)
 - [critical vulnerability chain in langgraph allows attackers t](./2026-06-12/critical-vulnerability-chain-in-langgraph-allows-attackers-t.md)
+- [early warning signs of supply chain attacks live in the dark](./2026-06-12/early-warning-signs-of-supply-chain-attacks-live-in-the-dark.md)
 - [europol disrupts audia6 crypto laundering service used by ra](./2026-06-12/europol-disrupts-audia6-crypto-laundering-service-used-by-ra.md)
 - [hackers use free spotify premium hacks on tiktok and instagr](./2026-06-12/hackers-use-free-spotify-premium-hacks-on-tiktok-and-instagr.md)
+- [hackers use onyxc2 malware as a service to steal credentials](./2026-06-12/hackers-use-onyxc2-malware-as-a-service-to-steal-credentials.md)
 - [interpol operation takes down sniper dz phishing platform ar](./2026-06-12/interpol-operation-takes-down-sniper-dz-phishing-platform-ar.md)
 - [langgraph flaw chain exposes self hosted ai agents to remote](./2026-06-12/langgraph-flaw-chain-exposes-self-hosted-ai-agents-to-remote.md)
 - [microsoft outlook and word vulnerabilities allow attackers t](./2026-06-12/microsoft-outlook-and-word-vulnerabilities-allow-attackers-t.md)
-- [oracle peoplesoft 0 day rce vulnerability exploited in attac](./2026-06-12/oracle-peoplesoft-0-day-rce-vulnerability-exploited-in-attac.md)
 - [over 73 000 french govt employees affected in tchap messenge](./2026-06-12/over-73-000-french-govt-employees-affected-in-tchap-messenge.md)
-- [palo alto pan os vulnerability allows attackers to execute a](./2026-06-12/palo-alto-pan-os-vulnerability-allows-attackers-to-execute-a.md)
 - [rethinking mdr as attackers and defenders embrace ai](./2026-06-12/rethinking-mdr-as-attackers-and-defenders-embrace-ai.md)
 - [sheetcreep c rat abuses google sheets api as c2 to target di](./2026-06-12/sheetcreep-c-rat-abuses-google-sheets-api-as-c2-to-target-di.md)
 - [solana fakefix campaign uses 25 malicious npm and pypi packa](./2026-06-12/solana-fakefix-campaign-uses-25-malicious-npm-and-pypi-packa.md)
@@ -55,7 +54,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [langflow vulnerability cve 2026 5027 exploited for unauthent](./2026-06-10/langflow-vulnerability-cve-2026-5027-exploited-for-unauthent.md)
 - [microsoft defender rogueplanet zero day grants system access](./2026-06-10/microsoft-defender-rogueplanet-zero-day-grants-system-access.md)
 - [microsoft patches record 206 flaws including three zero days](./2026-06-10/microsoft-patches-record-206-flaws-including-three-zero-days.md)
-- [path traversal flaw in ai dev platform langflow exploited in](./2026-06-10/path-traversal-flaw-in-ai-dev-platform-langflow-exploited-in.md)
 
 ## 2026-06-09
 - [blinding the watchmen abusing cloud logging services for def](./2026-06-09/blinding-the-watchmen-abusing-cloud-logging-services-for-def.md)
@@ -89,7 +87,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [one character linux kernel flaw enables local root access ex](./2026-06-08/one-character-linux-kernel-flaw-enables-local-root-access-ex.md)
 - [unc3753 used vishing and physical intrusions in u s data the](./2026-06-08/unc3753-used-vishing-and-physical-intrusions-in-u-s-data-the.md)
 - [verdantbamboo deploys bsd variant of brickstorm on linux app](./2026-06-08/verdantbamboo-deploys-bsd-variant-of-brickstorm-on-linux-app.md)
-- [weekly recap instagram account hacks android zero day github](./2026-06-08/weekly-recap-instagram-account-hacks-android-zero-day-github.md)
 - [when hi this is it comes through microsoft teams](./2026-06-08/when-hi-this-is-it-comes-through-microsoft-teams.md)
 
 ## 2026-06-06
@@ -585,7 +582,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2024 7694 teamt5 threatsonar anti ransomware un](./2026-02-17/cisa-kev-cve-2024-7694-teamt5-threatsonar-anti-ransomware-un.md)
 - [cisa kev cve 2026 2441 google chromium css use after free vu](./2026-02-17/cisa-kev-cve-2026-2441-google-chromium-css-use-after-free-vu.md)
 - [securing the agent skill ecosystem how snyk and vercel are l](./2026-02-17/securing-the-agent-skill-ecosystem-how-snyk-and-vercel-are-l.md)
-- [top 6 wiz code alternatives](./2026-02-17/top-6-wiz-code-alternatives.md)
 - [weaving security into the flow new snyk studio capabilities ](./2026-02-17/weaving-security-into-the-flow-new-snyk-studio-capabilities-.md)
 
 ## 2026-02-16
@@ -863,7 +859,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-10-22
 - [cisa kev cve 2025 61932 motex lanscope endpoint manager impr](./2025-10-22/cisa-kev-cve-2025-61932-motex-lanscope-endpoint-manager-impr.md)
-- [devseccon 2025 recap securing the ai revolution together](./2025-10-22/devseccon-2025-recap-securing-the-ai-revolution-together.md)
 - [snakestealer how it preys on personal data and how you can p](./2025-10-22/snakestealer-how-it-preys-on-personal-data-and-how-you-can-p.md)
 - [why we built evo from my heart](./2025-10-22/why-we-built-evo-from-my-heart.md)
 
@@ -917,7 +912,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2025 20352 cisco ios and ios xe software snmp d](./2025-09-29/cisa-kev-cve-2025-20352-cisco-ios-and-ios-xe-software-snmp-d.md)
 - [cisa kev cve 2025 32463 sudo inclusion of functionality from](./2025-09-29/cisa-kev-cve-2025-32463-sudo-inclusion-of-functionality-from.md)
 - [cisa kev cve 2025 59689 libraesva email security gateway com](./2025-09-29/cisa-kev-cve-2025-59689-libraesva-email-security-gateway-com.md)
-- [the ultimate guide to upcoming ctfs from beginner to elite h](./2025-09-29/the-ultimate-guide-to-upcoming-ctfs-from-beginner-to-elite-h.md)
 
 ## 2025-09-25
 - [cisa kev cve 2025 20362 cisco secure firewall adaptive secur](./2025-09-25/cisa-kev-cve-2025-20362-cisco-secure-firewall-adaptive-secur.md)
@@ -1274,10 +1268,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [reconstructing the tj actions changed files github actions c](./2025-03-17/reconstructing-the-tj-actions-changed-files-github-actions-c.md)
 
 ## 2025-03-13
-- [ai risk management benefits challenges and best practices](./2025-03-13/ai-risk-management-benefits-challenges-and-best-practices.md)
 - [cisa kev cve 2025 21590 juniper junos os improper isolation ](./2025-03-13/cisa-kev-cve-2025-21590-juniper-junos-os-improper-isolation-.md)
 - [cisa kev cve 2025 24201 apple multiple products webkit out o](./2025-03-13/cisa-kev-cve-2025-24201-apple-multiple-products-webkit-out-o.md)
-- [responding and remediating best practices for handling secur](./2025-03-13/responding-and-remediating-best-practices-for-handling-secur.md)
 
 ## 2025-03-12
 - [snyk and servicenow streamlining vulnerability management wi](./2025-03-12/snyk-and-servicenow-streamlining-vulnerability-management-wi.md)
@@ -1373,7 +1365,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [creating sboms with the snyk cli](./2025-02-05/creating-sboms-with-the-snyk-cli.md)
 
 ## 2025-02-04
-- [best practices for creating a modern npm package with securi](./2025-02-04/best-practices-for-creating-a-modern-npm-package-with-securi.md)
 - [cisa kev cve 2018 19410 paessler prtg network monitor local ](./2025-02-04/cisa-kev-cve-2018-19410-paessler-prtg-network-monitor-local-.md)
 - [cisa kev cve 2018 9276 paessler prtg network monitor os comm](./2025-02-04/cisa-kev-cve-2018-9276-paessler-prtg-network-monitor-os-comm.md)
 - [cisa kev cve 2024 29059 microsoft net framework information ](./2025-02-04/cisa-kev-cve-2024-29059-microsoft-net-framework-information-.md)
@@ -1416,15 +1407,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [securing genai development with snyk](./2025-01-09/securing-genai-development-with-snyk.md)
 
 ## 2025-01-08
-- [10 docker security best practices](./2025-01-08/10-docker-security-best-practices.md)
 - [cisa kev cve 2025 0282 ivanti connect secure policy secure a](./2025-01-08/cisa-kev-cve-2025-0282-ivanti-connect-secure-policy-secure-a.md)
 
 ## 2025-01-07
 - [cisa kev cve 2020 2883 oracle weblogic server unspecified vu](./2025-01-07/cisa-kev-cve-2020-2883-oracle-weblogic-server-unspecified-vu.md)
 - [cisa kev cve 2024 55550 mitel micollab path traversal vulner](./2025-01-07/cisa-kev-cve-2024-55550-mitel-micollab-path-traversal-vulner.md)
-
-## 2025-01-06
-- [securing the digital future appsec best practices in digital](./2025-01-06/securing-the-digital-future-appsec-best-practices-in-digital.md)
 
 ## 2025-01-01
 - [new year new security goals improve your appsec in 2025](./2025-01-01/new-year-new-security-goals-improve-your-appsec-in-2025.md)
@@ -1442,7 +1429,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2024 12356 beyondtrust privileged remote access](./2024-12-19/cisa-kev-cve-2024-12356-beyondtrust-privileged-remote-access.md)
 
 ## 2024-12-18
-- [4 tips for securing genai assisted development](./2024-12-18/4-tips-for-securing-genai-assisted-development.md)
 - [cisa kev cve 2018 14933 nuuo nvrmini devices os command inje](./2024-12-18/cisa-kev-cve-2018-14933-nuuo-nvrmini-devices-os-command-inje.md)
 - [cisa kev cve 2019 11001 reolink multiple ip cameras os comma](./2024-12-18/cisa-kev-cve-2019-11001-reolink-multiple-ip-cameras-os-comma.md)
 - [cisa kev cve 2021 40407 reolink rlc 410w ip camera os comman](./2024-12-18/cisa-kev-cve-2021-40407-reolink-rlc-410w-ip-camera-os-comman.md)
@@ -1464,7 +1450,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2024-12-10
 - [cisa kev cve 2024 49138 microsoft windows common log file sy](./2024-12-10/cisa-kev-cve-2024-49138-microsoft-windows-common-log-file-sy.md)
-- [how to mitigate ssrf vulnerabilities in go](./2024-12-10/how-to-mitigate-ssrf-vulnerabilities-in-go.md)
 
 ## 2024-12-09
 - [snyk generated sboms now include license details for the ope](./2024-12-09/snyk-generated-sboms-now-include-license-details-for-the-ope.md)
@@ -1490,7 +1475,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2023 28461 array networks ag and vxag arrayos m](./2024-11-25/cisa-kev-cve-2023-28461-array-networks-ag-and-vxag-arrayos-m.md)
 
 ## 2024-11-21
-- [a commitment to future generations snyk s 2024 student editi](./2024-11-21/a-commitment-to-future-generations-snyk-s-2024-student-editi.md)
 - [cisa kev cve 2024 21287 oracle agile product lifecycle manag](./2024-11-21/cisa-kev-cve-2024-21287-oracle-agile-product-lifecycle-manag.md)
 - [cisa kev cve 2024 44308 apple multiple products code executi](./2024-11-21/cisa-kev-cve-2024-44308-apple-multiple-products-code-executi.md)
 - [cisa kev cve 2024 44309 apple multiple products cross site s](./2024-11-21/cisa-kev-cve-2024-44309-apple-multiple-products-cross-site-s.md)
@@ -1500,7 +1484,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2024 38813 vmware vcenter server privilege esca](./2024-11-20/cisa-kev-cve-2024-38813-vmware-vcenter-server-privilege-esca.md)
 
 ## 2024-11-19
-- [how to prioritize vulnerabilities based on risk](./2024-11-19/how-to-prioritize-vulnerabilities-based-on-risk.md)
 - [women in security inspiring leaders of today and tomorrow](./2024-11-19/women-in-security-inspiring-leaders-of-today-and-tomorrow.md)
 
 ## 2024-11-18
@@ -1537,10 +1520,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2024-10-31
 - [lottie player npm package compromised for crypto wallet thef](./2024-10-31/lottie-player-npm-package-compromised-for-crypto-wallet-thef.md)
-
-## 2024-10-29
-- [best practices for continuous vulnerability management](./2024-10-29/best-practices-for-continuous-vulnerability-management.md)
-- [top 5 sast auto fixing tools and how they compare](./2024-10-29/top-5-sast-auto-fixing-tools-and-how-they-compare.md)
 
 ## 2024-10-24
 - [cisa kev cve 2024 20481 cisco asa and ftd denial of service ](./2024-10-24/cisa-kev-cve-2024-20481-cisco-asa-and-ftd-denial-of-service-.md)
@@ -1610,9 +1589,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2024-09-27
 - [zero day rce vulnerability found in cups common unix printin](./2024-09-27/zero-day-rce-vulnerability-found-in-cups-common-unix-printin.md)
 
-## 2024-09-26
-- [how to prevent log injection vulnerability in javascript and](./2024-09-26/how-to-prevent-log-injection-vulnerability-in-javascript-and.md)
-
 ## 2024-09-25
 - [promise queues and batching concurrent tasks in deno](./2024-09-25/promise-queues-and-batching-concurrent-tasks-in-deno.md)
 
@@ -1621,7 +1597,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [identifying insecure c code with valgrind and fixing with sn](./2024-09-24/identifying-insecure-c-code-with-valgrind-and-fixing-with-sn.md)
 
 ## 2024-09-19
-- [3 best practices to make the most of snyk apprisk essentials](./2024-09-19/3-best-practices-to-make-the-most-of-snyk-apprisk-essentials.md)
 - [cisa kev cve 2024 8963 ivanti cloud services appliance csa p](./2024-09-19/cisa-kev-cve-2024-8963-ivanti-cloud-services-appliance-csa-p.md)
 
 ## 2024-09-18
@@ -1659,7 +1634,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [what you should know about php code security](./2024-09-04/what-you-should-know-about-php-code-security.md)
 
 ## 2024-09-03
-- [3 ways appsec modernization is a game changer for financial ](./2024-09-03/3-ways-appsec-modernization-is-a-game-changer-for-financial-.md)
 - [cisa kev cve 2021 20124 draytek vigorconnect path traversal ](./2024-09-03/cisa-kev-cve-2021-20124-draytek-vigorconnect-path-traversal-.md)
 - [cisa kev cve 2024 7262 kingsoft wps office path traversal vu](./2024-09-03/cisa-kev-cve-2024-7262-kingsoft-wps-office-path-traversal-vu.md)
 - [how axel springer national media and tech achieved continuou](./2024-09-03/how-axel-springer-national-media-and-tech-achieved-continuou.md)
@@ -1698,7 +1672,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the journey to appsec gold lessons we can learn from the oly](./2024-08-15/the-journey-to-appsec-gold-lessons-we-can-learn-from-the-oly.md)
 
 ## 2024-08-14
-- [incyber forum europe recap 4 tips from devsecops experts](./2024-08-14/incyber-forum-europe-recap-4-tips-from-devsecops-experts.md)
 - [vulnerabilities in nodejs c c add on extensions](./2024-08-14/vulnerabilities-in-nodejs-c-c-add-on-extensions.md)
 
 ## 2024-08-13
@@ -1717,14 +1690,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2024 36971 android kernel remote code execution](./2024-08-07/cisa-kev-cve-2024-36971-android-kernel-remote-code-execution.md)
 
 ## 2024-08-06
-- [application vulnerability management best practices](./2024-08-06/application-vulnerability-management-best-practices.md)
 - [extend the power of your appsec data with the new snyk and s](./2024-08-06/extend-the-power-of-your-appsec-data-with-the-new-snyk-and-s.md)
 
 ## 2024-08-05
 - [cisa kev cve 2018 0824 microsoft com for windows deserializa](./2024-08-05/cisa-kev-cve-2018-0824-microsoft-com-for-windows-deserializa.md)
-
-## 2024-08-01
-- [infosec europe session 4 tips for safer ai adoption](./2024-08-01/infosec-europe-session-4-tips-for-safer-ai-adoption.md)
 
 ## 2024-07-31
 - [a denial of service regex breaks fastapi security](./2024-07-31/a-denial-of-service-regex-breaks-fastapi-security.md)
@@ -1745,9 +1714,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2024-07-22
 - [welcoming diana brunelle snyk s new chief people officer](./2024-07-22/welcoming-diana-brunelle-snyk-s-new-chief-people-officer.md)
 
-## 2024-07-18
-- [how to setup deno dev container on github codespaces](./2024-07-18/how-to-setup-deno-dev-container-on-github-codespaces.md)
-
 ## 2024-07-17
 - [10 dimensions of python static analysis](./2024-07-17/10-dimensions-of-python-static-analysis.md)
 - [cisa kev cve 2022 22948 vmware vcenter server incorrect defa](./2024-07-17/cisa-kev-cve-2022-22948-vmware-vcenter-server-incorrect-defa.md)
@@ -1756,9 +1722,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2024-07-15
 - [cisa kev cve 2024 36401 osgeo geoserver geotools eval inject](./2024-07-15/cisa-kev-cve-2024-36401-osgeo-geoserver-geotools-eval-inject.md)
-
-## 2024-07-12
-- [how to secure an s3 bucket on aws](./2024-07-12/how-to-secure-an-s3-bucket-on-aws.md)
 
 ## 2024-07-11
 - [a stepping stone towards holistic application risk and compl](./2024-07-11/a-stepping-stone-towards-holistic-application-risk-and-compl.md)
@@ -1771,9 +1734,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2024-07-02
 - [cisa kev cve 2024 20399 cisco nx os command injection vulner](./2024-07-02/cisa-kev-cve-2024-20399-cisco-nx-os-command-injection-vulner.md)
-
-## 2024-06-27
-- [how to secure a rest api](./2024-06-27/how-to-secure-a-rest-api.md)
 
 ## 2024-06-26
 - [cisa kev cve 2020 13965 roundcube webmail cross site scripti](./2024-06-26/cisa-kev-cve-2020-13965-roundcube-webmail-cross-site-scripti.md)
@@ -1818,9 +1778,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [secure ai tool adoption perceptions and realities](./2024-06-04/secure-ai-tool-adoption-perceptions-and-realities.md)
 - [snyk sponsors snowflake summit](./2024-06-04/snyk-sponsors-snowflake-summit.md)
 
-## 2024-05-30
-- [5 tips for adopting ai code assistance securely](./2024-05-30/5-tips-for-adopting-ai-code-assistance-securely.md)
-
 ## 2024-05-29
 - [10 modern node js runtime features to start using in 2024](./2024-05-29/10-modern-node-js-runtime-features-to-start-using-in-2024.md)
 
@@ -1831,7 +1788,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [preventing broken access control in express node js applicat](./2024-05-22/preventing-broken-access-control-in-express-node-js-applicat.md)
 
 ## 2024-05-21
-- [how to secure python flask applications](./2024-05-21/how-to-secure-python-flask-applications.md)
 - [learning from cloud transformation as we move to ai](./2024-05-21/learning-from-cloud-transformation-as-we-move-to-ai.md)
 
 ## 2024-05-15
@@ -1842,9 +1798,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2024-05-09
 - [meet the new host for the secure developer podcast](./2024-05-09/meet-the-new-host-for-the-secure-developer-podcast.md)
-
-## 2024-05-08
-- [the ultimate guide to creating a secure python package](./2024-05-08/the-ultimate-guide-to-creating-a-secure-python-package.md)
 
 ## 2024-05-07
 - [integrating snyk code sast results in your servicenow workfl](./2024-05-07/integrating-snyk-code-sast-results-in-your-servicenow-workfl.md)
@@ -1867,9 +1820,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2024-04-18
 - [building an npm package compatible with esm and cjs in 2024](./2024-04-18/building-an-npm-package-compatible-with-esm-and-cjs-in-2024.md)
 - [day in the life of a food giant ciso](./2024-04-18/day-in-the-life-of-a-food-giant-ciso.md)
-
-## 2024-04-17
-- [how to install java on macos](./2024-04-17/how-to-install-java-on-macos.md)
 
 ## 2024-04-16
 - [an investigation into code injection vulnerabilities caused ](./2024-04-16/an-investigation-into-code-injection-vulnerabilities-caused-.md)
@@ -1913,9 +1863,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2024-03-06
 - [snyk learn and the nist cybersecurity framework csf](./2024-03-06/snyk-learn-and-the-nist-cybersecurity-framework-csf.md)
 
-## 2024-03-05
-- [5 security best practices for adopting generative ai code as](./2024-03-05/5-security-best-practices-for-adopting-generative-ai-code-as.md)
-
 ## 2024-03-04
 - [welcoming gary olson snyk s new chief revenue officer](./2024-03-04/welcoming-gary-olson-snyk-s-new-chief-revenue-officer.md)
 
@@ -1931,9 +1878,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2024-02-27
 - [how rei built a devsecops culture and how snyk helped](./2024-02-27/how-rei-built-a-devsecops-culture-and-how-snyk-helped.md)
-
-## 2024-02-21
-- [how to build a modern devsecops culture lessons from jaguar ](./2024-02-21/how-to-build-a-modern-devsecops-culture-lessons-from-jaguar-.md)
 
 ## 2024-02-20
 - [preventing server side request forgery in node js applicatio](./2024-02-20/preventing-server-side-request-forgery-in-node-js-applicatio.md)
@@ -1952,17 +1896,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2024-02-06
 - [welcoming danny allan and brian rogan snyk leadership team e](./2024-02-06/welcoming-danny-allan-and-brian-rogan-snyk-leadership-team-e.md)
 
-## 2024-02-05
-- [10 github security best practices](./2024-02-05/10-github-security-best-practices.md)
-
-## 2024-01-25
-- [7 tips to become a successful bug bounty hunter](./2024-01-25/7-tips-to-become-a-successful-bug-bounty-hunter.md)
-
 ## 2024-01-23
 - [the 4 best devsecops tools for a secure devops workflow](./2024-01-23/the-4-best-devsecops-tools-for-a-secure-devops-workflow.md)
-
-## 2024-01-22
-- [3 tips from snyk and dynatrace s ai security experts](./2024-01-22/3-tips-from-snyk-and-dynatrace-s-ai-security-experts.md)
 
 ## 2024-01-18
 - [new year s security resolutions for 2024 from snyk devrel se](./2024-01-18/new-year-s-security-resolutions-for-2024-from-snyk-devrel-se.md)
@@ -1971,24 +1906,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2024-01-16
 - [snyk welcomes helios accelerating our aspm vision with runti](./2024-01-16/snyk-welcomes-helios-accelerating-our-aspm-vision-with-runti.md)
 
-## 2024-01-10
-- [mastering python virtual environments a complete guide to ve](./2024-01-10/mastering-python-virtual-environments-a-complete-guide-to-ve.md)
-
-## 2024-01-09
-- [how to choose a security tool for your ai generated code](./2024-01-09/how-to-choose-a-security-tool-for-your-ai-generated-code.md)
-
 ## 2024-01-05
 - [build and deploy a node js security scanning api to platform](./2024-01-05/build-and-deploy-a-node-js-security-scanning-api-to-platform.md)
 
 ## 2024-01-02
 - [krampus delivers an end of year struts vulnerability](./2024-01-02/krampus-delivers-an-end-of-year-struts-vulnerability.md)
 - [kroger s approach to supply chain security](./2024-01-02/kroger-s-approach-to-supply-chain-security.md)
-
-## 2023-12-28
-- [3 tips for rebuilding a docker image faster and save ci seco](./2023-12-28/3-tips-for-rebuilding-a-docker-image-faster-and-save-ci-seco.md)
-
-## 2023-12-27
-- [how to prevent open redirect vulnerabilities in laravel](./2023-12-27/how-to-prevent-open-redirect-vulnerabilities-in-laravel.md)
 
 ## 2023-12-21
 - [command injection in python examples and prevention](./2023-12-21/command-injection-in-python-examples-and-prevention.md)
@@ -2002,7 +1925,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2023-12-18
 - [snyk named as a top cybersecurity company in inaugural fortu](./2023-12-18/snyk-named-as-a-top-cybersecurity-company-in-inaugural-fortu.md)
-- [top 3 security best practices for handling jwts](./2023-12-18/top-3-security-best-practices-for-handling-jwts.md)
 
 ## 2023-12-14
 - [enhancing code to cloud security with the common configurati](./2023-12-14/enhancing-code-to-cloud-security-with-the-common-configurati.md)
@@ -2038,7 +1960,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2023-11-28
 - [a devsecops solution for your apps on aws from snyk](./2023-11-28/a-devsecops-solution-for-your-apps-on-aws-from-snyk.md)
-- [how to integrate aspm with your application security program](./2023-11-28/how-to-integrate-aspm-with-your-application-security-program.md)
 
 ## 2023-11-27
 - [exploring webextension security vulnerabilities in react dev](./2023-11-27/exploring-webextension-security-vulnerabilities-in-react-dev.md)
@@ -2100,36 +2021,24 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2023-10-24
 - [getting started with query parameterization](./2023-10-24/getting-started-with-query-parameterization.md)
-- [how to secure javascript applications right from the cli](./2023-10-24/how-to-secure-javascript-applications-right-from-the-cli.md)
 
 ## 2023-10-23
-- [how to keep an http connection alive for 9 hours](./2023-10-23/how-to-keep-an-http-connection-alive-for-9-hours.md)
 - [power up security collaboration with snyk and slack](./2023-10-23/power-up-security-collaboration-with-snyk-and-slack.md)
 
 ## 2023-10-18
 - [securing symmetric encryption algorithms in java](./2023-10-18/securing-symmetric-encryption-algorithms-in-java.md)
-
-## 2023-10-17
-- [how to protect node js apps from csrf attacks](./2023-10-17/how-to-protect-node-js-apps-from-csrf-attacks.md)
-
-## 2023-10-13
-- [6 steps for scaling risk based appsec programs](./2023-10-13/6-steps-for-scaling-risk-based-appsec-programs.md)
 
 ## 2023-10-12
 - [installing and managing java on macos](./2023-10-12/installing-and-managing-java-on-macos.md)
 
 ## 2023-10-11
 - [find and fix http 2 rapid reset zero day vulnerability cve 2](./2023-10-11/find-and-fix-http-2-rapid-reset-zero-day-vulnerability-cve-2.md)
-- [how to update curl](./2023-10-11/how-to-update-curl.md)
 
 ## 2023-10-10
 - [cybersecurity venture s 2023 software supply chain attack re](./2023-10-10/cybersecurity-venture-s-2023-software-supply-chain-attack-re.md)
 
 ## 2023-10-09
 - [sas and snyk discuss the future of ai for development and se](./2023-10-09/sas-and-snyk-discuss-the-future-of-ai-for-development-and-se.md)
-
-## 2023-10-05
-- [how to find and fix critical webp zero day vulnerability cve](./2023-10-05/how-to-find-and-fix-critical-webp-zero-day-vulnerability-cve.md)
 
 ## 2023-10-04
 - [high severity vulnerability found in libcurl and curl cve 20](./2023-10-04/high-severity-vulnerability-found-in-libcurl-and-curl-cve-20.md)
@@ -2145,23 +2054,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2023-09-28
 - [critical webp 0 day security cve 2023 4863 impacts wider sof](./2023-09-28/critical-webp-0-day-security-cve-2023-4863-impacts-wider-sof.md)
 
-## 2023-09-27
-- [10 best practices for securely developing with ai](./2023-09-27/10-best-practices-for-securely-developing-with-ai.md)
-
 ## 2023-09-26
 - [signing container images comparing sigstore notary and docke](./2023-09-26/signing-container-images-comparing-sigstore-notary-and-docke.md)
-
-## 2023-09-21
-- [how to prevent nullpointerexceptions in java](./2023-09-21/how-to-prevent-nullpointerexceptions-in-java.md)
 
 ## 2023-09-20
 - [snyk is named a strong performer as a first time entrant in ](./2023-09-20/snyk-is-named-a-strong-performer-as-a-first-time-entrant-in-.md)
 
 ## 2023-09-19
 - [developer first supply chain security](./2023-09-19/developer-first-supply-chain-security.md)
-
-## 2023-09-18
-- [black hat asia customer panel recap how to lead devsecops ad](./2023-09-18/black-hat-asia-customer-panel-recap-how-to-lead-devsecops-ad.md)
 
 ## 2023-09-14
 - [modern vs code extension development the basics](./2023-09-14/modern-vs-code-extension-development-the-basics.md)
@@ -2172,9 +2072,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2023-09-12
 - [a guide to input validation with spring boot](./2023-09-12/a-guide-to-input-validation-with-spring-boot.md)
-
-## 2023-09-11
-- [how to avoid web cache poisoning attacks](./2023-09-11/how-to-avoid-web-cache-poisoning-attacks.md)
 
 ## 2023-09-07
 - [top considerations for addressing risks in the owasp top 10 ](./2023-09-07/top-considerations-for-addressing-risks-in-the-owasp-top-10-.md)
@@ -2188,25 +2085,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2023-08-31
 - [7 appsec tips from snowflake s director of product security](./2023-08-31/7-appsec-tips-from-snowflake-s-director-of-product-security.md)
 
-## 2023-08-30
-- [how to use ai for software development and cybersecurity](./2023-08-30/how-to-use-ai-for-software-development-and-cybersecurity.md)
-
-## 2023-08-29
-- [how to implement ssl tls pinning in node js](./2023-08-29/how-to-implement-ssl-tls-pinning-in-node-js.md)
-
 ## 2023-08-25
 - [how okta empowers devs to find fix security issues with snyk](./2023-08-25/how-okta-empowers-devs-to-find-fix-security-issues-with-snyk.md)
 - [what kind of security dog are you](./2023-08-25/what-kind-of-security-dog-are-you.md)
 
 ## 2023-08-24
-- [top 5 vs code extensions for security](./2023-08-24/top-5-vs-code-extensions-for-security.md)
 - [using jlink to create smaller docker images for your spring ](./2023-08-24/using-jlink-to-create-smaller-docker-images-for-your-spring-.md)
 
 ## 2023-08-23
 - [streamline dependency updates with mergify and snyk](./2023-08-23/streamline-dependency-updates-with-mergify-and-snyk.md)
-
-## 2023-08-22
-- [best practices for building a production ready dockerfile fo](./2023-08-22/best-practices-for-building-a-production-ready-dockerfile-fo.md)
 
 ## 2023-08-21
 - [does gitops enhance application security](./2023-08-21/does-gitops-enhance-application-security.md)
@@ -2225,7 +2112,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [net developers alert moq nuget package exfiltrates user emai](./2023-08-09/net-developers-alert-moq-nuget-package-exfiltrates-user-emai.md)
 
 ## 2023-08-08
-- [5 tips to supercharge app security from code to cloud](./2023-08-08/5-tips-to-supercharge-app-security-from-code-to-cloud.md)
 - [snyk ranked 19 on 2023 forbes cloud 100 list](./2023-08-08/snyk-ranked-19-on-2023-forbes-cloud-100-list.md)
 
 ## 2023-08-07
@@ -2237,7 +2123,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new sec cybersecurity rules put more onus on the ciso not so](./2023-08-03/new-sec-cybersecurity-rules-put-more-onus-on-the-ciso-not-so.md)
 
 ## 2023-08-02
-- [how to dockerize a php application securely](./2023-08-02/how-to-dockerize-a-php-application-securely.md)
 - [software supply chain security tools types features consider](./2023-08-02/software-supply-chain-security-tools-types-features-consider.md)
 
 ## 2023-08-01
@@ -2255,29 +2140,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2023-07-26
 - [snyk s 2023 state of open source security supply chain secur](./2023-07-26/snyk-s-2023-state-of-open-source-security-supply-chain-secur.md)
 
-## 2023-07-20
-- [4 enterprise level security best practices](./2023-07-20/4-enterprise-level-security-best-practices.md)
-- [8 tips for securing your ci cd pipeline with snyk](./2023-07-20/8-tips-for-securing-your-ci-cd-pipeline-with-snyk.md)
-
 ## 2023-07-19
-- [best practices for using ai in the sdlc](./2023-07-19/best-practices-for-using-ai-in-the-sdlc.md)
 - [finding and fixing insecure direct object references in pyth](./2023-07-19/finding-and-fixing-insecure-direct-object-references-in-pyth.md)
 
 ## 2023-07-18
-- [best practices for effective attack surface analysis](./2023-07-18/best-practices-for-effective-attack-surface-analysis.md)
 - [swift deserialization security primer](./2023-07-18/swift-deserialization-security-primer.md)
 
 ## 2023-07-17
 - [xs leaks what they are and how to avoid them](./2023-07-17/xs-leaks-what-they-are-and-how-to-avoid-them.md)
-
-## 2023-07-14
-- [top 5 security concerns for infrastructure as code](./2023-07-14/top-5-security-concerns-for-infrastructure-as-code.md)
-
-## 2023-07-12
-- [how to strengthen security in your ci cd pipeline](./2023-07-12/how-to-strengthen-security-in-your-ci-cd-pipeline.md)
-
-## 2023-07-11
-- [session management security best practices for protecting us](./2023-07-11/session-management-security-best-practices-for-protecting-us.md)
 
 ## 2023-06-29
 - [building a security conscious ci cd pipeline](./2023-06-29/building-a-security-conscious-ci-cd-pipeline.md)
@@ -2291,10 +2161,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2023-06-26
 - [maximizing iam security with aws permissions boundaries and ](./2023-06-26/maximizing-iam-security-with-aws-permissions-boundaries-and-.md)
-- [secrets management tools best practice](./2023-06-26/secrets-management-tools-best-practice.md)
 
 ## 2023-06-22
-- [how to implement devsecops in 4 steps devsecops implementati](./2023-06-22/how-to-implement-devsecops-in-4-steps-devsecops-implementati.md)
 - [research with snyk and redhunt labs scanning the top 1000 or](./2023-06-22/research-with-snyk-and-redhunt-labs-scanning-the-top-1000-or.md)
 
 ## 2023-06-21
@@ -2309,9 +2177,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2023-06-15
 - [the securitymanager is getting removed in java what that mea](./2023-06-15/the-securitymanager-is-getting-removed-in-java-what-that-mea.md)
-
-## 2023-06-14
-- [the secure developer security champions recap](./2023-06-14/the-secure-developer-security-champions-recap.md)
 
 ## 2023-06-13
 - [snyk named a leader placed highest in strategy category in t](./2023-06-13/snyk-named-a-leader-placed-highest-in-strategy-category-in-t.md)

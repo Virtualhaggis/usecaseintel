@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### ISO File Dropped to Downloads — RoguePlanet Defender Exploit Precursor
 
-`UC_62_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_61_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceFileEvents
 
 ### Defender Component (MsMpEng/NisSrv) Spawns Interactive Shell with SYSTEM Integrity
 
-`UC_62_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_61_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceProcessEvents
 
 ### Connection to RoguePlanet PoC C2 Domain projectnightcrawler.dev
 
-`UC_62_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_61_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ union
 
 ### Unpatched Assets Vulnerable to Chaotic Eclipse Defender CVE Cluster
 
-`UC_62_10` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_61_10` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

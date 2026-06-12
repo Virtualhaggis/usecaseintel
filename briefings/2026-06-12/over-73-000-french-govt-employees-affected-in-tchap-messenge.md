@@ -24,15 +24,19 @@ DINUM, the French government's digital affairs directorate,  disclosed on Mond
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1071** — Application Layer Protocol
-- **T1078** — Valid Accounts
-- **T1566** — Phishing
+- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1199** — Trusted Relationship
 - **T1005** — Data from Local System
 - **T1530** — Data from Cloud Storage
-- **T1213** — Data from Information Repositories
-- **T1552.001** — Credentials In Files
-- **T1048.003** — Exfiltration Over Unencrypted Non-C2 Protocol
+- **T1119** — Automated Collection
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1567.002** — Exfiltration to Cloud Storage
 - **T1020** — Automated Exfiltration
+- **T1030** — Data Transfer Size Limits
+- **T1087** — Account Discovery
 - **T1087.004** — Account Discovery: Cloud Account
+- **T1213** — Data from Information Repositories
 
 ## Kill chain phases observed
 
@@ -40,101 +44,133 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Anomalous endpoint authentication to Tchap (tchap.gouv.fr) — possible hijacked account
+### First-seen device/user authenticating to Tchap (tchap.gouv.fr) matrix endpoint
 
-`UC_16_2` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+`UC_18_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*tchap.gouv.fr*" OR Web.url="*matrix.agent.education.tchap.gouv.fr*") by Web.src Web.user Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | eventstats dc(src) as orgSrcDistinct, dc(user) as orgUserDistinct by url | where firstTime > relative_time(now(),"-7d") AND orgUserDistinct < 5 | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true earliest(_time) as firstTime latest(_time) as lastTime count from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("tchap.gouv.fr","matrix.agent.education.tchap.gouv.fr")) by All_Traffic.src All_Traffic.user All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | where firstTime > relative_time(now(), "-24h") | sort - firstTime
 ```
 
 **Defender KQL:**
 ```kql
+let LookbackBaseline = 30d;
+let RecentWindow = 24h;
+let TchapDomains = dynamic(["tchap.gouv.fr", "matrix.agent.education.tchap.gouv.fr"]);
 let Baseline = DeviceNetworkEvents
-    | where Timestamp between (ago(60d) .. ago(7d))
-    | where RemoteUrl has_any ("tchap.gouv.fr","matrix.agent.education.tchap.gouv.fr")
-    | summarize by DeviceId, InitiatingProcessAccountUpn;
+    | where Timestamp between (ago(LookbackBaseline) .. ago(RecentWindow))
+    | where RemoteUrl has_any (TchapDomains)
+    | summarize by DeviceId, InitiatingProcessAccountName;
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteUrl has_any ("tchap.gouv.fr","matrix.agent.education.tchap.gouv.fr")
-| join kind=leftanti Baseline on DeviceId, InitiatingProcessAccountUpn
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Conns=count(), Urls=make_set(RemoteUrl, 25)
-          by DeviceId, DeviceName, InitiatingProcessAccountUpn, InitiatingProcessFileName, RemoteIP
-| order by FirstSeen desc
-```
-
-### Bulk Matrix/Tchap public room scraping (high-volume API fetches per single account)
-
-`UC_16_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count from datamodel=Web.Web where (Web.url="*matrix.agent.education.tchap.gouv.fr*" OR Web.url="*tchap.gouv.fr/_matrix/*" OR Web.url="*/rooms/*/messages*" OR Web.url="*/sync*" OR Web.url="*publicRooms*") by Web.src Web.user Web.url _time span=10m | `drop_dm_object_name(Web)` | stats sum(count) as reqs dc(url) as distinctUrls by src user _time | where reqs > 500 OR distinctUrls > 50
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteUrl has_any ("tchap.gouv.fr","matrix.agent.education.tchap.gouv.fr")
-| summarize Connections=count(), DistinctRemoteIPs=dcount(RemoteIP), Bucket=bin(Timestamp, 10m)
-          by DeviceId, DeviceName, InitiatingProcessAccountUpn, InitiatingProcessFileName
-| where Connections > 500    // empirically a Tchap desktop client averages <50 conns / 10 min
-| order by Connections desc
-```
-
-### PowerShell with hardcoded LDAP bind credentials (Tchap-style leak)
-
-`UC_16_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe","powershell_ise.exe") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where match(process, "(?i)(LDAP://|DirectoryEntry|System\.DirectoryServices|LdapConnection|PrincipalContext)") AND match(process, "(?i)(NetworkCredential|ConvertTo-SecureString|password|userPassword|-pwd|secret|bind)") | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where AccountName !endswith "$"
-| where FileName in~ ("powershell.exe","pwsh.exe","powershell_ise.exe")
-   or InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe","powershell_ise.exe")
-| where ProcessCommandLine has_any ("LDAP://","DirectoryEntry","System.DirectoryServices.Protocols","System.DirectoryServices","LdapConnection","PrincipalContext")
-| where ProcessCommandLine has_any ("NetworkCredential","ConvertTo-SecureString","-Password","PasswordCredential","userPassword","bindDN","secret")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| where Timestamp > ago(RecentWindow)
+| where RemoteUrl has_any (TchapDomains)
+| where InitiatingProcessAccountName !endswith "$"
+| join kind=leftanti Baseline on DeviceId, InitiatingProcessAccountName
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Large outbound transfer from endpoint to Tchap/Matrix FQDNs (potential 13.5GB-style exfil)
+### High-volume scripted access to Tchap Matrix endpoint (bulk public-room scraping)
 
-`UC_16_5` · phase: **actions** · confidence: **Low** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true sum(Web.bytes_in) as bytes_in count from datamodel=Web.Web where (Web.url="*tchap.gouv.fr*" OR Web.url="*matrix.agent.education.tchap.gouv.fr*") by Web.src Web.user _time span=1h | `drop_dm_object_name(Web)` | where bytes_in > 1073741824    // 1 GiB / hour from a single src is far above baseline | sort - bytes_in
-```
-
-### Bulk user-profile enumeration via Tchap Matrix /publicRooms API
-
-`UC_16_6` · phase: **recon** · confidence: **Low** · AI-generated for this article
+`UC_18_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count from datamodel=Web.Web where (Web.url="*tchap.gouv.fr*" OR Web.url="*matrix.agent.education.tchap.gouv.fr*") AND (Web.url="*publicRooms*" OR Web.url="*/joined_members*" OR Web.url="*/members*" OR Web.url="*profile*") by Web.src Web.user Web.url _time span=15m | `drop_dm_object_name(Web)` | stats sum(count) as reqs dc(url) as distinctUrls by src user _time | where reqs > 200 OR distinctUrls > 30
+| tstats summariesonly=true count values(All_Traffic.dest) as dest from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("tchap.gouv.fr","matrix.agent.education.tchap.gouv.fr") by All_Traffic.src All_Traffic.user _time span=1h | `drop_dm_object_name(All_Traffic)` | where count > 500 | sort - count
 ```
 
 **Defender KQL:**
 ```kql
+let TchapDomains = dynamic(["tchap.gouv.fr", "matrix.agent.education.tchap.gouv.fr"]);
+let ScriptedClients = dynamic(["powershell.exe","pwsh.exe","curl.exe","wget.exe","python.exe","python3.exe","node.exe","go.exe","httpie.exe"]);
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where RemoteUrl has_any ("tchap.gouv.fr","matrix.agent.education.tchap.gouv.fr")
-| where RemoteUrl has_any ("publicRooms","/joined_members","/members","profile")
-| summarize EnumRequests=count(), DistinctUrls=dcount(RemoteUrl), Bucket=bin(Timestamp, 15m)
-          by DeviceId, DeviceName, InitiatingProcessAccountUpn, InitiatingProcessFileName
-| where EnumRequests > 200 or DistinctUrls > 30
-| order by EnumRequests desc
+| where RemoteUrl has_any (TchapDomains)
+| where InitiatingProcessAccountName !endswith "$"
+| summarize ConnCount = count(),
+            DistinctRemoteIPs = dcount(RemoteIP),
+            FirstSeen = min(Timestamp),
+            LastSeen = max(Timestamp),
+            DurationMin = datetime_diff('minute', max(Timestamp), min(Timestamp))
+            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, bin(Timestamp, 1h)
+| where ConnCount > 500 or (InitiatingProcessFileName in~ (ScriptedClients) and ConnCount > 50)
+| order by ConnCount desc
+```
+
+### PowerShell process invoking LDAP:// with hardcoded plaintext credential
+
+`UC_18_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process_cmd from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe") Processes.process="*LDAP://*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | search process_cmd="*DirectoryEntry*" OR process_cmd="*DirectorySearcher*" OR process_cmd="*ConvertTo-SecureString*" OR process_cmd="*NetworkCredential*" OR process_cmd="*-Password*" OR process_cmd="*PrincipalContext*" | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let LdapMarker = "LDAP://";
+let CredMarkers = dynamic(["DirectoryEntry","DirectorySearcher","ConvertTo-SecureString","NetworkCredential","-Password","PrincipalContext","AccountManagement"]);
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("powershell.exe","pwsh.exe")
+   or InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe")
+| where ProcessCommandLine has LdapMarker or InitiatingProcessCommandLine has LdapMarker
+| where ProcessCommandLine has_any (CredMarkers) or InitiatingProcessCommandLine has_any (CredMarkers)
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Multi-GB outbound transfer from single user to Tchap/Matrix endpoint (exfil volume)
+
+`UC_18_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true sum(All_Traffic.bytes_in) as bytes_in sum(All_Traffic.bytes_out) as bytes_out count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("tchap.gouv.fr","matrix.agent.education.tchap.gouv.fr") by All_Traffic.src All_Traffic.user _time span=4h | `drop_dm_object_name(All_Traffic)` | where bytes_in > 1073741824 | eval gb_in=round(bytes_in/1073741824,2) | sort - bytes_in
+```
+
+**Defender KQL:**
+```kql
+let TchapDomains = dynamic(["tchap.gouv.fr", "matrix.agent.education.tchap.gouv.fr"]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has_any (TchapDomains)
+| where InitiatingProcessAccountName !endswith "$"
+| summarize ConnCount = count(),
+            FirstSeen = min(Timestamp),
+            LastSeen = max(Timestamp),
+            DurationMin = datetime_diff('minute', max(Timestamp), min(Timestamp))
+            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, bin(Timestamp, 4h)
+| where ConnCount > 2000 and DurationMin between (5 .. 240)
+| extend ConnsPerMin = round(todouble(ConnCount) / max_of(DurationMin, 1), 1)
+| order by ConnCount desc
+```
+
+### Bulk Matrix profile/room-member enumeration against Tchap endpoint
+
+`UC_18_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Web.Web where Web.dest IN ("tchap.gouv.fr","matrix.agent.education.tchap.gouv.fr") (Web.url="*/profile/*" OR Web.url="*/joined_members*" OR Web.url="*/members*" OR Web.url="*/state*" OR Web.url="*/messages*") by Web.src Web.user _time span=1h | `drop_dm_object_name(Web)` | where count > 500 | sort - count
+```
+
+**Defender KQL:**
+```kql
+let TchapDomains = dynamic(["tchap.gouv.fr", "matrix.agent.education.tchap.gouv.fr"]);
+let ScriptedClients = dynamic(["powershell.exe","pwsh.exe","curl.exe","wget.exe","python.exe","python3.exe","node.exe","httpie.exe","go.exe"]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has_any (TchapDomains)
+| where InitiatingProcessAccountName !endswith "$"
+| where InitiatingProcessFileName in~ (ScriptedClients)
+   or InitiatingProcessCommandLine has_any ("/_matrix/client/","/joined_members","/profile/","/members")
+| summarize ConnCount = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
+            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, bin(Timestamp, 1h)
+| where ConnCount > 50
+| order by ConnCount desc
 ```
 
 ### PowerShell encoded / obfuscated command
@@ -176,4 +212,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **MED** based on: IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: IOCs present, 7 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

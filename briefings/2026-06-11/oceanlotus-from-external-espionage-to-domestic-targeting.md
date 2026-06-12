@@ -66,12 +66,13 @@ Our tracking of OceanLotus activities from 2024–2026 reveals a shift in operat
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
+- **T1059** — Command and Scripting Interpreter
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1071.004** — Application Layer Protocol: DNS
-- **T1059** — Command and Scripting Interpreter
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1105** — Ingress Tool Transfer
-- **T1573** — Encrypted Channel
+- **T1095** — Non-Application Layer Protocol
+- **T1574.002** — DLL Side-Loading
+- **T1055.001** — DLL Injection
+- **T1572** — Protocol Tunneling
 
 ## Kill chain phases observed
 
@@ -79,104 +80,57 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### OceanLotus SPECTRALVIPER C2 callback to known infrastructure (IPs + domains)
+### FireAnt Metakit supply-chain: trojanized update spawns interpreter/LOLBin child
 
-`UC_41_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_41_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest in ("139.162.11.152","142.91.98.77","139.180.128.42","139.99.33.239","166.88.77.186","103.119.47.104","38.60.245.37","194.68.26.241") by All_Traffic.src All_Traffic.dest All_Traffic.user | `drop_dm_object_name(All_Traffic)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src from datamodel=Network_Resolution.DNS where DNS.query IN ("financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com","*.financemachinelearning.com","*.gatewayrvcenter.com","*.coachcybersecurity.com","*.mxprodesign.com","*.power-sync-services.com","*.leadingfilipinoteams.com") by DNS.query DNS.src | `drop_dm_object_name(DNS)`] | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="FireAnt*" OR Processes.parent_process_name="Metakit*" OR Processes.parent_process_path="*\\FireAnt*\\*" OR Processes.parent_process_path="*\\Metakit*\\*") AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process_path Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let OceanLotusIPs = dynamic(["139.162.11.152","142.91.98.77","139.180.128.42","139.99.33.239","166.88.77.186","103.119.47.104","38.60.245.37","194.68.26.241"]);
-let OceanLotusDomains = dynamic(["financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com"]);
-union
-( DeviceNetworkEvents
-  | where Timestamp > ago(30d)
-  | where RemoteIP in (OceanLotusIPs) or RemoteUrl has_any (OceanLotusDomains)
-  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemoteUrl, RemotePort, Source="DeviceNetworkEvents"
-),
-( DeviceEvents
-  | where Timestamp > ago(30d)
-  | where ActionType == "DnsQueryResponse"
-  | extend Q = tostring(parse_json(AdditionalFields).query)
-  | where Q has_any (OceanLotusDomains) or RemoteUrl has_any (OceanLotusDomains)
-  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemoteUrl=coalesce(RemoteUrl,Q), RemotePort, Source="DnsQueryResponse"
-)
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName has "fireant" or InitiatingProcessFileName has "metakit" or InitiatingProcessFolderPath has_any ("FireAnt","Metakit")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### SPECTRALVIPER known-bad SHA1 hash on file write or process execution
+### SPECTRALVIPER C2 beacon to OceanLotus C2 domains
 
-`UC_41_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_41_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_hash IN ("d511b77459673ec42163f19e300ff1d233b6c39f","59a8553a4f8130f576ab234e0b220be4d4da0e98","9ca1a5c7f79882db913534c1e62b26bcdcb9f6dd","a8e2bbbfcb86500322d2367744fa12755ab0c165","f74f1feb62b662cda489fdb2453727824e55acb9","f8f8209987ca7f139de6a62f9e6ee21bd2ae93a9","19a69f856efa811c376f68e4feb0997b4724f8bd","490194e9bb5128eca8693ad9e610891c2ed185af","51176139b0b2220b802c1578a4994df68df5bcd1","91f042f59be4bdcb6e5ea21b91decd731c175b54","a177ed0bffeb1efe1d9d31d72a82ef2625ae646d","b7b2d2db544f9eea74453cdf2b8beea58cf07c48","4ad36ad6c165b5174967020cb1a3358f78d7a283","57352b3ceee32216e5aa20baa848483d7ab5a6fb","9bc06df9f932746a05ee728c8b103bd3ba6bf395","865a1739337d3303b3ab02c5e694c22b79c42b7d","41cb8cd78b8db76563e4f972abe817ceee9cf9b0","0037dbb0fea981d02f6f76de81ebaefcb68b7d20","5d6194bb48febb91a10d1462461a012fafc0918b","b028e947150764a71deef498de6f8c95ecccb445") by host Processes.process_name Processes.process_hash Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com","*.financemachinelearning.com","*.gatewayrvcenter.com","*.coachcybersecurity.com","*.mxprodesign.com","*.power-sync-services.com","*.leadingfilipinoteams.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let OceanLotusSHA1 = dynamic(["d511b77459673ec42163f19e300ff1d233b6c39f","59a8553a4f8130f576ab234e0b220be4d4da0e98","9ca1a5c7f79882db913534c1e62b26bcdcb9f6dd","a8e2bbbfcb86500322d2367744fa12755ab0c165","f74f1feb62b662cda489fdb2453727824e55acb9","f8f8209987ca7f139de6a62f9e6ee21bd2ae93a9","19a69f856efa811c376f68e4feb0997b4724f8bd","490194e9bb5128eca8693ad9e610891c2ed185af","51176139b0b2220b802c1578a4994df68df5bcd1","91f042f59be4bdcb6e5ea21b91decd731c175b54","a177ed0bffeb1efe1d9d31d72a82ef2625ae646d","b7b2d2db544f9eea74453cdf2b8beea58cf07c48","4ad36ad6c165b5174967020cb1a3358f78d7a283","57352b3ceee32216e5aa20baa848483d7ab5a6fb","9bc06df9f932746a05ee728c8b103bd3ba6bf395","865a1739337d3303b3ab02c5e694c22b79c42b7d","41cb8cd78b8db76563e4f972abe817ceee9cf9b0","0037dbb0fea981d02f6f76de81ebaefcb68b7d20","5d6194bb48febb91a10d1462461a012fafc0918b","b028e947150764a71deef498de6f8c95ecccb445"]);
+let OceanLotusC2 = dynamic(["financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com"]);
 union
-( DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where SHA1 in (OceanLotusSHA1) or InitiatingProcessSHA1 in (OceanLotusSHA1)
-  | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA1, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessSHA1, Source="DeviceProcessEvents"
-),
-( DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where SHA1 in (OceanLotusSHA1) or InitiatingProcessSHA1 in (OceanLotusSHA1)
-  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, SHA1, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessSHA1, Source="DeviceFileEvents"
-),
-( DeviceImageLoadEvents
-  | where Timestamp > ago(30d)
-  | where SHA1 in (OceanLotusSHA1)
-  | project Timestamp, DeviceName, FileName, FolderPath, SHA1, InitiatingProcessFileName, InitiatingProcessCommandLine, Source="DeviceImageLoadEvents"
-)
+(DeviceNetworkEvents
+ | where Timestamp > ago(30d)
+ | where RemoteUrl has_any (OceanLotusC2)
+ | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, Source="DeviceNetworkEvents"),
+(DeviceEvents
+ | where Timestamp > ago(30d)
+ | where ActionType == "DnsQueryResponse"
+ | where RemoteUrl has_any (OceanLotusC2)
+ | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort=int(null), Source="DnsQueryResponse")
 | order by Timestamp desc
 ```
 
-### FireAnt Metakit updater spawning script/LOLBin or writing PE to user-writable path (supply-chain)
+### SPECTRALVIPER C2 beacon to OceanLotus C2 IPs (Vultr/Choopa hosting clusters)
 
-`UC_41_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.process_path) as child_path from datamodel=Endpoint.Processes where (Processes.parent_process_name="FireAnt.exe" OR Processes.parent_process_name="FireAntMetakit.exe" OR Processes.parent_process="*\\FireAnt*\\*" OR Processes.parent_process="*Metakit*") AND (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","msiexec.exe")) by host Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path from datamodel=Endpoint.Filesystem where (Filesystem.process_name="FireAnt.exe" OR Filesystem.process_name="FireAntMetakit.exe") AND (Filesystem.file_name="*.exe" OR Filesystem.file_name="*.dll" OR Filesystem.file_name="*.scr") AND (Filesystem.file_path="*\\AppData\\*" OR Filesystem.file_path="*\\ProgramData\\*" OR Filesystem.file_path="*\\Temp\\*") by host Filesystem.process_name Filesystem.file_name | `drop_dm_object_name(Filesystem)`] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let FireAntParents = dynamic(["fireant.exe","fireantmetakit.exe","metakit.exe","fireant_updater.exe","fireantupdater.exe"]);
-let SuspChildren = dynamic(["powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","msiexec.exe"]);
-union
-( DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where InitiatingProcessFileName in~ (FireAntParents) or InitiatingProcessFolderPath has_any ("FireAnt","Metakit")
-  | where FileName in~ (SuspChildren)
-  | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA1, Pivot="FireAnt_child_lolbin"
-),
-( DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where InitiatingProcessFileName in~ (FireAntParents) or InitiatingProcessFolderPath has_any ("FireAnt","Metakit")
-  | where ActionType in ("FileCreated","FileRenamed")
-  | where FileName endswith ".exe" or FileName endswith ".dll" or FileName endswith ".scr" or FileName endswith ".lnk"
-  | where FolderPath has_any (@"\AppData\",@"\ProgramData\",@"\Temp\",@"\Public\")
-  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, FileName, FolderPath, SHA1, SHA256, Pivot="FireAnt_drops_PE"
-)
-| order by Timestamp desc
-```
-
-### Sustained low-rate beaconing from single host to OceanLotus C2 IP set (long-tail intrusion signal)
-
-`UC_41_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_41_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count as conn_count min(_time) as firstTime max(_time) as lastTime dc(eval(strftime(_time,"%Y-%m-%d-%H"))) as distinct_hours dc(eval(strftime(_time,"%Y-%m-%d"))) as distinct_days values(All_Traffic.dest_port) as dest_ports values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest in ("139.162.11.152","142.91.98.77","139.180.128.42","139.99.33.239","166.88.77.186","103.119.47.104","38.60.245.37","194.68.26.241") by All_Traffic.src All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | where distinct_days >= 3 AND distinct_hours >= 6 | eval avg_per_day=round(conn_count/distinct_days,2) | convert ctime(firstTime) ctime(lastTime) | sort - distinct_days
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("139.162.11.152","142.91.98.77","139.180.128.42","139.99.33.239","166.88.77.186","103.119.47.104","38.60.245.37","194.68.26.241") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -185,19 +139,97 @@ let OceanLotusIPs = dynamic(["139.162.11.152","142.91.98.77","139.180.128.42","1
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP in (OceanLotusIPs)
-| extend HourBucket = bin(Timestamp, 1h), DayBucket = startofday(Timestamp)
-| summarize ConnCount = count(),
-            DistinctHours = dcount(HourBucket),
-            DistinctDays = dcount(DayBucket),
-            FirstSeen = min(Timestamp),
-            LastSeen = max(Timestamp),
-            Ports = make_set(RemotePort, 20),
-            Processes = make_set(InitiatingProcessFileName, 20),
-            CmdSamples = make_set(InitiatingProcessCommandLine, 10)
-            by DeviceName, RemoteIP
-| where DistinctDays >= 3 and DistinctHours >= 6
-| extend CampaignSpanDays = datetime_diff('day', LastSeen, FirstSeen)
-| order by DistinctDays desc, CampaignSpanDays desc
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, Protocol, ActionType
+| order by Timestamp desc
+```
+
+### SPECTRALVIPER process injection target: OneDrive.Sync.Service.exe loading non-Microsoft DLL
+
+`UC_41_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("OneDrive.exe","OneDrive.Sync.Service.exe","OneDriveStandaloneUpdater.exe") AND NOT (Processes.process_path IN ("*\\Microsoft\\OneDrive\\*","*\\Program Files\\Microsoft OneDrive\\*","*\\Program Files (x86)\\Microsoft OneDrive\\*")) by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceImageLoadEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("OneDrive.exe","OneDrive.Sync.Service.exe","OneDriveStandaloneUpdater.exe")
+| where FileName endswith ".dll"
+| where not(FolderPath startswith @"C:\Windows\")
+     and not(FolderPath startswith @"C:\Program Files\Microsoft OneDrive\")
+     and not(FolderPath startswith @"C:\Program Files (x86)\Microsoft OneDrive\")
+     and not(FolderPath startswith @"C:\Program Files\Common Files\Microsoft\")
+| where FolderPath has_any (@"\AppData\Local\Temp\", @"\AppData\Roaming\", @"\ProgramData\", @"\Users\Public\", @"\Windows\Temp\")
+| join kind=leftouter (DeviceProcessEvents | where Timestamp > ago(7d) | project InitiatingProcessSHA1, InitiatingFileVendor=ProcessVersionInfoCompanyName) on InitiatingProcessSHA1
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, LoadedDll=FileName, LoadedDllPath=FolderPath, LoadedDllSHA256=SHA256
+| order by Timestamp desc
+```
+
+### Denis/SOUNDBITE DNS tunneling to OceanLotus C2 - high entropy subdomain queries
+
+`UC_41_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count values(DNS.query) as queries from datamodel=Network_Resolution.DNS where DNS.message_type="QUERY" AND DNS.record_type IN ("TXT","NULL","CNAME","A") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | eval subdomain_len=len(query) | eval label=mvindex(split(query,"."),0) | eval label_len=len(label) | where label_len > 30 AND subdomain_len > 60 | stats count as qcount dc(query) as uniq_queries min(_time) as firstTime max(_time) as lastTime by src | where qcount > 30 AND uniq_queries > 15 | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceEvents
+| where Timestamp > ago(7d)
+| where ActionType == "DnsQueryResponse"
+| where isnotempty(RemoteUrl)
+| extend Label = tostring(split(RemoteUrl, ".")[0]), LabelLen = strlen(tostring(split(RemoteUrl, ".")[0])), TotalLen = strlen(RemoteUrl)
+| where LabelLen > 30 and TotalLen > 60
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","iexplore.exe","opera.exe")
+| summarize QueryCount = count(), UniqueQueries = dcount(RemoteUrl), Sample = any(RemoteUrl) by DeviceName, InitiatingProcessFileName, bin(Timestamp, 30m)
+| where QueryCount > 30 and UniqueQueries > 15
+| order by Timestamp desc
+```
+
+### PHOREAL ICMP-based covert C2 from non-system process
+
+`UC_41_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.transport="icmp" AND NOT (All_Traffic.dest_ip IN ("10.0.0.0/8","172.16.0.0/12","192.168.0.0/16")) AND NOT (All_Traffic.process_name IN ("ping.exe","tracert.exe","PathPing.exe","MsMpEng.exe","SenseIR.exe")) by All_Traffic.src All_Traffic.dest_ip All_Traffic.process_name All_Traffic.process_path | `drop_dm_object_name(All_Traffic)` | where count > 20
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where Protocol == "Icmp"
+| where RemoteIPType == "Public"
+| where InitiatingProcessFileName !in~ ("ping.exe","tracert.exe","pathping.exe","MsMpEng.exe","SenseIR.exe","svchost.exe")
+| where InitiatingProcessFolderPath !startswith @"C:\Windows\System32\" and InitiatingProcessFolderPath !startswith @"C:\Windows\SysWOW64\"
+| summarize IcmpCount = count(), DistinctDsts = dcount(RemoteIP), Sample = any(RemoteIP) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, bin(Timestamp, 1h)
+| where IcmpCount > 20
+| order by Timestamp desc
+```
+
+### OceanLotus SPECTRALVIPER known-sample SHA1 hit on disk or in process
+
+`UC_41_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("D511B77459673EC42163F19E300FF1D233B6C39F","59A8553A4F8130F576AB234E0B220BE4D4DA0E98","9CA1A5C7F79882DB913534C1E62B26BCDCB9F6DD","A8E2BBBFCB86500322D2367744FA12755AB0C165","F74F1FEB62B662CDA489FDB2453727824E55ACB9","F8F8209987CA7F139DE6A62F9E6EE21BD2AE93A9","19A69F856EFA811C376F68E4FEB0997B4724F8BD","490194E9BB5128ECA8693AD9E610891C2ED185AF","51176139B0B2220B802C1578A4994DF68DF5BCD1","91F042F59BE4BDCB6E5EA21B91DECD731C175B54","A177ED0BFFEB1EFE1D9D31D72A82EF2625AE646D","B7B2D2DB544F9EEA74453CDF2B8BEEA58CF07C48","4AD36AD6C165B5174967020CB1A3358F78D7A283","57352B3CEEE32216E5AA20BAA848483D7AB5A6FB","9BC06DF9F932746A05EE728C8B103BD3BA6BF395","865A1739337D3303B3AB02C5E694C22B79C42B7D","41CB8CD78B8DB76563E4F972ABE817CEEE9CF9B0","0037DBB0FEA981D02F6F76DE81EBAEFCB68B7D20","5D6194BB48FEBB91A10D1462461A012FAFC0918B","B028E947150764A71DEEF498DE6F8C95ECCCB445") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let OceanLotusSHA1 = dynamic(["D511B77459673EC42163F19E300FF1D233B6C39F","59A8553A4F8130F576AB234E0B220BE4D4DA0E98","9CA1A5C7F79882DB913534C1E62B26BCDCB9F6DD","A8E2BBBFCB86500322D2367744FA12755AB0C165","F74F1FEB62B662CDA489FDB2453727824E55ACB9","F8F8209987CA7F139DE6A62F9E6EE21BD2AE93A9","19A69F856EFA811C376F68E4FEB0997B4724F8BD","490194E9BB5128ECA8693AD9E610891C2ED185AF","51176139B0B2220B802C1578A4994DF68DF5BCD1","91F042F59BE4BDCB6E5EA21B91DECD731C175B54","A177ED0BFFEB1EFE1D9D31D72A82EF2625AE646D","B7B2D2DB544F9EEA74453CDF2B8BEEA58CF07C48","4AD36AD6C165B5174967020CB1A3358F78D7A283","57352B3CEEE32216E5AA20BAA848483D7AB5A6FB","9BC06DF9F932746A05EE728C8B103BD3BA6BF395","865A1739337D3303B3AB02C5E694C22B79C42B7D","41CB8CD78B8DB76563E4F972ABE817CEEE9CF9B0","0037DBB0FEA981D02F6F76DE81EBAEFCB68B7D20","5D6194BB48FEBB91A10D1462461A012FAFC0918B","B028E947150764A71DEEF498DE6F8C95ECCCB445"]);
+union
+(DeviceProcessEvents | where Timestamp > ago(180d) | where SHA1 in (OceanLotusSHA1) or InitiatingProcessSHA1 in (OceanLotusSHA1) | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA1, ProcessCommandLine, Source="DeviceProcessEvents"),
+(DeviceFileEvents | where Timestamp > ago(180d) | where SHA1 in (OceanLotusSHA1) | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, SHA1, ProcessCommandLine=InitiatingProcessCommandLine, Source="DeviceFileEvents"),
+(DeviceImageLoadEvents | where Timestamp > ago(180d) | where SHA1 in (OceanLotusSHA1) | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, SHA1, ProcessCommandLine=InitiatingProcessCommandLine, Source="DeviceImageLoadEvents")
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -435,4 +467,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
