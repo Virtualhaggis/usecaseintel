@@ -29,6 +29,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [rethinking mdr as attackers and defenders embrace ai](./2026-06-12/rethinking-mdr-as-attackers-and-defenders-embrace-ai.md)
 - [sheetcreep c rat abuses google sheets api as c2 to target di](./2026-06-12/sheetcreep-c-rat-abuses-google-sheets-api-as-c2-to-target-di.md)
 - [shinyhunters exploits oracle peoplesoft zero day cve 2026 35](./2026-06-12/shinyhunters-exploits-oracle-peoplesoft-zero-day-cve-2026-35.md)
+- [tracing digital intent new macos tahoe 26 artifact discovere](./2026-06-12/tracing-digital-intent-new-macos-tahoe-26-artifact-discovere.md)
 - [ukrainian national pleads guilty to role in conti ransomware](./2026-06-12/ukrainian-national-pleads-guilty-to-role-in-conti-ransomware.md)
 
 ## 2026-06-11
@@ -315,7 +316,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-05
 - [a rigged game scarcruft compromises gaming platform in a sup](./2026-05-05/a-rigged-game-scarcruft-compromises-gaming-platform-in-a-sup.md)
-- [copy fail what you need to know about the most severe linux ](./2026-05-05/copy-fail-what-you-need-to-know-about-the-most-severe-linux-.md)
 - [security metamorphosis a mythos ready architecture checklist](./2026-05-05/security-metamorphosis-a-mythos-ready-architecture-checklist.md)
 
 ## 2026-05-04

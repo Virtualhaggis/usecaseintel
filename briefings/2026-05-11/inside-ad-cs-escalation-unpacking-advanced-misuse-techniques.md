@@ -74,7 +74,7 @@ _(none detected from narrative keywords)_
 
 ### CVE-2022-26923 exploitation via update6.exe binary execution
 
-`UC_312_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_313_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### AD CS attacker tooling execution: Certify, Certipy, Whisker process indicators
 
-`UC_312_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_313_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceProcessEvents
 
 ### Shadow Credentials: msDS-KeyCredentialLink attribute modification
 
-`UC_312_16` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_313_16` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ IdentityQueryEvents
 
 ### PKINIT Kerberos TGT request via certificate authentication anomaly
 
-`UC_312_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_313_17` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +154,7 @@ IdentityLogonEvents
 
 ### AD CS certificate request with ENROLLEE_SUPPLIES_SUBJECT flag (ESC1)
 
-`UC_312_18` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_313_18` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -568,7 +568,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Inside AD CS Escalation: Unpacking Advanced Misuse Techniques and Tools
 
-`UC_312_13` · phase: **exploit** · confidence: **High**
+`UC_313_13` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
