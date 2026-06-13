@@ -28,17 +28,14 @@ Sygnia, which tracks the group as Velvet Ant , says it backdoored the PAM and Op
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1556.003** — Modify Authentication Process: Pluggable Authentication Modules
-- **T1556** — Modify Authentication Process
 - **T1554** — Compromise Host Software Binary
+- **T1556** — Modify Authentication Process
 - **T1056.001** — Input Capture: Keylogging
-- **T1005** — Data from Local System
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1090.003** — Proxy: Multi-hop Proxy
-- **T1584.008** — Compromise Infrastructure: Network Devices
-- **T1090.001** — Proxy: Internal Proxy
-- **T1572** — Protocol Tunneling
+- **T1003.008** — OS Credential Dumping: /etc/passwd and /etc/shadow
+- **T1133** — External Remote Services
 - **T1021.004** — Remote Services: SSH
+- **T1090.001** — Proxy: Internal Proxy
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
@@ -46,56 +43,57 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Velvet Ant backdoored PAM authentication module replacement on Linux
+### Unauthorized write to Linux PAM authentication module (pam_unix.so swap)
 
 `UC_11_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process values(Filesystem.process_path) as process_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("/lib/security/*","/lib64/security/*","/lib/x86_64-linux-gnu/security/*","/usr/lib/x86_64-linux-gnu/security/*","/lib/aarch64-linux-gnu/security/*") OR Filesystem.file_name IN ("pam_unix.so","pam_sss.so","pam_winbind.so","pam_tally2.so","pam_cracklib.so","pam_systemd.so","libpam.so.0","libpam_misc.so.0")) Filesystem.action IN ("modified","created","renamed") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | where NOT match(process_name,"(?i)(dpkg|rpm|yum|dnf|apt|apt-get|zypper|pacman|update-binfmts|alternatives|unattended-upgrade)") | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_hash) as file_hash values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/lib/security/pam_*.so" OR Filesystem.file_path="*/lib64/security/pam_*.so" OR Filesystem.file_path="*/lib/x86_64-linux-gnu/security/pam_*.so" OR Filesystem.file_path="*/usr/lib64/security/pam_*.so" OR Filesystem.file_path="*/usr/lib/x86_64-linux-gnu/security/pam_*.so") Filesystem.action IN ("created","modified","renamed") NOT Filesystem.process_name IN ("dpkg","dpkg-deb","apt","apt-get","aptitude","unattended-upgrade","yum","dnf","rpm","zypper","pacman","ldconfig","snapd") by Filesystem.dest Filesystem.process_name Filesystem.user Filesystem.file_name | `drop_dm_object_name(Filesystem)` | sort 0 - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where DeviceCategory_Or_OSPlatform_proxy == DeviceCategory_Or_OSPlatform_proxy // keep placeholder readable
-| where FolderPath has_any (@"/lib/security/", @"/lib64/security/", @"/lib/x86_64-linux-gnu/security/", @"/usr/lib/x86_64-linux-gnu/security/", @"/lib/aarch64-linux-gnu/security/")
-   or FileName in~ ("pam_unix.so","pam_sss.so","pam_winbind.so","pam_tally2.so","pam_cracklib.so","pam_systemd.so","libpam.so.0","libpam_misc.so.0")
+| where FolderPath has_any (@"/lib/security/", @"/lib64/security/", @"/lib/x86_64-linux-gnu/security/", @"/usr/lib/x86_64-linux-gnu/security/", @"/usr/lib64/security/")
+| where FileName startswith "pam_" and FileName endswith ".so"
 | where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where InitiatingProcessFileName !in~ ("dpkg","rpm","yum","dnf","apt","apt-get","zypper","pacman","unattended-upgrade","update-alternatives")
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where InitiatingProcessFileName !in~ ("dpkg","dpkg-deb","apt","apt-get","aptitude","unattended-upgrade","yum","dnf","rpm","zypper","pacman","ldconfig","snapd","snap")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, FolderPath, FileName, SHA256, MD5, PreviousFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessAccountName, InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
-### OpenSSH sshd/ssh binary tampering on Linux (Velvet Ant Operation Highland)
+### Unauthorized modification of OpenSSH sshd or ssh client binary
 
 `UC_11_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.process_path) as process_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("/usr/sbin/sshd","/usr/bin/ssh","/usr/bin/scp","/usr/bin/sftp","/usr/lib/openssh/sftp-server","/usr/libexec/openssh/sftp-server") Filesystem.action IN ("modified","created","renamed") by Filesystem.dest Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where NOT match(process_name,"(?i)(dpkg|rpm|yum|dnf|apt|apt-get|zypper|pacman|unattended-upgrade)") | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_hash) as file_hash values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("/usr/sbin/sshd","/usr/bin/sshd","/usr/bin/ssh","/usr/sbin/ssh","/usr/bin/ssh-keygen","/usr/bin/scp","/usr/bin/sftp") Filesystem.action IN ("created","modified","renamed") NOT Filesystem.process_name IN ("dpkg","dpkg-deb","apt","apt-get","unattended-upgrade","yum","dnf","rpm","zypper","pacman") by Filesystem.dest Filesystem.process_name Filesystem.user Filesystem.file_name | `drop_dm_object_name(Filesystem)` | sort 0 - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath in~ ("/usr/sbin/", "/usr/bin/", "/usr/lib/openssh/", "/usr/libexec/openssh/")
-| where FileName in~ ("sshd","ssh","scp","sftp","sftp-server","ssh-keygen","ssh-agent")
+| where FolderPath in~ ("/usr/sbin/","/usr/bin/")
+| where FileName in~ ("sshd","ssh","ssh-keygen","scp","sftp","ssh-agent")
 | where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where InitiatingProcessFileName !in~ ("dpkg","rpm","yum","dnf","apt","apt-get","zypper","pacman","unattended-upgrade")
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessParentFileName
+| where InitiatingProcessFileName !in~ ("dpkg","dpkg-deb","apt","apt-get","unattended-upgrade","yum","dnf","rpm","zypper","pacman","snapd","snap")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, FolderPath, FileName, SHA256, MD5, PreviousFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessAccountName, InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
-### sshd writing non-standard files — credential capture sink indicator
+### sshd writing to non-standard files (credential-capture log artifact)
 
 `UC_11_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_size) as file_size from datamodel=Endpoint.Filesystem where Filesystem.process_name="sshd" Filesystem.action IN ("created","modified") by Filesystem.dest Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where NOT match(file_path,"^/(var/run/|run/|var/log/|var/lib/sss/|tmp/ssh-|tmp/sshd|etc/ssh/|home/[^/]+/\.ssh/|root/\.ssh/|proc/)") | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.file_name) as file_name from datamodel=Endpoint.Filesystem where Filesystem.process_name="sshd" Filesystem.action IN ("created","modified") NOT (Filesystem.file_path IN ("/var/run/sshd.pid","/run/sshd.pid","/var/log/auth.log","/var/log/secure","/var/log/lastlog","/var/log/wtmp","/var/log/btmp","/var/log/utmp","/run/utmp","/var/empty/sshd") OR Filesystem.file_path="/home/*/.ssh/*" OR Filesystem.file_path="/root/.ssh/*" OR Filesystem.file_path="/tmp/ssh-*" OR Filesystem.file_path="/var/lib/sss/*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | sort 0 - lastTime
 ```
 
 **Defender KQL:**
@@ -103,49 +101,74 @@ DeviceFileEvents
 DeviceFileEvents
 | where Timestamp > ago(7d)
 | where InitiatingProcessFileName =~ "sshd"
+| where InitiatingProcessFolderPath in~ ("/usr/sbin/","/usr/bin/")
 | where ActionType in ("FileCreated","FileModified")
-| where not (FolderPath startswith "/var/run/" or FolderPath startswith "/run/" or FolderPath startswith "/var/log/" or FolderPath startswith "/var/lib/sss/" or FolderPath startswith "/tmp/ssh-" or FolderPath startswith "/etc/ssh/" or FolderPath matches regex @"^/home/[^/]+/\.ssh/" or FolderPath startswith "/root/.ssh/" or FolderPath startswith "/proc/")
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, FileSize, InitiatingProcessId, InitiatingProcessAccountName, InitiatingProcessCommandLine
-| summarize WriteCount = count(), SamplePath = any(FolderPath), Files = make_set(FileName, 10) by DeviceName, bin(Timestamp, 1h)
+| where not (FolderPath in~ ("/var/run/","/run/","/var/log/","/var/empty/sshd/","/var/lib/sss/") )
+| where not (FolderPath startswith "/home/" and FolderPath contains "/.ssh/")
+| where not (FolderPath startswith "/root/.ssh/")
+| where not (FolderPath startswith "/tmp/ssh-")
+| where FileName !in~ ("sshd.pid","auth.log","secure","lastlog","wtmp","btmp","utmp")
+| project Timestamp, DeviceName, FolderPath, FileName, FileSize, SHA256, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, RequestAccountName
 | order by Timestamp desc
 ```
 
-### Cisco NX-OS CVE-2024-20399 NX-API command-injection persistence indicator
+### Internet-facing web service spawning interactive SSH into management subnet
 
-`UC_11_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-index=cisco_nxos (sourcetype="cisco:nxos:syslog" OR sourcetype="cisco:nxos") ("VSHD-5-VSHD_SYSLOG_CONFIG_I" OR "AUTHPRIV-3-SYSTEM_MSG" OR "%SYS-5-CONFIG_I" OR message="*run bash*" OR message="*run-script*" OR message="*nxapi*") | rex field=_raw "user:\s+(?<user>[^\s]+)" | rex field=_raw "cmd:\s+(?<cmd>[^\n]+)" | search cmd="*bash*" OR cmd="*sh -c*" OR cmd="*chmod*" OR cmd="*wget*" OR cmd="*curl*" OR cmd="*tftp*" OR cmd="*scp*" | stats min(_time) as firstTime max(_time) as lastTime count by host user cmd | convert ctime(firstTime) ctime(lastTime)
-```
-
-### F5 BIG-IP management plane unexpected outbound C2 to internet
-
-`UC_11_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_11_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime sum(All_Traffic.bytes_out) as bytes_out values(All_Traffic.app) as app values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where All_Traffic.src_category="f5_mgmt" All_Traffic.dest_category="external" NOT (All_Traffic.dest_port IN (53,80,123,443,8443) AND All_Traffic.dest IN ("downloads.f5.com","updates.f5.com")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | where bytes_out > 1024 | convert ctime(firstTime) ctime(lastTime)
-```
-
-### Internet-facing web server pivoting into isolated segment via SSH/shell
-
-`UC_11_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("nginx","httpd","apache2","w3wp.exe","php-fpm","node","java","python3","tomcat") Processes.process_name IN ("ssh","sshpass","plink.exe","ssh.exe","ncat","nc","socat","chisel","frpc","gost","iox","reGeorg","reverse_tcp") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("httpd","nginx","apache2","tomcat","java","node","php-fpm","php-cgi","uwsgi","gunicorn","caddy","haproxy","lighttpd") Processes.process_name IN ("ssh","sshpass","scp","sftp","plink","autossh","socat","ncat","nc") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort 0 - lastTime
 ```
 
 **Defender KQL:**
 ```kql
+let WebParents = dynamic(["httpd","nginx","apache2","tomcat","java","node","php-fpm","php-cgi","uwsgi","gunicorn","caddy","lighttpd","haproxy"]);
+let PivotTools = dynamic(["ssh","sshpass","scp","sftp","plink","autossh","socat","ncat","nc"]);
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("nginx","httpd","apache2","w3wp.exe","php-fpm","php-fpm7","php-fpm8","node","java","python3","tomcat","tomcat9")
-| where FileName in~ ("ssh","sshpass","plink.exe","ssh.exe","ncat","nc","socat","chisel","frpc","frps","gost","iox")
-   or ProcessCommandLine has_any ("-D 1080","-R 0.0.0.0:","-L 0.0.0.0:","ProxyCommand","DynamicForward","socat TCP-LISTEN","chisel client")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| where InitiatingProcessFileName in~ (WebParents)
+| where FileName in~ (PivotTools)
+| extend RfcTarget = extract(@"(?:^|\s)(?:-[a-zA-Z]\s+)?(?:[A-Za-z0-9_\-]+@)?((?:10\.|172\.(?:1[6-9]|2[0-9]|3[01])\.|192\.168\.)\d+\.\d+\.\d+|(?:10\.|172\.(?:1[6-9]|2[0-9]|3[01])\.|192\.168\.)[0-9.]+)", 1, ProcessCommandLine)
+| where isnotempty(RfcTarget) or ProcessCommandLine has_any (".internal",".corp",".local",".lan",".intranet")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, RfcTarget, InitiatingProcessParentFileName
 | order by Timestamp desc
+```
+
+### First-seen pam_unix.so / sshd / ssh binary hash in Linux fleet
+
+`UC_11_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.dest) as hosts from datamodel=Endpoint.Processes where Processes.process_name IN ("sshd","ssh","scp","sftp") earliest=-60d@d latest=-7d@d by Processes.process_hash Processes.process_name | `drop_dm_object_name(Processes)` | rename process_hash as baseline_hash | append [ | tstats summariesonly=t count min(_time) as recent_firstTime max(_time) as recent_lastTime values(Processes.dest) as recent_hosts from datamodel=Endpoint.Processes where Processes.process_name IN ("sshd","ssh","scp","sftp") earliest=-7d@d by Processes.process_hash Processes.process_name | `drop_dm_object_name(Processes)` | rename process_hash as recent_hash ] | stats values(*) as * by recent_hash | where isnotnull(recent_hash) AND isnull(baseline_hash)
+```
+
+**Defender KQL:**
+```kql
+let Lookback = 60d;
+let Recent = 7d;
+let AuthBinaries = dynamic(["sshd","ssh","scp","sftp","ssh-keygen","ssh-agent"]);
+let BaselineExec = DeviceProcessEvents
+    | where Timestamp between (ago(Lookback) .. ago(Recent))
+    | where FileName in~ (AuthBinaries) and FolderPath in~ ("/usr/sbin/","/usr/bin/")
+    | summarize by SHA256, FileName;
+let RecentExec = DeviceProcessEvents
+    | where Timestamp > ago(Recent)
+    | where FileName in~ (AuthBinaries) and FolderPath in~ ("/usr/sbin/","/usr/bin/")
+    | summarize FirstSeen = min(Timestamp), HostCount = dcount(DeviceId), AnyHost = any(DeviceName), AnyCmd = any(ProcessCommandLine) by SHA256, FileName, FolderPath;
+let NewExec = RecentExec | join kind=leftanti BaselineExec on SHA256, FileName | extend Kind = "sshd/ssh exec";
+let BaselineLoad = DeviceImageLoadEvents
+    | where Timestamp between (ago(Lookback) .. ago(Recent))
+    | where FileName == "pam_unix.so"
+    | summarize by SHA256, FileName;
+let RecentLoad = DeviceImageLoadEvents
+    | where Timestamp > ago(Recent)
+    | where FileName == "pam_unix.so"
+    | summarize FirstSeen = min(Timestamp), HostCount = dcount(DeviceId), AnyHost = any(DeviceName), AnyCmd = "" by SHA256, FileName, FolderPath;
+let NewLoad = RecentLoad | join kind=leftanti BaselineLoad on SHA256, FileName | extend Kind = "pam_unix.so load";
+union NewExec, NewLoad
+| order by FirstSeen desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -357,4 +380,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
