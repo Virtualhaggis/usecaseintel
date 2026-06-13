@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Unauthorized write to Linux PAM authentication module (pam_unix.so swap)
 
-`UC_13_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_15_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceFileEvents
 
 ### Unauthorized modification of OpenSSH sshd or ssh client binary
 
-`UC_13_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_15_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceFileEvents
 
 ### sshd writing to non-standard files (credential-capture log artifact)
 
-`UC_13_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_15_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceFileEvents
 
 ### Internet-facing web service spawning interactive SSH into management subnet
 
-`UC_13_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_15_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceProcessEvents
 
 ### First-seen pam_unix.so / sshd / ssh binary hash in Linux fleet
 
-`UC_13_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_15_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

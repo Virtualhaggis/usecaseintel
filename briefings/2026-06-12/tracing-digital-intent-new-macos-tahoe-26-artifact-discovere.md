@@ -40,7 +40,7 @@ Forensic examiners are constantly hunting for data that reveals not just what ha
 - **T1195.002** — Compromise Software Supply Chain
 - **T1083** — File and Directory Discovery
 - **T1005** — Data from Local System
-- **T1070.004** — File Deletion
+- **T1070.004** — Indicator Removal: File Deletion
 - **T1070** — Indicator Removal
 
 ## Kill chain phases observed
@@ -49,59 +49,55 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### macOS process cmdline referencing Tahoe 26 App.MenuItem Biome stream
+### macOS Tahoe 26 App.MenuItem Biome stream accessed by non-Apple process
 
-`UC_6_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_8_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.os="macos" (Processes.process="*Library/Biome/streams/restricted/App.MenuItem*" OR Processes.process="*ccl_segb_cli.py*" OR Processes.process="*ccl-segb*") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | where NOT match(parent_process_name, "(?i)^(python|python3|osquery|Velociraptor|GRR|MacOSArtifactParser)$") | sort - firstTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image from datamodel=Endpoint.Processes where Processes.process="*Library/Biome/streams/restricted/App.MenuItem*" by host Processes.user Processes.process_name Processes.parent_process_name Processes.process_path
+| `drop_dm_object_name(Processes)`
+| where NOT match(process_name, "(?i)^(biomed|biomesyncd|BiomeAgent|knowledge-agent|mds|mds_stores|fseventsd|spindump)$")
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where ProcessCommandLine has_any ("Library/Biome/streams/restricted/App.MenuItem", "ccl_segb_cli.py", "ccl-segb", "ccl_segb")
-   or InitiatingProcessCommandLine has_any ("Library/Biome/streams/restricted/App.MenuItem", "ccl_segb_cli.py", "ccl-segb")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, DeviceId, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd   = InitiatingProcessCommandLine,
-          ChildImage  = FolderPath,
-          ChildCmd    = ProcessCommandLine,
-          SHA256
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, OSPlatform) by DeviceId | project DeviceId, OSPlatform) on DeviceId
-| where OSPlatform =~ "macOS" or isempty(OSPlatform)
+| where Timestamp > ago(7d)
+| where ProcessCommandLine has "Library/Biome/streams/restricted/App.MenuItem"
+   or InitiatingProcessCommandLine has "Library/Biome/streams/restricted/App.MenuItem"
+| where InitiatingProcessFileName !in~ ("biomed","biomesyncd","BiomeAgent","knowledge-agent","mds","mds_stores","fseventsd","spindump")
+| where FileName !in~ ("biomed","biomesyncd","BiomeAgent","knowledge-agent")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
 | order by Timestamp desc
 ```
 
-### Deletion or modification of macOS Tahoe 26 App.MenuItem Biome stream file
+### Anti-forensic deletion or truncation of macOS Tahoe 26 App.MenuItem Biome stream
 
-`UC_6_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_8_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*Library/Biome/streams/restricted/App.MenuItem*" (Filesystem.action="deleted" OR Filesystem.action="renamed" OR Filesystem.action="modified" OR Filesystem.action="truncated") by host Filesystem.user Filesystem.process_name Filesystem.process_path Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | where NOT match(process_name, "(?i)^(biomed|biomesyncd|bird|cloudd|mds|mds_stores|TimeMachine|backupd|tmutil)$") | sort - firstTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.action) as action from datamodel=Endpoint.Filesystem where Filesystem.file_path="*Library/Biome/streams/restricted/App.MenuItem/*" (Filesystem.action=deleted OR Filesystem.action=renamed OR Filesystem.action=modified) by host Filesystem.user Filesystem.process_name Filesystem.process_path
+| `drop_dm_object_name(Filesystem)`
+| where NOT match(process_name, "(?i)^(biomed|biomesyncd|BiomeAgent|knowledge-agent)$")
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FolderPath has "Library/Biome/streams/restricted/App.MenuItem"
-| where ActionType in ("FileDeleted", "FileRenamed", "FileModified")
-| where InitiatingProcessFileName !in~ ("biomed", "biomesyncd", "bird", "cloudd", "mds", "mds_stores", "backupd", "tmutil", "TimeMachine")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, DeviceId,
-          ActionType, FolderPath, FileName, PreviousFolderPath, PreviousFileName,
-          InitiatingProcessAccountName,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine,
-          InitiatingProcessSHA256,
-          ParentImage = InitiatingProcessParentFileName
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, OSPlatform) by DeviceId | project DeviceId, OSPlatform) on DeviceId
-| where OSPlatform =~ "macOS" or isempty(OSPlatform)
+| where Timestamp > ago(7d)
+| where FolderPath has "/Library/Biome/streams/restricted/App.MenuItem"
+| where ActionType in ("FileDeleted","FileRenamed","FileModified")
+| where InitiatingProcessFileName !in~ ("biomed","biomesyncd","BiomeAgent","knowledge-agent")
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, PreviousFileName, PreviousFolderPath,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
@@ -332,7 +328,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Tracing Digital Intent: New MacOS Tahoe 26 Artifact Discovered
 
-`UC_6_6` · phase: **exploit** · confidence: **High**
+`UC_8_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

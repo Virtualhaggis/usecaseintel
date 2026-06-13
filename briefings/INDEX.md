@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1193 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1192 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,13 +10,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-13
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-13/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
-- [splunk enterprise pre auth rce chain exposes database with z](./2026-06-13/splunk-enterprise-pre-auth-rce-chain-exposes-database-with-z.md)
+- [chinese hackers hijack auth flow spy on isolated network for](./2026-06-13/chinese-hackers-hijack-auth-flow-spy-on-isolated-network-for.md)
+- [critical splunk enterprise flaw lets attackers run code with](./2026-06-13/critical-splunk-enterprise-flaw-lets-attackers-run-code-with.md)
 
 ## 2026-06-12
 - [agentjacking attack tricks ai coding agents into running mal](./2026-06-12/agentjacking-attack-tricks-ai-coding-agents-into-running-mal.md)
 - [china linked hackers backdoored linux login software to hide](./2026-06-12/china-linked-hackers-backdoored-linux-login-software-to-hide.md)
 - [cisa orders feds to patch actively exploited ivanti flaw by ](./2026-06-12/cisa-orders-feds-to-patch-actively-exploited-ivanti-flaw-by-.md)
-- [critical vulnerability chain in langgraph allows attackers t](./2026-06-12/critical-vulnerability-chain-in-langgraph-allows-attackers-t.md)
 - [early warning signs of supply chain attacks live in the dark](./2026-06-12/early-warning-signs-of-supply-chain-attacks-live-in-the-dark.md)
 - [europol disrupts audia6 crypto laundering service used by ra](./2026-06-12/europol-disrupts-audia6-crypto-laundering-service-used-by-ra.md)
 - [fancy bear hackers abuse edgerouters and cloud services to l](./2026-06-12/fancy-bear-hackers-abuse-edgerouters-and-cloud-services-to-l.md)
@@ -99,7 +99,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [when hi this is it comes through microsoft teams](./2026-06-08/when-hi-this-is-it-comes-through-microsoft-teams.md)
 
 ## 2026-06-06
-- [cisa adds actively exploited solarwinds serv u dos flaw to k](./2026-06-06/cisa-adds-actively-exploited-solarwinds-serv-u-dos-flaw-to-k.md)
 - [free apps are quietly turning smart tvs into web scraping pr](./2026-06-06/free-apps-are-quietly-turning-smart-tvs-into-web-scraping-pr.md)
 
 ## 2026-06-05

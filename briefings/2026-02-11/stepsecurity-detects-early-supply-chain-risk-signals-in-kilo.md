@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Inventory: @kilocode/cli v1.0.0-v1.0.3 affected-release install on dev workstations
 
-`UC_552_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_551_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### npm postinstall: @kilocode/cli platform-binary directory (cli-{platform}-{arch}) write
 
-`UC_552_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_551_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceFileEvents
 
 ### npm/yarn/pnpm postinstall: Node child egressing to non-registry public host
 
-`UC_552_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_551_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
