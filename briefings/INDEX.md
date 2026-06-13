@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1192 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1193 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,6 +12,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-13/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
 - [chinese hackers hijack auth flow spy on isolated network for](./2026-06-13/chinese-hackers-hijack-auth-flow-spy-on-isolated-network-for.md)
 - [critical splunk enterprise flaw lets attackers run code with](./2026-06-13/critical-splunk-enterprise-flaw-lets-attackers-run-code-with.md)
+- [new agentjacking attack hijacks your ai coding agent to run ](./2026-06-13/new-agentjacking-attack-hijacks-your-ai-coding-agent-to-run-.md)
 
 ## 2026-06-12
 - [agentjacking attack tricks ai coding agents into running mal](./2026-06-12/agentjacking-attack-tricks-ai-coding-agents-into-running-mal.md)
