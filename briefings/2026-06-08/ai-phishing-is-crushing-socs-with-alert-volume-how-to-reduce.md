@@ -34,87 +34,12 @@ As the queue grows, a cre…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1598.003** — Phishing for Information: Spearphishing Link
-- **T1656** — Impersonation
-- **T1583.001** — Acquire Infrastructure: Domains
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### LinkedIn file-share URL click chain redirecting to AWS CloudFront-hosted Microsoft 365 credential capture
-
-`UC_101_7` · phase: **delivery** · confidence: **Low** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Email.recipient) as recipient values(Email.url) as url values(Email.url_chain) as url_chain from datamodel=Email where Email.direction="inbound" Email.delivery_action="delivered" (Email.url="*linkedin.com/dms/*" OR Email.url="*linkedin.com/in/*" OR Email.url="*linkedin.com/feed/*" OR Email.url="*lnkd.in/*") (Email.url_chain="*cloudfront.net*" OR Email.url_chain="*amazonaws.com*") by Email.sender Email.subject Email.recipient | `drop_dm_object_name(Email)` | where match(url_chain,"(?i)(microsoft|office365|login|m365|outlook)") | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-// Article: ANY.RUN case study — LinkedIn share link -> CloudFront-hosted fake M365 login page
-let LookbackDays = 7d;
-let LinkedInLures = EmailEvents
-    | where Timestamp > ago(LookbackDays)
-    | where EmailDirection == "Inbound" and DeliveryAction == "Delivered"
-    | join kind=inner (
-        EmailUrlInfo
-        | where Url has_any ("linkedin.com/dms/", "linkedin.com/in/", "linkedin.com/feed/", "lnkd.in/")
-        | project NetworkMessageId, LureUrl = Url, UrlDomain
-      ) on NetworkMessageId
-    | project NetworkMessageId, EmailTime = Timestamp, SenderFromAddress,
-              RecipientEmailAddress, Subject, LureUrl;
-UrlClickEvents
-| where Timestamp > ago(LookbackDays)
-| where ActionType in ("ClickAllowed","ClickedThrough")
-| extend ChainStr = tostring(UrlChain)
-| where ChainStr has_any ("cloudfront.net", ".s3.amazonaws.com", "cloudfront.amazonaws.com")
-| where ChainStr matches regex @"(?i)(microsoft|office365|outlook|m365|login\.microsoftonline)"
-   or Url matches regex @"(?i)(microsoft|office365|outlook|m365|login\.microsoftonline)"
-| join kind=inner LinkedInLures on NetworkMessageId
-| project Timestamp, EmailTime, AccountUpn, SenderFromAddress, Subject,
-          LureUrl, ClickedUrl = Url, UrlChain, IsClickedThrough, IPAddress
-| order by Timestamp desc
-```
-
-### Safe Links click-through to a tenant-first-seen domain (short-lived-domain hunt)
-
-`UC_101_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` values(Email.url) as urls min(_time) as firstSeen from datamodel=Email where Email.url_click_action IN ("ClickAllowed","ClickedThrough") earliest=-30d@d latest=-1h by Email.url_domain | rename Email.url_domain as baseline_domain | append [ | tstats `summariesonly` count values(Email.recipient) as recipient values(Email.url) as url min(_time) as firstSeen from datamodel=Email where Email.url_click_action="ClickedThrough" earliest=-1h by Email.url_domain | rename Email.url_domain as recent_domain ] | stats values(*) as * by recent_domain | where isnull(baseline_domain) | sort - firstSeen
-```
-
-**Defender KQL:**
-```kql
-// Article-grounded: AI phishing relies on URLs with no reputation history; flag click-throughs to tenant-first-seen domains
-let BaselineDays = 30d;
-let RecentHours = 4h;
-let Baseline = UrlClickEvents
-    | where Timestamp between (ago(BaselineDays) .. ago(RecentHours))
-    | where ActionType in ("ClickAllowed","ClickedThrough")
-    | extend BaselineDomain = tostring(parse_url(Url).Host)
-    | where isnotempty(BaselineDomain)
-    | summarize BaselineHits = count() by BaselineDomain
-    | where BaselineHits >= 2;        // 2+ historical clicks = not first-seen
-UrlClickEvents
-| where Timestamp > ago(RecentHours)
-| where ActionType == "ClickedThrough"   // user bypassed the warning - higher fidelity than ClickAllowed alone
-| extend ClickDomain = tostring(parse_url(Url).Host)
-| where isnotempty(ClickDomain)
-| where ClickDomain !endswith "microsoft.com"
-    and ClickDomain !endswith "office.com"
-    and ClickDomain !endswith "office365.com"
-    and ClickDomain !endswith "sharepoint.com"
-    and ClickDomain !endswith "linkedin.com"
-| join kind=leftanti Baseline on $left.ClickDomain == $right.BaselineDomain
-| project Timestamp, AccountUpn, Url, ClickDomain, IPAddress, ThreatTypes, DetectionMethods, NetworkMessageId
-| order by Timestamp desc
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -353,4 +278,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

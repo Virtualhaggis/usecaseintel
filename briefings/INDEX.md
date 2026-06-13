@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-13
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-13/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
+- [splunk enterprise pre auth rce chain exposes database with z](./2026-06-13/splunk-enterprise-pre-auth-rce-chain-exposes-database-with-z.md)
 
 ## 2026-06-12
 - [agentjacking attack tricks ai coding agents into running mal](./2026-06-12/agentjacking-attack-tricks-ai-coding-agents-into-running-mal.md)
@@ -30,7 +31,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [over 400 arch linux packages compromised to push rootkit inf](./2026-06-12/over-400-arch-linux-packages-compromised-to-push-rootkit-inf.md)
 - [over 73 000 french govt employees affected in tchap messenge](./2026-06-12/over-73-000-french-govt-employees-affected-in-tchap-messenge.md)
 - [rethinking mdr as attackers and defenders embrace ai](./2026-06-12/rethinking-mdr-as-attackers-and-defenders-embrace-ai.md)
-- [sheetcreep c rat abuses google sheets api as c2 to target di](./2026-06-12/sheetcreep-c-rat-abuses-google-sheets-api-as-c2-to-target-di.md)
 - [shinyhunters exploits oracle peoplesoft zero day cve 2026 35](./2026-06-12/shinyhunters-exploits-oracle-peoplesoft-zero-day-cve-2026-35.md)
 - [tracing digital intent new macos tahoe 26 artifact discovere](./2026-06-12/tracing-digital-intent-new-macos-tahoe-26-artifact-discovere.md)
 - [ukrainian national pleads guilty to role in conti ransomware](./2026-06-12/ukrainian-national-pleads-guilty-to-role-in-conti-ransomware.md)

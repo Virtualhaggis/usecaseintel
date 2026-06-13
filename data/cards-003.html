@@ -19468,10 +19468,10 @@ DeviceFileEvents
   data-techs="T1190,T1195.002,T1528,T1555.003,T1566"
   data-sources="The Hacker News"
   data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint,network,web"
+  data-splunk-cats="application,endpoint,network,web"
   data-targets="azure,m365,windows"
-  data-uc-count="9" data-llm-uc-count="2"
-  data-search="AI Phishing Is Crushing SOCs with Alert Volume: How to Reduce Tier 1 Overload Phishing has always been a numbers game. AI has turned it into a volume machine. Attackers can now create convincing emails, fake login pages, and tailored lures in minutes. Every polished message adds another case for Tier 1 to review, another link to inspect, and another alert that cannot be dismissed at a glance. As the queue grows, a credential theft attempt or malware delivery can easily  T1190 T1195.002 T1528 T1555.003 T1566 [LLM] LinkedIn file-share URL click chain redirecting to AWS CloudFront-hosted Microsoft 365 credential capture [LLM] Safe Links click-through to a tenant-first-seen domain (short-lived-domain hunt) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process OAuth consent / suspicious app grant Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Trusted vendor binary / installer launching unusual children Network connections to article IPs / domains">
+  data-uc-count="7" data-llm-uc-count="0"
+  data-search="AI Phishing Is Crushing SOCs with Alert Volume: How to Reduce Tier 1 Overload Phishing has always been a numbers game. AI has turned it into a volume machine. Attackers can now create convincing emails, fake login pages, and tailored lures in minutes. Every polished message adds another case for Tier 1 to review, another link to inspect, and another alert that cannot be dismissed at a glance. As the queue grows, a credential theft attempt or malware delivery can easily  T1190 T1195.002 T1528 T1555.003 T1566 Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process OAuth consent / suspicious app grant Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Trusted vendor binary / installer launching unusual children Network connections to article IPs / domains">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-08-ai-phishing-is-crushing-socs-with-alert-volume-how-to-reduce" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -19480,7 +19480,7 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge thn">The Hacker News</span></div>
   <div class="pubmeta">
     <span>2026-06-08</span>
-    <span>9 use cases</span>
+    <span>7 use cases</span>
     <span>5 techniques</span>
     <span>4 kill-chain phases detected</span>
   </div>
@@ -19531,166 +19531,13 @@ DeviceFileEvents
 </div></div>
   <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] LinkedIn file-share URL click chain redirecting to AWS CloudFront-hosted Microsoft 365 credential capture · [LLM] Safe Links click-through to a tenant-first-seen domain (short-lived-domain hunt) · Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Office app spawning script/LOLBin child process · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) · Trusted vendor binary / installer launching unusual children</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Network connections to article IPs / domains</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ OAuth consent / suspicious app grant</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="fb10f78d26" data-platforms="def,sent,spl" data-targets="m365" open>
-  <summary>
-    <span class="uc-title">LinkedIn file-share URL click chain redirecting to AWS CloudFront-hosted Microsoft 365 credential capture</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf low">Low</span>
-    <button class="share-btn" data-share-uc="fb10f78d26" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts the specific lure pattern described in the article: a LinkedIn-shared &#x27;Drive&#x27; style URL is clicked, the Safe Links redirect chain transits AWS CloudFront, and the landing page is themed for Microsoft 365 sign-in. Article-grounded but broad — ship as hunting, not alerting.
-
-Rationale: Article explicitly names LinkedIn-shared &#x27;Drive&#x27; link as the lure and AWS CloudFront as the credential page host targeting Microsoft 365. The detection joins those three article-named elements (LinkedIn delivery URL + CloudFront-hosted click destination + M365 brand keyword) so it doesn&#x27;t fire on every LinkedIn email or every CloudFront site individually. Sentinel KQL omitted — UrlClickEvents has no clean Sentinel-side equivalent; the Defender query is the canonical version.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Link">T1566.002</span> <span class="ind tech" title="Phishing for Information: Spearphishing Link">T1598.003</span> <span class="ind tech" title="Impersonation">T1656</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.Email_Url_Clicks</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate LinkedIn newsletters / InMail with promotional landing pages hosted on CloudFront</li><li>HR/recruiter mail with LinkedIn profile links that redirect through analytics middlemen on CloudFront</li><li>Vendor marketing campaigns where the partner&#x27;s lead-capture page runs on CloudFront and references &#x27;Microsoft&#x27; / &#x27;Office&#x27; as content</li><li>Internal Microsoft Learn / training content shared via LinkedIn where the LMS sits on AWS</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Suppress recognized recruiter / marketing platforms that legitimately use LinkedIn + CloudFront
-| where SenderFromAddress !endswith &quot;@linkedin.com&quot;
-| where SenderFromAddress !endswith &quot;@e.linkedin.com&quot;
-| where ClickedUrl !has &quot;learn.microsoft.com&quot;
-| where ClickedUrl !has &quot;docs.microsoft.com&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1. Triage: pull EmailEvents row for NetworkMessageId — check SenderFromAddress reputation, SPF/DKIM/DMARC AuthenticationDetails, and the full UrlChain. Sandbox the LureUrl in an isolated browser (the article&#x27;s whole pitch) and screenshot the rendered page. 2. Contain: if confirmed phish, soft-delete the message via EmailPostDeliveryEvents soft-delete, reset the credentials of any user in AccountUpn list, revoke active sessions in Entra ID, and submit the CloudFront URL to Microsoft + AWS abuse. 3. Hunt: pivot on UrlDomain across last 30 days for other recipients, search SigninLogs for the same AccountUpn signing in from unfamiliar IPs in the 24h after the click, and search for the CloudFront distribution string across UrlClickEvents to find sibling campaigns.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-101-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article: ANY.RUN case study — LinkedIn share link -&gt; CloudFront-hosted fake M365 login page
-let LookbackDays = 7d;
-let LinkedInLures = EmailEvents
-    | where Timestamp &gt; ago(LookbackDays)
-    | where EmailDirection == &quot;Inbound&quot; and DeliveryAction == &quot;Delivered&quot;
-    | join kind=inner (
-        EmailUrlInfo
-        | where Url has_any (&quot;linkedin.com/dms/&quot;, &quot;linkedin.com/in/&quot;, &quot;linkedin.com/feed/&quot;, &quot;lnkd.in/&quot;)
-        | project NetworkMessageId, LureUrl = Url, UrlDomain
-      ) on NetworkMessageId
-    | project NetworkMessageId, EmailTime = Timestamp, SenderFromAddress,
-              RecipientEmailAddress, Subject, LureUrl;
-UrlClickEvents
-| where Timestamp &gt; ago(LookbackDays)
-| where ActionType in (&quot;ClickAllowed&quot;,&quot;ClickedThrough&quot;)
-| extend ChainStr = tostring(UrlChain)
-| where ChainStr has_any (&quot;cloudfront.net&quot;, &quot;.s3.amazonaws.com&quot;, &quot;cloudfront.amazonaws.com&quot;)
-| where ChainStr matches regex @&quot;(?i)(microsoft|office365|outlook|m365|login\.microsoftonline)&quot;
-   or Url matches regex @&quot;(?i)(microsoft|office365|outlook|m365|login\.microsoftonline)&quot;
-| join kind=inner LinkedInLures on NetworkMessageId
-| project Timestamp, EmailTime, AccountUpn, SenderFromAddress, Subject,
-          LureUrl, ClickedUrl = Url, UrlChain, IsClickedThrough, IPAddress
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article: ANY.RUN case study — LinkedIn share link -&gt; CloudFront-hosted fake M365 login page
-let LookbackDays = 7d;
-let LinkedInLures = EmailEvents
-    | where TimeGenerated &gt; ago(LookbackDays)
-    | where EmailDirection == &quot;Inbound&quot; and DeliveryAction == &quot;Delivered&quot;
-    | join kind=inner (
-        EmailUrlInfo
-        | where Url has_any (&quot;linkedin.com/dms/&quot;, &quot;linkedin.com/in/&quot;, &quot;linkedin.com/feed/&quot;, &quot;lnkd.in/&quot;)
-        | project NetworkMessageId, LureUrl = Url, UrlDomain
-      ) on NetworkMessageId
-    | project NetworkMessageId, EmailTime = TimeGenerated, SenderFromAddress,
-              RecipientEmailAddress, Subject, LureUrl;
-UrlClickEvents
-| where TimeGenerated &gt; ago(LookbackDays)
-| where ActionType in (&quot;ClickAllowed&quot;,&quot;ClickedThrough&quot;)
-| extend ChainStr = tostring(UrlChain)
-| where ChainStr has_any (&quot;cloudfront.net&quot;, &quot;.s3.amazonaws.com&quot;, &quot;cloudfront.amazonaws.com&quot;)
-| where ChainStr matches regex @&quot;(?i)(microsoft|office365|outlook|m365|login\.microsoftonline)&quot;
-   or Url matches regex @&quot;(?i)(microsoft|office365|outlook|m365|login\.microsoftonline)&quot;
-| join kind=inner LinkedInLures on NetworkMessageId
-| project TimeGenerated, EmailTime, AccountUpn, SenderFromAddress, Subject,
-          LureUrl, ClickedUrl = Url, UrlChain, IsClickedThrough, IPAddress
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Email.recipient) as recipient values(Email.url) as url values(Email.url_chain) as url_chain from datamodel=Email where Email.direction=&quot;inbound&quot; Email.delivery_action=&quot;delivered&quot; (Email.url=&quot;*linkedin.com/dms/*&quot; OR Email.url=&quot;*linkedin.com/in/*&quot; OR Email.url=&quot;*linkedin.com/feed/*&quot; OR Email.url=&quot;*lnkd.in/*&quot;) (Email.url_chain=&quot;*cloudfront.net*&quot; OR Email.url_chain=&quot;*amazonaws.com*&quot;) by Email.sender Email.subject Email.recipient | `drop_dm_object_name(Email)` | where match(url_chain,&quot;(?i)(microsoft|office365|login|m365|outlook)&quot;) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-101-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Email.recipient) as recipient values(Email.url) as url values(Email.url_chain) as url_chain from datamodel=Email where Email.direction=&quot;inbound&quot; Email.delivery_action=&quot;delivered&quot; (Email.url=&quot;*linkedin.com/dms/*&quot; OR Email.url=&quot;*linkedin.com/in/*&quot; OR Email.url=&quot;*linkedin.com/feed/*&quot; OR Email.url=&quot;*lnkd.in/*&quot;) (Email.url_chain=&quot;*cloudfront.net*&quot; OR Email.url_chain=&quot;*amazonaws.com*&quot;) by Email.sender Email.subject Email.recipient | `drop_dm_object_name(Email)` | where match(url_chain,&quot;(?i)(microsoft|office365|login|m365|outlook)&quot;) | sort - lastTime</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="fa362237a7" data-platforms="def,sent,spl" data-targets="m365">
-  <summary>
-    <span class="uc-title">Safe Links click-through to a tenant-first-seen domain (short-lived-domain hunt)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="fa362237a7" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">The article calls out &#x27;short-lived domains&#x27; / &#x27;URLs often have little or no reputation history&#x27; as the AI-phishing trend that drowns Tier 1. This hunt surfaces UrlClickEvents where the user bypassed the Safe Links warning to a domain never seen in tenant click history, which captures the exact reputation-gap the article describes.
-
-Rationale: Article&#x27;s central operational claim is that AI-generated lures rotate infrastructure so fast that reputation engines return &#x27;unknown&#x27;, forcing Tier 1 manual review. Anti-joining UrlClickEvents against a 30-day per-tenant baseline directly operationalises that claim — only domains the tenant has never clicked before, gated to ClickedThrough so user bypass is required. No external sources searched per the prompt&#x27;s 2-3 search cap; baseline pattern is from the in-prompt KQL knowledge base.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Link">T1566.002</span> <span class="ind tech" title="Acquire Infrastructure: Domains">T1583.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.Email_Url_Clicks</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Marketing-campaign domains a user clicks for the first time (new vendor newsletter, conference signup)</li><li>New partner / supplier portal domains the org has just started doing business with</li><li>Genuinely benign URL shorteners or one-off branded redirect domains for press releases</li><li>Browser-warning bypasses on personal-interest links (news article on a niche site, e-commerce checkout)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Whitelist common legit first-seen categories the SOC has triaged historically
-| where ClickDomain !endswith &quot;.gov&quot;
-    and ClickDomain !endswith &quot;.edu&quot;
-    and not(ClickDomain matches regex @&quot;(?i)\.(eventbrite|zoom|webex|teams|salesforce|hubspot|mailchimp)\.&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1. Triage: examine the Url + UrlChain for credential-form indicators (login, signin, auth in path), check IPAddress against tenant geo norms, pull the corresponding EmailEvents row via NetworkMessageId for sender reputation. Detonate the URL in a sandbox. 2. Contain: if phish, expire user sessions and force password reset in Entra ID; soft-delete the parent message; submit URL to MDO Threat Submission. 3. Hunt: search DeviceProcessEvents on the user&#x27;s device for browser-spawned LOLBins in the 60 seconds after Timestamp (cmd, powershell, mshta, rundll32); search SigninLogs for AccountUpn from anomalous IPs in the following 24h; search UrlClickEvents tenant-wide for the same ClickDomain to scope cohort exposure.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-101-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Article-grounded: AI phishing relies on URLs with no reputation history; flag click-throughs to tenant-first-seen domains
-let BaselineDays = 30d;
-let RecentHours = 4h;
-let Baseline = UrlClickEvents
-    | where Timestamp between (ago(BaselineDays) .. ago(RecentHours))
-    | where ActionType in (&quot;ClickAllowed&quot;,&quot;ClickedThrough&quot;)
-    | extend BaselineDomain = tostring(parse_url(Url).Host)
-    | where isnotempty(BaselineDomain)
-    | summarize BaselineHits = count() by BaselineDomain
-    | where BaselineHits &gt;= 2;        // 2+ historical clicks = not first-seen
-UrlClickEvents
-| where Timestamp &gt; ago(RecentHours)
-| where ActionType == &quot;ClickedThrough&quot;   // user bypassed the warning - higher fidelity than ClickAllowed alone
-| extend ClickDomain = tostring(parse_url(Url).Host)
-| where isnotempty(ClickDomain)
-| where ClickDomain !endswith &quot;microsoft.com&quot;
-    and ClickDomain !endswith &quot;office.com&quot;
-    and ClickDomain !endswith &quot;office365.com&quot;
-    and ClickDomain !endswith &quot;sharepoint.com&quot;
-    and ClickDomain !endswith &quot;linkedin.com&quot;
-| join kind=leftanti Baseline on $left.ClickDomain == $right.BaselineDomain
-| project Timestamp, AccountUpn, Url, ClickDomain, IPAddress, ThreatTypes, DetectionMethods, NetworkMessageId
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-grounded: AI phishing relies on URLs with no reputation history; flag click-throughs to tenant-first-seen domains
-let BaselineDays = 30d;
-let RecentHours = 4h;
-let Baseline = UrlClickEvents
-    | where TimeGenerated between (ago(BaselineDays) .. ago(RecentHours))
-    | where ActionType in (&quot;ClickAllowed&quot;,&quot;ClickedThrough&quot;)
-    | extend BaselineDomain = tostring(parse_url(Url).Host)
-    | where isnotempty(BaselineDomain)
-    | summarize BaselineHits = count() by BaselineDomain
-    | where BaselineHits &gt;= 2;        // 2+ historical clicks = not first-seen
-UrlClickEvents
-| where TimeGenerated &gt; ago(RecentHours)
-| where ActionType == &quot;ClickedThrough&quot;   // user bypassed the warning - higher fidelity than ClickAllowed alone
-| extend ClickDomain = tostring(parse_url(Url).Host)
-| where isnotempty(ClickDomain)
-| where ClickDomain !endswith &quot;microsoft.com&quot;
-    and ClickDomain !endswith &quot;office.com&quot;
-    and ClickDomain !endswith &quot;office365.com&quot;
-    and ClickDomain !endswith &quot;sharepoint.com&quot;
-    and ClickDomain !endswith &quot;linkedin.com&quot;
-| join kind=leftanti Baseline on $left.ClickDomain == $right.BaselineDomain
-| project TimeGenerated, AccountUpn, Url, ClickDomain, IPAddress, ThreatTypes, DetectionMethods, NetworkMessageId
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` values(Email.url) as urls min(_time) as firstSeen from datamodel=Email where Email.url_click_action IN (&quot;ClickAllowed&quot;,&quot;ClickedThrough&quot;) earliest=-30d@d latest=-1h by Email.url_domain | rename Email.url_domain as baseline_domain | append [ | tstats `summariesonly` count values(Email.recipient) as recipient values(Email.url) as url min(_time) as firstSeen from datamodel=Email where Email.url_click_action=&quot;ClickedThrough&quot; earliest=-1h by Email.url_domain | rename Email.url_domain as recent_domain ] | stats values(*) as * by recent_domain | where isnull(baseline_domain) | sort - firstSeen</code></pre><pre class="spl-mode-body" id="art-101-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false values(Email.url) as urls min(_time) as firstSeen from datamodel=Email where Email.url_click_action IN (&quot;ClickAllowed&quot;,&quot;ClickedThrough&quot;) earliest=-30d@d latest=-1h by Email.url_domain | rename Email.url_domain as baseline_domain | append [ | tstats summariesonly=false count values(Email.recipient) as recipient values(Email.url) as url min(_time) as firstSeen from datamodel=Email where Email.url_click_action=&quot;ClickedThrough&quot; earliest=-1h by Email.url_domain | rename Email.url_domain as recent_domain ] | stats values(*) as * by recent_domain | where isnull(baseline_domain) | sort - firstSeen</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="53a9c31d59" data-platforms="def,sent,spl" data-targets="azure,m365,windows">
+  <div class="usecases"><details class="uc" data-uc-slug="53a9c31d59" data-platforms="def,sent,spl" data-targets="azure,m365,windows" open>
   <summary>
     <span class="uc-title">Phishing-link click correlated to endpoint execution</span>
     <span class="uc-phase">Delivery</span>
@@ -19714,11 +19561,11 @@ for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-101-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-101-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+    <div class="tab-content active" id="art-101-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
 // Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
 // never spawn a non-browser child process, so the join eliminates the
 // 99% of noise that makes a raw click query unactionable.
@@ -19758,7 +19605,7 @@ DeviceProcessEvents
           Subject, Url, UrlDomain, ActionType,
           FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-101-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+    <div class="tab-content" id="art-101-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
 // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
 // non-browser child process. Lower fidelity than the Defender version.
 let LookbackDays = 7d;
@@ -19783,7 +19630,7 @@ SecurityEvent
           NewProcessName, CommandLine, Sender, Subject
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc2-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+    <div class="tab-content" id="art-101-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc0-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats `summariesonly` earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -19815,7 +19662,7 @@ SecurityEvent
 | where delta_sec &gt;= 0 AND delta_sec &lt;= 60
 | table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
         clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-101-uc2-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-101-uc0-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats summariesonly=false earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -19865,11 +19712,11 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailAttachmentInfo</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-101-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-101-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc3-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+    <div class="tab-content active" id="art-101-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp &gt; ago(LookbackDays)
     | where AccountName !endswith &quot;$&quot;
@@ -19883,7 +19730,7 @@ DeviceProcessEvents
 | join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
           InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256</code></pre></div>
-    <div class="tab-content" id="art-101-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
+    <div class="tab-content" id="art-101-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
 // OfficeActivity Send/Receive activity + correlate to host process spawn.
 let LookbackDays = 7d;
 let MailWithAttach = OfficeActivity
@@ -19906,7 +19753,7 @@ SecurityEvent
           ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
+    <div class="tab-content" id="art-101-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -19917,7 +19764,7 @@ SecurityEvent
         where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
           AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
         by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-101-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
+     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-101-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -19946,18 +19793,18 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-101-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-101-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-101-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-101-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-101-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
 | where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-101-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-101-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -19980,7 +19827,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
+    <div class="tab-content" id="art-101-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
 status: experimental
 description: |
@@ -20024,13 +19871,13 @@ falsepositives:
     - Legitimate automation macros in trusted internal documents
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-101-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-101-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-101-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
@@ -20054,17 +19901,17 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-101-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-101-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-101-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-101-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc5-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+    <div class="tab-content active" id="art-101-uc3-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
 | where Timestamp &gt; ago(7d)
 | where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
 | project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
           ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-101-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
+    <div class="tab-content" id="art-101-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
 AuditLogs
 | where TimeGenerated &gt; ago(7d)
 | where OperationName has &quot;Consent to application&quot;
@@ -20075,7 +19922,7 @@ AuditLogs
 | project TimeGenerated, OperationName, User, AppName, AppId, Result
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
+    <div class="tab-content" id="art-101-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
 status: experimental
 description: |
@@ -20101,7 +19948,7 @@ falsepositives:
     - Legitimate first-time SaaS app onboarding
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-101-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -20110,7 +19957,7 @@ level: medium
         &quot;Add OAuth2PermissionGrant&quot;,
         &quot;Add delegated permission grant&quot;)
     by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-101-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-101-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -20137,19 +19984,19 @@ level: medium
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-101-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-101-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-101-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-101-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-101-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-101-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-101-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -20163,7 +20010,7 @@ level: medium
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
+    <div class="tab-content" id="art-101-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d06
 status: experimental
 description: |
@@ -20207,7 +20054,7 @@ falsepositives:
     - IT-driven scripted automation that admins paste-launch
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-101-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -20215,7 +20062,7 @@ level: high
         OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*hxxp*&quot; OR Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot;)
     by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-101-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-101-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -20241,18 +20088,18 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc7-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-101-uc7-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-101-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-101-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-101-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-101-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-101-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+    <div class="tab-content" id="art-101-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
 // article (matching shape with the Defender query).
 SecurityEvent
 | where TimeGenerated &gt; ago(7d)
@@ -20272,7 +20119,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+    <div class="tab-content" id="art-101-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
 status: experimental
 description: |
@@ -20314,12 +20161,12 @@ falsepositives:
       article before alerting.
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-101-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-101-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-101-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
@@ -20342,17 +20189,17 @@ level: medium
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-101-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-101-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-101-uc8-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-101-uc8-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-101-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-101-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-101-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-101-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-101-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-101-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
 | where RemoteIP in (&quot;13.107.213.44&quot;, &quot;143.204.203.52&quot;) or RemoteUrl has_any (&quot;blog.com&quot;, &quot;openvpn.com&quot;, &quot;epleyonlineo.za.com&quot;)
 | project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-101-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;13.107.213.44&quot;, &quot;143.204.203.52&quot;]);
+    <div class="tab-content" id="art-101-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;13.107.213.44&quot;, &quot;143.204.203.52&quot;]);
 let BadDomains = dynamic([&quot;blog.com&quot;, &quot;openvpn.com&quot;, &quot;epleyonlineo.za.com&quot;]);
 ImNetworkSession
 | where TimeGenerated &gt; ago(7d)
@@ -20361,7 +20208,7 @@ ImNetworkSession
 | project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+    <div class="tab-content" id="art-101-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
 status: experimental
 description: |
@@ -20391,7 +20238,7 @@ falsepositives:
     - None on a true-positive IOC match
 level: critical
 </code></pre></div>
-    <div class="tab-content" id="art-101-uc8-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-101-uc6-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-101-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-101-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-101-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;13.107.213.44&quot;, &quot;143.204.203.52&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -20405,7 +20252,7 @@ level: critical
     [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
         where DNS.query IN (&quot;blog.com&quot;, &quot;openvpn.com&quot;, &quot;epleyonlineo.za.com&quot;)
         by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-101-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-101-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.dest IN (&quot;13.107.213.44&quot;, &quot;143.204.203.52&quot;)
     by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
@@ -20431,7 +20278,7 @@ level: critical
   data-splunk-cats="application"
   data-targets="azure"
   data-uc-count="3" data-llm-uc-count="1"
-  data-search="[GHSA / CRITICAL] CVE-2026-47430: Cordova Plugin InAppBrowser: iOS: Arbitrary Cordova callback IDs can be dispatched without validation from InAppBrowser WebViews. Cordova Plugin InAppBrowser: iOS: Arbitrary Cordova callback IDs can be dispatched without validation from InAppBrowser WebViews. CVE-2026-47430 T1190 T1528 [LLM] Vulnerable cordova-plugin-inappbrowser &lt;6.0.1 on iOS — CVE-2026-47430 asset hunt Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant">
+  data-search="[GHSA / CRITICAL] CVE-2026-47430: Cordova Plugin InAppBrowser: iOS: Arbitrary Cordova callback IDs can be dispatched without validation from InAppBrowser WebViews. Cordova Plugin InAppBrowser: iOS: Arbitrary Cordova callback IDs can be dispatched without validation from InAppBrowser WebViews. CVE-2026-47430 T1190 T1528 [LLM] Vulnerable cordova-plugin-inappbrowser (CVE-2026-47430) on iOS — asset hunt Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-08-ghsa-critical-cve-2026-47430-cordova-plugin-inappbrowser-ios" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -20488,54 +20335,104 @@ level: critical
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Vulnerable cordova-plugin-inappbrowser (CVE-2026-47430) on iOS — asset hunt · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Vulnerable cordova-plugin-inappbrowser &lt;6.0.1 on iOS — CVE-2026-47430 asset hunt</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ OAuth consent / suspicious app grant</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="eec2e762af" data-platforms="def,sent,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="71b5dd6f58" data-platforms="def,sent,spl" data-targets="" open>
   <summary>
-    <span class="uc-title">Vulnerable cordova-plugin-inappbrowser &lt;6.0.1 on iOS — CVE-2026-47430 asset hunt</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-title">Vulnerable cordova-plugin-inappbrowser (CVE-2026-47430) on iOS — asset hunt</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="eec2e762af" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="71b5dd6f58" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts iOS managed apps shipping cordova-plugin-inappbrowser between 3.1.0 and 6.0.0 (the GHSA-q42j-x8rq-pjg6 vulnerable range, fixed in 6.0.1). In this range any web content loaded inside the InAppBrowser WebView can dispatch arbitrary Cordova callbacks via window.webkit.messageHandlers.cordova_iab.postMessage({id:&#x27;&lt;callbackId&gt;&#x27;}) and spoof Camera/Contacts/File/Geolocation plugin results. Output drives patch prioritisation.
+    <div class="uc-desc">Enumerates enrolled iOS devices running a Cordova application that bundles cordova-plugin-inappbrowser at any version from 3.1.0 through 6.0.0, where unvalidated WKScriptMessage `id` dispatch in CDVWKInAppBrowser.m allows in-WebView content to spoof Cordova plugin callbacks. Output is the patch/upgrade backlog: device, OS version, plugin version, and the affected app so the mobile team can push 6.0.1 builds.
 
-Rationale: The GHSA names a precise vulnerable range (3.1.0 ≤ vuln ≤ 6.0.0; fixed 6.0.1) and CVE-2026-47430. DeviceTvmSoftwareVulnerabilities is the canonical Defender surface for CVE-tagged inventory; the SoftwareName/Version regex fallback catches devices where TVM has the inventory entry but hasn&#x27;t yet linked it to the new CVE. No external corroboration sought — this is a single-CVE advisory and the GHSA is the authoritative source. JS-bridge exploitation itself is not detectable on any SIEM-visible telemetry, so asset hunting is the only deployable angle.
+Rationale: Article gives a hard CVE ID (CVE-2026-47430), an exact package name (`cordova-plugin-inappbrowser`), a fully bounded affected range (3.1.0–6.0.0), and the fixed version (6.0.1). DeviceTvmSoftwareVulnerabilities is the authoritative Defender-side feed when the CVE is in TVM&#x27;s catalog; the DeviceTvmSoftwareInventory union catches a lag period before TVM ingests the new CVE. iOS-only platform filter mirrors the advisory scope (CDVWKInAppBrowser.m is the iOS WKWebView path). Cross-checked against Vulnerability-Lookup (CIRCL) and CVEdetails to confirm version range and iOS scope.
 
 Cross-checked against:
-  • https://github.com/advisories/GHSA-q42j-x8rq-pjg6</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span> <span class="ind tech" title="Gather Victim Host Information: Software">T1592.002</span></div>
+  • https://vulnerability.circl.lu/vuln/cve-2026-47430
+  • https://vulnerability.circl.lu/vuln/ghsa-q42j-x8rq-pjg6
+  • https://www.cvedetails.com/vulnerability-list/vendor_id-45/product_id-41306/Apache-Cordova-In-app-browser.html
+  • https://cordova.apache.org/blog/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Gather Victim Host Information: Software">T1592.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internally-built apps shipping a custom-patched fork of the plugin where the maintainer cherry-picked the upstream fix without bumping the version string — TVM still reports the old version</li><li>Developer / QA test iPads enrolled in MDM running staging app builds that the SOC doesn&#x27;t need to chase to remediation</li><li>Third-party / vendor apps where the device is corporate-managed but patching ownership sits with the vendor (raise ticket, not incident)</li><li>TVM inventory lag: an in-app update to 6.0.1 may take up to ~24h to reflect in DeviceTvmSoftwareVulnerabilities, producing brief stale FPs after a fleet patch</li><li>Plugin forks renamed downstream (e.g. cordova-plugin-inappbrowser-custom) that re-export the same vulnerable code but won&#x27;t match the SoftwareName has-clause — inverse risk (false negative), worth a separate broader sweep</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SoftwareVersion !contains &quot;-internal&quot; and SoftwareVersion !contains &quot;+patched&quot; and SoftwareVersion !contains &quot;-fork&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the flagged record is the production app, not a dev/staging build, and inspect the IPA&#x27;s plugins/cordova-plugin-inappbrowser/plugin.xml or package.json to verify the bundled version. Identify the owning team via MDM app metadata and confirm whether the app uses sensitive Cordova plugins (Camera, Contacts, File, Geolocation) — these are the spoofable callback targets called out in the advisory. 2) Contain: for internally-built apps, build and force-push a 6.0.1+ release via Intune/MDM and revoke prior versions; for third-party apps that handle sensitive plugin scopes, scope-block the app on managed devices via app-protection policy until the vendor confirms patching. 3) Hunt: pivot on AADSignInEventsBeta and CloudAppEvents for the same DeviceId / user over the prior 30d for unexpected OAuth consents, token-refresh anomalies, or first-seen device-IPs that could indicate exploitation via a forged callback prior to detection.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal-only/Kiosk iOS apps where InAppBrowser only loads first-party HTTPS that the app fully controls — exploitation is theoretical even if the plugin version matches (still patch, but deprioritise)</li><li>Apps that bundle the plugin code but never call `cordova.InAppBrowser.open()` (dead-code package — vulnerable surface not actually instantiated)</li><li>Test/staging device builds with intentionally pinned old plugin versions for compatibility regression testing</li><li>TVM has stale inventory for retired/wiped devices that still appear in DeviceTvmSoftwareInventory for a few days post-decommission</li><li>MAM-only (no MDM agent) iPhones where Defender for Endpoint mobile cannot enumerate per-app dependencies — produces silent gaps, not FPs, but skews coverage metrics</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (MachineGroup has_any (&quot;iOS-Test&quot;, &quot;iOS-Staging&quot;, &quot;Regression-Lab&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the bundled plugin version from the IPA&#x27;s `config.xml`/`package.json` (TVM reads MDM-pushed metadata which can lag a release). Identify the responsible app and its owning team via MachineGroup and the app bundle ID. Confirm whether the app actually invokes `cordova.InAppBrowser.open()` and whether it ever loads attacker-influenceable URLs (OAuth redirect, deep-link target, marketing link, untrusted referral). 2) Contain: where the app does open external content in InAppBrowser, push a temporary MDM config or app-config flag that pins InAppBrowser navigation to a first-party allowlist while the 6.0.1 build is being prepared. Prioritise apps marked `IsInternetFacing` and apps that ship to external users. 3) Hunt: in the iOS app team&#x27;s source, search for `commandDelegate.sendPluginResult` and `WKScriptMessage` handlers exposed by other in-house plugins to validate that no other plugin shares the same id-without-validation pattern; ensure CI dependency-scanning (Dependab</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-103-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-103-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(7d)
-| where CveId =~ &quot;CVE-2026-47430&quot;
-   or (SoftwareName has &quot;cordova-plugin-inappbrowser&quot;
-       and SoftwareVersion matches regex @&quot;^(3\.[1-9]|3\.[1-9][0-9]+|[45]\.|6\.0\.0)&quot;)
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, OSVersion, DeviceType, Model, Vendor) by DeviceId) on DeviceId
-| project Timestamp, DeviceName, DeviceId, OSPlatform, OSVersion, Model, Vendor, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel desc, DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(7d)
-| where CveId =~ &quot;CVE-2026-47430&quot;
-   or (SoftwareName has &quot;cordova-plugin-inappbrowser&quot;
-       and SoftwareVersion matches regex @&quot;^(3\.[1-9]|3\.[1-9][0-9]+|[45]\.|6\.0\.0)&quot;)
-| project TimeGenerated, DeviceName, DeviceId, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count, min(_time) as firstSeen, max(_time) as lastSeen from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-47430&quot; OR Vulnerabilities.signature=&quot;cordova-plugin-inappbrowser&quot; by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.cve, Vulnerabilities.severity, Vulnerabilities.vendor_product | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstSeen) ctime(lastSeen) | sort - severity</code></pre><pre class="spl-mode-body" id="art-103-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, min(_time) as firstSeen, max(_time) as lastSeen from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-47430&quot; OR Vulnerabilities.signature=&quot;cordova-plugin-inappbrowser&quot; by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.cve, Vulnerabilities.severity, Vulnerabilities.vendor_product | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstSeen) ctime(lastSeen) | sort - severity</code></pre></div></div>
+    <div class="tab-content active" id="art-103-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Path A: authoritative CVE match from Defender TVM
+let byCve =
+    DeviceTvmSoftwareVulnerabilities
+    | where CveId =~ &quot;CVE-2026-47430&quot;
+    | project Timestamp, DeviceId, DeviceName, OSPlatform, OSVersion,
+              SoftwareVendor, SoftwareName, SoftwareVersion,
+              VulnerabilitySeverityLevel, RecommendedSecurityUpdate;
+// Path B: catch hosts where TVM hasn&#x27;t yet ingested the CVE record but the plugin is in inventory
+let byInventory =
+    DeviceTvmSoftwareInventory
+    | where SoftwareName has &quot;cordova-plugin-inappbrowser&quot;
+    | extend Major = toint(extract(@&quot;^(\d+)\.&quot;, 1, SoftwareVersion))
+    | extend Minor = toint(extract(@&quot;^\d+\.(\d+)\.&quot;, 1, SoftwareVersion))
+    | extend Patch = toint(extract(@&quot;^\d+\.\d+\.(\d+)&quot;, 1, SoftwareVersion))
+    | where Major between (3 .. 6)
+    | where not(Major == 3 and Minor == 0)              // 3.0.x is not in range — vuln starts at 3.1.0
+    | where not(Major == 6 and (Minor &gt; 0 or Patch &gt;= 1)) // exclude 6.0.1+ / 6.1+ / 7+
+    | project Timestamp, DeviceId, DeviceName, OSPlatform, OSVersion,
+              SoftwareVendor, SoftwareName, SoftwareVersion,
+              VulnerabilitySeverityLevel = &quot;Critical&quot;,
+              RecommendedSecurityUpdate = &quot;Upgrade cordova-plugin-inappbrowser to 6.0.1&quot;;
+byCve
+| union byInventory
+| where OSPlatform has &quot;iOS&quot; or isempty(OSPlatform)   // CVE is iOS-only; keep blanks for safety
+| summarize arg_max(Timestamp, *) by DeviceId, SoftwareName, SoftwareVersion
+| join kind=leftouter (
+    DeviceInfo
+    | summarize arg_max(Timestamp, *) by DeviceId
+    | project DeviceId, LoggedOnUsers, MachineGroup, IsInternetFacing
+  ) on DeviceId
+| project Timestamp, DeviceName, DeviceId, OSPlatform, OSVersion,
+          SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel,
+          RecommendedSecurityUpdate, LoggedOnUsers, MachineGroup
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let byCve =
+    DeviceTvmSoftwareVulnerabilities
+    | where TimeGenerated &gt; ago(7d)
+    | where CveId =~ &quot;CVE-2026-47430&quot;
+    | project TimeGenerated, DeviceId, DeviceName, OSPlatform, OSVersion,
+              SoftwareVendor, SoftwareName, SoftwareVersion,
+              VulnerabilitySeverityLevel, RecommendedSecurityUpdate;
+byCve
+| where OSPlatform has &quot;iOS&quot; or isempty(OSPlatform)
+| summarize arg_max(TimeGenerated, *) by DeviceId, SoftwareName, SoftwareVersion
+| join kind=leftouter (
+    DeviceInfo
+    | where TimeGenerated &gt; ago(7d)
+    | summarize arg_max(TimeGenerated, *) by DeviceId
+    | project DeviceId, LoggedOnUsers, MachineGroup, IsInternetFacing
+  ) on DeviceId
+| project TimeGenerated, DeviceName, DeviceId, OSPlatform, OSVersion,
+          SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel,
+          RecommendedSecurityUpdate, LoggedOnUsers, MachineGroup
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-47430&quot; OR (Vulnerabilities.signature=&quot;cordova-plugin-inappbrowser&quot; AND Vulnerabilities.os=&quot;iOS&quot;) by Vulnerabilities.dest Vulnerabilities.user Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| eval patched_version=&quot;6.0.1&quot;
+| convert ctime(firstSeen) ctime(lastSeen)
+| sort - lastSeen</code></pre><pre class="spl-mode-body" id="art-103-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-47430&quot; OR (Vulnerabilities.signature=&quot;cordova-plugin-inappbrowser&quot; AND Vulnerabilities.os=&quot;iOS&quot;) by Vulnerabilities.dest Vulnerabilities.user Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| eval patched_version=&quot;6.0.1&quot;
+| convert ctime(firstSeen) ctime(lastSeen)
+| sort - lastSeen</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
