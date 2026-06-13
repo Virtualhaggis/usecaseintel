@@ -38,12 +38,59 @@ Forensic examiners are constantly hunting for data that reveals not just what ha
 - **T1566** — Phishing
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1005** — Data from Local System
+- **T1070** — Indicator Removal
+- **T1083** — File and Directory Discovery
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### macOS Tahoe 26 App.MenuItem Biome Stream Access by Non-System Process
+
+`UC_0_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.action) as action values(Filesystem.process_path) as process_path from datamodel=Endpoint.Filesystem where Filesystem.file_path="*/Library/Biome/streams/restricted/App.MenuItem*" by Filesystem.dest Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | search NOT process_name IN ("biomed","biomesyncd","knowledgeconstructiond","suggestd","duetexpertd","mds","mds_stores","Spotlight","backupd","tccd") | search NOT process_path IN ("/System/*","/usr/libexec/*") | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where FolderPath has "/Library/Biome/streams/restricted/App.MenuItem"
+| where ActionType in ("FileCreated", "FileModified", "FileRenamed", "FileCopied", "FileDeleted")
+| where InitiatingProcessFileName !in~ ("biomed", "biomesyncd", "knowledgeconstructiond", "suggestd", "duetexpertd", "mds", "mds_stores", "Spotlight", "backupd", "tccd", "coreduetd", "TimeMachine")
+| where InitiatingProcessFolderPath !startswith "/System/"
+| where InitiatingProcessFolderPath !startswith "/usr/libexec/"
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### macOS Forensic Artifact Sweep: Rapid Enumeration of Biome and Knowledge Stores
+
+`UC_0_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count dc(Filesystem.file_path) as path_count values(Filesystem.file_path) as paths min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/Library/Biome/streams/*" OR Filesystem.file_path="*/Library/CoreDuet/*" OR Filesystem.file_path="*/Library/Knowledge/*" OR Filesystem.file_path="*/Library/Application Support/Knowledge/*" OR Filesystem.file_path="*/Library/Caches/com.apple.spotlight/*" OR Filesystem.file_path="*/private/var/db/CoreDuet/*") by Filesystem.dest Filesystem.process_name Filesystem.user _time span=5m | `drop_dm_object_name(Filesystem)` | search NOT process_name IN ("biomed","biomesyncd","knowledgeconstructiond","suggestd","duetexpertd","mds","mds_stores","Spotlight","backupd","tccd","coreduetd") | where path_count >= 3 | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where FolderPath has_any ("/Library/Biome/streams/", "/Library/CoreDuet/", "/Library/Knowledge/", "/Library/Application Support/Knowledge/", "/Library/Caches/com.apple.spotlight/", "/private/var/db/CoreDuet/", "/Library/Biome/streams/restricted/App.MenuItem")
+| where InitiatingProcessFileName !in~ ("biomed", "biomesyncd", "knowledgeconstructiond", "suggestd", "duetexpertd", "mds", "mds_stores", "Spotlight", "backupd", "tccd", "coreduetd", "TimeMachine", "backupd-helper")
+| where InitiatingProcessFolderPath !startswith "/System/"
+| where InitiatingProcessFolderPath !startswith "/usr/libexec/"
+| summarize PathCount = dcount(FolderPath), FileCount = dcount(strcat(FolderPath, FileName)), Paths = make_set(FolderPath, 25), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, InitiatingProcessCommandLine, bin(Timestamp, 5m)
+| where PathCount >= 3 and FileCount >= 10
+| order by LastSeen desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -322,4 +369,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

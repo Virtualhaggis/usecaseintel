@@ -30,14 +30,15 @@ Sygnia, which tracks the group as Velvet Ant , says it backdoored the PAM and Op
 - **T1556.003** — Modify Authentication Process: Pluggable Authentication Modules
 - **T1543** — Create or Modify System Process
 - **T1554** — Compromise Host Software Binary
-- **T1556.004** — Modify Authentication Process: Network Provider DLL
+- **T1556.004** — Modify Authentication Process: Network Device Authentication
+- **T1556** — Modify Authentication Process
 - **T1056.001** — Input Capture: Keylogging
 - **T1003.008** — OS Credential Dumping: /etc/passwd and /etc/shadow
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1090.001** — Proxy: Internal Proxy
+- **T1572** — Protocol Tunneling
 - **T1505.003** — Server Software Component: Web Shell
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1090.002** — Proxy: External Proxy
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1027.009** — Obfuscated Files or Information: Embedded Payloads
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
@@ -45,165 +46,106 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Velvet Ant — PAM module replacement on Linux (Operation Highland)
+### Linux PAM module (pam_unix.so) written by non-package-manager process — Velvet Ant Op Highland
 
 `UC_7_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as writer values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("/lib/security/*","/lib64/security/*","/usr/lib/security/*","/usr/lib64/security/*","/usr/lib/x86_64-linux-gnu/security/*","/etc/pam.d/*")) AND NOT Filesystem.process_name IN ("dpkg","apt","apt-get","yum","dnf","rpm","zypper","pacman","ldconfig","update-alternatives","authconfig","pam-auth-update") by Filesystem.dest Filesystem.file_path Filesystem.process_name Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified","write","rename") AND (Filesystem.file_path IN ("/lib/security/*","/lib64/security/*","/usr/lib/security/*","/usr/lib64/security/*","/lib/x86_64-linux-gnu/security/*","/usr/lib/x86_64-linux-gnu/security/*") OR Filesystem.file_name="pam_unix.so" OR Filesystem.file_name="pam_sss.so" OR Filesystem.file_name="pam_ldap.so") AND NOT Filesystem.process_name IN ("dpkg","apt","apt-get","rpm","yum","dnf","zypper","pacman","alpine-pkg") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-// Operation Highland — PAM module/config tampering by non-package-manager processes
 DeviceFileEvents
-| where Timestamp > ago(14d)
-| where DeviceName !in~ (dynamic([]))  // scope to Linux fleet if needed
-| where (FolderPath matches regex @"^/(lib|lib64|usr/lib|usr/lib64|usr/lib/x86_64-linux-gnu)/security/" and FileName endswith ".so")
-   or FolderPath startswith "/etc/pam.d/"
+| where Timestamp > ago(7d)
 | where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where InitiatingProcessFileName !in~ ("dpkg","apt","apt-get","yum","dnf","rpm","zypper","pacman","ldconfig","update-alternatives","authconfig","pam-auth-update","tar","cp","mv")
-| where InitiatingProcessAccountName !in~ ("_apt","_dpkg")
-| project Timestamp, DeviceName, FolderPath, FileName, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, InitiatingProcessAccountName,
-          InitiatingProcessParentFileName
+| where (FolderPath has_any ("/lib/security/","/lib64/security/","/usr/lib/security/","/usr/lib64/security/","/lib/x86_64-linux-gnu/security/","/usr/lib/x86_64-linux-gnu/security/"))
+   or FileName in~ ("pam_unix.so","pam_sss.so","pam_ldap.so","pam_krb5.so","pam_tally2.so")
+| where InitiatingProcessFileName !in~ ("dpkg","apt","apt-get","rpm","yum","dnf","zypper","pacman","unattended-upgrade","packagekitd")
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, FileSize,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath,
+          InitiatingProcessAccountName, InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
-### Velvet Ant — OpenSSH binary replacement (sshd/ssh) on Linux
+### OpenSSH binary (sshd/ssh) modified outside the package manager — Velvet Ant Op Highland
 
 `UC_7_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as writer values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("/usr/sbin/sshd","/usr/bin/sshd","/usr/bin/ssh","/usr/bin/scp","/usr/bin/sftp","/usr/bin/ssh-keygen","/usr/bin/ssh-agent","/usr/libexec/openssh/*","/etc/ssh/sshd_config","/etc/ssh/ssh_config")) AND NOT Filesystem.process_name IN ("dpkg","apt","apt-get","yum","dnf","rpm","zypper","pacman","unattended-upgrade") by Filesystem.dest Filesystem.file_path Filesystem.process_name Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified","write","rename") AND Filesystem.file_path IN ("/usr/sbin/sshd","/usr/bin/ssh","/usr/bin/ssh-keygen","/usr/bin/scp","/usr/libexec/openssh/sftp-server","/usr/lib/openssh/sftp-server","/usr/local/sbin/sshd","/usr/local/bin/ssh") AND NOT Filesystem.process_name IN ("dpkg","apt","apt-get","rpm","yum","dnf","zypper","pacman","unattended-upgrade") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-// Operation Highland — OpenSSH binary swap detection
 DeviceFileEvents
-| where Timestamp > ago(14d)
+| where Timestamp > ago(7d)
 | where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FolderPath in~ ("/usr/sbin","/usr/bin","/usr/local/sbin","/usr/local/bin")
-      and FileName in~ ("sshd","ssh","scp","sftp","ssh-keygen","ssh-agent","ssh-add")
-   or (FolderPath startswith "/usr/libexec/openssh")
-   or (FolderPath == "/etc/ssh" and FileName in~ ("sshd_config","ssh_config"))
-| where InitiatingProcessFileName !in~ ("dpkg","apt","apt-get","yum","dnf","rpm","zypper","pacman","unattended-upgrade","needrestart")
-| where InitiatingProcessAccountName !in~ ("_apt","_dpkg")
-| extend ReplacedBinary = strcat(FolderPath, "/", FileName)
-| project Timestamp, DeviceName, ReplacedBinary, SHA256, FileSize,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, InitiatingProcessParentFileName,
-          InitiatingProcessAccountName
+| where (FolderPath in~ ("/usr/sbin/","/usr/bin/","/sbin/","/bin/","/usr/local/sbin/","/usr/local/bin/") and FileName in~ ("sshd","ssh","ssh-keygen","scp","ssh-agent","ssh-keyscan"))
+   or (FolderPath has_any ("/usr/libexec/openssh/","/usr/lib/openssh/") and FileName in~ ("sftp-server","ssh-keysign"))
+| where InitiatingProcessFileName !in~ ("dpkg","apt","apt-get","rpm","yum","dnf","zypper","pacman","unattended-upgrade","packagekitd")
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, FileSize,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath,
+          InitiatingProcessAccountName, InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
-### Velvet Ant — sshd process writing credential dump files outside expected paths
+### sshd/login/PAM process writes credential-capture file outside standard log paths
 
 `UC_7_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.process_name="sshd" AND NOT Filesystem.file_path IN ("/var/log/*","/var/run/*","/run/*","/var/empty/*","/var/lib/sss/*","/dev/null","/dev/log","/proc/*","/tmp/ssh-*","/home/*/.ssh/authorized_keys","/etc/motd","/var/lib/sudo/*","/var/cache/*") by Filesystem.dest Filesystem.file_path Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified","write") AND Filesystem.process_name IN ("sshd","ssh","login","su","sudo","gdm-session-worker","lightdm") AND NOT (Filesystem.file_path IN ("/var/log/*","/run/*","/var/run/*","/proc/*","/sys/*","/dev/*","/tmp/ssh-*","/home/*/.ssh/*")) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-// Operation Highland — sshd writing credential dumps outside legit paths
 DeviceFileEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName =~ "sshd"
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where not (FolderPath startswith "/var/log"
-      or FolderPath startswith "/var/run"
-      or FolderPath startswith "/run"
-      or FolderPath startswith "/var/empty"
-      or FolderPath startswith "/proc"
-      or FolderPath startswith "/tmp/ssh-"
-      or FolderPath startswith "/var/lib/sss"
-      or FolderPath endswith "/.ssh"
-      or FileName in~ ("authorized_keys","known_hosts","motd",".bash_history")
-      or FolderPath in ("/dev","/var/cache"))
-| where InitiatingProcessParentFileName in~ ("sshd","systemd","init")
-| project Timestamp, DeviceName, FolderPath, FileName, FileSize, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessId,
-          InitiatingProcessFolderPath, InitiatingProcessParentFileName
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("sshd","ssh","login","su","sudo","gdm-session-worker","lightdm","sddm")
+| where ActionType in ("FileCreated","FileModified")
+| where not(FolderPath startswith "/var/log/"
+         or FolderPath startswith "/run/"
+         or FolderPath startswith "/var/run/"
+         or FolderPath startswith "/proc/"
+         or FolderPath startswith "/sys/"
+         or FolderPath startswith "/dev/"
+         or FolderPath matches regex @"^/home/[^/]+/\.ssh/"
+         or FolderPath matches regex @"^/root/\.ssh/"
+         or FolderPath startswith "/tmp/ssh-")
+| where FolderPath has_any ("/tmp/","/var/tmp/","/dev/shm/","/etc/","/usr/share/","/usr/lib/","/var/spool/","/var/cache/","/opt/")
+   or FileName startswith "."
+   or FileName has_any (".log",".dat",".tmp",".cache",".bin")
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, FileSize, SHA256,
+          InitiatingProcessFileName, InitiatingProcessId, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### Velvet Ant — Internet-facing web server spawning shell as pivot bridge into isolated segment
+### Internet-facing web server process spawns SSH/network-pivot child targeting RFC1918 — HTTP-to-internal bridge
 
-`UC_7_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_7_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("nginx","apache2","httpd","lighttpd","caddy","java","php-fpm","node","python","python3","uwsgi","gunicorn") AND Processes.process_name IN ("bash","sh","dash","zsh","ksh","nc","ncat","socat","ssh","curl","wget","python","python3","perl") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("apache2","httpd","nginx","php-fpm","php-cgi","java","tomcat","node","python","python3","ruby","unicorn","gunicorn") AND Processes.process_name IN ("ssh","sshpass","scp","sftp","nc","ncat","socat","curl","wget","bash","sh","dash","ash","zsh") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | where match(process,"(?:^|[^0-9])(10\.|172\.(?:1[6-9]|2[0-9]|3[01])\.|192\.168\.)") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-// Operation Highland — web server pivot: nginx/apache spawning shells, netcat, ssh, socat
-let WebServerParents = dynamic(["nginx","apache2","httpd","lighttpd","caddy","java","php-fpm","node","python","python3","uwsgi","gunicorn"]);
-let PivotChildren = dynamic(["bash","sh","dash","zsh","ksh","nc","nc.openbsd","nc.traditional","ncat","socat","ssh","curl","wget","perl"]);
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ (WebServerParents)
-| where FileName in~ (PivotChildren)
-   or (FileName in~ ("python","python3") and ProcessCommandLine has_any ("-c ","socket","subprocess","pty.spawn"))
-| where not (InitiatingProcessCommandLine has_any ("logrotate","reload","graceful","configtest","-t ")) // legit ops
+| where InitiatingProcessFileName in~ ("apache2","httpd","nginx","php-fpm","php-cgi","java","tomcat","node","python","python3","ruby","unicorn","gunicorn","w3wp")
+| where FileName in~ ("ssh","sshpass","scp","sftp","nc","ncat","socat","curl","wget","bash","sh","dash","ash","zsh")
+| where ProcessCommandLine matches regex @"(?:^|[^0-9])(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.)[0-9]"
+| where InitiatingProcessAccountName !endswith "$"
 | project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          SHA256
-| order by Timestamp desc
-```
-
-### Velvet Ant — Hunt for staged auth-binary copies in non-canonical paths
-
-`UC_7_10` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as writer values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_name="sshd" OR Filesystem.file_name="pam_unix.so" OR Filesystem.file_name="pam_sshd.so" OR Filesystem.file_name="pam_login.so" OR Filesystem.file_name="pam_securetty.so") AND NOT Filesystem.file_path IN ("/usr/sbin/sshd","/usr/bin/sshd","/lib/security/pam_*.so","/lib64/security/pam_*.so","/usr/lib/security/pam_*.so","/usr/lib64/security/pam_*.so","/usr/lib/x86_64-linux-gnu/security/pam_*.so") by Filesystem.dest Filesystem.file_path Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-// Operation Highland — staged copies of auth binaries outside canonical paths
-DeviceFileEvents
-| where Timestamp > ago(90d)
-| where FileName in~ ("sshd","pam_unix.so","pam_sshd.so","pam_login.so","pam_securetty.so","pam_deny.so","pam_permit.so")
-| where not (
-      (FileName == "sshd" and FolderPath in ("/usr/sbin","/usr/bin","/usr/local/sbin","/usr/local/bin"))
-   or (FileName startswith "pam_" and FolderPath in ("/lib/security","/lib64/security","/usr/lib/security","/usr/lib64/security","/usr/lib/x86_64-linux-gnu/security","/usr/lib/aarch64-linux-gnu/security"))
-   )
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| project Timestamp, DeviceName, FolderPath, FileName, SHA256, FileSize,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+          ParentName = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine, ParentId = InitiatingProcessId,
+          ChildName = FileName, ChildCmd = ProcessCommandLine, ChildPath = FolderPath,
+          ChildSHA256 = SHA256
 | order by Timestamp desc
 ```
 
@@ -416,4 +358,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
