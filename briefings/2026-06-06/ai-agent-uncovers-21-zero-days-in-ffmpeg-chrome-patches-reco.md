@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable FFmpeg versions exposed to CVE-2026-39210 through CVE-2026-39218
 
-`UC_111_6` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_113_6` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### FFmpeg invoked against untrusted RTSP / AV1-over-RTP sources
 
-`UC_111_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_113_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceProcessEvents
 
 ### Chrome installs below 149.0.7827.53 carrying CVE-2026-10881 sandbox-escape exposure
 
-`UC_111_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_113_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

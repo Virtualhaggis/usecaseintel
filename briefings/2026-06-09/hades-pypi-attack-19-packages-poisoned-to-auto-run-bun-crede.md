@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Hades/Miasma PyPI poisoned package installation (26 named packages)
 
-`UC_85_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_87_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### Python interpreter downloading Bun runtime ZIP from oven-sh GitHub release
 
-`UC_85_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_87_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceNetworkEvents
 
 ### Hades persistence: *-setup.pth file written into Python site-packages
 
-`UC_85_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_87_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceFileEvents
 
 ### Bun runtime reading developer credential files (.npmrc / .pypirc / .ssh / .env / cloud configs)
 
-`UC_85_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_87_12` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -149,7 +149,7 @@ DeviceFileEvents
 
 ### gh-token-monitor service install or rm -rf wiper command (Hades self-destruct)
 
-`UC_85_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_87_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -186,7 +186,7 @@ union
 
 ### Hades C2: GitHub commit search for campaign markers TheBeautifulSnadsOfTime / firedalazer
 
-`UC_85_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_87_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -472,7 +472,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hades PyPI Attack: 19 Packages Poisoned to Auto-Run Bun Credential Stealer
 
-`UC_85_8` · phase: **exploit** · confidence: **High**
+`UC_87_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

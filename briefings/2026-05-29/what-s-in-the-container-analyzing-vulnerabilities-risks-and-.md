@@ -67,7 +67,7 @@ _(none detected from narrative keywords)_
 
 ### Web service in container spawning interactive shell (Redis/nginx RCE)
 
-`UC_177_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_179_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### Container privilege escalation via Looney Tunables, PwnKit, sudo chroot
 
-`UC_177_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_179_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ DeviceProcessEvents
 
 ### perfctl rootkit — /etc/ld.so.preload write or LD_PRELOAD on root daemon
 
-`UC_177_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_179_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ union
 
 ### Container default credential leak — PKP_DB_PASSWORD=changeMePlease and --secret
 
-`UC_177_7` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_179_7` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,7 +155,7 @@ DeviceProcessEvents
 
 ### Container-to-container horizontal scan — Dero miner self-propagation
 
-`UC_177_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_179_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -177,7 +177,7 @@ DeviceNetworkEvents
 
 ### Container egress to cryptominer pool / Kinsing C2
 
-`UC_177_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_179_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -255,7 +255,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — What’s in the container? Analyzing vulnerabilities, risks and protection with Ka
 
-`UC_177_3` · phase: **install** · confidence: **High**
+`UC_179_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

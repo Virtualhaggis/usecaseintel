@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Browser writing oversized OPFS file (potential FROST SSD-timing side-channel)
 
-`UC_84_6` · phase: **recon** · confidence: **Low** · AI-generated for this article
+`UC_86_6` · phase: **recon** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

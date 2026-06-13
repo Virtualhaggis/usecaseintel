@@ -38,8 +38,9 @@ Forensic examiners are constantly hunting for data that reveals not just what ha
 - **T1566** — Phishing
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1070.004** — Indicator Removal: File Deletion
+- **T1485** — Data Destruction
 - **T1005** — Data from Local System
-- **T1070** — Indicator Removal
 - **T1083** — File and Directory Discovery
 
 ## Kill chain phases observed
@@ -48,13 +49,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### macOS Tahoe 26 App.MenuItem Biome Stream Access by Non-System Process
+### Anti-forensics: deletion or truncation of macOS Tahoe 26 App.MenuItem Biome stream
 
-`UC_0_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.action) as action values(Filesystem.process_path) as process_path from datamodel=Endpoint.Filesystem where Filesystem.file_path="*/Library/Biome/streams/restricted/App.MenuItem*" by Filesystem.dest Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | search NOT process_name IN ("biomed","biomesyncd","knowledgeconstructiond","suggestd","duetexpertd","mds","mds_stores","Spotlight","backupd","tccd") | search NOT process_path IN ("/System/*","/usr/libexec/*") | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.process_path) as process_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.action IN ("deleted","renamed","modified") Filesystem.file_path="*/Library/Biome/streams/restricted/App.MenuItem/*" NOT Filesystem.process_name IN ("biomesyncd","biomed","launchd","tccd","syspolicyd","knowledge-agent") by Filesystem.dest Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -62,33 +63,51 @@ _(none detected from narrative keywords)_
 DeviceFileEvents
 | where Timestamp > ago(7d)
 | where FolderPath has "/Library/Biome/streams/restricted/App.MenuItem"
-| where ActionType in ("FileCreated", "FileModified", "FileRenamed", "FileCopied", "FileDeleted")
-| where InitiatingProcessFileName !in~ ("biomed", "biomesyncd", "knowledgeconstructiond", "suggestd", "duetexpertd", "mds", "mds_stores", "Spotlight", "backupd", "tccd", "coreduetd", "TimeMachine")
-| where InitiatingProcessFolderPath !startswith "/System/"
-| where InitiatingProcessFolderPath !startswith "/usr/libexec/"
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where ActionType in ("FileDeleted", "FileRenamed", "FileModified")
+| where InitiatingProcessFileName !in~ ("biomesyncd", "biomed", "launchd", "syspolicyd", "tccd", "knowledge-agent")
+| where InitiatingProcessAccountName !in~ ("_spotlight", "_assetcache")
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
-### macOS Forensic Artifact Sweep: Rapid Enumeration of Biome and Knowledge Stores
+### Suspicious read/copy of macOS App.MenuItem Biome stream by non-system process
 
-`UC_0_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count dc(Filesystem.file_path) as path_count values(Filesystem.file_path) as paths min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/Library/Biome/streams/*" OR Filesystem.file_path="*/Library/CoreDuet/*" OR Filesystem.file_path="*/Library/Knowledge/*" OR Filesystem.file_path="*/Library/Application Support/Knowledge/*" OR Filesystem.file_path="*/Library/Caches/com.apple.spotlight/*" OR Filesystem.file_path="*/private/var/db/CoreDuet/*") by Filesystem.dest Filesystem.process_name Filesystem.user _time span=5m | `drop_dm_object_name(Filesystem)` | search NOT process_name IN ("biomed","biomesyncd","knowledgeconstructiond","suggestd","duetexpertd","mds","mds_stores","Spotlight","backupd","tccd","coreduetd") | where path_count >= 3 | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process="*/Library/Biome/streams/restricted/App.MenuItem*" OR Processes.process="*ccl_segb_cli*" OR Processes.process="*ccl-segb*") NOT Processes.process_name IN ("biomesyncd","biomed","knowledge-agent") by Processes.dest Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
+DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where FolderPath has_any ("/Library/Biome/streams/", "/Library/CoreDuet/", "/Library/Knowledge/", "/Library/Application Support/Knowledge/", "/Library/Caches/com.apple.spotlight/", "/private/var/db/CoreDuet/", "/Library/Biome/streams/restricted/App.MenuItem")
-| where InitiatingProcessFileName !in~ ("biomed", "biomesyncd", "knowledgeconstructiond", "suggestd", "duetexpertd", "mds", "mds_stores", "Spotlight", "backupd", "tccd", "coreduetd", "TimeMachine", "backupd-helper")
-| where InitiatingProcessFolderPath !startswith "/System/"
-| where InitiatingProcessFolderPath !startswith "/usr/libexec/"
-| summarize PathCount = dcount(FolderPath), FileCount = dcount(strcat(FolderPath, FileName)), Paths = make_set(FolderPath, 25), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, InitiatingProcessCommandLine, bin(Timestamp, 5m)
-| where PathCount >= 3 and FileCount >= 10
+| where ProcessCommandLine has_any ("/Library/Biome/streams/restricted/App.MenuItem", "ccl_segb_cli", "ccl-segb")
+| where InitiatingProcessFileName !in~ ("biomesyncd", "biomed", "knowledge-agent")
+| where FileName !in~ ("biomesyncd", "biomed", "Spotlight", "mdworker_shared")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### Post-compromise enumeration of macOS forensic artifacts (Biome, knowledgeC, TCC)
+
+`UC_2_9` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.process_name) as procnames from datamodel=Endpoint.Processes where (Processes.process="*/Library/Biome/streams/restricted/App.MenuItem*" OR Processes.process="*/Library/Biome/streams/public*" OR Processes.process="*knowledgeC.db*" OR Processes.process="*TCC.db*" OR Processes.process="*LSQuarantineEvent*" OR Processes.process="*com.apple.sharedfilelist*" OR Processes.process="*CoreDuet/Knowledge*") NOT Processes.process_name IN ("mds","mds_stores","mdworker_shared","biomesyncd","biomed","Spotlight","tccd","knowledge-agent") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | eval pathset=mvdedup(cmdlines) | eval paths_touched=mvcount(pathset) | where paths_touched>=3 | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where ProcessCommandLine has_any ("/Library/Biome/streams/restricted/App.MenuItem", "/Library/Biome/streams/public", "knowledgeC.db", "TCC.db", "LSQuarantineEvent", "com.apple.sharedfilelist", "/Library/Application Support/com.apple.TCC", "/private/var/db/CoreDuet/Knowledge")
+| where FileName !in~ ("mds", "mds_stores", "mdworker_shared", "biomesyncd", "biomed", "Spotlight", "tccd", "knowledge-agent")
+| where InitiatingProcessFileName !in~ ("mds", "mds_stores", "mdworker_shared", "biomesyncd", "biomed", "Spotlight", "tccd", "knowledge-agent")
+| summarize PathsTouched = dcount(ProcessCommandLine), SampleCmds = make_set(ProcessCommandLine, 5), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, AccountName, FileName, InitiatingProcessFileName
+| where PathsTouched >= 3
 | order by LastSeen desc
 ```
 
@@ -319,7 +338,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Tracing Digital Intent: New MacOS Tahoe 26 Artifact Discovered
 
-`UC_0_6` · phase: **exploit** · confidence: **High**
+`UC_2_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -369,4 +388,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
