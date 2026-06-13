@@ -92,7 +92,7 @@ _(none detected from narrative keywords)_
 
 ### ChatGPT Plus payment-update phishing emails (display-name + subject lure)
 
-`UC_99_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_100_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ EmailEvents
 
 ### Claude 'Appeal Request' phishing email with PDF attachment lure
 
-`UC_99_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_100_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ suspect_mail
 
 ### Connection to AI-brand phishing / installer C2 infrastructure (MSTI June 2026 IOCs)
 
-`UC_99_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_100_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,7 +163,7 @@ DeviceNetworkEvents
 
 ### Execution or drop of fake AI-platform installer (DeepSeek/Manus/Seedance/GPT-5.5/Kimi)
 
-`UC_99_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_100_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -192,7 +192,7 @@ union isfuzzy=false
 
 ### Phishing redirect chain via awstrack.me / Rebrandly into AI-themed landing path
 
-`UC_99_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_100_16` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -532,7 +532,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — AI brands as bait: How threat actors are using the AI hype in social engineering
 
-`UC_99_11` · phase: **exploit** · confidence: **High**
+`UC_100_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

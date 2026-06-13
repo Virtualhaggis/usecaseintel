@@ -34,94 +34,12 @@ As the queue grows, a cre…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1566.002** — Phishing: Spearphishing Link
-- **T1598.003** — Phishing for Information: Spearphishing Link
-- **T1656** — Impersonation
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### LinkedIn-delivered 'Drive' phishing link followed by AWS CloudFront-hosted M365 lookalike navigation
-
-`UC_100_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count from datamodel=Email where Email.url="*linkedin.com*" OR Email.url="*lnkd.in*" by _time, Email.recipient, Email.url, Email.message_id
-| `drop_dm_object_name(Email)`
-| rename _time as ClickTime, recipient as user, url as LinkedInUrl
-| join type=inner user [
-  | tstats summariesonly=true count from datamodel=Web where (Web.url="*cloudfront.net*" AND (Web.url="*login*" OR Web.url="*microsoftonline*" OR Web.url="*office365*" OR Web.url="*o365*" OR Web.url="*outlook*" OR Web.url="*signin*" OR Web.url="*sign-in*" OR Web.url="*m365*")) by _time, Web.user, Web.src, Web.url, Web.dest
-  | `drop_dm_object_name(Web)`
-  | rename _time as NavTime, url as CloudFrontUrl
-]
-| where NavTime >= ClickTime AND NavTime <= relative_time(ClickTime,"+10m")
-| eval DelaySec=NavTime-ClickTime
-| table ClickTime, NavTime, DelaySec, user, src, LinkedInUrl, CloudFrontUrl, dest
-| sort -ClickTime
-```
-
-**Defender KQL:**
-```kql
-let LookbackDays = 7d;
-let CorrelationWindowMin = 10m;
-let LinkedInClicks = UrlClickEvents
-    | where Timestamp > ago(LookbackDays)
-    | where ActionType in ("ClickAllowed","ClickedThrough")
-    | where Url has_any ("linkedin.com","lnkd.in")
-    | project ClickTime = Timestamp, AccountUpn, LinkedInUrl = Url, NetworkMessageId;
-DeviceNetworkEvents
-| where Timestamp > ago(LookbackDays)
-| where isnotempty(RemoteUrl)
-| where RemoteUrl has "cloudfront.net"
-| where RemoteUrl has_any ("login.microsoft","microsoftonline","office365","o365","outlook","m365","signin","sign-in","microsoft-login","auth")
-| where InitiatingProcessFileName in~ ("msedge.exe","chrome.exe","firefox.exe","brave.exe","opera.exe","arc.exe")
-| where isnotempty(InitiatingProcessAccountUpn)
-| join kind=inner LinkedInClicks on $left.InitiatingProcessAccountUpn == $right.AccountUpn
-| where Timestamp between (ClickTime .. ClickTime + CorrelationWindowMin)
-| project ClickTime, NavTime = Timestamp,
-          DelaySec = datetime_diff('second', Timestamp, ClickTime),
-          DeviceName,
-          AccountUpn = InitiatingProcessAccountUpn,
-          Browser = InitiatingProcessFileName,
-          LinkedInUrl, CloudFrontUrl = RemoteUrl, RemoteIP
-| order by ClickTime desc
-```
-
-### Browser navigation to *.cloudfront.net Microsoft 365 login lookalike
-
-`UC_100_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count, values(Web.url) as urls, min(_time) as first_seen, max(_time) as last_seen
-  from datamodel=Web
-  where Web.url="*cloudfront.net*"
-    AND (Web.url="*login.microsoft*" OR Web.url="*microsoftonline*" OR Web.url="*office365*" OR Web.url="*o365*" OR Web.url="*outlook*" OR Web.url="*signin*" OR Web.url="*sign-in*" OR Web.url="*m365*" OR Web.url="*microsoft-login*")
-  by Web.user, Web.src, Web.dest
-| `drop_dm_object_name(Web)`
-| convert ctime(first_seen), ctime(last_seen)
-| sort -last_seen
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where isnotempty(RemoteUrl)
-| where RemoteUrl has "cloudfront.net"
-| where RemoteUrl has_any ("login.microsoft","microsoftonline","office365","o365","outlook","m365","signin","sign-in","microsoft-login")
-| where InitiatingProcessFileName in~ ("msedge.exe","chrome.exe","firefox.exe","brave.exe","opera.exe","arc.exe")
-| where InitiatingProcessAccountName !endswith "$"
-| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), HitCount = count(),
-            Browsers = make_set(InitiatingProcessFileName, 5),
-            SampleUrl = any(RemoteUrl)
-            by DeviceName, AccountUpn = InitiatingProcessAccountUpn, RemoteIP
-| order by LastSeen desc
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -360,4 +278,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
