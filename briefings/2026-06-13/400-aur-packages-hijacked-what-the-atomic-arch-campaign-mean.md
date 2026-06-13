@@ -21,16 +21,20 @@ Back to Blog Threat Intel 400+ AUR Packages Hijacked: What the “Atomic Arch”
 - **T1071** — Application Layer Protocol
 - **T1195.001** — Compromise Software Dependencies and Development Tools
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1204.002** — User Execution: Malicious File
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
 - **T1552.001** — Unsecured Credentials: Credentials In Files
 - **T1552.004** — Unsecured Credentials: Private Keys
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1567.002** — Exfiltration to Cloud Storage
-- **T1105** — Ingress Tool Transfer
-- **T1053.003** — Scheduled Task/Job: Cron
-- **T1543.002** — Create or Modify System Process: Systemd Service
-- **T1546.004** — Event Triggered Execution: Unix Shell Configuration Modification
+- **T1555.003** — Credentials from Password Stores: Credentials from Web Browsers
+- **T1567.002** — Exfiltration Over Web Service: Exfiltration to Cloud Storage
+- **T1041** — Exfiltration Over C2 Channel
 - **T1014** — Rootkit
+- **T1547** — Boot or Logon Autostart Execution
+- **T1548** — Abuse Elevation Control Mechanism
+- **T1053.003** — Scheduled Task/Job: Cron
+- **T1547.013** — Boot or Logon Autostart Execution: XDG Autostart Entries
+- **T1037.004** — Boot or Logon Initialization Scripts: RC Scripts
 
 ## Kill chain phases observed
 
@@ -38,92 +42,132 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### AUR helper (makepkg/pacman/yay/paru) spawns npm install of atomic-lockfile or js-digest
+### Atomic Arch — AUR helper spawns npm/node installing atomic-lockfile or js-digest
 
-`UC_5_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_5_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("makepkg","pacman","yay","paru","pikaur","trizen","aurman") Processes.process_name IN ("npm","node","npx","yarn","pnpm") (Processes.process="*atomic-lockfile*" OR Processes.process="*js-digest*") by Processes.dest Processes.process_name Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("makepkg","pacman","yay","paru","trizen","pikaur","aurman") AND Processes.process_name IN ("npm","node","npx") AND (Processes.process LIKE "%atomic-lockfile%" OR Processes.process LIKE "%js-digest%") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("makepkg","pacman","yay","paru","pikaur","trizen","aurman")
-| where FileName in~ ("npm","node","npx","yarn","pnpm")
+| where InitiatingProcessFileName in~ ("makepkg","pacman","yay","paru","trizen","pikaur","aurman")
+| where FileName in~ ("npm","node","npx")
 | where ProcessCommandLine has_any ("atomic-lockfile","js-digest")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Credential store / SSH key / cloud-secret access by descendants of pacman or makepkg
+### Atomic Arch — pacman/makepkg/npm process tree egress to temp.sh or github.com/fardewoak
 
-`UC_5_4` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.file_name) as files values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/.ssh/id_*" OR Filesystem.file_path="*/.ssh/known_hosts*" OR Filesystem.file_path="*/.aws/credentials*" OR Filesystem.file_path="*/.npmrc*" OR Filesystem.file_path="*/.config/gh/*" OR Filesystem.file_path="*/.docker/config.json*" OR Filesystem.file_path="*cookies.sqlite*" OR Filesystem.file_path="*/Login Data*") Filesystem.process_name IN ("npm","node","npx","rustc","cargo") by Filesystem.dest Filesystem.process_name Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FolderPath has_any ("/.ssh/","/.aws/credentials","/.npmrc","/.config/gh/","/.docker/config.json","/.config/Slack/","/.config/discord/","/.mozilla/firefox/","/.config/google-chrome/","Login Data","cookies.sqlite")
-   or FileName in~ ("id_rsa","id_ed25519","id_ecdsa","known_hosts","credentials")
-| where InitiatingProcessFileName in~ ("npm","node","npx","yarn","pnpm","rustc","cargo")
-   or InitiatingProcessParentFileName in~ ("makepkg","pacman","yay","paru","pikaur","trizen","aurman")
-   or InitiatingProcessCommandLine has_any ("atomic-lockfile","js-digest")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, FolderPath, FileName, ActionType
-| order by Timestamp desc
-```
-
-### Network egress from Arch build/install context to temp.sh or github.com/fardewoak/nodejs-argo
-
-`UC_5_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_5_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_host) as hosts values(All_Traffic.dest_ip) as ips values(All_Traffic.url) as urls values(All_Traffic.app) as app values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host="temp.sh" OR All_Traffic.url="*github.com/fardewoak/nodejs-argo*" OR All_Traffic.url="*temp.sh*") (All_Traffic.app IN ("npm","node","npx","makepkg","pacman","yay","paru","curl","wget","rustc","cargo") OR All_Traffic.app="*") by All_Traffic.src All_Traffic.app
-| `drop_dm_object_name(All_Traffic)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="temp.sh" OR All_Traffic.url LIKE "%temp.sh%" OR All_Traffic.url LIKE "%github.com/fardewoak%") AND All_Traffic.app IN ("makepkg","pacman","yay","paru","trizen","pikaur","aurman","npm","node","curl","wget","git") by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest All_Traffic.url | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where RemoteUrl has_any ("temp.sh","github.com/fardewoak/nodejs-argo")
-   or RemoteUrl endswith ".temp.sh"
-| where InitiatingProcessFileName in~ ("makepkg","pacman","yay","paru","pikaur","trizen","aurman","npm","node","npx","rustc","cargo","bash","sh","curl","wget")
-   or InitiatingProcessParentFileName in~ ("makepkg","pacman","yay","paru","npm","node")
-   or InitiatingProcessCommandLine has_any ("atomic-lockfile","js-digest")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| where RemoteUrl has_any ("temp.sh","fardewoak")
+| where InitiatingProcessFileName in~ ("makepkg","pacman","yay","paru","trizen","pikaur","aurman","npm","node","npx","curl","wget","git")
+    or InitiatingProcessParentFileName in~ ("makepkg","pacman","yay","paru","trizen","pikaur","aurman")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
-### Persistence file writes (cron, systemd unit, shell rc) by AUR install descendants
+### Atomic Arch — non-browser process reading SSH, npm, docker, and cloud credential
 
-`UC_5_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as proc values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/etc/cron*" OR Filesystem.file_path="*/var/spool/cron/*" OR Filesystem.file_path="*/etc/systemd/system/*" OR Filesystem.file_path="*/usr/lib/systemd/system/*" OR Filesystem.file_path="*/.bashrc" OR Filesystem.file_path="*/.bash_profile" OR Filesystem.file_path="*/.profile" OR Filesystem.file_path="*/.zshrc" OR Filesystem.file_path="*/.config/systemd/user/*" OR Filesystem.file_path="*/sys/fs/bpf/*") (Filesystem.process_name IN ("npm","node","npx","rustc","cargo","bash","sh","makepkg","pacman","yay","paru") OR Filesystem.action="created") by Filesystem.dest Filesystem.process_name Filesystem.file_path
-| `drop_dm_object_name(Filesystem)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path LIKE "%/.ssh/id_%" OR Filesystem.file_path LIKE "%/.ssh/known_hosts%" OR Filesystem.file_path LIKE "%/.npmrc%" OR Filesystem.file_path LIKE "%/.docker/config.json%" OR Filesystem.file_path LIKE "%/.aws/credentials%" OR Filesystem.file_path LIKE "%/.config/gh/%" OR Filesystem.file_path LIKE "%/.config/google-chrome/%Cookies%" OR Filesystem.file_path LIKE "%/.mozilla/firefox/%cookies.sqlite%" OR Filesystem.file_path LIKE "%/.config/Slack/%" OR Filesystem.file_path LIKE "%/.config/discord/%") AND NOT Filesystem.process_name IN ("ssh","sshd","ssh-agent","scp","rsync","git","gpg","gpg-agent","npm","node","docker","aws","gh","firefox","firefox-bin","chrome","google-chrome","chromium","brave","slack","discord","teams","gnome-keyring-daemon") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.process_path Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileModified")
-| where FolderPath has_any ("/etc/cron.d/","/etc/cron.daily/","/etc/cron.hourly/","/var/spool/cron/","/etc/systemd/system/","/usr/lib/systemd/system/","/.bashrc","/.bash_profile","/.profile","/.zshrc","/.config/systemd/user/","/sys/fs/bpf/")
-| where InitiatingProcessFileName in~ ("npm","node","npx","rustc","cargo","bash","sh","makepkg","pacman")
-   or InitiatingProcessParentFileName in~ ("makepkg","pacman","yay","paru","pikaur","trizen","aurman","npm","node")
-   or InitiatingProcessCommandLine has_any ("atomic-lockfile","js-digest")
+| where FolderPath has_any ("/.ssh/","/.npmrc","/.docker/config.json","/.aws/credentials","/.config/gh/","/.config/google-chrome/","/.mozilla/firefox/","/.config/Slack/","/.config/discord/","/.config/Teams/")
+| where ActionType in ("FileOpened","FileAccessed","FileRead","FileCreated","FileModified")
+| where not (InitiatingProcessFileName in~ ("ssh","sshd","ssh-agent","ssh-keygen","scp","rsync","git","gpg","gpg-agent","npm","node","docker","aws","gh","firefox","firefox-bin","chrome","google-chrome","chromium","brave","slack","discord","teams","gnome-keyring-daemon"))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName, FolderPath, FileName, ActionType
+| order by Timestamp desc
+```
+
+### Atomic Arch — HTTPS POST/PUT exfil to temp.sh from non-browser process
+
+`UC_5_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url LIKE "%temp.sh%" AND Web.http_method IN ("POST","PUT") AND NOT (Web.user_agent LIKE "%Mozilla%" OR Web.user_agent LIKE "%Firefox%" OR Web.user_agent LIKE "%Chrome%" OR Web.user_agent LIKE "%Safari%" OR Web.user_agent LIKE "%Edge%") by Web.src Web.user Web.url Web.http_method Web.user_agent Web.bytes_out | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has "temp.sh"
+| where RemoteIPType == "Public"
+| where not (InitiatingProcessFileName in~ ("firefox","firefox-bin","chrome","google-chrome","chromium","brave","msedge","opera","vivaldi","safari"))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteIP, RemotePort, RemoteUrl
+| order by Timestamp desc
+```
+
+### Atomic Arch — eBPF program load on Arch build host (rootkit persistence)
+
+`UC_5_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process_name="bpftool" OR Processes.process LIKE "%BPF_PROG_LOAD%" OR Processes.process LIKE "%/sys/fs/bpf/%") AND Processes.parent_process_name IN ("makepkg","pacman","yay","paru","npm","node","sh","bash") AND Processes.user="root" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+union
+( DeviceProcessEvents
+  | where Timestamp > ago(7d)
+  | where (FileName =~ "bpftool" or ProcessCommandLine has_any ("BPF_PROG_LOAD","bpf_prog_load","/sys/fs/bpf/"))
+  | where InitiatingProcessParentFileName in~ ("makepkg","pacman","yay","paru","npm","node")
+  | where ProcessIntegrityLevel == "System" or AccountName == "root"
+  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessParentFileName
+),
+( DeviceFileEvents
+  | where Timestamp > ago(7d)
+  | where FolderPath startswith "/sys/fs/bpf/"
+  | where ActionType in ("FileCreated","FileModified")
+  | where InitiatingProcessParentFileName in~ ("makepkg","pacman","yay","paru","npm","node")
+  | project Timestamp, DeviceName, AccountName, FileName=FileName, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessParentFileName
+)
+| order by Timestamp desc
+```
+
+### Atomic Arch — AUR install writes cron/systemd/shell-rc persistence on dev or CI host
+
+`UC_5_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path LIKE "%/etc/cron%" OR Filesystem.file_path LIKE "%/etc/systemd/system/%" OR Filesystem.file_path LIKE "%/.config/systemd/user/%" OR Filesystem.file_path LIKE "%/etc/profile.d/%" OR Filesystem.file_path LIKE "%/.bashrc%" OR Filesystem.file_path LIKE "%/.zshrc%" OR Filesystem.file_path LIKE "%/.bash_profile%" OR Filesystem.file_path LIKE "%/.profile%" OR Filesystem.file_path LIKE "%/etc/crontab%" OR Filesystem.file_path LIKE "%/var/spool/cron/%") AND Filesystem.action IN ("created","modified") AND (Filesystem.process_name IN ("makepkg","pacman","yay","paru","trizen","pikaur","aurman","npm","node","sh","bash") OR Filesystem.parent_process_name IN ("makepkg","pacman","yay","paru","trizen","pikaur","aurman")) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.parent_process_name Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where FolderPath has_any ("/etc/cron","/etc/systemd/system/","/.config/systemd/user/","/etc/profile.d/","/.bashrc","/.zshrc","/.bash_profile","/.profile","/etc/crontab","/var/spool/cron/","/.config/autostart/")
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where InitiatingProcessParentFileName in~ ("makepkg","pacman","yay","paru","trizen","pikaur","aurman") 
+    or InitiatingProcessFileName in~ ("makepkg","pacman","yay","paru","npm","node","npx")
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, FolderPath, FileName, ActionType
 | order by Timestamp desc
 ```
@@ -191,4 +235,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -34,12 +34,135 @@ As the queue grows, a cre…
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
+- **T1656** — Impersonation
+- **T1078.004** — Cloud Accounts
+- **T1621** — Multi-Factor Authentication Request Generation
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Inbound LinkedIn-themed lure with URL chain terminating at AWS CloudFront M365 decoy
+
+`UC_101_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let LinkedInLureTokens = dynamic(["linkedin","lnkd.in","drive","document","shared file","docusign","review"]);
+let PhishHostSuffix = dynamic([".cloudfront.net",".amazonaws.com"]);
+let Inbound = EmailEvents
+    | where Timestamp > ago(LookbackDays)
+    | where EmailDirection == "Inbound" and DeliveryAction == "Delivered"
+    | where Subject has_any (LinkedInLureTokens)
+         or SenderDisplayName has "linkedin"
+         or SenderFromAddress has "linkedin"
+    | project NetworkMessageId, EmailTime = Timestamp, Subject,
+              SenderFromAddress, SenderMailFromDomain, RecipientEmailAddress;
+let UrlsToCloudFront = EmailUrlInfo
+    | where Timestamp > ago(LookbackDays)
+    | where UrlDomain endswith ".cloudfront.net" or Url has_any (PhishHostSuffix)
+    | project NetworkMessageId, Url, UrlDomain;
+let ChainedClicks = UrlClickEvents
+    | where Timestamp > ago(LookbackDays)
+    | where ActionType in ("ClickAllowed","ClickedThrough")
+    | where Url has_any (PhishHostSuffix) or Url has "cloudfront"
+    | project ClickTime = Timestamp, NetworkMessageId, AccountUpn, Url, IPAddress, UrlChain;
+Inbound
+| join kind=inner UrlsToCloudFront on NetworkMessageId
+| join kind=inner ChainedClicks on NetworkMessageId
+| where RecipientEmailAddress !endswith "gmail.com"
+    and RecipientEmailAddress !endswith "yahoo.com"
+    and RecipientEmailAddress !endswith "outlook.com"
+    and RecipientEmailAddress !endswith "hotmail.com"   // mirror the campaign's corporate-only filter
+| project ClickTime, EmailTime,
+          DelaySec = datetime_diff('second', ClickTime, EmailTime),
+          AccountUpn, RecipientEmailAddress,
+          SenderFromAddress, SenderMailFromDomain,
+          Subject, Url, UrlDomain, UrlChain, IPAddress
+| order by ClickTime desc
+```
+
+### Successful M365 sign-in from new IP within 10 min of click to CloudFront-hosted URL
+
+`UC_101_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let WindowMin = 10m;
+let Clicks = UrlClickEvents
+    | where Timestamp > ago(LookbackDays)
+    | where ActionType in ("ClickAllowed","ClickedThrough")
+    | where Url has "cloudfront" or Url has ".amazonaws.com"
+    | project ClickTime = Timestamp, AccountUpn, ClickIP = IPAddress, Url;
+let BaselineIPs = AADSignInEventsBeta
+    | where Timestamp between (ago(30d) .. ago(LookbackDays))
+    | where ErrorCode == 0
+    | summarize by AccountUpn, IPAddress;
+AADSignInEventsBeta
+| where Timestamp > ago(LookbackDays)
+| where ErrorCode == 0
+| where Application has_any ("Office 365","Microsoft 365","Office Home","OfficeHome")
+| join kind=inner Clicks on AccountUpn
+| where Timestamp between (ClickTime .. ClickTime + WindowMin)
+| join kind=leftanti BaselineIPs on AccountUpn, IPAddress
+| project SignInTime = Timestamp, ClickTime,
+          DelayMin = datetime_diff('minute', Timestamp, ClickTime),
+          AccountUpn, IPAddress, Country, City, UserAgent,
+          Application, Url
+| order by SignInTime desc
+```
+
+### From / Reply-To header domain mismatch with Reply-To on free webmail
+
+`UC_101_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let FreeWebmail = dynamic(["gmail.com","yahoo.com","outlook.com","hotmail.com","proton.me","protonmail.com","yandex.com","mail.ru","gmx.com","aol.com","icloud.com","zoho.com"]);
+EmailEvents
+| where Timestamp > ago(LookbackDays)
+| where EmailDirection == "Inbound" and DeliveryAction == "Delivered"
+| extend ReplyTo = tostring(parse_json(tostring(AdditionalFields)).ReplyTo)
+| extend ReplyToDomain = tolower(extract(@"@([A-Za-z0-9.\-]+)", 1, ReplyTo))
+| where isnotempty(ReplyToDomain)
+| where ReplyToDomain != tolower(SenderFromDomain)
+| where ReplyToDomain in (FreeWebmail)
+| where SenderFromDomain !in (FreeWebmail)   // From is a brand/corp domain, Reply-To is free mail
+| project Timestamp, NetworkMessageId, SenderDisplayName,
+          SenderFromAddress, SenderFromDomain,
+          ReplyTo, ReplyToDomain,
+          RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation
+| order by Timestamp desc
+```
+
+### MFA push fatigue: denied MFA followed by successful AAD sign-in within 2 minutes
+
+`UC_101_10` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Defender KQL:**
+```kql
+let LookbackDays = 7d;
+let WindowSec = 120;
+let MfaDenied = AADSignInEventsBeta
+    | where Timestamp > ago(LookbackDays)
+    | where ErrorCode in (50158, 500121, 50097, 50074)   // MFA challenge denied / not satisfied / device auth required
+    | project DenyTime = Timestamp, AccountUpn, IPAddress, Application;
+AADSignInEventsBeta
+| where Timestamp > ago(LookbackDays)
+| where ErrorCode == 0
+| join kind=inner MfaDenied on AccountUpn, IPAddress
+| where Timestamp between (DenyTime .. DenyTime + WindowSec * 1s)
+| project SuccessTime = Timestamp, DenyTime,
+          DelaySec = datetime_diff('second', Timestamp, DenyTime),
+          AccountUpn, IPAddress, Country, City, UserAgent,
+          Application, AppDisplayName
+| order by SuccessTime desc
+```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -278,4 +401,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 11 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
