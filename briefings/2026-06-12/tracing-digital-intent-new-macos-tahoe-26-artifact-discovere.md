@@ -40,11 +40,9 @@ Forensic examiners are constantly hunting for data that reveals not just what ha
 - **T1195.002** — Compromise Software Supply Chain
 - **T1005** — Data from Local System
 - **T1083** — File and Directory Discovery
-- **T1217** — Browser Information Discovery
+- **T1070** — Indicator Removal
 - **T1070.004** — Indicator Removal: File Deletion
-- **T1485** — Data Destruction
-- **T1564** — Hide Artifacts
-- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1565.001** — Stored Data Manipulation
 
 ## Kill chain phases observed
 
@@ -52,107 +50,42 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Non-Apple process accessing macOS Tahoe 26 App.MenuItem Biome stream
+### Suspicious read / archive of macOS Biome App.MenuItem restricted stream
 
 `UC_10_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime
-  from datamodel=Endpoint.Processes
-  where (Processes.process="*Biome/streams/restricted/App.MenuItem*"
-         OR Processes.process="*App.MenuItem/local*")
-        AND NOT (Processes.parent_process_name IN ("biomesyncd","BiomeAgent","CommCenter","duetexpertd","BiomeDaemon"))
-        AND NOT (Processes.process_name IN ("biomesyncd","BiomeAgent","mds","mds_stores"))
-  by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort -lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*/Library/Biome/streams/restricted/App.MenuItem*" OR Processes.process="*ccl_segb_cli*" OR Processes.process="*App.MenuItem/local*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where NOT (process_name IN ("biomed","launchd","BiomeAgent")) | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-// macOS Tahoe 26 — process touches the App.MenuItem Biome stream
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where ProcessCommandLine has_any ("Biome/streams/restricted/App.MenuItem", "App.MenuItem/local")
-| where InitiatingProcessFileName !in~ ("biomesyncd","BiomeAgent","CommCenter","duetexpertd","BiomeDaemon","mds","mds_stores")
-| where FileName !in~ ("biomesyncd","BiomeAgent","mds_stores")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
-          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName, SHA256
+| where Timestamp > ago(7d)
+| where ProcessCommandLine has_any ("/Library/Biome/streams/restricted/App.MenuItem", "ccl_segb_cli", "App.MenuItem/local")
+| where InitiatingProcessFileName !in~ ("biomed", "BiomeAgent", "launchd")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Anti-forensic deletion or truncation of macOS App.MenuItem Biome stream
+### Tampering with macOS Biome App.MenuItem stream (anti-forensics)
 
-`UC_10_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_10_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime
-  from datamodel=Endpoint.Filesystem
-  where Filesystem.file_path="*Library/Biome/streams/restricted/App.MenuItem*"
-        AND Filesystem.action IN ("deleted","modified","renamed","created")
-        AND NOT (Filesystem.process_name IN ("biomesyncd","BiomeAgent","duetexpertd","BiomeDaemon","mds_stores","BiomeDataStoreCleanup"))
-  by Filesystem.dest Filesystem.user Filesystem.action Filesystem.file_path Filesystem.process_name Filesystem.process_path
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort -lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*/Library/Biome/streams/restricted/App.MenuItem/*" Filesystem.action IN ("deleted","modified","renamed") by Filesystem.dest Filesystem.user Filesystem.action Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where NOT (process_name IN ("biomed","launchd","BiomeAgent","runningboardd")) | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-// Anti-forensic touch on the App.MenuItem Biome stream
 DeviceFileEvents
-| where Timestamp > ago(14d)
-| where FolderPath has "Library/Biome/streams/restricted/App.MenuItem"
-| where ActionType in ("FileDeleted","FileModified","FileRenamed","FileCreated")
-| where InitiatingProcessFileName !in~ ("biomesyncd","BiomeAgent","duetexpertd","BiomeDaemon","mds_stores","BiomeDataStoreCleanup","Installer","softwareupdated")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, PreviousFileName,
-          InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessCommandLine, InitiatingProcessAccountName,
-          InitiatingProcessParentFileName, InitiatingProcessSHA256
-| order by Timestamp desc
-```
-
-### ccl-segb forensic parser executed on production macOS endpoint
-
-`UC_10_9` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime
-  from datamodel=Endpoint.Processes
-  where (Processes.process="*ccl_segb_cli.py*"
-         OR Processes.process="*ccl-segb*"
-         OR Processes.process="*ccl_segb*"
-         OR Processes.process="*ccl_segb_cli *")
-        AND Processes.process_name IN ("python","python3","pythonw.exe","python.exe","python3.exe","sh","bash","zsh")
-  by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| eval is_dfir_host=if(match(dest,"(?i)^(dfir|ir|forensic|analyst)-"),1,0)
-| where is_dfir_host=0
-| sort -lastTime
-```
-
-**Defender KQL:**
-```kql
-// ccl-segb (Unit 42-referenced Biome SEGB parser) running on non-DFIR endpoint
-let DfirHosts = dynamic([]); // tenant-specific — populate with DFIR/IR workstation names
-DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where ProcessCommandLine has_any ("ccl_segb_cli.py","ccl-segb","ccl_segb")
-| where InitiatingProcessFileName in~ ("python","python3","pythonw.exe","python.exe","python3.exe","sh","bash","zsh")
-      or FileName in~ ("python","python3","python.exe","python3.exe")
-| where not(DeviceName has_any (DfirHosts))
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
-          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName, SHA256
+| where FolderPath has "/Library/Biome/streams/restricted/App.MenuItem"
+| where ActionType in ("FileDeleted", "FileRenamed", "FileModified")
+| where InitiatingProcessFileName !in~ ("biomed", "BiomeAgent", "launchd", "runningboardd")
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, PreviousFolderPath, PreviousFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
@@ -433,4 +366,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
