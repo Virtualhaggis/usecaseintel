@@ -69,7 +69,7 @@ _(none detected from narrative keywords)_
 
 ### Bun runtime spawned via node→shell→bun chain from npm install (Miasma dropper)
 
-`UC_138_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_139_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### GitHub Actions Runner.Worker process-memory secret scraping (Miasma payload)
 
-`UC_138_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_139_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceProcessEvents
 
 ### Cloud IMDS credential harvesting from node/bun process on CI runner
 
-`UC_138_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_139_14` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceNetworkEvents
 
 ### Passwordless sudo rule dropped into /etc/sudoers.d (Miasma privilege escalation)
 
-`UC_138_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_139_15` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,7 +163,7 @@ union
 
 ### Security vendor domain blackhole written to /etc/hosts from non-admin process
 
-`UC_138_16` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_139_16` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -192,7 +192,7 @@ union
 
 ### Public GitHub repo creation matching Miasma 'adjective-creature-N' exfil pattern
 
-`UC_138_17` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_139_17` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -218,7 +218,7 @@ CloudAppEvents
 
 ### Worm-injected .github/setup.js commit with 'chore: update dependencies [skip ci]' message
 
-`UC_138_18` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_139_18` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -242,7 +242,7 @@ CloudAppEvents
 
 ### Destructive 'rm -rf ~' or Miasma honeytoken tripwire from node/bun process tree
 
-`UC_138_19` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_139_19` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -609,7 +609,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Preinstall to persistence: Inside the Red Hat npm Miasma credential-stealing cam
 
-`UC_138_11` · phase: **exploit** · confidence: **High**
+`UC_139_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### vpmdhaj typosquat npm package install via preinstall hook (node child of npm)
 
-`UC_182_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_183_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceProcessEvents
 
 ### payload.bin written under node_modules by node process
 
-`UC_182_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_183_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceFileEvents
 
 ### Outbound HTTP beacon to vpmdhaj C2 (aab.sportsontheweb.net)
 
-`UC_182_14` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_183_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ DeviceNetworkEvents
 
 ### __DAEMONIZED=1 environment marker on spawned process
 
-`UC_182_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_183_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +162,7 @@ DeviceProcessEvents
 
 ### Cloud metadata service hit (IMDSv2 / ECS) from node process under node_modules
 
-`UC_182_16` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_183_16` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -186,7 +186,7 @@ DeviceNetworkEvents
 
 ### Bun runtime download from github.com/oven-sh during npm install (Gen-2 loader)
 
-`UC_182_17` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_183_17` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -548,7 +548,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Typosquatted npm packages used to steal cloud and CI/CD secrets
 
-`UC_182_11` · phase: **exploit** · confidence: **High**
+`UC_183_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

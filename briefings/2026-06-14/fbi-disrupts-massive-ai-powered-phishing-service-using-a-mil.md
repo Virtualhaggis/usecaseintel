@@ -11,12 +11,8 @@ By Bill Toulas
 June 14, 2026
 10:36 AM
 0 
-
-
 In a coordinated effort, the FBI, working with Google and Black Lotus Labs, has dismantled a massive Chinese phishing-as-a-service operation called Outsider Enterprise with thousands of phishing websites used to steal credit card data and passwords.
-
-
-The cybercrime operation used AI and distributed phishing kits for campaigns impersonating various trusted brands in texts sent t…
+The cybercrime operation used AI and distributed phishing kits for campaigns impersonating various trusted brands in texts sent through A…
 
 ## Indicators of Compromise (high-fidelity only)
 

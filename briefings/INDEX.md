@@ -11,6 +11,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-14
 - [152 chrome extensions hide ad tracking and fake google searc](./2026-06-14/152-chrome-extensions-hide-ad-tracking-and-fake-google-searc.md)
 - [fbi disrupts massive ai powered phishing service using a mil](./2026-06-14/fbi-disrupts-massive-ai-powered-phishing-service-using-a-mil.md)
+- [when a government pulls an ai model what the fable 5 and myt](./2026-06-14/when-a-government-pulls-an-ai-model-what-the-fable-5-and-myt.md)
 
 ## 2026-06-13
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-13/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
@@ -2188,7 +2189,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [snyk partner speaks series true devsecops with snyk and dyna](./2023-06-08/snyk-partner-speaks-series-true-devsecops-with-snyk-and-dyna.md)
 
 ## 2023-06-07
-- [high profile aws breaches how to avoid them](./2023-06-07/high-profile-aws-breaches-how-to-avoid-them.md)
 - [reduce risk to your supply chain with a software bill of mat](./2023-06-07/reduce-risk-to-your-supply-chain-with-a-software-bill-of-mat.md)
 - [snyk learn now aligns with the nist nice workforce framework](./2023-06-07/snyk-learn-now-aligns-with-the-nist-nice-workforce-framework.md)
 - [snyk welcomes enso enabling security leaders to scale their ](./2023-06-07/snyk-welcomes-enso-enabling-security-leaders-to-scale-their-.md)
