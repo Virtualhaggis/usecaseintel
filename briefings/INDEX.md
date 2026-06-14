@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1195 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1194 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -29,7 +29,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 48150 budibase workspace scoped build](./2026-06-12/ghsa-critical-cve-2026-48150-budibase-workspace-scoped-build.md)
 - [google sues chinese smishing network accused of using gemini](./2026-06-12/google-sues-chinese-smishing-network-accused-of-using-gemini.md)
 - [hackers abuse legitimate ninjaone rmm software to bypass tra](./2026-06-12/hackers-abuse-legitimate-ninjaone-rmm-software-to-bypass-tra.md)
-- [hackers use onyxc2 malware as a service to steal credentials](./2026-06-12/hackers-use-onyxc2-malware-as-a-service-to-steal-credentials.md)
 - [interpol operation takes down sniper dz phishing platform ar](./2026-06-12/interpol-operation-takes-down-sniper-dz-phishing-platform-ar.md)
 - [langgraph flaw chain exposes self hosted ai agents to remote](./2026-06-12/langgraph-flaw-chain-exposes-self-hosted-ai-agents-to-remote.md)
 - [malicious npm campaign steals ssh keys api tokens cloud cred](./2026-06-12/malicious-npm-campaign-steals-ssh-keys-api-tokens-cloud-cred.md)
