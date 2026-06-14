@@ -29,14 +29,14 @@ The vulnerability, tracked as CVE-2026-20253 , is rated 9.8 on the CVSS scoring 
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1592.004** — Gather Victim Host Information: Client Configurations
-- **T1595.002** — Active Scanning: Vulnerability Scanning
+- **T1505.003** — Server Software Component: Web Shell
+- **T1059** — Command and Scripting Interpreter
+- **T1071** — Application Layer Protocol
 - **T1059.001** — Command and Scripting Interpreter: PowerShell
 - **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1505.003** — Server Software Component: Web Shell
-- **T1574** — Hijack Execution Flow
-- **T1592.002** — Gather Victim Host Information: Software
+- **T1592.004** — Gather Victim Host Information: Client Configurations
+- **T1595.002** — Active Scanning: Vulnerability Scanning
 
 ## Kill chain phases observed
 
@@ -44,120 +44,150 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Unauthenticated POST to Splunk PostgreSQL sidecar /v1/postgres/recovery/* (CVE-2026-20253)
+### Unauthenticated HTTP request to Splunk PostgreSQL recovery endpoints (CVE-2026-20253)
 
 `UC_9_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as http_method values(Web.status) as status values(Web.user_agent) as ua values(Web.dest) as dest from datamodel=Web.Web where (Web.url="*/v1/postgres/recovery/backup*" OR Web.url="*/v1/postgres/recovery/restore*") by Web.src Web.dest _time span=1h | `drop_dm_object_name(Web)` | where status>=200 AND status<400 | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src values(Web.user) as user values(Web.status) as status values(Web.http_method) as http_method from datamodel=Web where (Web.url="*/v1/postgres/recovery/backup*" OR Web.url="*/v1/postgres/recovery/restore*") by Web.dest Web.url
+| `drop_dm_object_name(Web)`
+| where status=200 OR status=201 OR status=204
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where RemoteUrl has_any ("/v1/postgres/recovery/backup", "/v1/postgres/recovery/restore") or AdditionalFields has_any ("/v1/postgres/recovery/backup", "/v1/postgres/recovery/restore")
-| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, LocalIP, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine, AdditionalFields
+| where ActionType in ("InboundConnectionAccepted", "HttpConnectionInspected")
+| where LocalPort in (8000, 8089)
+| where RemoteUrl has_any ("/v1/postgres/recovery/backup", "/v1/postgres/recovery/restore")
+| project Timestamp, DeviceName, LocalIP, LocalPort, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Pre-auth reconnaissance probes against Splunk version / app endpoints
+### Splunk Secure Gateway modular-input Python script overwritten (CVE-2026-20253 RCE)
 
-`UC_9_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count values(Web.url) as urls values(Web.user_agent) as ua values(Web.status) as status values(Web.http_method) as method dc(Web.url) as distinct_urls from datamodel=Web.Web where (Web.url="*/services/server/info*" OR Web.url="*/en-US/account/login*" OR Web.url="*/en-US/app/*" OR Web.url="*/services/properties*") by Web.src Web.dest _time span=10m | `drop_dm_object_name(Web)` | where distinct_urls>=3 OR (ua="*curl*" OR ua="*python*" OR ua="*go-http*" OR ua="*nuclei*" OR ua="*nikto*") | sort - _time
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemotePort in (8000, 8089)
-| where RemoteUrl has_any ("/services/server/info", "/en-US/account/login", "/en-US/app/", "/services/properties")
-| summarize PathCount = dcount(RemoteUrl), Paths = make_set(RemoteUrl, 25), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, RemoteIP, InitiatingProcessFileName
-| where PathCount >= 3
-| order by LastSeen desc
-```
-
-### splunkd / splunk process spawning shell interpreters (post-exploitation RCE)
-
-`UC_9_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_9_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name="splunkd.exe" OR Processes.parent_process_name="splunkd" OR Processes.parent_process_name="splunk.exe") (Processes.process_name="cmd.exe" OR Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe" OR Processes.process_name="bash" OR Processes.process_name="sh" OR Processes.process_name="dash" OR Processes.process_name="python" OR Processes.process_name="python3" OR Processes.process_name="perl") by Processes.dest Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("splunkd.exe", "splunkd", "splunk.exe", "splunk")
-| where FileName in~ ("cmd.exe", "powershell.exe", "pwsh.exe", "bash", "sh", "dash", "zsh", "python", "python3", "perl", "ruby", "nc", "ncat", "socat", "curl", "wget")
-| where not (InitiatingProcessFolderPath has "\\splunk\\etc\\apps\\" and ProcessCommandLine has_any ("modular_input", "scripted_input"))
-| where ProcessCommandLine has_any ("-c ", "-e ", "/bin/", "base64", "-EncodedCommand", "IEX", "DownloadString", "/dev/tcp", "socket", "reverse", "bind")
-   or InitiatingProcessParentFileName !in~ ("splunkd.exe","splunk.exe","systemd")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc
-```
-
-### Suspicious file write to Splunk app Python script (ssg_enable_modular_input.py overwrite)
-
-`UC_9_10` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name values(Filesystem.user) as user values(Filesystem.action) as action from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/splunk/etc/apps/*/bin/*.py" OR Filesystem.file_path="*\\Splunk\\etc\\apps\\*\\bin\\*.py" OR Filesystem.file_path="*ssg_enable_modular_input.py*") (Filesystem.action=created OR Filesystem.action=modified OR Filesystem.action=write) by Filesystem.dest Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | where NOT (process_name="splunkd*" OR process_name="splunk" OR process_name="yum" OR process_name="dpkg" OR process_name="msiexec.exe") | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.user) as user values(Filesystem.action) as action from datamodel=Endpoint.Filesystem where Filesystem.file_path="*splunk_secure_gateway/bin/ssg_enable_modular_input.py*" AND Filesystem.action IN ("created","modified","written","renamed") by Filesystem.dest Filesystem.file_path Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
+| where FolderPath has "splunk_secure_gateway" and FileName =~ "ssg_enable_modular_input.py"
 | where ActionType in ("FileCreated", "FileModified", "FileRenamed")
-| where FolderPath has_any ("/opt/splunk/etc/apps/", "\\Splunk\\etc\\apps\\")
-| where FileName endswith ".py"
-   or FileName =~ "ssg_enable_modular_input.py"
-| where InitiatingProcessFileName !in~ ("splunkd", "splunkd.exe", "splunk", "splunk.exe", "msiexec.exe", "yum", "dnf", "dpkg", "apt", "rpm", "tar")
-   or InitiatingProcessFileName in~ ("postgres", "postgres.exe", "postmaster", "postmaster.exe")
-| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
+| where not (InitiatingProcessFileName in~ ("splunk-update", "yum", "dnf", "apt", "rpm", "dpkg", "msiexec.exe", "tar", "git", "ansible", "puppet"))
+| project Timestamp, DeviceName, FolderPath, FileName, PreviousFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
 | order by Timestamp desc
 ```
 
-### Vulnerable Splunk Enterprise version inventory (CVE-2026-20253 exposure)
+### Splunk-spawned pg_dump or pg_restore with external connection string (CVE-2026-20253)
 
-`UC_9_11` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_9_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| inputlookup vulnerable_splunk_versions.csv
-| eval cve="CVE-2026-20253"
-| append [
-    | rest /services/server/info splunk_server=*
-    | rename splunk_server as host, version as splunk_version
-    | eval major=mvindex(split(splunk_version,"."),0), minor=mvindex(split(splunk_version,"."),1), patch=mvindex(split(splunk_version,"."),2)
-    | where (major=10 AND minor=0 AND patch<=6) OR (major=10 AND minor=2 AND patch<=3)
-    | eval cve="CVE-2026-20253", fixed_in=if(minor==0,"10.0.7","10.2.4")
-  ]
-| table host splunk_version cve fixed_in
-| sort splunk_version
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("splunkd","splunkd.exe","splunk","splunk.exe") AND Processes.process_name IN ("pg_dump","pg_dump.exe","pg_restore","pg_restore.exe") by Processes.dest Processes.process_name
+| `drop_dm_object_name(Processes)`
+| search cmdline IN ("*host=*","*-h *","*passfile=*","*.pgpass*") NOT cmdline IN ("*host=127.0.0.1*","*host=localhost*")
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceTvmSoftwareInventory
-| where SoftwareVendor =~ "splunk"
-| where SoftwareName has "splunk"
-| extend ver_parts = split(SoftwareVersion, ".")
-| extend major = toint(ver_parts[0]), minor = toint(ver_parts[1]), patch = toint(ver_parts[2])
-| where (major == 10 and minor == 0 and patch <= 6) or (major == 10 and minor == 2 and patch <= 3)
-| extend CveId = "CVE-2026-20253", RecommendedFix = iff(minor == 0, "10.0.7", "10.2.4")
-| project DeviceId, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, RecommendedFix
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, IsInternetFacing, PublicIP) by DeviceId) on DeviceId
-| order by IsInternetFacing desc, DeviceName asc
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("splunkd", "splunkd.exe", "splunk", "splunk.exe")
+| where FileName in~ ("pg_dump", "pg_dump.exe", "pg_restore", "pg_restore.exe")
+| extend cmd = tolower(ProcessCommandLine)
+| where cmd has_any ("host=", "-h ", "passfile=", ".pgpass")
+| where not (cmd has_any ("host=127.0.0.1", "host=localhost", "-h 127.0.0.1", "-h localhost"))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### Splunk host outbound TCP/5432 to non-RFC1918 destination (attacker PostgreSQL connection)
+
+`UC_9_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest) as dest values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=5432 AND All_Traffic.dest_category!="internal" AND All_Traffic.app IN ("splunkd","splunkd.exe","splunk","postgres","pg_dump","pg_restore") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemotePort == 5432
+| where RemoteIPType == "Public"
+| where InitiatingProcessFileName in~ ("splunkd", "splunkd.exe", "splunk", "splunk.exe", "pg_dump", "pg_dump.exe", "pg_restore", "pg_restore.exe", "postgres", "postgres.exe")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### Splunkd spawning shell or interpreter (CVE-2026-20253 RCE outcome)
+
+`UC_9_11` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("splunkd","splunkd.exe","splunk","splunk.exe") AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","bash","sh","dash","zsh","python","python3","python.exe","perl","ruby") by Processes.dest Processes.process_name Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("splunkd", "splunkd.exe", "splunk", "splunk.exe")
+| where FileName in~ ("cmd.exe", "powershell.exe", "pwsh.exe", "bash", "sh", "dash", "zsh", "python", "python3", "python.exe", "perl", "ruby")
+| extend cmd = tolower(ProcessCommandLine)
+| where (FileName in~ ("cmd.exe", "powershell.exe", "pwsh.exe"))
+   or (cmd has_any ("-c ", "-e ", "/dev/tcp", "base64", "iex", "downloadstring", "bash -i", "sh -i", " nc ", "ncat", "perl -e", "python -c", "python3 -c", "ruby -e"))
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, ProcessIntegrityLevel
+| order by Timestamp desc
+```
+
+### Unauthenticated Splunk version fingerprinting probes (recon for CVE-2026-20253)
+
+`UC_9_12` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(Web.user_agent) as ua values(Web.url) as urls dc(Web.url) as url_count from datamodel=Web where (Web.url="*/services/server/info*" OR Web.url="*/en-US/account/login*" OR Web.url="*/en-US/static/build*") AND Web.status=200 by Web.src Web.dest
+| `drop_dm_object_name(Web)`
+| search url_count>=2 OR ua IN ("curl/*","python-requests/*","Go-http-client/*","Nmap*","nuclei*")
+| sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("InboundConnectionAccepted", "HttpConnectionInspected")
+| where LocalPort in (8000, 8089)
+| where RemoteUrl has_any ("/services/server/info", "/en-US/account/login", "/en-US/static/build")
+| where RemoteIPType == "Public"
+| summarize ProbeCount = count(), Paths = make_set(RemoteUrl), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, RemoteIP
+| where ProbeCount >= 3 or array_length(Paths) >= 2
+| order by FirstSeen desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -402,4 +432,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 13 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -26,18 +26,20 @@ Dubbed "Operation Highland," the intrusion is attributed to the Velvet Ant cyber
 - **T1003** — OS Credential Dumping
 - **T1190** — Exploit Public-Facing Application
 - **T1071** — Application Layer Protocol
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1090** — Proxy
+- **T1219** — Remote Access Software
 - **T1556.003** — Modify Authentication Process: Pluggable Authentication Modules
-- **T1554** — Compromise Host Software Binary
 - **T1556** — Modify Authentication Process
+- **T1554** — Compromise Host Software Binary
+- **T1040** — Network Sniffing
 - **T1056.001** — Input Capture: Keylogging
-- **T1572** — Protocol Tunneling
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 - **T1090.001** — Internal Proxy
+- **T1572** — Protocol Tunneling
+- **T1090.003** — Multi-hop Proxy
 - **T1021.004** — Remote Services: SSH
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1543.002** — Create or Modify System Process: Systemd Service
-- **T1037.004** — Boot or Logon Initialization Scripts: RC Scripts
-- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
@@ -45,117 +47,141 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### pam_unix.so binary modification in /lib/security or /lib64/security
+### GS-Netcat reverse shell C2 to thc.org relay (Velvet Ant Operation Highland)
 
-`UC_7_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_3` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified","renamed") AND (Filesystem.file_path="*/lib/security/pam_*.so" OR Filesystem.file_path="*/lib64/security/pam_*.so" OR Filesystem.file_path="*/usr/lib/security/pam_*.so" OR Filesystem.file_path="*/usr/lib64/security/pam_*.so") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | where NOT (process_name IN ("dpkg","rpm","yum","dnf","apt-get","apt","zypper","pacman")) | convert ctime(firstTime), ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="thc.org" OR DNS.query="*.thc.org" OR DNS.query="gs.thc.org") by DNS.src DNS.query DNS.answer host
+| `drop_dm_object_name(DNS)`
+| append [| tstats summariesonly=t count from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_host="gs.thc.org" OR All_Traffic.dest_host="*.thc.org") by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port host | `drop_dm_object_name(All_Traffic)`]
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FolderPath has_any ("/lib/security/", "/lib64/security/", "/usr/lib/security/", "/usr/lib64/security/")
-| where FileName startswith "pam_" and FileName endswith ".so"
-| where ActionType in ("FileCreated", "FileModified", "FileRenamed")
-| where not(InitiatingProcessFileName in~ ("dpkg", "rpm", "yum", "dnf", "apt-get", "apt", "zypper", "pacman", "rpm-installd"))
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessParentFileName
+// Velvet Ant GS-Netcat relay C2 — hits on Linux endpoints with MDE
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl endswith "thc.org" or RemoteUrl =~ "gs.thc.org"
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemoteUrl, RemotePort, Protocol,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, InitiatingProcessSHA256
 | order by Timestamp desc
 ```
 
-### OpenSSH ssh/sshd/scp binary replacement on Linux endpoints
+### PAM module replacement in /lib*/security (Velvet Ant backdoored pam_unix.so)
 
 `UC_7_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified","renamed") AND Filesystem.file_path IN ("/usr/sbin/sshd","/usr/bin/ssh","/usr/bin/scp","/usr/bin/ssh-agent","/usr/bin/ssh-keygen","/usr/libexec/openssh/sftp-server") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.process_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | where NOT (process_name IN ("dpkg","rpm","yum","dnf","apt-get","apt","zypper","pacman")) | convert ctime(firstTime), ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/lib/security/pam_*.so" OR Filesystem.file_path="/lib64/security/pam_*.so" OR Filesystem.file_path="/lib/x86_64-linux-gnu/security/pam_*.so" OR Filesystem.file_path="/usr/lib/x86_64-linux-gnu/security/pam_*.so" OR Filesystem.file_path="/usr/lib64/security/pam_*.so") AND Filesystem.action IN ("created","modified","renamed") AND NOT (Filesystem.process_name IN ("dpkg","apt","apt-get","yum","dnf","rpm","zypper","pacman","unattended-upgrade","update-alternatives","snapd")) by host Filesystem.file_path Filesystem.file_name Filesystem.action Filesystem.process_name Filesystem.process Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
+// Velvet Ant pam_unix.so backdoor drop — sensor must be MDE for Linux
+let pkg_managers = dynamic(["dpkg","apt","apt-get","yum","dnf","rpm","zypper","pacman","unattended-upgrade","update-alternatives","snapd","snap"]);
 DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FolderPath in~ ("/usr/sbin/", "/usr/bin/", "/usr/libexec/openssh/")
-| where FileName in~ ("sshd", "ssh", "scp", "ssh-agent", "ssh-keygen", "sftp-server", "ssh-keyscan")
-| where ActionType in ("FileCreated", "FileModified", "FileRenamed")
-| where not(InitiatingProcessFileName in~ ("dpkg", "rpm", "yum", "dnf", "apt-get", "apt", "zypper", "pacman"))
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessParentFileName
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FolderPath has_any ("/lib/security/", "/lib64/security/", "/lib/x86_64-linux-gnu/security/", "/usr/lib/x86_64-linux-gnu/security/", "/usr/lib64/security/")
+| where FileName endswith ".so" and FileName startswith "pam_"
+| where InitiatingProcessFileName !in~ (pkg_managers)
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, FileSize,
+          InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
-### fcgiwrap spawning ssh/scp child for cross-segment HTTP-to-SSH bridge
+### OpenSSH binary replacement (ssh/sshd/scp) outside package manager (Velvet Ant trojanized SSH)
 
-`UC_7_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_7_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="fcgiwrap" AND Processes.process_name IN ("ssh","scp","sshpass","nc","ncat","socat","bash","sh","uptime") by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | convert ctime(firstTime), ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("/usr/sbin/sshd","/usr/sbin/ssh","/usr/bin/sshd","/usr/bin/ssh","/usr/bin/scp","/usr/local/sbin/sshd","/usr/local/bin/ssh","/usr/local/bin/scp","/bin/ssh","/sbin/sshd")) AND Filesystem.action IN ("created","modified","renamed","deleted") AND NOT (Filesystem.process_name IN ("dpkg","apt","apt-get","yum","dnf","rpm","zypper","pacman","unattended-upgrade","update-alternatives","snapd")) by host Filesystem.file_path Filesystem.action Filesystem.process_name Filesystem.process Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName =~ "fcgiwrap"
-   or InitiatingProcessParentFileName =~ "fcgiwrap"
-| where FileName in~ ("ssh", "scp", "sshpass", "nc", "ncat", "socat", "bash", "sh", "uptime")
-   or ProcessCommandLine has_any ("ssh ", "scp ", "sshpass")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName,
-          SHA256
+// Velvet Ant trojanized ssh/sshd/scp swap
+let pkg_managers = dynamic(["dpkg","apt","apt-get","yum","dnf","rpm","zypper","pacman","unattended-upgrade","update-alternatives","snapd","snap"]);
+let ssh_binaries = dynamic(["ssh","sshd","scp","ssh-agent","ssh-keysign"]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FolderPath in~ ("/usr/sbin/","/usr/bin/","/bin/","/sbin/","/usr/local/sbin/","/usr/local/bin/")
+| where FileName in~ (ssh_binaries)
+| where InitiatingProcessFileName !in~ (pkg_managers)
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, FileSize,
+          InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### smbd daemon executed from non-standard path masquerading as Samba
+### smbd process masquerading as Samba daemon (Velvet Ant SOCKS5 proxy)
 
 `UC_7_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="smbd" OR Processes.process="*smbd*-D*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where NOT (process_path IN ("/usr/sbin/smbd","/usr/local/sbin/smbd","/opt/samba/sbin/smbd")) OR NOT (parent_process_name IN ("systemd","init","smbd")) | convert ctime(firstTime), ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="smbd" OR Processes.process="smbd -D*" OR Processes.process="*/smbd -D*") by host Processes.user Processes.process_name Processes.process Processes.process_path Processes.parent_process_name Processes.parent_process Processes.parent_process_path Processes.dest
+| `drop_dm_object_name(Processes)`
+| eval canonical_path = if(match(process_path, "^(/usr/sbin|/usr/local/sbin|/opt/samba/sbin)/smbd$"), 1, 0)
+| eval canonical_parent = if(match(parent_process_name, "^(systemd|init|samba|smbd)$"), 1, 0)
+| where canonical_path=0 OR canonical_parent=0
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
+// Velvet Ant SOCKS5 proxy masquerading as smbd -D
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName =~ "smbd" or ProcessCommandLine matches regex @"(?i)\bsmbd\s+-D\b"
-| where not(FolderPath in~ ("/usr/sbin/", "/usr/local/sbin/", "/opt/samba/sbin/"))
-   or not(InitiatingProcessFileName in~ ("systemd", "init", "smbd"))
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName, SHA256
+| where Timestamp > ago(30d)
+| where FileName =~ "smbd" or ProcessCommandLine matches regex @"(^|[\s/])smbd\s+(-D|--daemon)\b"
+| where (FolderPath !startswith "/usr/sbin/" and FolderPath !startswith "/usr/local/sbin/" and FolderPath !startswith "/opt/samba/")
+    or InitiatingProcessFileName !in~ ("systemd","init","samba","smbd")
+| project Timestamp, DeviceName, AccountName, FolderPath, FileName, ProcessCommandLine, SHA256,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
-### New or modified systemd unit ExecStart pointing outside system binary paths
+### fcgiwrap spawning ssh or 'uptime' binary (Velvet Ant air-gap pivot bridge)
 
-`UC_7_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified","renamed") AND (Filesystem.file_path="/etc/systemd/system/*.service" OR Filesystem.file_path="/usr/lib/systemd/system/*.service" OR Filesystem.file_path="/lib/systemd/system/*.service" OR Filesystem.file_path="/etc/rc.local" OR Filesystem.file_path="/etc/profile.d/*" OR Filesystem.file_path="/etc/init.d/*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where NOT (process_name IN ("dpkg","rpm","yum","dnf","apt-get","apt","zypper","pacman","systemctl","systemd-sysusers")) | convert ctime(firstTime), ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="fcgiwrap" OR Processes.parent_process_name="php-fpm") AND (Processes.process_name IN ("ssh","scp","nc","ncat","socat","bash","sh","dash","uptime","python","python3","perl")) by host Processes.user Processes.process_name Processes.process Processes.process_path Processes.parent_process_name Processes.parent_process
+| `drop_dm_object_name(Processes)`
+| where NOT (process_name="uptime" AND process_path="/usr/bin/uptime")
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FolderPath has_any ("/etc/systemd/system/", "/usr/lib/systemd/system/", "/lib/systemd/system/", "/etc/init.d/", "/etc/profile.d/")
-   or FileName in~ ("rc.local")
-| where ActionType in ("FileCreated", "FileModified", "FileRenamed")
-| where not(InitiatingProcessFileName in~ ("dpkg", "rpm", "yum", "dnf", "apt-get", "apt", "zypper", "pacman", "systemctl", "systemd-sysusers", "systemd-tmpfiles"))
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessParentFileName
+// Velvet Ant nginx → fcgiwrap → ssh/uptime air-gap bridge
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("fcgiwrap","php-fpm","php-cgi")
+| where FileName in~ ("ssh","scp","nc","ncat","socat","bash","sh","dash","uptime","python","python3","perl")
+    or FolderPath has_any ("/tmp/","/var/tmp/","/dev/shm/","/var/www/")
+| where not (FileName =~ "uptime" and FolderPath in~ ("/usr/bin/","/bin/"))
+| project Timestamp, DeviceName, AccountName, FolderPath, FileName, ProcessCommandLine, SHA256,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, InitiatingProcessParentId
 | order by Timestamp desc
 ```
 
@@ -204,4 +230,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 8 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 8 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
