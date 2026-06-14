@@ -149,7 +149,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — TeamPCP deploys CanisterWorm on NPM following Trivy compromise
 
-`UC_443_5` · phase: **exploit** · confidence: **High**
+`UC_444_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

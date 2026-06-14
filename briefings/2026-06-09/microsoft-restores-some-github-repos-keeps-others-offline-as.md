@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Miasma C2 / IOC domain resolution: check.git-service.com, t.m-kosche.com, git-service.com
 
-`UC_80_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_81_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceNetworkEvents
 
 ### Miasma/Shai-Hulud typosquat PyPI package installation (rsquests, tlask, langchain-core-mcp, durabletask)
 
-`UC_80_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_81_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceProcessEvents
 
 ### Miasma loader artifact written to Python site-packages: .pth, _index.js, .abi3.so
 
-`UC_80_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_81_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceFileEvents
 
 ### Bun or Node runtime spawned by Python package manager (Miasma stealer bootstrap)
 
-`UC_80_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_81_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceProcessEvents
 
 ### Miasma stealer payload SHA256 match on disk or in execution
 
-`UC_80_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_81_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -375,7 +375,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft Restores Some GitHub Repos, Keeps Others Offline as Miasma Probe Conti
 
-`UC_80_8` · phase: **exploit** · confidence: **High**
+`UC_81_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

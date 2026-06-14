@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1194 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1195 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-14
 - [152 chrome extensions hide ad tracking and fake google searc](./2026-06-14/152-chrome-extensions-hide-ad-tracking-and-fake-google-searc.md)
+- [fbi disrupts massive ai powered phishing service using a mil](./2026-06-14/fbi-disrupts-massive-ai-powered-phishing-service-using-a-mil.md)
 
 ## 2026-06-13
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-13/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
