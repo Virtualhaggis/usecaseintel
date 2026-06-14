@@ -1,12 +1,12 @@
 <article class="card" id="art-103" data-art-slug="2026-06-08-ghsa-critical-cve-2026-47430-cordova-plugin-inappbrowser-ios"
-  data-phases="actions,c2,exploit,install,recon,weapon" data-sev="crit"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190,T1528"
   data-sources="GitHub Security Advisories"
   data-platforms="def,sent,sigma,spl"
   data-splunk-cats="application,cloud"
   data-targets="azure"
-  data-uc-count="3" data-llm-uc-count="1"
-  data-search="[GHSA / CRITICAL] CVE-2026-47430: Cordova Plugin InAppBrowser: iOS: Arbitrary Cordova callback IDs can be dispatched without validation from InAppBrowser WebViews. Cordova Plugin InAppBrowser: iOS: Arbitrary Cordova callback IDs can be dispatched without validation from InAppBrowser WebViews. CVE-2026-47430 T1190 T1528 [LLM] Vulnerable cordova-plugin-inappbrowser (CVE-2026-47430) on managed iOS / mobile assets Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant">
+  data-uc-count="4" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-47430: Cordova Plugin InAppBrowser: iOS: Arbitrary Cordova callback IDs can be dispatched without validation from InAppBrowser WebViews. Cordova Plugin InAppBrowser: iOS: Arbitrary Cordova callback IDs can be dispatched without validation from InAppBrowser WebViews. CVE-2026-47430 T1190 T1528 [LLM] Vulnerable cordova-plugin-inappbrowser (CVE-2026-47430) on managed iOS devices [LLM] Asset hunt: cordova-plugin-inappbrowser presence in iOS app inventory (CVE-2026-47430 scoping) Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-08-ghsa-critical-cve-2026-47430-cordova-plugin-inappbrowser-ios" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -15,9 +15,9 @@
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-06-08</span>
-    <span>3 use cases</span>
+    <span>4 use cases</span>
     <span>2 techniques</span>
-    <span>5 kill-chain phases detected</span>
+    <span>4 kill-chain phases detected</span>
   </div>
   <p class="summary">Cordova Plugin InAppBrowser: iOS: Arbitrary Cordova callback IDs can be dispatched without validation from InAppBrowser WebViews.</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-47430</span></div>
@@ -33,10 +33,10 @@
   <div class="name">Reconnaissance</div>
   <div class="marker">Detected</div>
 </div>
-<div class="kc-cell hit">
+<div class="kc-cell ">
   <div class="num">Phase 2</div>
   <div class="name">Weaponization</div>
-  <div class="marker">Detected</div>
+  <div class="marker">—</div>
 </div>
 <div class="kc-cell ">
   <div class="num">Phase 3</div>
@@ -63,69 +63,107 @@
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] Vulnerable cordova-plugin-inappbrowser (CVE-2026-47430) on managed iOS / mobile assets</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Asset hunt: cordova-plugin-inappbrowser presence in iOS app inventory (CVE-2026-47430 scoping) · Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Vulnerable cordova-plugin-inappbrowser (CVE-2026-47430) on managed iOS devices</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ OAuth consent / suspicious app grant</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="62b14451d7" data-platforms="def,sent,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="7920d0f4af" data-platforms="def,sent,spl" data-targets="" open>
   <summary>
-    <span class="uc-title">Vulnerable cordova-plugin-inappbrowser (CVE-2026-47430) on managed iOS / mobile assets</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
+    <span class="uc-title">Vulnerable cordova-plugin-inappbrowser (CVE-2026-47430) on managed iOS devices</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="62b14451d7" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="7920d0f4af" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts for managed devices reporting CVE-2026-47430 — vulnerable versions (3.1.0 through 6.0.0) of the iOS cordova-plugin-inappbrowser shipped inside in-house or third-party Cordova/Ionic mobile apps. This is an asset-prioritisation hunt; the article is a disclosure advisory with no IOCs, in-the-wild payload, or attacker infrastructure that endpoint/SIEM telemetry could match on.
+    <div class="uc-desc">Identifies devices carrying cordova-plugin-inappbrowser 3.1.0 through 6.0.0 — the vulnerable range for the iOS CDVWKInAppBrowser.m callback-ID validation flaw that lets attacker-controlled WebView content fire any pending Cordova plugin callback. Pure asset/vulnerability hunt — feeds the patch worklist.
 
-Rationale: Article gives exact affected range (3.1.0–6.0.0), exact fixed version (6.0.1), and CVE-2026-47430. No IOCs, no in-the-wild payloads, no attacker infrastructure exist — so a behavioural endpoint/network detection would be a fabricated template. The honest detection is asset discovery: surface managed iOS devices carrying the vulnerable package so they can be prioritised for patching. TVM tables are the right pivot because they&#x27;re the only place embedded library CVEs surface in M365 Defender / Sentinel.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-q42j-x8rq-pjg6
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-47430</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Gather Victim Host Information: Software">T1592.002</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerability_Management.Vulnerabilities</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Newly patched device that hasn&#x27;t re-reported to TVM yet still listed as vulnerable (lag of up to 24h)</li><li>In-house Cordova app rebuilt against 6.0.1 but TVM still recognising the older bundle ID until next scan</li><li>Third-party MDM-distributed apps where the version string is unparseable and matches the regex spuriously</li><li>Test/dev iOS devices in an MDM tenant that intentionally hold older app versions for regression testing</li><li>TVM mis-attributing the npm package version to a wrapping app&#x27;s own version string</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SoftwareName has &quot;cordova-plugin-inappbrowser&quot; and SoftwareVersion !startswith &quot;6.0.1&quot; and SoftwareVersion !startswith &quot;6.1&quot; and SoftwareVersion !startswith &quot;7.&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: Pull DeviceName + LoggedOnUsers for each hit. Confirm the host actually runs an app shipping cordova-plugin-inappbrowser via MDM/Intune app inventory (TVM occasionally flags packages bundled in dead code). Cross-reference with the corporate app catalogue to identify whether the affected app is internally developed or third-party. Step 2 — Contain: For internally-developed apps, open a ticket with the mobile dev team to bump the dependency to ≥6.0.1 and ship a forced-update release; for third-party apps, check the vendor&#x27;s advisory channel for a patched build and use Intune/Jamf to force-upgrade or block the older version via app protection policy. Step 3 — Hunt: For any device that opens InAppBrowser to OAuth or deep-link redirect targets, review recent UrlClickEvents / SigninLogs for the affected users in the last 30 days for forged-callback indicators (anomalous OAuth consent grants, unexpected account.upn changes on the user&#x27;s mailbox/contact lists).</div></details>
+Rationale: Article names CVE-2026-47430 explicitly and specifies the vulnerable range cordova-plugin-inappbrowser 3.1.0–6.0.0 (fixed in 6.0.1). The realistic detection surface for this client-side iOS Cordova flaw is asset/vulnerability inventory — WKWebView postMessage / commandDelegate sendPluginResult runtime telemetry isn&#x27;t shipped by Defender/Sentinel/Falcon/Datadog/CloudTrail. Hunt joins TVM vuln data to DeviceInfo so the output is a per-device patch list.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Lab/test iOS devices intentionally running outdated app builds for security research</li><li>Devices recently patched but pending the next TVM rescan (stale finding)</li><li>Forks of cordova-plugin-inappbrowser where the fix was backported in-house but the upstream version string was preserved</li><li>Enterprise-managed apps inside a planned maintenance window awaiting the scheduled upgrade</li><li>Apps vendoring the plugin under a renamed package — note this is an under-detection risk, not a true FP</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SoftwareVersion !startswith &quot;6.0.1&quot; and SoftwareVersion !startswith &quot;6.1&quot; and SoftwareVersion !startswith &quot;7.&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Triage: enumerate which iOS app on the device bundles the vulnerable plugin and confirm whether it opens third-party URLs (OAuth redirects, marketing deep-links, payment WebViews) inside InAppBrowser — that&#x27;s the exploitable surface. Contain: push the rebuilt iOS app bundling cordova-plugin-inappbrowser &gt;= 6.0.1 via MDM (Intune/Jamf); for apps that broker credential/permission grants (Camera, Contacts, File, Geolocation), force-revoke active OAuth refresh tokens for affected users until the patched app version lands. Hunt: review AAD SigninLogs and CloudAppEvents for the same user pool over the prior 30 days for unfamiliar OAuth consent grants, unexpected token refreshes from iOS clients, or activity timing that doesn&#x27;t match normal UX flow — these would be the post-exploitation tells of a spoofed plugin callback.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-103-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-103-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-103-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Hunt managed iOS/mobile devices reporting CVE-2026-47430 in TVM
-let TargetCve = &quot;CVE-2026-47430&quot;;
-DeviceTvmSoftwareVulnerabilities
-| where CveId =~ TargetCve
-   or (SoftwareName has &quot;cordova-plugin-inappbrowser&quot; and SoftwareVersion matches regex @&quot;^(3\.[1-9]|[3-5]\.\d+|6\.0\.0)&quot;)
+    <div class="tab-content active" id="art-103-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(7d)
+| where CveId == &quot;CVE-2026-47430&quot;
 | join kind=leftouter (
     DeviceInfo
-    | summarize arg_max(Timestamp, OSPlatform, OSVersion, DeviceType, IsInternetFacing, LoggedOnUsers) by DeviceId
+    | summarize arg_max(Timestamp, OSPlatform, OSVersion, DeviceName, PublicIP, LoggedOnUsers) by DeviceId
   ) on DeviceId
-| project Timestamp, DeviceName, DeviceId, OSPlatform, OSVersion, DeviceType,
-          SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel,
-          RecommendedSecurityUpdate, IsInternetFacing, LoggedOnUsers
-| extend AffectedRange = &quot;3.1.0 - 6.0.0&quot;, FixedVersion = &quot;6.0.1&quot;
-| order by VulnerabilitySeverityLevel asc, DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel: same TVM-backed hunt for CVE-2026-47430 on managed mobile assets
-let TargetCve = &quot;CVE-2026-47430&quot;;
-DeviceTvmSoftwareVulnerabilities
+| project Timestamp, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, LoggedOnUsers
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(7d)
-| where CveId =~ TargetCve
-   or (SoftwareName has &quot;cordova-plugin-inappbrowser&quot; and SoftwareVersion matches regex @&quot;^(3\.[1-9]|[3-5]\.\d+|6\.0\.0)&quot;)
+| where CveId == &quot;CVE-2026-47430&quot;
 | join kind=leftouter (
     DeviceInfo
-    | summarize arg_max(TimeGenerated, OSPlatform, OSVersion, DeviceType, IsInternetFacing, LoggedOnUsers) by DeviceId
+    | summarize arg_max(TimeGenerated, OSPlatform, OSVersion, DeviceName, PublicIP, LoggedOnUsers) by DeviceId
   ) on DeviceId
-| project TimeGenerated, DeviceName, DeviceId, OSPlatform, OSVersion, DeviceType,
-          SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel,
-          RecommendedSecurityUpdate, IsInternetFacing, LoggedOnUsers
-| extend AffectedRange = &quot;3.1.0 - 6.0.0&quot;, FixedVersion = &quot;6.0.1&quot;
+| project TimeGenerated, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-47430&quot; OR (Vulnerabilities.signature=&quot;cordova-plugin-inappbrowser&quot; AND Vulnerabilities.signature_version&lt;&quot;6.0.1&quot;) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.signature_version Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | eval affected_range=&quot;3.1.0 - 6.0.0&quot;, fixed_version=&quot;6.0.1&quot; | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-47430&quot; OR (Vulnerabilities.signature=&quot;cordova-plugin-inappbrowser&quot; AND Vulnerabilities.signature_version&lt;&quot;6.0.1&quot;) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.signature_version Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | eval affected_range=&quot;3.1.0 - 6.0.0&quot;, fixed_version=&quot;6.0.1&quot; | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-103-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-47430&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
+| `drop_dm_object_name(&quot;Vulnerabilities&quot;)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count</code></pre><pre class="spl-mode-body" id="art-103-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-47430&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
+| `drop_dm_object_name(&quot;Vulnerabilities&quot;)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - count</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ef436cf5c6" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset hunt: cordova-plugin-inappbrowser presence in iOS app inventory (CVE-2026-47430 scoping)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="ef436cf5c6" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Enumerates iOS devices whose software inventory references cordova-plugin-inappbrowser, regardless of whether TVM has yet mapped CVE-2026-47430. Useful when the per-CVE hunt undercounts (forks, vendored copies, MDM lag) or when scoping the blast radius before a coordinated mobile-app patch wave.
+
+Rationale: Article identifies the affected package by name (cordova-plugin-inappbrowser) and the vulnerable range (3.1.0 through 6.0.0, fixed in 6.0.1). Hunts software inventory directly rather than the CVE-mapped table so it catches: (a) devices where Defender TVM hasn&#x27;t propagated the new CVE-ID mapping yet, (b) internally forked copies of the plugin, (c) apps whose vendor string is non-standard. Output complements the CVE-id hunt — together they minimise both false negatives.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Gather Victim Host Information: Software">T1592.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Defender for Endpoint on iOS often does NOT enumerate JS plugins inside hybrid app bundles — this query may UNDERCOUNT rather than over-report; an empty result is &#x27;unknown coverage&#x27;, not &#x27;safe&#x27;</li><li>Aliased plugin names (e.g. &#x27;cordova-plugin-inappbrowserxwalk&#x27;) matching the substring but not actually carrying the vulnerable CDVWKInAppBrowser.m code</li><li>Forks that backported the fix while keeping the upstream version string</li><li>Internal dev/QA-only test apps not deployed to production fleets</li><li>Inventory snapshot lag — patched app already pushed but device hasn&#x27;t re-reported</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Triage: for each device+app pair, confirm whether the iOS app actually opens third-party URLs inside InAppBrowser (the exploitation precondition per the advisory). For internally developed apps, pull the Info.plist / config.xml via MDM to verify the bundled plugin version. Contain: prioritise apps that broker OAuth, payments, or permission-grant flows (Camera/Contacts/File/Geolocation plugin callbacks are explicitly called out in the advisory as spoofable); coordinate with mobile dev teams to rebuild and republish on cordova-plugin-inappbrowser &gt;= 6.0.1. Hunt: pivot to AAD SigninLogs / CloudAppEvents for the same user pool over the previous 60 days, looking for OAuth consent grants to unfamiliar apps, anomalous refresh-token activity from iOS clients, or geographically inconsistent sign-ins from the affected app — those would be the indicators of an already-exploited callback-spoofing attempt.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-103-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-103-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareInventory
+| where Timestamp &gt; ago(7d)
+| where OSPlatform == &quot;iOS&quot;
+| where SoftwareName has &quot;cordova-plugin-inappbrowser&quot;
+   or SoftwareName has &quot;cordova-inappbrowser&quot;
+   or (SoftwareName has &quot;inappbrowser&quot; and SoftwareVendor has &quot;apache&quot;)
+| extend VersionParts = split(SoftwareVersion, &quot;.&quot;)
+| extend Major = toint(VersionParts[0]), Minor = toint(VersionParts[1]), Patch = toint(VersionParts[2])
+| extend IsVulnerable = (Major &gt;= 3 and Major &lt; 6) or (Major == 6 and Minor == 0 and Patch == 0)
+| where IsVulnerable
+| project Timestamp, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, IsVulnerable
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(7d)
+| where SoftwareName has &quot;cordova&quot; and SoftwareName has &quot;inappbrowser&quot;
+| project TimeGenerated, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-103-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where (Vulnerabilities.signature=&quot;*cordova-plugin-inappbrowser*&quot; OR Vulnerabilities.signature=&quot;*InAppBrowser*&quot;) by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity
+| `drop_dm_object_name(&quot;Vulnerabilities&quot;)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-103-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where (Vulnerabilities.signature=&quot;*cordova-plugin-inappbrowser*&quot; OR Vulnerabilities.signature=&quot;*InAppBrowser*&quot;) by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity
+| `drop_dm_object_name(&quot;Vulnerabilities&quot;)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -143,11 +181,11 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc1-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-103-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-103-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -156,7 +194,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-103-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -168,12 +206,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-103-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-47430&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-103-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-103-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-47430&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -196,17 +234,17 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-103-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-103-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-103-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-103-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-103-uc2-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+    <div class="tab-content active" id="art-103-uc3-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
 | where Timestamp &gt; ago(7d)
 | where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
 | project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
           ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
+    <div class="tab-content" id="art-103-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
 AuditLogs
 | where TimeGenerated &gt; ago(7d)
 | where OperationName has &quot;Consent to application&quot;
@@ -217,7 +255,7 @@ AuditLogs
 | project TimeGenerated, OperationName, User, AppName, AppId, Result
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
+    <div class="tab-content" id="art-103-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
 status: experimental
 description: |
@@ -243,7 +281,7 @@ falsepositives:
     - Legitimate first-time SaaS app onboarding
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-103-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-103-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -252,7 +290,7 @@ level: medium
         &quot;Add OAuth2PermissionGrant&quot;,
         &quot;Add delegated permission grant&quot;)
     by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-103-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-103-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
