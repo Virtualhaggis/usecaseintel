@@ -1,0 +1,45 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_PACKAGE_INSTALL_LIFECYCLE_HOOK_SPAWNS_INTERPRETER_')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Package install lifecycle hook spawns interpreter that reads developer credential stores",
+        "description": "Detects the joint pattern across the June 2026 Miasma/Hades/Atomic-Arch/Laravel-Lang supply-chain wave: a package-manager process (npm, yarn, pnpm, composer, pip, makepkg/pacman, bun) directly spawning a generic interpreter (node, python, bash/sh, powershell, curl/wget, perl) whose command line references developer secret stores (~/.aws/credentials, .npmrc, .docker/config, .kube/config, GITHUB_TOKEN, NPM_TOKEN, VAULT_TOKEN, /proc/self/environ, id_rsa) or hands-off staging primitives (base64/atob/eval, outbound curl/wget, setup.pth bootstrap). The fortnight's articles \u2014 Snyk and StepSecurity on @redhat-cloud-services preinstall hooks, StepSecurity on the Laravel-Lang tag-rewrite, THN on Hades PyPI wheels auto-running a Bun stealer, and BleepingComputer/THN/StepSecurity on the 400+ AUR Atomic Arch packages \u2014 all share this exact preinstall/postinstall/post_install/makepkg \u2192 interpreter \u2192 credential-harvest chain regardless of registry. Kill-chain stages covered: delivery (registry pull), execution (interpreter spawn), credential access (secret-file read), and command-and-control (egress staging). Fires when the parent-child binary pair AND a credential-indicator token co-occur in one process record; does NOT fire on routine `npm install` that only runs native gyp builds, on pip wheels that don't shell out, or on package-manager-driven test suites that don't touch credential paths.\n\nRationale: Every article in the batch describes the same primitive \u2014 a package-manager install lifecycle hook directly spawning an interpreter that immediately enumerates developer secret stores and stages exfil \u2014 but each names a different registry (npm/PyPI/Composer/AUR) and different IOCs that will rotate within days. Anchoring on the parent-binary (package manager) \u2192 child-binary (interpreter) chain AND credential-token presence in the child cmdline keeps the detection IOC-free, schema-correct on every EDR we ship to, and catches future variants in the same Miasma/Hades/Atomic-Arch/Laravel-Lang family without re-tuning.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let Lookback = 24h;\nlet PkgManagers = dynamic([\"npm.exe\",\"npm\",\"yarn.exe\",\"yarn\",\"pnpm.exe\",\"pnpm\",\"composer.exe\",\"composer\",\"pip.exe\",\"pip\",\"pip3\",\"makepkg\",\"pacman\",\"yay\",\"paru\",\"bun.exe\",\"bun\",\"poetry\"]);\nlet Interpreters = dynamic([\"node.exe\",\"node\",\"python.exe\",\"python\",\"python3\",\"bash\",\"sh\",\"powershell.exe\",\"pwsh.exe\",\"pwsh\",\"curl.exe\",\"curl\",\"wget.exe\",\"wget\",\"perl\",\"ruby\"]);\nlet CredIndicators = dynamic([\".aws/credentials\",\".npmrc\",\".docker/config\",\".kube/config\",\"GITHUB_TOKEN\",\"NPM_TOKEN\",\"AWS_SECRET\",\"AWS_ACCESS_KEY\",\"/proc/self/environ\",\"id_rsa\",\"VAULT_TOKEN\",\"/etc/shadow\",\"CIRCLE_TOKEN\",\"setup.pth\",\"atob(\",\"base64\",\"eval(\"]);\nlet HookIndicators = dynamic([\"preinstall\",\"postinstall\",\"post_install\",\"run-script\",\"lifecycle\",\"makepkg\"]);\nDeviceProcessEvents\n| where TimeGenerated > ago(Lookback)\n| where InitiatingProcessFileName in~ (PkgManagers)\n| where FileName in~ (Interpreters)\n| where AccountName !endswith \"$\"\n| where ProcessCommandLine has_any (CredIndicators)\n     or ProcessCommandLine matches regex @\"(?i)(curl|wget)\\s+-[a-zA-Z]*\\s*https?://\"\n     or InitiatingProcessCommandLine has_any (HookIndicators)\n| project TimeGenerated, DeviceName, AccountName,\n          ParentCmd = InitiatingProcessCommandLine,\n          ChildImage = FolderPath,\n          ChildCmd = ProcessCommandLine,\n          SHA256\n| order by TimeGenerated desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1195.002",
+          "T1059.007",
+          "T1059.006",
+          "T1059.004",
+          "T1552.001",
+          "T1528",
+          "T1041",
+          "T1546"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_PACKAGE_INSTALL_LIFECYCLE_HOOK_SPAWNS_INTERPRETER_",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_INSTALL_LIFECYCLE_HOOK_SPAWNS_INTERPRETER_.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,43 @@
+title: "[WEEKLY] Developer/AI tooling runtime spawns shell or egress LOLBin (unauth RCE post-expl)"
+id: 6b170ba2-d6df-5829-9088-a77cce79d93c
+status: experimental
+description: "Detects the common post-exploitation footprint shared by the recent wave of unauthenticated RCE flaws in developer-/AI-adjacent web services: LiteLLM CVE-2026-42271 (CISA KEV, MCP test-endpoint command injection), Langflow CVE-2026-5027 (KEV, code-validate RCE), DbGate CVE-2026-47668 (JSON script runner functionName injection executed in a forked Node child), Phoenix Storybook CVE-2026-8467 (HEEx template injection over WebSocket), NASA AMMOS AIT-BSC CVE-2026-47731 (path-traversal write), Meta Ads MCP CVE-2026-48039 (unauth /mcp tool execution), and the WWBN AVideo YPTSocket stored DOM XSS \u2014 all of which land code execution inside a python/node/uvicorn/erlang/php-fpm interpreter that does NOT normally fork shells or call out to the internet. The UC fires when a service-tier interpreter parent (python/uvicorn/gunicorn/node/erl/beam.smp/php-fpm/ruby) spawns a shell or known download LOLBin (curl/wget/nc/powershell/certutil/bitsadmin) AND that child or its parent makes an outbound public network connection within five minutes. This spans exploit \u2192 install \u2192 c2 phases of the kill chain. It will NOT fire on normal API traffic, on developer workstations where a human launches `node` interactively (filtered via process-tree depth and user context), or on CI runners executing `npm`/`pip` against trusted registries; it WILL fire when a vulnerable AI/dev service runtime is coerced into running an attacker-chosen command, regardless of which CVE was used to get there."
+references:
+  - https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_DEVELOPER_AI_TOOLING_RUNTIME_SPAWNS_SHELL_OR_EGRES.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.exploit
+  - attack.t1190
+  - attack.t1059_004
+  - attack.t1059_001
+  - attack.t1059_006
+  - attack.t1059_007
+  - attack.t1071_001
+  - attack.t1105
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'python'
+      - 'python3'
+      - 'python.exe'
+      - 'uvicorn'
+      - 'gunicorn'
+      - 'node'
+      - 'node.exe'
+      - 'nodejs'
+      - 'erl'
+      - 'erl.exe'
+      - 'beam.smp'
+      - 'php-fpm'
+      - 'php-fpm7'
+      - 'php-fpm8'
+      - 'ruby'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

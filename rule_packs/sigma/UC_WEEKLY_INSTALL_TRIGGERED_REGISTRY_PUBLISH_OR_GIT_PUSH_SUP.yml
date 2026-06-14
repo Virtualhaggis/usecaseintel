@@ -1,0 +1,42 @@
+title: "[WEEKLY] Install-Triggered Registry Publish or Git Push (Supply-Chain Worm Self-Propagation)"
+id: b53447b9-6ed7-52a2-b189-5b7a3a0a6466
+status: experimental
+description: "Detects the self-propagation primitive shared by the Miasma / Shai-Hulud npm worm wave, the Laravel-Lang Composer tag-rewrite attack, the @cap-js/openapi advisory, and the Atomic Arch AUR campaign: a package-manager install lifecycle (npm/yarn/pnpm/composer/pip/makepkg) is followed within 30 minutes on the same endpoint by a registry publish (`npm publish`, `yarn publish`, `composer publish`) or a `git push` to a developer-owned repository, indicating that stolen npm/PAT/SSH credentials harvested by the install-time payload are being weaponised to push trojanised tags back into the supply chain. This fortnight's articles \u2014 StepSecurity (Laravel-Lang, Miasma binding.gyp, Microsoft Azure 73-repo Miasma, AUR Atomic Arch), Snyk (@redhat-cloud-services, Node-gyp worm), GHSA @cap-js/openapi, Aikido (EDR/proxy bypass), and The Hacker News (npm 12 disabling install scripts) \u2014 all describe the same execution-to-exfil-to-republish chain. It spans execution \u2192 credential access \u2192 exfiltration / lateral movement (the worm's hop). It fires when an interactive developer workstation or build agent emits a publish/push within the correlation window of an install on the same host; it will NOT fire on isolated registry mirrors, scheduled CI release jobs where the install host and publishing host differ, or on hosts that only `install` without ever publishing \u2014 those are the legitimate consumer pattern."
+references:
+  - https://clankerusecase.com/use_cases/actions/UC_WEEKLY_INSTALL_TRIGGERED_REGISTRY_PUBLISH_OR_GIT_PUSH_SUP.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.actions
+  - attack.t1195_002
+  - attack.t1546_016
+  - attack.t1552_001
+  - attack.t1528
+  - attack.t1567
+  - attack.t1098
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'npm.exe'
+      - 'node.exe'
+      - 'yarn.exe'
+      - 'pnpm.exe'
+      - 'composer.exe'
+      - 'composer.phar'
+      - 'pip.exe'
+      - 'pip3.exe'
+      - 'makepkg'
+      - 'pacman'
+      - 'yay'
+      - 'paru'
+      - 'git.exe'
+      - 'git'
+      - 'push'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

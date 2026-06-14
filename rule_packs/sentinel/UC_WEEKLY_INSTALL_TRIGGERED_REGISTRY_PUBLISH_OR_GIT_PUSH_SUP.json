@@ -1,0 +1,43 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_INSTALL_TRIGGERED_REGISTRY_PUBLISH_OR_GIT_PUSH_SUP')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Install-Triggered Registry Publish or Git Push (Supply-Chain Worm Self-Propagation)",
+        "description": "Detects the self-propagation primitive shared by the Miasma / Shai-Hulud npm worm wave, the Laravel-Lang Composer tag-rewrite attack, the @cap-js/openapi advisory, and the Atomic Arch AUR campaign: a package-manager install lifecycle (npm/yarn/pnpm/composer/pip/makepkg) is followed within 30 minutes on the same endpoint by a registry publish (`npm publish`, `yarn publish`, `composer publish`) or a `git push` to a developer-owned repository, indicating that stolen npm/PAT/SSH credentials harvested by the install-time payload are being weaponised to push trojanised tags back into the supply chain. This fortnight's articles \u2014 StepSecurity (Laravel-Lang, Miasma binding.gyp, Microsoft Azure 73-repo Miasma, AUR Atomic Arch), Snyk (@redhat-cloud-services, Node-gyp worm), GHSA @cap-js/openapi, Aikido (EDR/proxy bypass), and The Hacker News (npm 12 disabling install scripts) \u2014 all describe the same execution-to-exfil-to-republish chain. It spans execution \u2192 credential access \u2192 exfiltration / lateral movement (the worm's hop). It fires when an interactive developer workstation or build agent emits a publish/push within the correlation window of an install on the same host; it will NOT fire on isolated registry mirrors, scheduled CI release jobs where the install host and publishing host differ, or on hosts that only `install` without ever publishing \u2014 those are the legitimate consumer pattern.\n\nRationale: Every article in scope describes the same self-propagation primitive: install-time code execution harvests publish credentials, then re-uses them in-place to push the worm forward. Anchoring on the parent-process install command + same-host publish/push within a tight window catches that primitive regardless of which registry, OS, language, or specific IOC (binding.gyp, preinstall script, AUR PKGBUILD, Composer tag) the campaign rotates to next.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let LookbackDays = 7d;\nlet CorrelationWindowSec = 1800;\nlet InstallEvents = DeviceProcessEvents\n    | where TimeGenerated > ago(LookbackDays)\n    | where (FileName in~ (\"npm.exe\",\"node.exe\",\"yarn.exe\",\"pnpm.exe\",\"composer.exe\",\"composer.phar\",\"pip.exe\",\"pip3.exe\",\"makepkg\",\"pacman\",\"yay\",\"paru\"))\n        or ProcessCommandLine has_any (\"npm install\",\"npm i \",\"yarn install\",\"pnpm install\",\"composer install\",\"composer update\",\"pip install\",\"makepkg -si\",\"pacman -S \",\"yay -S \")\n    | project InstallTime = TimeGenerated, DeviceId, DeviceName, AccountName,\n              InstallFile = FileName, InstallCmd = ProcessCommandLine;\nlet PublishEvents = DeviceProcessEvents\n    | where TimeGenerated > ago(LookbackDays)\n    | where (FileName in~ (\"git.exe\",\"git\") and ProcessCommandLine has \"push\")\n        or ProcessCommandLine has_any (\"npm publish\",\"yarn publish\",\"pnpm publish\",\"composer publish\")\n        or (ProcessCommandLine has_any (\"curl\",\"wget\",\"Invoke-WebRequest\",\"Invoke-RestMethod\")\n            and ProcessCommandLine has_any (\"registry.npmjs.org/-/package\",\"api.github.com/repos\",\"packagist.org/api\"))\n    | project PublishTime = TimeGenerated, DeviceId, DeviceName, AccountName,\n              PublishFile = FileName, PublishCmd = ProcessCommandLine;\nInstallEvents\n| join kind=inner PublishEvents on DeviceId\n| where PublishTime between (InstallTime .. InstallTime + CorrelationWindowSec * 1s)\n| where not(AccountName endswith \"$\")\n| project InstallTime, PublishTime,\n          DelaySec = datetime_diff('second', PublishTime, InstallTime),\n          DeviceName, AccountName, InstallFile, InstallCmd, PublishFile, PublishCmd\n| order by InstallTime desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1195.002",
+          "T1546.016",
+          "T1552.001",
+          "T1528",
+          "T1567",
+          "T1098"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_INSTALL_TRIGGERED_REGISTRY_PUBLISH_OR_GIT_PUSH_SUP",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/actions/UC_WEEKLY_INSTALL_TRIGGERED_REGISTRY_PUBLISH_OR_GIT_PUSH_SUP.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

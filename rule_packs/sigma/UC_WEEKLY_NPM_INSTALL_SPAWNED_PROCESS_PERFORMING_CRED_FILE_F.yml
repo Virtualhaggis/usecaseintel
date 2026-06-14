@@ -1,0 +1,41 @@
+title: "[WEEKLY] npm-install spawned process performing cred-file fan-out plus IMDS reach"
+id: 72668445-d1a7-5574-aa08-80276e62bb75
+status: experimental
+description: "Detects the post-execution credential-harvest stage of an npm supply-chain compromise: a process spawned under an npm/node/yarn/pnpm or node-gyp (python) parent that, within 10 minutes on the same host, reads two or more distinct cloud/dev credential file paths (.aws/credentials, .ssh/id_rsa, .npmrc, .docker/config.json, ~/.config/gcloud, .kube/config, .azure/accessTokens.json) or contacts cloud instance metadata (169.254.169.254 / metadata.google.internal / metadata.azure.com). This fortnight the @redhat-cloud-services 'Miasma' campaign (Snyk 2026-06-01, StepSecurity 2026-06-02, Microsoft 2026-06-03, Unit 42 2026-06-02) and the self-propagating binding.gyp worm (Snyk + StepSecurity 2026-06-04, Aikido 2026-06-09) drop the same multi-cloud secret harvester targeting AWS/GCP/Azure/GitHub Actions/npm/Vault/SSH/wallet secrets; the npm v12 install-scripts disablement announcement (The Hacker News + Aikido 2026-06-11) and a fresh Web3/cloud wave (Cyber Security News 2026-06-12) confirm the harvest behaviour persists across hook variants (preinstall, postinstall, binding.gyp), making the fan-out the durable signal rather than any single lifecycle hook or IOC. Spans install \u2192 credential_access in the kill chain. Fires on developer workstations and CI/CD runners exhibiting the spawn-plus-fan-out pair; does NOT fire on plain `npm install` compiling native modules without touching cred paths, nor on a single legitimate aws-sdk IMDS lookup from a known package's runtime."
+references:
+  - https://clankerusecase.com/use_cases/actions/UC_WEEKLY_NPM_INSTALL_SPAWNED_PROCESS_PERFORMING_CRED_FILE_F.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.actions
+  - attack.t1195_002
+  - attack.t1059_007
+  - attack.t1552_001
+  - attack.t1552_005
+  - attack.t1528
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'npm'
+      - 'npm.exe'
+      - 'npm-cli.js'
+      - 'node'
+      - 'node.exe'
+      - 'yarn'
+      - 'yarn.exe'
+      - 'pnpm'
+      - 'pnpm.exe'
+      - 'python'
+      - 'python.exe'
+      - 'python3'
+      - 'python3.exe'
+      - 'powershell.exe'
+      - 'pwsh.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

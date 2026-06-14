@@ -1,0 +1,33 @@
+{
+  "rule_id": "usecaseintel-UC_WEEKLY_SUB_ADMIN_GRANTS_OWNER_ADMINISTRATOR_ROLE_THEN_GRA",
+  "name": "[WEEKLY] Sub-admin grants Owner/Administrator role then grantee signs in from a different source within 60 minutes",
+  "description": "This UC fires when a SaaS or cloud-IdP audit log records assignment of an Owner / Administrator / Global Administrator role (or equivalent privileged group membership) to a non-self principal, and that grantee subsequently authenticates from a different source IP than the grantor within 60 minutes. The fortnight's driver is CVE-2026-47413 in praisonai-platform \u2014 `POST /workspaces/{id}/members` was gated only by `require_workspace_member` and forwarded `user_id` + `role=owner` straight to the service layer with no caller-authority check, letting any workspace member promote an arbitrary account to Owner \u2014 and The Gentlemen ransomware report (Hacker News, 2026-06-11), which documents T1098.001 Additional Cloud Credentials and T1078 Valid Accounts as the standard post-T1190 handoff used to convert an exploit (CVE-2024-55591, CVE-2025-32433, CVE-2025-33073 and others) into durable identity persistence. The kill-chain spans exploit (the underlying authorization bypass or compromised account performing the grant), persistence (the grantee role itself), and privilege escalation (the grantee now operating with admin authority). It would fire on the praisonai exploit pattern, on a low-privilege Okta admin granting Super Admin, on an AssumedRole session attaching AdministratorAccess to a fresh IAM user, or on a compromised helpdesk account adding a user to Global Administrators. It would NOT fire on Global-Admin-grants-Global-Admin lifecycle changes (excluded by the privileged-grantor allowlist), on PIM activation where grantor == grantee, on documented break-glass / automation SPNs (excluded via `false_positive_filters`), or where the grant succeeds but no grantee sign-in lands within the 60-minute window.",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*created* OR *role* OR *user* OR *group_membership* OR *directory* OR *success* OR *owner* OR *admin* OR *administrator* OR *globaladministrator* OR *superuser* OR *root* OR *role\\\\* OR *owner\\\\* OR *admin\\\\*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.exploit",
+    "attack.T1098",
+    "attack.T1098.001",
+    "attack.T1078",
+    "attack.T1078.004",
+    "attack.T1068",
+    "attack.T1190",
+    "attack.T1556"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_SUB_ADMIN_GRANTS_OWNER_ADMINISTRATOR_ROLE_THEN_GRA.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

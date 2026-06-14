@@ -1,0 +1,43 @@
+title: "[WEEKLY] Developer interpreter / package-manager process exfiltrating tokens to public code-hosting / worker domains"
+id: d313aad1-e266-5cf0-b7be-c925f800ba33
+status: experimental
+description: "Detects the multi-stage Miasma/Hades supply-chain pattern: a package manager (npm/pip/yarn/pnpm/uv) or its lifecycle hook spawns a script interpreter (node, python, bash, powershell), which within a short window reads local credential/token stores (.npmrc, .pypirc, .aws/credentials, .git-credentials, .env, browser SQLite cookie DBs) and egresses to a non-registry public-code-hosting or anonymous-worker endpoint (raw.githubusercontent.com, gist.github.com, *.workers.dev, *.trycloudflare.com, *.web.app, transfer.sh, telegram bot API). The fortnight's Miasma compromise of @redhat-cloud-services (Microsoft 2026-06-03), the Hades PyPI splinter (THN 2026-06-09), the 73 Microsoft GitHub repos pulled offline (THN 2026-06-09), and the WinRAR CVE-2025-8088 stealer chains reaching the same Cloudflare-Worker dead-drops (THN 2026-06-09) all converge on this exact preinstall->cred-harvest->bidirectional-C2 chain. Spans Initial Access (T1195.002), Execution (T1059), Credential Access (T1552.001/T1555.003), Exfiltration (T1567/T1102.002). Fires when ALL three stages co-occur on one host within 10 minutes; does NOT fire on a clean `npm install` against a registry (registry.npmjs.org / pypi.org are excluded), on isolated cred-file reads by password managers, or on developer git pushes that don't follow a package-install event."
+references:
+  - https://clankerusecase.com/use_cases/install/UC_WEEKLY_DEVELOPER_INTERPRETER_PACKAGE_MANAGER_PROCESS_EXFI.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.install
+  - attack.t1195_002
+  - attack.t1059_007
+  - attack.t1059_006
+  - attack.t1552_001
+  - attack.t1555_003
+  - attack.t1567_001
+  - attack.t1102_002
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'npm.exe'
+      - 'npm-cli.js'
+      - 'yarn.exe'
+      - 'pnpm.exe'
+      - 'pip'
+      - 'pip.exe'
+      - 'pip3'
+      - 'pip3.exe'
+      - 'uv.exe'
+      - 'node.exe'
+      - 'node'
+      - 'python.exe'
+      - 'python'
+      - 'python3'
+      - 'powershell.exe'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

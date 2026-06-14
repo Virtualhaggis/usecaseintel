@@ -1,0 +1,44 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_DEVELOPER_INTERPRETER_PACKAGE_MANAGER_PROCESS_EXFI')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Developer interpreter / package-manager process exfiltrating tokens to public code-hosting / worker domains",
+        "description": "Detects the multi-stage Miasma/Hades supply-chain pattern: a package manager (npm/pip/yarn/pnpm/uv) or its lifecycle hook spawns a script interpreter (node, python, bash, powershell), which within a short window reads local credential/token stores (.npmrc, .pypirc, .aws/credentials, .git-credentials, .env, browser SQLite cookie DBs) and egresses to a non-registry public-code-hosting or anonymous-worker endpoint (raw.githubusercontent.com, gist.github.com, *.workers.dev, *.trycloudflare.com, *.web.app, transfer.sh, telegram bot API). The fortnight's Miasma compromise of @redhat-cloud-services (Microsoft 2026-06-03), the Hades PyPI splinter (THN 2026-06-09), the 73 Microsoft GitHub repos pulled offline (THN 2026-06-09), and the WinRAR CVE-2025-8088 stealer chains reaching the same Cloudflare-Worker dead-drops (THN 2026-06-09) all converge on this exact preinstall->cred-harvest->bidirectional-C2 chain. Spans Initial Access (T1195.002), Execution (T1059), Credential Access (T1552.001/T1555.003), Exfiltration (T1567/T1102.002). Fires when ALL three stages co-occur on one host within 10 minutes; does NOT fire on a clean `npm install` against a registry (registry.npmjs.org / pypi.org are excluded), on isolated cred-file reads by password managers, or on developer git pushes that don't follow a package-install event.\n\nRationale: Every article this fortnight (Miasma npm, Hades PyPI, Microsoft's 73 GitHub repo pulls, the WinRAR delivery chains) ends in the same three-event sequence on a developer or build host: package-manager spawns interpreter, interpreter reads credential artifacts, interpreter or its child egresses to a public anonymous-worker / code-host dead-drop. Detecting on that joint sequence \u2014 rather than the rotating package names, hashes or domains \u2014 keeps the rule alive across the campaign's known splinters and the next ecosystem to be targeted.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let Window = 10m;\nlet RegistryHosts = dynamic([\"registry.npmjs.org\",\"pypi.org\",\"files.pythonhosted.org\",\"registry.yarnpkg.com\",\"index.docker.io\",\"ghcr.io\",\"crates.io\"]);\nlet PublicDropDomains = dynamic([\"workers.dev\",\"trycloudflare.com\",\"web.app\",\"raw.githubusercontent.com\",\"gist.github.com\",\"transfer.sh\",\"ngrok.io\",\"ngrok-free.app\",\"api.telegram.org\",\"discord.com\",\"discordapp.com\",\"pastebin.com\"]);\nlet CredArtifacts = dynamic([\".npmrc\",\".pypirc\",\"credentials\",\".git-credentials\",\"id_rsa\",\"id_ed25519\",\"config.json\",\".env\",\"Login Data\",\"Cookies\",\"key4.db\",\"logins.json\"]);\nlet PkgMgrParents = dynamic([\"npm.exe\",\"npm-cli.js\",\"yarn.exe\",\"yarn\",\"pnpm.exe\",\"pnpm\",\"pip\",\"pip.exe\",\"pip3\",\"pip3.exe\",\"uv\",\"uv.exe\",\"poetry\",\"poetry.exe\",\"node.exe\",\"node\"]);\nlet ScriptChildren = dynamic([\"node.exe\",\"node\",\"python.exe\",\"python\",\"python3\",\"powershell.exe\",\"pwsh.exe\",\"cmd.exe\",\"bash\",\"sh\",\"curl.exe\",\"wget.exe\"]);\nlet PkgInstallStage = DeviceProcessEvents\n    | where Timestamp > ago(2d)\n    | where AccountName !endswith \"$\"\n    | where InitiatingProcessFileName in~ (PkgMgrParents)\n    | where FileName in~ (ScriptChildren)\n    | where InitiatingProcessCommandLine has_any (\"install\",\"add\",\"preinstall\",\"postinstall\",\"lifecycle\",\"build\",\"ci\")\n    | project InstallTime = Timestamp, DeviceId, DeviceName, AccountName,\n              PkgMgr = InitiatingProcessFileName, ChildProc = FileName, ChildCmd = ProcessCommandLine;\nlet CredReadStage = DeviceFileEvents\n    | where Timestamp > ago(2d)\n    | where FileName in~ (CredArtifacts) or FolderPath has_any (\".aws\",\".ssh\",\"User Data\\\\Default\",\".npm\",\".config\\\\gh\")\n    | project CredTime = Timestamp, DeviceId, CredFile = FolderPath, CredInitiator = InitiatingProcessFileName;\nlet EgressStage = DeviceNetworkEvents\n    | where Timestamp > ago(2d)\n    | where RemoteIPType == \"Public\"\n    | where isnotempty(RemoteUrl)\n    | where not(RemoteUrl has_any (RegistryHosts))\n    | where RemoteUrl has_any (PublicDropDomains)\n    | project EgressTime = Timestamp, DeviceId, RemoteUrl, RemoteIP, EgressInitiator = InitiatingProcessFileName;\nPkgInstallStage\n| join kind=inner CredReadStage on DeviceId\n| where CredTime between (InstallTime .. InstallTime + Window)\n| join kind=inner EgressStage on DeviceId\n| where EgressTime between (InstallTime .. InstallTime + Window)\n| where EgressInitiator in~ (ScriptChildren) or CredInitiator in~ (ScriptChildren)\n| summarize InstallTime = min(InstallTime), CredFiles = make_set(CredFile, 25),\n            DropDomains = make_set(RemoteUrl, 25), DropIPs = make_set(RemoteIP, 25)\n          by DeviceName, AccountName, PkgMgr, ChildProc, ChildCmd\n| order by InstallTime desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1195.002",
+          "T1059.007",
+          "T1059.006",
+          "T1552.001",
+          "T1555.003",
+          "T1567.001",
+          "T1102.002"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_DEVELOPER_INTERPRETER_PACKAGE_MANAGER_PROCESS_EXFI",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/install/UC_WEEKLY_DEVELOPER_INTERPRETER_PACKAGE_MANAGER_PROCESS_EXFI.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

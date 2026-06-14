@@ -1,0 +1,44 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_SUB_ADMIN_GRANTS_OWNER_ADMINISTRATOR_ROLE_THEN_GRA')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Sub-admin grants Owner/Administrator role then grantee signs in from a different source within 60 minutes",
+        "description": "This UC fires when a SaaS or cloud-IdP audit log records assignment of an Owner / Administrator / Global Administrator role (or equivalent privileged group membership) to a non-self principal, and that grantee subsequently authenticates from a different source IP than the grantor within 60 minutes. The fortnight's driver is CVE-2026-47413 in praisonai-platform \u2014 `POST /workspaces/{id}/members` was gated only by `require_workspace_member` and forwarded `user_id` + `role=owner` straight to the service layer with no caller-authority check, letting any workspace member promote an arbitrary account to Owner \u2014 and The Gentlemen ransomware report (Hacker News, 2026-06-11), which documents T1098.001 Additional Cloud Credentials and T1078 Valid Accounts as the standard post-T1190 handoff used to convert an exploit (CVE-2024-55591, CVE-2025-32433, CVE-2025-33073 and others) into durable identity persistence. The kill-chain spans exploit (the underlying authorization bypass or compromised account performing the grant), persistence (the grantee role itself), and privilege escalation (the grantee now operating with admin authority). It would fire on the praisonai exploit pattern, on a low-privilege Okta admin granting Super Admin, on an AssumedRole session attaching AdministratorAccess to a fresh IAM user, or on a compromised helpdesk account adding a user to Global Administrators. It would NOT fire on Global-Admin-grants-Global-Admin lifecycle changes (excluded by the privileged-grantor allowlist), on PIM activation where grantor == grantee, on documented break-glass / automation SPNs (excluded via `false_positive_filters`), or where the grant succeeds but no grantee sign-in lands within the 60-minute window.\n\nRationale: The praisonai-platform CVE (Article 1) and The Gentlemen ransomware analysis (Article 6) explicitly share the same identity-elevation primitive \u2014 a caller without the target role grants Owner/Admin to a second principal who then authenticates and acts \u2014 and the four other articles all describe trust-boundary bypasses (T1190 Exploit Public-Facing Application is tagged on every one of the six) whose payoff is durable identity / account control of the kind this UC's grantee-signin correlation surfaces. Detecting the grant + new-IP-grantee-signin chain catches the praisonai vuln directly today and the broader post-T1190 cloud-account manipulation pattern The Gentlemen and similar actors are pivoting to this fortnight, without re-emitting the package-manager-install or LOLBin-network-egress patterns the catalog already covers.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let LookbackDays = 7d;\nlet CorrelationMinutes = 60;\nlet PrivilegedRoles = dynamic([\"Owner\",\"Administrator\",\"Global Administrator\",\"Privileged Role Administrator\",\"Application Administrator\",\"Cloud Application Administrator\",\"User Administrator\",\"Security Administrator\"]);\nlet SuspectGrants = AuditLogs\n    | where TimeGenerated > ago(LookbackDays)\n    | where Result =~ \"success\"\n    | where OperationName has_any (\"Add member to role\",\"Add owner to group\",\"Add member to group\",\"Add user\",\"Add app role assignment grant to user\",\"Add member to administrative unit\",\"Update role\")\n    | mv-expand TargetResources\n    | extend GranteeId = tostring(TargetResources.id)\n    | extend GranteeUpn = tostring(TargetResources.userPrincipalName)\n    | extend GrantedRole = tostring(coalesce(TargetResources.displayName, TargetResources.modifiedProperties[0].newValue))\n    | extend GrantorId = tostring(InitiatedBy.user.id)\n    | extend GrantorUpn = tostring(InitiatedBy.user.userPrincipalName)\n    | extend GrantorIP = tostring(InitiatedBy.user.ipAddress)\n    | where isnotempty(GrantorId) and isnotempty(GranteeId) and GrantorId != GranteeId\n    | where GrantedRole has_any (PrivilegedRoles)\n    | project GrantTime = TimeGenerated, GrantorId, GrantorUpn, GrantorIP, GranteeId, GranteeUpn, GrantedRole, OperationName;\nlet GranteeSignIn = SigninLogs\n    | where TimeGenerated > ago(LookbackDays)\n    | where ResultType == 0\n    | project SignInTime = TimeGenerated, GranteeId = UserId,\n              SignInIP = IPAddress,\n              SignInCountry = tostring(LocationDetails.countryOrRegion),\n              AppDisplayName, ClientAppUsed;\nSuspectGrants\n| join kind=inner GranteeSignIn on GranteeId\n| where SignInTime between (GrantTime .. GrantTime + CorrelationMinutes * 1m)\n| where SignInIP != GrantorIP\n| project GrantTime, SignInTime,\n          DelayMin = datetime_diff('minute', SignInTime, GrantTime),\n          GrantorUpn, GrantorIP, GranteeUpn, GrantedRole,\n          SignInIP, SignInCountry, AppDisplayName, ClientAppUsed, OperationName\n| order by GrantTime desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1098",
+          "T1098.001",
+          "T1078",
+          "T1078.004",
+          "T1068",
+          "T1190",
+          "T1556"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_SUB_ADMIN_GRANTS_OWNER_ADMINISTRATOR_ROLE_THEN_GRA",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "medium",
+          "source_url": "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_SUB_ADMIN_GRANTS_OWNER_ADMINISTRATOR_ROLE_THEN_GRA.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

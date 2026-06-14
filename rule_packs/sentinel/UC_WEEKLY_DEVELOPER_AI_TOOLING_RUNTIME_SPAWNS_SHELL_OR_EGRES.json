@@ -1,0 +1,44 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_DEVELOPER_AI_TOOLING_RUNTIME_SPAWNS_SHELL_OR_EGRES')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] Developer/AI tooling runtime spawns shell or egress LOLBin (unauth RCE post-expl)",
+        "description": "Detects the common post-exploitation footprint shared by the recent wave of unauthenticated RCE flaws in developer-/AI-adjacent web services: LiteLLM CVE-2026-42271 (CISA KEV, MCP test-endpoint command injection), Langflow CVE-2026-5027 (KEV, code-validate RCE), DbGate CVE-2026-47668 (JSON script runner functionName injection executed in a forked Node child), Phoenix Storybook CVE-2026-8467 (HEEx template injection over WebSocket), NASA AMMOS AIT-BSC CVE-2026-47731 (path-traversal write), Meta Ads MCP CVE-2026-48039 (unauth /mcp tool execution), and the WWBN AVideo YPTSocket stored DOM XSS \u2014 all of which land code execution inside a python/node/uvicorn/erlang/php-fpm interpreter that does NOT normally fork shells or call out to the internet. The UC fires when a service-tier interpreter parent (python/uvicorn/gunicorn/node/erl/beam.smp/php-fpm/ruby) spawns a shell or known download LOLBin (curl/wget/nc/powershell/certutil/bitsadmin) AND that child or its parent makes an outbound public network connection within five minutes. This spans exploit \u2192 install \u2192 c2 phases of the kill chain. It will NOT fire on normal API traffic, on developer workstations where a human launches `node` interactively (filtered via process-tree depth and user context), or on CI runners executing `npm`/`pip` against trusted registries; it WILL fire when a vulnerable AI/dev service runtime is coerced into running an attacker-chosen command, regardless of which CVE was used to get there.\n\nRationale: All seven articles describe distinct vulnerabilities, but post-exploitation collapses to the same shape: an internet-reachable interpreter (python/node/erlang/php) running an unsanitized attacker-controlled payload that immediately shells out and fetches a second-stage. Detecting that runtime-spawns-LOLBin-then-egress chain catches every variant of the campaign without binding to any single CVE's request signature, which is why this UC survives IOC and CVE rotation.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let LookbackPeriod = 7d;\nlet CorrelationWindow = 5m;\nlet InterpreterParents = dynamic([\"python.exe\",\"python\",\"python3\",\"uvicorn\",\"gunicorn\",\"node.exe\",\"node\",\"nodejs\",\"erl.exe\",\"erl\",\"beam.smp\",\"php-fpm\",\"php-fpm7\",\"php-fpm8\",\"ruby\",\"java.exe\",\"java\",\"dotnet.exe\",\"dotnet\"]);\nlet ShellOrLolbin = dynamic([\"sh\",\"bash\",\"dash\",\"zsh\",\"ksh\",\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"pwsh\",\"curl.exe\",\"curl\",\"wget.exe\",\"wget\",\"nc\",\"ncat\",\"certutil.exe\",\"bitsadmin.exe\",\"mshta.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"perl\",\"socat\"]);\nlet SuspectChildren = DeviceProcessEvents\n    | where Timestamp > ago(LookbackPeriod)\n    | where InitiatingProcessFileName in~ (InterpreterParents)\n    | where FileName in~ (ShellOrLolbin)\n    | where AccountName !endswith \"$\"\n    | project ChildTime = Timestamp, DeviceId, DeviceName, AccountName,\n              ParentImage = InitiatingProcessFolderPath,\n              ParentCmd = InitiatingProcessCommandLine,\n              ChildImage = FolderPath, ChildName = FileName,\n              ChildCmd = ProcessCommandLine, ChildPid = ProcessId;\nDeviceNetworkEvents\n| where Timestamp > ago(LookbackPeriod)\n| where ActionType == \"ConnectionSuccess\"\n| where RemoteIPType == \"Public\"\n| project NetTime = Timestamp, DeviceId, NetInitiator = InitiatingProcessFileName,\n          RemoteIP, RemoteUrl, RemotePort\n| join kind=inner SuspectChildren on DeviceId\n| where NetTime between (ChildTime .. ChildTime + CorrelationWindow)\n| extend TimeGenerated = ChildTime\n| project TimeGenerated, ChildTime, NetTime,\n          DelaySec = datetime_diff('second', NetTime, ChildTime),\n          DeviceName, AccountName,\n          ParentImage, ParentCmd, ChildImage, ChildName, ChildCmd,\n          NetInitiator, RemoteIP, RemoteUrl, RemotePort\n| order by TimeGenerated desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1190",
+          "T1059.004",
+          "T1059.001",
+          "T1059.006",
+          "T1059.007",
+          "T1071.001",
+          "T1105"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_DEVELOPER_AI_TOOLING_RUNTIME_SPAWNS_SHELL_OR_EGRES",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_DEVELOPER_AI_TOOLING_RUNTIME_SPAWNS_SHELL_OR_EGRES.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}

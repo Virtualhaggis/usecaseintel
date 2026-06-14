@@ -1,0 +1,43 @@
+title: "[WEEKLY] Sub-admin grants Owner/Administrator role then grantee signs in from a different source within 60 minutes"
+id: 6b5a0f52-bed7-5a7b-a0a2-445552de11c9
+status: experimental
+description: "This UC fires when a SaaS or cloud-IdP audit log records assignment of an Owner / Administrator / Global Administrator role (or equivalent privileged group membership) to a non-self principal, and that grantee subsequently authenticates from a different source IP than the grantor within 60 minutes. The fortnight's driver is CVE-2026-47413 in praisonai-platform \u2014 `POST /workspaces/{id}/members` was gated only by `require_workspace_member` and forwarded `user_id` + `role=owner` straight to the service layer with no caller-authority check, letting any workspace member promote an arbitrary account to Owner \u2014 and The Gentlemen ransomware report (Hacker News, 2026-06-11), which documents T1098.001 Additional Cloud Credentials and T1078 Valid Accounts as the standard post-T1190 handoff used to convert an exploit (CVE-2024-55591, CVE-2025-32433, CVE-2025-33073 and others) into durable identity persistence. The kill-chain spans exploit (the underlying authorization bypass or compromised account performing the grant), persistence (the grantee role itself), and privilege escalation (the grantee now operating with admin authority). It would fire on the praisonai exploit pattern, on a low-privilege Okta admin granting Super Admin, on an AssumedRole session attaching AdministratorAccess to a fresh IAM user, or on a compromised helpdesk account adding a user to Global Administrators. It would NOT fire on Global-Admin-grants-Global-Admin lifecycle changes (excluded by the privileged-grantor allowlist), on PIM activation where grantor == grantee, on documented break-glass / automation SPNs (excluded via `false_positive_filters`), or where the grant succeeds but no grantee sign-in lands within the 60-minute window."
+references:
+  - https://clankerusecase.com/use_cases/exploit/UC_WEEKLY_SUB_ADMIN_GRANTS_OWNER_ADMINISTRATOR_ROLE_THEN_GRA.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.exploit
+  - attack.t1098
+  - attack.t1098_001
+  - attack.t1078
+  - attack.t1078_004
+  - attack.t1068
+  - attack.t1190
+  - attack.t1556
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'created'
+      - 'role'
+      - 'user'
+      - 'group_membership'
+      - 'directory'
+      - 'success'
+      - 'owner'
+      - 'admin'
+      - 'administrator'
+      - 'globaladministrator'
+      - 'superuser'
+      - 'root'
+      - 'role\\'
+      - 'owner\\'
+      - 'admin\\'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

@@ -1,0 +1,44 @@
+title: "[WEEKLY] Package install lifecycle hook spawns interpreter that reads developer credential stores"
+id: ae5aa561-33c4-5d15-8df5-ba121968544b
+status: experimental
+description: "Detects the joint pattern across the June 2026 Miasma/Hades/Atomic-Arch/Laravel-Lang supply-chain wave: a package-manager process (npm, yarn, pnpm, composer, pip, makepkg/pacman, bun) directly spawning a generic interpreter (node, python, bash/sh, powershell, curl/wget, perl) whose command line references developer secret stores (~/.aws/credentials, .npmrc, .docker/config, .kube/config, GITHUB_TOKEN, NPM_TOKEN, VAULT_TOKEN, /proc/self/environ, id_rsa) or hands-off staging primitives (base64/atob/eval, outbound curl/wget, setup.pth bootstrap). The fortnight's articles \u2014 Snyk and StepSecurity on @redhat-cloud-services preinstall hooks, StepSecurity on the Laravel-Lang tag-rewrite, THN on Hades PyPI wheels auto-running a Bun stealer, and BleepingComputer/THN/StepSecurity on the 400+ AUR Atomic Arch packages \u2014 all share this exact preinstall/postinstall/post_install/makepkg \u2192 interpreter \u2192 credential-harvest chain regardless of registry. Kill-chain stages covered: delivery (registry pull), execution (interpreter spawn), credential access (secret-file read), and command-and-control (egress staging). Fires when the parent-child binary pair AND a credential-indicator token co-occur in one process record; does NOT fire on routine `npm install` that only runs native gyp builds, on pip wheels that don't shell out, or on package-manager-driven test suites that don't touch credential paths."
+references:
+  - https://clankerusecase.com/use_cases/install/UC_WEEKLY_PACKAGE_INSTALL_LIFECYCLE_HOOK_SPAWNS_INTERPRETER_.yml
+author: usecaseintel auto-generator
+tags:
+  - usecaseintel.tier.alerting
+  - usecaseintel.kill_chain.install
+  - attack.t1195_002
+  - attack.t1059_007
+  - attack.t1059_006
+  - attack.t1059_004
+  - attack.t1552_001
+  - attack.t1528
+  - attack.t1041
+  - attack.t1546
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|contains:
+      - 'npm'
+      - 'npm.exe'
+      - 'npm-cli.js'
+      - 'yarn'
+      - 'yarn.exe'
+      - 'pnpm'
+      - 'pnpm.exe'
+      - 'composer'
+      - 'composer.exe'
+      - 'composer.phar'
+      - 'pip'
+      - 'pip3'
+      - 'pip.exe'
+      - 'makepkg'
+      - 'pacman'
+  condition: selection
+falsepositives:
+  - Legitimate use of any of the above strings on dev / admin hosts
+  - Tune via known-good allowlist before alerting
+level: high

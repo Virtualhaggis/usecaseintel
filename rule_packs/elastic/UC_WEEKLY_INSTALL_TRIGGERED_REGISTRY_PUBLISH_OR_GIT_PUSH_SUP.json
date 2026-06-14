@@ -1,0 +1,32 @@
+{
+  "rule_id": "usecaseintel-UC_WEEKLY_INSTALL_TRIGGERED_REGISTRY_PUBLISH_OR_GIT_PUSH_SUP",
+  "name": "[WEEKLY] Install-Triggered Registry Publish or Git Push (Supply-Chain Worm Self-Propagation)",
+  "description": "Detects the self-propagation primitive shared by the Miasma / Shai-Hulud npm worm wave, the Laravel-Lang Composer tag-rewrite attack, the @cap-js/openapi advisory, and the Atomic Arch AUR campaign: a package-manager install lifecycle (npm/yarn/pnpm/composer/pip/makepkg) is followed within 30 minutes on the same endpoint by a registry publish (`npm publish`, `yarn publish`, `composer publish`) or a `git push` to a developer-owned repository, indicating that stolen npm/PAT/SSH credentials harvested by the install-time payload are being weaponised to push trojanised tags back into the supply chain. This fortnight's articles \u2014 StepSecurity (Laravel-Lang, Miasma binding.gyp, Microsoft Azure 73-repo Miasma, AUR Atomic Arch), Snyk (@redhat-cloud-services, Node-gyp worm), GHSA @cap-js/openapi, Aikido (EDR/proxy bypass), and The Hacker News (npm 12 disabling install scripts) \u2014 all describe the same execution-to-exfil-to-republish chain. It spans execution \u2192 credential access \u2192 exfiltration / lateral movement (the worm's hop). It fires when an interactive developer workstation or build agent emits a publish/push within the correlation window of an install on the same host; it will NOT fire on isolated registry mirrors, scheduled CI release jobs where the install host and publishing host differ, or on hosts that only `install` without ever publishing \u2014 those are the legitimate consumer pattern.",
+  "type": "query",
+  "language": "lucene",
+  "query": "Image:(*npm.exe* OR *node.exe* OR *yarn.exe* OR *pnpm.exe* OR *composer.exe* OR *composer.phar* OR *pip.exe* OR *pip3.exe* OR *makepkg* OR *pacman* OR *yay* OR *paru* OR *git.exe* OR *git* OR *push*)",
+  "index": [
+    "logs-*",
+    "winlogbeat-*",
+    "logs-endpoint.events.*"
+  ],
+  "enabled": false,
+  "risk_score": 73,
+  "severity": "high",
+  "interval": "1h",
+  "from": "now-25h",
+  "tags": [
+    "usecaseintel.tier.alerting",
+    "usecaseintel.kill_chain.actions",
+    "attack.T1195.002",
+    "attack.T1546.016",
+    "attack.T1552.001",
+    "attack.T1528",
+    "attack.T1567",
+    "attack.T1098"
+  ],
+  "references": [
+    "https://clankerusecase.com/use_cases/actions/UC_WEEKLY_INSTALL_TRIGGERED_REGISTRY_PUBLISH_OR_GIT_PUSH_SUP.yml"
+  ],
+  "note": "Auto-compiled from this UC's Sigma rule via pySigma (elasticsearch backend). Keyword-seeded hunting logic \u2014 review and tune before enabling."
+}

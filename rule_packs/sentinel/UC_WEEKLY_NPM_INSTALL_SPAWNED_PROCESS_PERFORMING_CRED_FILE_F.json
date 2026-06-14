@@ -1,0 +1,42 @@
+{
+  "schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "resources": [
+    {
+      "type": "Microsoft.OperationalInsights/workspaces/providers/alertRules",
+      "apiVersion": "2022-12-01-preview",
+      "name": "[concat(parameters('workspaceName'), '/Microsoft.SecurityInsights/UC_WEEKLY_NPM_INSTALL_SPAWNED_PROCESS_PERFORMING_CRED_FILE_F')]",
+      "kind": "Scheduled",
+      "properties": {
+        "displayName": "[WEEKLY] npm-install spawned process performing cred-file fan-out plus IMDS reach",
+        "description": "Detects the post-execution credential-harvest stage of an npm supply-chain compromise: a process spawned under an npm/node/yarn/pnpm or node-gyp (python) parent that, within 10 minutes on the same host, reads two or more distinct cloud/dev credential file paths (.aws/credentials, .ssh/id_rsa, .npmrc, .docker/config.json, ~/.config/gcloud, .kube/config, .azure/accessTokens.json) or contacts cloud instance metadata (169.254.169.254 / metadata.google.internal / metadata.azure.com). This fortnight the @redhat-cloud-services 'Miasma' campaign (Snyk 2026-06-01, StepSecurity 2026-06-02, Microsoft 2026-06-03, Unit 42 2026-06-02) and the self-propagating binding.gyp worm (Snyk + StepSecurity 2026-06-04, Aikido 2026-06-09) drop the same multi-cloud secret harvester targeting AWS/GCP/Azure/GitHub Actions/npm/Vault/SSH/wallet secrets; the npm v12 install-scripts disablement announcement (The Hacker News + Aikido 2026-06-11) and a fresh Web3/cloud wave (Cyber Security News 2026-06-12) confirm the harvest behaviour persists across hook variants (preinstall, postinstall, binding.gyp), making the fan-out the durable signal rather than any single lifecycle hook or IOC. Spans install \u2192 credential_access in the kill chain. Fires on developer workstations and CI/CD runners exhibiting the spawn-plus-fan-out pair; does NOT fire on plain `npm install` compiling native modules without touching cred paths, nor on a single legitimate aws-sdk IMDS lookup from a known package's runtime.\n\nRationale: Across all 10 articles the post-spawn behavior \u2014 a single npm/node/gyp-spawned process touching multiple cloud/dev credential paths and/or IMDS \u2014 is the invariant; the entry vector rotates between preinstall hooks (Miasma), postinstall hooks (npm v12 announcement), and binding.gyp (worm) but the harvest fan-out persists. Requiring \u22652 distinct cred paths within 10 minutes of an npm-rooted spawn eliminates the single-cred SDK use-case while catching every campaign variant the fortnight surfaced.",
+        "severity": "High",
+        "enabled": false,
+        "query": "let LookbackDays = 14d;\nlet CorrelationMin = 10m;\nlet InstallSpawn = imProcessCreate\n    | where TimeGenerated > ago(LookbackDays)\n    | where ParentProcessName matches regex @\"(?i)(?:^|[\\\\/])(npm|node|yarn|pnpm|python|python3|npm-cli\\.js)(\\.exe)?$\"\n    | where Process matches regex @\"(?i)(?:^|[\\\\/])(node|python|python3|powershell|pwsh|cmd|sh|bash)(\\.exe)?$\"\n    | where ParentProcessCommandLine has_any (\"install\",\" ci\",\"rebuild\",\"npx\") or CommandLine has_any (\"binding.gyp\",\"node-gyp\",\"preinstall\",\"postinstall\",\"index.js\",\"node_modules\")\n    | project InstallTime = TimeGenerated, DvcHostname, ActorUsername, Process, CommandLine, ParentProcessName, ParentProcessCommandLine;\nlet CredFanOut = imFileEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventType in (\"FileAccessed\",\"FileRead\",\"FileOpened\",\"FileCreated\",\"FileModified\")\n    | where ActingProcessName matches regex @\"(?i)(?:^|[\\\\/])(node|python|python3|powershell|pwsh|sh|bash|curl|wget)(\\.exe)?$\"\n    | where TargetFilePath has_any (@\"\\.aws\\credentials\",@\"/.aws/credentials\",@\"\\.ssh\\id_\",@\"/.ssh/id_\",@\"\\.npmrc\",@\"/.npmrc\",@\"\\.docker\\config.json\",@\"/.docker/config.json\",@\"/.config/gcloud\",@\"/.kube/config\",@\"/.azure/accessTokens.json\")\n       or TargetFileName in~ (\".env\",\".envrc\",\"github_token\",\"credentials\",\"id_rsa\",\"id_ed25519\",\"accessTokens.json\")\n    | summarize FirstHarvest = min(TimeGenerated), CredPathsTouched = dcount(TargetFilePath), CredFiles = make_set(TargetFilePath, 12) by DvcHostname, ActorUsername\n    | where CredPathsTouched >= 2;\nInstallSpawn\n| join kind=inner CredFanOut on DvcHostname\n| where FirstHarvest between (InstallTime .. InstallTime + CorrelationMin)\n| project InstallTime, FirstHarvest, DelaySec = datetime_diff('second', FirstHarvest, InstallTime), DvcHostname, ActorUsername, ParentProcessName, Process, CommandLine, ParentProcessCommandLine, CredPathsTouched, CredFiles\n| order by InstallTime desc",
+        "queryFrequency": "PT1H",
+        "queryPeriod": "PT24H",
+        "triggerOperator": "GreaterThan",
+        "triggerThreshold": 0,
+        "tactics": [],
+        "techniques": [
+          "T1195.002",
+          "T1059.007",
+          "T1552.001",
+          "T1552.005",
+          "T1528"
+        ],
+        "alertRuleTemplateName": "UC_WEEKLY_NPM_INSTALL_SPAWNED_PROCESS_PERFORMING_CRED_FILE_F",
+        "customDetails": {
+          "tier": "alerting",
+          "fp_rate_estimate": "low",
+          "source_url": "https://clankerusecase.com/use_cases/actions/UC_WEEKLY_NPM_INSTALL_SPAWNED_PROCESS_PERFORMING_CRED_FILE_F.yml"
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "workspaceName": {
+      "type": "string"
+    }
+  }
+}
