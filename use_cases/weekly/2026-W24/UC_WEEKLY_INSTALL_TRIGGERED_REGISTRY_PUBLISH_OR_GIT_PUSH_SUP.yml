@@ -1,0 +1,124 @@
+id: UC_WEEKLY_INSTALL_TRIGGERED_REGISTRY_PUBLISH_OR_GIT_PUSH_SUP
+title: "[WEEKLY] Install-Triggered Registry Publish or Git Push (Supply-Chain Worm Self-Propagation)"
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+- falcon
+- cloudwatch
+mitre_attack:
+- id: T1195.002
+  name: Compromise Software Supply Chain
+- id: T1546.016
+  name: "Event Triggered Execution: Installer Packages"
+- id: T1552.001
+  name: "Unsecured Credentials: Credentials In Files"
+- id: T1528
+  name: Steal Application Access Token
+- id: T1567
+  name: Exfiltration Over Web Service
+- id: T1098
+  name: Account Manipulation
+data_models:
+  defender:
+  - Endpoint.Processes
+description: |-
+  Detects the self-propagation primitive shared by the Miasma / Shai-Hulud npm worm wave, the Laravel-Lang Composer tag-rewrite attack, the @cap-js/openapi advisory, and the Atomic Arch AUR campaign: a package-manager install lifecycle (npm/yarn/pnpm/composer/pip/makepkg) is followed within 30 minutes on the same endpoint by a registry publish (`npm publish`, `yarn publish`, `composer publish`) or a `git push` to a developer-owned repository, indicating that stolen npm/PAT/SSH credentials harvested by the install-time payload are being weaponised to push trojanised tags back into the supply chain. This fortnight's articles — StepSecurity (Laravel-Lang, Miasma binding.gyp, Microsoft Azure 73-repo Miasma, AUR Atomic Arch), Snyk (@redhat-cloud-services, Node-gyp worm), GHSA @cap-js/openapi, Aikido (EDR/proxy bypass), and The Hacker News (npm 12 disabling install scripts) — all describe the same execution-to-exfil-to-republish chain. It spans execution → credential access → exfiltration / lateral movement (the worm's hop). It fires when an interactive developer workstation or build agent emits a publish/push within the correlation window of an install on the same host; it will NOT fire on isolated registry mirrors, scheduled CI release jobs where the install host and publishing host differ, or on hosts that only `install` without ever publishing — those are the legitimate consumer pattern.
+  
+  Rationale: Every article in scope describes the same self-propagation primitive: install-time code execution harvests publish credentials, then re-uses them in-place to push the worm forward. Anchoring on the parent-process install command + same-host publish/push within a tight window catches that primitive regardless of which registry, OS, language, or specific IOC (binding.gyp, preinstall script, AUR PKGBUILD, Composer tag) the campaign rotates to next.
+defender_kql: |-
+  let LookbackDays = 7d;
+  let CorrelationWindowSec = 1800;
+  let InstallEvents = DeviceProcessEvents
+      | where Timestamp > ago(LookbackDays)
+      | where (FileName in~ ("npm.exe","node.exe","yarn.exe","pnpm.exe","composer.exe","composer.phar","pip.exe","pip3.exe","makepkg","pacman","yay","paru"))
+          or ProcessCommandLine has_any ("npm install","npm i ","yarn install","pnpm install","composer install","composer update","pip install","makepkg -si","pacman -S ","yay -S ")
+      | project InstallTime = Timestamp, DeviceId, DeviceName, AccountName,
+                InstallFile = FileName, InstallCmd = ProcessCommandLine;
+  let PublishEvents = DeviceProcessEvents
+      | where Timestamp > ago(LookbackDays)
+      | where (FileName in~ ("git.exe","git") and ProcessCommandLine has "push")
+          or ProcessCommandLine has_any ("npm publish","yarn publish","pnpm publish","composer publish")
+          or (ProcessCommandLine has_any ("curl","wget","Invoke-WebRequest","Invoke-RestMethod")
+              and ProcessCommandLine has_any ("registry.npmjs.org/-/package","api.github.com/repos","packagist.org/api"))
+      | project PublishTime = Timestamp, DeviceId, DeviceName, AccountName,
+                PublishFile = FileName, PublishCmd = ProcessCommandLine;
+  InstallEvents
+  | join kind=inner PublishEvents on DeviceId
+  | where PublishTime between (InstallTime .. InstallTime + CorrelationWindowSec * 1s)
+  | where not(AccountName endswith "$")
+  | where AccountName !in~ ("system","local service","network service")
+  | project InstallTime, PublishTime,
+            DelaySec = datetime_diff('second', PublishTime, InstallTime),
+            DeviceName, AccountName, InstallFile, InstallCmd, PublishFile, PublishCmd
+  | order by InstallTime desc
+sentinel_kql: |-
+  let LookbackDays = 7d;
+  let CorrelationWindowSec = 1800;
+  let InstallEvents = DeviceProcessEvents
+      | where TimeGenerated > ago(LookbackDays)
+      | where (FileName in~ ("npm.exe","node.exe","yarn.exe","pnpm.exe","composer.exe","composer.phar","pip.exe","pip3.exe","makepkg","pacman","yay","paru"))
+          or ProcessCommandLine has_any ("npm install","npm i ","yarn install","pnpm install","composer install","composer update","pip install","makepkg -si","pacman -S ","yay -S ")
+      | project InstallTime = TimeGenerated, DeviceId, DeviceName, AccountName,
+                InstallFile = FileName, InstallCmd = ProcessCommandLine;
+  let PublishEvents = DeviceProcessEvents
+      | where TimeGenerated > ago(LookbackDays)
+      | where (FileName in~ ("git.exe","git") and ProcessCommandLine has "push")
+          or ProcessCommandLine has_any ("npm publish","yarn publish","pnpm publish","composer publish")
+          or (ProcessCommandLine has_any ("curl","wget","Invoke-WebRequest","Invoke-RestMethod")
+              and ProcessCommandLine has_any ("registry.npmjs.org/-/package","api.github.com/repos","packagist.org/api"))
+      | project PublishTime = TimeGenerated, DeviceId, DeviceName, AccountName,
+                PublishFile = FileName, PublishCmd = ProcessCommandLine;
+  InstallEvents
+  | join kind=inner PublishEvents on DeviceId
+  | where PublishTime between (InstallTime .. InstallTime + CorrelationWindowSec * 1s)
+  | where not(AccountName endswith "$")
+  | project InstallTime, PublishTime,
+            DelaySec = datetime_diff('second', PublishTime, InstallTime),
+            DeviceName, AccountName, InstallFile, InstallCmd, PublishFile, PublishCmd
+  | order by InstallTime desc
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as installTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("npm.exe","node.exe","yarn.exe","pnpm.exe","composer.exe","composer.phar","pip.exe","pip3.exe","makepkg","pacman","yay","paru")) OR (Processes.process IN ("*npm install*","*npm i *","*yarn install*","*pnpm install*","*composer install*","*composer update*","*pip install*","*makepkg -si*","*pacman -S *","*yay -S *")) by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | rename process AS installCmd, parent_process_name AS installParent | join type=inner dest [ | tstats `summariesonly` count min(_time) as publishTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("git.exe","git") AND Processes.process="*push*") OR Processes.process IN ("*npm publish*","*yarn publish*","*pnpm publish*","*composer publish*") OR (Processes.process IN ("*curl*","*wget*","*Invoke-WebRequest*","*Invoke-RestMethod*") AND (Processes.process="*registry.npmjs.org/-/package*" OR Processes.process="*api.github.com/repos*" OR Processes.process="*packagist.org/api*")) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | rename process AS publishCmd, process_name AS publishProcess ] | eval delaySec = publishTime - installTime | where delaySec >= 0 AND delaySec <= 1800 | table installTime, publishTime, delaySec, dest, user, installParent, installCmd, publishProcess, publishCmd | sort - installTime
+datadog_query: |-
+  source:windows.sysmon @EventID:1 (@CommandLine:(*"npm publish"* OR *"yarn publish"* OR *"pnpm publish"* OR *"composer publish"*) OR (@Image:(*\\git.exe OR *\\Git.exe) AND @CommandLine:*push*) OR (@CommandLine:(*registry.npmjs.org/-/package* OR *api.github.com/repos* OR *packagist.org/api*) AND @Image:(*\\curl.exe OR *\\wget.exe OR *\\powershell.exe OR *\\pwsh.exe))) AND (@ParentImage:(*\\npm.exe OR *\\node.exe OR *\\yarn.exe OR *\\pnpm.exe OR *\\composer.exe OR *\\composer.phar OR *\\pip.exe OR *\\pip3.exe OR *\\makepkg) OR @ParentCommandLine:(*"npm install"* OR *"npm i "* OR *"yarn install"* OR *"pnpm install"* OR *"composer install"* OR *"composer update"* OR *"pip install"* OR *"makepkg -si"* OR *"pacman -S "* OR *"yay -S "*))
+falcon_logscale_query: |-
+  #event_simpleName=ProcessRollup2
+  | ParentBaseFileName=/^(npm|node|yarn|pnpm|composer|composer\.phar|pip|pip3|makepkg|pacman|yay|paru)(\.exe)?$/i
+  | (ImageFileName=/\/git(\.exe)?$/i AND regex("\\bpush\\b", field=CommandLine)) OR regex("(npm|yarn|pnpm|composer)\\s+publish", field=CommandLine) OR regex("(registry\\.npmjs\\.org/-/package|api\\.github\\.com/repos|packagist\\.org/api)", field=CommandLine)
+  | groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine], function=count())
+  | count > 0
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail
+  fields @timestamp, eventName, eventSource, userIdentity.arn, userIdentity.userName, userIdentity.type, sourceIPAddress, userAgent, requestParameters.repositoryName, requestParameters.packageName, requestParameters.domain
+  | filter eventSource in ["codeartifact.amazonaws.com","ecr.amazonaws.com","codecommit.amazonaws.com"]
+        and eventName in ["PublishPackageVersion","PutImage","GitPush","UploadArchive","PutPackageOriginConfiguration"]
+        and not isPresent(errorCode)
+        and userIdentity.type in ["AssumedRole","IAMUser","Federated"]
+        and userAgent not like /codepipeline|codebuild|cloudformation/i
+  | stats count(*) as publishCount, earliest(@timestamp) as firstPublish, latest(@timestamp) as lastPublish by userIdentity.arn, sourceIPAddress, eventSource, eventName
+  | sort firstPublish desc
+  | limit 200
+required_telemetry:
+- Defender DeviceProcessEvents
+- Sentinel DeviceProcessEvents (MDE connector)
+- Sysmon EID 1 with ParentImage/ParentCommandLine
+- CrowdStrike FDR ProcessRollup2
+- AWS CloudTrail (CodeArtifact / ECR / CodeCommit management events)
+kill_chain_phase: exfiltration
+expected_fp_scenarios:
+- "Legitimate package maintainer who runs `npm install` to test changes locally and then `npm publish`es a new version within the same half-hour from their workstation."
+- "CI release jobs that install dependencies and publish from the same agent (e.g. self-hosted GitHub runner doing `npm ci && npm publish`)."
+- Monorepo release tooling (Lerna, Changesets, Nx release) that performs install + publish in a single bootstrap command.
+- "Developers running `git push` against a feature branch immediately after a routine `npm install` — common during active coding; tune by requiring the push target be an upstream maintainer remote, or require evidence of a publish API call."
+- Internal mirror sync jobs that pull and re-publish to a private registry.
+response_runbook: |-
+  1) Triage: confirm the install parent and publish child are on the SAME host within 30 min. Pull the install command's package name and the publish target (`npm whoami`, the repo URL, the CodeArtifact domain). Cross-check whether the user is a legitimate maintainer of that package/repo; if a normal developer triggered a publish to a package they don't own, escalate immediately. Inspect for hallmark worm artefacts on disk: weaponised binding.gyp, .claude/.gemini/.cursor settings.json writes, recent file activity under ~/.npm, ~/.config/composer.
+  2) Contain: revoke the user's npm token, GitHub PAT, SSH keys, and any cloud-provider session keys discoverable on the host (env vars, ~/.aws/credentials, ~/.npmrc). Rotate scoped tokens for every package the user has publish rights to. Pause CI/CD for the affected repo and re-pin dependencies to known-good versions. If a publish actually landed, contact the registry (npm/Composer/AUR) to yank the version.
+  3) Hunt: pivot on hash/host across the 
+false_positive_filters: |-
+  | where not(InstallCmd has_any ("--dry-run","--workspaces")) and not(PublishCmd has_any ("--dry-run","--registry=http://localhost",".github.io","verdaccio")) and not(DeviceName has_any ("ci-runner","build-agent","gh-actions"))

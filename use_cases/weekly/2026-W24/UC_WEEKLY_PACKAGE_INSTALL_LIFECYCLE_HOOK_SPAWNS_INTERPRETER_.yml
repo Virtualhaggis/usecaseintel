@@ -1,0 +1,105 @@
+id: UC_WEEKLY_PACKAGE_INSTALL_LIFECYCLE_HOOK_SPAWNS_INTERPRETER_
+title: "[WEEKLY] Package install lifecycle hook spawns interpreter that reads developer credential stores"
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+- falcon
+mitre_attack:
+- id: T1195.002
+  name: "Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools"
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1059.006
+  name: "Command and Scripting Interpreter: Python"
+- id: T1059.004
+  name: "Command and Scripting Interpreter: Unix Shell"
+- id: T1552.001
+  name: "Unsecured Credentials: Credentials In Files"
+- id: T1528
+  name: Steal Application Access Token
+- id: T1041
+  name: Exfiltration Over C2 Channel
+- id: T1546
+  name: Event Triggered Execution
+data_models:
+  defender:
+  - Endpoint.Processes
+description: |-
+  Detects the joint pattern across the June 2026 Miasma/Hades/Atomic-Arch/Laravel-Lang supply-chain wave: a package-manager process (npm, yarn, pnpm, composer, pip, makepkg/pacman, bun) directly spawning a generic interpreter (node, python, bash/sh, powershell, curl/wget, perl) whose command line references developer secret stores (~/.aws/credentials, .npmrc, .docker/config, .kube/config, GITHUB_TOKEN, NPM_TOKEN, VAULT_TOKEN, /proc/self/environ, id_rsa) or hands-off staging primitives (base64/atob/eval, outbound curl/wget, setup.pth bootstrap). The fortnight's articles — Snyk and StepSecurity on @redhat-cloud-services preinstall hooks, StepSecurity on the Laravel-Lang tag-rewrite, THN on Hades PyPI wheels auto-running a Bun stealer, and BleepingComputer/THN/StepSecurity on the 400+ AUR Atomic Arch packages — all share this exact preinstall/postinstall/post_install/makepkg → interpreter → credential-harvest chain regardless of registry. Kill-chain stages covered: delivery (registry pull), execution (interpreter spawn), credential access (secret-file read), and command-and-control (egress staging). Fires when the parent-child binary pair AND a credential-indicator token co-occur in one process record; does NOT fire on routine `npm install` that only runs native gyp builds, on pip wheels that don't shell out, or on package-manager-driven test suites that don't touch credential paths.
+  
+  Rationale: Every article in the batch describes the same primitive — a package-manager install lifecycle hook directly spawning an interpreter that immediately enumerates developer secret stores and stages exfil — but each names a different registry (npm/PyPI/Composer/AUR) and different IOCs that will rotate within days. Anchoring on the parent-binary (package manager) → child-binary (interpreter) chain AND credential-token presence in the child cmdline keeps the detection IOC-free, schema-correct on every EDR we ship to, and catches future variants in the same Miasma/Hades/Atomic-Arch/Laravel-Lang family without re-tuning.
+defender_kql: |-
+  let LookbackHours = 24h;
+  let PkgManagers = dynamic(["npm.exe","npm","npm-cli.js","yarn.exe","yarn","pnpm.exe","pnpm","composer.exe","composer","composer.phar","pip.exe","pip","pip3","makepkg","pacman","yay","paru","bun.exe","bun","poetry"]);
+  let Interpreters = dynamic(["node.exe","node","python.exe","python","python3","bash","sh","zsh","dash","powershell.exe","pwsh.exe","pwsh","cmd.exe","curl.exe","curl","wget.exe","wget","perl","ruby"]);
+  let CredIndicators = dynamic([".aws/credentials",".aws/config",".npmrc",".docker/config",".kube/config","GITHUB_TOKEN","NPM_TOKEN","AWS_SECRET","AWS_ACCESS_KEY","/proc/self/environ","id_rsa","VAULT_TOKEN","/etc/shadow","CIRCLE_TOKEN","GH_TOKEN","setup.pth","atob(","base64 -d","eval("]);
+  let HookIndicators = dynamic(["preinstall","postinstall","post_install","run-script","lifecycle","makepkg","prepare-package"]);
+  DeviceProcessEvents
+  | where Timestamp > ago(LookbackHours)
+  | where InitiatingProcessFileName in~ (PkgManagers)
+  | where FileName in~ (Interpreters)
+  | where AccountName !endswith "$"
+  | where ProcessCommandLine has_any (CredIndicators)
+       or ProcessCommandLine matches regex @"(?i)(curl|wget)\s+-[a-zA-Z]*\s*https?://"
+       or InitiatingProcessCommandLine has_any (HookIndicators)
+  | project Timestamp, DeviceName, AccountName,
+            ParentImage = InitiatingProcessFolderPath,
+            ParentCmd   = InitiatingProcessCommandLine,
+            ChildImage  = FolderPath,
+            ChildCmd    = ProcessCommandLine,
+            SHA256, IsInitiatingProcessRemoteSession
+  | order by Timestamp desc
+sentinel_kql: |-
+  let Lookback = 24h;
+  let PkgManagers = dynamic(["npm.exe","npm","yarn.exe","yarn","pnpm.exe","pnpm","composer.exe","composer","pip.exe","pip","pip3","makepkg","pacman","yay","paru","bun.exe","bun","poetry"]);
+  let Interpreters = dynamic(["node.exe","node","python.exe","python","python3","bash","sh","powershell.exe","pwsh.exe","pwsh","curl.exe","curl","wget.exe","wget","perl","ruby"]);
+  let CredIndicators = dynamic([".aws/credentials",".npmrc",".docker/config",".kube/config","GITHUB_TOKEN","NPM_TOKEN","AWS_SECRET","AWS_ACCESS_KEY","/proc/self/environ","id_rsa","VAULT_TOKEN","/etc/shadow","CIRCLE_TOKEN","setup.pth","atob(","base64","eval("]);
+  let HookIndicators = dynamic(["preinstall","postinstall","post_install","run-script","lifecycle","makepkg"]);
+  DeviceProcessEvents
+  | where TimeGenerated > ago(Lookback)
+  | where InitiatingProcessFileName in~ (PkgManagers)
+  | where FileName in~ (Interpreters)
+  | where AccountName !endswith "$"
+  | where ProcessCommandLine has_any (CredIndicators)
+       or ProcessCommandLine matches regex @"(?i)(curl|wget)\s+-[a-zA-Z]*\s*https?://"
+       or InitiatingProcessCommandLine has_any (HookIndicators)
+  | project TimeGenerated, DeviceName, AccountName,
+            ParentCmd = InitiatingProcessCommandLine,
+            ChildImage = FolderPath,
+            ChildCmd = ProcessCommandLine,
+            SHA256
+  | order by TimeGenerated desc
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as child_cmdline values(Processes.process_path) as child_image values(Processes.parent_process) as parent_cmdline values(Processes.parent_process_path) as parent_image values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("npm","npm.exe","npm-cli.js","yarn","yarn.exe","pnpm","pnpm.exe","composer","composer.exe","composer.phar","pip","pip3","pip.exe","makepkg","pacman","yay","paru","bun","bun.exe","poetry") AND Processes.process_name IN ("node","node.exe","python","python3","python.exe","bash","sh","zsh","dash","powershell.exe","pwsh","pwsh.exe","cmd.exe","curl","curl.exe","wget","wget.exe","perl","ruby") by host, Processes.user, Processes.parent_process_name, Processes.process_name | `drop_dm_object_name(Processes)` | where match(child_cmdline, "(?i)(\.aws/credentials|\.npmrc|\.docker/config|\.kube/config|GITHUB_TOKEN|NPM_TOKEN|AWS_SECRET|AWS_ACCESS_KEY|/proc/self/environ|id_rsa|VAULT_TOKEN|/etc/shadow|CIRCLE_TOKEN|GH_TOKEN|setup\.pth|atob\(|base64\s+-d|eval\(|curl\s+-[a-zA-Z]*\s*https?://|wget\s+https?://|fetch\()") OR match(parent_cmdline, "(?i)(preinstall|postinstall|run-script\s+(pre|post)|lifecycle|makepkg|post_install|prepare-package)") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+datadog_query: |-
+  (source:windows.sysmon @EventID:1 @ParentImage:(*\\npm.exe OR *\\NPM.exe OR *\\yarn.exe OR *\\pnpm.exe OR *\\composer.exe OR *\\Composer.exe OR *\\pip.exe OR *\\pip3.exe OR *\\bun.exe OR *\\Bun.exe OR *\\poetry.exe) @Image:(*\\node.exe OR *\\Node.exe OR *\\python.exe OR *\\python3.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\cmd.exe OR *\\curl.exe OR *\\wget.exe OR *\\perl.exe OR *\\ruby.exe) (@CommandLine:(*GITHUB_TOKEN* OR *NPM_TOKEN* OR *AWS_SECRET* OR *AWS_ACCESS_KEY* OR *.aws\\credentials* OR *.aws/credentials* OR *.npmrc* OR *id_rsa* OR *VAULT_TOKEN* OR *setup.pth* OR *atob\(* OR *base64* OR *eval\(*) OR @ParentCommandLine:(*preinstall* OR *postinstall* OR *run-script* OR *lifecycle*))) OR (source:linux.auditd @auditd.type:EXECVE @process.parent.command_line:(*npm* OR *yarn* OR *pnpm* OR *composer* OR *makepkg* OR *pacman* OR *yay* OR *paru* OR *pip*install* OR *bun*install* OR *post_install* OR *preinstall* OR *postinstall*) @process.command_line:(*GITHUB_TOKEN* OR *NPM_TOKEN* OR *AWS_SECRET* OR *AWS_ACCESS_KEY* OR *.aws/credentials* OR *.npmrc* OR */proc/self/environ* OR *id_rsa* OR *VAULT_TOKEN* OR */etc/shadow* OR *setup.pth* OR *atob\(* OR *base64\ -d* OR *curl* OR *wget*))
+falcon_logscale_query: |-
+  #event_simpleName=ProcessRollup2 ParentBaseFileName=/^(npm|yarn|pnpm|composer|pip|pip3|makepkg|pacman|yay|paru|bun|poetry)(\.exe)?$/i ImageFileName=/(node|python3?|bash|sh|zsh|dash|powershell|pwsh|cmd|curl|wget|perl|ruby)(\.exe)?$/i
+  | regex("(GITHUB_TOKEN|NPM_TOKEN|AWS_SECRET|AWS_ACCESS_KEY|\\.aws/credentials|\\.npmrc|\\.docker/config|\\.kube/config|/proc/self/environ|id_rsa|VAULT_TOKEN|/etc/shadow|CIRCLE_TOKEN|GH_TOKEN|setup\\.pth|atob\\(|base64\\s+-d|eval\\(|curl\\s+-[a-zA-Z]*\\s*https?://|wget\\s+https?://)", field=CommandLine)
+  | UserName!="SYSTEM"
+  | groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName], function={ count() | min(_time) | max(_time) })
+required_telemetry:
+- Defender DeviceProcessEvents
+- Sentinel DeviceProcessEvents (via M365D connector)
+- Sysmon EID 1 (ParentImage, Image, CommandLine, ParentCommandLine)
+- Linux auditd EXECVE (with parent command_line)
+- Splunk CIM Endpoint.Processes (parent_process, parent_process_name, process, process_name)
+- CrowdStrike FDR ProcessRollup2
+kill_chain_phase: execution
+expected_fp_scenarios:
+- "Legitimate developer running a project-bootstrap script that genuinely reads ~/.aws/credentials (e.g. AWS SAM `sam local invoke`, Serverless framework deploy) via npm/yarn run-script"
+- "CI/CD agents executing pre-baked `npm run release` scripts that legitimately base64-encode build artefacts before uploading via curl"
+- "Internal corporate npm/pip packages whose install scripts intentionally write CI tokens into ~/.npmrc or run `aws configure` during dev-environment provisioning"
+- "Container-build base images (Dockerfile RUN apt/pip) where `pip install` legitimately invokes a setup.py that shells to curl/wget for source tarballs"
+- Renovate/Dependabot self-update workflows that exec node child processes touching GITHUB_TOKEN env vars
+response_runbook: |-
+  1) Triage — open the parent/child process pair, isolate the package name from ParentCommandLine (npm/yarn install <pkg>, composer require <pkg>, makepkg PKGBUILD path, pip wheel filename). Cross-reference the package + version against the IOC lists in the cited advisories (Snyk Miasma list, StepSecurity Laravel-Lang/AUR lists, THN Hades wheel hashes). Pull the child cmdline in full and decode any base64 blobs. 2) Contain — isolate the developer/CI host via EDR network-containment, force-rotate every secret reachable from that host (CI tokens, cloud credentials, npm/PyPI publish tokens, GitHub PATs, SSH keys, Vault tokens), and revoke recently-issued OAuth/session tokens for the user. Block the package version in the internal registry mirror. 3) Hunt — pivot on every host that installed the same package@version in the last 14d (use Endpoint.Processes parent_process matching), enumerate outbound destinations from those hosts in the install window, and check downstream cloud audit logs (C
+false_positive_filters: |-
+  | where not (InitiatingProcessCommandLine has_any (dynamic(["sam local","serverless deploy","renovate-config","dependabot"])) and AccountName in~ (dynamic(["jenkins","gitlab-runner","github-actions"])))
+  | where not (DeviceName startswith "build-" and ProcessCommandLine has "aws configure")

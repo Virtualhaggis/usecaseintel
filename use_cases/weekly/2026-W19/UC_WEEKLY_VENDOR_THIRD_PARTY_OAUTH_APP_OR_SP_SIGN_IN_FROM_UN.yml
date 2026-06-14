@@ -123,15 +123,15 @@ sentinel_kql: |-
   | order by FirstAction desc
 splunk_spl: |-
   ``` Stage 1 — successful SP / OAuth / federated sign-ins (last 14d) with their (app,src) pair ```
-  | tstats `summariesonly` earliest(_time) as auth_time, values(Authentication.src) as auth_src, values(Authentication.app) as auth_app, values(Authentication.signature_id) as auth_sig from datamodel=Authentication where Authentication.action=success AND Authentication.signature_id IN ("ServicePrincipalSignIn","NonInteractiveUserSignIn","UserLoggedIn","ConsoleLogin","AssumeRoleWithSAML","federatedSSO","user.session.start") AND earliest=-14d@d by Authentication.user span=1m
+  | tstats `summariesonly` earliest(_time) as auth_time, values(Authentication.src) as auth_src, values(Authentication.app) as auth_app, values(Authentication.signature_id) as auth_sig from datamodel=Authentication.Authentication where Authentication.action=success AND Authentication.signature_id IN ("ServicePrincipalSignIn","NonInteractiveUserSignIn","UserLoggedIn","ConsoleLogin","AssumeRoleWithSAML","federatedSSO","user.session.start") AND earliest=-14d@d by Authentication.user span=1m
   | `drop_dm_object_name(Authentication)`
   | rename user as actor
   ``` Anti-baseline: keep only (app,src) pairs never (or barely) seen in the prior 30d window ```
-  | join type=left auth_app, auth_src [ tstats `summariesonly` count as baseline_count from datamodel=Authentication where Authentication.action=success AND earliest=-30d@d latest=-14d@d by Authentication.app, Authentication.src | `drop_dm_object_name(Authentication)` | rename app as auth_app, src as auth_src ]
+  | join type=left auth_app, auth_src [ tstats `summariesonly` count as baseline_count from datamodel=Authentication.Authentication where Authentication.action=success AND earliest=-30d@d latest=-14d@d by Authentication.app, Authentication.src | `drop_dm_object_name(Authentication)` | rename app as auth_app, src as auth_src ]
   | fillnull baseline_count value=0
   | where baseline_count <= 2
   ``` Stage 2 — bulk SaaS object reads by the same actor within 30 minutes ```
-  | join type=inner actor max=0 [ tstats `summariesonly` count from datamodel=Change where All_Changes.action IN ("read","downloaded","accessed","exported","cloned") AND All_Changes.object_category IN ("file","email","repository","record","blob","secret","mailbox") by _time, All_Changes.user, All_Changes.object, All_Changes.app, All_Changes.object_category | `drop_dm_object_name(All_Changes)` | rename user as actor, _time as access_time, object as object_id, app as access_app, object_category as object_kind ]
+  | join type=inner actor max=0 [ tstats `summariesonly` count from datamodel=Change.All_Changes where All_Changes.action IN ("read","downloaded","accessed","exported","cloned") AND All_Changes.object_category IN ("file","email","repository","record","blob","secret","mailbox") by _time, All_Changes.user, All_Changes.object_id, All_Changes.dest, All_Changes.object_category | `drop_dm_object_name(All_Changes)` | rename user as actor, _time as access_time, dest as access_app, object_category as object_kind ]
   | where access_time >= auth_time AND access_time <= auth_time + 1800
   | stats count as ObjectsRead, dc(object_id) as DistinctObjects, values(object_kind) as ObjectKinds, values(access_app) as AccessApps, min(access_time) as FirstAccess, max(access_time) as LastAccess by actor, auth_app, auth_src, auth_time
   | where ObjectsRead >= 50 OR DistinctObjects >= 25

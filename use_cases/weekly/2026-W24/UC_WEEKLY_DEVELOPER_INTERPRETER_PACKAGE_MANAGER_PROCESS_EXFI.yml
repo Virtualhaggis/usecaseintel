@@ -1,0 +1,187 @@
+id: UC_WEEKLY_DEVELOPER_INTERPRETER_PACKAGE_MANAGER_PROCESS_EXFI
+title: "[WEEKLY] Developer interpreter / package-manager process exfiltrating tokens to public code-hosting / worker domains"
+kill_chain: install
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+- falcon
+- cloudwatch
+mitre_attack:
+- id: T1195.002
+  name: "Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools"
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1059.006
+  name: "Command and Scripting Interpreter: Python"
+- id: T1552.001
+  name: "Unsecured Credentials: Credentials In Files"
+- id: T1555.003
+  name: "Credentials from Password Stores: Credentials from Web Browsers"
+- id: T1567.001
+  name: "Exfiltration Over Web Service: Exfiltration to Code Repository"
+- id: T1102.002
+  name: "Web Service: Bidirectional Communication"
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Endpoint.Filesystem
+  - Network_Traffic.All_Traffic
+  - Network_Resolution.DNS
+description: |-
+  Detects the multi-stage Miasma/Hades supply-chain pattern: a package manager (npm/pip/yarn/pnpm/uv) or its lifecycle hook spawns a script interpreter (node, python, bash, powershell), which within a short window reads local credential/token stores (.npmrc, .pypirc, .aws/credentials, .git-credentials, .env, browser SQLite cookie DBs) and egresses to a non-registry public-code-hosting or anonymous-worker endpoint (raw.githubusercontent.com, gist.github.com, *.workers.dev, *.trycloudflare.com, *.web.app, transfer.sh, telegram bot API). The fortnight's Miasma compromise of @redhat-cloud-services (Microsoft 2026-06-03), the Hades PyPI splinter (THN 2026-06-09), the 73 Microsoft GitHub repos pulled offline (THN 2026-06-09), and the WinRAR CVE-2025-8088 stealer chains reaching the same Cloudflare-Worker dead-drops (THN 2026-06-09) all converge on this exact preinstall->cred-harvest->bidirectional-C2 chain. Spans Initial Access (T1195.002), Execution (T1059), Credential Access (T1552.001/T1555.003), Exfiltration (T1567/T1102.002). Fires when ALL three stages co-occur on one host within 10 minutes; does NOT fire on a clean `npm install` against a registry (registry.npmjs.org / pypi.org are excluded), on isolated cred-file reads by password managers, or on developer git pushes that don't follow a package-install event.
+  
+  Rationale: Every article this fortnight (Miasma npm, Hades PyPI, Microsoft's 73 GitHub repo pulls, the WinRAR delivery chains) ends in the same three-event sequence on a developer or build host: package-manager spawns interpreter, interpreter reads credential artifacts, interpreter or its child egresses to a public anonymous-worker / code-host dead-drop. Detecting on that joint sequence — rather than the rotating package names, hashes or domains — keeps the rule alive across the campaign's known splinters and the next ecosystem to be targeted.
+defender_kql: |-
+  let Window = 10m;
+  let RegistryHosts = dynamic(["registry.npmjs.org","pypi.org","files.pythonhosted.org","registry.yarnpkg.com","index.docker.io","ghcr.io","crates.io"]);
+  let PublicDropDomains = dynamic(["workers.dev","trycloudflare.com","web.app","raw.githubusercontent.com","gist.github.com","transfer.sh","ngrok.io","ngrok-free.app","api.telegram.org","discord.com","discordapp.com","pastebin.com","hastebin.com","bot.discord.com"]);
+  let CredArtifacts = dynamic([".npmrc",".pypirc","credentials",".git-credentials","id_rsa","id_ed25519","config.json",".env","Login Data","Cookies","key4.db","logins.json"]);
+  let PkgMgrParents = dynamic(["npm.exe","npm-cli.js","yarn.exe","yarn","pnpm.exe","pnpm","pip","pip.exe","pip3","pip3.exe","uv","uv.exe","poetry","poetry.exe","node.exe","node"]);
+  let ScriptChildren = dynamic(["node.exe","node","python.exe","python","python3","powershell.exe","pwsh.exe","cmd.exe","bash","sh","curl.exe","wget.exe"]);
+  let PkgInstallStage = DeviceProcessEvents
+      | where Timestamp > ago(2d)
+      | where AccountName !endswith "$"
+      | where InitiatingProcessFileName in~ (PkgMgrParents)
+      | where FileName in~ (ScriptChildren)
+      | where InitiatingProcessCommandLine has_any ("install","add","i ","ci","preinstall","postinstall","lifecycle","build")
+      | project InstallTime = Timestamp, DeviceId, DeviceName, AccountName,
+                PkgMgr = InitiatingProcessFileName, PkgMgrCmd = InitiatingProcessCommandLine,
+                ChildProc = FileName, ChildCmd = ProcessCommandLine, ChildPid = ProcessId;
+  let CredReadStage = DeviceFileEvents
+      | where Timestamp > ago(2d)
+      | where ActionType in ("FileCreated","FileModified","FileRenamed") or ActionType startswith "File"
+      | where FileName in~ (CredArtifacts) or FolderPath has_any (".aws",".ssh","User Data\\Default",".npm",".config\\gh")
+      | project CredTime = Timestamp, DeviceId, CredFile = FolderPath, CredInitiator = InitiatingProcessFileName, CredInitiatorPid = InitiatingProcessId;
+  let EgressStage = DeviceNetworkEvents
+      | where Timestamp > ago(2d)
+      | where RemoteIPType == "Public"
+      | where isnotempty(RemoteUrl)
+      | where not(RemoteUrl has_any (RegistryHosts))
+      | extend HitDrop = iff(RemoteUrl has_any (PublicDropDomains), true, false)
+      | where HitDrop == true
+      | project EgressTime = Timestamp, DeviceId, RemoteUrl, RemoteIP, EgressInitiator = InitiatingProcessFileName, EgressPid = InitiatingProcessId;
+  PkgInstallStage
+  | join kind=inner CredReadStage on DeviceId
+  | where CredTime between (InstallTime .. InstallTime + Window)
+  | join kind=inner EgressStage on DeviceId
+  | where EgressTime between (InstallTime .. InstallTime + Window)
+  | where EgressInitiator in~ (ScriptChildren) or EgressInitiator =~ ChildProc or CredInitiator in~ (ScriptChildren)
+  | summarize InstallTime = min(InstallTime), CredReads = dcount(CredFile),
+              CredFiles = make_set(CredFile, 25), DropDomains = make_set(RemoteUrl, 25),
+              DropIPs = make_set(RemoteIP, 25)
+            by DeviceName, AccountName, PkgMgr, ChildProc, ChildCmd
+  | where CredReads >= 1
+  | order by InstallTime desc
+sentinel_kql: |-
+  let Window = 10m;
+  let RegistryHosts = dynamic(["registry.npmjs.org","pypi.org","files.pythonhosted.org","registry.yarnpkg.com","index.docker.io","ghcr.io","crates.io"]);
+  let PublicDropDomains = dynamic(["workers.dev","trycloudflare.com","web.app","raw.githubusercontent.com","gist.github.com","transfer.sh","ngrok.io","ngrok-free.app","api.telegram.org","discord.com","discordapp.com","pastebin.com"]);
+  let CredArtifacts = dynamic([".npmrc",".pypirc","credentials",".git-credentials","id_rsa","id_ed25519","config.json",".env","Login Data","Cookies","key4.db","logins.json"]);
+  let PkgMgrParents = dynamic(["npm.exe","npm-cli.js","yarn.exe","yarn","pnpm.exe","pnpm","pip","pip.exe","pip3","pip3.exe","uv","uv.exe","poetry","poetry.exe","node.exe","node"]);
+  let ScriptChildren = dynamic(["node.exe","node","python.exe","python","python3","powershell.exe","pwsh.exe","cmd.exe","bash","sh","curl.exe","wget.exe"]);
+  let PkgInstallStage = DeviceProcessEvents
+      | where Timestamp > ago(2d)
+      | where AccountName !endswith "$"
+      | where InitiatingProcessFileName in~ (PkgMgrParents)
+      | where FileName in~ (ScriptChildren)
+      | where InitiatingProcessCommandLine has_any ("install","add","preinstall","postinstall","lifecycle","build","ci")
+      | project InstallTime = Timestamp, DeviceId, DeviceName, AccountName,
+                PkgMgr = InitiatingProcessFileName, ChildProc = FileName, ChildCmd = ProcessCommandLine;
+  let CredReadStage = DeviceFileEvents
+      | where Timestamp > ago(2d)
+      | where FileName in~ (CredArtifacts) or FolderPath has_any (".aws",".ssh","User Data\\Default",".npm",".config\\gh")
+      | project CredTime = Timestamp, DeviceId, CredFile = FolderPath, CredInitiator = InitiatingProcessFileName;
+  let EgressStage = DeviceNetworkEvents
+      | where Timestamp > ago(2d)
+      | where RemoteIPType == "Public"
+      | where isnotempty(RemoteUrl)
+      | where not(RemoteUrl has_any (RegistryHosts))
+      | where RemoteUrl has_any (PublicDropDomains)
+      | project EgressTime = Timestamp, DeviceId, RemoteUrl, RemoteIP, EgressInitiator = InitiatingProcessFileName;
+  PkgInstallStage
+  | join kind=inner CredReadStage on DeviceId
+  | where CredTime between (InstallTime .. InstallTime + Window)
+  | join kind=inner EgressStage on DeviceId
+  | where EgressTime between (InstallTime .. InstallTime + Window)
+  | where EgressInitiator in~ (ScriptChildren) or CredInitiator in~ (ScriptChildren)
+  | summarize InstallTime = min(InstallTime), CredFiles = make_set(CredFile, 25),
+              DropDomains = make_set(RemoteUrl, 25), DropIPs = make_set(RemoteIP, 25)
+            by DeviceName, AccountName, PkgMgr, ChildProc, ChildCmd
+  | order by InstallTime desc
+splunk_spl: |-
+  | tstats `summariesonly` count min(_time) as install_time from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("npm.exe","npm-cli.js","yarn.exe","pnpm.exe","pip","pip.exe","pip3","pip3.exe","uv","uv.exe","node.exe","node") (Processes.process="*install*" OR Processes.process="*add *" OR Processes.parent_process="*lifecycle*" OR Processes.parent_process="*preinstall*" OR Processes.parent_process="*postinstall*") Processes.process_name IN ("node.exe","node","python.exe","python","python3","powershell.exe","pwsh.exe","cmd.exe","bash","sh","curl.exe","wget.exe") by host Processes.user Processes.process_name Processes.process_guid Processes.parent_process_name
+  | `drop_dm_object_name(Processes)`
+  | join type=inner host process_guid [
+      | tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("*\\.npmrc","*\\.pypirc","*\\.aws\\credentials","*\\.git-credentials","*\\.ssh\\id_rsa","*\\.docker\\config.json","*\\.env","*\\AppData\\*Login Data","*\\AppData\\*Cookies","*/.npmrc","*/.pypirc","*/.aws/credentials","*/.git-credentials","*/.ssh/id_rsa","*/.docker/config.json","*/.env") by host Filesystem.process_guid
+      | `drop_dm_object_name(Filesystem)`
+      | rename process_guid as process_guid
+  ]
+  | join type=inner host [
+      | tstats `summariesonly` count values(All_Traffic.dest) as egress_dest from datamodel=Network_Traffic.All_Traffic where All_Traffic.action=allowed All_Traffic.dest_category!=internal NOT All_Traffic.dest IN ("registry.npmjs.org","pypi.org","files.pythonhosted.org","registry.yarnpkg.com","*.docker.io") by host
+      | `drop_dm_object_name(All_Traffic)`
+      | join type=inner host [
+          | tstats `summariesonly` count from datamodel=Network_Resolution.DNS where (DNS.query="*.workers.dev" OR DNS.query="*.trycloudflare.com" OR DNS.query="*.web.app" OR DNS.query="raw.githubusercontent.com" OR DNS.query="gist.github.com" OR DNS.query="transfer.sh" OR DNS.query="*.ngrok.io" OR DNS.query="api.telegram.org" OR DNS.query="discord.com" OR DNS.query="*.pastebin.com") by host DNS.query
+          | `drop_dm_object_name(DNS)`
+      ]
+  ]
+  | where count >= 1
+  | sort - install_time
+datadog_query: |-
+  source:(windows.sysmon OR linux.auditd) (@EventID:1 OR @auditd.type:EXECVE) @ParentImage:(*\\npm.exe OR *\\npm-cli.js OR *\\yarn.exe OR *\\pnpm.exe OR *\\pip.exe OR *\\pip3.exe OR *\\uv.exe OR *\\node.exe OR */bin/npm OR */bin/yarn OR */bin/pnpm OR */bin/pip OR */bin/pip3 OR */bin/uv OR */bin/poetry OR */bin/node) @Image:(*\\node.exe OR *\\python.exe OR *\\python3.exe OR *\\powershell.exe OR *\\pwsh.exe OR *\\cmd.exe OR *\\bash.exe OR *\\curl.exe OR *\\wget.exe OR */bin/node OR */bin/python OR */bin/python3 OR */bin/bash OR */bin/sh OR */bin/curl OR */bin/wget) @CommandLine:(*install* OR *preinstall* OR *postinstall* OR *lifecycle* OR *.npmrc* OR *.pypirc* OR *.aws/credentials* OR *.git-credentials* OR *id_rsa* OR *.env* OR *Login\ Data* OR *Cookies* OR *workers.dev* OR *trycloudflare.com* OR *raw.githubusercontent.com* OR *gist.github.com* OR *transfer.sh* OR *api.telegram.org* OR *discord.com/api/webhooks*)
+falcon_logscale_query: |-
+  #event_simpleName=ProcessRollup2 ParentBaseFileName=/(npm|npm-cli\.js|yarn|pnpm|pip|pip3|uv|poetry|node)(\.exe)?$/i ImageFileName=/(node|python|python3|powershell|pwsh|cmd|bash|sh|curl|wget)(\.exe)?$/i
+  | regex("(install|preinstall|postinstall|lifecycle|ci |add )", field=ParentCommandLine)
+  | join({
+      #event_simpleName=FileOpenInfo
+      | regex("(\\\\\\.npmrc|\\\\\\.pypirc|\\\\\\.aws\\\\credentials|\\\\\\.git-credentials|\\\\id_rsa|\\\\\\.env|\\\\Login Data|\\\\Cookies|\\\\key4\\.db|/\\.npmrc|/\\.pypirc|/\\.aws/credentials|/\\.git-credentials|/id_rsa|/\\.env)", field=TargetFileName)
+    }, field=aid, include=[TargetFileName])
+  | join({
+      #event_simpleName=DnsRequest
+      DomainName=/(workers\.dev|trycloudflare\.com|web\.app|raw\.githubusercontent\.com|gist\.github\.com|transfer\.sh|ngrok\.io|ngrok-free\.app|api\.telegram\.org|discord\.com|discordapp\.com|pastebin\.com)$/i
+      NOT DomainName=/(registry\.npmjs\.org|pypi\.org|files\.pythonhosted\.org|registry\.yarnpkg\.com)$/i
+    }, field=aid, include=[DomainName])
+  | groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine, TargetFileName, DomainName], function=count())
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail
+  # Endpoint-side supply-chain stealer detection lives on EDR, not CloudTrail.
+  # This adjunct flags downstream IAM-credential abuse from a stolen .aws/credentials key:
+  # console logins / API calls from an unfamiliar IP for an IAM user shortly after the
+  # fortnight's package-install window. Pair with the endpoint UC for full chain.
+  fields @timestamp, eventName, eventSource, sourceIPAddress, userAgent, userIdentity.type, userIdentity.userName, userIdentity.arn, awsRegion, errorCode
+  | filter userIdentity.type = "IAMUser"
+        and not isPresent(errorCode)
+        and (eventName = "ConsoleLogin" or eventName like /^(GetCallerIdentity|ListBuckets|ListUsers|CreateAccessKey|AttachUserPolicy|GetSecretValue|AssumeRole)$/)
+        and userAgent not like /aws-internal/
+        and sourceIPAddress not like /^10\./
+        and sourceIPAddress not like /^172\.(1[6-9]|2[0-9]|3[0-1])\./
+        and sourceIPAddress not like /^192\.168\./
+  | stats count(*) as calls, count_distinct(eventName) as distinctActions, earliest(@timestamp) as first_seen, latest(@timestamp) as last_seen by userIdentity.userName, sourceIPAddress, userAgent
+  | filter distinctActions >= 2
+  | sort first_seen desc
+required_telemetry:
+- Defender DeviceProcessEvents
+- Defender DeviceFileEvents
+- Defender DeviceNetworkEvents
+- Sysmon EID 1 (process create)
+- Sysmon EID 3 (network connect) or EID 22 (DNS query)
+- Linux auditd EXECVE + path syscalls
+- Falcon FDR ProcessRollup2 / FileOpenInfo / DnsRequest
+- Splunk CIM Endpoint.Processes + Endpoint.Filesystem + Network_Traffic.All_Traffic + Network_Resolution.DNS
+kill_chain_phase: credential_access
+expected_fp_scenarios:
+- Internal developer-tooling package (lint hooks, telemetry SDK) that reads ~/.npmrc to validate auth and posts a usage ping to a corporate gist or GitHub raw URL during postinstall.
+- "CI agents that legitimately use `curl raw.githubusercontent.com/...` during a build step kicked off by `npm ci` (e.g. pulling a wasm blob or shellcheck binary)."
+- "Cloudflare Pages / Workers deployment tooling (`wrangler`, `vercel`) where install-time auth reads ~/.config tokens and contacts *.workers.dev for valid project sync."
+- Security agents (Snyk, GitGuardian pre-commit) that read .env and credential files for scanning, then post telemetry to vendor endpoints — pin those vendor domains to the allowlist.
+- "Devs running `pip install` of an internal mirror package whose postinstall pulls release notes from gist.github.com."
+response_runbook: |-
+  1) Triage: Pull the install-time command line and pivot on the parent `npm/pip/yarn/uv` invocation — capture the exact package name and version. Cross-reference the SHA256 of the dropped script (if FileWritten fires) against Microsoft / Snyk / Socket advisories for the Miasma/Hades families. Confirm whether the dropped child wrote any persistence (services, Run keys, ~/.bashrc, ~/.profile, ~/Library/LaunchAgents). 2) Contain: Isolate the developer endpoint via Defender / Falcon. Force-rotate every credential touched in the 10-minute window: npm tokens (`npm token revoke`), PyPI API tokens, AWS access keys for the local profile (`aws iam delete-access-key`), Git PATs, GitHub fine-grained tokens, refresh tokens for any browser profile listed in CredFiles. Quarantine the package cache (`~/.npm`, `~/.cache/pip`, `~/Library/Caches/pypoetry`). 3) Hunt: Sweep DNS/proxy for the same dead-drop domain across the fleet for the last 30 days; sweep package-lock/poetry-lock files in git for the mali
+false_positive_filters: |-
+  | where not (ChildCmd has_any ("snyk","gitguardian","socket-security","wrangler publish","vercel deploy","sentry-cli") and AccountName has_any ("build","ci","runner"))
+  | where not (DropDomains has_any ("raw.githubusercontent.com") and ChildCmd has "shellcheck")
+  | where not (PkgMgr has "node" and ChildCmd has_any ("corepack","npx --version"))

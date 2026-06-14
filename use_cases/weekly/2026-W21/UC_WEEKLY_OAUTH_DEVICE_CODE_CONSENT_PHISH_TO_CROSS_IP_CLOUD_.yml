@@ -134,15 +134,15 @@ sentinel_kql: |-
 splunk_spl: |-
   ``` Stage 1: device-code or non-Microsoft OAuth consent sign-in success ```
   | tstats `summariesonly` earliest(_time) AS auth_time, values(Authentication.src) AS auth_src_ip, values(Authentication.app) AS auth_app
-      from datamodel=Authentication
+      from datamodel=Authentication.Authentication
       where Authentication.action="success" AND (Authentication.signature_id="deviceCode" OR Authentication.authentication_method="deviceCode" OR Authentication.signature="Consent to application")
       by Authentication.user, Authentication.dest
   | `drop_dm_object_name(Authentication)`
   | rename user AS upn, dest AS tenant
   ``` Stage 2: privileged cloud action from a DIFFERENT src IP within 60 min ```
   | join type=inner upn
-      [| tstats `summariesonly` earliest(_time) AS act_time, values(All_Changes.src) AS act_src_ip, values(All_Changes.action) AS act_name, values(All_Changes.object) AS act_obj
-          from datamodel=Change
+      [| tstats `summariesonly` earliest(_time) AS act_time, values(All_Changes.src) AS act_src_ip, values(All_Changes.action) AS act_name, values(All_Changes.object_id) AS act_obj
+          from datamodel=Change.All_Changes
           where All_Changes.object_category IN ("user","mailbox","application","role","device")
             AND All_Changes.action IN ("created","modified","granted","added")
             AND All_Changes.result="success"

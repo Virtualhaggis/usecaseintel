@@ -1,0 +1,134 @@
+id: UC_WEEKLY_NPM_INSTALL_SPAWNED_PROCESS_PERFORMING_CRED_FILE_F
+title: "[WEEKLY] npm-install spawned process performing cred-file fan-out plus IMDS reach"
+kill_chain: actions
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+- falcon
+- cloudwatch
+mitre_attack:
+- id: T1195.002
+  name: Compromise Software Supply Chain
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1552.001
+  name: "Unsecured Credentials: Credentials In Files"
+- id: T1552.005
+  name: "Unsecured Credentials: Cloud Instance Metadata API"
+- id: T1528
+  name: Steal Application Access Token
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Endpoint.Filesystem
+  - Network_Traffic.All_Traffic
+description: |-
+  Detects the post-execution credential-harvest stage of an npm supply-chain compromise: a process spawned under an npm/node/yarn/pnpm or node-gyp (python) parent that, within 10 minutes on the same host, reads two or more distinct cloud/dev credential file paths (.aws/credentials, .ssh/id_rsa, .npmrc, .docker/config.json, ~/.config/gcloud, .kube/config, .azure/accessTokens.json) or contacts cloud instance metadata (169.254.169.254 / metadata.google.internal / metadata.azure.com). This fortnight the @redhat-cloud-services 'Miasma' campaign (Snyk 2026-06-01, StepSecurity 2026-06-02, Microsoft 2026-06-03, Unit 42 2026-06-02) and the self-propagating binding.gyp worm (Snyk + StepSecurity 2026-06-04, Aikido 2026-06-09) drop the same multi-cloud secret harvester targeting AWS/GCP/Azure/GitHub Actions/npm/Vault/SSH/wallet secrets; the npm v12 install-scripts disablement announcement (The Hacker News + Aikido 2026-06-11) and a fresh Web3/cloud wave (Cyber Security News 2026-06-12) confirm the harvest behaviour persists across hook variants (preinstall, postinstall, binding.gyp), making the fan-out the durable signal rather than any single lifecycle hook or IOC. Spans install → credential_access in the kill chain. Fires on developer workstations and CI/CD runners exhibiting the spawn-plus-fan-out pair; does NOT fire on plain `npm install` compiling native modules without touching cred paths, nor on a single legitimate aws-sdk IMDS lookup from a known package's runtime.
+  
+  Rationale: Across all 10 articles the post-spawn behavior — a single npm/node/gyp-spawned process touching multiple cloud/dev credential paths and/or IMDS — is the invariant; the entry vector rotates between preinstall hooks (Miasma), postinstall hooks (npm v12 announcement), and binding.gyp (worm) but the harvest fan-out persists. Requiring ≥2 distinct cred paths within 10 minutes of an npm-rooted spawn eliminates the single-cred SDK use-case while catching every campaign variant the fortnight surfaced.
+defender_kql: |-
+  let LookbackDays = 14d;
+  let CorrelationMin = 10m;
+  let CredFolderTokens = dynamic([@".aws\credentials",@"/.aws/credentials",@".ssh\id_rsa",@"/.ssh/id_rsa",@".ssh\id_ed25519",@"/.ssh/id_ed25519",@".npmrc",@".docker\config.json",@"/.docker/config.json",@"/.config/gcloud",@"/.kube/config",@"/.azure/accessTokens.json"]);
+  let InstallSpawn = DeviceProcessEvents
+      | where Timestamp > ago(LookbackDays)
+      | where InitiatingProcessFileName in~ ("npm.exe","node.exe","npm-cli.js","yarn.exe","pnpm.exe","python.exe","python3.exe","npm","node","yarn","pnpm","python","python3")
+      | where FileName in~ ("node.exe","python.exe","python3.exe","powershell.exe","pwsh.exe","cmd.exe","sh.exe","bash.exe","node","python","python3")
+      | where InitiatingProcessCommandLine has_any ("install"," ci","rebuild","npx") or ProcessCommandLine has_any ("binding.gyp","node-gyp","preinstall","postinstall","index.js","node_modules")
+      | where AccountName !endswith "$"
+      | project InstallTime = Timestamp, DeviceId, DeviceName, AccountName, InstallProc = FileName, InstallCmd = ProcessCommandLine, InstallParent = InitiatingProcessFileName, InstallParentCmd = InitiatingProcessCommandLine;
+  let CredFanOut = DeviceFileEvents
+      | where Timestamp > ago(LookbackDays)
+      | where ActionType in ("FileCreated","FileModified","FileRenamed")
+           or InitiatingProcessFileName in~ ("node.exe","python.exe","python3.exe","powershell.exe","pwsh.exe","sh.exe","bash.exe")
+      | where InitiatingProcessFileName in~ ("node.exe","python.exe","python3.exe","powershell.exe","pwsh.exe","sh.exe","bash.exe","curl.exe","wget.exe","node","python","python3")
+      | where FolderPath has_any (CredFolderTokens)
+           or FileName in~ (".npmrc","credentials","id_rsa","id_ed25519",".env",".envrc","accessTokens.json","github_token")
+      | summarize FirstHarvest = min(Timestamp), CredPathsTouched = dcount(FolderPath), CredFiles = make_set(FolderPath, 12) by DeviceId, AccountName, bin(Timestamp, CorrelationMin)
+      | where CredPathsTouched >= 2;
+  let IMDSReach = DeviceNetworkEvents
+      | where Timestamp > ago(LookbackDays)
+      | where RemoteIP in ("169.254.169.254","fd00:ec2::254") or RemoteUrl has_any ("metadata.google.internal","metadata.azure.com","169.254.169.254")
+      | where InitiatingProcessFileName in~ ("node.exe","python.exe","python3.exe","powershell.exe","pwsh.exe","sh.exe","bash.exe","curl.exe","wget.exe","node","python","python3")
+      | project IMDSTime = Timestamp, DeviceId, IMDSProc = InitiatingProcessFileName, IMDSCmd = InitiatingProcessCommandLine, RemoteIP, RemoteUrl;
+  let HitsFromFanOut = InstallSpawn
+      | join kind=inner CredFanOut on DeviceId
+      | where FirstHarvest between (InstallTime .. InstallTime + CorrelationMin)
+      | project Trigger = "cred-file-fan-out", InstallTime, EvidenceTime = FirstHarvest, DelaySec = datetime_diff('second', FirstHarvest, InstallTime), DeviceName, AccountName, InstallParent, InstallParentCmd, InstallProc, InstallCmd, CredPathsTouched, CredFiles, RemoteIP = "", RemoteUrl = "";
+  let HitsFromIMDS = InstallSpawn
+      | join kind=inner IMDSReach on DeviceId
+      | where IMDSTime between (InstallTime .. InstallTime + CorrelationMin)
+      | project Trigger = "imds-reach", InstallTime, EvidenceTime = IMDSTime, DelaySec = datetime_diff('second', IMDSTime, InstallTime), DeviceName, AccountName, InstallParent, InstallParentCmd, InstallProc, InstallCmd, CredPathsTouched = 0, CredFiles = dynamic([]), RemoteIP, RemoteUrl;
+  HitsFromFanOut
+  | union HitsFromIMDS
+  | order by InstallTime desc
+sentinel_kql: |-
+  let LookbackDays = 14d;
+  let CorrelationMin = 10m;
+  let InstallSpawn = imProcessCreate
+      | where TimeGenerated > ago(LookbackDays)
+      | where ParentProcessName matches regex @"(?i)(?:^|[\\/])(npm|node|yarn|pnpm|python|python3|npm-cli\.js)(\.exe)?$"
+      | where Process matches regex @"(?i)(?:^|[\\/])(node|python|python3|powershell|pwsh|cmd|sh|bash)(\.exe)?$"
+      | where ParentProcessCommandLine has_any ("install"," ci","rebuild","npx") or CommandLine has_any ("binding.gyp","node-gyp","preinstall","postinstall","index.js","node_modules")
+      | project InstallTime = TimeGenerated, DvcHostname, ActorUsername, Process, CommandLine, ParentProcessName, ParentProcessCommandLine;
+  let CredFanOut = imFileEvent
+      | where TimeGenerated > ago(LookbackDays)
+      | where EventType in ("FileAccessed","FileRead","FileOpened","FileCreated","FileModified")
+      | where ActingProcessName matches regex @"(?i)(?:^|[\\/])(node|python|python3|powershell|pwsh|sh|bash|curl|wget)(\.exe)?$"
+      | where TargetFilePath has_any (@"\.aws\credentials",@"/.aws/credentials",@"\.ssh\id_",@"/.ssh/id_",@"\.npmrc",@"/.npmrc",@"\.docker\config.json",@"/.docker/config.json",@"/.config/gcloud",@"/.kube/config",@"/.azure/accessTokens.json")
+         or TargetFileName in~ (".env",".envrc","github_token","credentials","id_rsa","id_ed25519","accessTokens.json")
+      | summarize FirstHarvest = min(TimeGenerated), CredPathsTouched = dcount(TargetFilePath), CredFiles = make_set(TargetFilePath, 12) by DvcHostname, ActorUsername
+      | where CredPathsTouched >= 2;
+  InstallSpawn
+  | join kind=inner CredFanOut on DvcHostname
+  | where FirstHarvest between (InstallTime .. InstallTime + CorrelationMin)
+  | project InstallTime, FirstHarvest, DelaySec = datetime_diff('second', FirstHarvest, InstallTime), DvcHostname, ActorUsername, ParentProcessName, Process, CommandLine, ParentProcessCommandLine, CredPathsTouched, CredFiles
+  | order by InstallTime desc
+splunk_spl: |-
+  | tstats summariesonly=true min(_time) as install_time values(Processes.process) as install_cmd values(Processes.parent_process_name) as install_parent from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("npm","npm.exe","npm-cli.js","node","node.exe","yarn","yarn.exe","pnpm","pnpm.exe","python","python.exe","python3","python3.exe") AND Processes.process_name IN ("node","node.exe","python","python.exe","python3","python3.exe","powershell.exe","pwsh.exe","cmd.exe","sh","bash") by Processes.dest, Processes.user | `drop_dm_object_name(Processes)` | join type=inner dest [| tstats summariesonly=true min(_time) as harvest_time dc(Filesystem.file_path) as cred_paths_touched values(Filesystem.file_path) as cred_paths values(Filesystem.process_name) as harvest_proc from datamodel=Endpoint.Filesystem where Filesystem.action="read" AND Filesystem.process_name IN ("node.exe","node","python.exe","python","python3","python3.exe","powershell.exe","pwsh.exe","sh","bash","curl.exe","wget.exe") AND (Filesystem.file_path="*\\.aws\\credentials*" OR Filesystem.file_path="*/.aws/credentials*" OR Filesystem.file_path="*\\.aws\\config*" OR Filesystem.file_path="*\\.ssh\\id_rsa*" OR Filesystem.file_path="*/.ssh/id_rsa*" OR Filesystem.file_path="*\\.ssh\\id_ed25519*" OR Filesystem.file_path="*/.ssh/id_ed25519*" OR Filesystem.file_path="*\\.npmrc*" OR Filesystem.file_path="*/.npmrc*" OR Filesystem.file_path="*\\.docker\\config.json*" OR Filesystem.file_path="*/.docker/config.json*" OR Filesystem.file_path="*/.config/gcloud/*" OR Filesystem.file_path="*/.kube/config*" OR Filesystem.file_path="*/.azure/accessTokens.json*" OR Filesystem.file_name IN (".env",".envrc","github_token","credentials","id_rsa","id_ed25519")) by Filesystem.dest | `drop_dm_object_name(Filesystem)` | where cred_paths_touched >= 2] | eval delay_sec = harvest_time - install_time | where delay_sec >= 0 AND delay_sec <= 600 | table install_time, harvest_time, delay_sec, dest, user, install_parent, install_cmd, harvest_proc, cred_paths_touched, cred_paths | sort - install_time
+datadog_query: |-
+  source:(windows.sysmon OR linux.auditd) (@EventID:1 OR @auditd.type:EXECVE) @ParentImage:(*\\npm.exe OR *\\node.exe OR *\\npm-cli.js OR *\\yarn.exe OR *\\pnpm.exe OR *\\python.exe OR *\\python3.exe OR */npm OR */node OR */yarn OR */pnpm OR */python OR */python3) @Image:(*\\node.exe OR *\\python.exe OR *\\python3.exe OR *\\powershell.exe OR *\\pwsh.exe OR *\\cmd.exe OR */node OR */python OR */python3 OR */sh OR */bash) (@CommandLine:(*binding.gyp* OR *node-gyp* OR *preinstall* OR *postinstall* OR *index.js* OR *node_modules*) OR @ParentCommandLine:(*"npm install"* OR *"npm ci"* OR *"npm rebuild"* OR *"yarn install"* OR *"pnpm install"* OR *npx*))
+falcon_logscale_query: |-
+  #event_simpleName=ProcessRollup2 ParentBaseFileName=/^(npm|node|yarn|pnpm|python|python3|npm-cli\.js)(\.exe)?$/i ImageFileName=/(node|python|python3|powershell|pwsh|cmd|sh|bash)(\.exe)?$/i
+  | regex("binding\\.gyp|node-gyp|preinstall|postinstall|index\\.js|node_modules|npm install|npm ci|npm rebuild|yarn install|pnpm install", field=CommandLine, strict=false)
+  | join(query={#event_simpleName=/FileOpenInfo|FileWritten/ TargetFileName=/(\.aws[\\\/]credentials|\.ssh[\\\/]id_(rsa|ed25519)|\.npmrc|\.docker[\\\/]config\.json|[\\\/]\.config[\\\/]gcloud|[\\\/]\.kube[\\\/]config|accessTokens\.json|[\\\/]\.env$)/i
+          | groupBy([aid], function=count(field=TargetFileName, distinct=true, as=cred_paths))
+          | cred_paths >= 2},
+         field=aid, include=[cred_paths])
+  | groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine, cred_paths], function=count())
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail
+  fields @timestamp, eventName, eventSource, userIdentity.type, userIdentity.sessionContext.sessionIssuer.userName, userIdentity.userName, sourceIPAddress, userAgent
+  | filter (userIdentity.type = "AssumedRole" or userIdentity.type = "IAMUser")
+         and userAgent like /(node|axios|got|undici|python-requests|aws-sdk-go|aws-sdk-js|Boto3|curl)/i
+         and (eventName in ["GetCallerIdentity","ListBuckets","GetSecretValue","ListSecrets","DescribeInstances","ListAccessKeys","CreateAccessKey","GetSessionToken","ListUsers","ListRoles","AssumeRole"]
+              or eventName like /^Describe/ or eventName like /^Get/ or eventName like /^List/)
+         and not (sourceIPAddress like /^10\./ or sourceIPAddress like /^172\.(1[6-9]|2[0-9]|3[01])\./ or sourceIPAddress like /^192\.168\./ or sourceIPAddress = "AWS Internal")
+  | stats count() as calls, count_distinct(eventName) as distinct_apis, earliest(@timestamp) as first_seen, latest(@timestamp) as last_seen, count_distinct(sourceIPAddress) as src_ips by userIdentity.sessionContext.sessionIssuer.userName, userIdentity.userName, userAgent
+  | filter distinct_apis >= 3
+  | sort first_seen desc
+required_telemetry:
+- Defender DeviceProcessEvents
+- Defender DeviceFileEvents
+- Defender DeviceNetworkEvents
+- Sentinel ASIM imProcessCreate / imFileEvent (M365 connector or Sysmon parser pack)
+- Sysmon EID 1 (ProcessCreate)
+- Sysmon EID 11 / 23 or Linux auditd file-access syscalls
+- Splunk CIM Endpoint.Processes
+- Splunk CIM Endpoint.Filesystem
+kill_chain_phase: credential_access
+expected_fp_scenarios:
+- "AWS SDK Node application in a package's functional test suite making a single IMDS call (single signal — does NOT trip ≥2 cred-path or fan-out logic, so should not fire; included for tuning awareness)."
+- "Developer runs `terraform plan` or `cdk synth` shortly after `npm install` in the same shell; cred reads are real but the parent of the cred-touching process is terraform/cdk, not npm/node-gyp."
+- "Yeoman / create-react-app / Vite scaffolders reading `.npmrc` plus `.gitconfig` during project init — usually only 1 credential-grade path; tuning excludes `.gitconfig` from the cred set."
+- "Docker-compose dev stack spawning node with both `.docker/config.json` (registry auth) and `.npmrc` (private registry) for legitimate package pull — pair with an outbound non-registry destination clause to suppress."
+- "CI runner using `aws-actions/configure-aws-credentials` that exports STS creds into env; subsequent `npm test` step calls AWS APIs but does not READ cred files (env-based) — would not fire."
+response_runbook: |-
+  1) Triage: confirm the npm/node/yarn/python parent commandline and the child interpreter's cred-file list. Pull and inspect the workspace's `package.json` for malicious `preinstall`/`postinstall` hooks and any `binding.gyp` whose `actions:` blocks reference non-build commands. Capture the SHA256 of the spawned `index.js` (typically under `node_modules/@<scope>/<pkg>/`), the resolved C2 (if any), and the dependency tree (`npm ls --all`). Cross-reference the affected package(s) against the @redhat-cloud-services Miasma and binding.gyp worm IOC lists. 2) Contain: isolate the host (CI runner or workstation) from egress. Rotate every credential the harvested files exposed — AWS keys (CreateAccessKey + delete the prior), npm publish token, GitHub PAT/Actions secrets, GCP service-account keys, Azure refresh tokens, Vault tokens, Kubernetes kubeconfig tokens, SSH keys. If the user maintains any npm packages, freeze publishes and audit recent versions for worm self-propagation. 3) Hunt: pivot o
+false_positive_filters: |-
+  | where not (InstallParentCmd has_any ("terraform","tflint","cdk","pulumi","sam build","sam deploy")) | where not (InstallCmd has_any ("aws-sdk-mock","localstack","vitest","jest","mocha")) | where not (CredPathsTouched == 2 and CredFiles has_any (".gitconfig",".gitconfig.local")) | where AccountName !endswith "$" and AccountName !in~ ("system","local service","network service")

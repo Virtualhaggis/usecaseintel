@@ -1,0 +1,156 @@
+id: UC_WEEKLY_SUB_ADMIN_GRANTS_OWNER_ADMINISTRATOR_ROLE_THEN_GRA
+title: "[WEEKLY] Sub-admin grants Owner/Administrator role then grantee signs in from a different source within 60 minutes"
+kill_chain: exploit
+confidence: High
+tier: alerting
+fp_rate_estimate: medium
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+- cloudwatch
+mitre_attack:
+- id: T1098
+  name: Account Manipulation
+- id: T1098.001
+  name: "Account Manipulation: Additional Cloud Credentials"
+- id: T1078
+  name: Valid Accounts
+- id: T1078.004
+  name: "Valid Accounts: Cloud Accounts"
+- id: T1068
+  name: Exploitation for Privilege Escalation
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1556
+  name: Modify Authentication Process
+data_models:
+  defender:
+  - Change.All_Changes
+  - Authentication.Authentication
+description: |-
+  This UC fires when a SaaS or cloud-IdP audit log records assignment of an Owner / Administrator / Global Administrator role (or equivalent privileged group membership) to a non-self principal, and that grantee subsequently authenticates from a different source IP than the grantor within 60 minutes. The fortnight's driver is CVE-2026-47413 in praisonai-platform — `POST /workspaces/{id}/members` was gated only by `require_workspace_member` and forwarded `user_id` + `role=owner` straight to the service layer with no caller-authority check, letting any workspace member promote an arbitrary account to Owner — and The Gentlemen ransomware report (Hacker News, 2026-06-11), which documents T1098.001 Additional Cloud Credentials and T1078 Valid Accounts as the standard post-T1190 handoff used to convert an exploit (CVE-2024-55591, CVE-2025-32433, CVE-2025-33073 and others) into durable identity persistence. The kill-chain spans exploit (the underlying authorization bypass or compromised account performing the grant), persistence (the grantee role itself), and privilege escalation (the grantee now operating with admin authority). It would fire on the praisonai exploit pattern, on a low-privilege Okta admin granting Super Admin, on an AssumedRole session attaching AdministratorAccess to a fresh IAM user, or on a compromised helpdesk account adding a user to Global Administrators. It would NOT fire on Global-Admin-grants-Global-Admin lifecycle changes (excluded by the privileged-grantor allowlist), on PIM activation where grantor == grantee, on documented break-glass / automation SPNs (excluded via `false_positive_filters`), or where the grant succeeds but no grantee sign-in lands within the 60-minute window.
+  
+  Rationale: The praisonai-platform CVE (Article 1) and The Gentlemen ransomware analysis (Article 6) explicitly share the same identity-elevation primitive — a caller without the target role grants Owner/Admin to a second principal who then authenticates and acts — and the four other articles all describe trust-boundary bypasses (T1190 Exploit Public-Facing Application is tagged on every one of the six) whose payoff is durable identity / account control of the kind this UC's grantee-signin correlation surfaces. Detecting the grant + new-IP-grantee-signin chain catches the praisonai vuln directly today and the broader post-T1190 cloud-account manipulation pattern The Gentlemen and similar actors are pivoting to this fortnight, without re-emitting the package-manager-install or LOLBin-network-egress patterns the catalog already covers.
+defender_kql: |-
+  let LookbackDays = 7d;
+  let CorrelationMinutes = 60;
+  let PrivilegedRoles = dynamic(["owner","admin","administrator","global administrator","globaladministrator","privileged role administrator","application administrator","cloud application administrator","superuser","super admin","root"]);
+  let SuspectGrants = CloudAppEvents
+      | where Timestamp > ago(LookbackDays)
+      | where ActionType has_any ("Add member","Add user","Add owner","Add role","Update role","Assign role","Add member to role","Add owner to group","Add member to group")
+           or RawEventData has_any ("\"role\":\"owner\"","\"role\":\"admin\"","\"role\":\"Owner\"","\"role\":\"Administrator\"","AdministratorAccess")
+      | extend RawJ = parse_json(RawEventData)
+      | extend GrantedRole = tolower(tostring(coalesce(RawJ.role, RawJ.RoleAdded, RawJ.NewRole, RawJ.new_role, RawJ["target_role"])))
+      | extend GranteeId = tostring(coalesce(RawJ.user_id, RawJ.TargetUserId, RawJ.targetUserPrincipalName, RawJ.target, RawJ["member"]))
+      | extend GrantorId = tostring(coalesce(AccountObjectId, RawJ.actor_id, RawJ.actorPrincipalId))
+      | where isnotempty(GrantedRole) and isnotempty(GranteeId) and isnotempty(GrantorId)
+      | where GrantedRole in (PrivilegedRoles)
+      | where GrantorId != GranteeId
+      | project GrantTime = Timestamp, GrantorId, GrantorIP = IPAddress, GranteeId, GrantedRole,
+                ObjectName, ApplicationId, UserAgent, ActionType;
+  let GranteeSignIn = AADSignInEventsBeta
+      | where Timestamp > ago(LookbackDays)
+      | where ErrorCode == 0
+      | project SignInTime = Timestamp, GranteeId = AccountObjectId,
+                SignInIP = IPAddress, SignInApp = Application, SignInCountry = Country;
+  SuspectGrants
+  | join kind=inner GranteeSignIn on GranteeId
+  | where SignInTime between (GrantTime .. GrantTime + CorrelationMinutes * 1m)
+  | where SignInIP != GrantorIP
+  | project GrantTime, SignInTime,
+            DelayMin = datetime_diff('minute', SignInTime, GrantTime),
+            GrantorId, GrantorIP, GranteeId, GrantedRole,
+            SignInIP, SignInApp, SignInCountry,
+            ActionType, ApplicationId, UserAgent
+  | order by GrantTime desc
+sentinel_kql: |-
+  let LookbackDays = 7d;
+  let CorrelationMinutes = 60;
+  let PrivilegedRoles = dynamic(["Owner","Administrator","Global Administrator","Privileged Role Administrator","Application Administrator","Cloud Application Administrator","User Administrator","Security Administrator"]);
+  let SuspectGrants = AuditLogs
+      | where TimeGenerated > ago(LookbackDays)
+      | where Result =~ "success"
+      | where OperationName has_any ("Add member to role","Add owner to group","Add member to group","Add user","Add app role assignment grant to user","Add member to administrative unit","Update role")
+      | mv-expand TargetResources
+      | extend GranteeId = tostring(TargetResources.id)
+      | extend GranteeUpn = tostring(TargetResources.userPrincipalName)
+      | extend GrantedRole = tostring(coalesce(TargetResources.displayName, TargetResources.modifiedProperties[0].newValue))
+      | extend GrantorId = tostring(InitiatedBy.user.id)
+      | extend GrantorUpn = tostring(InitiatedBy.user.userPrincipalName)
+      | extend GrantorIP = tostring(InitiatedBy.user.ipAddress)
+      | where isnotempty(GrantorId) and isnotempty(GranteeId) and GrantorId != GranteeId
+      | where GrantedRole has_any (PrivilegedRoles)
+      | project GrantTime = TimeGenerated, GrantorId, GrantorUpn, GrantorIP, GranteeId, GranteeUpn, GrantedRole, OperationName;
+  let GranteeSignIn = SigninLogs
+      | where TimeGenerated > ago(LookbackDays)
+      | where ResultType == 0
+      | project SignInTime = TimeGenerated, GranteeId = UserId,
+                SignInIP = IPAddress,
+                SignInCountry = tostring(LocationDetails.countryOrRegion),
+                AppDisplayName, ClientAppUsed;
+  SuspectGrants
+  | join kind=inner GranteeSignIn on GranteeId
+  | where SignInTime between (GrantTime .. GrantTime + CorrelationMinutes * 1m)
+  | where SignInIP != GrantorIP
+  | project GrantTime, SignInTime,
+            DelayMin = datetime_diff('minute', SignInTime, GrantTime),
+            GrantorUpn, GrantorIP, GranteeUpn, GrantedRole,
+            SignInIP, SignInCountry, AppDisplayName, ClientAppUsed, OperationName
+  | order by GrantTime desc
+splunk_spl: |-
+  | tstats summariesonly=true count min(_time) as grant_first max(_time) as grant_last values(All_Changes.command) as commands from datamodel=Change.All_Changes where All_Changes.action="created" AND All_Changes.object_category IN ("role","user","group_membership","directory") AND (All_Changes.command="*owner*" OR All_Changes.command="*admin*" OR All_Changes.command="*Administrator*" OR All_Changes.command="*AdministratorAccess*" OR All_Changes.command="*Global Administrator*") AND All_Changes.result="success" by All_Changes.user All_Changes.dest All_Changes.object_id
+  | `drop_dm_object_name(All_Changes)`
+  | rename user as grantor, object_id as grantee
+  | where grantor!=grantee AND isnotnull(grantee) AND grantee!=""
+  | join type=inner grantee [
+      | tstats summariesonly=true min(_time) as signin_time values(Authentication.src) as signin_src values(Authentication.app) as signin_app from datamodel=Authentication.Authentication where Authentication.action="success" by Authentication.user
+      | `drop_dm_object_name(Authentication)`
+      | rename user as grantee
+    ]
+  | eval delay_sec = signin_time - grant_last
+  | where delay_sec>=0 AND delay_sec<=3600
+  | table grant_first, grant_last, signin_time, delay_sec, grantor, grantee, dest, commands, signin_src, signin_app
+  | sort - grant_last
+datadog_query: |-
+  source:(cloudtrail OR azure.activeDirectory OR okta) (@evt.name:(AttachUserPolicy OR AttachRolePolicy OR AttachGroupPolicy OR AddUserToGroup OR PutUserPolicy OR "Add member to role" OR "Add owner to group" OR "Add member to group" OR user.account.privilege.grant OR group.user_membership.add OR user.account.update OR "Add app role assignment grant to user")) @evt.outcome:(success OR Success OR SUCCESS) AND -@userIdentity.type:AWSService AND (@requestParameters.policyArn:(*AdministratorAccess* OR *PowerUserAccess* OR *IAMFullAccess*) OR @TargetResources.displayName:(*Administrator* OR *Owner* OR "Global Administrator") OR @target.displayName:(*Administrator* OR *Owner*) OR @target.detailEntry.privilege:(SUPER_ADMIN OR ORG_ADMIN OR APP_ADMIN))
+cloudwatch_query: |-
+  # log group: /aws/cloudtrail
+  fields @timestamp, eventName, sourceIPAddress, userIdentity.type, userIdentity.arn, userIdentity.userName, userIdentity.sessionContext.sessionIssuer.userName, requestParameters.userName, requestParameters.policyArn, requestParameters.groupName, requestParameters.roleName
+  | filter eventName in ["AttachUserPolicy","AttachRolePolicy","AttachGroupPolicy","PutUserPolicy","PutRolePolicy","AddUserToGroup","UpdateAssumeRolePolicy","CreateAccessKey"]
+        and not isPresent(errorCode)
+        and userIdentity.type != "AWSService"
+        and (requestParameters.policyArn like /AdministratorAccess/i
+          or requestParameters.policyArn like /PowerUserAccess/i
+          or requestParameters.policyArn like /IAMFullAccess/i
+          or requestParameters.groupName like /admin/i
+          or requestParameters.roleName like /admin/i)
+        and (not isPresent(requestParameters.userName)
+             or requestParameters.userName != userIdentity.userName)
+        and userIdentity.arn not like /AdministratorAccess/i
+        and userIdentity.arn not like /OrganizationAccountAccessRole/i
+        and userIdentity.arn not like /AWSReservedSSO_AdministratorAccess/i
+  | sort @timestamp desc
+  | limit 200
+required_telemetry:
+- Defender CloudAppEvents
+- Defender AADSignInEventsBeta
+- Sentinel AuditLogs
+- Sentinel SigninLogs
+- Okta System Log (shipped to Datadog)
+- AWS CloudTrail management events
+- Splunk CIM Change.All_Changes
+- Splunk CIM Authentication.Authentication
+kill_chain_phase: privilege_escalation
+expected_fp_scenarios:
+- "Legitimate IT-admin lifecycle: a Global Administrator grants Administrator to a new sysadmin who signs in from their home/office IP within the hour"
+- "HR/IT joiner-mover-leaver SPN provisioning a new sysadmin and the user activates from a corporate VPN egress different than the SPN's data-centre IP"
+- Customer Success / Support engineers in B2B SaaS performing time-boxed impersonation that grants temporary Owner access for troubleshooting
+- "PIM/JIT approval workflows where the approver and the requester are different but both expected privileged users (approver != grantee but both pre-existing admins)"
+- MSP / delegated administration where the granting principal is an external partner SPN and the grantee logs in from the customer tenant
+- Break-glass account creation followed by an immediate validation login from a SOC analyst workstation
+response_runbook: |-
+  1) Triage: pull the audit row (Defender CloudAppEvents / Sentinel AuditLogs / CloudTrail / Okta) — confirm the granted role, capture grantor & grantee object IDs, the source IP, the user-agent, and the exact API/operation. Cross-check the grantor's effective role history over the prior 30 days (was this account itself ever the target role?), and the grantee's account-creation date / invite source. For praisonai-platform specifically, pull the raw `/workspaces/{id}/members` request body to confirm `role=owner` was passed by a member-tier caller (CVE-2026-47413 indicator). 2) Contain: revert the role assignment (remove member, detach policy, revoke role); force MFA + password reset on the grantee; revoke all active sessions and refresh tokens for both grantor and grantee; if the grant came via API, disable the grantor's API token / access key and rotate. Quarantine workspace-scoped or app-scoped tokens issued in the window. 3) Hunt: pivot on the grantor source IP / user-agent for the pri
+false_positive_filters: |-
+  | where GrantorId !in (dynamic(["<break_glass_object_id>","<jit_pim_service_principal_id>","<hr_provisioning_spn_id>","<sso_orchestration_role_id>","<msp_delegated_admin_spn_id>"])) and GrantorIP !in (dynamic(["<corp_admin_jump_host_ip>","<sso_automation_egress_ip>"]))

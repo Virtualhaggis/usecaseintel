@@ -219,7 +219,7 @@ splunk_spl: |-
   | eval benign_dev=if(match(parent_process,"(?i)(npm\\s+(install|run|test|build|ci)|yarn\\s+(install|run|test|build)|pnpm\\s+(install|run|test)|pip\\s+install|poetry\\s+install|conda\\s+install|cargo\\s+(build|check|fmt|clippy)|webpack|tsc\\s|eslint|prettier|jest)"),1,0)
   | where injection_marker=1 AND benign_dev=0
   | join type=left host max=0 [
-      | tstats `summariesonly` count as egress_count values(All_Traffic.dest) as egress_dest values(All_Traffic.dest_port) as egress_port from datamodel=Network_Traffic where All_Traffic.dest_category!="internal" AND All_Traffic.app IN ("node.exe","node","python.exe","python","python3","dotnet.exe","dotnet","portainer.exe","portainer","n8n","flowise","deepseek-tui","cargo.exe","cargo") earliest=-5m@m by All_Traffic.src
+      | tstats `summariesonly` count as egress_count values(All_Traffic.dest) as egress_dest values(All_Traffic.dest_port) as egress_port from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_category!="internal" AND All_Traffic.app IN ("node.exe","node","python.exe","python","python3","dotnet.exe","dotnet","portainer.exe","portainer","n8n","flowise","deepseek-tui","cargo.exe","cargo") earliest=-5m@m by All_Traffic.src
       | rename All_Traffic.src as host
     ]
   | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`

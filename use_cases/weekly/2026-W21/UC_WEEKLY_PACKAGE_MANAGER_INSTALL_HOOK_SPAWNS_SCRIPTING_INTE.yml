@@ -138,7 +138,7 @@ splunk_spl: |-
   | `drop_dm_object_name(Processes)`
   | rename process_id as child_pid, process_name as child_name, process as child_cmd, parent_process_name as pkg_mgr
   | join type=inner host [
-      | tstats summariesonly=t count min(_time) as net_time values(All_Traffic.dest) as dest values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic where All_Traffic.dest_port IN (53,80,443,8080,8443) AND NOT (All_Traffic.dest IN ("registry.npmjs.org","pypi.org","files.pythonhosted.org","packagist.org","repo.packagist.org","codeload.github.com","objects.githubusercontent.com","ghcr.io","raw.githubusercontent.com")) AND NOT (All_Traffic.dest="*.npmjs.org" OR All_Traffic.dest="*.pythonhosted.org" OR All_Traffic.dest="*.packagist.org") by host
+      | tstats summariesonly=t count min(_time) as net_time values(All_Traffic.dest) as dest values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (53,80,443,8080,8443) AND NOT (All_Traffic.dest IN ("registry.npmjs.org","pypi.org","files.pythonhosted.org","packagist.org","repo.packagist.org","codeload.github.com","objects.githubusercontent.com","ghcr.io","raw.githubusercontent.com")) AND NOT (All_Traffic.dest="*.npmjs.org" OR All_Traffic.dest="*.pythonhosted.org" OR All_Traffic.dest="*.packagist.org") by host
       | `drop_dm_object_name(All_Traffic)`
     ]
   | eval delta = net_time - install_time

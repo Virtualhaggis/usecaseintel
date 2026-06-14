@@ -1,0 +1,134 @@
+id: UC_WEEKLY_DEVELOPER_AI_TOOLING_RUNTIME_SPAWNS_SHELL_OR_EGRES
+title: "[WEEKLY] Developer/AI tooling runtime spawns shell or egress LOLBin (unauth RCE post-expl)"
+kill_chain: exploit
+confidence: High
+tier: alerting
+fp_rate_estimate: low
+implementations:
+- defender
+- sentinel
+- splunk
+- datadog
+- falcon
+mitre_attack:
+- id: T1190
+  name: Exploit Public-Facing Application
+- id: T1059.004
+  name: "Command and Scripting Interpreter: Unix Shell"
+- id: T1059.001
+  name: "Command and Scripting Interpreter: PowerShell"
+- id: T1059.006
+  name: "Command and Scripting Interpreter: Python"
+- id: T1059.007
+  name: "Command and Scripting Interpreter: JavaScript"
+- id: T1071.001
+  name: "Application Layer Protocol: Web Protocols"
+- id: T1105
+  name: Ingress Tool Transfer
+data_models:
+  defender:
+  - Endpoint.Processes
+  - Network_Traffic.All_Traffic
+description: |-
+  Detects the common post-exploitation footprint shared by the recent wave of unauthenticated RCE flaws in developer-/AI-adjacent web services: LiteLLM CVE-2026-42271 (CISA KEV, MCP test-endpoint command injection), Langflow CVE-2026-5027 (KEV, code-validate RCE), DbGate CVE-2026-47668 (JSON script runner functionName injection executed in a forked Node child), Phoenix Storybook CVE-2026-8467 (HEEx template injection over WebSocket), NASA AMMOS AIT-BSC CVE-2026-47731 (path-traversal write), Meta Ads MCP CVE-2026-48039 (unauth /mcp tool execution), and the WWBN AVideo YPTSocket stored DOM XSS — all of which land code execution inside a python/node/uvicorn/erlang/php-fpm interpreter that does NOT normally fork shells or call out to the internet. The UC fires when a service-tier interpreter parent (python/uvicorn/gunicorn/node/erl/beam.smp/php-fpm/ruby) spawns a shell or known download LOLBin (curl/wget/nc/powershell/certutil/bitsadmin) AND that child or its parent makes an outbound public network connection within five minutes. This spans exploit → install → c2 phases of the kill chain. It will NOT fire on normal API traffic, on developer workstations where a human launches `node` interactively (filtered via process-tree depth and user context), or on CI runners executing `npm`/`pip` against trusted registries; it WILL fire when a vulnerable AI/dev service runtime is coerced into running an attacker-chosen command, regardless of which CVE was used to get there.
+  
+  Rationale: All seven articles describe distinct vulnerabilities, but post-exploitation collapses to the same shape: an internet-reachable interpreter (python/node/erlang/php) running an unsanitized attacker-controlled payload that immediately shells out and fetches a second-stage. Detecting that runtime-spawns-LOLBin-then-egress chain catches every variant of the campaign without binding to any single CVE's request signature, which is why this UC survives IOC and CVE rotation.
+defender_kql: |-
+  let LookbackPeriod = 7d;
+  let CorrelationWindow = 5m;
+  let InterpreterParents = dynamic(["python.exe","python","python3","uvicorn","gunicorn","node.exe","node","nodejs","erl.exe","erl","beam.smp","php-fpm","php-fpm7","php-fpm8","ruby","java.exe","java","dotnet.exe","dotnet"]);
+  let ShellOrLolbin = dynamic(["sh","bash","dash","zsh","ksh","cmd.exe","powershell.exe","pwsh.exe","pwsh","curl.exe","curl","wget.exe","wget","nc","ncat","certutil.exe","bitsadmin.exe","mshta.exe","rundll32.exe","regsvr32.exe","perl","socat"]);
+  let SuspectChildren = DeviceProcessEvents
+      | where Timestamp > ago(LookbackPeriod)
+      | where InitiatingProcessFileName in~ (InterpreterParents)
+      | where FileName in~ (ShellOrLolbin)
+      | where AccountName !endswith "$"
+      | where InitiatingProcessTokenElevation !in~ ("TokenElevationTypeFull")
+          or InitiatingProcessAccountName !in~ ("system","local service","network service")
+      | project ChildTime = Timestamp, DeviceId, DeviceName, AccountName,
+                ParentImage = InitiatingProcessFolderPath,
+                ParentCmd = InitiatingProcessCommandLine,
+                ChildImage = FolderPath, ChildName = FileName,
+                ChildCmd = ProcessCommandLine, ChildPid = ProcessId,
+                ChildProcessGuid = ProcessUniqueId;
+  DeviceNetworkEvents
+  | where Timestamp > ago(LookbackPeriod)
+  | where ActionType == "ConnectionSuccess"
+  | where RemoteIPType == "Public"
+  | project NetTime = Timestamp, DeviceId, NetInitiator = InitiatingProcessFileName,
+            NetInitiatorPid = InitiatingProcessId, RemoteIP, RemoteUrl, RemotePort
+  | join kind=inner SuspectChildren on DeviceId
+  | where NetTime between (ChildTime .. ChildTime + CorrelationWindow)
+  | project ChildTime, NetTime,
+            DelaySec = datetime_diff('second', NetTime, ChildTime),
+            DeviceName, AccountName,
+            ParentImage, ParentCmd, ChildImage, ChildName, ChildCmd,
+            NetInitiator, RemoteIP, RemoteUrl, RemotePort
+  | order by ChildTime desc
+sentinel_kql: |-
+  let LookbackPeriod = 7d;
+  let CorrelationWindow = 5m;
+  let InterpreterParents = dynamic(["python.exe","python","python3","uvicorn","gunicorn","node.exe","node","nodejs","erl.exe","erl","beam.smp","php-fpm","php-fpm7","php-fpm8","ruby","java.exe","java","dotnet.exe","dotnet"]);
+  let ShellOrLolbin = dynamic(["sh","bash","dash","zsh","ksh","cmd.exe","powershell.exe","pwsh.exe","pwsh","curl.exe","curl","wget.exe","wget","nc","ncat","certutil.exe","bitsadmin.exe","mshta.exe","rundll32.exe","regsvr32.exe","perl","socat"]);
+  let SuspectChildren = DeviceProcessEvents
+      | where Timestamp > ago(LookbackPeriod)
+      | where InitiatingProcessFileName in~ (InterpreterParents)
+      | where FileName in~ (ShellOrLolbin)
+      | where AccountName !endswith "$"
+      | project ChildTime = Timestamp, DeviceId, DeviceName, AccountName,
+                ParentImage = InitiatingProcessFolderPath,
+                ParentCmd = InitiatingProcessCommandLine,
+                ChildImage = FolderPath, ChildName = FileName,
+                ChildCmd = ProcessCommandLine, ChildPid = ProcessId;
+  DeviceNetworkEvents
+  | where Timestamp > ago(LookbackPeriod)
+  | where ActionType == "ConnectionSuccess"
+  | where RemoteIPType == "Public"
+  | project NetTime = Timestamp, DeviceId, NetInitiator = InitiatingProcessFileName,
+            RemoteIP, RemoteUrl, RemotePort
+  | join kind=inner SuspectChildren on DeviceId
+  | where NetTime between (ChildTime .. ChildTime + CorrelationWindow)
+  | extend TimeGenerated = ChildTime
+  | project TimeGenerated, ChildTime, NetTime,
+            DelaySec = datetime_diff('second', NetTime, ChildTime),
+            DeviceName, AccountName,
+            ParentImage, ParentCmd, ChildImage, ChildName, ChildCmd,
+            NetInitiator, RemoteIP, RemoteUrl, RemotePort
+  | order by TimeGenerated desc
+splunk_spl: |-
+  | tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as child_cmdline values(Processes.process_path) as child_path values(Processes.parent_process) as parent_cmdline values(Processes.user) as user values(Processes.process_id) as child_pid from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python","python3","python.exe","uvicorn","gunicorn","node","node.exe","nodejs","erl","erl.exe","beam.smp","php-fpm","php-fpm7","php-fpm8","ruby","java","dotnet")) AND Processes.process_name IN ("sh","bash","dash","zsh","ksh","cmd.exe","powershell.exe","pwsh","pwsh.exe","curl","curl.exe","wget","wget.exe","nc","ncat","certutil.exe","bitsadmin.exe","mshta.exe","rundll32.exe","regsvr32.exe","perl","socat") by host Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_id _time | `drop_dm_object_name(Processes)` | rename dest as host_dest | join type=inner host_dest [| tstats summariesonly=t min(_time) as net_first max(_time) as net_last values(All_Traffic.dest) as remote_ip values(All_Traffic.dest_port) as remote_port from datamodel=Network_Traffic.All_Traffic where All_Traffic.action="allowed" NOT (All_Traffic.dest IN ("10.0.0.0/8","172.16.0.0/12","192.168.0.0/16","127.0.0.0/8","169.254.0.0/16")) by All_Traffic.src _time | `drop_dm_object_name(All_Traffic)` | rename src as host_dest] | where (net_first >= firstTime AND net_first <= firstTime + 300) OR (net_last >= firstTime AND net_last <= firstTime + 300) | convert ctime(firstTime) ctime(lastTime) ctime(net_first) ctime(net_last) | sort - lastTime
+datadog_query: |-
+  (source:windows.sysmon OR source:linux.auditd) (@EventID:1 OR @auditd.type:EXECVE) (@ParentImage:(*\\python.exe OR *\\Python.exe OR *\\node.exe OR *\\Node.exe OR *\\erl.exe OR *\\php-fpm* OR *\\java.exe OR *\\dotnet.exe) OR @process.parent.name:(python OR python3 OR uvicorn OR gunicorn OR node OR nodejs OR erl OR beam.smp OR php-fpm OR ruby OR java OR dotnet)) (@Image:(*\\cmd.exe OR *\\powershell.exe OR *\\pwsh.exe OR *\\curl.exe OR *\\wget.exe OR *\\certutil.exe OR *\\bitsadmin.exe OR *\\mshta.exe OR *\\rundll32.exe OR *\\regsvr32.exe) OR @process.name:(sh OR bash OR dash OR zsh OR ksh OR curl OR wget OR nc OR ncat OR perl OR socat OR powershell OR pwsh))
+falcon_logscale_query: |-
+  #event_simpleName=ProcessRollup2
+  | ParentBaseFileName=/^(python|python3|python\.exe|uvicorn|gunicorn|node|node\.exe|nodejs|erl|erl\.exe|beam\.smp|php-fpm[0-9]*|ruby|java|java\.exe|dotnet|dotnet\.exe)$/i
+  | ImageFileName=/(\\|\/)(sh|bash|dash|zsh|ksh|cmd\.exe|powershell\.exe|pwsh(\.exe)?|curl(\.exe)?|wget(\.exe)?|nc|ncat|certutil\.exe|bitsadmin\.exe|mshta\.exe|rundll32\.exe|regsvr32\.exe|perl|socat)$/i
+  | NOT UserName=/(\$$|^SYSTEM$|^LOCAL SERVICE$|^NETWORK SERVICE$)/i
+  | join({
+      #event_simpleName=NetworkConnectIP4
+      | NOT cidr("10.0.0.0/8", field=RemoteAddressIP4)
+      | NOT cidr("172.16.0.0/12", field=RemoteAddressIP4)
+      | NOT cidr("192.168.0.0/16", field=RemoteAddressIP4)
+      | NOT cidr("127.0.0.0/8", field=RemoteAddressIP4)
+    }, field=aid, include=[RemoteAddressIP4, RemotePort, ContextImageFileName])
+  | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine, RemoteAddressIP4, RemotePort], function=count())
+required_telemetry:
+- Defender DeviceProcessEvents
+- Defender DeviceNetworkEvents
+- Sysmon EID 1 (process create)
+- Sysmon EID 3 (network connect)
+- Linux auditd EXECVE
+- CrowdStrike FDR ProcessRollup2
+- CrowdStrike FDR NetworkConnectIP4
+- Splunk Endpoint.Processes datamodel
+kill_chain_phase: execution
+expected_fp_scenarios:
+- Python/Node-based admin scripts in cron or systemd that legitimately invoke curl/wget to fetch nightly data feeds — distinguish via parent command-line containing the production script path
+- CI/CD runners (Jenkins, GitLab, GitHub self-hosted) where node/python build steps spawn shell wrappers around npm/pip — exclude by runner hostname or build-agent user
+- "Developer workstations where engineers run `node`/`python` interactively and shell out — exclude by interactive logon session and engineering-OU hostnames"
+- Application Performance Monitoring agents (Datadog, New Relic, Elastic APM) that periodically curl their backends from inside Python/Node runtimes — allow-list APM destinations
+- "Container entrypoints (e.g. `node entrypoint.js` → `sh -c \"…\"`) used to bootstrap config from S3/Secrets Manager — scope detection to long-running web service PIDs, not bootstrap"
+response_runbook: |-
+  1) Triage: Identify the parent service (LiteLLM, Langflow, DbGate, Phoenix/Storybook, AIT-BSC, Meta Ads MCP, AVideo, or similar) and confirm version against the relevant CVE (CVE-2026-42271, CVE-2026-5027, CVE-2026-47668, CVE-2026-8467, CVE-2026-47731, CVE-2026-48039). Pull the child command-line and remote destination — decode any base64 / hex blobs and pivot the remote IP through threat-intel. Confirm whether the parent PID matches a long-running web listener (not a CLI invocation). 2) Contain: Isolate the host from network via EDR, snapshot memory, kill the offending interpreter PID tree, block the remote IP/domain at egress, and rotate any credentials, tokens, or API keys reachable from the service's identity (cloud IAM role, Meta access token, DB credentials). 3) Hunt: Across the fleet, search for any other host where the same interpreter parent has spawned a shell/LOLBin in the last 30 days; review the vulnerable service's HTTP/WebSocket access logs for the precursor payload; che
+false_positive_filters: |-
+  | where not (InitiatingProcessCommandLine has_any ("/opt/datadog-agent/","/opt/newrelic/","node_modules/.bin/npm","pip install","poetry install","yarn install")) | where not (DeviceName has_any ("jenkins-","gitlab-runner-","gh-runner-","buildkite-")) | where not (FolderPath startswith "/opt/datadog-agent/" or FolderPath startswith "/opt/newrelic/")

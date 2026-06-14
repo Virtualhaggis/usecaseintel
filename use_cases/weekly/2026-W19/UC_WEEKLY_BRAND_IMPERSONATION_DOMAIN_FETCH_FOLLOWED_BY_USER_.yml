@@ -104,7 +104,7 @@ sentinel_kql: |-
 splunk_spl: |-
   ``` Brand-impersonation domain contact + user-context loader within 10 min (joint pattern across THN/BleepingComputer/Microsoft/ESET/Cyber Security News briefings) ```
   | tstats `summariesonly` earliest(_time) AS dl_time
-      values(All_Traffic.dest) AS dl_dest values(All_Traffic.dest_ip) AS dl_ip values(All_Traffic.app) AS dl_app values(All_Traffic.url) AS dl_url
+      values(All_Traffic.dest) AS dl_dest values(All_Traffic.dest_ip) AS dl_ip values(All_Traffic.app) AS dl_app values(All_Traffic.dest) AS dl_url
       from datamodel=Network_Traffic.All_Traffic
       where All_Traffic.action="allowed" AND All_Traffic.dest_category!="internal"
         AND (
@@ -115,8 +115,8 @@ splunk_spl: |-
           OR All_Traffic.dest="*macclean*" OR All_Traffic.dest="*mac-storage-guide*"
           OR All_Traffic.dest="*csec-c2-server*" OR All_Traffic.dest="*steamhostserver*"
           OR All_Traffic.dest="*serverconect*" OR All_Traffic.dest="*transcloud*"
-          OR All_Traffic.dest="*recargapopular*" OR All_Traffic.url="*.msixbundle*"
-          OR All_Traffic.url="*claude-pro*" OR All_Traffic.url="*download-version.1-5-8*"
+          OR All_Traffic.dest="*recargapopular*" OR All_Traffic.dest="*.msixbundle*"
+          OR All_Traffic.dest="*claude-pro*" OR All_Traffic.dest="*download-version.1-5-8*"
           OR All_Traffic.dest IN (<brand_lookalike_domain_list>)
           OR All_Traffic.dest_ip IN (<c2_ip_list>)
         )
