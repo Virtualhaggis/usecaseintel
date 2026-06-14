@@ -38,11 +38,13 @@ Forensic examiners are constantly hunting for data that reveals not just what ha
 - **T1566** — Phishing
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
-- **T1070.004** — File Deletion
-- **T1485** — Data Destruction
-- **T1083** — File and Directory Discovery
 - **T1005** — Data from Local System
+- **T1083** — File and Directory Discovery
 - **T1217** — Browser Information Discovery
+- **T1070.004** — Indicator Removal: File Deletion
+- **T1485** — Data Destruction
+- **T1564** — Hide Artifacts
+- **T1059.006** — Command and Scripting Interpreter: Python
 
 ## Kill chain phases observed
 
@@ -50,42 +52,107 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### macOS Tahoe 26 App.MenuItem Biome stream tampering or deletion
+### Non-Apple process accessing macOS Tahoe 26 App.MenuItem Biome stream
 
 `UC_10_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action IN ("deleted","modified","renamed") AND Filesystem.file_path="*/Library/Biome/streams/restricted/App.MenuItem/local*" by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | where process_name!="biomed" AND process_name!="biomesyncd" AND process_name!="runningboardd" AND process_name!="backupd"
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime
+  from datamodel=Endpoint.Processes
+  where (Processes.process="*Biome/streams/restricted/App.MenuItem*"
+         OR Processes.process="*App.MenuItem/local*")
+        AND NOT (Processes.parent_process_name IN ("biomesyncd","BiomeAgent","CommCenter","duetexpertd","BiomeDaemon"))
+        AND NOT (Processes.process_name IN ("biomesyncd","BiomeAgent","mds","mds_stores"))
+  by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort -lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FolderPath has @"Library/Biome/streams/restricted/App.MenuItem"
-| where ActionType in ("FileDeleted","FileRenamed","FileModified")
-| where InitiatingProcessFileName !in~ ("biomed","biomesyncd","runningboardd","backupd","mds_stores","TimeMachineHelper","installd","softwareupdated")
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256
+// macOS Tahoe 26 — process touches the App.MenuItem Biome stream
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where ProcessCommandLine has_any ("Biome/streams/restricted/App.MenuItem", "App.MenuItem/local")
+| where InitiatingProcessFileName !in~ ("biomesyncd","BiomeAgent","CommCenter","duetexpertd","BiomeDaemon","mds","mds_stores")
+| where FileName !in~ ("biomesyncd","BiomeAgent","mds_stores")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
+          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, SHA256
 | order by Timestamp desc
 ```
 
-### Suspicious process accessing or parsing macOS Biome restricted streams
+### Anti-forensic deletion or truncation of macOS App.MenuItem Biome stream
 
-`UC_10_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_10_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process IN ("*ccl_segb_cli*","*ccl-segb*","*App.MenuItem*","*Library/Biome/streams/restricted*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | where parent_process_name!="biomed" AND parent_process_name!="biomesyncd"
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime
+  from datamodel=Endpoint.Filesystem
+  where Filesystem.file_path="*Library/Biome/streams/restricted/App.MenuItem*"
+        AND Filesystem.action IN ("deleted","modified","renamed","created")
+        AND NOT (Filesystem.process_name IN ("biomesyncd","BiomeAgent","duetexpertd","BiomeDaemon","mds_stores","BiomeDataStoreCleanup"))
+  by Filesystem.dest Filesystem.user Filesystem.action Filesystem.file_path Filesystem.process_name Filesystem.process_path
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort -lastTime
 ```
 
 **Defender KQL:**
 ```kql
+// Anti-forensic touch on the App.MenuItem Biome stream
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where FolderPath has "Library/Biome/streams/restricted/App.MenuItem"
+| where ActionType in ("FileDeleted","FileModified","FileRenamed","FileCreated")
+| where InitiatingProcessFileName !in~ ("biomesyncd","BiomeAgent","duetexpertd","BiomeDaemon","mds_stores","BiomeDataStoreCleanup","Installer","softwareupdated")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, PreviousFileName,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName,
+          InitiatingProcessParentFileName, InitiatingProcessSHA256
+| order by Timestamp desc
+```
+
+### ccl-segb forensic parser executed on production macOS endpoint
+
+`UC_10_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime
+  from datamodel=Endpoint.Processes
+  where (Processes.process="*ccl_segb_cli.py*"
+         OR Processes.process="*ccl-segb*"
+         OR Processes.process="*ccl_segb*"
+         OR Processes.process="*ccl_segb_cli *")
+        AND Processes.process_name IN ("python","python3","pythonw.exe","python.exe","python3.exe","sh","bash","zsh")
+  by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
+| eval is_dfir_host=if(match(dest,"(?i)^(dfir|ir|forensic|analyst)-"),1,0)
+| where is_dfir_host=0
+| sort -lastTime
+```
+
+**Defender KQL:**
+```kql
+// ccl-segb (Unit 42-referenced Biome SEGB parser) running on non-DFIR endpoint
+let DfirHosts = dynamic([]); // tenant-specific — populate with DFIR/IR workstation names
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where ProcessCommandLine has_any ("ccl_segb_cli","ccl-segb","Library/Biome/streams/restricted","App.MenuItem")
-| where InitiatingProcessFileName !in~ ("biomed","biomesyncd","runningboardd","backupd","mds_stores")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, FolderPath, SHA256
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has_any ("ccl_segb_cli.py","ccl-segb","ccl_segb")
+| where InitiatingProcessFileName in~ ("python","python3","pythonw.exe","python.exe","python3.exe","sh","bash","zsh")
+      or FileName in~ ("python","python3","python.exe","python3.exe")
+| where not(DeviceName has_any (DfirHosts))
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
+          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, SHA256
 | order by Timestamp desc
 ```
 
@@ -366,4 +433,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
