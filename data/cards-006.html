@@ -1,3 +1,657 @@
+<article class="card" id="art-165" data-art-slug="2026-05-29-ghsa-critical-cve-2026-47393-praisonai-deploy-type-api-emits"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,network,web"
+  data-targets="aws,linux,vcs,windows"
+  data-uc-count="7" data-llm-uc-count="4"
+  data-search="[GHSA / CRITICAL] CVE-2026-47393: PraisonAI `deploy --type api` emits a Flask server with authentication disabled by default PraisonAI `deploy --type api` emits a Flask server with authentication disabled by default CVE-2026-47393 CVE-2026-44338 T1190 [LLM] PraisonAI `deploy --type api` command execution — vulnerable server provisioned [LLM] Public inbound to PraisonAI Flask listener on TCP/8005 (default port, 0.0.0.0 bind) [LLM] Unauthenticated POST to PraisonAI `/chat` or `/agents` endpoint (incl. CVE-Detector scanner) [LLM] PraisonAI python process spawning shell, curl, or wget (post-exploitation tool-use abuse) Asset exposure — vulnerability matches article CVE(s) Network connections to article IPs / domains Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47393: PraisonAI `deploy --type api` emits a Flask se">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-05-29-ghsa-critical-cve-2026-47393-praisonai-deploy-type-api-emits" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-8444-4fhq-fxpq" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-47393: PraisonAI `deploy --type api` emits a Flask server with authentication disabled by default</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-05-29</span>
+    <span>7 use cases</span>
+    <span>1 technique</span>
+    <span>6 kill-chain phases detected</span>
+  </div>
+  <p class="summary">PraisonAI `deploy --type api` emits a Flask server with authentication disabled by default</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-47393</span> <span class="ind cve">CVE-2026-44338</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+<div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">146.190.133.49</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-165-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-165"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-165-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Public inbound to PraisonAI Flask listener on TCP/8005 (default port, 0.0.0.0 bind)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Unauthenticated POST to PraisonAI `/chat` or `/agents` endpoint (incl. CVE-Detector scanner) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47393: PraisonAI `deploy --type api` emits a Flask se</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] PraisonAI `deploy --type api` command execution — vulnerable server provisioned</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Network connections to article IPs / domains</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] PraisonAI python process spawning shell, curl, or wget (post-exploitation tool-use abuse)</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="63db84875f" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <summary>
+    <span class="uc-title">PraisonAI `deploy --type api` command execution — vulnerable server provisioned</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="63db84875f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts for the documented PraisonAI quickstart command (`praisonai deploy --type api`) which generates a Flask server that defaults to AUTH_ENABLED=False. Surfaces vulnerable deployments inside the estate before scanners find them externally.
+
+Rationale: Anchors on the exact vendor-documented quickstart `praisonai deploy --type api` (and `-t api` short flag) cited in GHSA-8444-4fhq-fxpq §Summary. Cross-checked against Sysdig (rapid-exploitation timeline) and parent GHSA-6rmh-7xcm-cpxj. Pure CLI pattern — no hashes to bypass.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-6rmh-7xcm-cpxj
+  • https://www.sysdig.com/blog/cve-2026-44338-praisonai-authentication-bypass-in-under-4-hours-and-the-growing-trend-of-rapid-exploitation
+  • https://thehackernews.com/2026/05/praisonai-cve-2026-44338-auth-bypass.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate dev/test deployment of PraisonAI ≥4.6.34 (patched version) where operator opted into auth_enabled=True</li><li>CI/CD pipeline executing the quickstart for integration testing</li><li>Security researcher / red team running PoC in sanctioned lab</li><li>Documentation walkthrough by developers learning the framework</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;code.exe&quot;, &quot;devenv.exe&quot;) and not (DeviceName has_any (&quot;dev-&quot;, &quot;lab-&quot;, &quot;sandbox-&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): On the host, run `pip show praisonai` to extract the installed version. Versions 2.5.6–4.6.33 are vulnerable; 4.6.34+ patched. Inspect the generated server file for `AUTH_ENABLED = False` and `AUTH_TOKEN = None` literals. Step 2 (contain): If vulnerable and reachable, stop the Flask process (`pkill -f &#x27;praisonai.*deploy&#x27;`), revoke any LLM API keys exposed in the host&#x27;s env (OPENAI_API_KEY / ANTHROPIC_API_KEY rotated immediately), and block port 8005 inbound at host firewall. Step 3 (hunt): Pivot to UC2/UC3 to confirm no exploitation occurred — search inbound :8005 connections from public IPs and HTTP POSTs to /chat or /agents in the last 30 days.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-165-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-165-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-165-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-165-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-165-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-165-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-165-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where ProcessCommandLine has &quot;praisonai&quot;
+| where ProcessCommandLine has &quot;deploy&quot;
+| where ProcessCommandLine has_any (&quot;--type api&quot;, &quot;-t api&quot;)
+| project Timestamp, DeviceName, AccountName, AccountUpn, FolderPath, FileName,
+          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-165-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(30d)
+| where EventID == 4688
+| where CommandLine has &quot;praisonai&quot;
+| where CommandLine has &quot;deploy&quot;
+| where CommandLine has_any (&quot;--type api&quot;, &quot;-t api&quot;)
+| project TimeGenerated, Computer, SubjectUserName, NewProcessName, CommandLine, ParentProcessName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-165-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: PraisonAI deploy api command generating vulnerable Flask server (CVE-2026-47393)
+id: 9c1d4e22-7d4b-4b5b-9a3e-praisonai0001
+description: Detects execution of the documented PraisonAI quickstart that emits a Flask API server with AUTH_ENABLED=False by default.
+references:
+  - https://github.com/advisories/GHSA-8444-4fhq-fxpq
+  - https://github.com/advisories/GHSA-6rmh-7xcm-cpxj
+  - https://www.sysdig.com/blog/cve-2026-44338-praisonai-authentication-bypass-in-under-4-hours-and-the-growing-trend-of-rapid-exploitation
+author: SOC Detection Engineering
+date: 2026/05/30
+tags:
+  - attack.t1190
+  - attack.t1133
+logsource:
+  category: process_creation
+detection:
+  selection_cli:
+    CommandLine|contains|all:
+      - &#x27;praisonai&#x27;
+      - &#x27;deploy&#x27;
+    CommandLine|contains:
+      - &#x27;--type api&#x27;
+      - &#x27;-t api&#x27;
+  condition: selection_cli
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-165-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.security OR source:linux.auditd OR source:windows.sysmon) (@CommandLine:(*praisonai*deploy*--type\ api* OR *praisonai*deploy*-t\ api*) OR @process.command_line:(*praisonai*deploy*--type\ api* OR *praisonai*deploy*-t\ api*))</code></pre></div>
+    <div class="tab-content" id="art-165-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| CommandLine=/praisonai\s+.*deploy\s+(--type|-t)\s+api/i
+| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-165-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-165-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-165-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-165-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name from datamodel=Endpoint.Processes where (Processes.process=&quot;*praisonai*deploy*--type*api*&quot; OR Processes.process=&quot;*praisonai*deploy*-t*api*&quot;) by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-165-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name from datamodel=Endpoint.Processes where (Processes.process=&quot;*praisonai*deploy*--type*api*&quot; OR Processes.process=&quot;*praisonai*deploy*-t*api*&quot;) by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="c8d69c4527" data-platforms="cloudwatch,datadog,def,falcon,sent,spl" data-targets="aws,windows">
+  <summary>
+    <span class="uc-title">Public inbound to PraisonAI Flask listener on TCP/8005 (default port, 0.0.0.0 bind)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="c8d69c4527" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects external (non-RFC1918) inbound connections to TCP/8005 where the listener is a Python process — the default port for the unauthenticated PraisonAI Flask API. Catches both vulnerable exposure and active scanner traffic (the Sysdig-observed CVE-Detector/1.0 fleet probed within 4 hours).
+
+Rationale: Port 8005 is the explicit default from `praisonai/deploy/models.py:port = Field(default=8005)` and `0.0.0.0` bind is documented as the recommended sample YAML. Scoping the listener process to python and filtering RemoteIPType=Public turns a generic port query into a high-signal exposure detection. Sysdig logged scanners hitting this exact surface within hours.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-6rmh-7xcm-cpxj
+  • https://www.sysdig.com/blog/cve-2026-44338-praisonai-authentication-bypass-in-under-4-hours-and-the-growing-trend-of-rapid-exploitation
+  • https://www.csoonline.com/article/4171215/praisonai-vulnerability-gets-scanned-within-4-hours-of-disclosure.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Other application coincidentally listening on TCP/8005 (rare — 8005 is also Apache Tomcat shutdown port on localhost only, won&#x27;t normally accept public traffic)</li><li>Authorized external monitoring / vulnerability scanner (Tenable, Qualys, Rapid7) probing the port</li><li>Cloud load-balancer health check against a backend praisonai pod</li><li>Internal pen-test in scope but originating from an unexpected IP range</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RemoteIP in (&quot;&lt;known-scanner-cidr-1&gt;&quot;, &quot;&lt;authorized-pentest-ip&gt;&quot;) and DeviceName has &quot;test-&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Resolve the RemoteIP — is it a known scanner (Shodan/Censys/CVE-Detector), an authorized pen-tester, or unattributed? Confirm the listening process via `lsof -i :8005` / `netstat -anob | findstr 8005`. Step 2 (contain): If unauthorized inbound, block source IP and 8005 at perimeter/security-group immediately; stop the praisonai process; rotate any LLM API keys present in the env. Step 3 (hunt): Search the praisonai access log / web proxy for POST /chat or POST /agents from the same RemoteIP — that confirms exploitation rather than scanning. Run UC3 and UC4.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-165-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-165-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-165-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-165-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-165-uc1-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-165-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-165-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where LocalPort == 8005
+| where ActionType in (&quot;InboundConnectionAccepted&quot;, &quot;ConnectionAcceptedInbound&quot;, &quot;ConnectionSuccess&quot;)
+| where RemoteIPType == &quot;Public&quot;
+| where InitiatingProcessFileName in~ (&quot;python.exe&quot;, &quot;python3.exe&quot;, &quot;python&quot;, &quot;python3&quot;, &quot;pythonw.exe&quot;)
+   or InitiatingProcessCommandLine has_any (&quot;praisonai&quot;, &quot;api_server&quot;, &quot;generate_api_server_code&quot;)
+| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalIP, LocalPort,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-165-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where DestinationPort == 8005
+| where DeviceAction in~ (&quot;allow&quot;, &quot;accept&quot;, &quot;permit&quot;)
+| where not(ipv4_is_private(SourceIP))
+| summarize Hits = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated),
+            SrcIPs = make_set(SourceIP, 50)
+            by DestinationIP, DestinationPort, DeviceProduct
+| order by Hits desc</code></pre></div>
+    <div class="tab-content" id="art-165-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:cloudtrail OR source:vpc OR source:windows.sysmon) (@network.destination.port:8005 OR @DestinationPort:8005) AND NOT CIDR(@network.client.ip, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16)</code></pre></div>
+    <div class="tab-content" id="art-165-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+| LocalPort=8005
+| ConnectionDirection=1
+| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
+| ContextImageFileName=/python(3|w)?(\.exe)?$/i
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4], function=count())</code></pre></div>
+    <div class="tab-content" id="art-165-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/vpc/flowlogs
+fields @timestamp, srcAddr, dstAddr, srcPort, dstPort, protocol, action, bytes
+| filter dstPort = 8005
+      and protocol = 6
+      and action = &quot;ACCEPT&quot;
+      and not (srcAddr like /^10\./ or srcAddr like /^172\.(1[6-9]|2[0-9]|3[0-1])\./ or srcAddr like /^192\.168\./)
+| stats count(*) as hits, sum(bytes) as bytesIn by srcAddr, dstAddr
+| sort hits desc
+| limit 100</code></pre></div>
+    <div class="tab-content" id="art-165-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-165-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-165-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-165-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest) as dest from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=8005 All_Traffic.direction=inbound NOT (All_Traffic.src=10.0.0.0/8 OR All_Traffic.src=172.16.0.0/12 OR All_Traffic.src=192.168.0.0/16) by All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | where count &gt; 0 | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-165-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest) as dest from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=8005 All_Traffic.direction=inbound NOT (All_Traffic.src=10.0.0.0/8 OR All_Traffic.src=172.16.0.0/12 OR All_Traffic.src=192.168.0.0/16) by All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | where count &gt; 0 | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="5aaa2d1d25" data-platforms="cloudwatch,datadog,def,sent,sigma,spl" data-targets="vcs,windows">
+  <summary>
+    <span class="uc-title">Unauthenticated POST to PraisonAI `/chat` or `/agents` endpoint (incl. CVE-Detector scanner)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="5aaa2d1d25" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects HTTP POST requests to the `/chat` and `/agents` endpoints exposed by the generated PraisonAI Flask server, including the documented &quot;CVE-Detector/1.0&quot; scanner Sysdig observed within 4 hours of disclosure. These are the only two endpoints the generator emits.
+
+Rationale: Anchors on the two endpoints the article explicitly names — `/chat` and `/agents` from `api.py:43-49` — combined with the `CVE-Detector/1.0` User-Agent string that Sysdig published from real telemetry within 4 hours of the GHSA. Cross-checked CSO Online and Sysdig confirming the scanner UA.
+
+Cross-checked against:
+  • https://www.sysdig.com/blog/cve-2026-44338-praisonai-authentication-bypass-in-under-4-hours-and-the-growing-trend-of-rapid-exploitation
+  • https://www.csoonline.com/article/4171215/praisonai-vulnerability-gets-scanned-within-4-hours-of-disclosure.html
+  • https://thehackernews.com/2026/05/praisonai-cve-2026-44338-auth-bypass.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate users of an auth-enabled (patched) PraisonAI deployment hitting /chat normally</li><li>Internal load-test / synthetic monitor POSTing to /chat as a health check</li><li>Other web apps that coincidentally expose a /chat or /agents path (e.g. unrelated chatbots, agent listing pages)</li><li>Authorized scanners (Tenable Web App, Qualys WAS) emulating CVE-Detector probes</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where csUserAgent !has_any (&quot;kube-probe&quot;, &quot;ELB-HealthChecker&quot;, &quot;GoogleHC&quot;, &quot;AlwaysOn&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): For each cIP, confirm the asset behind the URL — is it actually a PraisonAI instance? Pull the request body and check for `praisonai.run` JSON shape, agent names, or tool-use invocations. Step 2 (contain): If unauthorized exploitation confirmed, block cIP at WAF/perimeter; stop the praisonai process; rotate LLM API keys; preserve access logs for forensics. Step 3 (hunt): Search outbound from the same host to `api.openai.com`, `api.anthropic.com` or other LLM providers in the last 7 days for unexpected billing spend. Run UC4 for shell spawned by the python process.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-165-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-165-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-165-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-165-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-165-uc2-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-165-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-165-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Defender XDR has no native inbound HTTP table — detect via the Flask child shell instead (see UC4)
+// If Defender for Endpoint web filtering ships URL telemetry to UrlClickEvents, we lose POST visibility, so this UC is best served by Sentinel/WAF/proxy logs
+DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where LocalPort == 8005
+| where ActionType in (&quot;InboundConnectionAccepted&quot;, &quot;ConnectionAcceptedInbound&quot;)
+| where RemoteIPType == &quot;Public&quot;
+| summarize Probes = count(), Sources = dcount(RemoteIP), SourceList = make_set(RemoteIP, 50)
+          by DeviceName, bin(Timestamp, 5m)
+| where Probes &gt; 3 or Sources &gt; 1
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-165-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
+| where TimeGenerated &gt; ago(7d)
+| where csMethod == &quot;POST&quot;
+| where csUriStem in~ (&quot;/chat&quot;, &quot;/agents&quot;) or csUriStem startswith &quot;/chat&quot; or csUriStem startswith &quot;/agents&quot;
+| where sPort == 8005 or true  // remove `or true` if praisonai is the only thing on 8005
+| extend IsScanner = csUserAgent has_any (&quot;CVE-Detector&quot;, &quot;CVE-Detector/1.0&quot;)
+| summarize Hits = count(), Endpoints = make_set(csUriStem, 10),
+            UserAgents = make_set(csUserAgent, 20), AnyScanner = max(tobool(IsScanner))
+            by cIP, Computer, bin(TimeGenerated, 15m)
+| where AnyScanner == true or Hits &gt; 5
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-165-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: PraisonAI unauthenticated /chat or /agents POST (CVE-2026-47393 / CVE-2026-44338)
+id: 5b3a7c81-2f9e-4a55-8c1d-praisonai0003
+description: Detects HTTP POST to the two endpoints exposed by the PraisonAI deploy-generated Flask server, including the CVE-Detector/1.0 scanner observed by Sysdig.
+references:
+  - https://github.com/advisories/GHSA-8444-4fhq-fxpq
+  - https://www.sysdig.com/blog/cve-2026-44338-praisonai-authentication-bypass-in-under-4-hours-and-the-growing-trend-of-rapid-exploitation
+author: SOC Detection Engineering
+date: 2026/05/30
+tags:
+  - attack.t1190
+  - attack.t1059.006
+logsource:
+  category: webserver
+detection:
+  selection_endpoint:
+    cs-method: &#x27;POST&#x27;
+    cs-uri-stem|startswith:
+      - &#x27;/chat&#x27;
+      - &#x27;/agents&#x27;
+  selection_scanner:
+    cs(User-Agent)|contains:
+      - &#x27;CVE-Detector&#x27;
+  condition: selection_endpoint and (selection_scanner or 1 of selection_endpoint)
+level: high</code></pre></div>
+    <div class="tab-content" id="art-165-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:cloudfront OR source:alb OR source:iis) @http.method:POST (@http.url_details.path:(\/chat OR \/agents) OR @http.url:(*\/chat* OR *\/agents*)) AND (@http.useragent:*CVE-Detector* OR @http.useragent:*CVE-Detector\/1.0* OR @network.destination.port:8005)</code></pre></div>
+    <div class="tab-content" id="art-165-uc2-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/applicationelb/access-logs (or your nginx/CloudFront equivalent)
+fields @timestamp, client_ip, request_verb, request_url, user_agent, elb_status_code, target_status_code
+| filter request_verb = &quot;POST&quot;
+      and (request_url like /\/chat(\?|$|\s)/ or request_url like /\/agents(\?|$|\s)/)
+      and (user_agent like /CVE-Detector/i or elb_status_code = 200)
+| stats count(*) as hits, latest(@timestamp) as last_seen, latest(target_status_code) as last_status by client_ip, request_url, user_agent
+| sort hits desc
+| limit 200</code></pre></div>
+    <div class="tab-content" id="art-165-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-165-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-165-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-165-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.user_agent) as user_agent values(Web.src) as src from datamodel=Web.Web where (Web.url=&quot;*/chat*&quot; OR Web.url=&quot;*/agents*&quot;) Web.http_method=POST by Web.dest Web.url Web.status | `drop_dm_object_name(Web)` | where (like(user_agent,&quot;%CVE-Detector%&quot;) OR count &gt; 5) | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-165-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.user_agent) as user_agent values(Web.src) as src from datamodel=Web.Web where (Web.url=&quot;*/chat*&quot; OR Web.url=&quot;*/agents*&quot;) Web.http_method=POST by Web.dest Web.url Web.status | `drop_dm_object_name(Web)` | where (like(user_agent,&quot;%CVE-Detector%&quot;) OR count &gt; 5) | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="f6cf48115b" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+  <summary>
+    <span class="uc-title">PraisonAI python process spawning shell, curl, or wget (post-exploitation tool-use abuse)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="f6cf48115b" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the praisonai-hosted python process spawning a shell, downloader, or scripting interpreter — the post-exploitation footprint when an attacker abuses the unauthenticated /chat endpoint to invoke agent tools (python_repl, bash, file I/O, HTTP) named in §Impact.
+
+Rationale: §Impact explicitly enumerates the agent-tool surface attackers reach: `python_repl`, `bash`, file I/O, HTTP — all of which translate into shell/curl/wget child processes of the python host. Parent-child pivot on `python` + cmdline-contains-`praisonai` → shell/downloader is the cleanest post-exploit signal and dodges the `anti-bare-process-execution` smell.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-6rmh-7xcm-cpxj
+  • https://www.sysdig.com/blog/cve-2026-44338-praisonai-authentication-bypass-in-under-4-hours-and-the-growing-trend-of-rapid-exploitation</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate praisonai agent invocations that use python_repl or bash tools by design (operator-sanctioned tool-use)</li><li>Developer interactively testing agents with shell tools enabled</li><li>Jupyter / IPython kernels coincidentally hosting praisonai modules and spawning shells</li><li>System package management triggering subprocess shells under a python parent</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (AccountName in~ (&quot;jupyter&quot;, &quot;airflow&quot;, &quot;mlops-svc&quot;) and DeviceName has_any (&quot;dev-&quot;, &quot;sandbox-&quot;, &quot;jupyter-&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Reconstruct the process tree — confirm the praisonai parent&#x27;s cmdline references the generated api_server file. Pull the child&#x27;s cmdline for reverse-shell, curl-pipe-bash, or exfil signatures. Cross-reference Timestamp with UC3 inbound /chat or /agents POSTs from the same DeviceName. Step 2 (contain): Kill the praisonai parent process and child, isolate the host from network, snapshot memory and the agents.yaml file. Rotate LLM API keys and any creds visible in the praisonai process env (the article notes API keys are present in process env). Step 3 (hunt): Search egress to api.openai.com / api.anthropic.com from the host for unexpected token spend, search for new outbound C2 to non-LLM IPs spawned by the python parent, and enumerate any files written by the child shell (DeviceFileEvents InitiatingProcessId == ChildProcessId).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-165-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-165-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-165-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-165-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-165-uc3-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-165-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-165-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;python.exe&quot;, &quot;python3.exe&quot;, &quot;python&quot;, &quot;python3&quot;, &quot;pythonw.exe&quot;)
+| where InitiatingProcessCommandLine has_any (&quot;praisonai&quot;, &quot;api_server&quot;, &quot;generate_api_server_code&quot;, &quot;praisonai.run&quot;)
+   or InitiatingProcessParentFileName in~ (&quot;python.exe&quot;, &quot;python3.exe&quot;, &quot;python&quot;, &quot;python3&quot;)
+      and InitiatingProcessParentId in (
+        (DeviceProcessEvents
+         | where Timestamp &gt; ago(7d)
+         | where ProcessCommandLine has &quot;praisonai&quot; and ProcessCommandLine has &quot;deploy&quot;
+         | distinct ProcessId)
+      )
+| where FileName in~ (&quot;bash&quot;, &quot;sh&quot;, &quot;dash&quot;, &quot;zsh&quot;, &quot;cmd.exe&quot;, &quot;powershell.exe&quot;, &quot;pwsh.exe&quot;, &quot;curl&quot;, &quot;curl.exe&quot;, &quot;wget&quot;, &quot;wget.exe&quot;, &quot;nc&quot;, &quot;ncat&quot;, &quot;socat&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine,
+          FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-165-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where ParentProcessName has_any (&quot;python.exe&quot;, &quot;python3.exe&quot;, &quot;pythonw.exe&quot;)
+| where NewProcessName has_any (&quot;\\cmd.exe&quot;, &quot;\\powershell.exe&quot;, &quot;\\pwsh.exe&quot;, &quot;\\curl.exe&quot;, &quot;\\wget.exe&quot;)
+   or CommandLine has_any (&quot;praisonai&quot;, &quot;praisonai.run&quot;, &quot;api_server&quot;)
+| project TimeGenerated, Computer, SubjectUserName, NewProcessName, CommandLine, ParentProcessName
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-165-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: PraisonAI python process spawning shell or downloader (post-exploit CVE-2026-47393)
+id: 7d2e4f93-8c1a-4b6e-9d0a-praisonai0004
+description: Detects shell, downloader, or interpreter spawned as a child of the praisonai-hosted python process. Maps to the python_repl/bash/HTTP tool-use abuse named in the GHSA §Impact.
+references:
+  - https://github.com/advisories/GHSA-8444-4fhq-fxpq
+  - https://github.com/advisories/GHSA-6rmh-7xcm-cpxj
+author: SOC Detection Engineering
+date: 2026/05/30
+tags:
+  - attack.t1059.004
+  - attack.t1059.006
+  - attack.t1105
+logsource:
+  category: process_creation
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - &#x27;\python.exe&#x27;
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
+      - &#x27;\pythonw.exe&#x27;
+    ParentCommandLine|contains:
+      - &#x27;praisonai&#x27;
+      - &#x27;api_server&#x27;
+      - &#x27;generate_api_server_code&#x27;
+  selection_child:
+    Image|endswith:
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+      - &#x27;\curl.exe&#x27;
+      - &#x27;\wget.exe&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/sh&#x27;
+      - &#x27;/curl&#x27;
+      - &#x27;/wget&#x27;
+      - &#x27;/nc&#x27;
+      - &#x27;/ncat&#x27;
+      - &#x27;/socat&#x27;
+  condition: selection_parent and selection_child
+level: high</code></pre></div>
+    <div class="tab-content" id="art-165-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.security OR source:windows.sysmon OR source:linux.auditd) (@ParentImage:(*\\python.exe OR *\\PYTHON.EXE OR *\\pythonw.exe OR */python OR */python3) OR @process.parent.executable.path:(*/python OR */python3)) AND (@ParentCommandLine:*praisonai* OR @process.parent.command_line:*praisonai*) AND (@Image:(*\\cmd.exe OR *\\powershell.exe OR *\\pwsh.exe OR *\\curl.exe OR *\\wget.exe) OR @process.executable.path:(*/bash OR */sh OR */curl OR */wget OR */nc OR */ncat OR */socat))</code></pre></div>
+    <div class="tab-content" id="art-165-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/python(3|w)?(\.exe)?$/i
+| regex(&quot;praisonai&quot;, field=ParentCommandLine)
+| ImageFileName=/\\\\(cmd|powershell|pwsh|curl|wget)\.exe$|\/(bash|sh|dash|zsh|curl|wget|nc|ncat|socat)$/i
+| groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-165-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-165-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-165-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-165-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process from datamodel=Endpoint.Processes where Processes.parent_process=&quot;*praisonai*&quot; (Processes.process_name=&quot;bash&quot; OR Processes.process_name=&quot;sh&quot; OR Processes.process_name=&quot;cmd.exe&quot; OR Processes.process_name=&quot;powershell.exe&quot; OR Processes.process_name=&quot;pwsh.exe&quot; OR Processes.process_name=&quot;curl&quot; OR Processes.process_name=&quot;curl.exe&quot; OR Processes.process_name=&quot;wget&quot; OR Processes.process_name=&quot;wget.exe&quot;) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-165-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process from datamodel=Endpoint.Processes where Processes.parent_process=&quot;*praisonai*&quot; (Processes.process_name=&quot;bash&quot; OR Processes.process_name=&quot;sh&quot; OR Processes.process_name=&quot;cmd.exe&quot; OR Processes.process_name=&quot;powershell.exe&quot; OR Processes.process_name=&quot;pwsh.exe&quot; OR Processes.process_name=&quot;curl&quot; OR Processes.process_name=&quot;curl.exe&quot; OR Processes.process_name=&quot;wget&quot; OR Processes.process_name=&quot;wget.exe&quot;) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-165-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-165-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-165-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-165-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-47393&quot;, &quot;CVE-2026-44338&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-165-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-47393&quot;, &quot;CVE-2026-44338&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-165-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-165-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-165-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-165-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-47393&quot;, &quot;CVE-2026-44338&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-165-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-47393&quot;, &quot;CVE-2026-44338&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Network connections to article IPs / domains</span>
+    <span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-165-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-165-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-165-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-165-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-165-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIP in (&quot;146.190.133.49&quot;) or RemoteUrl has_any (&quot;&quot;)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-165-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;146.190.133.49&quot;]);
+let BadDomains = dynamic([&quot;&quot;]);
+ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr in (BadIPs)
+   or Url has_any (BadDomains)
+| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-165-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
+status: experimental
+description: |
+    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
+    article-specific destinations. For dynamic IOC management, use a
+    watchlist or external feed.
+references:
+    - https://attack.mitre.org/tactics/TA0011/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.command-and-control
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection_ip:
+        DestinationIp:
+            - &#x27;__IP_PLACEHOLDER_1__&#x27;
+            - &#x27;__IP_PLACEHOLDER_2__&#x27;
+    selection_domain:
+        DestinationHostname:
+            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
+            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
+    condition: selection_ip or selection_domain
+falsepositives:
+    - None on a true-positive IOC match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-165-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-165-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-165-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-165-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;146.190.133.49&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats `summariesonly` count from datamodel=Web
+        where Web.dest IN (&quot;&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-165-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Network_Traffic.All_Traffic
+    where All_Traffic.dest IN (&quot;146.190.133.49&quot;)
+    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
+| `drop_dm_object_name(All_Traffic)`
+| append
+    [| tstats summariesonly=false count from datamodel=Web
+        where Web.dest IN (&quot;&quot;)
+        by Web.src, Web.dest, Web.url, Web.user
+     | `drop_dm_object_name(Web)`]
+| append
+    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
+        where DNS.query IN (&quot;&quot;)
+        by DNS.src, DNS.query, DNS.answer
+     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="6927d9393e" data-platforms="def,sent,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47393: PraisonAI `deploy --type api` emits a Flask se</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="6927d9393e" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-165-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-165-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-165-uc6-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-165-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47393: PraisonAI `deploy --type api` emits a Flask se
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;api.py&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/usr/bin/env&quot;) or FileName in~ (&quot;api.py&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-165-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47393: PraisonAI `deploy --type api` emits a Flask se
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;api.py&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FolderPath has_any (&quot;/usr/bin/env&quot;) or FileName in~ (&quot;api.py&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-165-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-165-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-165-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-165-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47393: PraisonAI `deploy --type api` emits a Flask se ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;api.py&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/usr/bin/env*&quot; OR Filesystem.file_name IN (&quot;api.py&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-165-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47393: PraisonAI `deploy --type api` emits a Flask se ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;api.py&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_path=&quot;*/usr/bin/env*&quot; OR Filesystem.file_name IN (&quot;api.py&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-171" data-art-slug="2026-05-29-ghsa-critical-cve-2026-47140-nodevm-builtin-denylist-bypass-"
   data-phases="c2,exploit,install,recon,weapon" data-sev="crit"
   data-techs="T1190"
@@ -16026,579 +16680,6 @@ level: high
        OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
 | `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-202" data-art-slug="2026-05-27-cisa-kev-cve-2026-45321-tanstack-unspecified-vulnerability"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1486"
-  data-sources="CISA KEV"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,network"
-  data-targets="windows"
-  data-uc-count="6" data-llm-uc-count="0"
-  data-search="CISA KEV: CVE-2026-45321 — TanStack Unspecified Vulnerability TanStack contains an unspecified vulnerability that allowed malicious versions of the product to be published to the npm registry to publish credential-stealing malware under a trusted identity. Vendor: TanStack, Product: TanStack. Known ransomware use: Known. Federal patch due: 2026-06-10. CVE-2026-45321 T1486 Asset exposure — vulnerability matches article CVE(s) Ransomware-style mass file rename / extension change LSASS process access / dump (credential theft) Remote service execution — PsExec / SMB lateral movement Network connections to article IPs / domains File hash IOCs — endpoint file/process match">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-05-27-cisa-kev-cve-2026-45321-tanstack-unspecified-vulnerability" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2026-45321 — TanStack Unspecified Vulnerability</a></h2>
-  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
-  <div class="pubmeta">
-    <span>2026-05-27</span>
-    <span>6 use cases</span>
-    <span>1 technique</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">TanStack contains an unspecified vulnerability that allowed malicious versions of the product to be published to the npm registry to publish credential-stealing malware under a trusted identity. Vendor: TanStack, Product: TanStack. Known ransomware use: Known. Federal patch due: 2026-06-10.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-45321</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Encrypted for Impact">T1486</span></div>
-<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">api.masscan.cloud</span> <span class="ind ">filev2.getsession.org</span> <span class="ind ">git-tanstack.com</span> <span class="ind ">seed1.getsession.org</span> <span class="ind ">seed2.getsession.org</span> <span class="ind ">seed3.getsession.org</span> <span class="ind ">litter.catbox.moe</span></div>
-<div class="ind-group"><span class="ind-label">SHA256</span><span class="ind ">ab4fcadaec49c032…</span> <span class="ind ">2ec78d556d696e20…</span> <span class="ind ">7c12d8614c624c70…</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-202-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-202"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-202-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ File hash IOCs — endpoint file/process match</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Ransomware-style mass file rename / extension change · LSASS process access / dump (credential theft) · Remote service execution — PsExec / SMB lateral movement</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-202-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-202-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-202-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-202-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-45321&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-202-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-45321&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-202-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-202-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-202-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-202-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-45321&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-202-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-45321&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="8f76affc05" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Ransomware-style mass file rename / extension change</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="8f76affc05" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Threshold detection: many files renamed in short window, often with new extension.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Encrypted for Impact">T1486</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">DeviceFileEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-202-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-202-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-202-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-202-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(1d)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where ActionType in (&quot;FileRenamed&quot;,&quot;FileModified&quot;)
-| summarize files = dcount(FileName) by DeviceName, InitiatingProcessAccountName, bin(Timestamp, 1m)
-| where files &gt; 200    // empirical: &gt; 200 unique-file renames in 1m by one account on one host
-                       //            is well above the P99 of legitimate bulk-tooling
-| order by files desc
-</code></pre></div>
-    <div class="tab-content" id="art-202-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(1d)
-| where ActorUsername !endswith &quot;$&quot;
-| where EventType in (&quot;FileRenamed&quot;,&quot;FileModified&quot;)
-| summarize files = dcount(TargetFileName)
-            by DvcHostname, ActorUsername, ActingProcessName, bin(TimeGenerated, 1m)
-| where files &gt; 200    // P99 of legit bulk-tooling per-minute rename volume
-| order by files desc
-</code></pre></div>
-    <div class="tab-content" id="art-202-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-202-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-202-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-202-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, dc(Filesystem.file_name) AS files
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;modified&quot;,&quot;renamed&quot;)
-    by Filesystem.dest, Filesystem.user, _time span=1m
-| `drop_dm_object_name(Filesystem)`
-| where files &gt; 200
-| sort - files</code></pre><pre class="spl-mode-body" id="art-202-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, dc(Filesystem.file_name) AS files
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;modified&quot;,&quot;renamed&quot;)
-    by Filesystem.dest, Filesystem.user, _time span=1m
-| `drop_dm_object_name(Filesystem)`
-| where files &gt; 200
-| sort - files</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="b723485c48" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">LSASS process access / dump (credential theft)</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="b723485c48" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Mimikatz, comsvcs.dll MiniDump, or any non-Windows process opening LSASS.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="LSASS Memory">T1003.001</span> <span class="ind tech" title="OS Credential Dumping">T1003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-202-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-202-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-202-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-202-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-202-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where ActionType == &quot;OpenProcessApiCall&quot;
-| where FileName =~ &quot;lsass.exe&quot;
-| where InitiatingProcessFileName !in~ (&quot;MsSense.exe&quot;,&quot;MsMpEng.exe&quot;,&quot;csrss.exe&quot;,
-                                          &quot;svchost.exe&quot;,&quot;wininit.exe&quot;,&quot;services.exe&quot;,
-                                          &quot;lsm.exe&quot;,&quot;SearchProtocolHost.exe&quot;)
-| project Timestamp, DeviceName, ActionType, FileName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, AccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-202-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// SecurityEvent EventID 4663 = object access. AccessMask 0x10 / 0x40 / 0x1010
-// indicate read access to lsass.exe — credential-dump signature. Audit
-// Object Access &gt; Audit File System policy required.
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4663
-| where ObjectName endswith &quot;\lsass.exe&quot;
-| where Account !endswith &quot;$&quot;
-| project TimeGenerated, Computer, Account, ObjectName, ProcessName,
-          AccessMask, AccessReason
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-202-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: LSASS Process Access Outside Microsoft-Signed Tooling
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d04
-status: experimental
-description: |
-    Anything opening lsass.exe with read-memory access that isn&#x27;t a
-    Microsoft signed component (Defender, csrss, etc.) is suspect.
-    Mimikatz / Pypykatz / nanodump signature.
-references:
-    - https://attack.mitre.org/techniques/T1003/001/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1003.001
-    - attack.credential-access
-logsource:
-    category: process_access
-    product: windows
-detection:
-    selection:
-        TargetImage|endswith: &#x27;\lsass.exe&#x27;
-    filter_known_good:
-        SourceImage|endswith:
-            - &#x27;\MsSense.exe&#x27;
-            - &#x27;\MsMpEng.exe&#x27;
-            - &#x27;\csrss.exe&#x27;
-            - &#x27;\svchost.exe&#x27;
-            - &#x27;\wininit.exe&#x27;
-            - &#x27;\services.exe&#x27;
-            - &#x27;\lsm.exe&#x27;
-            - &#x27;\SearchProtocolHost.exe&#x27;
-    condition: selection and not filter_known_good
-falsepositives:
-    - Third-party EDR / forensic tools — extend the filter list
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-202-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-202-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-202-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-202-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process=&quot;*lsass*&quot; OR Processes.process=&quot;*sekurlsa*&quot;
-        OR Processes.process=&quot;*MiniDump*&quot; OR Processes.process=&quot;*comsvcs.dll*MiniDump*&quot;
-        OR Processes.process=&quot;*procdump*lsass*&quot;)
-       OR (Processes.process_name=&quot;rundll32.exe&quot; AND Processes.process=&quot;*comsvcs*MiniDump*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-202-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process=&quot;*lsass*&quot; OR Processes.process=&quot;*sekurlsa*&quot;
-        OR Processes.process=&quot;*MiniDump*&quot; OR Processes.process=&quot;*comsvcs.dll*MiniDump*&quot;
-        OR Processes.process=&quot;*procdump*lsass*&quot;)
-       OR (Processes.process_name=&quot;rundll32.exe&quot; AND Processes.process=&quot;*comsvcs*MiniDump*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="4e3ef9d0b4" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Remote service execution — PsExec / SMB lateral movement</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="4e3ef9d0b4" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">psexec / paexec / smbexec / wmic /node — service install over SMB from remote host.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="SMB/Windows Admin Shares">T1021.002</span> <span class="ind tech" title="Service Execution">T1569.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-202-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-202-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-202-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-202-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-202-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where FileName in~ (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
-   or (FileName =~ &quot;wmic.exe&quot; and ProcessCommandLine has &quot;/node:&quot;)
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc
-</code></pre></div>
-    <div class="tab-content" id="art-202-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688            // process-create (audit-policy required)
-| where Account !endswith &quot;$&quot;
-| where NewProcessName endswith &quot;\psexec.exe&quot;
-   or NewProcessName endswith &quot;\psexesvc.exe&quot;
-   or NewProcessName endswith &quot;\paexec.exe&quot;
-   or (NewProcessName endswith &quot;\wmic.exe&quot; and CommandLine has &quot;/node:&quot;)
-| project TimeGenerated, Computer, Account, NewProcessName, CommandLine,
-          ParentProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-202-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: PsExec / SMB Lateral Movement Tooling Execution
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d03
-status: experimental
-description: |
-    PsExec, paexec, smbexec, csexec, remcom — admin-grade tooling that
-    pivots over SMB. Pair with `wmic /node:` for the full cluster.
-references:
-    - https://attack.mitre.org/techniques/T1021/002/
-    - https://attack.mitre.org/techniques/T1569/002/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1021.002
-    - attack.t1569.002
-    - attack.lateral-movement
-    - attack.execution
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_psexec:
-        Image|endswith:
-            - &#x27;\psexec.exe&#x27;
-            - &#x27;\psexec64.exe&#x27;
-            - &#x27;\psexesvc.exe&#x27;
-            - &#x27;\paexec.exe&#x27;
-            - &#x27;\csexec.exe&#x27;
-            - &#x27;\remcom.exe&#x27;
-            - &#x27;\smbexec.py&#x27;
-    selection_wmic_remote:
-        Image|endswith:
-            - &#x27;\wmic.exe&#x27;
-        CommandLine|contains:
-            - &#x27;/node:&#x27;
-    condition: selection_psexec or selection_wmic_remote
-falsepositives:
-    - Sysadmins running approved remote-management tooling — wrap with
-      a known-admin-host watchlist
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-202-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-202-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-202-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-202-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
-       OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-202-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
-       OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Network connections to article IPs / domains</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-202-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-202-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-202-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-202-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-202-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteIP in (&quot;&quot;) or RemoteUrl has_any (&quot;api.masscan.cloud&quot;, &quot;filev2.getsession.org&quot;, &quot;git-tanstack.com&quot;, &quot;seed1.getsession.org&quot;, &quot;seed2.getsession.org&quot;, &quot;seed3.getsession.org&quot;, &quot;litter.catbox.moe&quot;)
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-202-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;&quot;]);
-let BadDomains = dynamic([&quot;api.masscan.cloud&quot;, &quot;filev2.getsession.org&quot;, &quot;git-tanstack.com&quot;, &quot;seed1.getsession.org&quot;, &quot;seed2.getsession.org&quot;, &quot;seed3.getsession.org&quot;, &quot;litter.catbox.moe&quot;]);
-ImNetworkSession
-| where TimeGenerated &gt; ago(7d)
-| where DstIpAddr in (BadIPs)
-   or Url has_any (BadDomains)
-| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-202-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
-status: experimental
-description: |
-    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
-    article-specific destinations. For dynamic IOC management, use a
-    watchlist or external feed.
-references:
-    - https://attack.mitre.org/tactics/TA0011/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.command-and-control
-logsource:
-    category: network_connection
-    product: windows
-detection:
-    selection_ip:
-        DestinationIp:
-            - &#x27;__IP_PLACEHOLDER_1__&#x27;
-            - &#x27;__IP_PLACEHOLDER_2__&#x27;
-    selection_domain:
-        DestinationHostname:
-            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
-            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
-    condition: selection_ip or selection_domain
-falsepositives:
-    - None on a true-positive IOC match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-202-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-202-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-202-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-202-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN (&quot;api.masscan.cloud&quot;, &quot;filev2.getsession.org&quot;, &quot;git-tanstack.com&quot;, &quot;seed1.getsession.org&quot;, &quot;seed2.getsession.org&quot;, &quot;seed3.getsession.org&quot;, &quot;litter.catbox.moe&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;api.masscan.cloud&quot;, &quot;filev2.getsession.org&quot;, &quot;git-tanstack.com&quot;, &quot;seed1.getsession.org&quot;, &quot;seed2.getsession.org&quot;, &quot;seed3.getsession.org&quot;, &quot;litter.catbox.moe&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-202-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats summariesonly=false count from datamodel=Web
-        where Web.dest IN (&quot;api.masscan.cloud&quot;, &quot;filev2.getsession.org&quot;, &quot;git-tanstack.com&quot;, &quot;seed1.getsession.org&quot;, &quot;seed2.getsession.org&quot;, &quot;seed3.getsession.org&quot;, &quot;litter.catbox.moe&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;api.masscan.cloud&quot;, &quot;filev2.getsession.org&quot;, &quot;git-tanstack.com&quot;, &quot;seed1.getsession.org&quot;, &quot;seed2.getsession.org&quot;, &quot;seed3.getsession.org&quot;, &quot;litter.catbox.moe&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-202-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-202-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-202-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-202-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-202-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
-// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
-// (Initiating only) so column-projection has to differ per side.
-union
-    ( DeviceFileEvents
-        | where Timestamp &gt; ago(7d)
-        | where InitiatingProcessAccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c&quot;, &quot;2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96&quot;, &quot;7c12d8614c624c70d6dd6fc2ee289332474abaa38f70ebe2cdef064923ca3a9b&quot;) or SHA1 in~ (&quot;ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c&quot;, &quot;2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96&quot;, &quot;7c12d8614c624c70d6dd6fc2ee289332474abaa38f70ebe2cdef064923ca3a9b&quot;) or MD5 in~ (&quot;ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c&quot;, &quot;2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96&quot;, &quot;7c12d8614c624c70d6dd6fc2ee289332474abaa38f70ebe2cdef064923ca3a9b&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
-    ( DeviceProcessEvents
-        | where Timestamp &gt; ago(7d)
-        | where AccountName !endswith &quot;$&quot;
-        | where SHA256 in~ (&quot;ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c&quot;, &quot;2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96&quot;, &quot;7c12d8614c624c70d6dd6fc2ee289332474abaa38f70ebe2cdef064923ca3a9b&quot;) or SHA1 in~ (&quot;ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c&quot;, &quot;2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96&quot;, &quot;7c12d8614c624c70d6dd6fc2ee289332474abaa38f70ebe2cdef064923ca3a9b&quot;) or MD5 in~ (&quot;ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c&quot;, &quot;2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96&quot;, &quot;7c12d8614c624c70d6dd6fc2ee289332474abaa38f70ebe2cdef064923ca3a9b&quot;)
-        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
-| order by Timestamp desc
-</code></pre></div>
-    <div class="tab-content" id="art-202-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
-// Defender version so the engine can push hash predicates per-side.
-let BadHashes = dynamic([&quot;ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c&quot;, &quot;2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96&quot;, &quot;7c12d8614c624c70d6dd6fc2ee289332474abaa38f70ebe2cdef064923ca3a9b&quot;]);
-union
-    ( ImFileEvent
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where TargetFileSHA256 in~ (BadHashes)
-           or TargetFileSHA1 in~ (BadHashes)
-           or TargetFileMD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType,
-                  TargetFileName, TargetFilePath, TargetFileSHA256,
-                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
-    ( ImProcessCreate
-        | where TimeGenerated &gt; ago(7d)
-        | where ActorUsername !endswith &quot;$&quot;
-        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
-        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
-                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
-                  TargetFileSHA256 = SHA256,
-                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-202-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
-status: experimental
-description: |
-    Replace `__HASH_LIST__` placeholder with article-specific SHA256
-    values. Use a watchlist or external indicator file for management
-    at scale.
-references:
-    - https://attack.mitre.org/techniques/T1027/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1027
-    - attack.defense-evasion
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection:
-        Hashes|contains:
-            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
-    condition: selection
-falsepositives:
-    - None on a true-positive hash match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-202-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-202-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-202-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-202-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c&quot;, &quot;2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96&quot;, &quot;7c12d8614c624c70d6dd6fc2ee289332474abaa38f70ebe2cdef064923ca3a9b&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c&quot;, &quot;2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96&quot;, &quot;7c12d8614c624c70d6dd6fc2ee289332474abaa38f70ebe2cdef064923ca3a9b&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-202-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.file_hash IN (&quot;ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c&quot;, &quot;2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96&quot;, &quot;7c12d8614c624c70d6dd6fc2ee289332474abaa38f70ebe2cdef064923ca3a9b&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| append
-    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
-        where Processes.process_hash IN (&quot;ab4fcadaec49c03278063dd269ea5eef82d24f2124a8e15d7b90f2fa8601266c&quot;, &quot;2ec78d556d696e208927cc503d48e4b5eb56b31abc2870c2ed2e98d6be27fc96&quot;, &quot;7c12d8614c624c70d6dd6fc2ee289332474abaa38f70ebe2cdef064923ca3a9b&quot;)
-        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
-     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
   </div>
 </details></div>
 </article>

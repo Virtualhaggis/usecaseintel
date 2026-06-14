@@ -38,11 +38,11 @@ Forensic examiners are constantly hunting for data that reveals not just what ha
 - **T1566** — Phishing
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
+- **T1070.004** — File Deletion
+- **T1485** — Data Destruction
 - **T1005** — Data from Local System
+- **T1217** — Browser Information Discovery
 - **T1083** — File and Directory Discovery
-- **T1070** — Indicator Removal
-- **T1070.004** — Indicator Removal: File Deletion
-- **T1565.001** — Stored Data Manipulation
 
 ## Kill chain phases observed
 
@@ -50,42 +50,51 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Suspicious read / archive of macOS Biome App.MenuItem restricted stream
+### Anti-forensic deletion/tampering of macOS Tahoe 26 App.MenuItem Biome stream
 
-`UC_10_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*/Library/Biome/streams/restricted/App.MenuItem*" OR Processes.process="*ccl_segb_cli*" OR Processes.process="*App.MenuItem/local*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where NOT (process_name IN ("biomed","launchd","BiomeAgent")) | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where ProcessCommandLine has_any ("/Library/Biome/streams/restricted/App.MenuItem", "ccl_segb_cli", "App.MenuItem/local")
-| where InitiatingProcessFileName !in~ ("biomed", "BiomeAgent", "launchd")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Tampering with macOS Biome App.MenuItem stream (anti-forensics)
-
-`UC_10_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_12_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*/Library/Biome/streams/restricted/App.MenuItem/*" Filesystem.action IN ("deleted","modified","renamed") by Filesystem.dest Filesystem.user Filesystem.action Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where NOT (process_name IN ("biomed","launchd","BiomeAgent","runningboardd")) | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.process_path) as process_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.action IN ("deleted","modified","renamed") AND Filesystem.file_path="*/Library/Biome/streams/restricted/App.MenuItem/*" by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | where NOT match(process_path,"(?i)/usr/libexec/biomed|/System/Library/|/usr/sbin/spindump") | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(30d)
+| where Timestamp > ago(7d)
 | where FolderPath has "/Library/Biome/streams/restricted/App.MenuItem"
-| where ActionType in ("FileDeleted", "FileRenamed", "FileModified")
-| where InitiatingProcessFileName !in~ ("biomed", "BiomeAgent", "launchd", "runningboardd")
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, PreviousFolderPath, PreviousFileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where ActionType in ("FileDeleted","FileRenamed","FileModified")
+| where InitiatingProcessFileName !in~ ("biomed","biomesyncd","BiomeAgent","runningboardd","launchd")
+| where InitiatingProcessFolderPath !startswith "/System/Library/"
+| where InitiatingProcessFolderPath !startswith "/usr/libexec/"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256
+| order by Timestamp desc
+```
+
+### Non-forensic process bulk-reading the App.MenuItem Biome stream
+
+`UC_12_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where Filesystem.action="read" AND Filesystem.file_path="*/Library/Biome/streams/restricted/App.MenuItem/*" by Filesystem.dest Filesystem.process_name Filesystem.process_path Filesystem.user | `drop_dm_object_name(Filesystem)` | where NOT match(process_path,"(?i)/usr/libexec/biomed|/System/Library/|/Applications/Xcode\.app/") | where count > 1 | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let SuspectReads = DeviceFileEvents
+  | where Timestamp > ago(7d)
+  | where FolderPath has "/Library/Biome/streams/restricted/App.MenuItem"
+  | where ActionType in ("FileCreated","FileModified","FileRenamed")
+  | summarize Touches = count() by DeviceId, DeviceName, InitiatingProcessId, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, bin(Timestamp, 10m);
+let ProcessReads = DeviceProcessEvents
+  | where Timestamp > ago(7d)
+  | where ProcessCommandLine has_any ("/Library/Biome/streams/restricted/App.MenuItem","ccl_segb_cli.py","ccl-segb","App.MenuItem/local")
+  | where FileName !in~ ("biomed","biomesyncd","BiomeAgent")
+  | project Timestamp, DeviceId, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256;
+union SuspectReads, ProcessReads
+| where InitiatingProcessFileName !in~ ("biomed","biomesyncd","BiomeAgent","mdworker","mds_stores","Spotlight","backupd","tmutil")
 | order by Timestamp desc
 ```
 
@@ -316,7 +325,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Tracing Digital Intent: New MacOS Tahoe 26 Artifact Discovered
 
-`UC_10_6` · phase: **exploit** · confidence: **High**
+`UC_12_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

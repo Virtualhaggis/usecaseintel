@@ -1,3 +1,921 @@
+<article class="card" id="art-72" data-art-slug="2026-06-09-blinding-the-watchmen-abusing-cloud-logging-services-for-def"
+  data-phases="actions,c2,delivery,exploit,install" data-sev="high"
+  data-techs="T1190,T1566"
+  data-sources="Unit 42 (Palo Alto)"
+  data-platforms="cloudwatch,datadog,def,sent,sigma,spl"
+  data-splunk-cats="cloud,endpoint,web"
+  data-targets="aws,azure,gcp,m365,windows"
+  data-uc-count="10" data-llm-uc-count="6"
+  data-search="Blinding the Watchmen: Abusing Cloud Logging Services for Defense Evasion and Visibility Unit 42 research examines attack scenarios targeting cloud logging services. Learn how to defend against log manipulation and defense evasion. The post Blinding the Watchmen: Abusing Cloud Logging Services for Defense Evasion and Visibility appeared first on Unit 42 .  T1190 T1566 [LLM] AWS CloudTrail trail disabled or deleted (StopLogging / DeleteTrail) [LLM] AWS CloudTrail S3 destination bucket emptied or deleted [LLM] AWS CloudTrail UpdateTrail config tampering (S3 destination swap or validation disabled) [LLM] GCP Cloud Logging sink disabled or deleted [LLM] AWS CloudWatch Logs group deleted or retention shortened to 1 day [LLM] AWS CloudTrail log file integrity validation disabled (EnableLogFileValidation=false) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Trusted vendor binary / installer launching unusual children">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2026-06-09-blinding-the-watchmen-abusing-cloud-logging-services-for-def" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://unit42.paloaltonetworks.com/cloud-logging-defense-evasion/" target="_blank" rel="noopener">Blinding the Watchmen: Abusing Cloud Logging Services for Defense Evasion and Visibility</a></h2>
+  <div class="source-badges"><span class="source-badge unit42">Unit 42 (Palo Alto)</span></div>
+  <div class="pubmeta">
+    <span>2026-06-09</span>
+    <span>10 use cases</span>
+    <span>2 techniques</span>
+    <span>5 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Unit 42 research examines attack scenarios targeting cloud logging services. Learn how to defend against log manipulation and defense evasion. The post Blinding the Watchmen: Abusing Cloud Logging Services for Defense Evasion and Visibility appeared first on Unit 42 .</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Phishing">T1566</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-72-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-72"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-72-kc">
+  <div class="kc3d"><div class="kc-cell ">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Office app spawning script/LOLBin child process · Trusted vendor binary / installer launching unusual children</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] AWS CloudTrail UpdateTrail config tampering (S3 destination swap or validation disabled)</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] AWS CloudTrail trail disabled or deleted (StopLogging / DeleteTrail) · [LLM] AWS CloudTrail S3 destination bucket emptied or deleted · [LLM] GCP Cloud Logging sink disabled or deleted · [LLM] AWS CloudWatch Logs group deleted or retention shortened to 1 day · [LLM] AWS CloudTrail log file integrity validation disabled (EnableLogFileValidation=false)</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="16abbaa304" data-platforms="cloudwatch,datadog,def,sent,sigma,spl" data-targets="aws" open>
+  <summary>
+    <span class="uc-title">AWS CloudTrail trail disabled or deleted (StopLogging / DeleteTrail)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="16abbaa304" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects an IAM principal invoking cloudtrail:StopLogging or cloudtrail:DeleteTrail, which the article describes as Technique 1 — the most direct way to blind defenders by suspending log delivery to the configured S3 bucket. High-confidence signal: legitimate admin teardowns are rare and usually scheduled.
+
+Rationale: Article Technique 1 names the exact APIs (cloudtrail:StopLogging) and impact (no further logs written to S3). Cross-checked AWS CloudTrail API docs and MITRE T1562.008 page — both confirm StopLogging/DeleteTrail as defender-blinding actions. errorCode-absent filter ensures we only alert on successful evasion, not denied attempts (which themselves indicate recon and could be a separate hunt).
+
+Cross-checked against:
+  • https://attack.mitre.org/techniques/T1562/008/
+  • https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_StopLogging.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Tools">T1562.001</span> <span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Scheduled trail decommission during multi-account consolidation (Control Tower / Organizations migrations)</li><li>Terraform/CloudFormation stack deletions that own the trail being recreated immediately after</li><li>IaC drift remediation where a duplicate trail is being cleaned up</li><li>Disaster-recovery testing in a sandbox account</li><li>Cost-cutting exercise replacing per-region trails with an org-wide trail</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where userIdentity.userName !startswith &quot;terraform-&quot; and UserAgent !has &quot;aws-internal&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Pull the userIdentity.arn — is this a human IAM user, a CI/CD role (e.g. Terraform/Atlantis), or an AssumedRole from a workstation? Pull the 24h activity window for that principal in CloudTrail and check for change-control ticket references in userAgent. Step 2 (contain): If unauthorized, re-create the trail immediately and revoke the principal&#x27;s cloudtrail:* permissions via SCP or inline deny; rotate any active session via sts:RevokeSession. Step 3 (hunt): Pivot on sourceIPAddress for any iam:CreateAccessKey, iam:AttachUserPolicy, or s3:DeleteBucket activity within ±1h — StopLogging is almost always the prelude to a larger action the attacker doesn&#x27;t want logged.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-72-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-72-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-72-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-72-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-72-uc0-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-72-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-72-uc0-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where Application == &quot;Amazon Web Services&quot;
+| where ActionType in (&quot;StopLogging&quot;, &quot;DeleteTrail&quot;)
+| extend TrailName = tostring(parse_json(tostring(RawEventData)).requestParameters.name)
+| project Timestamp, AccountDisplayName, AccountObjectId, ActionType, TrailName, IPAddress, CountryCode, UserAgent, RawEventData
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-72-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>AWSCloudTrail
+| where TimeGenerated &gt; ago(7d)
+| where EventSource == &quot;cloudtrail.amazonaws.com&quot;
+| where EventName in (&quot;StopLogging&quot;, &quot;DeleteTrail&quot;)
+| where isempty(ErrorCode)
+| extend TrailName = tostring(parse_json(RequestParameters).name)
+| project TimeGenerated, EventName, UserIdentityArn, UserIdentityType, SourceIpAddress, AWSRegion, TrailName, UserAgent
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-72-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: AWS CloudTrail Logging Stopped or Trail Deleted
+id: 3c1f9a6e-2e4d-4f87-9c84-8a73e0b1a9c1
+description: Detects cloudtrail:StopLogging or cloudtrail:DeleteTrail API calls used to blind defenders, as described in Unit 42 &#x27;Blinding the Watchmen&#x27;.
+references:
+  - https://unit42.paloaltonetworks.com/cloud-logging-defense-evasion/
+author: Detection Engineering
+date: 2026/06/12
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - attack.t1562.008
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection:
+    eventSource: cloudtrail.amazonaws.com
+    eventName:
+      - StopLogging
+      - DeleteTrail
+  filter_failed:
+    errorCode: &#x27;*&#x27;
+  condition: selection and not filter_failed
+level: high</code></pre></div>
+    <div class="tab-content" id="art-72-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:(StopLogging OR DeleteTrail) @evt.outcome:success -@userIdentity.invokedBy:*</code></pre></div>
+    <div class="tab-content" id="art-72-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
+fields @timestamp, eventName, eventSource, userIdentity.arn, userIdentity.userName, userIdentity.type, sourceIPAddress, awsRegion, requestParameters.name
+| filter eventSource = &quot;cloudtrail.amazonaws.com&quot;
+| filter eventName in [&quot;StopLogging&quot;, &quot;DeleteTrail&quot;]
+| filter not isPresent(errorCode)
+| sort @timestamp desc
+| limit 100</code></pre></div>
+    <div class="tab-content" id="art-72-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=aws sourcetype=&quot;aws:cloudtrail&quot; eventSource=&quot;cloudtrail.amazonaws.com&quot; (eventName=&quot;StopLogging&quot; OR eventName=&quot;DeleteTrail&quot;) NOT errorCode=&quot;*&quot; | stats min(_time) as firstSeen, count by userIdentity.arn, userIdentity.type, sourceIPAddress, awsRegion, eventName, requestParameters.name | where count &gt;= 1</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="987add7095" data-platforms="cloudwatch,datadog,def,sent,spl" data-targets="aws">
+  <summary>
+    <span class="uc-title">AWS CloudTrail S3 destination bucket emptied or deleted</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="987add7095" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects s3:DeleteBucket (and the preceding bulk s3:DeleteObject) against a bucket that is the configured CloudTrail destination — Technique 2 in the article. CloudTrail&#x27;s UI surfaces a &#x27;bucket not found&#x27; indicator a few minutes after, but by then forensic archive is gone.
+
+Rationale: Article Figure 2 caption explicitly shows the CloudTrail console indicator after s3:DeleteBucket; Technique 2 names the exact API combination (s3:DeleteBucket + s3:DeleteObject). The Sentinel join enriches with which trail the bucket served — an analyst doesn&#x27;t have to look it up at 3am. Cross-checked the AWS S3 API reference and MITRE T1562.008.
+
+Cross-checked against:
+  • https://attack.mitre.org/techniques/T1562/008/
+  • https://docs.aws.amazon.com/AmazonS3/latest/API/API_DeleteBucket.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span> <span class="ind tech" title="Indicator Removal: File Deletion">T1070.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate trail-bucket migration during account consolidation</li><li>Terraform destroy on a sandbox account that owned its own trail</li><li>Lifecycle-policy-driven bucket cleanup when archive moves to Glacier in a different bucket</li><li>DR tabletop where the trail is being re-pointed at a new bucket</li><li>Cost cleanup of an abandoned dev trail</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where UserAgent !has &quot;terraform&quot; and UserAgent !has &quot;cloudformation&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the deleted bucket name against your CloudTrail trail inventory (CreateTrail/UpdateTrail history) — only escalate if it was actively serving a production trail. Pull the past 7 days of userIdentity activity. Step 2 (contain): Revoke the principal&#x27;s s3:Delete* and cloudtrail:* permissions via SCP; if logs landed in a CloudWatch Logs subscription, switch incident analysis there until S3 is restored from versioning or replicated archive. Step 3 (hunt): Look for s3:PutBucketVersioning Status=Suspended in the 24h preceding the delete (attackers must disable versioning first to prevent recovery), and any iam:CreateAccessKey by the same principal — they often pre-stage egress credentials before destroying logs.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-72-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-72-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-72-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-72-uc1-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-72-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-72-uc1-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where Application == &quot;Amazon Web Services&quot;
+| where ActionType == &quot;DeleteBucket&quot;
+| extend BucketName = tostring(parse_json(tostring(RawEventData)).requestParameters.bucketName)
+| where isnotempty(BucketName)
+| project Timestamp, AccountDisplayName, AccountObjectId, BucketName, IPAddress, CountryCode, UserAgent, RawEventData
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-72-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let TrailBuckets = AWSCloudTrail
+    | where TimeGenerated &gt; ago(30d)
+    | where EventName in (&quot;CreateTrail&quot;, &quot;UpdateTrail&quot;)
+    | extend BucketName = tostring(parse_json(RequestParameters).s3BucketName)
+    | where isnotempty(BucketName)
+    | summarize TrailNames = make_set(tostring(parse_json(RequestParameters).name)) by BucketName;
+AWSCloudTrail
+| where TimeGenerated &gt; ago(7d)
+| where EventSource == &quot;s3.amazonaws.com&quot;
+| where EventName == &quot;DeleteBucket&quot;
+| where isempty(ErrorCode)
+| extend BucketName = tostring(parse_json(RequestParameters).bucketName)
+| join kind=inner TrailBuckets on BucketName
+| project TimeGenerated, EventName, UserIdentityArn, SourceIpAddress, BucketName, TrailNames, UserAgent
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-72-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:DeleteBucket @evt.outcome:success @eventSource:s3.amazonaws.com</code></pre></div>
+    <div class="tab-content" id="art-72-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
+fields @timestamp, eventName, eventSource, userIdentity.arn, sourceIPAddress, requestParameters.bucketName
+| filter eventSource = &quot;s3.amazonaws.com&quot;
+| filter eventName = &quot;DeleteBucket&quot;
+| filter not isPresent(errorCode)
+| sort @timestamp desc
+| limit 100</code></pre></div>
+    <div class="tab-content" id="art-72-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=aws sourcetype=&quot;aws:cloudtrail&quot; eventSource=&quot;s3.amazonaws.com&quot; eventName=&quot;DeleteBucket&quot; NOT errorCode=&quot;*&quot; | rename requestParameters.bucketName as bucketName | join type=left bucketName [ search index=aws sourcetype=&quot;aws:cloudtrail&quot; eventSource=&quot;cloudtrail.amazonaws.com&quot; eventName IN (&quot;CreateTrail&quot;,&quot;UpdateTrail&quot;,&quot;GetTrail&quot;) | rename requestParameters.s3BucketName as bucketName | stats values(requestParameters.name) as trailName by bucketName ] | where isnotnull(trailName) | stats min(_time) as firstSeen, count by userIdentity.arn, sourceIPAddress, bucketName, trailName</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="e4d918525e" data-platforms="cloudwatch,datadog,def,sent,spl" data-targets="aws">
+  <summary>
+    <span class="uc-title">AWS CloudTrail UpdateTrail config tampering (S3 destination swap or validation disabled)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="e4d918525e" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects cloudtrail:UpdateTrail calls that re-point a trail&#x27;s S3BucketName to an attacker-controlled bucket, disable log file integrity validation (EnableLogFileValidation=false), or replace event selectors to exclude write events. Captures the Continuous Visibility scenario from the article — quietly redirecting the org&#x27;s logs into the adversary&#x27;s own account.
+
+Rationale: Article&#x27;s &#x27;Continuous Visibility&#x27; section describes attackers transferring logs to their own accounts — a destination swap via UpdateTrail is the cleanest implementation; reviewer feedback #5 calls out validation-disable specifically. Both conditions are rare in legitimate ops because trails are usually IaC-managed. Cross-checked AWS UpdateTrail API doc.
+
+Cross-checked against:
+  • https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_UpdateTrail.html
+  • https://attack.mitre.org/techniques/T1562/008/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span> <span class="ind tech" title="Data from Cloud Storage">T1530</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Terraform/CloudFormation re-applying with a renamed S3 bucket</li><li>Security team migrating to a centralized log archive account</li><li>Compliance team enabling log validation (true) — not malicious; ensure detection filters on false</li><li>One-time SRE-driven KMS-encryption rollout that re-emits UpdateTrail with the same bucket</li><li>Org-wide trail consolidation by AWS Control Tower</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where UserAgent !has &quot;cloudformation.amazonaws.com&quot; and UserAgent !has &quot;terraform&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Diff the new s3BucketName against the inventory of org-owned buckets — if it&#x27;s a 12-digit account ID you don&#x27;t own, escalate immediately. Check userAgent for IaC tooling fingerprints. Step 2 (contain): Revert the trail config to the known-good bucket, revoke the principal&#x27;s cloudtrail:UpdateTrail via SCP, and S3-block-public-access on the rogue destination if it&#x27;s reachable. Step 3 (hunt): Pivot on the source account/principal for sts:AssumeRole chains in the prior 24h, and search for the same modus operandi on other trails or on Config recorders (PutDeliveryChannel) — the same playbook applies cross-service.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-72-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-72-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-72-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-72-uc2-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-72-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-72-uc2-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where Application == &quot;Amazon Web Services&quot;
+| where ActionType == &quot;UpdateTrail&quot;
+| extend Raw = parse_json(tostring(RawEventData))
+| extend TrailName = tostring(Raw.requestParameters.name)
+| extend NewBucket = tostring(Raw.requestParameters.s3BucketName)
+| extend LogValidation = tostring(Raw.requestParameters.enableLogFileValidation)
+| where isnotempty(NewBucket) or LogValidation == &quot;false&quot;
+| project Timestamp, AccountDisplayName, AccountObjectId, TrailName, NewBucket, LogValidation, IPAddress, UserAgent, RawEventData
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-72-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>AWSCloudTrail
+| where TimeGenerated &gt; ago(7d)
+| where EventSource == &quot;cloudtrail.amazonaws.com&quot;
+| where EventName == &quot;UpdateTrail&quot;
+| where isempty(ErrorCode)
+| extend Req = parse_json(RequestParameters)
+| extend TrailName = tostring(Req.name)
+| extend NewBucket = tostring(Req.s3BucketName)
+| extend LogValidation = tostring(Req.enableLogFileValidation)
+| where isnotempty(NewBucket) or LogValidation == &quot;false&quot;
+| project TimeGenerated, EventName, UserIdentityArn, SourceIpAddress, TrailName, NewBucket, LogValidation, UserAgent
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-72-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:UpdateTrail @evt.outcome:success (@requestParameters.s3BucketName:* OR @requestParameters.enableLogFileValidation:false)</code></pre></div>
+    <div class="tab-content" id="art-72-uc2-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
+fields @timestamp, eventName, userIdentity.arn, sourceIPAddress, requestParameters.name, requestParameters.s3BucketName, requestParameters.enableLogFileValidation
+| filter eventSource = &quot;cloudtrail.amazonaws.com&quot;
+| filter eventName = &quot;UpdateTrail&quot;
+| filter not isPresent(errorCode)
+| filter isPresent(requestParameters.s3BucketName) or requestParameters.enableLogFileValidation = &quot;false&quot;
+| sort @timestamp desc
+| limit 100</code></pre></div>
+    <div class="tab-content" id="art-72-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=aws sourcetype=&quot;aws:cloudtrail&quot; eventSource=&quot;cloudtrail.amazonaws.com&quot; eventName=&quot;UpdateTrail&quot; NOT errorCode=&quot;*&quot; | rename requestParameters.name as trailName, requestParameters.s3BucketName as newBucket, requestParameters.enableLogFileValidation as logValidation | eval evasion=case(logValidation==&quot;false&quot;,&quot;validation_disabled&quot;, isnotnull(newBucket),&quot;destination_swapped&quot;, 1==1,&quot;other&quot;) | where evasion!=&quot;other&quot; | stats min(_time) as firstSeen, values(evasion) as evasionType, count by userIdentity.arn, sourceIPAddress, trailName, newBucket, logValidation</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="c8fc0e89dd" data-platforms="datadog,sigma,spl" data-targets="gcp">
+  <summary>
+    <span class="uc-title">GCP Cloud Logging sink disabled or deleted</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="c8fc0e89dd" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects google.logging.v2.ConfigServiceV2.UpdateSink with disabled=true or DeleteSink against a routing sink — Technique 1 / 2 equivalents for GCP described in the article. Sink disable is the exact control the article&#x27;s Figure 1 console message confirms.
+
+Rationale: Article explicitly names logging.sinks.update with disabled=true (Figure 1) and logging.buckets.delete (Technique 2 for GCP); MITRE T1562.008 page confirms GCP sink disable as a sub-technique example. Sentinel KQL left empty because Sentinel&#x27;s canonical schema in this tenant does not include a validated GCP Cloud Audit table — operators on AWSCloudTrail-only tenants should consume via Datadog gcp.audit or native GCP Security Command Center.
+
+Cross-checked against:
+  • https://attack.mitre.org/techniques/T1562/008/
+  • https://cloud.google.com/logging/docs/audit</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Terraform run that re-creates a sink (delete + create pair)</li><li>Project decommission where parent project removes child-project sinks</li><li>Cost-cutting exercise disabling verbose sinks before quarterly review</li><li>Folder-level sink supersedes a project-level sink and the redundant one is removed</li><li>DR drill where logging is being re-pointed to a different log bucket</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Look up the sink name and project; confirm whether it was the org&#x27;s _Default sink (which captures all admin activity) or a custom-purpose sink. Pull the principalEmail&#x27;s 24h GCP activity. Step 2 (contain): Recreate the sink from IaC/Terraform state; revoke the principal&#x27;s roles/logging.configWriter and roles/logging.admin via gcloud projects remove-iam-policy-binding. Step 3 (hunt): Search for iam.serviceAccountKeys.create or setIamPolicy by the same principal in the prior 24h — sink disable usually precedes credential theft or resource exfil the attacker doesn&#x27;t want exported to Splunk/Chronicle.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-72-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-72-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-72-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-72-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: GCP Cloud Logging Sink Disabled or Deleted
+id: 9e2d6b34-1f5c-4d2a-8e74-3b89c1e5a4f2
+description: Detects routing-sink disable or deletion in GCP Cloud Logging — Technique 1/2 from Unit 42 &#x27;Blinding the Watchmen&#x27;.
+references:
+  - https://unit42.paloaltonetworks.com/cloud-logging-defense-evasion/
+author: Detection Engineering
+date: 2026/06/12
+tags:
+  - attack.defense_evasion
+  - attack.t1562.008
+logsource:
+  product: gcp
+  service: gcp.audit
+detection:
+  selection_delete:
+    methodName: &#x27;google.logging.v2.ConfigServiceV2.DeleteSink&#x27;
+  selection_update_disabled:
+    methodName: &#x27;google.logging.v2.ConfigServiceV2.UpdateSink&#x27;
+    request.sink.disabled: true
+  condition: selection_delete or selection_update_disabled
+level: high</code></pre></div>
+    <div class="tab-content" id="art-72-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:gcp.audit (@protoPayload.methodName:google.logging.v2.ConfigServiceV2.DeleteSink OR (@protoPayload.methodName:google.logging.v2.ConfigServiceV2.UpdateSink AND @protoPayload.request.sink.disabled:true))</code></pre></div>
+    <div class="tab-content" id="art-72-uc3-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=gcp sourcetype=&quot;google:gcp:pubsub:message&quot; (protoPayload.methodName=&quot;google.logging.v2.ConfigServiceV2.DeleteSink&quot; OR (protoPayload.methodName=&quot;google.logging.v2.ConfigServiceV2.UpdateSink&quot; AND protoPayload.request.sink.disabled=true)) | stats min(_time) as firstSeen, count by protoPayload.authenticationInfo.principalEmail, protoPayload.requestMetadata.callerIp, protoPayload.methodName, protoPayload.resourceName, resource.labels.project_id</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="27b07911a1" data-platforms="cloudwatch,datadog,def,sent,spl" data-targets="aws">
+  <summary>
+    <span class="uc-title">AWS CloudWatch Logs group deleted or retention shortened to 1 day</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="27b07911a1" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects logs:DeleteLogGroup or logs:PutRetentionPolicy that drops retention to 1 day on a CloudWatch Logs group — covers the article&#x27;s Technique 2 (delete log storage destination) for the CloudWatch Logs delivery path mentioned as an alternative to S3, and reviewer feedback #3.
+
+Rationale: Article&#x27;s Background section names CloudWatch Logs explicitly as an alternative CloudTrail destination, and reviewer feedback #3 calls out DeleteLogGroup/PutRetentionPolicy as the equivalent of bucket destruction. Retention=1 is the lowest the API allows and is functionally equivalent to deletion within the attack window. Cross-checked AWS CloudWatch Logs API reference.
+
+Cross-checked against:
+  • https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_DeleteLogGroup.html
+  • https://attack.mitre.org/techniques/T1562/008/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span> <span class="ind tech" title="Indicator Removal: Clear Network Connection History">T1070.007</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Dev/test pipeline shortening retention to control costs in ephemeral accounts</li><li>Lambda function being torn down with its log group</li><li>Terraform destroy on a stack that owns its own log group</li><li>Lifecycle automation moving archives to S3 with reduced CloudWatch retention</li><li>Org-level retention policy reducing per-group retention as part of cost optimization</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where LogGroup startswith &quot;/aws/cloudtrail&quot; or LogGroup startswith &quot;/aws/guardduty&quot; or LogGroup startswith &quot;/aws/vpc/flowlogs&quot; or LogGroup contains &quot;audit&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Check whether the log group is on the inventory of security-relevant groups (/aws/cloudtrail, /aws/guardduty, /aws/vpc/flowlogs, audit-Lambdas). Anything outside that list is likely benign noise. Step 2 (contain): If security-relevant, restore retention via PutRetentionPolicy and revoke logs:Delete*/logs:PutRetentionPolicy from the principal via SCP. Pull any subscription filters that may have shipped logs to a sibling SIEM — those may still hold a copy. Step 3 (hunt): Look for parallel s3:DeleteBucket / cloudtrail:StopLogging / config:DeleteDeliveryChannel by the same principal in ±1h — multi-surface log destruction is the unmistakable pre-action pattern.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-72-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-72-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-72-uc4-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-72-uc4-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-72-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-72-uc4-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where Application == &quot;Amazon Web Services&quot;
+| where ActionType in (&quot;DeleteLogGroup&quot;, &quot;PutRetentionPolicy&quot;)
+| extend Req = parse_json(tostring(RawEventData)).requestParameters
+| extend LogGroup = tostring(Req.logGroupName)
+| extend RetentionDays = toint(Req.retentionInDays)
+| where ActionType == &quot;DeleteLogGroup&quot; or (ActionType == &quot;PutRetentionPolicy&quot; and RetentionDays &lt;= 1)
+| project Timestamp, AccountDisplayName, AccountObjectId, ActionType, LogGroup, RetentionDays, IPAddress, UserAgent, RawEventData
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-72-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>AWSCloudTrail
+| where TimeGenerated &gt; ago(7d)
+| where EventSource == &quot;logs.amazonaws.com&quot;
+| where EventName in (&quot;DeleteLogGroup&quot;, &quot;PutRetentionPolicy&quot;)
+| where isempty(ErrorCode)
+| extend Req = parse_json(RequestParameters)
+| extend LogGroup = tostring(Req.logGroupName)
+| extend RetentionDays = toint(Req.retentionInDays)
+| where EventName == &quot;DeleteLogGroup&quot; or (EventName == &quot;PutRetentionPolicy&quot; and RetentionDays &lt;= 1)
+| project TimeGenerated, EventName, UserIdentityArn, SourceIpAddress, LogGroup, RetentionDays, UserAgent
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-72-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.outcome:success ((@evt.name:DeleteLogGroup) OR (@evt.name:PutRetentionPolicy AND @requestParameters.retentionInDays:&lt;=1))</code></pre></div>
+    <div class="tab-content" id="art-72-uc4-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
+fields @timestamp, eventName, userIdentity.arn, sourceIPAddress, requestParameters.logGroupName, requestParameters.retentionInDays
+| filter eventSource = &quot;logs.amazonaws.com&quot;
+| filter eventName in [&quot;DeleteLogGroup&quot;, &quot;PutRetentionPolicy&quot;]
+| filter not isPresent(errorCode)
+| filter eventName = &quot;DeleteLogGroup&quot; or requestParameters.retentionInDays &lt;= 1
+| sort @timestamp desc
+| limit 100</code></pre></div>
+    <div class="tab-content" id="art-72-uc4-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=aws sourcetype=&quot;aws:cloudtrail&quot; eventSource=&quot;logs.amazonaws.com&quot; (eventName=&quot;DeleteLogGroup&quot; OR (eventName=&quot;PutRetentionPolicy&quot; AND requestParameters.retentionInDays&lt;=1)) NOT errorCode=&quot;*&quot; | rename requestParameters.logGroupName as logGroup, requestParameters.retentionInDays as retentionDays | stats min(_time) as firstSeen, values(eventName) as actions, values(retentionDays) as retentionDays, count by userIdentity.arn, sourceIPAddress, logGroup</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="5d158ea1e4" data-platforms="cloudwatch,datadog,def,sent,sigma,spl" data-targets="aws">
+  <summary>
+    <span class="uc-title">AWS CloudTrail log file integrity validation disabled (EnableLogFileValidation=false)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="5d158ea1e4" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects cloudtrail:UpdateTrail or cloudtrail:CreateTrail with EnableLogFileValidation set to false — the article&#x27;s title &#x27;Blinding the Watchmen&#x27; captures the intent and reviewer feedback #5 calls this out specifically. Without digest files, log tampering becomes undetectable.
+
+Rationale: Reviewer feedback #5 explicitly grounds this: disabling EnableLogFileValidation removes the SHA-256 digest chain that proves logs were not tampered with, precisely the &#x27;Blinding the Watchmen&#x27; theme. AWS CIS Benchmark 2.2 and Security Hub PCI.CloudTrail.1 also require this to be true — a legitimate flip to false should be an exception, not the norm.
+
+Cross-checked against:
+  • https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-validation-intro.html
+  • https://attack.mitre.org/techniques/T1562/001/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Tools">T1562.001</span> <span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>IaC drift where the Terraform template was authored before validation was required</li><li>New sandbox trail created without validation enabled</li><li>Cost-driven flip during a digest-storage cleanup exercise</li><li>Migration from CloudTrail Lake (which doesn&#x27;t use digest files) and someone forgot to re-enable on the file trail</li><li>One-time compliance evidence-gathering exercise that briefly toggles validation off</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where UserAgent !has &quot;terraform&quot; and UserAgent !has &quot;cloudformation&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Pull the trail history (DescribeTrails) and confirm validation was previously enabled — a fresh CreateTrail with validation off is lower-severity than a flip on a long-lived prod trail. Identify the IAM principal and userAgent. Step 2 (contain): Re-enable via cloudtrail:UpdateTrail EnableLogFileValidation=true and revoke cloudtrail:Update*/Create* from the principal via SCP if unauthorized. Step 3 (hunt): Search S3 PutObject events against the trail bucket for the 24h window after validation was disabled — any objects placed by a principal other than cloudtrail.amazonaws.com indicate log injection (Technique 5: Log poisoning).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-72-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-72-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-72-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-72-uc5-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-72-uc5-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-72-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-72-uc5-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where Application == &quot;Amazon Web Services&quot;
+| where ActionType in (&quot;UpdateTrail&quot;, &quot;CreateTrail&quot;)
+| extend Req = parse_json(tostring(RawEventData)).requestParameters
+| extend TrailName = tostring(Req.name)
+| extend LogValidation = tostring(Req.enableLogFileValidation)
+| where LogValidation == &quot;false&quot;
+| project Timestamp, AccountDisplayName, AccountObjectId, ActionType, TrailName, LogValidation, IPAddress, UserAgent, RawEventData
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-72-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>AWSCloudTrail
+| where TimeGenerated &gt; ago(7d)
+| where EventSource == &quot;cloudtrail.amazonaws.com&quot;
+| where EventName in (&quot;UpdateTrail&quot;, &quot;CreateTrail&quot;)
+| where isempty(ErrorCode)
+| extend Req = parse_json(RequestParameters)
+| extend TrailName = tostring(Req.name)
+| extend LogValidation = tostring(Req.enableLogFileValidation)
+| where LogValidation == &quot;false&quot;
+| project TimeGenerated, EventName, UserIdentityArn, UserIdentityType, SourceIpAddress, AWSRegion, TrailName, LogValidation, UserAgent
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-72-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: AWS CloudTrail Log File Validation Disabled
+id: b71c4e5d-3a82-49f8-bd1e-7e2f93a8c5b3
+description: Detects UpdateTrail/CreateTrail setting EnableLogFileValidation=false, removing the cryptographic digest that proves logs were not tampered with.
+references:
+  - https://unit42.paloaltonetworks.com/cloud-logging-defense-evasion/
+author: Detection Engineering
+date: 2026/06/12
+tags:
+  - attack.defense_evasion
+  - attack.t1562.001
+  - attack.t1562.008
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection:
+    eventSource: cloudtrail.amazonaws.com
+    eventName:
+      - UpdateTrail
+      - CreateTrail
+    requestParameters.logFileValidationEnabled: false
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-72-uc5-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:(UpdateTrail OR CreateTrail) @evt.outcome:success @requestParameters.enableLogFileValidation:false</code></pre></div>
+    <div class="tab-content" id="art-72-uc5-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
+fields @timestamp, eventName, userIdentity.arn, sourceIPAddress, requestParameters.name, requestParameters.enableLogFileValidation
+| filter eventSource = &quot;cloudtrail.amazonaws.com&quot;
+| filter eventName in [&quot;UpdateTrail&quot;, &quot;CreateTrail&quot;]
+| filter not isPresent(errorCode)
+| filter requestParameters.enableLogFileValidation = &quot;false&quot; or requestParameters.enableLogFileValidation = false
+| sort @timestamp desc
+| limit 100</code></pre></div>
+    <div class="tab-content" id="art-72-uc5-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=aws sourcetype=&quot;aws:cloudtrail&quot; eventSource=&quot;cloudtrail.amazonaws.com&quot; (eventName=&quot;UpdateTrail&quot; OR eventName=&quot;CreateTrail&quot;) requestParameters.enableLogFileValidation=false NOT errorCode=&quot;*&quot; | rename requestParameters.name as trailName | stats min(_time) as firstSeen, count by userIdentity.arn, userIdentity.type, sourceIPAddress, awsRegion, trailName, eventName</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="53a9c31d59" data-platforms="def,sent,spl" data-targets="azure,m365,windows">
+  <summary>
+    <span class="uc-title">Phishing-link click correlated to endpoint execution</span>
+    <span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="53a9c31d59" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">User received an external email containing a URL, clicked it, and within
+60 seconds the recipient&#x27;s endpoint spawned a scripting interpreter or
+network downloader (PowerShell / cmd / mshta / curl / certutil / bitsadmin).
+This is the high-fidelity shape — a raw &quot;user clicked an emailed URL&quot;
+query is too noisy to alert on because every Microsoft 365 tenant
+generates thousands of legitimate clicks per day. The exec-correlation
+step suppresses the noise to roughly the rate at which a click actually
+drives onto-host execution, which is the actionable signal.
+Pair with UC_PHISH_LINK_BYPASS (Safe Links override) and UC_PHISH_LINK_NEWDOMAIN
+for orthogonal high-fidelity variants.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Link">T1566.002</span> <span class="ind tech" title="User Execution: Malicious Link">T1204.001</span> <span class="ind tech" title="PowerShell">T1059.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-72-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-72-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-72-uc6-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-72-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+// Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
+// never spawn a non-browser child process, so the join eliminates the
+// 99% of noise that makes a raw click query unactionable.
+let LookbackDays = 7d;
+let SuspectClicks = UrlClickEvents
+    | where Timestamp &gt; ago(LookbackDays)
+    | where AccountName !endswith &quot;$&quot;
+    | where ActionType in (&quot;ClickAllowed&quot;,&quot;ClickedThrough&quot;)
+    | join kind=inner (
+        EmailEvents
+        | where Timestamp &gt; ago(LookbackDays)
+        | where DeliveryAction == &quot;Delivered&quot;
+        | where EmailDirection == &quot;Inbound&quot;
+        | project NetworkMessageId, Subject, SenderFromAddress, SenderFromDomain,
+                  RecipientEmailAddress, EmailTimestamp = Timestamp
+      ) on NetworkMessageId
+    | join kind=leftouter (
+        EmailUrlInfo | project NetworkMessageId, Url, UrlDomain
+      ) on NetworkMessageId, Url
+    | project ClickTime = Timestamp, AccountUpn, IPAddress, Url, UrlDomain,
+              Subject, SenderFromAddress, SenderFromDomain, RecipientEmailAddress,
+              ActionType;
+// Correlate to a non-browser child process spawned within 60 seconds on
+// the recipient&#x27;s device.
+DeviceProcessEvents
+| where Timestamp &gt; ago(LookbackDays)
+| where InitiatingProcessFileName in~ (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,
+                                         &quot;outlook.exe&quot;,&quot;brave.exe&quot;,&quot;arc.exe&quot;)
+| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;,
+                        &quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,
+                        &quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;)
+| join kind=inner SuspectClicks on $left.AccountName == $right.AccountUpn
+| where Timestamp between (ClickTime .. ClickTime + 60s)
+| project ClickTime, ProcessTime = Timestamp,
+          DelaySec = datetime_diff(&#x27;second&#x27;, Timestamp, ClickTime),
+          DeviceName, AccountName, RecipientEmailAddress, SenderFromAddress,
+          Subject, Url, UrlDomain, ActionType,
+          FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by ClickTime desc</code></pre></div>
+    <div class="tab-content" id="art-72-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+// pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
+// non-browser child process. Lower fidelity than the Defender version.
+let LookbackDays = 7d;
+let SuspectMailUsers = OfficeActivity
+    | where TimeGenerated &gt; ago(LookbackDays)
+    | where OfficeWorkload == &quot;Exchange&quot;
+    | where Operation =~ &quot;Receive&quot;
+    | summarize Subject = any(Subject), Sender = any(Sender)
+                by MailboxOwnerUPN, MessageId, EmailTime = bin(TimeGenerated, 1m);
+SecurityEvent
+| where TimeGenerated &gt; ago(LookbackDays)
+| where EventID == 4688
+| where ParentProcessName has_any (&quot;\chrome.exe&quot;,&quot;\msedge.exe&quot;,
+                                     &quot;\firefox.exe&quot;,&quot;\outlook.exe&quot;,&quot;\brave.exe&quot;)
+| where NewProcessName has_any (&quot;\powershell.exe&quot;,&quot;\pwsh.exe&quot;,&quot;\cmd.exe&quot;,
+                                  &quot;\mshta.exe&quot;,&quot;\rundll32.exe&quot;,&quot;\regsvr32.exe&quot;,
+                                  &quot;\wscript.exe&quot;,&quot;\cscript.exe&quot;,&quot;\bitsadmin.exe&quot;,
+                                  &quot;\certutil.exe&quot;,&quot;\curl.exe&quot;,&quot;\wget.exe&quot;)
+| join kind=inner SuspectMailUsers on $left.Account == $right.MailboxOwnerUPN
+| where TimeGenerated between (EmailTime .. EmailTime + 60s)
+| project TimeGenerated, EmailTime, Computer, Account, ParentProcessName,
+          NewProcessName, CommandLine, Sender, Subject
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-72-uc6-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-72-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-72-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-72-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| tstats `summariesonly` earliest(_time) AS click_time
+    from datamodel=Web
+    where Web.action=&quot;allowed&quot;
+    by Web.src, Web.user, Web.dest, Web.url
+| `drop_dm_object_name(Web)`
+| rename user AS recipient, dest AS clicked_domain, url AS clicked_url
+| join type=inner recipient
+    [| tstats `summariesonly` count
+         from datamodel=Email.All_Email
+         where All_Email.action=&quot;delivered&quot; AND All_Email.url!=&quot;-&quot;
+         by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
+     | `drop_dm_object_name(All_Email)`
+     | rex field=url &quot;https?://(?&lt;email_domain&gt;[^/]+)&quot;
+     | rename recipient AS recipient]
+| join type=inner src
+    [| tstats `summariesonly` earliest(_time) AS exec_time
+         values(Processes.process) AS exec_cmd, values(Processes.process_name) AS exec_proc
+         from datamodel=Endpoint.Processes
+         where Processes.parent_process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,
+                                                   &quot;outlook.exe&quot;,&quot;brave.exe&quot;,&quot;arc.exe&quot;)
+           AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;,
+                                            &quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wscript.exe&quot;,
+                                            &quot;cscript.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,
+                                            &quot;curl.exe&quot;,&quot;wget.exe&quot;)
+         by Processes.dest, Processes.user
+     | `drop_dm_object_name(Processes)`
+     | rename dest AS src]
+| eval delta_sec = exec_time - click_time
+| where delta_sec &gt;= 0 AND delta_sec &lt;= 60
+| table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
+        clicked_domain, clicked_url, exec_proc, exec_cmd
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-72-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| tstats summariesonly=false earliest(_time) AS click_time
+    from datamodel=Web
+    where Web.action=&quot;allowed&quot;
+    by Web.src, Web.user, Web.dest, Web.url
+| `drop_dm_object_name(Web)`
+| rename user AS recipient, dest AS clicked_domain, url AS clicked_url
+| join type=inner recipient
+    [| tstats summariesonly=false count
+         from datamodel=Email.All_Email
+         where All_Email.action=&quot;delivered&quot; AND All_Email.url!=&quot;-&quot;
+         by All_Email.recipient, All_Email.src_user, All_Email.url, All_Email.subject
+     | `drop_dm_object_name(All_Email)`
+     | rex field=url &quot;https?://(?&lt;email_domain&gt;[^/]+)&quot;
+     | rename recipient AS recipient]
+| join type=inner src
+    [| tstats summariesonly=false earliest(_time) AS exec_time
+         values(Processes.process) AS exec_cmd, values(Processes.process_name) AS exec_proc
+         from datamodel=Endpoint.Processes
+         where Processes.parent_process_name IN (&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;,
+                                                   &quot;outlook.exe&quot;,&quot;brave.exe&quot;,&quot;arc.exe&quot;)
+           AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;mshta.exe&quot;,
+                                            &quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wscript.exe&quot;,
+                                            &quot;cscript.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,
+                                            &quot;curl.exe&quot;,&quot;wget.exe&quot;)
+         by Processes.dest, Processes.user
+     | `drop_dm_object_name(Processes)`
+     | rename dest AS src]
+| eval delta_sec = exec_time - click_time
+| where delta_sec &gt;= 0 AND delta_sec &lt;= 60
+| table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
+        clicked_domain, clicked_url, exec_proc, exec_cmd
+| sort - click_time</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="384c7f898c" data-platforms="def,sent,spl" data-targets="azure,m365,windows">
+  <summary>
+    <span class="uc-title">Email attachment opened from external sender</span>
+    <span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="384c7f898c" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Attachment delivery + execution by recipient — most common malware initial access.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Spearphishing Attachment">T1566.001</span> <span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailAttachmentInfo</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-72-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-72-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-72-uc7-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-72-uc7-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+let MalAttachments = EmailAttachmentInfo
+    | where Timestamp &gt; ago(LookbackDays)
+    | where AccountName !endswith &quot;$&quot;
+    | project NetworkMessageId, RecipientEmailAddress,
+              AttachmentFileName = FileName, AttachmentSHA256 = SHA256;
+DeviceProcessEvents
+| where Timestamp &gt; ago(LookbackDays)
+| where InitiatingProcessFileName in~ (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,
+                      &quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
+| join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256</code></pre></div>
+    <div class="tab-content" id="art-72-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
+// OfficeActivity Send/Receive activity + correlate to host process spawn.
+let LookbackDays = 7d;
+let MailWithAttach = OfficeActivity
+    | where TimeGenerated &gt; ago(LookbackDays)
+    | where OfficeWorkload == &quot;Exchange&quot;
+    | where Operation in~ (&quot;Send&quot;,&quot;Receive&quot;)
+    | where isnotempty(MessageId)
+    | project EmailTime = TimeGenerated, MailboxOwnerUPN, Sender,
+              Recipients, Subject, MessageId;
+SecurityEvent
+| where TimeGenerated &gt; ago(LookbackDays)
+| where EventID == 4688
+| where ParentProcessName endswith &quot;OUTLOOK.EXE&quot;
+| where NewProcessName endswith &quot;\cmd.exe&quot;
+   or NewProcessName endswith &quot;\powershell.exe&quot;
+   or NewProcessName endswith &quot;\wscript.exe&quot;
+   or NewProcessName endswith &quot;\cscript.exe&quot;
+   or NewProcessName endswith &quot;\mshta.exe&quot;
+| project TimeGenerated, Computer, Account, NewProcessName, CommandLine,
+          ParentProcessName
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-72-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-72-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-72-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-72-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
+    from datamodel=Email.All_Email
+    where All_Email.file_name!=&quot;-&quot;
+    by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
+| rename All_Email.recipient as user
+| join type=inner user
+    [| tstats `summariesonly` count
+        from datamodel=Endpoint.Processes
+        where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
+          AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
+        by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-72-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
+    from datamodel=Email.All_Email
+    where All_Email.file_name!=&quot;-&quot;
+    by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
+| rename All_Email.recipient as user
+| join type=inner user
+    [| tstats summariesonly=false count
+        from datamodel=Endpoint.Processes
+        where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
+          AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
+        by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+     | rename Processes.user as user]</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="3e2a4a3a7f" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Office app spawning script/LOLBin child process</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="3e2a4a3a7f" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Classic macro/exploit pattern — Office app launching cmd/powershell/wmic/regsvr32.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Visual Basic">T1059.005</span> <span class="ind tech" title="System Binary Proxy Execution">T1218</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-72-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-72-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-72-uc8-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-72-uc8-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-72-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-72-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where ParentProcessName endswith &quot;\winword.exe&quot;
+   or ParentProcessName endswith &quot;\excel.exe&quot;
+   or ParentProcessName endswith &quot;\powerpnt.exe&quot;
+   or ParentProcessName endswith &quot;\outlook.exe&quot;
+   or ParentProcessName endswith &quot;\onenote.exe&quot;
+   or ParentProcessName endswith &quot;\mspub.exe&quot;
+   or ParentProcessName endswith &quot;\visio.exe&quot;
+| where NewProcessName endswith &quot;\cmd.exe&quot;
+   or NewProcessName endswith &quot;\powershell.exe&quot;
+   or NewProcessName endswith &quot;\pwsh.exe&quot;
+   or NewProcessName endswith &quot;\wscript.exe&quot;
+   or NewProcessName endswith &quot;\cscript.exe&quot;
+   or NewProcessName endswith &quot;\mshta.exe&quot;
+   or NewProcessName endswith &quot;\rundll32.exe&quot;
+   or NewProcessName endswith &quot;\regsvr32.exe&quot;
+| project TimeGenerated, Computer, Account, ParentProcessName,
+          NewProcessName, CommandLine
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-72-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
+status: experimental
+description: |
+    Word/Excel/Outlook/OneNote spawning powershell, cmd, wscript,
+    cscript, mshta, rundll32, regsvr32 — classic macro / embedded-
+    object payload signature.
+references:
+    - https://attack.mitre.org/techniques/T1059/
+    - https://attack.mitre.org/techniques/T1566/001/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1059
+    - attack.t1566.001
+    - attack.execution
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_parent:
+        ParentImage|endswith:
+            - &#x27;\winword.exe&#x27;
+            - &#x27;\excel.exe&#x27;
+            - &#x27;\powerpnt.exe&#x27;
+            - &#x27;\outlook.exe&#x27;
+            - &#x27;\onenote.exe&#x27;
+            - &#x27;\mspub.exe&#x27;
+            - &#x27;\visio.exe&#x27;
+    selection_child:
+        Image|endswith:
+            - &#x27;\cmd.exe&#x27;
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+            - &#x27;\wscript.exe&#x27;
+            - &#x27;\cscript.exe&#x27;
+            - &#x27;\mshta.exe&#x27;
+            - &#x27;\rundll32.exe&#x27;
+            - &#x27;\regsvr32.exe&#x27;
+    condition: selection_parent and selection_child
+falsepositives:
+    - Legitimate automation macros in trusted internal documents
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-72-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-72-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-72-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-72-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
+      AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-72-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
+      AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-72-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-72-uc9-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-72-uc9-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-72-uc9-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-72-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-72-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+// article (matching shape with the Defender query).
+SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where NewProcessName endswith &quot;\powershell.exe&quot;
+   or NewProcessName endswith &quot;\cmd.exe&quot;
+   or NewProcessName endswith &quot;\rundll32.exe&quot;
+   or NewProcessName endswith &quot;\regsvr32.exe&quot;
+   or NewProcessName endswith &quot;\mshta.exe&quot;
+   or NewProcessName endswith &quot;\wscript.exe&quot;
+   or NewProcessName endswith &quot;\cscript.exe&quot;
+   or NewProcessName endswith &quot;\wmic.exe&quot;
+   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
+| project TimeGenerated, Computer, Account, ParentProcessName,
+          NewProcessName, CommandLine
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-72-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
+status: experimental
+description: |
+    A signed vendor binary (in the article&#x27;s named-vendors list)
+    spawning script-host or LOLBin children. Strongest signal when
+    paired with a recent CVE / supply-chain advisory naming the same
+    vendor.
+references:
+    - https://attack.mitre.org/techniques/T1195/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1195
+    - attack.initial-access
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_child:
+        Image|endswith:
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+            - &#x27;\cmd.exe&#x27;
+            - &#x27;\rundll32.exe&#x27;
+            - &#x27;\regsvr32.exe&#x27;
+            - &#x27;\mshta.exe&#x27;
+            - &#x27;\wscript.exe&#x27;
+            - &#x27;\cscript.exe&#x27;
+            - &#x27;\wmic.exe&#x27;
+            - &#x27;\bitsadmin.exe&#x27;
+    selection_parent_vendor:
+        ParentImage|contains:
+            - &#x27;\Program Files\&#x27;
+            - &#x27;\Program Files (x86)\&#x27;
+    condition: selection_child and selection_parent_vendor
+falsepositives:
+    - Many — installers and updaters legitimately spawn children. Pin
+      the parent path to specific vendor binaries observed in the
+      article before alerting.
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-72-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-72-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-72-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-72-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-72-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-73" data-art-slug="2026-06-09-ghsa-critical-cve-2026-8467-phoenixstorybook-unauthenticated"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -20943,254 +21861,6 @@ level: critical
         where DNS.query IN (&quot;blog.com&quot;, &quot;openvpn.com&quot;, &quot;epleyonlineo.za.com&quot;)
         by DNS.src, DNS.query, DNS.answer
      | `drop_dm_object_name(DNS)`]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-103" data-art-slug="2026-06-08-ghsa-critical-cve-2026-47430-cordova-plugin-inappbrowser-ios"
-  data-phases="actions,c2,exploit,install,recon,weapon" data-sev="crit"
-  data-techs="T1190,T1528"
-  data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application"
-  data-targets="azure"
-  data-uc-count="3" data-llm-uc-count="1"
-  data-search="[GHSA / CRITICAL] CVE-2026-47430: Cordova Plugin InAppBrowser: iOS: Arbitrary Cordova callback IDs can be dispatched without validation from InAppBrowser WebViews. Cordova Plugin InAppBrowser: iOS: Arbitrary Cordova callback IDs can be dispatched without validation from InAppBrowser WebViews. CVE-2026-47430 T1190 T1528 [LLM] Vulnerable cordova-plugin-inappbrowser &lt;6.0.1 on iOS (CVE-2026-47430) Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-08-ghsa-critical-cve-2026-47430-cordova-plugin-inappbrowser-ios" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-q42j-x8rq-pjg6" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-47430: Cordova Plugin InAppBrowser: iOS: Arbitrary Cordova callback IDs can be dispatched without validation from InAppBrowser WebViews.</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-06-08</span>
-    <span>3 use cases</span>
-    <span>2 techniques</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Cordova Plugin InAppBrowser: iOS: Arbitrary Cordova callback IDs can be dispatched without validation from InAppBrowser WebViews.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-47430</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-103-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-103"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-103-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] Vulnerable cordova-plugin-inappbrowser &lt;6.0.1 on iOS (CVE-2026-47430)</em></div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ OAuth consent / suspicious app grant</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="75aa22ec93" data-platforms="def,sent" data-targets="" open>
-  <summary>
-    <span class="uc-title">Vulnerable cordova-plugin-inappbrowser &lt;6.0.1 on iOS (CVE-2026-47430)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="75aa22ec93" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Identifies iOS-managed devices/apps shipping cordova-plugin-inappbrowser between 3.1.0 and 6.0.0, the range vulnerable to unvalidated Cordova callback-id dispatch from InAppBrowser WebViews (CDVWKInAppBrowser.m:560-574). Article-specific because the exploit is in-process iOS JavaScript with no Sysmon/EDR/network footprint — asset hunting is the only SOC pivot.
-
-Rationale: Article explicitly names CVE-2026-47430, vulnerable range 3.1.0-6.0.0, and patched version 6.0.1 of cordova-plugin-inappbrowser. Defender TVM is the only canonical Microsoft Sentinel/XDR table that stores iOS app/library version inventory when Defender for Endpoint on iOS is enrolled, so a CveId+SoftwareName hunt is the only article-specific signal we can express. The exploit primitive itself (WKScriptMessage with crafted `id` field inside InAppBrowser WebView) executes inside the iOS app process and produces no process-creation, file-write, registry, or network telemetry visible to Defender/Sentinel/Splunk/Falcon — hence the empty queries for those stacks.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Gather Victim Host Information: Software">T1592.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Third-party iOS app pinned to an older Cordova plugin version where the upstream vendor has not yet released a 6.0.1-based rebuild — true at the asset layer but not actionable against the user</li><li>Internal dev/QA build of an in-house Cordova app intentionally held on 6.0.0 for regression testing</li><li>Stale TVM inventory after device retirement where the entry persists for several days before TVM ages it out</li><li>Internal fork of cordova-plugin-inappbrowser that retains the upstream package name and version string but already includes the CDVWKInAppBrowser.m:560-574 validation patch</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SoftwareVersion !startswith &quot;6.0.1&quot; and SoftwareVersion !startswith &quot;6.1&quot; and SoftwareVersion !startswith &quot;7.&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): confirm SoftwareVersion is in 3.1.0-6.0.0, device is currently enrolled (DeviceInfo last-seen &lt;14d), and identify the iOS app bundle ID via MDM/app catalog. Step 2 (contain): open a ticket with each owning app team to upgrade cordova-plugin-inappbrowser to 6.0.1 and resubmit; for apps that bundle Camera/Contacts/File/Geolocation Cordova plugins (the article&#x27;s example abuse targets), request app-store hold or kill-switch until rebuilt. Step 3 (hunt): for the affected DeviceIds, pivot Defender DeviceNetworkEvents and UrlClickEvents on the prior 14 days to spot OAuth-redirect or marketing-link traffic to external domains outside the app&#x27;s known login origins — these are the in-flight exploitation primitives the article calls out (OAuth redirect, marketing link, deep-link target, MITM).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc0-sentinel">Sentinel KQL</button>
-    </div>
-    <div class="tab-content active" id="art-103-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(7d)
-| where CveId == &quot;CVE-2026-47430&quot;
-   or (SoftwareName has &quot;cordova-plugin-inappbrowser&quot; and SoftwareVersion !startswith &quot;6.0.1&quot; and SoftwareVersion !startswith &quot;6.1&quot; and SoftwareVersion !startswith &quot;7.&quot;)
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, OSPlatform, DeviceType, DeviceName, LoggedOnUsers) by DeviceId) on DeviceId
-| where OSPlatform =~ &quot;iOS&quot; or DeviceType =~ &quot;Mobile&quot;
-| project Timestamp, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, LoggedOnUsers
-| order by VulnerabilitySeverityLevel asc, Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-103-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(7d)
-| where CveId == &quot;CVE-2026-47430&quot;
-   or (SoftwareName has &quot;cordova-plugin-inappbrowser&quot; and SoftwareVersion !startswith &quot;6.0.1&quot; and SoftwareVersion !startswith &quot;6.1&quot; and SoftwareVersion !startswith &quot;7.&quot;)
-| join kind=leftouter (DeviceInfo | summarize arg_max(TimeGenerated, OSPlatform, DeviceType, DeviceName) by DeviceId) on DeviceId
-| where OSPlatform =~ &quot;iOS&quot; or DeviceType =~ &quot;Mobile&quot;
-| project TimeGenerated, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by TimeGenerated desc</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-103-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-47430&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-47430&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-103-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-47430&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-103-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-47430&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="e2349777f5" data-platforms="def,sent,sigma,spl" data-targets="azure">
-  <summary>
-    <span class="uc-title">OAuth consent / suspicious app grant</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e2349777f5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Cloud identity abuse: app gets high-priv scopes, often via consent phishing.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Account Manipulation: Additional Cloud Credentials">T1098.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-103-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-103-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-103-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-103-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-103-uc2-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
-| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-          ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
-AuditLogs
-| where TimeGenerated &gt; ago(7d)
-| where OperationName has &quot;Consent to application&quot;
-| where Result =~ &quot;success&quot;
-| extend AppName = tostring(parse_json(tostring(TargetResources))[0].displayName),
-         AppId   = tostring(parse_json(tostring(TargetResources))[0].id),
-         User    = tostring(parse_json(tostring(InitiatedBy)).user.userPrincipalName)
-| project TimeGenerated, OperationName, User, AppName, AppId, Result
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
-status: experimental
-description: |
-    User-driven consent to a third-party OAuth application — illicit-
-    consent attack precursor. Pair with first-time-seen-app heuristic
-    in your SIEM for higher fidelity.
-references:
-    - https://attack.mitre.org/techniques/T1528/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1528
-    - attack.persistence
-logsource:
-    product: azure
-    service: auditlogs
-detection:
-    selection:
-        OperationName: &#x27;Consent to application&#x27;
-        Result: &#x27;success&#x27;
-    condition: selection
-falsepositives:
-    - Legitimate first-time SaaS app onboarding
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-103-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-103-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-103-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-103-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action=&quot;success&quot;
-      AND Authentication.signature IN (
-        &quot;Consent to application&quot;,
-        &quot;Add app role assignment grant to user&quot;,
-        &quot;Add OAuth2PermissionGrant&quot;,
-        &quot;Add delegated permission grant&quot;)
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-103-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action=&quot;success&quot;
-      AND Authentication.signature IN (
-        &quot;Consent to application&quot;,
-        &quot;Add app role assignment grant to user&quot;,
-        &quot;Add OAuth2PermissionGrant&quot;,
-        &quot;Add delegated permission grant&quot;)
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre></div></div>
   </div>
 </details></div>
 </article>

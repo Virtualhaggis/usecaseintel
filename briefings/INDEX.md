@@ -1,12 +1,15 @@
 # Briefings — full archive
 
-_1193 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1194 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-06-14
+- [152 chrome extensions hide ad tracking and fake google searc](./2026-06-14/152-chrome-extensions-hide-ad-tracking-and-fake-google-searc.md)
 
 ## 2026-06-13
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-13/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
