@@ -1,0 +1,114 @@
+{
+  "name": "Bluenoroff",
+  "ucs": [
+    {
+      "title": "[LLM] Bluenoroff/TA444 fake-job lure: signed installer/PDF reader drops AppleScript or PowerShell stager to Lazarus C2",
+      "description": "Hunts Bluenoroff's hallmark 'RustBucket / KandyKorn / ObjCShellz' style social-engineering chain \u2014 a recruiter or VC contact delivers a weaponized PDF viewer or signed installer that spawns a script interpreter (powershell/wscript/osascript) which reaches out to a hard-coded staging URL. This is the defining DPRK financial-cluster delivery pattern (TA444 = Sapphire Sleet = APT38 on the BeagleBoyz cryptocurrency-theft mission) and combines T1566.003, T1204.002, T1059, and T1071.001 \u2014 the exact chain Mandiant/CrowdStrike/Microsoft have repeatedly attributed to Stardust Chollima.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1204.002",
+        "T1059.001",
+        "T1059.005",
+        "T1071.001",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.process_hash) as hash from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"AcroRd32.exe\",\"FoxitPDFReader.exe\",\"SumatraPDF.exe\",\"PDFReaderPro.exe\",\"WPS.exe\",\"WPS Office.exe\",\"Skype.exe\",\"Telegram.exe\",\"WhatsApp.exe\") Processes.process_name IN (\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"curl.exe\",\"certutil.exe\",\"bitsadmin.exe\") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process | rename Processes.* as * | append [| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (80,443,8080,8443) All_Traffic.app=\"powershell.exe\" OR All_Traffic.app=\"wscript.exe\" OR All_Traffic.app=\"curl.exe\" by host All_Traffic.dest All_Traffic.app | rename All_Traffic.* as *] | stats values(cmdline) as cmdline values(parent) as parent values(hash) as hash values(dest) as c2_dest min(firstTime) as firstTime max(lastTime) as lastTime by host user | where match(cmdline,\"(?i)(downloadstring|iex|invoke-expression|webclient|fromBase64String|hidden|-enc|/c\\\\s+curl|certutil\\\\s+-urlcache|bitsadmin\\\\s+/transfer)\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let LookbackDays = 14d;\nlet LureParents = dynamic([\"AcroRd32.exe\",\"FoxitPDFReader.exe\",\"SumatraPDF.exe\",\"PDFReaderPro.exe\",\"wps.exe\",\"wpsoffice.exe\",\"Skype.exe\",\"Telegram.exe\",\"WhatsApp.exe\",\"slack.exe\",\"Discord.exe\"]);\nlet Stagers = dynamic([\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"curl.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"rundll32.exe\"]);\nlet ProcChain =\n    DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where InitiatingProcessFileName in~ (LureParents)\n    | where FileName in~ (Stagers)\n    | where AccountName !endswith \"$\"\n    | where ProcessCommandLine has_any (\"DownloadString\",\"DownloadFile\",\"IEX\",\"Invoke-Expression\",\"WebClient\",\"FromBase64String\",\"-enc\",\"-EncodedCommand\",\"-WindowStyle Hidden\",\"-w hidden\",\"-urlcache\",\"-transfer\",\"http://\",\"https://\")\n       or ProcessCommandLine matches regex @\"(?i)(curl|bitsadmin|certutil).{0,40}https?://\";\nProcChain\n| join kind=leftouter (\n    DeviceNetworkEvents\n    | where Timestamp > ago(LookbackDays)\n    | where RemoteIPType == \"Public\"\n    | where InitiatingProcessFileName in~ (Stagers)\n    | project NetTime = Timestamp, DeviceId, InitiatingProcessId, RemoteIP, RemoteUrl, RemotePort\n  ) on DeviceId, $left.ProcessId == $right.InitiatingProcessId\n| where NetTime between (Timestamp .. Timestamp + 5m)     // 5m = empirical stager-to-C2 window from past Bluenoroff cases\n| project Timestamp, DeviceName, AccountName,\n          LureParent = InitiatingProcessFileName,\n          LureParentCmd = InitiatingProcessCommandLine,\n          Stager = FileName,\n          StagerCmd = ProcessCommandLine,\n          SHA256,\n          C2_IP = RemoteIP,\n          C2_Url = RemoteUrl,\n          C2_Port = RemotePort,\n          DelaySec = datetime_diff('second', NetTime, Timestamp)\n| order by Timestamp desc",
+      "sentinel_kql": "let LookbackDays = 14d;\nlet LureParents = dynamic([\"AcroRd32.exe\",\"FoxitPDFReader.exe\",\"SumatraPDF.exe\",\"PDFReaderPro.exe\",\"wps.exe\",\"wpsoffice.exe\",\"Skype.exe\",\"Telegram.exe\",\"WhatsApp.exe\",\"slack.exe\",\"Discord.exe\"]);\nlet Stagers = dynamic([\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"curl.exe\",\"certutil.exe\",\"bitsadmin.exe\",\"rundll32.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(LookbackDays)\n| where EventID == 4688\n| extend ChildName = tostring(split(NewProcessName, \"\\\\\")[-1])\n| extend ParentName = tostring(split(ParentProcessName, \"\\\\\")[-1])\n| where ParentName in~ (LureParents)\n| where ChildName in~ (Stagers)\n| where SubjectUserName !endswith \"$\"\n| where CommandLine has_any (\"DownloadString\",\"DownloadFile\",\"IEX\",\"Invoke-Expression\",\"WebClient\",\"FromBase64String\",\"-enc\",\"-EncodedCommand\",\"-WindowStyle Hidden\",\"-w hidden\",\"-urlcache\",\"-transfer\",\"http://\",\"https://\")\n   or CommandLine matches regex @\"(?i)(curl|bitsadmin|certutil).{0,40}https?://\"\n| project TimeGenerated, Computer, User = SubjectUserName,\n          LureParent = ParentName, LureParentCmd = ParentProcessName,\n          Stager = ChildName, StagerCmd = CommandLine,\n          NewProcessId, LogonId\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Bluenoroff Fake-Job Lure - PDF/Chat Client Spawns Network-Capable Stager\nid: 3a1c5f70-c2b4-4f2b-9e7e-7f1c4f8c1a01\nstatus: experimental\ndescription: Detects DPRK Bluenoroff/TA444/APT38 social-engineering chain where a weaponized PDF viewer or chat-app installer spawns powershell/wscript/curl/certutil with download cradle indicators. Mirrors RustBucket/KandyKorn/ObjCShellz tradecraft (CrowdStrike Stardust Chollima, Microsoft Sapphire Sleet).\nreferences:\n  - https://attack.mitre.org/groups/G0098/\nauthor: SOC Detection Engineering\ndate: 2026/06/15\ntags:\n  - attack.initial_access\n  - attack.execution\n  - attack.t1204.002\n  - attack.t1059.001\n  - attack.g0098\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_parent:\n    ParentImage|endswith:\n      - '\\AcroRd32.exe'\n      - '\\FoxitPDFReader.exe'\n      - '\\SumatraPDF.exe'\n      - '\\PDFReaderPro.exe'\n      - '\\wps.exe'\n      - '\\wpsoffice.exe'\n      - '\\Skype.exe'\n      - '\\Telegram.exe'\n      - '\\WhatsApp.exe'\n      - '\\slack.exe'\n      - '\\Discord.exe'\n  selection_child:\n    Image|endswith:\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\mshta.exe'\n      - '\\curl.exe'\n      - '\\certutil.exe'\n      - '\\bitsadmin.exe'\n      - '\\rundll32.exe'\n  selection_cmd:\n    CommandLine|contains:\n      - 'DownloadString'\n      - 'DownloadFile'\n      - 'IEX'\n      - 'Invoke-Expression'\n      - 'WebClient'\n      - 'FromBase64String'\n      - '-EncodedCommand'\n      - '-WindowStyle Hidden'\n      - '-urlcache'\n      - '-transfer'\n      - 'http://'\n      - 'https://'\n  condition: selection_parent and selection_child and selection_cmd\nfalsepositives:\n  - PDF viewers running auto-update routines (filter on signed Adobe updater paths)\n  - Telegram/Slack bots invoking helper scripts (rare; filter per-app)\nlevel: high",
+      "datadog_query": "source:(windows.sysmon OR windows.security) (@EventID:1 OR @EventID:4688) (@ParentImage:(*\\AcroRd32.exe OR *\\acrord32.exe OR *\\FoxitPDFReader.exe OR *\\foxitpdfreader.exe OR *\\SumatraPDF.exe OR *\\sumatrapdf.exe OR *\\Skype.exe OR *\\skype.exe OR *\\Telegram.exe OR *\\telegram.exe OR *\\WhatsApp.exe OR *\\whatsapp.exe OR *\\Slack.exe OR *\\slack.exe OR *\\Discord.exe OR *\\discord.exe OR *\\wps.exe OR *\\WPS.exe)) AND (@Image:(*\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\wscript.exe OR *\\WScript.exe OR *\\cscript.exe OR *\\CScript.exe OR *\\mshta.exe OR *\\MSHTA.EXE OR *\\curl.exe OR *\\Curl.exe OR *\\certutil.exe OR *\\CertUtil.exe OR *\\bitsadmin.exe OR *\\BITSADMIN.exe OR *\\rundll32.exe OR *\\RunDll32.exe)) AND @CommandLine:(*DownloadString* OR *downloadstring* OR *DownloadFile* OR *IEX* OR *Invoke-Expression* OR *WebClient* OR *FromBase64String* OR *-EncodedCommand* OR *-enc* OR *\"WindowStyle Hidden\"* OR *-urlcache* OR *-transfer* OR *http\\://* OR *https\\://*)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2\n| ParentBaseFileName=/^(AcroRd32|FoxitPDFReader|SumatraPDF|PDFReaderPro|wps|wpsoffice|Skype|Telegram|WhatsApp|slack|Discord)\\.exe$/i\n| ImageFileName=/\\\\(powershell|pwsh|wscript|cscript|mshta|curl|certutil|bitsadmin|rundll32)\\.exe$/i\n| regex(\"(?i)(downloadstring|downloadfile|invoke-expression|iex|webclient|frombase64string|-encodedcommand|-enc |windowstyle hidden|-urlcache|-transfer|https?://)\", field=CommandLine)\n| groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine, SHA256HashData], function=[count(), min(@timestamp, as=firstSeen), max(@timestamp, as=lastSeen)])\n| sort(lastSeen, order=desc)",
+      "cloudwatch_query": "",
+      "rationale": "Bluenoroff/TA444/APT38 is the DPRK financial-crime cluster (BeagleBoyz, Stardust Chollima, Sapphire Sleet) consistently observed since 2022 running fake-recruiter and fake-VC lures (RustBucket on macOS, KandyKorn/ObjCShellz, Windows variants delivered via Telegram/Skype/WhatsApp PDF lures). Their on-host execution invariably involves a script interpreter spawned by a chat client or PDF reader that"
+    },
+    {
+      "title": "[LLM] Bluenoroff persistence: LaunchAgent / Run-key + AppleScript or VBS pointing to non-Apple/non-MS domain (KandyKorn / ObjCShellz pattern)",
+      "description": "Hunts Bluenoroff's post-exploitation persistence: writing a LaunchAgent plist or HKCU\\Run value that auto-executes osascript/wscript/powershell against an attacker-controlled host masquerading as legit infrastructure (e.g. swissborg[.]blog, mfdsregistry[.]com). Combines T1547.001, T1543.003, T1059, T1036.005 \u2014 the exact post-foothold chain documented across KandyKorn (Elastic), ObjCShellz (Jamf), and the 2024 Sapphire Sleet crypto-wallet thefts.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1547.001",
+        "T1543.003",
+        "T1059.001",
+        "T1036.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as run_value values(Registry.process_name) as writer from datamodel=Endpoint.Registry where Registry.registry_path IN (\"*\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\Run\\\\*\",\"*\\\\Software\\\\Microsoft\\\\Windows\\\\CurrentVersion\\\\RunOnce\\\\*\",\"*\\\\Software\\\\Microsoft\\\\Windows NT\\\\CurrentVersion\\\\Winlogon\\\\*\") by host Registry.user Registry.registry_key_name Registry.registry_value_name | rename Registry.* as * | where match(run_value,\"(?i)(wscript|cscript|powershell|pwsh|mshta|rundll32|curl|certutil)\") AND match(run_value,\"(?i)(https?://|\\\\.vbs|\\\\.js|\\\\.hta|-enc|-encodedcommand|frombase64string|downloadstring|appdata\\\\\\\\local\\\\\\\\temp|appdata\\\\\\\\roaming|programdata)\") AND NOT match(run_value,\"(?i)(microsoft\\\\.com|windowsupdate\\\\.com|office\\\\.com|adobe\\\\.com|googleapis\\\\.com)\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let LookbackDays = 30d;\nlet RunKeys = dynamic([\n  @\"HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\",\n  @\"HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce\",\n  @\"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run\",\n  @\"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnce\",\n  @\"HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\"\n]);\nDeviceRegistryEvents\n| where Timestamp > ago(LookbackDays)\n| where ActionType in (\"RegistryValueSet\",\"RegistryKeyCreated\")\n| where RegistryKey has_any (RunKeys)\n| where isnotempty(RegistryValueData)\n| where RegistryValueData matches regex @\"(?i)(wscript|cscript|powershell|pwsh|mshta|rundll32|curl|certutil)\"\n| where RegistryValueData matches regex @\"(?i)(https?://|\\.vbs|\\.js|\\.hta|-enc|-encodedcommand|frombase64string|downloadstring|appdata\\\\local\\\\temp|appdata\\\\roaming|programdata)\"\n| where not(RegistryValueData matches regex @\"(?i)(microsoft\\.com|windowsupdate\\.com|office\\.com|adobe\\.com|googleapis\\.com|github\\.com/microsoft)\")\n| where InitiatingProcessAccountName !endswith \"$\"\n| where InitiatingProcessFileName !in~ (\"msiexec.exe\",\"TrustedInstaller.exe\",\"setup.exe\",\"OfficeClickToRun.exe\")\n| join kind=leftouter (\n    DeviceNetworkEvents\n    | where Timestamp > ago(LookbackDays)\n    | where RemoteIPType == \"Public\"\n    | where InitiatingProcessFileName in~ (\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\",\"curl.exe\",\"certutil.exe\")\n    | summarize C2Domains = make_set(RemoteUrl, 25), C2IPs = make_set(RemoteIP, 25) by DeviceId, bin(Timestamp, 1h)\n  ) on DeviceId\n| project Timestamp, DeviceName,\n          User = InitiatingProcessAccountName,\n          WriterProcess = InitiatingProcessFileName,\n          WriterCmd = InitiatingProcessCommandLine,\n          RegistryKey,\n          RegistryValueName,\n          AutoRunPayload = RegistryValueData,\n          ObservedC2Domains = C2Domains,\n          ObservedC2IPs = C2IPs\n| order by Timestamp desc",
+      "sentinel_kql": "let LookbackDays = 30d;\nlet RunKeys = dynamic([\n  @\"\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\",\n  @\"\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce\",\n  @\"\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\"\n]);\nImRegistryEvent\n| where TimeGenerated > ago(LookbackDays)\n| where EventType in (\"RegistryValueSet\",\"RegistryKeyCreated\",\"RegistryEvent\")\n| where RegistryKey has_any (RunKeys)\n| where isnotempty(RegistryValueData)\n| where RegistryValueData matches regex @\"(?i)(wscript|cscript|powershell|pwsh|mshta|rundll32|curl|certutil)\"\n| where RegistryValueData matches regex @\"(?i)(https?://|\\.vbs|\\.js|\\.hta|-enc|-encodedcommand|frombase64string|downloadstring|appdata\\\\local\\\\temp|appdata\\\\roaming|programdata)\"\n| where not(RegistryValueData matches regex @\"(?i)(microsoft\\.com|windowsupdate\\.com|office\\.com|adobe\\.com|googleapis\\.com)\")\n| where ActorUsername !endswith \"$\"\n| project TimeGenerated, DvcHostname, ActorUsername,\n          WriterProcess = ActingProcessName,\n          WriterCmd = ActingProcessCommandLine,\n          RegistryKey, RegistryValue, AutoRunPayload = RegistryValueData\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Bluenoroff Persistence - Run Key Drops Script Interpreter Cradle to Non-Microsoft Host\nid: 9b1d4e80-d3c5-4a2c-8b7e-1f4c8e3b2a02\nstatus: experimental\ndescription: Detects DPRK Bluenoroff/TA444/APT38 (Sapphire Sleet, Stardust Chollima) writing autostart Run keys whose value invokes wscript/cscript/powershell/curl/certutil against an HTTP URL or staged script in user-writable directory. Mirrors KandyKorn / ObjCShellz / 2024 fake-VC chain.\nreferences:\n  - https://attack.mitre.org/groups/G0098/\nauthor: SOC Detection Engineering\ndate: 2026/06/15\ntags:\n  - attack.persistence\n  - attack.t1547.001\n  - attack.t1059.001\n  - attack.g0098\nlogsource:\n  category: registry_set\n  product: windows\ndetection:\n  selection_key:\n    TargetObject|contains:\n      - '\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\'\n      - '\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce\\'\n      - '\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\\'\n  selection_payload_interp:\n    Details|contains:\n      - 'wscript'\n      - 'cscript'\n      - 'powershell'\n      - 'pwsh'\n      - 'mshta'\n      - 'rundll32'\n      - 'curl'\n      - 'certutil'\n  selection_payload_marker:\n    Details|contains:\n      - 'http://'\n      - 'https://'\n      - '.vbs'\n      - '.js'\n      - '.hta'\n      - '-EncodedCommand'\n      - 'FromBase64String'\n      - 'DownloadString'\n      - '\\AppData\\Local\\Temp\\'\n      - '\\AppData\\Roaming\\'\n      - '\\ProgramData\\'\n  filter_legit:\n    Details|contains:\n      - 'microsoft.com'\n      - 'windowsupdate.com'\n      - 'office.com'\n      - 'adobe.com'\n  condition: selection_key and selection_payload_interp and selection_payload_marker and not filter_legit\nfalsepositives:\n  - Custom enterprise login scripts in user RunOnce \u2014 filter per signed-script-path\n  - Vendor uninstall residue\nlevel: high",
+      "datadog_query": "source:windows.sysmon @EventID:13 @TargetObject:(*\\CurrentVersion\\Run\\* OR *\\CurrentVersion\\RunOnce\\* OR *\\Winlogon\\Userinit* OR *\\Winlogon\\Shell*) @Details:(*wscript* OR *WScript* OR *cscript* OR *CScript* OR *powershell* OR *PowerShell* OR *POWERSHELL* OR *pwsh* OR *mshta* OR *MSHTA* OR *rundll32* OR *RunDll32* OR *curl* OR *Curl* OR *certutil* OR *CertUtil*) AND @Details:(*http\\://* OR *https\\://* OR *.vbs* OR *.js* OR *.hta* OR *-EncodedCommand* OR *-enc * OR *FromBase64String* OR *DownloadString* OR *\\AppData\\Local\\Temp\\* OR *\\AppData\\Roaming\\* OR *\\ProgramData\\*) -@Details:(*microsoft.com* OR *windowsupdate.com* OR *office.com* OR *adobe.com* OR *googleapis.com*)",
+      "falcon_logscale_query": "#event_simpleName=AsepValueUpdate\n| regex(\"(?i)\\\\\\\\(Run|RunOnce|Winlogon)\", field=RegObjectName)\n| regex(\"(?i)(wscript|cscript|powershell|pwsh|mshta|rundll32|curl|certutil)\", field=RegStringValue)\n| regex(\"(?i)(https?://|\\\\.vbs|\\\\.js|\\\\.hta|-encodedcommand|-enc |frombase64string|downloadstring|\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp|\\\\\\\\AppData\\\\\\\\Roaming|\\\\\\\\ProgramData)\", field=RegStringValue)\n| NOT regex(\"(?i)(microsoft\\\\.com|windowsupdate\\\\.com|office\\\\.com|adobe\\\\.com|googleapis\\\\.com)\", field=RegStringValue)\n| groupBy([aid, ComputerName, UserName, ContextImageFileName, RegObjectName, RegValueName, RegStringValue], function=[count(), min(@timestamp, as=firstSeen), max(@timestamp, as=lastSeen)])\n| sort(lastSeen, order=desc)",
+      "cloudwatch_query": "",
+      "rationale": "Bluenoroff/TA444 (Stardust Chollima, Sapphire Sleet, BeagleBoyz) consistently uses simple, low-tech persistence \u2014 HKCU Run key or LaunchAgent plist pointing to a script interpreter that re-pulls the next stage from a typo-squat domain (e.g. swissborg[.]blog, mfdsregistry[.]com, cryptosvc-update[.]net). This pattern is documented across KandyKorn, ObjCShellz, and the 2023-2024 RustBucket Windows va",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "TrustedInstaller",
+          "tables_in_scope": [
+            "DeviceRegistryEvents"
+          ],
+          "suggestion": null,
+          "message": "`TrustedInstaller` is not a canonical column of DeviceRegistryEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "OfficeClickToRun",
+          "tables_in_scope": [
+            "DeviceRegistryEvents"
+          ],
+          "suggestion": null,
+          "message": "`OfficeClickToRun` is not a canonical column of DeviceRegistryEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Public",
+          "tables_in_scope": [
+            "DeviceRegistryEvents"
+          ],
+          "suggestion": null,
+          "message": "`Public` is not a canonical column of DeviceRegistryEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemoteUrl",
+          "tables_in_scope": [
+            "DeviceRegistryEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteUrl` is not a column of DeviceRegistryEvents; it does exist on DeviceNetworkEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemoteIP",
+          "tables_in_scope": [
+            "DeviceRegistryEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceLogonEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteIP` is not a column of DeviceRegistryEvents; it does exist on DeviceNetworkEvents, DeviceLogonEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        }
+      ]
+    }
+  ]
+}

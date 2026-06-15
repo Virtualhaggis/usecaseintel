@@ -69,7 +69,7 @@ _(none detected from narrative keywords)_
 
 ### FireAnt Metakit.exe spawns unsigned setup.exe from update path (SPECTRALVIPER supply-chain delivery)
 
-`UC_63_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_67_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceProcessEvents
 
 ### DtlCrashCatch.dll image-load by legitimate signed binary (OceanLotus DLL side-load)
 
-`UC_63_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_67_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceImageLoadEvents
 
 ### OneDrive.Sync.Service.exe spawned/injected outside legitimate OneDrive chain (SPECTRALVIPER injection target)
 
-`UC_63_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_67_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceProcessEvents
 
 ### SPECTRALVIPER C2 callout to OceanLotus FireAnt infrastructure
 
-`UC_63_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_67_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceNetworkEvents
 
 ### Public-facing MSSQL sqlservr.exe spawns suspicious child (OceanLotus transport-construction intrusion vector)
 
-`UC_63_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_67_14` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -164,7 +164,7 @@ DeviceProcessEvents
 
 ### SPECTRALVIPER known-bad SHA1 observed on disk or in process
 
-`UC_63_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_67_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -183,7 +183,7 @@ union
 
 ### Registry Run-key persistence written by SPECTRALVIPER side-load chain
 
-`UC_63_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_67_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -455,7 +455,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus Hits Vietnam Investors With SPECTRALVIPER in FireAnt Attack
 
-`UC_63_9` · phase: **exploit** · confidence: **High**
+`UC_67_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

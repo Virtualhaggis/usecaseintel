@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1197 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1198 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,21 +11,25 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-15
 - [152 chrome wallpaper extensions with 105k installs linked to](./2026-06-15/152-chrome-wallpaper-extensions-with-105k-installs-linked-to.md)
 - [china nexus hackers use backdoored pam modules for credentia](./2026-06-15/china-nexus-hackers-use-backdoored-pam-modules-for-credentia.md)
+- [chinese hackers abused google workspace rules to steal resea](./2026-06-15/chinese-hackers-abused-google-workspace-rules-to-steal-resea.md)
 - [chinese hackers breach redcap servers steal medical research](./2026-06-15/chinese-hackers-breach-redcap-servers-steal-medical-research.md)
 - [cisa kev cve 2026 20262 cisco catalyst sd wan manager direct](./2026-06-15/cisa-kev-cve-2026-20262-cisco-catalyst-sd-wan-manager-direct.md)
 - [cisa kev cve 2026 54420 litespeed cpanel plugin unix symboli](./2026-06-15/cisa-kev-cve-2026-54420-litespeed-cpanel-plugin-unix-symboli.md)
 - [cisco fixes sd wan vmanage flaw exploited in zero day attack](./2026-06-15/cisco-fixes-sd-wan-vmanage-flaw-exploited-in-zero-day-attack.md)
 - [council of europe investigates shinyhunters data breach clai](./2026-06-15/council-of-europe-investigates-shinyhunters-data-breach-clai.md)
 - [dpapisnoop tool extracts credhist hashes for offline windows](./2026-06-15/dpapisnoop-tool-extracts-credhist-hashes-for-offline-windows.md)
+- [ghsa critical cve 2026 53633 vitest browser exposed browser ](./2026-06-15/ghsa-critical-cve-2026-53633-vitest-browser-exposed-browser-.md)
 - [hackers abuse lnk files powershell and python loader to depl](./2026-06-15/hackers-abuse-lnk-files-powershell-and-python-loader-to-depl.md)
 - [hackers use microsoft graph reconnaissance to target payroll](./2026-06-15/hackers-use-microsoft-graph-reconnaissance-to-target-payroll.md)
 - [litellm vulnerability chain lets low privilege users take ov](./2026-06-15/litellm-vulnerability-chain-lets-low-privilege-users-take-ov.md)
 - [microsoft defender email security benchmarking key insights ](./2026-06-15/microsoft-defender-email-security-benchmarking-key-insights-.md)
+- [north korean hackers are turning developer tools into malwar](./2026-06-15/north-korean-hackers-are-turning-developer-tools-into-malwar.md)
 - [optinmonster wordpress plugin hacked in cdn supply chain att](./2026-06-15/optinmonster-wordpress-plugin-hacked-in-cdn-supply-chain-att.md)
 - [palo alto warns of active exploitation of pan os globalprote](./2026-06-15/palo-alto-warns-of-active-exploitation-of-pan-os-globalprote.md)
 - [popular wordpress plugin scripts tampered to plant hidden ba](./2026-06-15/popular-wordpress-plugin-scripts-tampered-to-plant-hidden-ba.md)
 - [promptsnatcher ad blocker extensions steal ai chats from cha](./2026-06-15/promptsnatcher-ad-blocker-extensions-steal-ai-chats-from-cha.md)
 - [searchjack campaign uses 23 chrome extensions to hijack sear](./2026-06-15/searchjack-campaign-uses-23-chrome-extensions-to-hijack-sear.md)
+- [simplehelp bug lets hackers create rogue remote support acco](./2026-06-15/simplehelp-bug-lets-hackers-create-rogue-remote-support-acco.md)
 - [sniper dz scams target mena users via fake facebook offers a](./2026-06-15/sniper-dz-scams-target-mena-users-via-fake-facebook-offers-a.md)
 - [the government just banned an ai model an engineer s perspec](./2026-06-15/the-government-just-banned-an-ai-model-an-engineer-s-perspec.md)
 - [the onboarding password mistake that creates unnecessary ris](./2026-06-15/the-onboarding-password-mistake-that-creates-unnecessary-ris.md)
@@ -108,7 +112,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47252 anyquery applescript jxa code i](./2026-06-08/ghsa-critical-cve-2026-47252-anyquery-applescript-jxa-code-i.md)
 - [ghsa critical cve 2026 47430 cordova plugin inappbrowser ios](./2026-06-08/ghsa-critical-cve-2026-47430-cordova-plugin-inappbrowser-ios.md)
 - [ghsa critical cve 2026 47724 nebula mesh api endpoints lack ](./2026-06-08/ghsa-critical-cve-2026-47724-nebula-mesh-api-endpoints-lack-.md)
-- [meta blocks nso group s new whatsapp phishing attack files c](./2026-06-08/meta-blocks-nso-group-s-new-whatsapp-phishing-attack-files-c.md)
 - [one character linux kernel flaw enables local root access ex](./2026-06-08/one-character-linux-kernel-flaw-enables-local-root-access-ex.md)
 - [when hi this is it comes through microsoft teams](./2026-06-08/when-hi-this-is-it-comes-through-microsoft-teams.md)
 
@@ -286,7 +289,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-14
 - [cisa kev cve 2026 20182 cisco catalyst sd wan controller aut](./2026-05-14/cisa-kev-cve-2026-20182-cisco-catalyst-sd-wan-controller-aut.md)
 - [frostyneighbor fresh mischief and digital shenanigans](./2026-05-14/frostyneighbor-fresh-mischief-and-digital-shenanigans.md)
-- [ghsa critical cve 2026 27886 strapi may leak sensitive data ](./2026-05-14/ghsa-critical-cve-2026-27886-strapi-may-leak-sensitive-data-.md)
 - [ghsa critical cve 2026 44789 n8n http request node paginatio](./2026-05-14/ghsa-critical-cve-2026-44789-n8n-http-request-node-paginatio.md)
 - [ghsa critical cve 2026 44791 n8n has an xml node prototype p](./2026-05-14/ghsa-critical-cve-2026-44791-n8n-has-an-xml-node-prototype-p.md)
 - [ghsa critical cve 2026 44848 portainer missing authorization](./2026-05-14/ghsa-critical-cve-2026-44848-portainer-missing-authorization.md)
@@ -298,7 +300,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 45374 deepseek tui task create insecu](./2026-05-14/ghsa-critical-cve-2026-45374-deepseek-tui-task-create-insecu.md)
 - [ghsa critical cve 2026 45411 vm2 has a sandbox breakout usin](./2026-05-14/ghsa-critical-cve-2026-45411-vm2-has-a-sandbox-breakout-usin.md)
 - [ghsa critical cve 2026 46442 flowiseai authenticated host rc](./2026-05-14/ghsa-critical-cve-2026-46442-flowiseai-authenticated-host-rc.md)
-- [ghsa critical cve 2026 8178 amazon redshift vulnerable to re](./2026-05-14/ghsa-critical-cve-2026-8178-amazon-redshift-vulnerable-to-re.md)
 - [ghsa critical ghsa wf8q wvv8 p8jf samanhappy mcphub sse endp](./2026-05-14/ghsa-critical-ghsa-wf8q-wvv8-p8jf-samanhappy-mcphub-sse-endp.md)
 - [kimsuky targets organizations with pebbledash based tools](./2026-05-14/kimsuky-targets-organizations-with-pebbledash-based-tools.md)
 - [ongoing exploitation of cisco catalyst sd wan vulnerabilitie](./2026-05-14/ongoing-exploitation-of-cisco-catalyst-sd-wan-vulnerabilitie.md)

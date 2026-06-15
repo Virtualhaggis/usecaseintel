@@ -1,0 +1,150 @@
+{
+  "name": "Lazarus Group",
+  "ucs": [
+    {
+      "title": "[LLM] Lazarus Group AppleJeus/Operation Dream Job \u2014 trojanized cryptocurrency/trading app spawning LOLBin download chain",
+      "description": "Hunts the Lazarus Group / Hidden Cobra (DPRK, G0032) tradecraft seen in AppleJeus and Operation Dream Job: a signed-but-trojanized cryptocurrency trading client or recruiter-themed lure executable (CelasTrade, JMTTrading, Manuscrypt, BLINDINGCAN dropper) runs from a user-writable path and immediately invokes certutil/curl/bitsadmin/regsvr32 to stage a second-stage implant. This actor-specific child chain plus the social-engineering parent paths is the differentiating signal versus generic LOLBin abuse.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1059.001",
+        "T1059.003",
+        "T1105",
+        "T1036.005",
+        "T1027"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_hash) as process_hash values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"CelasTradePro.exe\",\"JMTTrader.exe\",\"WorldBit-Bot.exe\",\"UnionCryptoTrader.exe\",\"CryptoNeuro Trader.exe\",\"Kupay Wallet.exe\",\"Ant2Whale.exe\",\"DAFOM.exe\") OR (Processes.parent_process_path IN (\"*\\\\Users\\\\*\\\\Downloads\\\\*\",\"*\\\\Users\\\\*\\\\AppData\\\\Local\\\\Temp\\\\*\",\"*\\\\ProgramData\\\\*\") AND Processes.parent_process_name IN (\"*Trader*.exe\",\"*Wallet*.exe\",\"*Crypto*.exe\",\"*Bridge*.exe\",\"BLINDINGCAN*.exe\")) Processes.process_name IN (\"certutil.exe\",\"curl.exe\",\"bitsadmin.exe\",\"regsvr32.exe\",\"rundll32.exe\",\"powershell.exe\",\"mshta.exe\") (Processes.process=\"*-urlcache*\" OR Processes.process=\"*-decode*\" OR Processes.process=\"*transfer*http*\" OR Processes.process=\"*DownloadString*\" OR Processes.process=\"*FromBase64String*\" OR Processes.process=\"*-EncodedCommand*\" OR Processes.process=\"*Invoke-WebRequest*\" OR Processes.process=\"*://*\") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process_path Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "// Lazarus AppleJeus / Dream Job \u2014 trojanized crypto/recruiter binary chaining to LOLBin staging\nlet LookbackDays = 14d;\nlet LazarusLureNames = dynamic([\"celastradepro.exe\",\"jmttrader.exe\",\"worldbit-bot.exe\",\"unioncryptotrader.exe\",\"cryptoneuro trader.exe\",\"kupay wallet.exe\",\"ant2whale.exe\",\"dafom.exe\",\"blindingcan.exe\"]);\nlet LazarusLureSubstrings = dynamic([\"trader\",\"wallet\",\"crypto\",\"bridge\",\"defi\",\"coin\",\"amazon_assessment\",\"job_description\",\"sdet_assignment\"]);\nlet StagingLOLBins = dynamic([\"certutil.exe\",\"curl.exe\",\"bitsadmin.exe\",\"regsvr32.exe\",\"rundll32.exe\",\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where FileName in~ (StagingLOLBins)\n| where (InitiatingProcessFileName in~ (LazarusLureNames))\n     or (InitiatingProcessFolderPath has_any (@\"\\Users\\\", @\"\\AppData\\Local\\Temp\\\", @\"\\ProgramData\\\", @\"\\Public\\\")\n         and InitiatingProcessFileName has_any (LazarusLureSubstrings)\n         and InitiatingProcessFileName endswith \".exe\")\n| where ProcessCommandLine has_any (\"-urlcache\",\"-decode\",\"transfer http\",\"DownloadString\",\"FromBase64String\",\"-EncodedCommand\",\"-enc \",\"Invoke-WebRequest\",\"http://\",\"https://\")\n| where AccountName !endswith \"$\"\n| project Timestamp, DeviceName, AccountName,\n          LureParent = InitiatingProcessFileName,\n          LureParentPath = InitiatingProcessFolderPath,\n          LureParentCmd = InitiatingProcessCommandLine,\n          LureParentSHA256 = InitiatingProcessSHA256,\n          ChildLOLBin = FileName,\n          ChildCmd = ProcessCommandLine,\n          ChildSHA256 = SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "// Lazarus AppleJeus / Dream Job \u2014 trojanized lure \u2192 LOLBin staging via ImProcessCreate\nlet LookbackDays = 14d;\nlet LazarusLureNames = dynamic([\"celastradepro.exe\",\"jmttrader.exe\",\"worldbit-bot.exe\",\"unioncryptotrader.exe\",\"cryptoneuro trader.exe\",\"kupay wallet.exe\",\"ant2whale.exe\",\"dafom.exe\",\"blindingcan.exe\"]);\nlet LazarusLureSubstrings = dynamic([\"trader\",\"wallet\",\"crypto\",\"bridge\",\"defi\",\"coin\",\"amazon_assessment\",\"job_description\",\"sdet_assignment\"]);\nlet StagingLOLBins = dynamic([\"certutil.exe\",\"curl.exe\",\"bitsadmin.exe\",\"regsvr32.exe\",\"rundll32.exe\",\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\"]);\nImProcessCreate\n| where TimeGenerated > ago(LookbackDays)\n| extend ChildName = tolower(tostring(split(ActingProcessName, \"\\\\\")[-1]))\n| extend ParentName = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1]))\n| where ChildName in (StagingLOLBins)\n| where (ParentName in (LazarusLureNames))\n     or (ParentProcessName has_any (@\"\\Users\\\", @\"\\AppData\\Local\\Temp\\\", @\"\\ProgramData\\\", @\"\\Public\\\")\n         and ParentName has_any (LazarusLureSubstrings)\n         and ParentName endswith \".exe\")\n| where ActingProcessCommandLine has_any (\"-urlcache\",\"-decode\",\"transfer http\",\"DownloadString\",\"FromBase64String\",\"-EncodedCommand\",\"-enc \",\"Invoke-WebRequest\",\"http://\",\"https://\")\n| where ActorUsername !endswith \"$\"\n| project TimeGenerated, DvcHostname, ActorUsername,\n          ParentName, ParentProcessName, ParentProcessCommandLine,\n          ChildName, ActingProcessCommandLine, SHA256\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Lazarus AppleJeus/Dream Job Trojanized Lure Spawns Staging LOLBin\nid: 8b5d0e2c-1a47-4f1a-9b14-2e0bafef0c11\nstatus: experimental\ndescription: Detects Lazarus Group / Hidden Cobra trojanized cryptocurrency trader or recruiter lure executables (AppleJeus, BLINDINGCAN dropper) spawning certutil/curl/bitsadmin/regsvr32/powershell with download or decode arguments.\nreferences:\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa21-048a\n  - https://attack.mitre.org/groups/G0032/\nauthor: SOC Detection Eng\ndate: 2026/06/15\ntags:\n  - attack.execution\n  - attack.t1059.001\n  - attack.t1105\n  - attack.t1036.005\n  - attack.g0032\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_child:\n    Image|endswith:\n      - '\\certutil.exe'\n      - '\\curl.exe'\n      - '\\bitsadmin.exe'\n      - '\\regsvr32.exe'\n      - '\\rundll32.exe'\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\mshta.exe'\n  selection_cmd:\n    CommandLine|contains:\n      - '-urlcache'\n      - '-decode'\n      - 'transfer http'\n      - 'DownloadString'\n      - 'FromBase64String'\n      - '-EncodedCommand'\n      - 'Invoke-WebRequest'\n      - 'http://'\n      - 'https://'\n  selection_parent_known:\n    ParentImage|endswith:\n      - '\\CelasTradePro.exe'\n      - '\\JMTTrader.exe'\n      - '\\WorldBit-Bot.exe'\n      - '\\UnionCryptoTrader.exe'\n      - '\\Kupay Wallet.exe'\n      - '\\Ant2Whale.exe'\n      - '\\DAFOM.exe'\n  selection_parent_heuristic_path:\n    ParentImage|contains:\n      - '\\Users\\'\n      - '\\AppData\\Local\\Temp\\'\n      - '\\ProgramData\\'\n      - '\\Public\\'\n  selection_parent_heuristic_name:\n    ParentImage|contains:\n      - 'Trader'\n      - 'Wallet'\n      - 'Crypto'\n      - 'Bridge'\n      - 'DeFi'\n      - 'Coin'\n      - 'job_description'\n      - 'sdet_assignment'\n      - 'amazon_assessment'\n  condition: selection_child and selection_cmd and (selection_parent_known or (selection_parent_heuristic_path and selection_parent_heuristic_name))\nfalsepositives:\n  - Legitimate cryptocurrency trading software downloading updates\n  - IT install scripts in user temp paths\nlevel: high",
+      "datadog_query": "source:windows.sysmon @EventID:1 (@ParentImage:(*\\CelasTradePro.exe OR *\\celastradepro.exe OR *\\JMTTrader.exe OR *\\jmttrader.exe OR *\\WorldBit-Bot.exe OR *\\worldbit-bot.exe OR *\\UnionCryptoTrader.exe OR *\\unioncryptotrader.exe OR *\\Kupay\\ Wallet.exe OR *\\Ant2Whale.exe OR *\\DAFOM.exe) OR (@ParentImage:(*\\Users\\* OR *\\AppData\\Local\\Temp\\* OR *\\ProgramData\\* OR *\\Public\\*) AND @ParentImage:(*Trader* OR *trader* OR *Wallet* OR *wallet* OR *Crypto* OR *crypto* OR *Bridge* OR *bridge* OR *job_description* OR *sdet_assignment* OR *amazon_assessment*))) @Image:(*\\certutil.exe OR *\\Certutil.exe OR *\\CERTUTIL.EXE OR *\\curl.exe OR *\\Curl.exe OR *\\bitsadmin.exe OR *\\BITSAdmin.exe OR *\\regsvr32.exe OR *\\RegSvr32.exe OR *\\rundll32.exe OR *\\RunDll32.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\mshta.exe OR *\\MSHTA.EXE) @CommandLine:(*urlcache* OR *UrlCache* OR *-decode* OR *transfer\\ http* OR *DownloadString* OR *FromBase64String* OR *EncodedCommand* OR *Invoke-WebRequest* OR *http://* OR *https://*)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2\n| ImageFileName=/\\\\(certutil|curl|bitsadmin|regsvr32|rundll32|powershell|pwsh|mshta)\\.exe$/i\n| CommandLine=/(\\-urlcache|\\-decode|transfer\\s+http|DownloadString|FromBase64String|\\-EncodedCommand|\\-enc\\s|Invoke-WebRequest|https?:\\/\\/)/i\n| (ParentBaseFileName=/^(CelasTradePro|JMTTrader|WorldBit-Bot|UnionCryptoTrader|Kupay Wallet|Ant2Whale|DAFOM|BLINDINGCAN)\\.exe$/i\n   OR (ParentImageFileName=/\\\\(Users|AppData\\\\Local\\\\Temp|ProgramData|Public)\\\\/i\n       AND ParentBaseFileName=/(trader|wallet|crypto|bridge|defi|coin|job_description|sdet_assignment|amazon_assessment).*\\.exe$/i))\n| UserName!=/\\$$/\n| groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName], function=[count(), min(@timestamp), collect([ParentImageFileName, CommandLine, SHA256HashData])])",
+      "cloudwatch_query": "",
+      "rationale": "Anchors on the exact lure binary names CISA/Mandiant/Kaspersky have attributed to Lazarus Group AppleJeus campaigns (CelasTradePro, JMTTrader, UnionCryptoTrader, Kupay Wallet, Ant2Whale, DAFOM, WorldBit-Bot) AND on Operation Dream Job recruiter-themed lures (job_description / sdet_assignment / amazon_assessment) running from user-writable paths. Pairs that actor-specific parent with the certutil/b"
+    },
+    {
+      "title": "[LLM] Lazarus 3CX/X_TRADER supply-chain \u2014 signed but unsigned-by-vendor application loading sideloaded DLL with C2 beacon",
+      "description": "Hunts the Lazarus / Diamond Sleet / Labyrinth Chollima supply-chain tradecraft from the 3CXDesktopApp (SmoothOperator) and X_TRADER (VEILEDSIGNAL) campaigns: a legitimately-installed enterprise client (3CXDesktopApp.exe, ffmpeg.dll host, X_TRADER.exe) sideloads a malicious DLL that immediately beacons to a Lazarus C2 infrastructure pattern (icon-encoded GitHub-hosted second-stage URL or known SmoothOperator domains). Differentiates from generic DLL-sideload detections by anchoring on the actor's exact host-binary/DLL pairs and the post-load network IOC family.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1574.002",
+        "T1071.001",
+        "T1102.002",
+        "T1027.013",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.process_name IN (\"3CXDesktopApp.exe\",\"X_TRADER.exe\",\"Trading Technologies XTrader.exe\") AND (All_Traffic.dest IN (\"akamaicontainer.com\",\"akamaitechcloudservices.com\",\"azuredeploystore.com\",\"azureonlinecloud.com\",\"azureonlinestorage.com\",\"dunamistrd.com\",\"glcloudservice.com\",\"journalide.org\",\"msedgepackageinfo.com\",\"msstorageazure.com\",\"msstorageboxes.com\",\"officeaddons.com\",\"officestoragebox.com\",\"pbxcloudeservices.com\",\"pbxphonenetwork.com\",\"pbxsources.com\",\"qwepoi123098.com\",\"sbmsa.wiki\",\"sourceslabs.com\",\"visualstudiofactory.com\",\"zacharryblogs.com\",\"raw.githubusercontent.com\") OR match(All_Traffic.url,\".*\\.ico$\") ) by All_Traffic.src All_Traffic.user All_Traffic.process_name All_Traffic.dest All_Traffic.dest_port All_Traffic.url | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "// Lazarus / Diamond Sleet 3CX (SmoothOperator) + X_TRADER (VEILEDSIGNAL) supply-chain compromise\n// Anchors on the actor-specific host binary AND known C2 domain set, plus the GitHub icon-hosted second-stage retrieval pattern\nlet LookbackDays = 30d;\nlet LazarusHostBinaries = dynamic([\"3cxdesktopapp.exe\",\"x_trader.exe\",\"trading technologies xtrader.exe\"]);\nlet LazarusSideloadedDlls = dynamic([\"ffmpeg.dll\",\"d3dcompiler_47.dll\",\"winscard.dll\",\"iconv.dll\"]);\nlet SmoothOperatorC2 = dynamic([\n    \"akamaicontainer.com\",\"akamaitechcloudservices.com\",\"azuredeploystore.com\",\n    \"azureonlinecloud.com\",\"azureonlinestorage.com\",\"dunamistrd.com\",\n    \"glcloudservice.com\",\"journalide.org\",\"msedgepackageinfo.com\",\n    \"msstorageazure.com\",\"msstorageboxes.com\",\"officeaddons.com\",\n    \"officestoragebox.com\",\"pbxcloudeservices.com\",\"pbxphonenetwork.com\",\n    \"pbxsources.com\",\"qwepoi123098.com\",\"sbmsa.wiki\",\"sourceslabs.com\",\n    \"visualstudiofactory.com\",\"zacharryblogs.com\"]);\nlet SideloadEvents = DeviceImageLoadEvents\n    | where Timestamp > ago(LookbackDays)\n    | where InitiatingProcessFileName in~ (LazarusHostBinaries)\n    | where FileName in~ (LazarusSideloadedDlls)\n    | where not(FolderPath has_any (@\"\\Program Files\\3CXDesktopApp\\\", @\"\\Program Files (x86)\\3CXDesktopApp\\\")\n                and SHA256 in ((externaldata(h:string)[@\"https://example/empty.txt\"] with (format=\"txt\"))))  // placeholder: replace with allowlist of known-good vendor DLL hashes\n    | project Timestamp, DeviceId, DeviceName,\n              HostBin = InitiatingProcessFileName, DllName = FileName,\n              DllPath = FolderPath, DllSHA256 = SHA256,\n              InitiatingProcessId;\nlet NetworkBeacons = DeviceNetworkEvents\n    | where Timestamp > ago(LookbackDays)\n    | where InitiatingProcessFileName in~ (LazarusHostBinaries)\n    | where (RemoteUrl has_any (SmoothOperatorC2))\n         or (RemoteUrl has \"raw.githubusercontent.com\" and RemoteUrl endswith \".ico\")\n         or (RemoteUrl endswith \".ico\" and RemoteIPType == \"Public\");\nSideloadEvents\n| join kind=inner (NetworkBeacons) on DeviceId\n| where Timestamp1 between (Timestamp .. Timestamp + 1h)\n| project SideloadTime = Timestamp, BeaconTime = Timestamp1,\n          DeviceName, HostBin, DllName, DllPath, SHA256,\n          BeaconUrl = RemoteUrl, BeaconIP = RemoteIP, RemotePort\n| order by SideloadTime desc",
+      "sentinel_kql": "// Lazarus / Diamond Sleet 3CX + X_TRADER supply-chain \u2014 host-binary network egress to known C2 set\nlet LookbackDays = 30d;\nlet LazarusHostBinaries = dynamic([\"3cxdesktopapp.exe\",\"x_trader.exe\",\"trading technologies xtrader.exe\"]);\nlet SmoothOperatorC2 = dynamic([\n    \"akamaicontainer.com\",\"akamaitechcloudservices.com\",\"azuredeploystore.com\",\n    \"azureonlinecloud.com\",\"azureonlinestorage.com\",\"dunamistrd.com\",\n    \"glcloudservice.com\",\"journalide.org\",\"msedgepackageinfo.com\",\n    \"msstorageazure.com\",\"msstorageboxes.com\",\"officeaddons.com\",\n    \"officestoragebox.com\",\"pbxcloudeservices.com\",\"pbxphonenetwork.com\",\n    \"pbxsources.com\",\"qwepoi123098.com\",\"sbmsa.wiki\",\"sourceslabs.com\",\n    \"visualstudiofactory.com\",\"zacharryblogs.com\"]);\nlet NetSession = ImNetworkSession\n    | where TimeGenerated > ago(LookbackDays)\n    | extend SrcImageLower = tolower(tostring(SrcUsername))\n    | extend DstHostLower = tolower(DstHostname)\n    | extend UrlLower = tolower(Url)\n    | where (DstHostLower has_any (SmoothOperatorC2))\n         or (UrlLower has \"raw.githubusercontent.com\" and UrlLower endswith \".ico\")\n    | project TimeGenerated, DvcHostname, SrcIpAddr, DstIpAddr, DstHostname, Url, DstPortNumber;\nlet DnsSession = ImDnsActivity\n    | where TimeGenerated > ago(LookbackDays)\n    | where DnsQuery has_any (SmoothOperatorC2)\n    | project TimeGenerated, DvcHostname, DnsQuery, SrcIpAddr;\nlet ProcCtx = ImProcessCreate\n    | where TimeGenerated > ago(LookbackDays)\n    | extend ActingName = tolower(tostring(split(ActingProcessName, \"\\\\\")[-1]))\n    | where ActingName in (LazarusHostBinaries)\n    | project ProcTime = TimeGenerated, DvcHostname, ActingName, ActingProcessCommandLine, SHA256;\nProcCtx\n| join kind=inner (NetSession) on DvcHostname\n| where TimeGenerated between (ProcTime .. ProcTime + 1h)\n| project ProcTime, BeaconTime = TimeGenerated, DvcHostname,\n          HostBinary = ActingName, ActingProcessCommandLine, SHA256,\n          DstHostname, Url, DstIpAddr, DstPortNumber\n| order by BeaconTime desc",
+      "sigma_yaml": "",
+      "datadog_query": "source:windows.sysmon @EventID:3 @Image:(*\\3CXDesktopApp.exe OR *\\3cxdesktopapp.exe OR *\\X_TRADER.exe OR *\\x_trader.exe OR *\\Trading\\ Technologies\\ XTrader.exe) (@DestinationHostname:(akamaicontainer.com OR akamaitechcloudservices.com OR azuredeploystore.com OR azureonlinecloud.com OR azureonlinestorage.com OR dunamistrd.com OR glcloudservice.com OR journalide.org OR msedgepackageinfo.com OR msstorageazure.com OR msstorageboxes.com OR officeaddons.com OR officestoragebox.com OR pbxcloudeservices.com OR pbxphonenetwork.com OR pbxsources.com OR qwepoi123098.com OR sbmsa.wiki OR sourceslabs.com OR visualstudiofactory.com OR zacharryblogs.com OR raw.githubusercontent.com))",
+      "falcon_logscale_query": "#event_simpleName=DnsRequest\n| ContextImageFileName=/\\\\(3CXDesktopApp|X_TRADER|Trading Technologies XTrader)\\.exe$/i\n| DomainName=/^(akamaicontainer|akamaitechcloudservices|azuredeploystore|azureonlinecloud|azureonlinestorage|dunamistrd|glcloudservice|journalide|msedgepackageinfo|msstorageazure|msstorageboxes|officeaddons|officestoragebox|pbxcloudeservices|pbxphonenetwork|pbxsources|qwepoi123098|sbmsa\\.wiki|sourceslabs|visualstudiofactory|zacharryblogs)\\.(com|org|wiki)$/i\n| join({#event_simpleName=NetworkConnectIP4 | ContextImageFileName=/\\\\(3CXDesktopApp|X_TRADER|Trading Technologies XTrader)\\.exe$/i}, field=aid, include=[RemoteAddressIP4, RemotePort, ContextImageFileName])\n| groupBy([aid, ComputerName, ContextImageFileName, DomainName, RemoteAddressIP4], function=[count(), min(@timestamp), max(@timestamp)])",
+      "cloudwatch_query": "",
+      "rationale": "Anchors precisely on the host-binary set Mandiant and CrowdStrike attributed to Lazarus (Diamond Sleet / Labyrinth Chollima) in the 3CXDesktopApp/SmoothOperator and X_TRADER/VEILEDSIGNAL supply-chain operations, joined to the published C2 domain set AND the actor-specific .ico-on-GitHub second-stage retrieval (T1102.002 + T1027.013). The combination of (a) signed 3CX/X_TRADER process initiating th",
+      "_field_issues_autofix": [
+        "DllSHA256 -> SHA256"
+      ],
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Public",
+          "tables_in_scope": [
+            "DeviceImageLoadEvents"
+          ],
+          "suggestion": null,
+          "message": "`Public` is not a canonical column of DeviceImageLoadEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "NetworkBeacons",
+          "tables_in_scope": [
+            "DeviceImageLoadEvents"
+          ],
+          "suggestion": null,
+          "message": "`NetworkBeacons` is not a canonical column of DeviceImageLoadEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "HostBin",
+          "tables_in_scope": [
+            "DeviceImageLoadEvents"
+          ],
+          "suggestion": null,
+          "message": "`HostBin` is not a canonical column of DeviceImageLoadEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "DllName",
+          "tables_in_scope": [
+            "DeviceImageLoadEvents"
+          ],
+          "suggestion": "FileName",
+          "message": "`DllName` is not a canonical column of DeviceImageLoadEvents. Did you mean `FileName`?"
+        },
+        {
+          "kind": "unknown_field",
+          "field": "DllPath",
+          "tables_in_scope": [
+            "DeviceImageLoadEvents"
+          ],
+          "suggestion": null,
+          "message": "`DllPath` is not a canonical column of DeviceImageLoadEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemoteUrl",
+          "tables_in_scope": [
+            "DeviceImageLoadEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteUrl` is not a column of DeviceImageLoadEvents; it does exist on DeviceNetworkEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemoteIP",
+          "tables_in_scope": [
+            "DeviceImageLoadEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceLogonEvents",
+            "DeviceEvents",
+            "AlertEvidence",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemoteIP` is not a column of DeviceImageLoadEvents; it does exist on DeviceNetworkEvents, DeviceLogonEvents, DeviceEvents, AlertEvidence, ASCDeviceEvents."
+        },
+        {
+          "kind": "wrong_table",
+          "field": "RemotePort",
+          "tables_in_scope": [
+            "DeviceImageLoadEvents"
+          ],
+          "exists_on": [
+            "DeviceNetworkEvents",
+            "DeviceLogonEvents",
+            "DeviceEvents",
+            "ASCDeviceEvents"
+          ],
+          "message": "`RemotePort` is not a column of DeviceImageLoadEvents; it does exist on DeviceNetworkEvents, DeviceLogonEvents, DeviceEvents, ASCDeviceEvents."
+        }
+      ]
+    }
+  ]
+}

@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Self-hosted AI agent process spawns shell/curl/wget then executes the fetched payload
 
-`UC_51_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_55_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### OpenClaw agent runtime reads secrets store (.env / .aws / id_rsa) followed by external network egress
 
-`UC_51_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_55_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ SecretReads
 
 ### Outbound connection or DNS resolution to imperva_artifactory.com (OpenClaw PoC C2)
 
-`UC_51_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_55_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ union isfuzzy=true
 
 ### AI-agent-driven mailbox auto-forwards messages to first-time-seen external recipient
 
-`UC_51_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_55_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
