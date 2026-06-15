@@ -2264,10 +2264,10 @@ level: critical
   data-techs="T1190,T1195.002,T1204.004,T1528"
   data-sources="The Hacker News|Cyber Security News"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint,network,web"
+  data-splunk-cats="application,endpoint,network,web"
   data-targets="azure,linux,m365,windows"
-  data-uc-count="13" data-llm-uc-count="6"
-  data-search="Critical Splunk Enterprise Flaw Lets Attackers Run Code Without Authentication Splunk has released security updates to address a critical security flaw in Splunk Enterprise that could be exploited to conduct unauthenticated file operations and even remote code execution. The vulnerability, tracked as CVE-2026-20253, is rated 9.8 on the CVSS scoring system. &quot;In Splunk Enterprise versions below 10.2.4 and 10.0.7, an unauthenticated user could create or truncate arbitrary CVE-2026-20253 T1190 T1195.002 T1204.004 T1528 [LLM] Unauthenticated POST to Splunk /v1/postgres/recovery/{backup,restore} endpoints [LLM] splunkd spawning shell interpreters (CVE-2026-20253 post-exploit RCE) [LLM] Write to Splunk .pgpass or ssg_enable_modular_input.py from unexpected process [LLM] Splunk Enterprise host initiating outbound PostgreSQL (TCP/5432) to public IP [LLM] Splunk Enterprise vulnerable version inventory (CVE-2026-20253 exposure) [LLM] Reconnaissance probes to Splunk version/info endpoints Beaconing — periodic outbound to small set of destinations Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant Phishing-link click correlated to endpoint execution Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — Critical Splunk Enterprise Flaw Lets Attackers Run Code Without Authentication">
+  data-uc-count="12" data-llm-uc-count="5"
+  data-search="Critical Splunk Enterprise Flaw Lets Attackers Run Code Without Authentication Splunk has released security updates to address a critical security flaw in Splunk Enterprise that could be exploited to conduct unauthenticated file operations and even remote code execution. The vulnerability, tracked as CVE-2026-20253, is rated 9.8 on the CVSS scoring system. &quot;In Splunk Enterprise versions below 10.2.4 and 10.0.7, an unauthenticated user could create or truncate arbitrary CVE-2026-20253 T1190 T1195.002 T1204.004 T1528 [LLM] Unauthenticated HTTP access to Splunk PostgreSQL sidecar recovery endpoints (CVE-2026-20253) [LLM] Splunk Secure Gateway Python script overwritten via PostgreSQL lo_export (CVE-2026-20253) [LLM] Splunk PostgreSQL sidecar (postmaster/postgres) spawning shell or scripting interpreter [LLM] splunkd spawning reverse-shell or interactive interpreter (post-CVE-2026-20253 exploitation) [LLM] Splunk Enterprise hosts vulnerable to CVE-2026-20253 (PostgreSQL sidecar pre-auth RCE) Beaconing — periodic outbound to small set of destinations Asset exposure — vulnerability matches article CVE(s) OAuth consent / suspicious app grant Phishing-link click correlated to endpoint execution Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — Critical Splunk Enterprise Flaw Lets Attackers Run Code Without Authentication">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-13-critical-splunk-enterprise-flaw-lets-attackers-run-code-with" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -2276,7 +2276,7 @@ level: critical
   <div class="source-badges"><span class="source-badge thn">The Hacker News</span><span class="source-badge csn">Cyber Security News</span></div>
   <div class="pubmeta">
     <span>2026-06-13</span>
-    <span>13 use cases</span>
+    <span>12 use cases</span>
     <span>4 techniques</span>
     <span>6 kill-chain phases detected</span>
   </div>
@@ -2324,74 +2324,88 @@ level: critical
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Splunk Enterprise vulnerable version inventory (CVE-2026-20253 exposure) · [LLM] Reconnaissance probes to Splunk version/info endpoints · Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Splunk Enterprise hosts vulnerable to CVE-2026-20253 (PostgreSQL sidecar pre-auth RCE) · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Unauthenticated POST to Splunk /v1/postgres/recovery/{backup,restore} endpoints · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) · Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] splunkd spawning shell interpreters (CVE-2026-20253 post-exploit RCE) · [LLM] Write to Splunk .pgpass or ssg_enable_modular_input.py from unexpected process · Article-specific behavioural hunt — Critical Splunk Enterprise Flaw Lets Attackers Run Code Without Authentication</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Splunk Enterprise host initiating outbound PostgreSQL (TCP/5432) to public IP · Beaconing — periodic outbound to small set of destinations</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Unauthenticated HTTP access to Splunk PostgreSQL sidecar recovery endpoints (CVE-2026-20253) · [LLM] Splunk PostgreSQL sidecar (postmaster/postgres) spawning shell or scripting interpreter · Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) · Trusted vendor binary / installer launching unusual children</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Splunk Secure Gateway Python script overwritten via PostgreSQL lo_export (CVE-2026-20253) · Article-specific behavioural hunt — Critical Splunk Enterprise Flaw Lets Attackers Run Code Without Authentication</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] splunkd spawning reverse-shell or interactive interpreter (post-CVE-2026-20253 exploitation) · Beaconing — periodic outbound to small set of destinations</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ OAuth consent / suspicious app grant</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="9952bc0cf9" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="3d1b5966fc" data-platforms="datadog,def,sent,sigma,spl" data-targets="windows" open>
   <summary>
-    <span class="uc-title">Unauthenticated POST to Splunk /v1/postgres/recovery/{backup,restore} endpoints</span>
+    <span class="uc-title">Unauthenticated HTTP access to Splunk PostgreSQL sidecar recovery endpoints (CVE-2026-20253)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="9952bc0cf9" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="3d1b5966fc" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the watchTowr-detailed CVE-2026-20253 exploitation path: anonymous HTTP requests to the PostgreSQL sidecar&#x27;s backup/restore endpoints that return a 2xx success code. These endpoints are not meant to be accessed without authentication and any external hit is suspicious.
+    <div class="uc-desc">Detects HTTP requests to the unauthenticated /v1/postgres/recovery/backup and /v1/postgres/recovery/restore endpoints exposed by Splunk Enterprise 10.0.x and 10.2.x PostgreSQL sidecar. Any request to these URIs from outside Splunk&#x27;s own loopback indicates either active exploitation, vulnerability scanning, or watchTowr DAG probing.
 
-Rationale: Endpoints &#x27;/v1/postgres/recovery/backup&#x27; and &#x27;/v1/postgres/recovery/restore&#x27; are named verbatim in the watchTowr write-up. The Splunk advisory confirms the PostgreSQL sidecar lacks authentication, so any successful (2xx) hit from outside the management VLAN is high-fidelity exploitation evidence. Sentinel block fixed: W3CIISLog uses Computer/cIP/csUriStem and CommonSecurityLog uses DeviceName/SourceIP/RequestURL — no cross-table column leakage.
+Rationale: Specific URIs /v1/postgres/recovery/backup and /v1/postgres/recovery/restore are taken verbatim from the article and confirmed by watchTowr Labs. They are non-existent on patched 10.0.7/10.2.4 and not used by any client other than Splunk itself, so any external hit is high-fidelity. Defender query degrades to network-only because Advanced Hunting cannot see inbound HTTP URLs; paired with proximate file modification for fidelity.
 
 Cross-checked against:
-  • https://advisory.splunk.com/advisories/SVD-2026-XXXX
-  • https://labs.watchtowr.com/cve-2026-20253-splunk-rce/
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-20253</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal Splunk health-check or monitoring agents probing the sidecar endpoint over loopback</li><li>Splunk support engineer running diagnostic backup/restore during a paid case</li><li>Pre-authorised vulnerability scanner (Tenable/Qualys/Nessus) probing for CVE-2026-20253</li><li>Splunk SOAR or automation job invoking the recovery API from a known service IP</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and not (SourceIP in (&quot;&lt;vulnerability scanner CIDR&gt;&quot;,&quot;&lt;Splunk SOAR egress IP&gt;&quot;) or UserAgent has_any (&quot;Nessus&quot;,&quot;Qualys&quot;,&quot;Tenable&quot;,&quot;Splunk-SOAR&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full PCAP / WAF request body and check for the &#x27;passfile&#x27; argument and references to .pgpass — this confirms exploitation versus an unauthenticated probe. Look up the source IP in TI for known exploit infrastructure. 2) Contain: if confirmed, isolate the Splunk indexer/searchhead host, block the source IP at the perimeter, and force-rotate the postgres_admin credential plus any service-account secrets that the splunkd process could have read. 3) Hunt: pivot to UC2 (splunkd child shell) and UC3 (file write to ssg_enable_modular_input.py) on the same host across the last 30 days, and search for outbound PostgreSQL (TCP/5432) from the host to non-corporate ranges (UC4).</div></details>
+  • https://labs.watchtowr.com/why-use-app-level-auth-when-every-database-has-auth-splunk-enterprise-cve-2026-20253-pre-auth-rce/
+  • https://orca.security/resources/blog/cve-2026-20253-splunk-enterprise-rce-unauthenticated-file-operations/
+  • https://cybersecuritynews.com/splunk-enterprise-pre-auth-rce-chain-exposes/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorised vulnerability scanners (Tenable.io, Qualys VMDR, Rapid7 InsightVM) probing Splunk hosts</li><li>watchTowr Detection Artifact Generator (DAG) test runs</li><li>Internal red-team Burp/Caido traffic during scoped engagements</li><li>Splunk loopback health-check polls from 127.0.0.1 or ::1</li><li>Cloud load-balancer health probes targeting the Splunk web port</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Append to Sentinel/Defender query
+| where SrcIpAddr !in (&quot;127.0.0.1&quot;,&quot;::1&quot;)
+| where SrcIpAddr !in~ (dynamic([&quot;&lt;approved_scanner_ip_1&gt;&quot;,&quot;&lt;approved_scanner_ip_2&gt;&quot;]))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1. Triage: confirm the source IP (RemoteIP / SrcIpAddr / cIP) is not in the approved scanner allowlist. Check HTTP status — 400 indicates the vulnerable code path replied, 401 means the host is patched. Pull the target Splunk host&#x27;s version from DeviceTvmSoftwareInventory or `splunk version`. 2. Contain: if the target is on a vulnerable version (10.0.0–10.0.6 or 10.2.0–10.2.3), firewall-block the source IP at perimeter, isolate the Splunk host if a 200 or 400 response was returned to an attacker-controlled IP, and take a forensic snapshot of /opt/splunk/etc/apps/ before any reboot. 3. Hunt: pivot to UCs 2–4 on the same DeviceId / Computer to confirm whether the chain progressed to file overwrite or shell execution; query for additional Splunk hosts in scope using DeviceTvmSoftwareVulnerabilities CveId == &#x27;CVE-2026-20253&#x27;.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-09-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-09-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-09-uc0-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-09-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-09-uc0-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-09-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-09-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;splunkd.exe&quot;,&quot;splunkd&quot;,&quot;postgres&quot;,&quot;postgres.exe&quot;)
-| where RemotePort in (8089, 8000)
-| join kind=inner (
-    DeviceProcessEvents
+    <div class="tab-content active" id="art-09-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Defender Advanced Hunting can&#x27;t see inbound HTTP URLs; degrades to inbound TCP/8000 to Splunk hosts paired with proximate Splunk app file modification
+let SplunkHosts = DeviceProcessEvents
     | where Timestamp &gt; ago(7d)
-    | where ProcessCommandLine has_any (&quot;/v1/postgres/recovery/backup&quot;,&quot;/v1/postgres/recovery/restore&quot;,&quot;.pgpass&quot;,&quot;postgres_admin&quot;)
-  ) on DeviceId
-| project Timestamp, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName, ProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-09-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>union
-(W3CIISLog
- | where TimeGenerated &gt; ago(7d)
- | where csUriStem has_any (&quot;/v1/postgres/recovery/backup&quot;,&quot;/v1/postgres/recovery/restore&quot;)
- | where scStatus between (200 .. 299)
- | project TimeGenerated, Computer, SourceIP=cIP, Method=csMethod, URI=strcat(csUriStem, iff(isnotempty(csUriQuery), strcat(&quot;?&quot;, csUriQuery), &quot;&quot;)), Status=scStatus, UserAgent=csUserAgent, Source=&quot;W3CIIS&quot;),
-(CommonSecurityLog
- | where TimeGenerated &gt; ago(7d)
- | where RequestURL has_any (&quot;/v1/postgres/recovery/backup&quot;,&quot;/v1/postgres/recovery/restore&quot;)
- | project TimeGenerated, Computer=DeviceName, SourceIP=SourceIP, Method=RequestMethod, URI=RequestURL, Status=tolong(EventOutcome), UserAgent=RequestClientApplication, Source=DeviceProduct)
-| extend IsExternal = not(ipv4_is_private(SourceIP))
-| where IsExternal == true or isempty(SourceIP)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-09-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Unauthenticated Splunk PostgreSQL Sidecar Recovery Endpoint Access (CVE-2026-20253)
-id: a1c4e8d2-7f3b-4d9e-9c0a-2b6e7f8a9b1c
-description: Detects HTTP requests to the Splunk PostgreSQL sidecar /v1/postgres/recovery/backup or /restore endpoints which lack authentication controls (CVE-2026-20253).
+    | where FileName in~ (&quot;splunkd&quot;,&quot;splunkd.exe&quot;)
+    | distinct DeviceId, DeviceName;
+let Inbound = DeviceNetworkEvents
+    | where Timestamp &gt; ago(7d)
+    | where ActionType in (&quot;InboundConnectionAccepted&quot;,&quot;ConnectionSuccess&quot;)
+    | where LocalPort in (8000, 8089, 5435)
+    | where RemoteIPType == &quot;Public&quot;
+    | join kind=inner SplunkHosts on DeviceId
+    | project NetTime=Timestamp, DeviceId, DeviceName, RemoteIP, RemotePort, LocalPort;
+let FileMods = DeviceFileEvents
+    | where Timestamp &gt; ago(7d)
+    | where FolderPath has &quot;/opt/splunk/etc/apps/&quot; and FileName endswith &quot;.py&quot;
+    | project FileTime=Timestamp, DeviceId, FolderPath, FileName, InitiatingProcessFileName;
+Inbound
+| join kind=inner FileMods on DeviceId
+| where FileTime between (NetTime .. NetTime + 5m)
+| project NetTime, FileTime, DeviceName, RemoteIP, LocalPort, FolderPath, FileName, InitiatingProcessFileName
+| order by NetTime desc</code></pre></div>
+    <div class="tab-content" id="art-09-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Prefer ASIM ImWebSession; fall back to CommonSecurityLog / W3CIISLog depending on what fronts Splunk
+ImWebSession
+| where TimeGenerated &gt; ago(7d)
+| where Url has_any (&quot;/v1/postgres/recovery/backup&quot;, &quot;/v1/postgres/recovery/restore&quot;)
+| project TimeGenerated, SrcIpAddr, DstIpAddr, DstHostname, Url, HttpMethod, HttpStatusCode, HttpRequestHeaderUserAgent, EventProduct, EventVendor
+| order by TimeGenerated desc
+| union (CommonSecurityLog
+    | where TimeGenerated &gt; ago(7d)
+    | where RequestURL has_any (&quot;/v1/postgres/recovery/backup&quot;, &quot;/v1/postgres/recovery/restore&quot;)
+    | project TimeGenerated, SrcIpAddr=SourceIP, DstIpAddr=DestinationIP, DstHostname=DestinationHostName, Url=RequestURL, HttpMethod=RequestMethod, HttpStatusCode=tostring(EventOutcome), HttpRequestHeaderUserAgent=RequestClientApplication, EventProduct=DeviceProduct, EventVendor=DeviceVendor)
+| union (W3CIISLog
+    | where TimeGenerated &gt; ago(7d)
+    | where csUriStem has_any (&quot;/v1/postgres/recovery/backup&quot;, &quot;/v1/postgres/recovery/restore&quot;)
+    | project TimeGenerated, SrcIpAddr=cIP, DstIpAddr=tostring(Computer), DstHostname=Computer, Url=csUriStem, HttpMethod=csMethod, HttpStatusCode=tostring(scStatus), HttpRequestHeaderUserAgent=csUserAgent, EventProduct=&quot;IIS&quot;, EventVendor=&quot;Microsoft&quot;)</code></pre></div>
+    <div class="tab-content" id="art-09-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Splunk PostgreSQL Sidecar Recovery Endpoint Access (CVE-2026-20253)
+id: 9c2d6e74-1f9b-4b1c-9e54-44a78c2d3e21
+status: experimental
+description: Detects HTTP requests to the unauthenticated PostgreSQL sidecar /v1/postgres/recovery/backup and /restore endpoints abused by CVE-2026-20253 for pre-auth RCE against Splunk Enterprise 10.0.x and 10.2.x.
 references:
   - https://thehackernews.com/2026/06/critical-splunk-enterprise-flaw-lets.html
-  - https://advisory.splunk.com/advisories/SVD-2026-XXXX
-author: thn-usecases
+  - https://labs.watchtowr.com/why-use-app-level-auth-when-every-database-has-auth-splunk-enterprise-cve-2026-20253-pre-auth-rce/
+  - https://orca.security/resources/blog/cve-2026-20253-splunk-enterprise-rce-unauthenticated-file-operations/
+author: SOC Detection Engineering
 date: 2026/06/15
 tags:
   - attack.t1190
@@ -2404,40 +2418,44 @@ detection:
     cs-uri-stem|contains:
       - &#x27;/v1/postgres/recovery/backup&#x27;
       - &#x27;/v1/postgres/recovery/restore&#x27;
-    sc-status:
-      - 200
-      - 201
-      - 202
-      - 204
   condition: selection
+falsepositives:
+  - Authorised vulnerability scanners (Tenable, Qualys, watchTowr DAG)
+  - Splunk loopback health checks (filter src 127.0.0.1/::1)
 level: high</code></pre></div>
-    <div class="tab-content" id="art-09-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon OR source:nginx OR source:apache OR source:cloudflare) (@http.url_details.path:(*/v1/postgres/recovery/backup* OR */v1/postgres/recovery/restore*) OR @url:(*/v1/postgres/recovery/backup* OR */v1/postgres/recovery/restore*)) @http.status_code:[200 TO 299]</code></pre></div>
-    <div class="tab-content" id="art-09-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemotePort=8089
-| join({#event_simpleName=ProcessRollup2 ImageFileName=/splunkd(\.exe)?$/i CommandLine=/(v1\/postgres\/recovery\/(backup|restore)|\.pgpass|postgres_admin)/i}, field=aid)
-| groupBy([aid, ComputerName, RemoteAddressIP4, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-09-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as method values(Web.status) as status values(Web.http_user_agent) as ua from datamodel=Web where (Web.url=&quot;*/v1/postgres/recovery/backup*&quot; OR Web.url=&quot;*/v1/postgres/recovery/restore*&quot;) Web.status&gt;=200 Web.status&lt;300 by Web.src Web.dest Web.url Web.http_method | `drop_dm_object_name(Web)` | iplocation src | search NOT src IN (&quot;10.0.0.0/8&quot;,&quot;192.168.0.0/16&quot;,&quot;172.16.0.0/12&quot;) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-09-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as method values(Web.status) as status values(Web.http_user_agent) as ua from datamodel=Web where (Web.url=&quot;*/v1/postgres/recovery/backup*&quot; OR Web.url=&quot;*/v1/postgres/recovery/restore*&quot;) Web.status&gt;=200 Web.status&lt;300 by Web.src Web.dest Web.url Web.http_method | `drop_dm_object_name(Web)` | iplocation src | search NOT src IN (&quot;10.0.0.0/8&quot;,&quot;192.168.0.0/16&quot;,&quot;172.16.0.0/12&quot;) | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-09-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:apache.access OR source:iis OR source:haproxy OR source:envoy) (@http.url:*v1/postgres/recovery/backup* OR @http.url:*v1/postgres/recovery/restore* OR @http.url_details.path:*v1/postgres/recovery/backup* OR @http.url_details.path:*v1/postgres/recovery/restore*) -@network.client.ip:127.0.0.1</code></pre></div>
+    <div class="tab-content" id="art-09-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*/v1/postgres/recovery/backup*&quot; OR Web.url=&quot;*/v1/postgres/recovery/restore*&quot;) by Web.src Web.dest Web.url Web.http_method Web.status Web.user_agent Web.http_content_type
+| `drop_dm_object_name(Web)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| eval cve=&quot;CVE-2026-20253&quot;</code></pre><pre class="spl-mode-body" id="art-09-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url=&quot;*/v1/postgres/recovery/backup*&quot; OR Web.url=&quot;*/v1/postgres/recovery/restore*&quot;) by Web.src Web.dest Web.url Web.http_method Web.status Web.user_agent Web.http_content_type
+| `drop_dm_object_name(Web)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| eval cve=&quot;CVE-2026-20253&quot;</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="f23caa2530" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="5efece28bd" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">splunkd spawning shell interpreters (CVE-2026-20253 post-exploit RCE)</span>
+    <span class="uc-title">Splunk Secure Gateway Python script overwritten via PostgreSQL lo_export (CVE-2026-20253)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="f23caa2530" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="5efece28bd" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Splunk&#x27;s daemon (splunkd / splunkd.exe) almost never spawns cmd, powershell, bash, sh, or python child processes outside of well-known modular-input scripts. Article confirms the exploit pivots through Python script overwrite into RCE under the Splunk service account, so a splunkd→interpreter child is the textbook execution signal.
+    <div class="uc-desc">Detects file write/modification of Python scripts under /opt/splunk/etc/apps/*/bin/ — especially ssg_enable_modular_input.py — initiated by the PostgreSQL sidecar (postmaster/postgres). This is the exact RCE pivot used by CVE-2026-20253: lo_export inside the malicious DB dump writes attacker-controlled content to a Splunk-owned .py file that splunkd later executes.
 
-Rationale: Article states the exploit ends with overwriting &#x27;/opt/splunk/etc/apps/splunk_secure_gateway/bin/ssg_enable_modular_input.py&#x27; so the Python interpreter then runs attacker code under splunkd&#x27;s identity. Any other interpreter child (cmd, powershell, bash, nc) under splunkd is operator-grade evidence of post-exploit RCE — only the legitimate ssg modular-input launcher is whitelisted.
+Rationale: Path /opt/splunk/etc/apps/splunk_secure_gateway/bin/ssg_enable_modular_input.py is quoted verbatim from the article as watchTowr&#x27;s RCE pivot; the writer is unavoidably the PostgreSQL sidecar (postmaster/postgres) because lo_export executes in that context. Splunk&#x27;s own install/upgrade does not invoke lo_export against arbitrary app .py files, so the writer + path pairing is high-fidelity.
 
 Cross-checked against:
-  • https://advisory.splunk.com/advisories/SVD-2026-XXXX
-  • https://labs.watchtowr.com/cve-2026-20253-splunk-rce/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: PowerShell">T1059.001</span> <span class="ind tech" title="Command and Scripting Interpreter: Windows Command Shell">T1059.003</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Custom modular input scripts in /opt/splunk/etc/apps/*/bin/*.py spawning python or sh</li><li>Splunk add-on installation scripts invoking curl/wget to pull packages from internal mirrors</li><li>Splunk diag bundle generation invoking tar/gzip via shell</li><li>SCCM/Ansible automation invoking splunk CLI which spawns sh</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and not (ProcessCommandLine has_any (&quot;ssg_enable_modular_input.py&quot;,&quot;scripted_input&quot;,&quot;btool&quot;,&quot;splunk-launch&quot;,&quot;splunk diag&quot;) and not ProcessCommandLine has_any (&quot;-EncodedCommand&quot;,&quot;base64&quot;,&quot;/dev/tcp/&quot;,&quot;bash -i&quot;,&quot;reverse&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: capture the full command line and grandparent — if grandparent is a web-handling splunkd worker and the child cmdline contains &#x27;-EncodedCommand&#x27;, curl/wget to a public IP, /dev/tcp, or base64 blobs, treat as confirmed exploitation. Check if the parent splunkd PID also handled a /v1/postgres/recovery/* request in the same minute (correlate with UC1). 2) Contain: isolate the host, kill the child PID tree, force-rotate splunk service-account credentials and any TLS keys the splunkd process could read, and snapshot /opt/splunk/etc/apps for forensics. 3) Hunt: search the prior 30 days for additional splunkd→interpreter chains across all Splunk infra, scan for newly-modified .py files under /opt/splunk/etc/apps/splunk_secure_gateway/bin (UC3), and pivot on the child process&#x27;s outbound destinations.</div></details>
+  • https://labs.watchtowr.com/why-use-app-level-auth-when-every-database-has-auth-splunk-enterprise-cve-2026-20253-pre-auth-rce/
+  • https://orca.security/resources/blog/cve-2026-20253-splunk-enterprise-rce-unauthenticated-file-operations/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component">T1505</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span> <span class="ind tech" title="Hijack Execution Flow">T1574</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Splunk in-place upgrade or `splunk install app` from .spl bundle (writer would be tar/unzip/splunkd, NOT postmaster — current filter excludes these)</li><li>Manual admin edits via vim/nano/sed under the same path (writer != postgres, excluded)</li><li>Splunk Cloud-Ops automation deploying patched ssg_enable_modular_input.py</li><li>Configuration management (Ansible/Chef/Puppet) deploying Splunk app updates</li><li>Splunk DB Connect or other PostgreSQL-using TA writing legitimate config (rare path overlap)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has_any (&quot;pg_basebackup&quot;,&quot;pg_dumpall&quot;,&quot;pg_upgrade&quot;)
+| where InitiatingProcessParentFileName !in~ (&quot;splunkd&quot;,&quot;splunkd.exe&quot;,&quot;splunk&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1. Triage: capture the modified file&#x27;s SHA256 and content, diff against a known-good ssg_enable_modular_input.py from a clean 10.0.7 or 10.2.4 install. Identify the user account postmaster ran as (typically `splunk` or `postgres`) and the exact Timestamp. 2. Contain: isolate the host from the network (Defender&#x27;s MachineIsolation API or equivalent), kill splunkd before it re-executes the modified script (`splunk stop` won&#x27;t help — `kill -9` the splunkd PID then quarantine /opt/splunk/etc/apps/splunk_secure_gateway/bin/*.py). 3. Hunt: query DeviceProcessEvents/ImProcessCreate for any splunkd or python child process from this host since the file-write Timestamp (UC 4); search DeviceFileEvents for OTHER .py modifications in /opt/splunk/etc/apps/*/bin/ on this and peer hosts; rotate any secrets in /opt/splunk/etc/passwd, /opt/splunk/etc/auth/, and Splunk API tokens.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-09-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-09-uc1-sentinel">Sentinel KQL</button>
@@ -2446,101 +2464,97 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-09-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-09-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-09-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-09-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;splunkd.exe&quot;,&quot;splunkd&quot;,&quot;splunk.exe&quot;,&quot;splunk&quot;)
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;python.exe&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl.exe&quot;,&quot;perl&quot;,&quot;ruby.exe&quot;,&quot;ruby&quot;,&quot;nc.exe&quot;,&quot;ncat.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;)
-| where not(ProcessCommandLine has_any (&quot;ssg_enable_modular_input.py&quot;,&quot;splunk-launch&quot;,&quot;btool&quot;,&quot;scripted_input&quot;,&quot;modinput&quot;))
-   or ProcessCommandLine has_any (&quot;-EncodedCommand&quot;,&quot;base64&quot;,&quot;/dev/tcp/&quot;,&quot;socket.&quot;,&quot;connect_back&quot;,&quot;reverse&quot;,&quot;bash -i&quot;,&quot;curl http&quot;,&quot;wget http&quot;)
-| project Timestamp, DeviceName, AccountName,
-          ParentImage=InitiatingProcessFolderPath, ParentCmd=InitiatingProcessCommandLine,
-          ChildImage=FolderPath, ChildCmd=ProcessCommandLine, SHA256
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| where FolderPath startswith &quot;/opt/splunk/etc/apps/&quot;
+| where FileName endswith &quot;.py&quot;
+| where InitiatingProcessFileName in~ (&quot;postmaster&quot;,&quot;postgres&quot;,&quot;psql&quot;)
+   or InitiatingProcessFolderPath has_any (&quot;/opt/splunk/var/packages/data/postgres&quot;,&quot;/opt/splunk/lib/postgres&quot;)
+| extend IsSSGTarget = FileName =~ &quot;ssg_enable_modular_input.py&quot;
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, IsSSGTarget,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, InitiatingProcessParentFileName, SHA256
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-09-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-09-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
 | where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where ParentProcessName has_any (&quot;splunkd.exe&quot;,&quot;splunk.exe&quot;)
-| extend NewProcessLower = tolower(NewProcessName)
-| where NewProcessLower has_any (&quot;\\cmd.exe&quot;,&quot;\\powershell.exe&quot;,&quot;\\pwsh.exe&quot;,&quot;\\python.exe&quot;,&quot;\\python3.exe&quot;,&quot;\\nc.exe&quot;,&quot;\\ncat.exe&quot;,&quot;\\curl.exe&quot;,&quot;\\wget.exe&quot;)
-| where not(CommandLine has_any (&quot;ssg_enable_modular_input.py&quot;,&quot;scripted_input&quot;,&quot;modinput&quot;,&quot;btool&quot;))
-   or CommandLine has_any (&quot;-EncodedCommand&quot;,&quot;base64&quot;,&quot;DownloadString&quot;,&quot;IEX&quot;)
-| project TimeGenerated, Computer, SubjectUserName, TargetUserName, ParentProcessName, NewProcessName, CommandLine
+| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| where TargetFilePath startswith &quot;/opt/splunk/etc/apps/&quot; and TargetFileName endswith &quot;.py&quot;
+| where ActingProcessName has_any (&quot;postmaster&quot;,&quot;postgres&quot;,&quot;psql&quot;)
+| extend IsSSGTarget = TargetFileName =~ &quot;ssg_enable_modular_input.py&quot;
+| project TimeGenerated, DvcHostname, EventType, TargetFilePath, TargetFileName, IsSSGTarget,
+          ActingProcessName, ActingProcessCommandLine, ActorUsername, TargetFileSHA256
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-09-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Splunk Daemon Spawning Shell or Scripting Interpreter (CVE-2026-20253 RCE)
-id: 6f0c5b22-3f9b-4a8d-8e63-2d2b5f7a3a91
-description: Splunk&#x27;s splunkd process spawning cmd/powershell/bash/python is consistent with post-exploitation of CVE-2026-20253. Whitelists the known ssg_enable_modular_input.py launcher.
+    <div class="tab-content" id="art-09-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Splunk App Python Script Written by PostgreSQL Sidecar (CVE-2026-20253)
+id: 4b87f1a2-2c39-4e0d-91a6-f7d8a4c9b613
+status: experimental
+description: Detects the lo_export-driven file write that overwrites Splunk Secure Gateway Python scripts (e.g. ssg_enable_modular_input.py) — the post-auth-bypass code-execution primitive in CVE-2026-20253.
 references:
   - https://thehackernews.com/2026/06/critical-splunk-enterprise-flaw-lets.html
-  - https://advisory.splunk.com/advisories/SVD-2026-XXXX
-author: thn-usecases
+  - https://labs.watchtowr.com/why-use-app-level-auth-when-every-database-has-auth-splunk-enterprise-cve-2026-20253-pre-auth-rce/
+author: SOC Detection Engineering
 date: 2026/06/15
 tags:
-  - attack.t1190
-  - attack.t1059.001
-  - attack.t1059.003
-  - attack.t1059.004
-  - attack.execution
+  - attack.t1505
+  - attack.t1059.006
+  - attack.persistence
   - cve.2026.20253
 logsource:
-  category: process_creation
+  category: file_event
+  product: linux
 detection:
-  selection_parent:
-    ParentImage|endswith:
-      - &#x27;\splunkd.exe&#x27;
-      - &#x27;/splunkd&#x27;
-      - &#x27;\splunk.exe&#x27;
-      - &#x27;/splunk&#x27;
-  selection_child:
+  selection_writer:
     Image|endswith:
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;\pwsh.exe&#x27;
-      - &#x27;/bash&#x27;
-      - &#x27;/sh&#x27;
-      - &#x27;/dash&#x27;
-      - &#x27;/zsh&#x27;
-      - &#x27;\python.exe&#x27;
-      - &#x27;/python&#x27;
-      - &#x27;/python3&#x27;
-      - &#x27;\nc.exe&#x27;
-      - &#x27;\ncat.exe&#x27;
-      - &#x27;\curl.exe&#x27;
-      - &#x27;\wget.exe&#x27;
-  filter_modinput:
-    CommandLine|contains:
-      - &#x27;ssg_enable_modular_input.py&#x27;
-      - &#x27;scripted_input&#x27;
-      - &#x27;btool&#x27;
-  condition: selection_parent and selection_child and not filter_modinput
+      - &#x27;/postmaster&#x27;
+      - &#x27;/postgres&#x27;
+      - &#x27;/psql&#x27;
+  selection_target:
+    TargetFilename|startswith: &#x27;/opt/splunk/etc/apps/&#x27;
+    TargetFilename|endswith: &#x27;.py&#x27;
+  condition: selection_writer and selection_target
+falsepositives:
+  - Splunk in-place upgrade running its bundled PostgreSQL backup/restore as part of a maintenance window
 level: high</code></pre></div>
-    <div class="tab-content" id="art-09-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon OR source:linux.auditd OR source:windows.security) (@ParentImage:(*\splunkd.exe OR *\Splunkd.exe OR */splunkd) OR @ParentBaseFileName:(splunkd.exe OR splunkd) OR @process.parent.executable.name:(splunkd OR splunkd.exe)) (@Image:(*\cmd.exe OR *\powershell.exe OR *\pwsh.exe OR *\python.exe OR *\nc.exe OR *\ncat.exe OR *\curl.exe OR *\wget.exe) OR @process.executable.name:(bash OR sh OR dash OR zsh OR python OR python3 OR nc OR ncat OR curl OR wget)) -@CommandLine:*ssg_enable_modular_input.py* -@process.command_line:*ssg_enable_modular_input.py*</code></pre></div>
-    <div class="tab-content" id="art-09-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/splunkd(\.exe)?$/i
-| ImageFileName=/\\(cmd|powershell|pwsh|python3?|nc|ncat|curl|wget)\.exe$/i OR ImageFileName=/\/(bash|sh|dash|zsh|python3?|nc|ncat|curl|wget)$/i
-| NOT regex(&quot;ssg_enable_modular_input\\.py|scripted_input|btool&quot;, field=CommandLine)
-| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-09-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;splunkd&quot;,&quot;splunkd.exe&quot;,&quot;splunk&quot;,&quot;splunk.exe&quot;)) Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;curl&quot;,&quot;wget&quot;) by host Processes.parent_process_name Processes.process_name Processes.process_path Processes.user | `drop_dm_object_name(Processes)` | where NOT match(cmdline,&quot;(?i)(modinput|scripted_input|splunk_secure_gateway[/\\\\]bin[/\\\\]ssg_enable_modular_input\\.py|splunk-launch|btool)&quot;) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-09-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;splunkd&quot;,&quot;splunkd.exe&quot;,&quot;splunk&quot;,&quot;splunk.exe&quot;)) Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;curl&quot;,&quot;wget&quot;) by host Processes.parent_process_name Processes.process_name Processes.process_path Processes.user | `drop_dm_object_name(Processes)` | where NOT match(cmdline,&quot;(?i)(modinput|scripted_input|splunk_secure_gateway[/\\\\]bin[/\\\\]ssg_enable_modular_input\\.py|splunk-launch|btool)&quot;) | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-09-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd (@process.name:postmaster OR @process.name:postgres OR @process.name:psql OR @process.executable.path:*postmaster* OR @process.executable.path:*postgres*) (@file.path:*/opt/splunk/etc/apps/*/bin/*.py OR @file.path:*ssg_enable_modular_input.py*)</code></pre></div>
+    <div class="tab-content" id="art-09-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+| TargetFileName=/^\/opt\/splunk\/etc\/apps\/[^\/]+\/bin\/.+\.py$/i
+| ContextImageFileName=/(postmaster|postgres|psql)/i
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=[count(), min(_time)])
+| count &gt; 0</code></pre></div>
+    <div class="tab-content" id="art-09-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path=&quot;/opt/splunk/etc/apps/*/bin/*.py&quot; AND Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;,&quot;renamed&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id Filesystem.process_name Filesystem.process_exec Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+| where match(process_name, &quot;(?i)postmaster|postgres|psql&quot;) OR match(process_exec, &quot;(?i)postmaster|postgres&quot;)
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| eval cve=&quot;CVE-2026-20253&quot;, target_artifact=&quot;ssg_enable_modular_input.py&quot;</code></pre><pre class="spl-mode-body" id="art-09-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path=&quot;/opt/splunk/etc/apps/*/bin/*.py&quot; AND Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;,&quot;renamed&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id Filesystem.process_name Filesystem.process_exec Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+| where match(process_name, &quot;(?i)postmaster|postgres|psql&quot;) OR match(process_exec, &quot;(?i)postmaster|postgres&quot;)
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| eval cve=&quot;CVE-2026-20253&quot;, target_artifact=&quot;ssg_enable_modular_input.py&quot;</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="22ace24007" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="6be96a985a" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Write to Splunk .pgpass or ssg_enable_modular_input.py from unexpected process</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-title">Splunk PostgreSQL sidecar (postmaster/postgres) spawning shell or scripting interpreter</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="22ace24007" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="6be96a985a" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Article identifies two precise filesystem targets the exploit chain touches: &#x27;/opt/splunk/var/packages/data/postgres/.pgpass&#x27; (read by the restore endpoint) and &#x27;/opt/splunk/etc/apps/splunk_secure_gateway/bin/ssg_enable_modular_input.py&#x27; (overwritten to gain RCE). Any process other than the postgres binary touching these files is a strong exploitation indicator.
+    <div class="uc-desc">Detects the PostgreSQL sidecar binary (postmaster/postgres) under /opt/splunk/ spawning a shell, scripting interpreter, or network tool — the direct manifestation of lo_export-triggered code execution per CVE-2026-20253. Splunk&#x27;s bundled PostgreSQL is an internal sidecar that should never legitimately exec /bin/sh, python, nc, etc.
 
-Rationale: Both file paths are taken verbatim from the watchTowr technical analysis quoted in the article. .pgpass is only ever written by the postgres binary itself during normal operations, and ssg_enable_modular_input.py ships with the Splunk Secure Gateway app and should only change during a Splunk upgrade. Any other process touching these files is exploitation-grade signal.
+Rationale: lo_export executes in the PostgreSQL backend process context, so the immediate child of a successful CVE-2026-20253 RCE is a postmaster/postgres-parented shell. Splunk&#x27;s bundled PostgreSQL is an internal sidecar with no legitimate need to fork sh/python/nc. Parent path constraint to /opt/splunk/ avoids overlap with other PostgreSQL deployments on shared hosts.
 
 Cross-checked against:
-  • https://labs.watchtowr.com/cve-2026-20253-splunk-rce/
-  • https://advisory.splunk.com/advisories/SVD-2026-XXXX</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Hijack Execution Flow">T1574</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Splunk upgrade or app reinstallation legitimately replacing ssg_enable_modular_input.py</li><li>Manual administrative edit of .pgpass during a documented credential rotation</li><li>Configuration management (Ansible/Chef/Puppet) deploying a templated .pgpass during host build</li><li>Splunk support engineer applying a hotfix that ships a patched ssg_enable_modular_input.py</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and not (InitiatingProcessCommandLine has_any (&quot;splunk install app&quot;,&quot;splunk-package-installer&quot;,&quot;ansible&quot;,&quot;puppet&quot;,&quot;chef-client&quot;,&quot;cfengine&quot;) and InitiatingProcessParentFileName in~ (&quot;splunkd&quot;,&quot;splunkd.exe&quot;,&quot;sshd&quot;,&quot;systemd&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the new file contents and diff against the version shipped by the installed Splunk Secure Gateway app — any non-Splunk Python (sockets, subprocess, base64 blobs, callbacks) is malicious. Check whether the writing process was the splunkd worker handling /v1/postgres/recovery/restore (UC1). 2) Contain: restore the legitimate ssg_enable_modular_input.py from the Splunk Secure Gateway app package, rotate the postgres_admin password, isolate the host. 3) Hunt: list every other .py under /opt/splunk/etc/apps/*/bin/ that was modified outside an upgrade window; check ASEPs/cron/systemd for persistence; look for outbound connections initiated by the modular-input Python process.</div></details>
+  • https://labs.watchtowr.com/why-use-app-level-auth-when-every-database-has-auth-splunk-enterprise-cve-2026-20253-pre-auth-rce/
+  • https://cybersecuritynews.com/splunk-enterprise-pre-auth-rce-chain-exposes/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Splunk-bundled PostgreSQL `archive_command`/`restore_command` configurations that exec sh by design (rare; hash the script)</li><li>DBA running pg_dump/pg_restore that internally invokes /bin/sh for COPY TO PROGRAM (validate user is splunk service account, not interactive)</li><li>Custom PostgreSQL extensions calling curl/wget for federated queries</li><li>Splunk in-place upgrade scripts driving pg_upgrade which spawns shell helpers</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where ProcessCommandLine !has_any (&quot;pg_basebackup&quot;,&quot;pg_upgrade&quot;,&quot;archive_command&quot;,&quot;pg_archivecleanup&quot;)
+| where InitiatingProcessCommandLine !has &quot;pg_upgrade&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1. Triage: capture the child cmdline and SHA256, the parent postmaster PID and its open sockets via `lsof -p &lt;pid&gt;`, plus the host&#x27;s Splunk version. Confirm parent ImageFileName is genuinely under /opt/splunk/ (not a co-resident PostgreSQL). 2. Contain: isolate the host (Defender MachineIsolation or firewall block), terminate the postmaster child shell PID, snapshot /opt/splunk/etc/apps/ and /opt/splunk/var/log/postgres/ for forensics, then stop splunkd to break the persistence loop before re-exec of any overwritten .py. 3. Hunt: pivot to UC 2 (file overwrite) and UC 1 (entry-point HTTP) for the same DeviceId; query DeviceNetworkEvents for outbound from the host after the shell timestamp; expand DeviceTvmSoftwareVulnerabilities for all CVE-2026-20253 hosts and prioritise patching.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-09-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-09-uc2-sentinel">Sentinel KQL</button>
@@ -2549,290 +2563,215 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-09-uc2-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-09-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-09-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+    <div class="tab-content active" id="art-09-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
-| where FolderPath has_any (&quot;/opt/splunk/var/packages/data/postgres/&quot;,&quot;\\Splunk\\var\\packages\\data\\postgres\\&quot;,&quot;/opt/splunk/etc/apps/splunk_secure_gateway/bin/&quot;,&quot;\\Splunk\\etc\\apps\\splunk_secure_gateway\\bin\\&quot;)
-| where FileName in~ (&quot;.pgpass&quot;,&quot;ssg_enable_modular_input.py&quot;)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where InitiatingProcessFileName !in~ (&quot;postgres&quot;,&quot;postgres.exe&quot;,&quot;splunk-package-installer&quot;)
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessParentFileName
+| where InitiatingProcessFileName in~ (&quot;postmaster&quot;,&quot;postgres&quot;)
+| where InitiatingProcessFolderPath has &quot;/opt/splunk/&quot;
+| where FileName in~ (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;awk&quot;)
+   or ProcessCommandLine has_any (&quot;/dev/tcp/&quot;,&quot;bash -i&quot;,&quot;sh -i&quot;,&quot;nc -e&quot;,&quot;ncat -e&quot;,&quot;perl -e&quot;,&quot;python -c&quot;,&quot;import socket&quot;,&quot;subprocess.&quot;,&quot;os.system&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName,
+          ParentImage=InitiatingProcessFolderPath, ParentName=InitiatingProcessFileName,
+          ParentCmd=InitiatingProcessCommandLine,
+          ChildImage=FolderPath, ChildName=FileName, ChildCmd=ProcessCommandLine, SHA256
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-09-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+    <div class="tab-content" id="art-09-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
 | where TimeGenerated &gt; ago(7d)
-| where TargetFilePath has_any (&quot;/opt/splunk/var/packages/data/postgres/.pgpass&quot;,&quot;splunk_secure_gateway/bin/ssg_enable_modular_input.py&quot;)
-| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileWritten&quot;,&quot;FileRenamed&quot;)
-| where ActingProcessName !has_any (&quot;postgres&quot;,&quot;postgres.exe&quot;)
-| project TimeGenerated, DvcHostname, EventType, TargetFilePath, ActingProcessName, ActingProcessCommandLine, ActorUsername
+| where ParentProcessName has_any (&quot;postmaster&quot;,&quot;postgres&quot;)
+| where ParentProcessCommandLine has &quot;/opt/splunk/&quot; or ActingProcessCommandLine has &quot;/opt/splunk/&quot;
+| where TargetProcessName has_any (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;awk&quot;)
+   or TargetProcessCommandLine has_any (&quot;/dev/tcp/&quot;,&quot;bash -i&quot;,&quot;sh -i&quot;,&quot;nc -e&quot;,&quot;ncat -e&quot;,&quot;perl -e&quot;,&quot;python -c&quot;,&quot;import socket&quot;,&quot;subprocess.&quot;,&quot;os.system&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine,
+          TargetProcessName, TargetProcessCommandLine, Hash
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-09-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Splunk Sensitive File Write — .pgpass or ssg_enable_modular_input.py (CVE-2026-20253)
-id: 4d8c91a7-1f88-4f3a-9a2e-7e4d8b9c0d11
-description: Detects modification of files specifically named in the watchTowr CVE-2026-20253 exploit chain — the postgres .pgpass credential file and the Splunk Secure Gateway modular input python script that gets overwritten to achieve RCE.
+    <div class="tab-content" id="art-09-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Splunk PostgreSQL Sidecar Spawning Shell or Interpreter (CVE-2026-20253)
+id: 7e4c8b91-9f0a-4e72-bda3-3f1d2e5a4c98
+status: experimental
+description: postmaster/postgres under /opt/splunk/ spawning a shell, scripting interpreter, or networking tool — the direct lo_export-triggered RCE primitive of CVE-2026-20253.
 references:
   - https://thehackernews.com/2026/06/critical-splunk-enterprise-flaw-lets.html
-  - https://labs.watchtowr.com/cve-2026-20253-splunk-rce/
-author: thn-usecases
+  - https://labs.watchtowr.com/why-use-app-level-auth-when-every-database-has-auth-splunk-enterprise-cve-2026-20253-pre-auth-rce/
+author: SOC Detection Engineering
 date: 2026/06/15
 tags:
-  - attack.t1505.003
-  - attack.t1574
-  - attack.persistence
+  - attack.t1190
+  - attack.t1059.004
+  - attack.t1059.006
+  - attack.execution
   - cve.2026.20253
 logsource:
-  category: file_event
+  category: process_creation
+  product: linux
 detection:
-  selection_pgpass:
-    TargetFilename|contains:
-      - &#x27;/opt/splunk/var/packages/data/postgres/.pgpass&#x27;
-      - &#x27;\Splunk\var\packages\data\postgres\.pgpass&#x27;
-  selection_modinput:
-    TargetFilename|contains:
-      - &#x27;/splunk_secure_gateway/bin/ssg_enable_modular_input.py&#x27;
-      - &#x27;\splunk_secure_gateway\bin\ssg_enable_modular_input.py&#x27;
-  filter_postgres:
-    Image|endswith:
+  selection_parent:
+    ParentImage|endswith:
+      - &#x27;/postmaster&#x27;
       - &#x27;/postgres&#x27;
-      - &#x27;\postgres.exe&#x27;
-  condition: (selection_pgpass or selection_modinput) and not filter_postgres
-level: high</code></pre></div>
-    <div class="tab-content" id="art-09-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon OR source:linux.auditd) (@TargetFilename:(*/opt/splunk/var/packages/data/postgres/.pgpass* OR *\Splunk\var\packages\data\postgres\.pgpass* OR */splunk_secure_gateway/bin/ssg_enable_modular_input.py* OR *\splunk_secure_gateway\bin\ssg_enable_modular_input.py*) OR @file.path:(*/opt/splunk/var/packages/data/postgres/.pgpass* OR */splunk_secure_gateway/bin/ssg_enable_modular_input.py*)) -@Image:*/postgres -@process.executable.name:postgres</code></pre></div>
-    <div class="tab-content" id="art-09-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| regex(&quot;(\\.pgpass$|splunk_secure_gateway\\\\bin\\\\ssg_enable_modular_input\\.py$|splunk_secure_gateway/bin/ssg_enable_modular_input\\.py$)&quot;, field=TargetFileName)
-| NOT ContextImageFileName=/\/postgres$/i
-| NOT ContextImageFileName=/\\postgres\.exe$/i
-| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-09-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as proc values(Filesystem.user) as user values(Filesystem.action) as action from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;*/opt/splunk/var/packages/data/postgres/.pgpass*&quot; OR Filesystem.file_path=&quot;*/opt/splunk/etc/apps/splunk_secure_gateway/bin/ssg_enable_modular_input.py*&quot;) Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;,&quot;written&quot;,&quot;renamed&quot;) by host Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where NOT (proc IN (&quot;postgres&quot;,&quot;splunkd-package-mgr&quot;) AND file_path LIKE &quot;%.pgpass&quot;) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-09-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as proc values(Filesystem.user) as user values(Filesystem.action) as action from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;*/opt/splunk/var/packages/data/postgres/.pgpass*&quot; OR Filesystem.file_path=&quot;*/opt/splunk/etc/apps/splunk_secure_gateway/bin/ssg_enable_modular_input.py*&quot;) Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;,&quot;written&quot;,&quot;renamed&quot;) by host Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where NOT (proc IN (&quot;postgres&quot;,&quot;splunkd-package-mgr&quot;) AND file_path LIKE &quot;%.pgpass&quot;) | sort - lastTime</code></pre></div></div>
+    ParentImage|contains: &#x27;/opt/splunk/&#x27;
+  selection_child:
+    Image|endswith:
+      - &#x27;/bash&#x27;
+      - &#x27;/sh&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/zsh&#x27;
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
+      - &#x27;/perl&#x27;
+      - &#x27;/nc&#x27;
+      - &#x27;/ncat&#x27;
+      - &#x27;/socat&#x27;
+      - &#x27;/curl&#x27;
+      - &#x27;/wget&#x27;
+  condition: selection_parent and selection_child
+falsepositives:
+  - Splunk-bundled PostgreSQL maintenance scripts (rare; verify by hash)
+level: critical</code></pre></div>
+    <div class="tab-content" id="art-09-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE (@process.parent_name:postmaster OR @process.parent_name:postgres OR @process.parent_executable.path:*/opt/splunk/*postgres* OR @process.parent_executable.path:*/opt/splunk/*postmaster*) (@process.name:(bash OR sh OR dash OR zsh OR python OR python3 OR perl OR nc OR ncat OR socat OR curl OR wget) OR @process.command_line:(*&quot;/dev/tcp/&quot;* OR *&quot;bash -i&quot;* OR *&quot;sh -i&quot;* OR *&quot;nc -e&quot;* OR *&quot;python -c&quot;*))</code></pre></div>
+    <div class="tab-content" id="art-09-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/^(postmaster|postgres)$/i
+| regex(&quot;/opt/splunk/&quot;, field=ParentImageFileName)
+| ImageFileName=/\/(bash|sh|dash|zsh|ksh|python3?|perl|ruby|nc|ncat|socat|curl|wget|awk)$/i OR CommandLine=/(\/dev\/tcp\/|bash -i|sh -i|nc -e|ncat -e|perl -e|python -c|import socket|subprocess\.|os\.system)/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=[count(), min(_time)])</code></pre></div>
+    <div class="tab-content" id="art-09-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;postmaster&quot;,&quot;postgres&quot;) OR Processes.parent_process_exec=&quot;*/opt/splunk/*postgres*&quot; OR Processes.parent_process_exec=&quot;*/opt/splunk/*postmaster*&quot;) AND Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;awk&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.parent_process_exec Processes.process_name Processes.process Processes.process_id Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| eval cve=&quot;CVE-2026-20253&quot;</code></pre><pre class="spl-mode-body" id="art-09-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;postmaster&quot;,&quot;postgres&quot;) OR Processes.parent_process_exec=&quot;*/opt/splunk/*postgres*&quot; OR Processes.parent_process_exec=&quot;*/opt/splunk/*postmaster*&quot;) AND Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;awk&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.parent_process_exec Processes.process_name Processes.process Processes.process_id Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| eval cve=&quot;CVE-2026-20253&quot;</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="3db2fe3e7b" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="67a2af171e" data-platforms="datadog,def,falcon,sent,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Splunk Enterprise host initiating outbound PostgreSQL (TCP/5432) to public IP</span>
+    <span class="uc-title">splunkd spawning reverse-shell or interactive interpreter (post-CVE-2026-20253 exploitation)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="3db2fe3e7b" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="67a2af171e" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">The CVE-2026-20253 attack chain requires the vulnerable Splunk instance to connect to an attacker-controlled PostgreSQL database via the /backup endpoint before the restore step is invoked. A Splunk-hosting server initiating outbound TCP/5432 to a public IP is a strong unauthenticated-RCE-in-progress signal because Splunk indexers/searchheads have no legitimate need to speak postgres to the internet.
+    <div class="uc-desc">Detects splunkd or its python children spawning a shell/interpreter with reverse-shell or remote-download patterns — the visible outcome when a CVE-2026-20253-overwritten ssg_*.py modular input runs under splunkd. Tighter than &#x27;splunkd ran a shell&#x27; because splunkd legitimately invokes shell for some TA scripts; constrained to reverse-shell-like cmdline patterns.
 
-Rationale: The exploit&#x27;s first stage is: &#x27;Connect to an attacker-controlled database and dump its contents into an arbitrary file using the /backup endpoint.&#x27; That is a Splunk-initiated outbound PostgreSQL session to attacker infrastructure — Splunk servers should never speak port 5432 outbound to the public internet, so the false-positive surface is tiny. cloudwatch_query intentionally left empty: this is host/network endpoint telemetry, not CloudTrail-natural; VPC Flow Log fields are not in the CloudTrail field whitelist used by the validator.
+Rationale: Article describes the RCE pivot as splunkd executing a Python script (ssg_enable_modular_input.py) that the attacker has overwritten with malicious content. Constraining to splunkd parent (or splunk_secure_gateway/bin/ grandparent) AND reverse-shell-like cmdline patterns (rather than any sh launch) keeps fidelity acceptable. Sigma omitted: detection genuinely needs OR-of-parent-source OR-of-child-binary OR-of-cmdline-pattern across three selection groups, which Sigma single-event-shape constraint awkwardly forces.
 
 Cross-checked against:
-  • https://labs.watchtowr.com/cve-2026-20253-splunk-rce/
-  • https://advisory.splunk.com/advisories/SVD-2026-XXXX</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Remote Access Software">T1219</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Splunk DB Connect add-on legitimately configured to query a SaaS PostgreSQL (RDS, Heroku Postgres, Supabase) — usually private-link, but some are public</li><li>DBA/admin running pg_dump from the Splunk host against a cloud-hosted dev database</li><li>Misconfigured monitoring agent on the Splunk host scraping a managed Postgres metrics endpoint on TCP/5432</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and not (InitiatingProcessCommandLine has_any (&quot;db_connection&quot;,&quot;dbxquery&quot;,&quot;pg_dump&quot;,&quot;SPLUNK_DB_CONNECT&quot;) and RemoteIP in (&quot;&lt;known DB Connect destination CIDRs&gt;&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: resolve the public destination IP — check ASN, passive DNS, and threat intel; query DB Connect configuration on the Splunk host to see if the destination matches any configured data source. If not, treat as exploitation. Cross-reference with UC1 for an inbound /v1/postgres/recovery/backup request in the same minute. 2) Contain: block egress to the destination IP, isolate the Splunk host, capture process memory of splunkd and postgres. Force-rotate the postgres_admin secret. 3) Hunt: pivot to UC2 (splunkd shell child) and UC3 (file write) on the same host within the next 5 minutes after the outbound 5432 connection; look across the fleet for any other Splunk host that contacted the same external IP in the prior 30 days.</div></details>
+  • https://labs.watchtowr.com/why-use-app-level-auth-when-every-database-has-auth-splunk-enterprise-cve-2026-20253-pre-auth-rce/
+  • https://orca.security/resources/blog/cve-2026-20253-splunk-enterprise-rce-unauthenticated-file-operations/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Command and Scripting Interpreter: PowerShell">T1059.001</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Splunk TAs/modular inputs that legitimately call curl/wget for HTTP collection (Splunk_TA_nix, Splunk_TA_microsoft, etc.) — typically not against /dev/tcp/</li><li>Custom scripted alerts or saved searches that exec sh -c &#x27;...&#x27;</li><li>Splunk apps using `subprocess` in Python (legitimate Splunk Add-on for AWS for example)</li><li>Splunk DSDL container start-up scripts that use python -c</li><li>Admin debug sessions using `splunk cmd btool` with downstream shell</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has_any (&quot;splunk_TA_&quot;,&quot;Splunk_TA_&quot;,&quot;appserver/mrsparkle&quot;)
+| where ProcessCommandLine !has &quot;splunk cmd&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1. Triage: identify the parent&#x27;s full path — was it /opt/splunk/bin/splunkd, or a child invoked from /opt/splunk/etc/apps/splunk_secure_gateway/bin/? If the latter, hash the .py and diff against a clean 10.0.7/10.2.4 install. Pull the destination IP/URL embedded in the cmdline. 2. Contain: isolate the host, kill the offending child PID, and quarantine /opt/splunk/etc/apps/splunk_secure_gateway/bin/*.py. If C2 traffic was outbound, block the destination at the perimeter and add to threat intel. 3. Hunt: chain to UC 2 (file overwrite by postgres) on the same host to confirm the CVE-2026-20253 attack chain rather than an unrelated splunkd compromise; sweep peer Splunk hosts for the same destination IP, and run `splunk btool inputs list --debug` to enumerate any tampered modular input config.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-09-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-09-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-09-uc3-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-09-uc3-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-09-uc3-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-09-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-09-uc3-kql"><pre><button class="copy-btn">COPY</button><code>let SplunkHosts = DeviceProcessEvents
-    | where Timestamp &gt; ago(30d)
-    | where FileName in~ (&quot;splunkd.exe&quot;,&quot;splunkd&quot;,&quot;splunk.exe&quot;,&quot;splunk&quot;)
-    | distinct DeviceId, DeviceName;
-DeviceNetworkEvents
+    <div class="tab-content active" id="art-09-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
-| where RemotePort == 5432
-| where RemoteIPType == &quot;Public&quot;
-| where ActionType in (&quot;ConnectionSuccess&quot;,&quot;ConnectionAttempt&quot;)
-| join kind=inner SplunkHosts on DeviceId
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
-          RemoteIP, RemotePort, LocalIP, LocalPort
+| where (InitiatingProcessFileName in~ (&quot;splunkd&quot;,&quot;splunkd.exe&quot;,&quot;splunk&quot;,&quot;splunk.exe&quot;)
+         or InitiatingProcessFolderPath has &quot;/opt/splunk/etc/apps/splunk_secure_gateway/bin/&quot;
+         or InitiatingProcessParentFileName in~ (&quot;splunkd&quot;,&quot;splunkd.exe&quot;))
+| where FileName in~ (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)
+| where ProcessCommandLine has_any (&quot;/dev/tcp/&quot;,&quot;bash -i&quot;,&quot;sh -i&quot;,&quot;nc -e&quot;,&quot;ncat -e&quot;,&quot;-NoP -NonI -W Hidden -Enc&quot;,&quot;powershell -enc&quot;,&quot;powershell -e &quot;,&quot;pwsh -e &quot;,&quot;python -c&quot;,&quot;import socket&quot;,&quot;socket.socket&quot;,&quot;subprocess.call&quot;,&quot;os.system&quot;,&quot;Invoke-WebRequest&quot;,&quot;Invoke-Expression&quot;,&quot;DownloadString&quot;)
+   or ProcessCommandLine matches regex @&quot;(?i)\b(curl|wget)\s+https?://&quot;
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName,
+          Parent=InitiatingProcessFileName, ParentPath=InitiatingProcessFolderPath,
+          ParentCmd=InitiatingProcessCommandLine, Grandparent=InitiatingProcessParentFileName,
+          Child=FileName, ChildCmd=ProcessCommandLine, SHA256
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-09-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let SplunkHosts = ImProcessCreate
-    | where TimeGenerated &gt; ago(30d)
-    | where ActingProcessName has_any (&quot;splunkd&quot;,&quot;splunkd.exe&quot;,&quot;splunk.exe&quot;)
-    | distinct DvcHostname;
-ImNetworkSession
+    <div class="tab-content" id="art-09-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
 | where TimeGenerated &gt; ago(7d)
-| where DstPortNumber == 5432
-| where DvcAction != &quot;Deny&quot; and EventResult != &quot;Failure&quot;
-| where not(ipv4_is_private(DstIpAddr))
-| where DvcHostname in (SplunkHosts) or SrcHostname in (SplunkHosts)
-| project TimeGenerated, SrcHostname, DvcHostname, SrcIpAddr, DstIpAddr, DstPortNumber, NetworkBytes, Url
+| where ParentProcessName has_any (&quot;splunkd&quot;,&quot;splunkd.exe&quot;,&quot;splunk&quot;,&quot;splunk.exe&quot;)
+     or ParentProcessCommandLine has &quot;/opt/splunk/etc/apps/splunk_secure_gateway/bin/&quot;
+| where TargetProcessName has_any (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;)
+| where TargetProcessCommandLine has_any (&quot;/dev/tcp/&quot;,&quot;bash -i&quot;,&quot;sh -i&quot;,&quot;nc -e&quot;,&quot;ncat -e&quot;,&quot;powershell -enc&quot;,&quot;powershell -e &quot;,&quot;python -c&quot;,&quot;import socket&quot;,&quot;socket.socket&quot;,&quot;Invoke-WebRequest&quot;,&quot;Invoke-Expression&quot;,&quot;DownloadString&quot;)
+   or TargetProcessCommandLine matches regex @&quot;(?i)\b(curl|wget)\s+https?://&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine,
+          TargetProcessName, TargetProcessCommandLine, Hash
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-09-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Splunk Host Outbound PostgreSQL (TCP/5432) to Public Internet — CVE-2026-20253 backup phase
-id: 7c2b9a6e-4a1d-4dc1-93b6-1a0a9c7e6b22
-description: A host running Splunk Enterprise establishing an outbound TCP/5432 (PostgreSQL) connection to a public IP is consistent with the /v1/postgres/recovery/backup phase of CVE-2026-20253, where Splunk is forced to connect to the attacker&#x27;s PostgreSQL server.
-references:
-  - https://thehackernews.com/2026/06/critical-splunk-enterprise-flaw-lets.html
-  - https://labs.watchtowr.com/cve-2026-20253-splunk-rce/
-author: thn-usecases
-date: 2026/06/15
-tags:
-  - attack.t1190
-  - attack.command_and_control
-  - cve.2026.20253
-logsource:
-  category: network_connection
-  product: windows
-detection:
-  selection:
-    Image|endswith:
-      - &#x27;\splunkd.exe&#x27;
-      - &#x27;/splunkd&#x27;
-      - &#x27;\postgres.exe&#x27;
-      - &#x27;/postgres&#x27;
-    DestinationPort: 5432
-    Initiated: &#x27;true&#x27;
-  filter_private:
-    DestinationIp|cidr:
-      - &#x27;10.0.0.0/8&#x27;
-      - &#x27;172.16.0.0/12&#x27;
-      - &#x27;192.168.0.0/16&#x27;
-      - &#x27;127.0.0.0/8&#x27;
-  condition: selection and not filter_private
-level: high</code></pre></div>
-    <div class="tab-content" id="art-09-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon OR source:linux.auditd) @EventID:3 @DestinationPort:5432 (@Image:(*\splunkd.exe OR */splunkd OR *\postgres.exe OR */postgres) OR @process.executable.name:(splunkd OR postgres)) -CIDR(@DestinationIp, 10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, 127.0.0.0/8)</code></pre></div>
-    <div class="tab-content" id="art-09-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemotePort=5432
-| ContextImageFileName=/(splunkd|postgres)(\.exe)?$/i
-| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
-| NOT cidr(&quot;127.0.0.0/8&quot;, field=RemoteAddressIP4)
-| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4], function=count())</code></pre></div>
-    <div class="tab-content" id="art-09-uc3-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.bytes_out) as bytes_out values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=5432 All_Traffic.action=allowed by All_Traffic.src All_Traffic.dest All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | iplocation dest | search NOT dest IN (&quot;10.0.0.0/8&quot;,&quot;192.168.0.0/16&quot;,&quot;172.16.0.0/12&quot;) | join src [| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;splunkd&quot;,&quot;splunkd.exe&quot;) by host | rename host as src | fields src] | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-09-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.bytes_out) as bytes_out values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=5432 All_Traffic.action=allowed by All_Traffic.src All_Traffic.dest All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | iplocation dest | search NOT dest IN (&quot;10.0.0.0/8&quot;,&quot;192.168.0.0/16&quot;,&quot;172.16.0.0/12&quot;) | join src [| tstats summariesonly=false count from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;splunkd&quot;,&quot;splunkd.exe&quot;) by host | rename host as src | fields src] | sort - lastTime</code></pre></div></div>
+    <div class="tab-content" id="art-09-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.auditd OR windows.sysmon OR windows.security) (@process.parent_name:(splunkd OR splunk OR splunkd.exe) OR @ParentImage:(*/opt/splunk/bin/splunkd* OR *\splunkd.exe OR *splunk_secure_gateway/bin/*)) @process.command_line:(*&quot;/dev/tcp/&quot;* OR *&quot;bash -i&quot;* OR *&quot;sh -i&quot;* OR *&quot;nc -e&quot;* OR *&quot;ncat -e&quot;* OR *&quot;powershell -enc&quot;* OR *&quot;powershell -e &quot;* OR *&quot;python -c&quot;* OR *&quot;import socket&quot;* OR *&quot;socket.socket&quot;* OR *&quot;Invoke-WebRequest&quot;* OR *&quot;Invoke-Expression&quot;* OR *&quot;DownloadString&quot;*)</code></pre></div>
+    <div class="tab-content" id="art-09-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/^(splunkd|splunkd\.exe|splunk|splunk\.exe)$/i OR regex(&quot;/opt/splunk/etc/apps/splunk_secure_gateway/bin/&quot;, field=ParentImageFileName)
+| ImageFileName=/\/(bash|sh|dash|zsh|cmd\.exe|powershell\.exe|pwsh\.exe|nc|ncat|socat|python3?|perl)$/i
+| CommandLine=/(\/dev\/tcp\/|bash -i|sh -i|nc -e|ncat -e|powershell -e(nc)?|python -c|import socket|socket\.socket|Invoke-WebRequest|Invoke-Expression|DownloadString|(curl|wget)\s+https?:\/\/)/i
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=[count(), min(_time)])</code></pre></div>
+    <div class="tab-content" id="art-09-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;splunkd&quot;,&quot;splunkd.exe&quot;,&quot;splunk&quot;,&quot;splunk.exe&quot;) OR Processes.parent_process_exec=&quot;*/opt/splunk/bin/splunkd*&quot; OR Processes.parent_process_exec=&quot;*/opt/splunk/etc/apps/splunk_secure_gateway/bin/*&quot;) AND Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;) AND (Processes.process LIKE &quot;%/dev/tcp/%&quot; OR Processes.process LIKE &quot;%bash -i%&quot; OR Processes.process LIKE &quot;%sh -i%&quot; OR Processes.process LIKE &quot;%nc -e%&quot; OR Processes.process LIKE &quot;%ncat -e%&quot; OR Processes.process LIKE &quot;%python -c%import socket%&quot; OR Processes.process LIKE &quot;%socket.socket%&quot; OR Processes.process LIKE &quot;%powershell -enc%&quot; OR Processes.process LIKE &quot;%Invoke-WebRequest%&quot; OR Processes.process LIKE &quot;%curl http%&quot; OR Processes.process LIKE &quot;%wget http%&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_id Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-09-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;splunkd&quot;,&quot;splunkd.exe&quot;,&quot;splunk&quot;,&quot;splunk.exe&quot;) OR Processes.parent_process_exec=&quot;*/opt/splunk/bin/splunkd*&quot; OR Processes.parent_process_exec=&quot;*/opt/splunk/etc/apps/splunk_secure_gateway/bin/*&quot;) AND Processes.process_name IN (&quot;bash&quot;,&quot;sh&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;) AND (Processes.process LIKE &quot;%/dev/tcp/%&quot; OR Processes.process LIKE &quot;%bash -i%&quot; OR Processes.process LIKE &quot;%sh -i%&quot; OR Processes.process LIKE &quot;%nc -e%&quot; OR Processes.process LIKE &quot;%ncat -e%&quot; OR Processes.process LIKE &quot;%python -c%import socket%&quot; OR Processes.process LIKE &quot;%socket.socket%&quot; OR Processes.process LIKE &quot;%powershell -enc%&quot; OR Processes.process LIKE &quot;%Invoke-WebRequest%&quot; OR Processes.process LIKE &quot;%curl http%&quot; OR Processes.process LIKE &quot;%wget http%&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_id Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="588dffbc9b" data-platforms="datadog,def,falcon,sent,spl" data-targets="">
+<details class="uc" data-uc-slug="d1374c2dc4" data-platforms="def,sent,spl" data-targets="">
   <summary>
-    <span class="uc-title">Splunk Enterprise vulnerable version inventory (CVE-2026-20253 exposure)</span>
+    <span class="uc-title">Splunk Enterprise hosts vulnerable to CVE-2026-20253 (PostgreSQL sidecar pre-auth RCE)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="588dffbc9b" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="d1374c2dc4" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Identifies hosts running Splunk Enterprise versions inside the affected ranges (10.0.0–10.0.6 and 10.2.0–10.2.3) so SOC and patch-ops have an authoritative target list for emergency patching to 10.0.7 / 10.2.4. 10.4 is not affected per Splunk&#x27;s advisory.
+    <div class="uc-desc">Inventory hunt that enumerates Splunk Enterprise instances on versions 10.0.0–10.0.6 or 10.2.0–10.2.3 — the range vulnerable to CVE-2026-20253. Required for SOC to scope blast radius before exploitation, validate patch coverage, and prioritise hosts seen in UCs 1–4.
 
-Rationale: Article gives exact patched-version cutoffs: &#x27;Splunk Enterprise 10.0.0 to 10.0.6 - Fixed in 10.0.7&#x27; and &#x27;10.2.0 to 10.2.3 - Fixed in 10.2.4&#x27;, and &#x27;Splunk Enterprise 10.4 - Not affected&#x27;. The KQL encodes those ranges directly so the output is the SOC&#x27;s patch target list.
+Rationale: Version bands and CVE ID are stated explicitly in the article (vulnerable: 10.0.0–10.0.6, 10.2.0–10.2.3; fixed: 10.0.7, 10.2.4; 10.4 not affected; Splunk Cloud not affected). Combining CveId lookup with a version-band fallback handles TVM KB ingestion lag. IsInternetFacing pivot from DeviceInfo flags hosts where exploitation is materially likelier given the article also notes the sidecar is on-by-default in Splunk Enterprise on AWS.
 
 Cross-checked against:
-  • https://advisory.splunk.com/advisories/SVD-2026-XXXX
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-20253</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Splunk Universal Forwarder (NOT Splunk Enterprise) reporting under the same vendor name — these are not vulnerable</li><li>Splunk Cloud-managed forwarders matching SoftwareName but not running the sidecar</li><li>Hosts mid-upgrade where the inventory hasn&#x27;t yet refreshed to 10.0.7 / 10.2.4</li><li>Test/dev Splunk instances on isolated networks where exposure is acceptable</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: dedupe the list by hostname, classify each into prod/test/dev. Confirm each is an Enterprise indexer/searchhead (not a Forwarder) by checking the installed package or splunkd --version. 2) Contain: schedule emergency patching to 10.0.7 or 10.2.4 within 48h; for internet-exposed instances, push WAF/firewall rules blocking /v1/postgres/recovery/* immediately. 3) Hunt: for every host on the list, retro-hunt UC1, UC2, UC3, UC4 across the prior 30 days to confirm none was already exploited before patching.</div></details>
+  • https://labs.watchtowr.com/why-use-app-level-auth-when-every-database-has-auth-splunk-enterprise-cve-2026-20253-pre-auth-rce/
+  • https://orca.security/resources/blog/cve-2026-20253-splunk-enterprise-rce-unauthenticated-file-operations/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Gather Victim Host Information: Client Configurations">T1592.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Hosts mid-patch with TVM KB not yet refreshed (false positive for ~24h post-patch)</li><li>Splunk Cloud-managed instances reported via on-prem agent (article confirms Cloud is unaffected — exclude via tag)</li><li>Splunk Universal Forwarders mis-tagged as Splunk Enterprise in inventory</li><li>Splunk Enterprise 10.4.x instances mis-parsed as 10.0.x / 10.2.x by inventory tooling</li><li>Sidecar-disabled deployments (PostgreSQL sidecar not active on every on-prem build)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DeviceName !has &quot;-cloud&quot; and OSPlatform != &quot;SplunkCloud&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1. Triage: export the vulnerable-host list to the patch team with IsInternetFacing prioritised and AWS-tagged hosts flagged (sidecar on-by-default per Orca). Cross-reference UCs 1, 3, 4 hits for these DeviceIds — any overlap is incident-grade, not patch-grade. 2. Contain: until patched, restrict ingress to Splunk web ports (8000, 8089) at the perimeter and load balancers using IP allowlist; for internet-facing hosts, drop port 8000 entirely until 10.0.7 or 10.2.4 is deployed. 3. Hunt: re-run UC 1 over the last 30 days scoped to vulnerable hosts to spot retroactive exploitation; check /opt/splunk/var/log/postgres/ for unexpected /backup or /restore calls; validate /opt/splunk/etc/apps/splunk_secure_gateway/bin/ssg_enable_modular_input.py hash against vendor distribution.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-09-uc4-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-09-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-09-uc4-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-09-uc4-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-09-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-09-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareInventory
-| where SoftwareVendor =~ &quot;splunk&quot; or SoftwareName has &quot;splunk&quot;
-| where SoftwareName has &quot;enterprise&quot; or SoftwareName has_any (&quot;splunkd&quot;,&quot;Splunk Enterprise&quot;)
-| extend MajorMinorPatch = extract(@&quot;(\d+\.\d+\.\d+)&quot;, 1, SoftwareVersion)
-| extend MajorMinor = extract(@&quot;(\d+\.\d+)&quot;, 1, SoftwareVersion)
-| extend PatchNum = toint(extract(@&quot;\d+\.\d+\.(\d+)&quot;, 1, SoftwareVersion))
-| where (MajorMinor == &quot;10.0&quot; and PatchNum between (0 .. 6))
-      or (MajorMinor == &quot;10.2&quot; and PatchNum between (0 .. 3))
-| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, MajorMinorPatch
-| union (
-    DeviceTvmSoftwareVulnerabilities
-    | where CveId == &quot;CVE-2026-20253&quot;
-    | project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, MajorMinorPatch=SoftwareVersion
-)
-| distinct DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion</code></pre></div>
+    <div class="tab-content active" id="art-09-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Primary: vulnerability KB
+DeviceTvmSoftwareVulnerabilities
+| where CveId == &quot;CVE-2026-20253&quot;
+| summarize VulnerableSoftware = make_set(strcat(SoftwareName, &quot; &quot;, SoftwareVersion)),
+            FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
+            Recommendation = any(RecommendedSecurityUpdate)
+            by DeviceName, DeviceId, OSPlatform
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, IsInternetFacing, PublicIP) by DeviceId) on DeviceId
+| project DeviceName, DeviceId, OSPlatform, VulnerableSoftware, IsInternetFacing, PublicIP, FirstSeen, LastSeen, Recommendation
+| order by IsInternetFacing desc, LastSeen desc
+// Fallback: inventory version scan if TVM KB lags
+| union (DeviceTvmSoftwareInventory
+    | where SoftwareVendor =~ &quot;splunk&quot; and SoftwareName has &quot;enterprise&quot;
+    | extend Major = toint(extract(@&quot;^(\d+)&quot;, 1, SoftwareVersion)),
+             Minor = toint(extract(@&quot;^\d+\.(\d+)&quot;, 1, SoftwareVersion)),
+             Patch = toint(extract(@&quot;^\d+\.\d+\.(\d+)&quot;, 1, SoftwareVersion))
+    | where (Major == 10 and Minor == 0 and Patch &lt;= 6)
+         or (Major == 10 and Minor == 2 and Patch &lt;= 3)
+    | project DeviceName, DeviceId, OSPlatform, VulnerableSoftware=pack_array(strcat(SoftwareName,&quot; &quot;,SoftwareVersion)), IsInternetFacing=bool(null), PublicIP=&quot;&quot;, FirstSeen=Timestamp, LastSeen=Timestamp, Recommendation=iff(Minor==0,&quot;Upgrade to 10.0.7&quot;,&quot;Upgrade to 10.2.4&quot;))</code></pre></div>
     <div class="tab-content" id="art-09-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(7d)
-| where CveId == &quot;CVE-2026-20253&quot; or (SoftwareName has &quot;splunk&quot; and SoftwareVersion matches regex @&quot;^10\.(0\.[0-6]|2\.[0-3])($|\D)&quot;)
-| project TimeGenerated, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| distinct DeviceName, OSPlatform, SoftwareName, SoftwareVersion, CveId</code></pre></div>
-    <div class="tab-content" id="art-09-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>@vulnerability.cve.id:CVE-2026-20253 OR (@software.vendor:splunk @software.name:*enterprise* @software.version:(10.0.0 OR 10.0.1 OR 10.0.2 OR 10.0.3 OR 10.0.4 OR 10.0.5 OR 10.0.6 OR 10.2.0 OR 10.2.1 OR 10.2.2 OR 10.2.3))</code></pre></div>
-    <div class="tab-content" id="art-09-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\\splunkd(\.exe)?$/i
-| regex(&quot;splunk[\\\\/](?&lt;version&gt;\\d+\\.\\d+\\.\\d+)&quot;, field=ImageFileName, strict=false)
-| regex(&quot;^(10\\.0\\.[0-6]|10\\.2\\.[0-3])$&quot;, field=version)
-| groupBy([aid, ComputerName, version], function=count())</code></pre></div>
-    <div class="tab-content" id="art-09-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;splunkd&quot;,&quot;splunkd.exe&quot;) by host Processes.process_path | `drop_dm_object_name(Processes)` | rex field=process_path &quot;(?i)splunk[\\\\/](?&lt;version&gt;\d+\.\d+\.\d+)&quot; | where (match(version,&quot;^10\.0\.(0|1|2|3|4|5|6)$&quot;) OR match(version,&quot;^10\.2\.(0|1|2|3)$&quot;)) | stats values(version) as affected_version values(process_path) as splunk_path by host</code></pre><pre class="spl-mode-body" id="art-09-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;splunkd&quot;,&quot;splunkd.exe&quot;) by host Processes.process_path | `drop_dm_object_name(Processes)` | rex field=process_path &quot;(?i)splunk[\\\\/](?&lt;version&gt;\d+\.\d+\.\d+)&quot; | where (match(version,&quot;^10\.0\.(0|1|2|3|4|5|6)$&quot;) OR match(version,&quot;^10\.2\.(0|1|2|3)$&quot;)) | stats values(version) as affected_version values(process_path) as splunk_path by host</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="fa2bf13fa9" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Reconnaissance probes to Splunk version/info endpoints</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="fa2bf13fa9" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects unauthenticated HTTP requests to Splunk endpoints that disclose version information (/services/server/info, /en-US/about, /static/js/build/version*). Threat actors using the CVE-2026-20253 PoC need to confirm an instance is in the vulnerable range (10.0.x or 10.2.x) before invoking the exploit, so version-probe traffic from external IPs is a useful early-warning signal.
-
-Rationale: Article and watchTowr writeup confirm the vulnerability is gated by version range (10.0.0–10.0.6, 10.2.0–10.2.3 vulnerable; 10.0.7, 10.2.4, 10.4 not), so opportunistic exploitation will be preceded by version fingerprinting against well-known Splunk discovery endpoints. Threshold of 3+ hits / 2+ distinct paths in 1h reduces single-browser noise.
-
-Cross-checked against:
-  • https://advisory.splunk.com/advisories/SVD-2026-XXXX
-  • https://labs.watchtowr.com/cve-2026-20253-splunk-rce/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Gather Victim Host Information: Client Configurations">T1592.004</span> <span class="ind tech" title="Active Scanning: Vulnerability Scanning">T1595.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Vulnerability scanner (Tenable/Qualys/Nessus/Rapid7) doing authorised CVE-2026-20253 sweep</li><li>Splunk health-check / monitoring agent legitimately polling /services/server/info</li><li>SRE/DevOps engineer hitting /en-US/about during platform audit</li><li>Internet-facing CDN/WAF synthetic checks that include a Splunk version probe</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and not (cIP in (&quot;&lt;scanner CIDR list&gt;&quot;) or csUserAgent has_any (&quot;Nessus&quot;,&quot;Qualys&quot;,&quot;Tenable&quot;,&quot;Rapid7&quot;,&quot;Splunk-HealthCheck&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: cross-check the source IP against known vulnerability-scanner CIDRs and authorised monitoring egress; check whether the same IP later hit /v1/postgres/recovery/* (UC1). 2) Contain: if source is external and not a sanctioned scanner, block at the perimeter and add it to the perimeter deny-list. 3) Hunt: across the same source IP, search for related Splunk paths /services/auth/login, /splunkd/__raw/*; check whether the same IP reconned other Splunk instances in the estate within the prior 7 days.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-09-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-09-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-09-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-09-uc5-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-09-uc5-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-09-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-09-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemotePort in (8000, 8089)
-| where InitiatingProcessFileName !in~ (&quot;splunkd.exe&quot;,&quot;splunkd&quot;,&quot;chrome.exe&quot;,&quot;msedge.exe&quot;,&quot;firefox.exe&quot;)
-| summarize HitCount = count(),
-            DistinctPaths = dcount(RemoteUrl),
-            UAs = make_set(InitiatingProcessVersionInfoProductName, 5)
-            by DeviceName, RemoteIP, bin(Timestamp, 1h)
-| where HitCount &gt;= 5</code></pre></div>
-    <div class="tab-content" id="art-09-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
-| where TimeGenerated &gt; ago(7d)
-| where csUriStem has_any (&quot;/services/server/info&quot;,&quot;/en-US/about&quot;,&quot;/static/js/build/version&quot;,&quot;/services/auth/login&quot;,&quot;/en-US/account/login&quot;)
-| where scStatus in (200, 401, 403)
-| summarize HitCount=count(),
-            DistinctPaths=dcount(csUriStem),
-            Paths=make_set(csUriStem, 10),
-            UAs=make_set(csUserAgent, 5)
-            by SourceIP=cIP, Computer, bin(TimeGenerated, 1h)
-| where HitCount &gt;= 3 or DistinctPaths &gt;= 2
-| extend IsExternal = not(ipv4_is_private(SourceIP))
-| where IsExternal == true
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-09-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Splunk Version/Info Endpoint Probing (CVE-2026-20253 Recon)
-id: 9e0f1b5a-2c44-4f6b-86c5-3a7d6e1b9f02
-description: Detects HTTP probes to Splunk version-disclosure endpoints from external sources — typical pre-exploitation reconnaissance for CVE-2026-20253.
-references:
-  - https://thehackernews.com/2026/06/critical-splunk-enterprise-flaw-lets.html
-author: thn-usecases
-date: 2026/06/15
-tags:
-  - attack.t1592.004
-  - attack.t1595.002
-  - attack.reconnaissance
-  - cve.2026.20253
-logsource:
-  category: webserver
-detection:
-  selection:
-    cs-uri-stem|contains:
-      - &#x27;/services/server/info&#x27;
-      - &#x27;/en-US/about&#x27;
-      - &#x27;/static/js/build/version&#x27;
-  condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-09-uc5-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:cloudflare OR source:windows.sysmon) (@http.url_details.path:(*/services/server/info* OR */en-US/about* OR */static/js/build/version*) OR @url:(*/services/server/info* OR */en-US/about* OR */static/js/build/version*)) @http.status_code:[200 TO 499] -@http.useragent:(*Chrome* OR *Firefox* OR *Safari* OR *Edg*)</code></pre></div>
-    <div class="tab-content" id="art-09-uc5-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 (RemotePort=8089 OR RemotePort=8000) ConnectionDirection=1
-| join({#event_simpleName=ProcessRollup2 ImageFileName=/\\splunkd(\.exe)?$/i CommandLine=/(services\/server\/info|en-US\/about|static\/js\/build\/version)/i}, field=aid)
-| groupBy([aid, ComputerName, RemoteAddressIP4], function=count())</code></pre></div>
-    <div class="tab-content" id="art-09-uc5-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count values(Web.url) as urls values(Web.http_user_agent) as ua dc(Web.url) as distinct_urls from datamodel=Web where (Web.url=&quot;*/services/server/info*&quot; OR Web.url=&quot;*/en-US/about*&quot; OR Web.url=&quot;*/static/js/build/version*&quot; OR Web.url=&quot;*/services/auth/login*&quot; OR Web.url=&quot;*/en-US/account/login*&quot;) Web.status IN (200,401,403) by Web.src Web.dest _time span=1h | `drop_dm_object_name(Web)` | iplocation src | search NOT src IN (&quot;10.0.0.0/8&quot;,&quot;192.168.0.0/16&quot;,&quot;172.16.0.0/12&quot;) | where count &gt;= 3 OR distinct_urls &gt;= 2 | sort - _time</code></pre><pre class="spl-mode-body" id="art-09-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count values(Web.url) as urls values(Web.http_user_agent) as ua dc(Web.url) as distinct_urls from datamodel=Web where (Web.url=&quot;*/services/server/info*&quot; OR Web.url=&quot;*/en-US/about*&quot; OR Web.url=&quot;*/static/js/build/version*&quot; OR Web.url=&quot;*/services/auth/login*&quot; OR Web.url=&quot;*/en-US/account/login*&quot;) Web.status IN (200,401,403) by Web.src Web.dest _time span=1h | `drop_dm_object_name(Web)` | iplocation src | search NOT src IN (&quot;10.0.0.0/8&quot;,&quot;192.168.0.0/16&quot;,&quot;172.16.0.0/12&quot;) | where count &gt;= 3 OR distinct_urls &gt;= 2 | sort - _time</code></pre></div></div>
+| where CveId == &quot;CVE-2026-20253&quot;
+| summarize VulnerableSoftware = make_set(strcat(SoftwareName, &quot; &quot;, SoftwareVersion)),
+            FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated),
+            Recommendation = any(RecommendedSecurityUpdate)
+            by DeviceName, DeviceId, OSPlatform
+| join kind=leftouter (DeviceInfo | summarize arg_max(TimeGenerated, IsInternetFacing, PublicIP) by DeviceId) on DeviceId
+| project DeviceName, DeviceId, OSPlatform, VulnerableSoftware, IsInternetFacing, PublicIP, FirstSeen, LastSeen, Recommendation
+| order by IsInternetFacing desc, LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-09-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-20253&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.category Vulnerabilities.cvss
+| `drop_dm_object_name(Vulnerabilities)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| eval recommended_fix=case(like(signature,&quot;%10.0.%&quot;),&quot;Upgrade to 10.0.7&quot;, like(signature,&quot;%10.2.%&quot;),&quot;Upgrade to 10.2.4&quot;, 1=1,&quot;Validate sidecar config&quot;)</code></pre><pre class="spl-mode-body" id="art-09-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-20253&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.category Vulnerabilities.cvss
+| `drop_dm_object_name(Vulnerabilities)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| eval recommended_fix=case(like(signature,&quot;%10.0.%&quot;),&quot;Upgrade to 10.0.7&quot;, like(signature,&quot;%10.2.%&quot;),&quot;Upgrade to 10.2.4&quot;, 1=1,&quot;Validate sidecar config&quot;)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
@@ -2850,11 +2789,11 @@ level: medium</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-09-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-09-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-09-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-09-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-09-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-09-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-09-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-09-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(1d)
 | where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
 | project DeviceName, RemoteIP, RemotePort, Timestamp
@@ -2867,7 +2806,7 @@ level: medium</code></pre></div>
     by DeviceName, RemoteIP, RemotePort
 | where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
 | order by conn_count desc</code></pre></div>
-    <div class="tab-content" id="art-09-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+    <div class="tab-content" id="art-09-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(2h)
 | where DvcAction != &quot;Block&quot;
 | where ipv4_is_private(DstIpAddr) == false
@@ -2877,7 +2816,7 @@ level: medium</code></pre></div>
 | where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
 | order by ConnCount desc
 </code></pre></div>
-    <div class="tab-content" id="art-09-uc6-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    <div class="tab-content" id="art-09-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -2886,7 +2825,7 @@ level: medium</code></pre></div>
 | eval delta = _time - prev_time
 | stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
 | where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre><pre class="spl-mode-body" id="art-09-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
+| sort - count</code></pre><pre class="spl-mode-body" id="art-09-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -2913,11 +2852,11 @@ level: medium</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-09-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-09-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-09-uc7-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-09-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-09-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-09-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-09-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-09-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -2926,7 +2865,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-09-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-09-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -2938,12 +2877,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-09-uc7-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-09-uc6-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-20253&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-09-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-09-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-20253&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -2966,17 +2905,17 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-09-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-09-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-09-uc8-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-09-uc8-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-09-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-09-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-09-uc7-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-09-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-09-uc8-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+    <div class="tab-content active" id="art-09-uc7-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
 | where Timestamp &gt; ago(7d)
 | where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
 | project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
           ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-09-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
+    <div class="tab-content" id="art-09-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
 AuditLogs
 | where TimeGenerated &gt; ago(7d)
 | where OperationName has &quot;Consent to application&quot;
@@ -2987,7 +2926,7 @@ AuditLogs
 | project TimeGenerated, OperationName, User, AppName, AppId, Result
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-09-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
+    <div class="tab-content" id="art-09-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
 status: experimental
 description: |
@@ -3013,7 +2952,7 @@ falsepositives:
     - Legitimate first-time SaaS app onboarding
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-09-uc8-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-09-uc7-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -3022,7 +2961,7 @@ level: medium
         &quot;Add OAuth2PermissionGrant&quot;,
         &quot;Add delegated permission grant&quot;)
     by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-09-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-09-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -3058,11 +2997,11 @@ for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-09-uc9-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-09-uc9-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-09-uc9-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-09-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-09-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-09-uc8-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-09-uc9-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+    <div class="tab-content active" id="art-09-uc8-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
 // Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
 // never spawn a non-browser child process, so the join eliminates the
 // 99% of noise that makes a raw click query unactionable.
@@ -3102,7 +3041,7 @@ DeviceProcessEvents
           Subject, Url, UrlDomain, ActionType,
           FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-09-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+    <div class="tab-content" id="art-09-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
 // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
 // non-browser child process. Lower fidelity than the Defender version.
 let LookbackDays = 7d;
@@ -3127,7 +3066,7 @@ SecurityEvent
           NewProcessName, CommandLine, Sender, Subject
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-09-uc9-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc9-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+    <div class="tab-content" id="art-09-uc8-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc8-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats `summariesonly` earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -3159,7 +3098,7 @@ SecurityEvent
 | where delta_sec &gt;= 0 AND delta_sec &lt;= 60
 | table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
         clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-09-uc9-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-09-uc8-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats summariesonly=false earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -3209,19 +3148,19 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-09-uc10-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-09-uc10-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-09-uc10-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-09-uc10-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-09-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-09-uc9-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-09-uc9-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-09-uc9-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-09-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-09-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-09-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-09-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -3235,7 +3174,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-09-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
+    <div class="tab-content" id="art-09-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d06
 status: experimental
 description: |
@@ -3279,7 +3218,7 @@ falsepositives:
     - IT-driven scripted automation that admins paste-launch
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-09-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-09-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -3287,7 +3226,7 @@ level: high
         OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*hxxp*&quot; OR Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot;)
     by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-09-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-09-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -3313,18 +3252,18 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-09-uc11-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-09-uc11-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-09-uc11-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-09-uc11-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-09-uc10-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-09-uc10-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-09-uc10-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-09-uc10-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-09-uc11-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-09-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-09-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+    <div class="tab-content" id="art-09-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
 // article (matching shape with the Defender query).
 SecurityEvent
 | where TimeGenerated &gt; ago(7d)
@@ -3344,7 +3283,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-09-uc11-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+    <div class="tab-content" id="art-09-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
 status: experimental
 description: |
@@ -3386,12 +3325,12 @@ falsepositives:
       article before alerting.
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-09-uc11-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc11-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-09-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-09-uc11-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-09-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
@@ -3414,11 +3353,11 @@ level: medium
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-09-uc12-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-09-uc12-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-09-uc12-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-09-uc11-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-09-uc11-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-09-uc11-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-09-uc12-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Critical Splunk Enterprise Flaw Lets Attackers Run Code Without Authentication
+    <div class="tab-content active" id="art-09-uc11-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Critical Splunk Enterprise Flaw Lets Attackers Run Code Without Authentication
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 
@@ -3431,7 +3370,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-09-uc12-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-09-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — Critical Splunk Enterprise Flaw Lets Attackers Run Code Without Authentication
@@ -3447,14 +3386,14 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-09-uc12-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc12-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc12-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc12-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Critical Splunk Enterprise Flaw Lets Attackers Run Code Without Authentication ```
+    <div class="tab-content" id="art-09-uc11-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-09-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-09-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-09-uc11-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Critical Splunk Enterprise Flaw Lets Attackers Run Code Without Authentication ```
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_path=&quot;*/opt/splunk/var/packages/data/postgres/.pgpass*&quot; OR Filesystem.file_path=&quot;*/opt/splunk/etc/apps/splunk_secure_gateway/bin/ssg_enable_modular_input.py*&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-09-uc12-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Critical Splunk Enterprise Flaw Lets Attackers Run Code Without Authentication ```
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-09-uc11-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Critical Splunk Enterprise Flaw Lets Attackers Run Code Without Authentication ```
 | tstats summariesonly=false count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
