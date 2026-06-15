@@ -1,596 +1,3 @@
-<article class="card" id="art-624" data-art-slug="2026-01-14-servicenow-s-virtual-agent-vulnerability-shows-why-ai-securi"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
-  data-techs="T1190,T1528"
-  data-sources="Snyk"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="aws,azure,linux,windows"
-  data-uc-count="6" data-llm-uc-count="2"
-  data-search="ServiceNow&#x27;s Virtual Agent Vulnerability Shows Why AI Security Needs Traditional AppSec Foundations The critical ServiceNow Virtual Agent vulnerability highlights a vital lesson: securing agentic AI requires a return to traditional AppSec foundations. While AI can amplify risks, the root causes often stem from classic failures in authentication and authorization. CVE-2025-12420 T1190 T1528 [LLM] BodySnatcher (CVE-2025-12420) — Hardcoded &#x27;servicenowexternalagent&#x27; Token Observed in HTTP Traffic [LLM] ServiceNow Virtual Agent Invocation of Hidden AIA-Agent Invoker AutoChat Topic (CVE-2025-12420) Asset exposure — vulnerability matches article CVE(s) Remote service execution — PsExec / SMB lateral movement OAuth consent / suspicious app grant RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2026-01-14-servicenow-s-virtual-agent-vulnerability-shows-why-ai-securi" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/servicenow-virtual-agent-vulnerability/" target="_blank" rel="noopener">ServiceNow&#x27;s Virtual Agent Vulnerability Shows Why AI Security Needs Traditional AppSec Foundations</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2026-01-14</span>
-    <span>6 use cases</span>
-    <span>2 techniques</span>
-    <span>5 kill-chain phases detected</span>
-  </div>
-  <p class="summary">The critical ServiceNow Virtual Agent vulnerability highlights a vital lesson: securing agentic AI requires a return to traditional AppSec foundations. While AI can amplify risks, the root causes often stem from classic failures in authentication and authorization.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2025-12420</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-624-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-624"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-624-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] BodySnatcher (CVE-2025-12420) — Hardcoded &#x27;servicenowexternalagent&#x27; Token Observed in HTTP Traffic · [LLM] ServiceNow Virtual Agent Invocation of Hidden AIA-Agent Invoker AutoChat Topic (CVE-2025-12420)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Remote service execution — PsExec / SMB lateral movement · OAuth consent / suspicious app grant</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="296ac7b2a7" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="aws,azure,linux,windows" open>
-  <summary>
-    <span class="uc-title">BodySnatcher (CVE-2025-12420) — Hardcoded &#x27;servicenowexternalagent&#x27; Token Observed in HTTP Traffic</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="296ac7b2a7" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts HTTP requests carrying the hardcoded shared token string &#x27;servicenowexternalagent&#x27; that AppOmni documented as the static credential used by every third-party integration to authenticate to the ServiceNow Virtual Agent API. Any inbound request bearing this token to a Now-platform host indicates exploitation of CVE-2025-12420 (BodySnatcher) since the credential is identical across all customer tenants.
-
-Rationale: Anchored on the literal credential string &#x27;servicenowexternalagent&#x27; published verbatim in code-block 1 of the Snyk article (and corroborated by AppOmni&#x27;s advisory). The token is identical across every ServiceNow tenant, so any occurrence in WAF, web-proxy, IIS, or EDR network telemetry is a high-fidelity exploitation signal for CVE-2025-12420.
-
-Cross-checked against:
-  • https://www.appomni.com/blog/servicenow-virtual-agent-vulnerability
-  • https://nvd.nist.gov/vuln/detail/CVE-2025-12420
-  • https://www.servicenow.com/community/now-platform-articles/security-advisory-cve-2025-12420/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Valid Accounts: Default Accounts">T1078.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal red-team / purple-team replay of the AppOmni PoC against staging ServiceNow tenants</li><li>Vendor vulnerability scanners (Qualys, Tenable, Rapid7) executing the AppOmni signature check</li><li>Security researchers / journalists hosting the IOC string on educational pages indexed by web-proxy logs</li><li>AppOmni / ServiceNow remediation-verification probes during patch deployment windows</li><li>SIEM ingest of historical PoC reproduction documents stored in SharePoint / Confluence (false positive when CommonSecurityLog captures the URL of a wiki page containing the string)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Suppress vendor scanners and internal red-team test ranges that we know legitimately probe this IOC.
-| where SourceIP !in (&quot;&lt;qualys_scanner_cidr&gt;&quot;, &quot;&lt;tenable_scanner_cidr&gt;&quot;, &quot;&lt;internal_redteam_cidr&gt;&quot;)
-| where not (UA has_any (&quot;Qualys&quot;, &quot;Nessus&quot;, &quot;Tenable&quot;, &quot;Rapid7&quot;, &quot;AppOmni&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (Triage): Confirm the destination host is a ServiceNow Now-platform instance (`*.service-now.com`). Pull the full HTTP request — Authorization header, JSON body, source IP — and validate the token appears verbatim (&#x27;servicenowexternalagent&#x27;, no rotation suffix). Cross-check whether the request originated from a known integration partner subnet or an unexpected external IP. Step 2 (Contain): Engage ServiceNow admin to rotate the OAuth credential for the affected integration, disable the Virtual Agent API channel for unauthenticated third-party callers, and apply the November-2025 patch if not already deployed. Block the source IP at the WAF if external. Step 3 (Hunt): Query ServiceNow sys_audit / syslog for any sys_user record created in the last 30d with admin role attached, plus any data created/modified by the &#x27;AIA-Agent Invoker&#x27; user in the same window. Pivot to UC #2 (AIA-Agent Invoker AutoChat Topic invocation) on the same source IPs.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-624-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-624-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-624-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-624-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-624-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-624-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-624-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Hunt the hardcoded &#x27;servicenowexternalagent&#x27; token across any HTTP context Defender sees (URL clicks, network events with URL captured).
-let IOCToken = &quot;servicenowexternalagent&quot;;
-DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteUrl has IOCToken or AdditionalFields has IOCToken
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| union (UrlClickEvents | where Timestamp &gt; ago(30d) | where Url has IOCToken | project Timestamp, AccountUpn, Url, NetworkMessageId, IPAddress)
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-624-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Hunt the hardcoded &#x27;servicenowexternalagent&#x27; token across WAF, ASIM web, and IIS telemetry.
-let IOCToken = &quot;servicenowexternalagent&quot;;
-let WAFHits = CommonSecurityLog
-    | where TimeGenerated &gt; ago(30d)
-    | where RequestURL has IOCToken
-        or RequestClientApplication has IOCToken
-        or RequestCookies has IOCToken
-        or RequestContext has IOCToken
-        or Message has IOCToken
-        or DeviceCustomString1 has IOCToken
-        or DeviceCustomString2 has IOCToken
-        or DeviceCustomString3 has IOCToken
-        or DeviceCustomString4 has IOCToken
-        or DeviceCustomString5 has IOCToken
-        or DeviceCustomString6 has IOCToken
-    | project TimeGenerated, Source=&quot;WAF&quot;, SourceIP=SourceIP, DestinationHost=DestinationHostName, URL=RequestURL, UA=RequestClientApplication, Action=DeviceAction;
-let WebHits = ImWebSession
-    | where TimeGenerated &gt; ago(30d)
-    | where Url has IOCToken
-        or UrlOriginal has IOCToken
-        or HttpRequestHeaderAuthorization has IOCToken
-        or HttpRequestHeaderCookie has IOCToken
-        or HttpRequestHeaderUserAgent has IOCToken
-        or HttpRequestHeaderReferer has IOCToken
-    | project TimeGenerated, Source=&quot;ASIM-Web&quot;, SourceIP=SrcIpAddr, DestinationHost=HttpHostName, URL=Url, UA=HttpRequestHeaderUserAgent, Action=DvcAction;
-let IISHits = W3CIISLog
-    | where TimeGenerated &gt; ago(30d)
-    | where csUriQuery has IOCToken
-        or csUriStem has IOCToken
-        or csUserAgent has IOCToken
-        or csReferer has IOCToken
-    | project TimeGenerated, Source=&quot;IIS&quot;, SourceIP=cIP, DestinationHost=Computer, URL=strcat(csUriStem, &quot;?&quot;, csUriQuery), UA=csUserAgent, Action=tostring(scStatus);
-union WAFHits, WebHits, IISHits
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-624-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: ServiceNow Virtual Agent Hardcoded Credential &#x27;servicenowexternalagent&#x27; Observed in HTTP Traffic
-id: 5f6b7c3d-2a8e-4b91-9c0f-8d1e4a2f7b13
-description: Detects HTTP requests containing the hardcoded shared credential &#x27;servicenowexternalagent&#x27; that ServiceNow shipped identically across every customer tenant for third-party Virtual Agent API integrations (CVE-2025-12420 / BodySnatcher).
-references:
-  - https://snyk.io/blog/servicenow-virtual-agent-vulnerability/
-  - https://www.appomni.com/blog/servicenow-virtual-agent-vulnerability
-author: SOC Detection Engineering
-date: 2026/01/14
-tags:
-  - attack.initial_access
-  - attack.t1190
-  - attack.t1078.001
-  - cve.2025.12420
-logsource:
-  category: webserver
-detection:
-  selection_url:
-    cs-uri-query|contains: &#x27;servicenowexternalagent&#x27;
-  selection_referer:
-    cs(Referer)|contains: &#x27;servicenowexternalagent&#x27;
-  selection_ua:
-    cs(User-Agent)|contains: &#x27;servicenowexternalagent&#x27;
-  condition: 1 of selection_*
-falsepositives:
-  - Internal red-team / pentest validation of the AppOmni advisory
-  - Vendor remediation scanners probing for the issue
-level: high</code></pre></div>
-    <div class="tab-content" id="art-624-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:cloudtrail OR source:azure.activity_logs OR source:windows.security OR source:linux.auditd) (@http.url:*servicenowexternalagent* OR @http.useragent:*servicenowexternalagent* OR @http.request.headers.authorization:*servicenowexternalagent* OR @network.http.request.body:*servicenowexternalagent*)</code></pre></div>
-    <div class="tab-content" id="art-624-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
-| join({#event_simpleName=ProcessRollup2 | regex(&quot;servicenowexternalagent&quot;, field=CommandLine, ignoreCase=true)}, field=[aid, ContextProcessId])
-| groupBy([aid, ComputerName, ContextImageFileName, CommandLine, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
-    <div class="tab-content" id="art-624-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-624-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-624-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-624-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src_ip values(Web.http_user_agent) as user_agent from datamodel=Web.Web where (Web.url=&quot;*servicenowexternalagent*&quot; OR Web.http_referrer=&quot;*servicenowexternalagent*&quot; OR Web.cookie=&quot;*servicenowexternalagent*&quot; OR Web.http_user_agent=&quot;*servicenowexternalagent*&quot;) by Web.dest Web.action Web.status | `drop_dm_object_name(Web)` | where action!=&quot;blocked&quot; | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-624-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src_ip values(Web.http_user_agent) as user_agent from datamodel=Web.Web where (Web.url=&quot;*servicenowexternalagent*&quot; OR Web.http_referrer=&quot;*servicenowexternalagent*&quot; OR Web.cookie=&quot;*servicenowexternalagent*&quot; OR Web.http_user_agent=&quot;*servicenowexternalagent*&quot;) by Web.dest Web.action Web.status | `drop_dm_object_name(Web)` | where action!=&quot;blocked&quot; | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="cde608651b" data-platforms="datadog,def,falcon,sent,spl" data-targets="aws,azure,windows">
-  <summary>
-    <span class="uc-title">ServiceNow Virtual Agent Invocation of Hidden AIA-Agent Invoker AutoChat Topic (CVE-2025-12420)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="cde608651b" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts unauthenticated or weakly-authenticated invocations of the hidden ServiceNow AutoChat topic that wires the &#x27;Record Management AI Agent&#x27; to the Virtual Agent API surface. AppOmni&#x27;s PoC showed the BodySnatcher chain pivots through this internal topic once the static &#x27;servicenowexternalagent&#x27; token is replayed, so any external client hitting the chatbot/v1/openframe or /api/now/v1/awa endpoints with an email-only identity payload referencing &#x27;Record Management&#x27; is high-fidelity for CVE-2025-12420 exploitation.
-
-Rationale: Anchored on the two literal strings in code-block 1 (&#x27;servicenowexternalagent&#x27;) and code-block 2 (&#x27;Record Management AI Agent&#x27;) from the Snyk article, plus the AppOmni-disclosed AutoChat / AIA-Agent Invoker pivot path. The combination of a Now-platform host, a Virtual Agent API path, and one of the agent markers is uniquely tied to BodySnatcher exploitation — legitimate chatbot traffic from end users won&#x27;t carry the &#x27;Record Management&#x27; agent name in the request body because that agent is admin-only.
-
-Cross-checked against:
-  • https://www.appomni.com/blog/servicenow-virtual-agent-vulnerability
-  • https://nvd.nist.gov/vuln/detail/CVE-2025-12420
-  • https://attack.mitre.org/techniques/T1190/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Valid Accounts: Cloud Accounts">T1078.004</span> <span class="ind tech" title="Create Account: Cloud Account">T1136.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate ServiceNow integration partners (UiPath, Microsoft Copilot Studio, Zendesk) calling the Virtual Agent API with their own scoped OAuth tokens</li><li>ServiceNow administrators testing the Record Management AI Agent from the platform&#x27;s own admin UI during patch validation</li><li>Internal HR/IT self-service portals that embed the Virtual Agent chatbot widget and reference agent names in request bodies</li><li>AppOmni / Snyk vulnerability scanners specifically probing for CVE-2025-12420</li><li>ServiceNow&#x27;s own MID-Server health checks that exercise the AWA API endpoint</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Allow-list known ServiceNow integration partner egress IPs and the platform&#x27;s own MID-Server ranges.
-| where SourceIP !in (&quot;&lt;approved_integration_partner_cidrs&gt;&quot;, &quot;&lt;servicenow_mid_server_cidr&gt;&quot;)
-| where not (UA has_any (&quot;ServiceNow-MID&quot;, &quot;AppOmni-Scanner&quot;, &quot;Snyk-Vuln-Scanner&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (Triage): Pull the full HTTP request payload from the WAF / proxy log. Verify it carries an email-only identity claim (no MFA, no SSO assertion) and that the body references &#x27;Record Management&#x27; or &#x27;AIA-Agent Invoker&#x27;. Cross-correlate the source IP against your inventory of approved ServiceNow integration partners. Step 2 (Contain): Have the ServiceNow admin disable the Virtual Agent third-party API channel, rotate any &#x27;servicenowexternalagent&#x27;-style shared credentials, and apply ServiceNow&#x27;s CVE-2025-12420 hotfix. Block the source IP at the WAF. Step 3 (Hunt): Query the ServiceNow sys_audit table for any sys_user records created or modified by &#x27;AIA-Agent Invoker&#x27; in the last 30 days. Enumerate which records the impersonated mailbox can now access in downstream-connected systems (Salesforce, M365) — assume lateral movement until proven otherwise. Force password reset on any admin accounts created post-incident.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-624-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-624-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-624-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-624-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-624-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-624-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Detect outbound calls from any device to ServiceNow tenants invoking the Virtual Agent / AutoChat API while carrying Record-Management agent indicators (CVE-2025-12420 BodySnatcher).
-let SnowHost = &quot;service-now.com&quot;;
-let ChatAPI = dynamic([&quot;/api/now/v1/awa&quot;, &quot;/api/now/cs/&quot;, &quot;/api/sn_va_as_service&quot;, &quot;virtualagent&quot;, &quot;openframe&quot;]);
-DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteUrl has SnowHost
-| where RemoteUrl has_any (ChatAPI)
-| where AdditionalFields has_any (&quot;Record Management&quot;, &quot;AIA-Agent Invoker&quot;, &quot;servicenowexternalagent&quot;, &quot;sys_user&quot;)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountUpn, RemoteUrl, RemoteIP, RemotePort, AdditionalFields
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-624-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Detect ServiceNow Virtual Agent / AutoChat API calls that invoke the Record-Management AI Agent (CVE-2025-12420 BodySnatcher).
-let SnowHost = &quot;service-now.com&quot;;
-let ChatPaths = dynamic([&quot;/api/now/v1/awa&quot;, &quot;/api/now/cs/&quot;, &quot;/api/sn_va_as_service&quot;, &quot;virtualagent&quot;, &quot;openframe&quot;]);
-let AgentMarkers = dynamic([&quot;Record Management&quot;, &quot;AIA-Agent Invoker&quot;, &quot;servicenowexternalagent&quot;, &quot;AutoChat&quot;]);
-let WAFHits = CommonSecurityLog
-    | where TimeGenerated &gt; ago(30d)
-    | where DestinationHostName has SnowHost or RequestURL has SnowHost
-    | where RequestURL has_any (ChatPaths)
-    | where RequestURL has_any (AgentMarkers)
-        or RequestCookies has_any (AgentMarkers)
-        or RequestContext has_any (AgentMarkers)
-        or Message has_any (AgentMarkers)
-        or DeviceCustomString1 has_any (AgentMarkers)
-        or DeviceCustomString2 has_any (AgentMarkers)
-        or DeviceCustomString3 has_any (AgentMarkers)
-        or DeviceCustomString4 has_any (AgentMarkers)
-        or DeviceCustomString5 has_any (AgentMarkers)
-        or DeviceCustomString6 has_any (AgentMarkers)
-    | project TimeGenerated, Source=&quot;WAF&quot;, SourceIP, DestinationHost=DestinationHostName, Method=RequestMethod, URL=RequestURL, UA=RequestClientApplication, Status=tostring(EventOutcome);
-let WebHits = ImWebSession
-    | where TimeGenerated &gt; ago(30d)
-    | where HttpHostName has SnowHost or Url has SnowHost
-    | where Url has_any (ChatPaths) or UrlOriginal has_any (ChatPaths)
-    | where Url has_any (AgentMarkers)
-        or UrlOriginal has_any (AgentMarkers)
-        or HttpRequestHeaderAuthorization has_any (AgentMarkers)
-        or HttpRequestHeaderCookie has_any (AgentMarkers)
-        or HttpRequestHeaderUserAgent has_any (AgentMarkers)
-        or HttpRequestHeaderReferer has_any (AgentMarkers)
-    | project TimeGenerated, Source=&quot;ASIM-Web&quot;, SourceIP=SrcIpAddr, DestinationHost=HttpHostName, Method=HttpMethod, URL=Url, UA=HttpRequestHeaderUserAgent, Status=tostring(HttpStatusCode);
-let IISHits = W3CIISLog
-    | where TimeGenerated &gt; ago(30d)
-    | where csUriStem has_any (ChatPaths)
-    | where csUriQuery has_any (AgentMarkers)
-        or csUriStem has_any (AgentMarkers)
-        or csUserAgent has_any (AgentMarkers)
-        or csReferer has_any (AgentMarkers)
-    | project TimeGenerated, Source=&quot;IIS&quot;, SourceIP=cIP, DestinationHost=Computer, Method=csMethod, URL=strcat(csUriStem, &quot;?&quot;, csUriQuery), UA=csUserAgent, Status=tostring(scStatus);
-union WAFHits, WebHits, IISHits
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-624-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:cloudtrail OR source:azure.activity_logs) (@http.url:*service-now.com* AND (@http.url:*/api/now/v1/awa* OR @http.url:*/api/now/cs/* OR @http.url:*virtualagent* OR @http.url:*sn_va_as_service*) AND (@http.request.body:(*&quot;Record Management&quot;* OR *&quot;AIA-Agent Invoker&quot;* OR *servicenowexternalagent* OR *AutoChat*) OR @http.url:*servicenowexternalagent*))</code></pre></div>
-    <div class="tab-content" id="art-624-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest DomainName=/service-now\.com$/i
-| join({#event_simpleName=NetworkConnectIP4}, field=[aid, ContextProcessId])
-| join({#event_simpleName=ProcessRollup2 | regex(&quot;(Record Management|AIA-Agent Invoker|servicenowexternalagent|AutoChat)&quot;, field=CommandLine, ignoreCase=true)}, field=[aid, ContextProcessId])
-| groupBy([aid, ComputerName, ContextImageFileName, DomainName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-624-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-624-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-624-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-624-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src_ip values(Web.http_user_agent) as user_agent values(Web.http_method) as method from datamodel=Web.Web where Web.url=&quot;*service-now.com*&quot; AND (Web.url=&quot;*/api/now/v1/awa*&quot; OR Web.url=&quot;*/api/now/cs/*&quot; OR Web.url=&quot;*virtualagent*&quot; OR Web.url=&quot;*/api/sn_va_as_service/*&quot;) AND (Web.http_content=&quot;*Record Management*&quot; OR Web.http_content=&quot;*AIA-Agent Invoker*&quot; OR Web.http_content=&quot;*sys_user*&quot; OR Web.url=&quot;*servicenowexternalagent*&quot;) by Web.dest Web.action Web.status | `drop_dm_object_name(Web)` | where status=200 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-624-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src_ip values(Web.http_user_agent) as user_agent values(Web.http_method) as method from datamodel=Web.Web where Web.url=&quot;*service-now.com*&quot; AND (Web.url=&quot;*/api/now/v1/awa*&quot; OR Web.url=&quot;*/api/now/cs/*&quot; OR Web.url=&quot;*virtualagent*&quot; OR Web.url=&quot;*/api/sn_va_as_service/*&quot;) AND (Web.http_content=&quot;*Record Management*&quot; OR Web.http_content=&quot;*AIA-Agent Invoker*&quot; OR Web.http_content=&quot;*sys_user*&quot; OR Web.url=&quot;*servicenowexternalagent*&quot;) by Web.dest Web.action Web.status | `drop_dm_object_name(Web)` | where status=200 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-624-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-624-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-624-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-624-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2025-12420&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-624-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2025-12420&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-624-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-624-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-624-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-624-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2025-12420&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-624-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2025-12420&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="4e3ef9d0b4" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Remote service execution — PsExec / SMB lateral movement</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="4e3ef9d0b4" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">psexec / paexec / smbexec / wmic /node — service install over SMB from remote host.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="SMB/Windows Admin Shares">T1021.002</span> <span class="ind tech" title="Service Execution">T1569.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-624-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-624-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-624-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-624-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-624-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where FileName in~ (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
-   or (FileName =~ &quot;wmic.exe&quot; and ProcessCommandLine has &quot;/node:&quot;)
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc
-</code></pre></div>
-    <div class="tab-content" id="art-624-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688            // process-create (audit-policy required)
-| where Account !endswith &quot;$&quot;
-| where NewProcessName endswith &quot;\psexec.exe&quot;
-   or NewProcessName endswith &quot;\psexesvc.exe&quot;
-   or NewProcessName endswith &quot;\paexec.exe&quot;
-   or (NewProcessName endswith &quot;\wmic.exe&quot; and CommandLine has &quot;/node:&quot;)
-| project TimeGenerated, Computer, Account, NewProcessName, CommandLine,
-          ParentProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-624-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: PsExec / SMB Lateral Movement Tooling Execution
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d03
-status: experimental
-description: |
-    PsExec, paexec, smbexec, csexec, remcom — admin-grade tooling that
-    pivots over SMB. Pair with `wmic /node:` for the full cluster.
-references:
-    - https://attack.mitre.org/techniques/T1021/002/
-    - https://attack.mitre.org/techniques/T1569/002/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1021.002
-    - attack.t1569.002
-    - attack.lateral-movement
-    - attack.execution
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_psexec:
-        Image|endswith:
-            - &#x27;\psexec.exe&#x27;
-            - &#x27;\psexec64.exe&#x27;
-            - &#x27;\psexesvc.exe&#x27;
-            - &#x27;\paexec.exe&#x27;
-            - &#x27;\csexec.exe&#x27;
-            - &#x27;\remcom.exe&#x27;
-            - &#x27;\smbexec.py&#x27;
-    selection_wmic_remote:
-        Image|endswith:
-            - &#x27;\wmic.exe&#x27;
-        CommandLine|contains:
-            - &#x27;/node:&#x27;
-    condition: selection_psexec or selection_wmic_remote
-falsepositives:
-    - Sysadmins running approved remote-management tooling — wrap with
-      a known-admin-host watchlist
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-624-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-624-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-624-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-624-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
-       OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-624-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
-       OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="e2349777f5" data-platforms="def,sent,sigma,spl" data-targets="azure">
-  <summary>
-    <span class="uc-title">OAuth consent / suspicious app grant</span>
-    <span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e2349777f5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Cloud identity abuse: app gets high-priv scopes, often via consent phishing.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Application Access Token">T1528</span> <span class="ind tech" title="Account Manipulation: Additional Cloud Credentials">T1098.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-624-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-624-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-624-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-624-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-624-uc4-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
-| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-          ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-624-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
-AuditLogs
-| where TimeGenerated &gt; ago(7d)
-| where OperationName has &quot;Consent to application&quot;
-| where Result =~ &quot;success&quot;
-| extend AppName = tostring(parse_json(tostring(TargetResources))[0].displayName),
-         AppId   = tostring(parse_json(tostring(TargetResources))[0].id),
-         User    = tostring(parse_json(tostring(InitiatedBy)).user.userPrincipalName)
-| project TimeGenerated, OperationName, User, AppName, AppId, Result
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-624-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
-status: experimental
-description: |
-    User-driven consent to a third-party OAuth application — illicit-
-    consent attack precursor. Pair with first-time-seen-app heuristic
-    in your SIEM for higher fidelity.
-references:
-    - https://attack.mitre.org/techniques/T1528/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1528
-    - attack.persistence
-logsource:
-    product: azure
-    service: auditlogs
-detection:
-    selection:
-        OperationName: &#x27;Consent to application&#x27;
-        Result: &#x27;success&#x27;
-    condition: selection
-falsepositives:
-    - Legitimate first-time SaaS app onboarding
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-624-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-624-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-624-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-624-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action=&quot;success&quot;
-      AND Authentication.signature IN (
-        &quot;Consent to application&quot;,
-        &quot;Add app role assignment grant to user&quot;,
-        &quot;Add OAuth2PermissionGrant&quot;,
-        &quot;Add delegated permission grant&quot;)
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-624-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action=&quot;success&quot;
-      AND Authentication.signature IN (
-        &quot;Consent to application&quot;,
-        &quot;Add app role assignment grant to user&quot;,
-        &quot;Add OAuth2PermissionGrant&quot;,
-        &quot;Add delegated permission grant&quot;)
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ace0fd1925" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ace0fd1925" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">ConnectWise / AnyDesk / TeamViewer / ScreenConnect / Atera installed outside IT change windows = common tradecraft for ransomware affiliates and IT-helpdesk impersonators.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Remote Access Software">T1219</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-624-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-624-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-624-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-624-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-624-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where FileName in~ (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
-        &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
-        &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;)
-   or FileName matches regex @&quot;(?i)kaseya.*\.exe&quot;
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-624-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where NewProcessName endswith &quot;\AnyDesk.exe&quot;
-   or NewProcessName endswith &quot;\TeamViewer.exe&quot;
-   or NewProcessName endswith &quot;\TeamViewer_Service.exe&quot;
-   or NewProcessName endswith &quot;\ScreenConnect.ClientService.exe&quot;
-   or NewProcessName endswith &quot;\ConnectWiseControl.ClientService.exe&quot;
-   or NewProcessName endswith &quot;\atera_agent.exe&quot;
-   or NewProcessName endswith &quot;\SplashtopStreamer.exe&quot;
-   or NewProcessName endswith &quot;\RustDesk.exe&quot;
-   or NewProcessName endswith &quot;\NinjaOne.exe&quot;
-| project TimeGenerated, Computer, Account, NewProcessName,
-          CommandLine, ParentProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-624-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Remote-Management (RMM) Tool Execution
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0c
-status: experimental
-description: |
-    AnyDesk / TeamViewer / ScreenConnect / Atera / Splashtop /
-    RustDesk — RMM tools attackers commonly install for hands-on-
-    keyboard access. Filter against the IT estate&#x27;s known tool.
-references:
-    - https://attack.mitre.org/techniques/T1219/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1219
-    - attack.command-and-control
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection:
-        Image|endswith:
-            - &#x27;\AnyDesk.exe&#x27;
-            - &#x27;\TeamViewer.exe&#x27;
-            - &#x27;\TeamViewer_Service.exe&#x27;
-            - &#x27;\ScreenConnect.ClientService.exe&#x27;
-            - &#x27;\ConnectWiseControl.ClientService.exe&#x27;
-            - &#x27;\atera_agent.exe&#x27;
-            - &#x27;\SplashtopStreamer.exe&#x27;
-            - &#x27;\RustDesk.exe&#x27;
-            - &#x27;\NinjaOne.exe&#x27;
-    condition: selection
-falsepositives:
-    - IT-approved RMM in use across the estate. Maintain a known-IT-
-      tool exclusion list per environment.
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-624-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-624-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-624-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-624-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
-        &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
-        &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-624-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
-        &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
-        &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-626" data-art-slug="2026-01-13-cisa-kev-cve-2026-20805-microsoft-windows-information-disclo"
   data-phases="c2,exploit,install,recon" data-sev="crit"
   data-techs=""
@@ -9632,6 +9039,132 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-655" data-art-slug="2025-12-15-cisa-kev-cve-2025-14611-gladinet-centrestack-and-triofox-har"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2025-14611 — Gladinet CentreStack and Triofox Hard Coded Cryptographic Vulnerability Gladinet CentreStack and TrioFox contain a hardcoded cryptographic keys vulnerability for their implementation of the AES cryptoscheme. This vulnerability degrades security for public exposed endpoints that may make use of it and may offer arbitrary local file inclusion when provided a specially crafted request without authentication. Vendor: Gladinet, Product: CentreStack and Triofox. Federal patch due: 2026-01-05. CVE-2025-14611  Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2025-12-15-cisa-kev-cve-2025-14611-gladinet-centrestack-and-triofox-har" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2025-14611 — Gladinet CentreStack and Triofox Hard Coded Cryptographic Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2025-12-15</span>
+    <span>1 use case</span>
+    <span>0 techniques</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Gladinet CentreStack and TrioFox contain a hardcoded cryptographic keys vulnerability for their implementation of the AES cryptoscheme. This vulnerability degrades security for public exposed endpoints that may make use of it and may offer arbitrary local file inclusion when provided a specially crafted request without authentication. Vendor: Gladinet, Product: CentreStack and Triofox. Federal patch due: 2026-01-05.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2025-14611</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-655-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-655"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-655-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-655-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-655-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-655-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-655-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2025-14611&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-655-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2025-14611&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-655-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-655-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-655-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-655-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2025-14611&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-655-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2025-14611&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1198 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1197 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,6 +11,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-15
 - [152 chrome wallpaper extensions with 105k installs linked to](./2026-06-15/152-chrome-wallpaper-extensions-with-105k-installs-linked-to.md)
 - [china nexus hackers use backdoored pam modules for credentia](./2026-06-15/china-nexus-hackers-use-backdoored-pam-modules-for-credentia.md)
+- [chinese hackers breach redcap servers steal medical research](./2026-06-15/chinese-hackers-breach-redcap-servers-steal-medical-research.md)
 - [hackers abuse lnk files powershell and python loader to depl](./2026-06-15/hackers-abuse-lnk-files-powershell-and-python-loader-to-depl.md)
 - [hackers use microsoft graph reconnaissance to target payroll](./2026-06-15/hackers-use-microsoft-graph-reconnaissance-to-target-payroll.md)
 - [new attack turned microsoft 365 copilot into 1 click data th](./2026-06-15/new-attack-turned-microsoft-365-copilot-into-1-click-data-th.md)
@@ -21,7 +22,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [sniper dz scams target mena users via fake facebook offers a](./2026-06-15/sniper-dz-scams-target-mena-users-via-fake-facebook-offers-a.md)
 - [the government just banned an ai model an engineer s perspec](./2026-06-15/the-government-just-banned-an-ai-model-an-engineer-s-perspec.md)
 - [the onboarding password mistake that creates unnecessary ris](./2026-06-15/the-onboarding-password-mistake-that-creates-unnecessary-ris.md)
-- [winrar vulnerability exploited by russian hackers to deploy ](./2026-06-15/winrar-vulnerability-exploited-by-russian-hackers-to-deploy-.md)
 
 ## 2026-06-14
 - [fbi disrupts massive ai powered phishing service using a mil](./2026-06-14/fbi-disrupts-massive-ai-powered-phishing-service-using-a-mil.md)
@@ -35,7 +35,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-12
 - [agentjacking attack tricks ai coding agents into running mal](./2026-06-12/agentjacking-attack-tricks-ai-coding-agents-into-running-mal.md)
 - [china linked hackers backdoored linux login software to hide](./2026-06-12/china-linked-hackers-backdoored-linux-login-software-to-hide.md)
-- [cisa orders feds to patch actively exploited ivanti flaw by ](./2026-06-12/cisa-orders-feds-to-patch-actively-exploited-ivanti-flaw-by-.md)
 - [early warning signs of supply chain attacks live in the dark](./2026-06-12/early-warning-signs-of-supply-chain-attacks-live-in-the-dark.md)
 - [europol disrupts audia6 crypto laundering service used by ra](./2026-06-12/europol-disrupts-audia6-crypto-laundering-service-used-by-ra.md)
 - [ghsa critical cve 2026 48150 budibase workspace scoped build](./2026-06-12/ghsa-critical-cve-2026-48150-budibase-workspace-scoped-build.md)

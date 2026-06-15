@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### Shai-Hulud npm worm — shai-hulud-workflow.yml dropped into .github/workflows/
 
-`UC_35_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_38_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceFileEvents
 
 ### Shai-Hulud worm exfil — outbound to webhook.site/bb8ca5f6 from developer or CI process
 
-`UC_35_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_38_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceNetworkEvents
 
 ### TruffleHog binary spawned by npm/node — Shai-Hulud secret harvest
 
-`UC_35_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_38_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ DeviceProcessEvents
 
 ### Shai-Hulud bundle.js — known-bad SHA256 written to disk
 
-`UC_35_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_38_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -190,7 +190,7 @@ union isfuzzy=true
 
 ### OAuth consent grant to unfamiliar third-party AI / SaaS app — Vercel-style trust chain attack
 
-`UC_35_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_38_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

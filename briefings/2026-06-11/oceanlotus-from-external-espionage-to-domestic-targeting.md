@@ -82,7 +82,7 @@ _(none detected from narrative keywords)_
 
 ### Network egress to OceanLotus SPECTRALVIPER C2 IPs (2024-2026 campaigns)
 
-`UC_59_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_60_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceNetworkEvents
 
 ### DNS resolution for OceanLotus SPECTRALVIPER C2 domains
 
-`UC_59_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_60_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceEvents
 
 ### SPECTRALVIPER known SHA1 sample sighting (ESET 2024-2026 IOC bundle)
 
-`UC_59_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_60_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ union isfuzzy=true
 
 ### FireAnt Metakit updater spawning unexpected child (supply-chain compromise)
 
-`UC_59_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_60_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -170,7 +170,7 @@ DeviceProcessEvents
 
 ### Sustained low-volume beaconing to OceanLotus SPECTRALVIPER C2 (long-tail persistence)
 
-`UC_59_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_60_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -370,7 +370,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus: From external espionage to domestic targeting
 
-`UC_59_8` · phase: **exploit** · confidence: **High**
+`UC_60_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

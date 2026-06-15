@@ -1,6 +1,6 @@
 # [HIGH] New attack turned Microsoft 365 Copilot into 1-click data theft tool
 
-**Source:** BleepingComputer
+**Source:** BleepingComputer, Cyber Security News
 **Published:** 2026-06-15
 **Article:** https://www.bleepingcomputer.com/news/security/new-attack-turned-microsoft-365-copilot-into-1-click-data-theft-tool/
 
@@ -11,12 +11,8 @@ By Bill Toulas
 June 15, 2026
 09:00 AM
 0 
-
-
 A critical vulnerability chain dubbed SearchLeak in Microsoft 365 Copilot Enterprise could allow attackers to steal sensitive data from a target's mailbox, OneDrive, or SharePoint account through a specially crafted URL.
-
-
-The exfiltrated information could be email content (e.g., access codes, passwords), calendar events and meeting details, documents, and other content accessibl…
+The exfiltrated information could be email content (e.g., access codes, passwords), calendar events and meeting details, documents, and other content accessible throug…
 
 ## Indicators of Compromise (high-fidelity only)
 

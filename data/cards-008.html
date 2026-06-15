@@ -1,293 +1,3 @@
-<article class="card" id="art-227" data-art-slug="2026-05-21-ghsa-critical-cve-2026-46614-fission-router-exposes-fission-"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,sent,sigma,spl"
-  data-splunk-cats="application,cloud,web"
-  data-targets="vcs"
-  data-uc-count="3" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-46614: Fission router exposes /fission-function/&lt;ns&gt;/&lt;name&gt; on its public listener, allowing invocation of any function without an HTTPTrigger Fission router exposes /fission-function/&lt;ns&gt;/&lt;name&gt; on its public listener, allowing invocation of any function without an HTTPTrigger CVE-2026-46614 T1190 [LLM] CVE-2026-46614: Unauthorized /fission-function/ invocation on Fission router public listener (port 8888) [LLM] Fission Function Name Enumeration via /fission-function/ Probing (CVE-2026-46614 recon) Asset exposure — vulnerability matches article CVE(s)">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-05-21-ghsa-critical-cve-2026-46614-fission-router-exposes-fission-" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-3g33-6vg6-27m8" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-46614: Fission router exposes /fission-function/&lt;ns&gt;/&lt;name&gt; on its public listener, allowing invocation of any function without an HTTPTrigger</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-05-21</span>
-    <span>3 use cases</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Fission router exposes /fission-function/&lt;ns&gt;/&lt;name&gt; on its public listener, allowing invocation of any function without an HTTPTrigger</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-46614</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-227-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-227"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-227-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Fission Function Name Enumeration via /fission-function/ Probing (CVE-2026-46614 recon) · Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] CVE-2026-46614: Unauthorized /fission-function/ invocation on Fission router public listener (port 8888)</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="b53e85ce98" data-platforms="datadog,sent,sigma,spl" data-targets="vcs" open>
-  <summary>
-    <span class="uc-title">CVE-2026-46614: Unauthorized /fission-function/ invocation on Fission router public listener (port 8888)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="b53e85ce98" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects HTTP requests to the internal-style /fission-function/&lt;ns&gt;/&lt;name&gt; route on the Fission router&#x27;s public listener (svc/router, port 8888). On versions &lt;= 1.22.0 this route is mounted on the public listener and allows any caller reaching the router to invoke any Function object — bypassing HTTPTrigger host/path/method restrictions. Post-fix (v1.23.0+), this path should only exist on port 8889 (svc/router-internal, ClusterIP-only), so any hit on port 8888 is either an unpatched cluster being exploited or an enumeration probe.
-
-Rationale: The path string `/fission-function/` and port 8888 are both directly named in the GHSA advisory as the vulnerable surface (pkg/router/httpTriggers.go:280-284 and svc/router listener config). After v1.23.0 this path should only appear on port 8889 (svc/router-internal), so hits on 8888 are unambiguous - either an exploitation attempt or an unpatched cluster still serving the route. We exclude 404 because that&#x27;s enumeration covered by the next UC; 200 means successful unauthorized invocation, 502 means the function exists and went cold (still a successful enumeration). Defender KQL is empty because Fission runs on Linux K8s nodes and the relevant telemetry is HTTP-layer (ingress/WAF), not endpoint EDR. Falcon LogScale is empty for the same reason - FDR doesn&#x27;t ship ingress HTTP path data.
-
-Cross-checked against:
-  • https://github.com/fission/fission/releases/tag/v1.23.0
-  • https://github.com/advisories/GHSA-3g33-6vg6-27m8</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="External Remote Services">T1133</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate internal trigger sources (kubewatcher, timer, mqtrigger, mqt-keda pods) misrouted to the public 8888 listener instead of the new svc/router-internal:8889 after a partial upgrade</li><li>Authorized security scans / pentests probing the Fission attack surface</li><li>Operators running curl health-check scripts against /fission-function/&lt;ns&gt;/&lt;name&gt; from inside the cluster for testing</li><li>Legacy CI/CD pipelines that pre-date HTTPTrigger objects and still invoke functions via the internal path</li><li>Cluster federation / multi-cluster controllers that proxy /fission-function/ requests across namespaces</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Suppress known internal trigger pods if their source IPs are stable and documented
-| where SourceIP !in (&quot;&lt;kubewatcher-pod-ip&gt;&quot;, &quot;&lt;timer-pod-ip&gt;&quot;, &quot;&lt;mqtrigger-pod-ip&gt;&quot;, &quot;&lt;mqt-keda-pod-ip&gt;&quot;)
-// Suppress authorized scanner User-Agents
-| where RequestClientApplication !has &quot;Nessus&quot; and RequestClientApplication !has &quot;Qualys&quot; and RequestClientApplication !has &quot;kube-probe&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1. TRIAGE: Confirm the Fission release version on the destination cluster (`kubectl -n fission get deploy router -o jsonpath=&#x27;{.spec.template.spec.containers[0].image}&#x27;`). If &lt;= 1.22.0 the route is unauthenticated by design - any non-cluster source IP is suspicious. Resolve SourceIP - internal trigger pods (kubewatcher/timer/mqtrigger) are expected; everything else is not. 2. CONTAIN: Apply the GHSA-3g33-6vg6-27m8 mitigation immediately - add a NetworkPolicy blocking ingress to svc/router:8888 except from the project&#x27;s ingress controller, and add an ingress path-filter dropping /fission-function/* externally. Schedule upgrade to v1.23.0+ within the change window. 3. HUNT: Pivot on SourceIP - list every other distinct URL it hit, every distinct namespace it accessed via /fission-function/&lt;ns&gt;/, and any 2xx responses (= successful invocation). Pull function-pod logs for the targeted functions to see what code ran and what data egressed.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-227-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-227-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-227-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-227-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-227-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Fission runs on Kubernetes (Linux) - this detection lives in ingress/WAF logs forwarded to CommonSecurityLog or web-tier IIS logs in front of the router
-union isfuzzy=true
-(
-  CommonSecurityLog
-  | where TimeGenerated &gt; ago(7d)
-  | where RequestURL has &quot;/fission-function/&quot;
-  | where DestinationPort == 8888 or isempty(tostring(DestinationPort))
-  | project TimeGenerated, SourceIP, DestinationIP, DestinationPort, RequestMethod, RequestURL, EventOutcome, DeviceVendor, DeviceProduct, RequestClientApplication
-  | extend Verdict = case(EventOutcome has &quot;200&quot;, &quot;Successful unauthorized invocation&quot;, EventOutcome has &quot;502&quot;, &quot;Cold-start - function exists&quot;, EventOutcome has &quot;404&quot;, &quot;Probe miss&quot;, &quot;Other - verify&quot;)
-),
-(
-  W3CIISLog
-  | where TimeGenerated &gt; ago(7d)
-  | where csUriStem has &quot;/fission-function/&quot;
-  | where sPort == 8888
-  | project TimeGenerated, SourceIP=cIP, DestinationIP=Computer, DestinationPort=sPort, RequestMethod=csMethod, RequestURL=strcat(csUriStem, iff(isnotempty(csUriQuery), strcat(&quot;?&quot;,csUriQuery), &quot;&quot;)), EventOutcome=tostring(scStatus), DeviceVendor=&quot;Microsoft&quot;, DeviceProduct=&quot;IIS&quot;, RequestClientApplication=csUserAgent
-  | extend Verdict = case(EventOutcome == &quot;200&quot;, &quot;Successful unauthorized invocation&quot;, EventOutcome == &quot;502&quot;, &quot;Cold-start - function exists&quot;, EventOutcome == &quot;404&quot;, &quot;Probe miss&quot;, &quot;Other - verify&quot;)
-)
-| where Verdict != &quot;Probe miss&quot;   // 200/502 = signal; 404 alone is enumeration noise covered by UC2
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-227-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Fission Router Unauthorized Function Invocation via /fission-function/ Path (CVE-2026-46614)
-id: a7c4e9d2-3b8f-4c2a-91e7-fb7d6a8c1e3f
-description: Detects HTTP requests to the /fission-function/&lt;ns&gt;/&lt;name&gt; path on the Fission router public listener (port 8888). On vulnerable versions (&lt;= 1.22.0) this allows direct invocation of any Function without HTTPTrigger restrictions. Post-fix the path moved to internal port 8889 - so any hit on 8888 indicates exploitation or an unpatched cluster.
-references:
-  - https://github.com/advisories/GHSA-3g33-6vg6-27m8
-  - https://github.com/fission/fission/releases/tag/v1.23.0
-author: Detection Engineering
-date: 2026/05/22
-tags:
-  - attack.initial_access
-  - attack.t1190
-  - attack.t1133
-  - cve.2026.46614
-logsource:
-  category: webserver
-detection:
-  selection_path:
-    cs-uri-stem|contains: &#x27;/fission-function/&#x27;
-  selection_port:
-    dst_port: 8888
-  filter_probe_miss:
-    sc-status: 404
-  condition: selection_path and selection_port and not filter_probe_miss
-falsepositives:
-  - Legitimate internal trigger sources (kubewatcher / timer / mqtrigger) misconfigured to hit the public listener instead of the new svc/router-internal:8889
-  - Penetration tests / vulnerability scans authorized against the cluster
-level: high</code></pre></div>
-    <div class="tab-content" id="art-227-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:kubernetes) @http.url_details.path:*/fission-function/* @network.destination.port:8888 -@http.status_code:404</code></pre></div>
-    <div class="tab-content" id="art-227-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-227-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-227-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-227-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count from datamodel=Web where Web.url=&quot;*/fission-function/*&quot; by _time, Web.src, Web.dest, Web.dest_port, Web.url, Web.http_method, Web.status, Web.http_user_agent
-| `drop_dm_object_name(Web)`
-| eval dest_port=coalesce(dest_port,&quot;unknown&quot;)
-| where (dest_port=&quot;8888&quot; OR dest_port=&quot;unknown&quot;) AND status!=&quot;404&quot;
-| eval reason=case(status==&quot;200&quot;,&quot;Successful unauthorized invocation&quot;,status==&quot;502&quot;,&quot;Cold-start invocation (function exists)&quot;,status==&quot;401&quot;,&quot;Auth challenge (post-patch)&quot;,true(),&quot;Other - verify manually&quot;)
-| table _time, src, dest, dest_port, http_method, url, status, reason, http_user_agent</code></pre><pre class="spl-mode-body" id="art-227-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where Web.url=&quot;*/fission-function/*&quot; by _time, Web.src, Web.dest, Web.dest_port, Web.url, Web.http_method, Web.status, Web.http_user_agent
-| `drop_dm_object_name(Web)`
-| eval dest_port=coalesce(dest_port,&quot;unknown&quot;)
-| where (dest_port=&quot;8888&quot; OR dest_port=&quot;unknown&quot;) AND status!=&quot;404&quot;
-| eval reason=case(status==&quot;200&quot;,&quot;Successful unauthorized invocation&quot;,status==&quot;502&quot;,&quot;Cold-start invocation (function exists)&quot;,status==&quot;401&quot;,&quot;Auth challenge (post-patch)&quot;,true(),&quot;Other - verify manually&quot;)
-| table _time, src, dest, dest_port, http_method, url, status, reason, http_user_agent</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="bb7b7c554f" data-platforms="datadog,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Fission Function Name Enumeration via /fission-function/ Probing (CVE-2026-46614 recon)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="bb7b7c554f" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects function-name discovery against the Fission router by counting distinct /fission-function/&lt;ns&gt;/&lt;name&gt; paths probed from the same source within a short window. Per the advisory, callers can enumerate which functions exist by differentiating response semantics (404 = no such function, 200 = invoked, 502 = function exists and went cold). A burst of 404s interleaved with 200/502s from one source is the canonical recon shape.
-
-Rationale: The advisory explicitly calls out enumeration as an impact: &#x27;Enumerate function names by probing the response semantics (404 vs 200 vs 502 from cold start).&#x27; Counting distinct paths under /fission-function/ per source IP in a short window directly models that pattern; requiring at least 3 404s alongside the path-count threshold filters legitimate trigger callers (who hit known paths and don&#x27;t miss). Sigma is empty because this is a count/threshold detection, not single-event-shape. Defender and Falcon are empty because the telemetry sits at the ingress/WAF layer, not on endpoints.
-
-Cross-checked against:
-  • https://github.com/fission/fission/releases/tag/v1.23.0
-  • https://github.com/advisories/GHSA-3g33-6vg6-27m8</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Active Scanning: Wordlist Scanning">T1595.003</span> <span class="ind tech" title="File and Directory Discovery">T1083</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Vulnerability scanners (Nessus, Qualys, Trivy, kube-bench) walking /fission-function/&lt;ns&gt;/&lt;name&gt; with a wordlist as part of an authorized assessment</li><li>CI/CD smoke tests that iterate through known function names to validate post-deploy health (legitimate, but indistinguishable from enumeration by path-count alone)</li><li>Multi-tenant cluster operators using a single audit-bot identity to walk all namespaces&#x27; functions for inventory</li><li>Misconfigured load-test tools (k6, locust) generating high distinct-path counts against a function under test</li><li>Service mesh / sidecar retries on 502 inflating the apparent unique-path count when retries rewrite URL segments</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Suppress scanner User-Agents if your scanners are documented
-| where UserAgent !has_any (&quot;Nessus&quot;, &quot;Qualys&quot;, &quot;Trivy&quot;, &quot;kube-bench&quot;, &quot;OpenVAS&quot;)
-// Suppress documented CI/CD smoke-test source IPs
-| where SourceIP !in (&quot;&lt;ci-runner-ip-range&gt;&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1. TRIAGE: Inspect the SourceIP - is it on the org&#x27;s scanner allowlist? Pull the User-Agent and pivot on whether it asserts itself as a scanner (Nessus/Qualys/curl/python-requests). Check whether the hit responses include 200s - successful invocations after enumeration are the genuine concern. 2. CONTAIN: Rate-limit /fission-function/* at the ingress immediately (e.g. nginx limit_req_zone keyed by source IP), then apply the CVE-2026-46614 fix - either upgrade Fission to &gt;= 1.23.0 or apply the path-block NetworkPolicy from the advisory mitigation section. 3. HUNT: For every function name the enumeration successfully invoked (200/502), pull the function&#x27;s pod logs to determine what code ran; check whether the function references secrets, mounts credentials, or makes outbound calls. Pivot on SourceIP across the past 30 days to see prior reconnaissance.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-227-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-227-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-227-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-227-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackHours = 24h;
-let WindowMinutes = 10m;
-let MinUniquePaths = 5;
-let MinProbeMisses = 3;
-union isfuzzy=true
-(
-  CommonSecurityLog
-  | where TimeGenerated &gt; ago(LookbackHours)
-  | where RequestURL has &quot;/fission-function/&quot;
-  | project TimeGenerated, SourceIP, RequestURL, Status=tostring(EventOutcome), UserAgent=RequestClientApplication, Router=DestinationIP
-),
-(
-  W3CIISLog
-  | where TimeGenerated &gt; ago(LookbackHours)
-  | where csUriStem has &quot;/fission-function/&quot;
-  | where sPort == 8888
-  | project TimeGenerated, SourceIP=cIP, RequestURL=csUriStem, Status=tostring(scStatus), UserAgent=csUserAgent, Router=Computer
-)
-| summarize
-    UniqueFunctionPaths = dcount(RequestURL),
-    TotalRequests = count(),
-    HitFunctions = dcountif(RequestURL, Status in (&quot;200&quot;,&quot;502&quot;)),
-    MissFunctions = dcountif(RequestURL, Status == &quot;404&quot;),
-    SamplePaths = make_set(RequestURL, 20),
-    UserAgents = make_set(UserAgent, 5),
-    Routers = make_set(Router, 3)
-    by bin(TimeGenerated, WindowMinutes), SourceIP
-| where UniqueFunctionPaths &gt;= MinUniquePaths and MissFunctions &gt;= MinProbeMisses
-| extend EnumerationConfidence = case(
-    HitFunctions &gt; 0 and MissFunctions &gt;= 3, &quot;High - mixed 200/502 hits with 404 misses (likely successful enumeration)&quot;,
-    MissFunctions &gt;= 10, &quot;Medium - heavy 404 probing&quot;,
-    &quot;Low&quot;)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-227-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:kubernetes) @http.url_details.path:*/fission-function/*</code></pre></div>
-    <div class="tab-content" id="art-227-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-227-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-227-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-227-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t dc(Web.url) as UniqueFunctionPaths, count as TotalRequests, dc(eval(if(Web.status==&quot;200&quot; OR Web.status==&quot;502&quot;, Web.url, null()))) as HitFunctions, dc(eval(if(Web.status==&quot;404&quot;, Web.url, null()))) as MissFunctions, values(Web.http_user_agent) as UserAgents, values(Web.dest) as Routers from datamodel=Web where Web.url=&quot;*/fission-function/*&quot; by _time span=10m, Web.src
-| `drop_dm_object_name(Web)`
-| where UniqueFunctionPaths &gt;= 5 AND MissFunctions &gt;= 3
-| eval EnumerationConfidence=case(HitFunctions&gt;0 AND MissFunctions&gt;=3,&quot;High - mixed 200/502 hits with 404 misses&quot;,MissFunctions&gt;=10,&quot;Medium - heavy 404 probing&quot;,true(),&quot;Low&quot;)
-| table _time, src, UniqueFunctionPaths, TotalRequests, HitFunctions, MissFunctions, EnumerationConfidence, Routers, UserAgents</code></pre><pre class="spl-mode-body" id="art-227-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false dc(Web.url) as UniqueFunctionPaths, count as TotalRequests, dc(eval(if(Web.status==&quot;200&quot; OR Web.status==&quot;502&quot;, Web.url, null()))) as HitFunctions, dc(eval(if(Web.status==&quot;404&quot;, Web.url, null()))) as MissFunctions, values(Web.http_user_agent) as UserAgents, values(Web.dest) as Routers from datamodel=Web where Web.url=&quot;*/fission-function/*&quot; by _time span=10m, Web.src
-| `drop_dm_object_name(Web)`
-| where UniqueFunctionPaths &gt;= 5 AND MissFunctions &gt;= 3
-| eval EnumerationConfidence=case(HitFunctions&gt;0 AND MissFunctions&gt;=3,&quot;High - mixed 200/502 hits with 404 misses&quot;,MissFunctions&gt;=10,&quot;Medium - heavy 404 probing&quot;,true(),&quot;Low&quot;)
-| table _time, src, UniqueFunctionPaths, TotalRequests, HitFunctions, MissFunctions, EnumerationConfidence, Routers, UserAgents</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-227-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-227-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-227-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-227-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-46614&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-227-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-46614&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-227-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-227-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-227-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-227-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-46614&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-227-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-46614&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-228" data-art-slug="2026-05-21-the-art-of-being-ungovernable"
   data-phases="actions,c2,exploit,install" data-sev="high"
   data-techs="T1190"
@@ -12917,6 +12627,624 @@ level: critical
         where DNS.query IN (&quot;git-tanstack.com&quot;)
         by DNS.src, DNS.query, DNS.answer
      | `drop_dm_object_name(DNS)`]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-257" data-art-slug="2026-05-19-ghsa-critical-cve-2026-2587-glassfish-s-gadget-handler-is-vu"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint,network,web"
+  data-targets="linux,vcs,windows"
+  data-uc-count="7" data-llm-uc-count="4"
+  data-search="[GHSA / CRITICAL] CVE-2026-2587: GlassFish&#x27;s gadget handler is vulnerable to RCE GlassFish&#x27;s gadget handler is vulnerable to RCE CVE-2026-2587 T1190 [LLM] GlassFish java process spawning command shell (CVE-2026-2587 RCE) [LLM] Inbound HTTP request to GlassFish gadget.jsf handler (CVE-2026-2587 exploit attempt) [LLM] GlassFish java process outbound HTTP fetch to external host (gadget XML callback) [LLM] Unpatched GlassFish admingui/jsftemplating inventory (CVE-2026-2587 attack surface) Asset exposure — vulnerability matches article CVE(s) Remote service execution — PsExec / SMB lateral movement RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-05-19-ghsa-critical-cve-2026-2587-glassfish-s-gadget-handler-is-vu" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-29wv-cv7p-xjc2" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-2587: GlassFish&#x27;s gadget handler is vulnerable to RCE</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-05-19</span>
+    <span>7 use cases</span>
+    <span>1 technique</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">GlassFish&#x27;s gadget handler is vulnerable to RCE</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-2587</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-257-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-257"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-257-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] GlassFish java process spawning command shell (CVE-2026-2587 RCE) · [LLM] Inbound HTTP request to GlassFish gadget.jsf handler (CVE-2026-2587 exploit attempt) · [LLM] GlassFish java process outbound HTTP fetch to external host (gadget XML callback) · [LLM] Unpatched GlassFish admingui/jsftemplating inventory (CVE-2026-2587 attack surface)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ Remote service execution — PsExec / SMB lateral movement</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="542626be27" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <summary>
+    <span class="uc-title">GlassFish java process spawning command shell (CVE-2026-2587 RCE)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="542626be27" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the GlassFish admin console java process spawning a command interpreter or LOLBin child — the post-exploitation pivot after EL injection via gadget.jsf evaluates Runtime.exec(). Parent is matched on glassfish/asadmin/domain1 markers in its commandline so we don&#x27;t fire on every JVM on the host.
+
+Rationale: Anchors on the GlassFish-specific parent (java + glassfish/asadmin/domain1/com.sun.aas.installRoot tokens documented in the Eclipse GlassFish startup args) plus an interpreter/LOLBin child — the exact RCE pivot the EL injection at /common/gadgets/gadget.jsf achieves via java.lang.Runtime.getRuntime().exec(). Cross-checked Bhanunamikaze PoC repo and stack.watch advisory for exploit chain shape.
+
+Cross-checked against:
+  • https://github.com/Bhanunamikaze/CVE-2026-2587-Exploit-POC
+  • https://stack.watch/vuln/CVE-2026-2587/
+  • https://app.opencve.io/cve/CVE-2026-2587
+  • https://blog.mindedsecurity.com/2015/11/reliable-os-shell-with-el-expression.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span> <span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Windows Command Shell">T1059.003</span> <span class="ind tech" title="Unix Shell">T1059.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>GlassFish startup/shutdown scripts using cmd.exe /c or sh -c to invoke asadmin or perform pre/post lifecycle tasks</li><li>Deployed J2EE applications that legitimately use Runtime.exec / ProcessBuilder to call native binaries (e.g. ImageMagick wrappers, scheduled batch ingestion jobs)</li><li>Sysadmin running asadmin from a wrapper shell during maintenance (asadmin → sh → asadmin tree)</li><li>Java diagnostic tooling such as jcmd, jstack, or jstat invoked via shell from monitoring agents</li><li>GlassFish cluster sync scripts that wrap asadmin with bash on Linux deployments</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ChildCmd has_any (&quot;list-applications&quot;,&quot;list-domains&quot;,&quot;start-domain&quot;,&quot;stop-domain&quot;,&quot;deploy --&quot;,&quot;undeploy --&quot;,&quot;asadmin.bat&quot;,&quot;asadmin.sh&quot;) and ParentCmd has &quot;asadmin&quot;)
+| where not (ChildCmd has_any (&quot;jcmd&quot;,&quot;jstack&quot;,&quot;jstat&quot;,&quot;jinfo&quot;) and ParentCmd has &quot;glassfish&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage — pull the full process tree for the java parent (PID, full ParentCommandLine, domain dir, listening ports). Confirm host runs Eclipse GlassFish &lt; 7.1.0 / admingui &lt; 8.0.2 / jsftemplating &lt; 4.2.0. Inspect the child cmdline for reconnaissance (whoami, id, ifconfig) or staging (curl/wget pulling binaries). 2) Contain — isolate the host via Defender Live Response or EDR network containment, kill the suspect java domain process, snapshot the GlassFish domain1/logs directory and server.log, and block port 4848 ingress at the perimeter pending patch. 3) Hunt — pivot on the java PID for outbound HTTP fetches to non-corp IPs in the same window (UC3), search /common/gadgets/gadget.jsf access in upstream web/proxy logs (UC2), and check DeviceTvmSoftwareVulnerabilities for additional CVE-2026-2587-affected hosts (UC4).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-257-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-257-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-257-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-257-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-257-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-257-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-257-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;java&quot;)
+| where InitiatingProcessCommandLine has_any (&quot;glassfish&quot;,&quot;asadmin&quot;,&quot;appserver-rt&quot;,&quot;domain1&quot;,&quot;com.sun.aas.installRoot&quot;)
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;python.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;)
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-257-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ParentProcessName has &quot;java&quot;
+| where ParentProcessCommandLine has_any (&quot;glassfish&quot;,&quot;asadmin&quot;,&quot;appserver-rt&quot;,&quot;domain1&quot;,&quot;com.sun.aas.installRoot&quot;)
+| where ActingProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;python.exe&quot;)
+   or ActingProcessName matches regex @&quot;(?i)/(sh|bash|dash|zsh)$&quot;
+| where ActorUsername !endswith &quot;$&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine, Hash
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-257-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: GlassFish Java Process Spawning Command Interpreter (CVE-2026-2587)
+id: a7e3c5f4-9b21-4d56-8e3a-1f4b2c8e9d01
+description: GlassFish admin console java process spawning a shell or LOLBin, indicative of EL injection RCE via the gadget.jsf handler (CVE-2026-2587).
+references:
+  - https://github.com/advisories/GHSA-29wv-cv7p-xjc2
+  - https://github.com/Bhanunamikaze/CVE-2026-2587-Exploit-POC
+author: Detection Engineering
+date: 2026/06/04
+tags:
+  - attack.t1190
+  - attack.t1059
+  - attack.initial_access
+  - attack.execution
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - &#x27;\java.exe&#x27;
+      - &#x27;/java&#x27;
+    ParentCommandLine|contains:
+      - &#x27;glassfish&#x27;
+      - &#x27;asadmin&#x27;
+      - &#x27;appserver-rt&#x27;
+      - &#x27;domain1&#x27;
+      - &#x27;com.sun.aas.installRoot&#x27;
+  selection_child:
+    Image|endswith:
+      - &#x27;\cmd.exe&#x27;
+      - &#x27;\powershell.exe&#x27;
+      - &#x27;\pwsh.exe&#x27;
+      - &#x27;\wscript.exe&#x27;
+      - &#x27;\cscript.exe&#x27;
+      - &#x27;\wmic.exe&#x27;
+      - &#x27;\bitsadmin.exe&#x27;
+      - &#x27;\certutil.exe&#x27;
+      - &#x27;\curl.exe&#x27;
+      - &#x27;\wget.exe&#x27;
+      - &#x27;\python.exe&#x27;
+      - &#x27;/sh&#x27;
+      - &#x27;/bash&#x27;
+      - &#x27;/dash&#x27;
+      - &#x27;/zsh&#x27;
+  condition: selection_parent and selection_child
+level: high</code></pre></div>
+    <div class="tab-content" id="art-257-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.auditd) @ParentImage:(*\java.exe OR *\Java.exe OR *\JAVA.EXE OR */java) @ParentCommandLine:(*glassfish* OR *GlassFish* OR *GLASSFISH* OR *asadmin* OR *appserver-rt* OR *domain1* OR *com.sun.aas.installRoot*) @Image:(*\cmd.exe OR *\CMD.EXE OR *\powershell.exe OR *\PowerShell.exe OR *\POWERSHELL.EXE OR *\pwsh.exe OR *\wmic.exe OR *\bitsadmin.exe OR *\certutil.exe OR *\curl.exe OR *\wget.exe OR *\python.exe OR */sh OR */bash OR */dash OR */zsh)</code></pre></div>
+    <div class="tab-content" id="art-257-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^java(\.exe)?$/i
+| regex(&quot;(?i)(glassfish|asadmin|appserver-rt|domain1|com\\.sun\\.aas\\.installRoot)&quot;, field=ParentCommandLine)
+| ImageFileName=/(\\\\(cmd|powershell|pwsh|wscript|cscript|wmic|bitsadmin|certutil|curl|wget|python)\.exe|\/(sh|bash|dash|zsh))$/i
+| groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-257-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-257-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-257-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-257-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;java.exe&quot; OR Processes.parent_process_name=&quot;java&quot;) AND (Processes.parent_process=&quot;*glassfish*&quot; OR Processes.parent_process=&quot;*asadmin*&quot; OR Processes.parent_process=&quot;*appserver-rt*&quot; OR Processes.parent_process=&quot;*domain1*&quot; OR Processes.parent_process=&quot;*com.sun.aas.installRoot*&quot;) AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;python.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | sort 0 -lastTime</code></pre><pre class="spl-mode-body" id="art-257-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;java.exe&quot; OR Processes.parent_process_name=&quot;java&quot;) AND (Processes.parent_process=&quot;*glassfish*&quot; OR Processes.parent_process=&quot;*asadmin*&quot; OR Processes.parent_process=&quot;*appserver-rt*&quot; OR Processes.parent_process=&quot;*domain1*&quot; OR Processes.parent_process=&quot;*com.sun.aas.installRoot*&quot;) AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;python.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | sort 0 -lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="b4e5fdf91d" data-platforms="cloudwatch,datadog,sent,sigma,spl" data-targets="vcs">
+  <summary>
+    <span class="uc-title">Inbound HTTP request to GlassFish gadget.jsf handler (CVE-2026-2587 exploit attempt)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="b4e5fdf91d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects HTTP requests targeting the vulnerable /common/gadgets/gadget.jsf endpoint with the gadget= URL parameter, the entry point for the EL injection RCE. Any external-sourced hit on this path is treatable as an exploit attempt because the admin console should not be internet-exposed.
+
+Rationale: The Bhanunamikaze PoC and Eclipse advisory both confirm the entry point is /common/gadgets/gadget.jsf with a gadget= URL parameter pointing to attacker-hosted XML — that string pair is a binary indicator that a CVE-2026-2587 attempt is in flight. EvalIndicator splits inline EL (URL contains #{ or %23%7B) from the callback-fetch variant where the EL lives in the fetched XML&#x27;s ModulePrefs title attribute. Defender XDR is left empty because Defender Advanced Hunting does not ingest GlassFish/Apache/NGINX web access logs by default.
+
+Cross-checked against:
+  • https://github.com/Bhanunamikaze/CVE-2026-2587-Exploit-POC
+  • https://stack.watch/vuln/CVE-2026-2587/
+  • https://www.hackingdream.net/2026/05/cve-2026-2587-glassfish-el-injection-exploit-poc.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="JavaScript">T1059.007</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal admin/operator legitimately using the gadget dashboard from a corporate IP (admin console SHOULD be internal-only — investigate the exposure even if benign)</li><li>Authenticated vulnerability scanners (Qualys, Nessus, Tenable Nessus Pro, Rapid7 InsightVM) probing CVE-2026-2587 from a known scanner ASN</li><li>Internal security team running the CVE-2026-2587 PoC validator from a sanctioned test host</li><li>Synthetic monitoring / uptime checks that crawl admin endpoints</li><li>Backup of the admin console performed via wget mirroring from a jump host</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// in CommonSecurityLog branch, suppress known scanners &amp; internal admin jumps
+| where not (RequestClientApplication has_any (&quot;Nessus&quot;,&quot;Qualys&quot;,&quot;Rapid7&quot;,&quot;Tenable&quot;,&quot;Acunetix&quot;,&quot;Nuclei&quot;,&quot;Burp&quot;))
+| where SourceIP !startswith &quot;10.&quot; and SourceIP !startswith &quot;192.168.&quot; and not (SourceIP matches regex @&quot;^172\.(1[6-9]|2\d|3[0-1])\.&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage — extract gadget= parameter, URL-decode it. If it resolves to an external host or contains EL syntax (#{, %23%7B, java.lang.Runtime), treat as confirmed exploit attempt. Check upstream WAF for the source IP&#x27;s request history and reputation (AbuseIPDB, threat intel). Pull the GlassFish host&#x27;s java process tree for the same window. 2) Contain — block the source IP at the perimeter / WAF, remove /common/gadgets/gadget.jsf exposure (WAF rule or reverse-proxy deny), force-rotate any admin-console credentials, and disable the gadget handler if unused (upgrade or set the GlassFish admingui module to &gt;= 8.0.2). 3) Hunt — correlate with UC1 process-tree alerts for the same host within ±10 min, look for the host&#x27;s outbound fetches to the URL inside the gadget= param (UC3), search auth logs for successful admin-console logins from the same source IP preceding the exploit attempt.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-257-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-257-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-257-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-257-uc1-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-257-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-257-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>(union isfuzzy=true
+    (CommonSecurityLog
+     | where TimeGenerated &gt; ago(7d)
+     | where RequestURL has &quot;/common/gadgets/gadget.jsf&quot;
+     | where RequestURL has &quot;gadget=&quot;
+     | project TimeGenerated, SourceIP, DestinationHostName, DeviceVendor, DeviceProduct, RequestURL, RequestMethod, RequestClientApplication, ResultDescription),
+    (W3CIISLog
+     | where TimeGenerated &gt; ago(7d)
+     | where csUriStem =~ &quot;/common/gadgets/gadget.jsf&quot;
+     | where csUriQuery has &quot;gadget=&quot;
+     | project TimeGenerated, SourceIP = cIP, DestinationHostName = Computer, RequestURL = strcat(csUriStem, &quot;?&quot;, csUriQuery), RequestMethod = csMethod, RequestClientApplication = csUserAgent, ResultDescription = tostring(scStatus)),
+    (ImWebSession
+     | where TimeGenerated &gt; ago(7d)
+     | where Url has &quot;/common/gadgets/gadget.jsf&quot;
+     | where Url has &quot;gadget=&quot;
+     | project TimeGenerated, SourceIP = SrcIpAddr, DestinationHostName = DstHostname, RequestURL = Url, RequestMethod = HttpMethod, RequestClientApplication = HttpRequestHeaderUserAgent, ResultDescription = tostring(HttpStatusCode)))
+| extend GadgetParam = extract(@&quot;(?i)gadget=([^&amp;]+)&quot;, 1, RequestURL)
+| extend EvalIndicator = iif(RequestURL has_any (&quot;%23%7B&quot;,&quot;%23%7b&quot;,&quot;#{&quot;,&quot;getRuntime&quot;,&quot;java.lang.Runtime&quot;,&quot;ProcessBuilder&quot;,&quot;forName&quot;), &quot;DirectEL&quot;, &quot;CallbackFetch&quot;)
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-257-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: GlassFish Admin Console Gadget Handler Access (CVE-2026-2587)
+id: c9a5b7d8-1e43-6f78-a05c-3b6d4e0f1234
+description: HTTP request to the vulnerable GlassFish /common/gadgets/gadget.jsf admin-console endpoint with the gadget= URL parameter. Any external hit is treatable as an exploit attempt for CVE-2026-2587 EL Injection RCE.
+references:
+  - https://github.com/advisories/GHSA-29wv-cv7p-xjc2
+  - https://github.com/Bhanunamikaze/CVE-2026-2587-Exploit-POC
+  - https://stack.watch/vuln/CVE-2026-2587/
+author: Detection Engineering
+date: 2026/06/04
+tags:
+  - attack.t1190
+  - attack.initial_access
+logsource:
+  category: webserver
+detection:
+  selection_path:
+    cs-uri-stem|contains: &#x27;/common/gadgets/gadget.jsf&#x27;
+  selection_param:
+    cs-uri-query|contains: &#x27;gadget=&#x27;
+  condition: selection_path and selection_param
+level: high</code></pre></div>
+    <div class="tab-content" id="art-257-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:(nginx OR apache OR aws.alb OR aws.elb OR aws.cloudfront OR azure.application_gateway OR cloudflare) @http.url_details.path:&quot;/common/gadgets/gadget.jsf&quot; @http.url_details.queryString:*gadget=*</code></pre></div>
+    <div class="tab-content" id="art-257-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/applicationelb (or your ALB / CloudFront access-log group)
+fields @timestamp, client_ip, target_status_code, elb_status_code, request, user_agent, target_processing_time
+| filter request like /\/common\/gadgets\/gadget\.jsf/
+      and request like /gadget=/
+| sort @timestamp desc
+| limit 200</code></pre></div>
+    <div class="tab-content" id="art-257-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-257-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-257-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-257-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*/common/gadgets/gadget.jsf*&quot; AND Web.url=&quot;*gadget=*&quot; by Web.src Web.dest Web.url Web.http_method Web.http_user_agent Web.status | `drop_dm_object_name(Web)` | rex field=url &quot;gadget=(?&lt;gadget_url&gt;[^&amp;]+)&quot; | eval gadget_url=urldecode(gadget_url) | where NOT match(src,&quot;^(10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)&quot;) OR match(gadget_url,&quot;^https?://(?!.*\.corp\.example\.com)&quot;) | sort 0 -lastTime</code></pre><pre class="spl-mode-body" id="art-257-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*/common/gadgets/gadget.jsf*&quot; AND Web.url=&quot;*gadget=*&quot; by Web.src Web.dest Web.url Web.http_method Web.http_user_agent Web.status | `drop_dm_object_name(Web)` | rex field=url &quot;gadget=(?&lt;gadget_url&gt;[^&amp;]+)&quot; | eval gadget_url=urldecode(gadget_url) | where NOT match(src,&quot;^(10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)&quot;) OR match(gadget_url,&quot;^https?://(?!.*\.corp\.example\.com)&quot;) | sort 0 -lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="38c122a1e0" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">GlassFish java process outbound HTTP fetch to external host (gadget XML callback)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="38c122a1e0" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the GlassFish admin console java process fetching content from a public IP — the out-of-band step where the gadget handler retrieves the attacker-controlled XML payload to evaluate. Anchored on parent java + glassfish tokens to avoid the every-JVM-phones-home noise floor.
+
+Rationale: The CVE-2026-2587 exploit chain explicitly requires the GlassFish gadget handler to fetch the attacker-hosted XML from the URL in the gadget= parameter (per the Bhanunamikaze PoC, which hosts a benign probe XML and waits for the callback). A java process whose parent commandline carries the GlassFish startup tokens reaching out to a public IP on web ports is the network-side signature of that fetch. Tier set to hunting because legitimate Java integrations also call externally; pair with UC1 process-tree hits on the same host for high-confidence triage.
+
+Cross-checked against:
+  • https://github.com/Bhanunamikaze/CVE-2026-2587-Exploit-POC
+  • https://stack.watch/vuln/CVE-2026-2587/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Web Protocols">T1071.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>GlassFish phoning home for Java auto-update / telemetry to oracle.com / java.com</li><li>Deployed J2EE applications making legitimate REST calls to SaaS APIs (Salesforce, ServiceNow, payment gateways)</li><li>Maven Central / dependency-resolution fetches at GlassFish domain startup</li><li>License-server check-ins to vendor endpoints</li><li>Cluster sync between GlassFish nodes traversing a NAT&#x27;d public IP</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RemoteUrl endswith &quot;.oracle.com&quot; or RemoteUrl endswith &quot;.java.com&quot; or RemoteUrl endswith &quot;.eclipse.org&quot;)
+| where not (RemoteUrl endswith &quot;maven.org&quot; or RemoteUrl endswith &quot;.sonatype.com&quot; or RemoteUrl endswith &quot;repo1.maven.org&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage — check whether the destination IP/host is a known corporate dependency (Java update, vendor SaaS, license server). Lookup reputation (VirusTotal, AbuseIPDB, urlscan). Pull the gadget.jsf access in upstream web logs for the same host within ±5 min (UC2) — a paired hit confirms the callback chain. 2) Contain — if destination is untrusted: isolate the GlassFish host, kill the java domain process, block the destination IP at egress, and capture the GlassFish server.log to identify the gadget= URL that triggered the fetch. 3) Hunt — pivot on the destination IP across all hosts to find other compromised GlassFish nodes, search DNS for the attacker domain across the fleet, and query DeviceTvmSoftwareVulnerabilities for CVE-2026-2587 affected hosts (UC4) to scope unpatched attack surface.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-257-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-257-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-257-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-257-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-257-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-257-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;java&quot;)
+| where InitiatingProcessCommandLine has_any (&quot;glassfish&quot;,&quot;asadmin&quot;,&quot;appserver-rt&quot;,&quot;domain1&quot;,&quot;com.sun.aas.installRoot&quot;)
+| where RemoteIPType == &quot;Public&quot;
+| where RemotePort in (80, 443, 8080, 8443)
+| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Hits = count(), Cmds = make_set(InitiatingProcessCommandLine, 5), URLs = make_set(RemoteUrl, 10)
+          by DeviceName, RemoteIP, RemotePort, InitiatingProcessAccountName
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-257-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pivot: outbound proxy / CASB log of Java User-Agent from a known GlassFish host. Maintain GlassFishHosts watchlist of host names/IPs.
+let GlassFishHosts = dynamic([&quot;glassfish-prod-01&quot;,&quot;glassfish-prod-02&quot;]);  // populate from CMDB
+CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where CommunicationDirection =~ &quot;Outbound&quot;
+   or DeviceVendor in~ (&quot;Zscaler&quot;,&quot;Palo Alto Networks&quot;,&quot;Cisco&quot;,&quot;Symantec&quot;,&quot;Forcepoint&quot;,&quot;Netskope&quot;)
+| where SourceHostName in~ (GlassFishHosts) or SourceIP in (&quot;&lt;glassfish-ip-1&gt;&quot;,&quot;&lt;glassfish-ip-2&gt;&quot;)
+| where RequestClientApplication has_any (&quot;Java/&quot;,&quot;Apache-HttpClient/&quot;,&quot;Jersey/&quot;)
+| where DestinationPort in (80, 443, 8080, 8443)
+| where DestinationIP !startswith &quot;10.&quot; and DestinationIP !startswith &quot;192.168.&quot;
+   and not (DestinationIP matches regex @&quot;^172\.(1[6-9]|2\d|3[0-1])\.&quot;)
+   and not (DestinationHostName endswith &quot;.corp.example.com&quot;)
+| project TimeGenerated, SourceHostName, SourceIP, DestinationIP, DestinationHostName, DestinationPort, RequestURL, RequestClientApplication
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-257-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @Image:(*\java.exe OR *\Java.exe OR *\JAVA.EXE OR */java) @DestinationPort:(80 OR 443 OR 8080 OR 8443) -CIDR(@DestinationIp, 10.0.0.0/8) -CIDR(@DestinationIp, 172.16.0.0/12) -CIDR(@DestinationIp, 192.168.0.0/16) -CIDR(@DestinationIp, 127.0.0.0/8)</code></pre></div>
+    <div class="tab-content" id="art-257-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+| ContextImageFileName=/(\\\\java\.exe|\/java)$/i
+| (RemotePort=80 OR RemotePort=443 OR RemotePort=8080 OR RemotePort=8443)
+| !cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
+| !cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
+| !cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
+| !cidr(&quot;127.0.0.0/8&quot;, field=RemoteAddressIP4)
+| join(query={#event_simpleName=ProcessRollup2 ImageFileName=/(\\\\java\.exe|\/java)$/i | regex(&quot;(?i)(glassfish|asadmin|domain1)&quot;, field=CommandLine) | groupBy([aid, TargetProcessId], function=count())}, field=[aid, ContextProcessId], include=[TargetProcessId])
+| groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-257-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-257-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-257-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-257-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app=&quot;java.exe&quot; OR All_Traffic.app=&quot;java&quot; OR All_Traffic.process_name=&quot;java.exe&quot; OR All_Traffic.process_name=&quot;java&quot;) AND All_Traffic.dest_port IN (80,443,8080,8443) AND NOT (All_Traffic.dest_ip=&quot;10.0.0.0/8&quot; OR All_Traffic.dest_ip=&quot;172.16.0.0/12&quot; OR All_Traffic.dest_ip=&quot;192.168.0.0/16&quot; OR All_Traffic.dest_ip=&quot;127.0.0.0/8&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | sort 0 -lastTime</code></pre><pre class="spl-mode-body" id="art-257-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app=&quot;java.exe&quot; OR All_Traffic.app=&quot;java&quot; OR All_Traffic.process_name=&quot;java.exe&quot; OR All_Traffic.process_name=&quot;java&quot;) AND All_Traffic.dest_port IN (80,443,8080,8443) AND NOT (All_Traffic.dest_ip=&quot;10.0.0.0/8&quot; OR All_Traffic.dest_ip=&quot;172.16.0.0/12&quot; OR All_Traffic.dest_ip=&quot;192.168.0.0/16&quot; OR All_Traffic.dest_ip=&quot;127.0.0.0/8&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | sort 0 -lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="faa5b55e2c" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Unpatched GlassFish admingui/jsftemplating inventory (CVE-2026-2587 attack surface)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="faa5b55e2c" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Surface-level hunting query that lists hosts with Eclipse GlassFish admingui &lt; 8.0.2 or jsftemplating &lt; 4.2.0 installed so the SOC can drive patching and prioritise UC1-UC3 alerts by exposure. Pure inventory pivot — not a behavioural detection.
+
+Rationale: Article explicitly names the affected Maven packages and version ceilings (admingui &lt; 8.0.2, jsftemplating &lt; 4.2.0). Defender&#x27;s TVM tables natively expose CVE-to-host mapping, making this the cleanest one-shot inventory query. Ordered by IsInternetFacing because that flag is the single biggest exploit-likelihood multiplier for this CVE.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-29wv-cv7p-xjc2
+  • https://github.com/eclipse-ee4j/glassfish/releases
+  • https://app.opencve.io/cve/CVE-2026-2587</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>TVM lag — recently-patched hosts still appearing in the table until next inventory sync (24-48h)</li><li>Air-gapped lab/QA GlassFish instances flagged but not actually exposed</li><li>Embedded GlassFish in vendor appliances where the vendor — not the customer — owns patching</li><li>Host has the JAR present on disk but the server is not running / port 4848 is firewalled off</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage — sort the result by IsInternetFacing == true and PublicIP isnotempty first; cross-reference with external attack-surface scans (Shodan, internal EASM) to confirm port 4848 / gadget.jsf reachability. 2) Contain — for any internet-exposed instance, immediately block 4848 ingress at the perimeter, disable the gadget handler at the reverse proxy (deny /common/gadgets/), and rotate admin-console credentials. For internal-only, schedule the upgrade to GlassFish 7.1.0+ / admingui 8.0.2+ / jsftemplating 4.2.0+ within the standard critical-patch SLA. 3) Hunt — for every host on this list, retro-hunt UC1/UC2/UC3 over the last 30 days to confirm no prior exploitation, and add the hostname/IP to the GlassFishHosts watchlist used in UC3 for ongoing high-confidence alerting.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-257-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-257-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-257-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-257-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where CveId == &quot;CVE-2026-2587&quot;
+   or (SoftwareVendor =~ &quot;eclipse&quot; and SoftwareName has_any (&quot;glassfish&quot;,&quot;admingui&quot;,&quot;jsftemplating&quot;))
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, *) by DeviceId) on DeviceId
+| extend VulnerableComponent = case(
+    SoftwareName has &quot;admingui&quot;, &quot;admingui &lt; 8.0.2&quot;,
+    SoftwareName has &quot;jsftemplating&quot;, &quot;jsftemplating &lt; 4.2.0&quot;,
+    SoftwareName has &quot;glassfish&quot;, &quot;glassfish &lt; 7.1.0&quot;,
+    &quot;unknown&quot;)
+| project Timestamp, DeviceName, OSPlatform, PublicIP, IsInternetFacing, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerableComponent, CveId, RecommendedSecurityUpdate
+| order by IsInternetFacing desc, DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-257-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(7d)
+| where CveId == &quot;CVE-2026-2587&quot;
+   or (SoftwareVendor =~ &quot;eclipse&quot; and SoftwareName has_any (&quot;glassfish&quot;,&quot;admingui&quot;,&quot;jsftemplating&quot;))
+| join kind=leftouter (DeviceInfo | summarize arg_max(TimeGenerated, *) by DeviceId) on DeviceId
+| extend VulnerableComponent = case(
+    SoftwareName has &quot;admingui&quot;, &quot;admingui &lt; 8.0.2&quot;,
+    SoftwareName has &quot;jsftemplating&quot;, &quot;jsftemplating &lt; 4.2.0&quot;,
+    SoftwareName has &quot;glassfish&quot;, &quot;glassfish &lt; 7.1.0&quot;,
+    &quot;unknown&quot;)
+| project TimeGenerated, DeviceName, OSPlatform, PublicIP, IsInternetFacing, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerableComponent, CveId, RecommendedSecurityUpdate
+| order by IsInternetFacing desc, DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-257-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>| inputlookup cve_inventory.csv | search cve_id=&quot;CVE-2026-2587&quot; | table host product version cvss patched_date</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-257-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-257-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-257-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-257-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-2587&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-257-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-2587&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-257-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-257-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-257-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-257-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-2587&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-257-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-2587&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="4e3ef9d0b4" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Remote service execution — PsExec / SMB lateral movement</span>
+    <span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="4e3ef9d0b4" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">psexec / paexec / smbexec / wmic /node — service install over SMB from remote host.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="SMB/Windows Admin Shares">T1021.002</span> <span class="ind tech" title="Service Execution">T1569.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-257-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-257-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-257-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-257-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-257-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where FileName in~ (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
+   or (FileName =~ &quot;wmic.exe&quot; and ProcessCommandLine has &quot;/node:&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
+</code></pre></div>
+    <div class="tab-content" id="art-257-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688            // process-create (audit-policy required)
+| where Account !endswith &quot;$&quot;
+| where NewProcessName endswith &quot;\psexec.exe&quot;
+   or NewProcessName endswith &quot;\psexesvc.exe&quot;
+   or NewProcessName endswith &quot;\paexec.exe&quot;
+   or (NewProcessName endswith &quot;\wmic.exe&quot; and CommandLine has &quot;/node:&quot;)
+| project TimeGenerated, Computer, Account, NewProcessName, CommandLine,
+          ParentProcessName
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-257-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: PsExec / SMB Lateral Movement Tooling Execution
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d03
+status: experimental
+description: |
+    PsExec, paexec, smbexec, csexec, remcom — admin-grade tooling that
+    pivots over SMB. Pair with `wmic /node:` for the full cluster.
+references:
+    - https://attack.mitre.org/techniques/T1021/002/
+    - https://attack.mitre.org/techniques/T1569/002/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1021.002
+    - attack.t1569.002
+    - attack.lateral-movement
+    - attack.execution
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_psexec:
+        Image|endswith:
+            - &#x27;\psexec.exe&#x27;
+            - &#x27;\psexec64.exe&#x27;
+            - &#x27;\psexesvc.exe&#x27;
+            - &#x27;\paexec.exe&#x27;
+            - &#x27;\csexec.exe&#x27;
+            - &#x27;\remcom.exe&#x27;
+            - &#x27;\smbexec.py&#x27;
+    selection_wmic_remote:
+        Image|endswith:
+            - &#x27;\wmic.exe&#x27;
+        CommandLine|contains:
+            - &#x27;/node:&#x27;
+    condition: selection_psexec or selection_wmic_remote
+falsepositives:
+    - Sysadmins running approved remote-management tooling — wrap with
+      a known-admin-host watchlist
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-257-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-257-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-257-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-257-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
+       OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-257-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
+       OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ace0fd1925" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ace0fd1925" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">ConnectWise / AnyDesk / TeamViewer / ScreenConnect / Atera installed outside IT change windows = common tradecraft for ransomware affiliates and IT-helpdesk impersonators.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Remote Access Software">T1219</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-257-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-257-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-257-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-257-uc6-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-257-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where FileName in~ (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
+        &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
+        &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;)
+   or FileName matches regex @&quot;(?i)kaseya.*\.exe&quot;
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-257-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where NewProcessName endswith &quot;\AnyDesk.exe&quot;
+   or NewProcessName endswith &quot;\TeamViewer.exe&quot;
+   or NewProcessName endswith &quot;\TeamViewer_Service.exe&quot;
+   or NewProcessName endswith &quot;\ScreenConnect.ClientService.exe&quot;
+   or NewProcessName endswith &quot;\ConnectWiseControl.ClientService.exe&quot;
+   or NewProcessName endswith &quot;\atera_agent.exe&quot;
+   or NewProcessName endswith &quot;\SplashtopStreamer.exe&quot;
+   or NewProcessName endswith &quot;\RustDesk.exe&quot;
+   or NewProcessName endswith &quot;\NinjaOne.exe&quot;
+| project TimeGenerated, Computer, Account, NewProcessName,
+          CommandLine, ParentProcessName
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-257-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Remote-Management (RMM) Tool Execution
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0c
+status: experimental
+description: |
+    AnyDesk / TeamViewer / ScreenConnect / Atera / Splashtop /
+    RustDesk — RMM tools attackers commonly install for hands-on-
+    keyboard access. Filter against the IT estate&#x27;s known tool.
+references:
+    - https://attack.mitre.org/techniques/T1219/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1219
+    - attack.command-and-control
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - &#x27;\AnyDesk.exe&#x27;
+            - &#x27;\TeamViewer.exe&#x27;
+            - &#x27;\TeamViewer_Service.exe&#x27;
+            - &#x27;\ScreenConnect.ClientService.exe&#x27;
+            - &#x27;\ConnectWiseControl.ClientService.exe&#x27;
+            - &#x27;\atera_agent.exe&#x27;
+            - &#x27;\SplashtopStreamer.exe&#x27;
+            - &#x27;\RustDesk.exe&#x27;
+            - &#x27;\NinjaOne.exe&#x27;
+    condition: selection
+falsepositives:
+    - IT-approved RMM in use across the estate. Maintain a known-IT-
+      tool exclusion list per environment.
+level: high
+</code></pre></div>
+    <div class="tab-content" id="art-257-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-257-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-257-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-257-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
+        &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
+        &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-257-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
+        &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
+        &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
+    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
   </div>
 </details></div>
 </article>
