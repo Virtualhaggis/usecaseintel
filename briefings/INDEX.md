@@ -1,12 +1,21 @@
 # Briefings — full archive
 
-_1194 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1195 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-06-15
+- [152 chrome wallpaper extensions with 105k installs linked to](./2026-06-15/152-chrome-wallpaper-extensions-with-105k-installs-linked-to.md)
+- [hackers abuse lnk files powershell and python loader to depl](./2026-06-15/hackers-abuse-lnk-files-powershell-and-python-loader-to-depl.md)
+- [palo alto warns of active exploitation of pan os globalprote](./2026-06-15/palo-alto-warns-of-active-exploitation-of-pan-os-globalprote.md)
+- [popular wordpress plugin scripts tampered to plant hidden ba](./2026-06-15/popular-wordpress-plugin-scripts-tampered-to-plant-hidden-ba.md)
+- [sniper dz scams target mena users via fake facebook offers a](./2026-06-15/sniper-dz-scams-target-mena-users-via-fake-facebook-offers-a.md)
+- [threat actor malware platform exposed via unlocked php insta](./2026-06-15/threat-actor-malware-platform-exposed-via-unlocked-php-insta.md)
+- [winrar vulnerability exploited by russian hackers to deploy ](./2026-06-15/winrar-vulnerability-exploited-by-russian-hackers-to-deploy-.md)
 
 ## 2026-06-14
 - [152 chrome extensions hide ad tracking and fake google searc](./2026-06-14/152-chrome-extensions-hide-ad-tracking-and-fake-google-searc.md)
@@ -17,7 +26,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-13/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
 - [chinese hackers hijack auth flow spy on isolated network for](./2026-06-13/chinese-hackers-hijack-auth-flow-spy-on-isolated-network-for.md)
 - [critical splunk enterprise flaw lets attackers run code with](./2026-06-13/critical-splunk-enterprise-flaw-lets-attackers-run-code-with.md)
-- [new agentjacking attack hijacks your ai coding agent to run ](./2026-06-13/new-agentjacking-attack-hijacks-your-ai-coding-agent-to-run-.md)
 
 ## 2026-06-12
 - [agentjacking attack tricks ai coding agents into running mal](./2026-06-12/agentjacking-attack-tricks-ai-coding-agents-into-running-mal.md)
@@ -25,13 +33,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa orders feds to patch actively exploited ivanti flaw by ](./2026-06-12/cisa-orders-feds-to-patch-actively-exploited-ivanti-flaw-by-.md)
 - [early warning signs of supply chain attacks live in the dark](./2026-06-12/early-warning-signs-of-supply-chain-attacks-live-in-the-dark.md)
 - [europol disrupts audia6 crypto laundering service used by ra](./2026-06-12/europol-disrupts-audia6-crypto-laundering-service-used-by-ra.md)
-- [fancy bear hackers abuse edgerouters and cloud services to l](./2026-06-12/fancy-bear-hackers-abuse-edgerouters-and-cloud-services-to-l.md)
 - [ghsa critical cve 2026 48150 budibase workspace scoped build](./2026-06-12/ghsa-critical-cve-2026-48150-budibase-workspace-scoped-build.md)
 - [google sues chinese smishing network accused of using gemini](./2026-06-12/google-sues-chinese-smishing-network-accused-of-using-gemini.md)
-- [hackers abuse legitimate ninjaone rmm software to bypass tra](./2026-06-12/hackers-abuse-legitimate-ninjaone-rmm-software-to-bypass-tra.md)
 - [interpol operation takes down sniper dz phishing platform ar](./2026-06-12/interpol-operation-takes-down-sniper-dz-phishing-platform-ar.md)
 - [langgraph flaw chain exposes self hosted ai agents to remote](./2026-06-12/langgraph-flaw-chain-exposes-self-hosted-ai-agents-to-remote.md)
-- [malicious npm campaign steals ssh keys api tokens cloud cred](./2026-06-12/malicious-npm-campaign-steals-ssh-keys-api-tokens-cloud-cred.md)
 - [over 400 arch linux aur packages hijacked to deploy infostea](./2026-06-12/over-400-arch-linux-aur-packages-hijacked-to-deploy-infostea.md)
 - [over 400 arch linux packages compromised to push rootkit inf](./2026-06-12/over-400-arch-linux-packages-compromised-to-push-rootkit-inf.md)
 - [over 73 000 french govt employees affected in tchap messenge](./2026-06-12/over-73-000-french-govt-employees-affected-in-tchap-messenge.md)
@@ -99,12 +104,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47724 nebula mesh api endpoints lack ](./2026-06-08/ghsa-critical-cve-2026-47724-nebula-mesh-api-endpoints-lack-.md)
 - [meta blocks nso group s new whatsapp phishing attack files c](./2026-06-08/meta-blocks-nso-group-s-new-whatsapp-phishing-attack-files-c.md)
 - [one character linux kernel flaw enables local root access ex](./2026-06-08/one-character-linux-kernel-flaw-enables-local-root-access-ex.md)
-- [unc3753 used vishing and physical intrusions in u s data the](./2026-06-08/unc3753-used-vishing-and-physical-intrusions-in-u-s-data-the.md)
 - [verdantbamboo deploys bsd variant of brickstorm on linux app](./2026-06-08/verdantbamboo-deploys-bsd-variant-of-brickstorm-on-linux-app.md)
 - [when hi this is it comes through microsoft teams](./2026-06-08/when-hi-this-is-it-comes-through-microsoft-teams.md)
-
-## 2026-06-06
-- [free apps are quietly turning smart tvs into web scraping pr](./2026-06-06/free-apps-are-quietly-turning-smart-tvs-into-web-scraping-pr.md)
 
 ## 2026-06-05
 - [cisa kev cve 2026 28318 solarwinds serv u uncontrolled resou](./2026-06-05/cisa-kev-cve-2026-28318-solarwinds-serv-u-uncontrolled-resou.md)

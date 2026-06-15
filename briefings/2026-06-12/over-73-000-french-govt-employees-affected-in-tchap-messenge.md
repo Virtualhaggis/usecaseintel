@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### First-seen device/user authenticating to Tchap (tchap.gouv.fr) matrix endpoint
 
-`UC_35_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_39_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceNetworkEvents
 
 ### High-volume scripted access to Tchap Matrix endpoint (bulk public-room scraping)
 
-`UC_35_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_39_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceNetworkEvents
 
 ### PowerShell process invoking LDAP:// with hardcoded plaintext credential
 
-`UC_35_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_39_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceProcessEvents
 
 ### Multi-GB outbound transfer from single user to Tchap/Matrix endpoint (exfil volume)
 
-`UC_35_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_39_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ DeviceNetworkEvents
 
 ### Bulk Matrix profile/room-member enumeration against Tchap endpoint
 
-`UC_35_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_39_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

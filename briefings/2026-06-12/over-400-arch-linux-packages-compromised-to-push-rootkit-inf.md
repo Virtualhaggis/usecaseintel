@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Atomic Arch — pacman/makepkg post-install spawning npm install of atomic-lockfile
 
-`UC_25_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_30_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### Atomic Arch — ELF payload 'deps' written or executed under build/cache directories after AUR install
 
-`UC_25_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_30_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceFileEvents
 
 ### Atomic Arch rootkit — eBPF program load by AUR-build-chain descendant
 
-`UC_25_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_30_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceEvents
 
 ### Atomic Arch infostealer — bulk reads of SSH/npmrc/Vault/browser-cookie files by non-shell process
 
-`UC_25_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_30_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceFileEvents
 
 ### Atomic Arch — DNS resolution and HTTP POST to temp.sh from non-browser developer workstation process
 
-`UC_25_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_30_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -156,7 +156,7 @@ DeviceNetworkEvents
 
 ### Atomic Arch — Tor client spawn or .onion endpoint contact from AUR-installing developer host
 
-`UC_25_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_30_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

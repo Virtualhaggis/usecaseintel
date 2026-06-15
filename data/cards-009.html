@@ -1,3 +1,443 @@
+<article class="card" id="art-261" data-art-slug="2026-05-19-ghsa-critical-cve-2026-46395-haxcms-private-key-disclosure-v"
+  data-phases="actions,c2,exploit,install,recon,weapon" data-sev="crit"
+  data-techs=""
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,cloud,endpoint"
+  data-targets="azure,vcs,windows"
+  data-uc-count="5" data-llm-uc-count="3"
+  data-search="[GHSA / CRITICAL] CVE-2026-46395: HAXcms: Private Key Disclosure via Broken HMAC Implementation HAXcms: Private Key Disclosure via Broken HMAC Implementation CVE-2026-46395  [LLM] HAXcms CVE-2026-46395: unauthenticated GET to /system/api/connectionSettings [LLM] HAXcms CVE-2026-46395: forged-JWT admin write within 30m of connectionSettings leak [LLM] HAXcms CVE-2026-46395: vulnerable @haxtheweb/haxcms-nodejs &lt;= 25.0.0 present Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-46395: HAXcms: Private Key Disclosure via Broken HMAC">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-05-19-ghsa-critical-cve-2026-46395-haxcms-private-key-disclosure-v" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-6c8g-9hfh-pq5h" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-46395: HAXcms: Private Key Disclosure via Broken HMAC Implementation</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-05-19</span>
+    <span>5 use cases</span>
+    <span>0 techniques</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">HAXcms: Private Key Disclosure via Broken HMAC Implementation</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-46395</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-261-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-261"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-261-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] HAXcms CVE-2026-46395: vulnerable @haxtheweb/haxcms-nodejs &lt;= 25.0.0 present</em></div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] HAXcms CVE-2026-46395: unauthenticated GET to /system/api/connectionSettings · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-46395: HAXcms: Private Key Disclosure via Broken HMAC</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] HAXcms CVE-2026-46395: forged-JWT admin write within 30m of connectionSettings leak</em></div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="cae1e6fe9a" data-platforms="datadog,falcon,sent,sigma,spl" data-targets="azure,vcs" open>
+  <summary>
+    <span class="uc-title">HAXcms CVE-2026-46395: unauthenticated GET to /system/api/connectionSettings</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="cae1e6fe9a" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Surfaces any HTTP GET to the HAXcms unauthenticated /system/api/connectionSettings endpoint, which returns base64 tokens whose tail bytes are the private signing key (privateKey+salt) plaintext. A single GET against a vulnerable @haxtheweb/haxcms-nodejs &lt;= 25.0.0 instance fully discloses the JWT-signing secret, so any request to this path on internet-facing HAXcms deployments warrants triage.
+
+Rationale: Endpoint path `/system/api/connectionSettings` is the article-named primary leak vector and is not present on benign HAXcms traffic that goes through the authenticated UI. A successful 2xx on this path is essentially equivalent to private-key exfiltration. Defender_kql is intentionally empty because Defender Advanced Hunting does not ship raw HTTP request URIs for arbitrary Node.js applications — the detection lives on the web tier (AppServiceHTTPLogs / W3CIISLog).
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-6c8g-9hfh-pq5h
+  • https://github.com/haxtheweb/issues</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorised internal/external penetration test enumerating the HAXcms endpoints</li><li>Vulnerability scanners (Tenable / Qualys / Nuclei) probing this exact CVE template after public disclosure</li><li>HAXcms development / staging instances being smoke-tested by the maintainer</li><li>Legitimate HAXcms CLI tooling that hits connectionSettings as part of provisioning (only seen from internal IPs)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIp !in (&quot;&lt;internal_scanner_ip&gt;&quot;, &quot;&lt;pentest_jumpbox_ip&gt;&quot;)
+| where UserAgent !has_any (&quot;Nessus&quot;, &quot;Qualys&quot;, &quot;Nuclei&quot;, &quot;Burp&quot;, &quot;sqlmap&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the host is running @haxtheweb/haxcms-nodejs &lt;= 25.0.0 (vulnerable). Pull the response size from the web log — a 2xx with &gt;100 byte body indicates the key was returned. Geo/ASN the source IP and check whether the user-agent matches a known scanner.
+Step 2 (contain): If response was 2xx, treat the private signing key as compromised. Isolate the HAXcms host from the internet, rotate the signing key + salt, invalidate all outstanding admin/user/site tokens, force re-authentication, and patch to a fixed version once available.
+Step 3 (hunt): Look back 30 days on the same host for any prior GETs to /system/api/connectionSettings from external IPs, and for any subsequent authenticated admin writes (saveOutline / saveManifest / saveNode / createSite / deleteSite / file uploads) from the same source IP — the forged-JWT chain produces no login events.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-261-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-261-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-261-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-261-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let WindowDays = 7d;
+let HaxcmsLeak = union isfuzzy=true
+    (AppServiceHTTPLogs
+        | where TimeGenerated &gt; ago(WindowDays)
+        | where csMethod =~ &quot;GET&quot;
+        | where csUriStem =~ &quot;/system/api/connectionSettings&quot;
+        | project TimeGenerated, SourceIp = CIp, Host = CsHost, UriStem = csUriStem, Method = csMethod, Status = ScStatus, UserAgent),
+    (W3CIISLog
+        | where TimeGenerated &gt; ago(WindowDays)
+        | where csMethod =~ &quot;GET&quot;
+        | where csUriStem =~ &quot;/system/api/connectionSettings&quot;
+        | project TimeGenerated, SourceIp = cIP, Host = sSiteName, UriStem = csUriStem, Method = csMethod, Status = scStatus, UserAgent = csUserAgent);
+HaxcmsLeak
+| where Status between (200 .. 299)   // 2xx = key successfully disclosed
+| summarize Hits = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated),
+            UserAgents = make_set(UserAgent, 10), Statuses = make_set(Status, 5)
+            by SourceIp, Host
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: HAXcms CVE-2026-46395 connectionSettings Private Key Disclosure Access
+id: 6f3a7c2e-1bd4-4f12-a8d3-8e0c9c4a13a1
+description: Detects HTTP GET requests to the HAXcms /system/api/connectionSettings endpoint which is unauthenticated and discloses the JWT signing private key (CVE-2026-46395) on @haxtheweb/haxcms-nodejs &lt;= 25.0.0.
+references:
+  - https://github.com/advisories/GHSA-6c8g-9hfh-pq5h
+  - https://nvd.nist.gov/vuln/detail/CVE-2026-46395
+author: SOC Detection Engineering
+date: 2026/05/20
+tags:
+  - attack.credential_access
+  - attack.t1552.001
+  - attack.initial_access
+  - attack.t1190
+  - cve.2026.46395
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-method: &#x27;GET&#x27;
+    cs-uri-stem|endswith: &#x27;/system/api/connectionSettings&#x27;
+  condition: selection
+falsepositives:
+  - Authorised penetration tests against the HAXcms instance
+  - Internal vulnerability scanners probing this exact path post-disclosure
+level: high</code></pre></div>
+    <div class="tab-content" id="art-261-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:iis OR source:azure.app_service) @http.method:GET (@http.url_details.path:&quot;/system/api/connectionSettings&quot; OR @http.url:*\/system\/api\/connectionSettings*) @http.status_code:[200 TO 299]</code></pre></div>
+    <div class="tab-content" id="art-261-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest OR #event_simpleName=NetworkConnectIP4
+| ContextImageFileName=/(node|nginx|apache2|httpd|iisexpress|w3wp)\.exe?/i
+| //  Falcon FDR does not natively ship web request bodies / URI paths;
+| //  this is a host-side proxy for HAXcms instances. Pair with web-tier logs (Datadog / Sentinel) for the URI predicate.
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-261-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agents values(Web.dest) as dest values(Web.status) as status from datamodel=Web.Web where Web.http_method=&quot;GET&quot; Web.url=&quot;*/system/api/connectionSettings*&quot; by Web.src Web.dest | `drop_dm_object_name(Web)` | rename src as src_ip | where status&gt;=200 AND status&lt;300 | sort -firstTime</code></pre><pre class="spl-mode-body" id="art-261-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agents values(Web.dest) as dest values(Web.status) as status from datamodel=Web.Web where Web.http_method=&quot;GET&quot; Web.url=&quot;*/system/api/connectionSettings*&quot; by Web.src Web.dest | `drop_dm_object_name(Web)` | rename src as src_ip | where status&gt;=200 AND status&lt;300 | sort -firstTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="8319527d29" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">HAXcms CVE-2026-46395: forged-JWT admin write within 30m of connectionSettings leak</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="8319527d29" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Correlates a successful GET to /system/api/connectionSettings (the private-key leak primitive) with subsequent authenticated HAXcms admin-write API calls from the same source IP within 30 minutes. Because forged JWTs are signed with the stolen privateKey+salt they produce no login events and look indistinguishable from the real admin to single-event detections — this temporal correlation is the cleanest way to catch the full exploit chain.
+
+Rationale: The article describes the complete exploit chain (extract key → forge admin JWT → call admin API) as feasible &quot;with a single HTTP request&quot; sequence, and explicitly warns the forged tokens &quot;produce no login events in logs&quot;. Temporal correlation of the article-named leak path (`/system/api/connectionSettings`) with the article-named admin endpoints (saveOutline / saveManifest / saveNode / createSite / deleteSite / saveFile / saveUser / form_token) from the same source IP within a tight window is the only reliable host-agnostic signal. Defender_kql is a host-tier approximation that depends on the HAXcms server itself being enrolled in Defender for Endpoint; if it is not, leave the Defender field empty operationally and rely on the Sentinel / Splunk web-tier queries. Datadog/Falcon/Sigma left empty — single-shape Sigma cannot express the cross-event join, and Falcon FDR does not ship arbitrary Node.js HTTP request URIs.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-6c8g-9hfh-pq5h
+  • https://nvd.nist.gov/vuln/detail/CVE-2026-46395</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Forge Web Credentials: Web Cookies">T1606.001</span> <span class="ind tech" title="Valid Accounts">T1078</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorised pentester chaining the disclosure + write actions in a single engagement IP</li><li>Legitimate HAXcms admin behind a shared NAT egress that also happens to be a CI scanner that probes connectionSettings</li><li>Internal vulnerability validation by an AppSec engineer hitting both endpoints from the same workstation</li><li>Site backup/restore tooling that legitimately calls saveOutline/saveManifest after configuration reads</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIp !in (&quot;&lt;internal_admin_workstation_ip&gt;&quot;, &quot;&lt;pentest_egress_ip&gt;&quot;)
+| where UserAgent !has_any (&quot;Nessus&quot;,&quot;Qualys&quot;,&quot;Nuclei&quot;,&quot;Burp&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the leaking endpoint returned a 2xx response with non-trivial body size (&gt;100 bytes). Examine the admin-write requests&#x27; Authorization header (if logged) — if the JWT&#x27;s `iat` is suspiciously close to the leak time and `user` claim is `admin`, treat as confirmed forgery. Cross-check whether the genuine admin had an interactive session on Entra/Okta during the same window — absence is incriminating.
+Step 2 (contain): Take the HAXcms instance offline or block at the WAF, rotate `privateKey + salt`, invalidate every outstanding user_token / site_token / form_token / base_token by regenerating, force admin password reset, and snapshot site content for offline integrity comparison. Patch @haxtheweb/haxcms-nodejs above the fixed version.
+Step 3 (hunt): Pivot on the source IP across the WAF for the prior 30 days — same IP touching /system/api/connectionSettings on any other HAXcms tenant indicates active mass-exploitation. Diff site content (saveOutline / saveNode bodie</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-261-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-261-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// HAXcms is a Node.js web app — the JWT/Authorization header signal lives on the web tier (AppServiceHTTPLogs / W3CIISLog), not in DeviceProcessEvents.
+// On hosts that run HAXcms AND are enrolled in Defender, this query approximates the post-exploit chain by joining
+// outbound DNS lookups from the suspected attacker host to HAXcms domains with subsequent file modifications under
+// HAXcms content roots performed by the local node.exe.
+let WindowMinutes = 30m;
+let HaxcmsHostHints = dynamic([&quot;haxcms&quot;,&quot;haxtheweb&quot;]);
+let NetTouch = DeviceNetworkEvents
+    | where Timestamp &gt; ago(7d)
+    | where RemoteUrl has_any (HaxcmsHostHints) or InitiatingProcessFileName =~ &quot;node.exe&quot;
+    | where ActionType in (&quot;ConnectionSuccess&quot;,&quot;ConnectionAttempt&quot;,&quot;HttpConnectionInspected&quot;)
+    | project NetTime = Timestamp, DeviceId, DeviceName, RemoteUrl, RemoteIP,
+              InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName;
+DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;node.exe&quot;
+| where FolderPath has_any (&quot;\\haxcms\\&quot;,&quot;/haxcms/&quot;,&quot;\\_sites\\&quot;,&quot;/_sites/&quot;,&quot;site.json&quot;,&quot;manifest.json&quot;)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| join kind=inner NetTouch on DeviceId
+| where Timestamp between (NetTime .. NetTime + WindowMinutes)
+| extend DelaySec = datetime_diff(&#x27;second&#x27;, Timestamp, NetTime)
+| project NetTime, FileWriteTime = Timestamp, DelaySec, DeviceName, RemoteUrl, RemoteIP,
+          FileName, FolderPath, InitiatingProcessAccountName,
+          InitiatingProcessCommandLine
+| order by NetTime desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let WindowMinutes = 30m;
+let WindowDays = 7d;
+let HaxcmsLeak = union isfuzzy=true
+    (AppServiceHTTPLogs
+        | where TimeGenerated &gt; ago(WindowDays)
+        | where csMethod =~ &quot;GET&quot; and csUriStem =~ &quot;/system/api/connectionSettings&quot;
+        | where ScStatus between (200 .. 299)
+        | project LeakTime = TimeGenerated, SourceIp = CIp, Host = CsHost),
+    (W3CIISLog
+        | where TimeGenerated &gt; ago(WindowDays)
+        | where csMethod =~ &quot;GET&quot; and csUriStem =~ &quot;/system/api/connectionSettings&quot;
+        | where scStatus between (200 .. 299)
+        | project LeakTime = TimeGenerated, SourceIp = cIP, Host = sSiteName);
+let HaxcmsAdminWrite = union isfuzzy=true
+    (AppServiceHTTPLogs
+        | where TimeGenerated &gt; ago(WindowDays)
+        | where csMethod in~ (&quot;POST&quot;,&quot;PUT&quot;,&quot;DELETE&quot;,&quot;PATCH&quot;)
+        | where csUriStem has_any (&quot;/system/api/saveOutline&quot;,&quot;/system/api/saveManifest&quot;,&quot;/system/api/saveNode&quot;,&quot;/system/api/createSite&quot;,&quot;/system/api/deleteSite&quot;,&quot;/system/api/saveFile&quot;,&quot;/system/api/saveUser&quot;,&quot;/system/api/listFiles&quot;)
+        | where ScStatus between (200 .. 299)
+        | project WriteTime = TimeGenerated, SourceIp = CIp, Host = CsHost,
+                  UriStem = csUriStem, Method = csMethod, UserAgent = UserAgent),
+    (W3CIISLog
+        | where TimeGenerated &gt; ago(WindowDays)
+        | where csMethod in~ (&quot;POST&quot;,&quot;PUT&quot;,&quot;DELETE&quot;,&quot;PATCH&quot;)
+        | where csUriStem has_any (&quot;/system/api/saveOutline&quot;,&quot;/system/api/saveManifest&quot;,&quot;/system/api/saveNode&quot;,&quot;/system/api/createSite&quot;,&quot;/system/api/deleteSite&quot;,&quot;/system/api/saveFile&quot;,&quot;/system/api/saveUser&quot;,&quot;/system/api/listFiles&quot;)
+        | where scStatus between (200 .. 299)
+        | project WriteTime = TimeGenerated, SourceIp = cIP, Host = sSiteName,
+                  UriStem = csUriStem, Method = csMethod, UserAgent = csUserAgent);
+HaxcmsLeak
+| join kind=inner HaxcmsAdminWrite on SourceIp, Host
+| where WriteTime between (LeakTime .. LeakTime + WindowMinutes)
+| extend DelaySec = datetime_diff(&#x27;second&#x27;, WriteTime, LeakTime)
+| project LeakTime, WriteTime, DelaySec, SourceIp, Host, UriStem, Method, UserAgent
+| order by LeakTime desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as leakTime from datamodel=Web.Web where Web.http_method=&quot;GET&quot; Web.url=&quot;*/system/api/connectionSettings*&quot; Web.status&gt;=200 Web.status&lt;300 by Web.src Web.dest | `drop_dm_object_name(Web)` | rename src as leak_src dest as leak_dest | join type=inner leak_src leak_dest [| tstats `summariesonly` count min(_time) as writeTime values(Web.url) as urls values(Web.http_method) as methods from datamodel=Web.Web where (Web.http_method=&quot;POST&quot; OR Web.http_method=&quot;PUT&quot; OR Web.http_method=&quot;DELETE&quot; OR Web.http_method=&quot;PATCH&quot;) (Web.url=&quot;*/system/api/saveOutline*&quot; OR Web.url=&quot;*/system/api/saveManifest*&quot; OR Web.url=&quot;*/system/api/saveNode*&quot; OR Web.url=&quot;*/system/api/createSite*&quot; OR Web.url=&quot;*/system/api/deleteSite*&quot; OR Web.url=&quot;*/system/api/saveFile*&quot; OR Web.url=&quot;*/system/api/saveUser*&quot;) Web.status&gt;=200 Web.status&lt;300 by Web.src Web.dest | `drop_dm_object_name(Web)` | rename src as leak_src dest as leak_dest] | eval delaySec=writeTime-leakTime | where delaySec&gt;=0 AND delaySec&lt;=1800 | table leakTime writeTime delaySec leak_src leak_dest urls methods | sort -leakTime</code></pre><pre class="spl-mode-body" id="art-261-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as leakTime from datamodel=Web.Web where Web.http_method=&quot;GET&quot; Web.url=&quot;*/system/api/connectionSettings*&quot; Web.status&gt;=200 Web.status&lt;300 by Web.src Web.dest | `drop_dm_object_name(Web)` | rename src as leak_src dest as leak_dest | join type=inner leak_src leak_dest [| tstats summariesonly=false count min(_time) as writeTime values(Web.url) as urls values(Web.http_method) as methods from datamodel=Web.Web where (Web.http_method=&quot;POST&quot; OR Web.http_method=&quot;PUT&quot; OR Web.http_method=&quot;DELETE&quot; OR Web.http_method=&quot;PATCH&quot;) (Web.url=&quot;*/system/api/saveOutline*&quot; OR Web.url=&quot;*/system/api/saveManifest*&quot; OR Web.url=&quot;*/system/api/saveNode*&quot; OR Web.url=&quot;*/system/api/createSite*&quot; OR Web.url=&quot;*/system/api/deleteSite*&quot; OR Web.url=&quot;*/system/api/saveFile*&quot; OR Web.url=&quot;*/system/api/saveUser*&quot;) Web.status&gt;=200 Web.status&lt;300 by Web.src Web.dest | `drop_dm_object_name(Web)` | rename src as leak_src dest as leak_dest] | eval delaySec=writeTime-leakTime | where delaySec&gt;=0 AND delaySec&lt;=1800 | table leakTime writeTime delaySec leak_src leak_dest urls methods | sort -leakTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="a8d1663189" data-platforms="def,falcon,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">HAXcms CVE-2026-46395: vulnerable @haxtheweb/haxcms-nodejs &lt;= 25.0.0 present</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="a8d1663189" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Asset-side detection for any host running the broken HAXcms Node.js backend (npm package `@haxtheweb/haxcms-nodejs` &lt;= 25.0.0). Until the maintainer ships a fix every such installation is one unauthenticated GET away from full-admin compromise via JWT forgery, so this UC drives patch prioritisation and feeds the Phase 2 correlation rules above.
+
+Rationale: Uses the article-named vulnerable package `@haxtheweb/haxcms-nodejs` and the explicit affected-version ceiling (`&lt;= 25.0.0`) plus CVE-2026-46395 from the GHSA advisory. TVM software-inventory tables are the canonical source of truth for npm/host packages enrolled with MDVM. Defender/Sentinel field set verified against the canonical schema (no Authorization column references).
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-6c8g-9hfh-pq5h</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Air-gapped / lab HAXcms install not reachable from the internet (still patch, but low urgency)</li><li>HAXcms dev workstation that runs the package locally for development only</li><li>Container images cached on a build host that no longer runs the package live</li><li>TVM inventory lag — host already patched but inventory not yet refreshed</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): For each device returned, confirm the HAXcms instance is internet-reachable (check DeviceInfo.IsInternetFacing if available, otherwise external scan from your perimeter). Prioritise public-facing hosts.
+Step 2 (contain): Stage the upstream fix as soon as it ships; in the interim block /system/api/connectionSettings at the WAF/reverse-proxy (return 403/404 unconditionally) and rotate `privateKey + salt` so historical leaks are invalidated.
+Step 3 (hunt): For every device that has been confirmed vulnerable, run UC1 and UC2 retrospectively over the maximum log retention to verify no prior leak/exploit. If logs do not cover the full vulnerable window, assume compromise and rebuild from known-good.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-261-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-261-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-261-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(7d)
+| where CveId =~ &quot;CVE-2026-46395&quot;
+   or (SoftwareName has_any (&quot;haxcms&quot;,&quot;haxtheweb&quot;,&quot;haxcms-nodejs&quot;) and SoftwareVendor has_any (&quot;haxtheweb&quot;,&quot;penn state&quot;,&quot;the pennsylvania state university&quot;))
+| project Timestamp, DeviceId, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion,
+          CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, AffectedSoftwareSku
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(7d)
+| where CveId =~ &quot;CVE-2026-46395&quot;
+   or (SoftwareName has_any (&quot;haxcms&quot;,&quot;haxtheweb&quot;,&quot;haxcms-nodejs&quot;) and SoftwareVendor has_any (&quot;haxtheweb&quot;,&quot;penn state&quot;))
+| project TimeGenerated, DeviceId, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion,
+          CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=InstalledApplication ApplicationName=/haxcms|haxtheweb/i
+| groupBy([aid, ComputerName, ApplicationName, ApplicationVersion], function=count(), limit=10000)</code></pre></div>
+    <div class="tab-content" id="art-261-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve=&quot;CVE-2026-46395&quot; OR (Vulnerabilities.signature=&quot;*haxcms*&quot;)) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | sort -lastTime</code></pre><pre class="spl-mode-body" id="art-261-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where (Vulnerabilities.cve=&quot;CVE-2026-46395&quot; OR (Vulnerabilities.signature=&quot;*haxcms*&quot;)) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | sort -lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-261-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-261-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-46395&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-261-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-46395&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-261-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-46395&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-261-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-46395&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="5f9ef93ea3" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-46395: HAXcms: Private Key Disclosure via Broken HMAC</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="5f9ef93ea3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-261-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-261-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-261-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-261-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-46395: HAXcms: Private Key Disclosure via Broken HMAC
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-46395: HAXcms: Private Key Disclosure via Broken HMAC
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-261-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-261-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-261-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-261-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-46395: HAXcms: Private Key Disclosure via Broken HMAC ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-261-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-46395: HAXcms: Private Key Disclosure via Broken HMAC ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-262" data-art-slug="2026-05-19-ghsa-critical-cve-2026-45721-algernon-handler-lua-discovery-"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -13630,307 +14070,6 @@ level: high</code></pre></div>
 | where isnotnull(user_segment) AND isnotnull(session_id) AND user_segment != &quot;api&quot;
 | convert ctime(firstTime) ctime(lastTime)
 | sort - lastTime</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-292" data-art-slug="2026-05-14-ghsa-critical-cve-2026-45374-deepseek-tui-task-create-insecu"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,sent,sigma,spl"
-  data-splunk-cats="application,endpoint"
-  data-targets="linux,macos,vcs,windows"
-  data-uc-count="3" data-llm-uc-count="1"
-  data-search="[GHSA / CRITICAL] CVE-2026-45374: DeepSeek TUI: task_create Insecure Defaults Enable RCE via Prompt Injection in Project Files DeepSeek TUI: task_create Insecure Defaults Enable RCE via Prompt Injection in Project Files CVE-2026-45374 T1190 [LLM] DeepSeek-TUI sub-agent shell execution via AGENTS.md prompt injection (CVE-2026-45374) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-45374: DeepSeek TUI: task_create Insecure Defaults En">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-05-14-ghsa-critical-cve-2026-45374-deepseek-tui-task-create-insecu" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-72w5-pf8h-xfp4" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-45374: DeepSeek TUI: task_create Insecure Defaults Enable RCE via Prompt Injection in Project Files</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-05-14</span>
-    <span>3 use cases</span>
-    <span>1 technique</span>
-    <span>4 kill-chain phases detected</span>
-  </div>
-  <p class="summary">DeepSeek TUI: task_create Insecure Defaults Enable RCE via Prompt Injection in Project Files</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-45374</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-292-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-292"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-292-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] DeepSeek-TUI sub-agent shell execution via AGENTS.md prompt injection (CVE-2026-45374)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-45374: DeepSeek TUI: task_create Insecure Defaults En</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="4269794692" data-platforms="datadog,def,sent,sigma,spl" data-targets="linux,macos,vcs,windows" open>
-  <summary>
-    <span class="uc-title">DeepSeek-TUI sub-agent shell execution via AGENTS.md prompt injection (CVE-2026-45374)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="4269794692" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts exploitation of CVE-2026-45374 where deepseek-tui&#x27;s task_create tool spawns durable sub-agents with allow_shell=true and auto_approve=true defaults. A malicious AGENTS.md in a cloned repo injects shell commands (e.g. &#x27;curl -s http://attacker/...&#x27;) that execute without user approval. Detection pivots on the deepseek-tui binary spawning shell utilities or HTTP-egress LOLBins.
-
-Rationale: Article specifies the exact binary name &#x27;deepseek-tui&#x27; (rust:deepseek-tui &lt; 0.8.26) and shows the PoC payload as &#x27;curl -s http://[collaborator]/badge-gen?project=web-service&#x27; executed via the sub-agent&#x27;s shell. Parent=deepseek-tui spawning curl/wget/bash/python with HTTP URLs or shell -c flags is the highest-fidelity behavioural marker — deepseek-tui itself talks to the DeepSeek API directly (not via curl), so any forked shell/HTTP utility is anomalous and indicates the prompt-injection-driven sub-agent shell escape. External corroboration: confirmed deepseek-tui is a real Rust CLI (deepseek-ai/awesome-deepseek-agent repo) and a separate active campaign abuses fake deepseek-tui repos for malware delivery (cybersecuritynews.com), increasing the prior on this being targeted.
-
-Cross-checked against:
-  • https://github.com/deepseek-ai/awesome-deepseek-agent/blob/main/docs/deepseek-tui.md
-  • https://cybersecuritynews.com/hackers-use-fake-deepseek-tui-github-repositories/amp/
-  • https://github.com/advisories/GHSA-72w5-pf8h-xfp4</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="User Execution: Malicious Image">T1204.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-292-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-292-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-292-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-292-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-292-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-292-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// CVE-2026-45374: deepseek-tui sub-agent shell exec (MDE Linux/macOS)
-DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName =~ &quot;deepseek-tui&quot;
-   or InitiatingProcessFolderPath has &quot;deepseek-tui&quot;
-| where FileName in~ (&quot;curl&quot;,&quot;wget&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;zsh&quot;,&quot;dash&quot;,&quot;ksh&quot;,&quot;fish&quot;,
-                      &quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,
-                      &quot;ruby&quot;,&quot;node&quot;,&quot;powershell&quot;,&quot;pwsh&quot;)
-| where ProcessCommandLine has_any (&quot;http://&quot;,&quot;https://&quot;,&quot;/dev/tcp/&quot;,&quot;base64 -d&quot;,&quot;-c &quot;,&quot;-s &quot;)
-   or FileName in~ (&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;)
-| project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd   = InitiatingProcessCommandLine,
-          ChildImage  = FolderPath,
-          ChildCmd    = ProcessCommandLine,
-          SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-292-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// CVE-2026-45374: deepseek-tui sub-agent shell exec — ASIM cross-vendor
-ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where ParentProcessName has &quot;deepseek-tui&quot;
-| where TargetProcessName has_any (&quot;curl&quot;,&quot;wget&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;zsh&quot;,&quot;dash&quot;,&quot;ksh&quot;,&quot;fish&quot;,
-                                   &quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,
-                                   &quot;ruby&quot;,&quot;node&quot;,&quot;powershell&quot;,&quot;pwsh&quot;)
-| where TargetProcessCommandLine has_any (&quot;http://&quot;,&quot;https://&quot;,&quot;/dev/tcp/&quot;,&quot;base64 -d&quot;,&quot;-c &quot;,&quot;-s &quot;)
-   or TargetProcessName has_any (&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername,
-          ParentProcessName, ParentProcessCommandLine,
-          TargetProcessName, TargetProcessCommandLine, SHA256
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-292-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: DeepSeek-TUI Sub-Agent Shell Execution (CVE-2026-45374)
-id: 7c4f2a3b-5e8d-4a91-9c2b-1d6f8e3a5c7b
-description: |
-  Detects the deepseek-tui binary spawning shell utilities or network-capable
-  LOLBins, which indicates exploitation of CVE-2026-45374 where task_create
-  sub-agents inherit allow_shell=true / auto_approve=true defaults and execute
-  attacker-controlled commands injected via a malicious AGENTS.md file in a
-  cloned project.
-references:
-  - https://github.com/advisories/GHSA-72w5-pf8h-xfp4
-author: SOC Detection Engineering
-date: 2026/05/15
-tags:
-  - attack.execution
-  - attack.t1059.004
-  - attack.t1059.006
-  - attack.t1105
-  - attack.t1204.003
-  - cve.2026.45374
-logsource:
-  category: process_creation
-  product: linux
-detection:
-  selection_parent:
-    ParentImage|contains: &#x27;deepseek-tui&#x27;
-  selection_child:
-    Image|endswith:
-      - &#x27;/curl&#x27;
-      - &#x27;/wget&#x27;
-      - &#x27;/bash&#x27;
-      - &#x27;/sh&#x27;
-      - &#x27;/zsh&#x27;
-      - &#x27;/dash&#x27;
-      - &#x27;/nc&#x27;
-      - &#x27;/ncat&#x27;
-      - &#x27;/socat&#x27;
-      - &#x27;/python&#x27;
-      - &#x27;/python3&#x27;
-      - &#x27;/perl&#x27;
-      - &#x27;/ruby&#x27;
-      - &#x27;/node&#x27;
-      - &#x27;/pwsh&#x27;
-  condition: selection_parent and selection_child
-falsepositives:
-  - Legitimate use of deepseek-tui to run network-aware build or test scripts
-    in trusted repositories.
-level: high</code></pre></div>
-    <div class="tab-content" id="art-292-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.auditd OR windows.sysmon OR linux.syslog) (@process.parent.name:deepseek-tui OR @ParentImage:(*\/deepseek-tui OR *\\deepseek-tui.exe)) (@process.name:(curl OR wget OR bash OR sh OR zsh OR dash OR nc OR ncat OR socat OR python OR python3 OR perl OR ruby OR node OR pwsh OR powershell) OR @Image:(*\/curl OR *\/wget OR *\/bash OR *\/sh OR *\/python* OR *\/nc OR *\/ncat OR *\/socat OR *\\powershell.exe OR *\\PowerShell.exe))</code></pre></div>
-    <div class="tab-content" id="art-292-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-292-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-292-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-292-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.process_path) as paths from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;deepseek-tui&quot; OR Processes.parent_process_name=&quot;deepseek-tui.exe&quot;) (Processes.process_name IN (&quot;curl&quot;,&quot;wget&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;zsh&quot;,&quot;dash&quot;,&quot;ksh&quot;,&quot;fish&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;,&quot;node&quot;,&quot;powershell&quot;,&quot;pwsh&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | where match(cmdlines, &quot;(?i)(https?://|-s\s+http|curl\s|wget\s|/dev/tcp/|base64\s+-d|-c\s+[&#x27;\&quot;])&quot;) | rename firstTime as firstTime lastTime as lastTime | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-292-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.process_path) as paths from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;deepseek-tui&quot; OR Processes.parent_process_name=&quot;deepseek-tui.exe&quot;) (Processes.process_name IN (&quot;curl&quot;,&quot;wget&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;zsh&quot;,&quot;dash&quot;,&quot;ksh&quot;,&quot;fish&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;socat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;ruby&quot;,&quot;node&quot;,&quot;powershell&quot;,&quot;pwsh&quot;)) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | where match(cmdlines, &quot;(?i)(https?://|-s\s+http|curl\s|wget\s|/dev/tcp/|base64\s+-d|-c\s+[&#x27;\&quot;])&quot;) | rename firstTime as firstTime lastTime as lastTime | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-292-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-292-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-292-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-292-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-45374&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-292-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-45374&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-292-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-292-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-292-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-292-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-45374&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-292-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-45374&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="737c2db722" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-45374: DeepSeek TUI: task_create Insecure Defaults En</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="737c2db722" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-292-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-292-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-292-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-292-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45374: DeepSeek TUI: task_create Insecure Defaults En
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/tmp/poc-task-create&quot;, &quot;/dev/null&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-292-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45374: DeepSeek TUI: task_create Insecure Defaults En
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/tmp/poc-task-create&quot;, &quot;/dev/null&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-292-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-292-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-292-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-292-uc2-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45374: DeepSeek TUI: task_create Insecure Defaults En ```
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/poc-task-create*&quot; OR Filesystem.file_path=&quot;*/dev/null*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-292-uc2-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-45374: DeepSeek TUI: task_create Insecure Defaults En ```
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/poc-task-create*&quot; OR Filesystem.file_path=&quot;*/dev/null*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
   </div>
 </details></div>
 </article>
