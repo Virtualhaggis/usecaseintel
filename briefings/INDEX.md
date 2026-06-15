@@ -12,6 +12,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [152 chrome wallpaper extensions with 105k installs linked to](./2026-06-15/152-chrome-wallpaper-extensions-with-105k-installs-linked-to.md)
 - [china nexus hackers use backdoored pam modules for credentia](./2026-06-15/china-nexus-hackers-use-backdoored-pam-modules-for-credentia.md)
 - [chinese hackers breach redcap servers steal medical research](./2026-06-15/chinese-hackers-breach-redcap-servers-steal-medical-research.md)
+- [cisa kev cve 2026 20262 cisco catalyst sd wan manager direct](./2026-06-15/cisa-kev-cve-2026-20262-cisco-catalyst-sd-wan-manager-direct.md)
+- [cisa kev cve 2026 54420 litespeed cpanel plugin unix symboli](./2026-06-15/cisa-kev-cve-2026-54420-litespeed-cpanel-plugin-unix-symboli.md)
 - [cisco fixes sd wan vmanage flaw exploited in zero day attack](./2026-06-15/cisco-fixes-sd-wan-vmanage-flaw-exploited-in-zero-day-attack.md)
 - [council of europe investigates shinyhunters data breach clai](./2026-06-15/council-of-europe-investigates-shinyhunters-data-breach-clai.md)
 - [dpapisnoop tool extracts credhist hashes for offline windows](./2026-06-15/dpapisnoop-tool-extracts-credhist-hashes-for-offline-windows.md)
@@ -19,6 +21,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hackers use microsoft graph reconnaissance to target payroll](./2026-06-15/hackers-use-microsoft-graph-reconnaissance-to-target-payroll.md)
 - [litellm vulnerability chain lets low privilege users take ov](./2026-06-15/litellm-vulnerability-chain-lets-low-privilege-users-take-ov.md)
 - [microsoft defender email security benchmarking key insights ](./2026-06-15/microsoft-defender-email-security-benchmarking-key-insights-.md)
+- [optinmonster wordpress plugin hacked in cdn supply chain att](./2026-06-15/optinmonster-wordpress-plugin-hacked-in-cdn-supply-chain-att.md)
 - [palo alto warns of active exploitation of pan os globalprote](./2026-06-15/palo-alto-warns-of-active-exploitation-of-pan-os-globalprote.md)
 - [popular wordpress plugin scripts tampered to plant hidden ba](./2026-06-15/popular-wordpress-plugin-scripts-tampered-to-plant-hidden-ba.md)
 - [promptsnatcher ad blocker extensions steal ai chats from cha](./2026-06-15/promptsnatcher-ad-blocker-extensions-steal-ai-chats-from-cha.md)
@@ -48,7 +51,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [rethinking mdr as attackers and defenders embrace ai](./2026-06-12/rethinking-mdr-as-attackers-and-defenders-embrace-ai.md)
 - [shinyhunters exploits oracle peoplesoft zero day cve 2026 35](./2026-06-12/shinyhunters-exploits-oracle-peoplesoft-zero-day-cve-2026-35.md)
 - [tracing digital intent new macos tahoe 26 artifact discovere](./2026-06-12/tracing-digital-intent-new-macos-tahoe-26-artifact-discovere.md)
-- [ukrainian national pleads guilty to role in conti ransomware](./2026-06-12/ukrainian-national-pleads-guilty-to-role-in-conti-ransomware.md)
 
 ## 2026-06-11
 - [a tale of two eras](./2026-06-11/a-tale-of-two-eras.md)
@@ -1762,12 +1764,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2024-06-13
 - [4 ai coding risks and how to address them](./2024-06-13/4-ai-coding-risks-and-how-to-address-them.md)
 - [cisa kev cve 2024 26169 microsoft windows error reporting se](./2024-06-13/cisa-kev-cve-2024-26169-microsoft-windows-error-reporting-se.md)
-- [cisa kev cve 2024 32896 android pixel privilege escalation v](./2024-06-13/cisa-kev-cve-2024-32896-android-pixel-privilege-escalation-v.md)
 - [cisa kev cve 2024 4358 progress telerik report server authen](./2024-06-13/cisa-kev-cve-2024-4358-progress-telerik-report-server-authen.md)
 - [why vulnerability management falls short in modern applicati](./2024-06-13/why-vulnerability-management-falls-short-in-modern-applicati.md)
 
 ## 2024-06-12
-- [cisa kev cve 2024 4577 php cgi os command injection vulnerab](./2024-06-12/cisa-kev-cve-2024-4577-php-cgi-os-command-injection-vulnerab.md)
 - [essential node js backend examples for developers in 2024](./2024-06-12/essential-node-js-backend-examples-for-developers-in-2024.md)
 - [snyk and aws announce native amazon eks support directly fro](./2024-06-12/snyk-and-aws-announce-native-amazon-eks-support-directly-fro.md)
 

@@ -67,7 +67,7 @@ _(none detected from narrative keywords)_
 
 ### Hosts missing June 2026 Patch Tuesday critical RCE/EoP fixes
 
-`UC_84_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_86_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Outlook preview-pane Type Confusion exploit chain (Outlook → Word → LOLBin)
 
-`UC_84_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_86_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceProcessEvents
 
 ### mstsc.exe child process after outbound RDP to external server (RDC heap overflow)
 
-`UC_84_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_86_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceProcessEvents
 
 ### csrss.exe or dwm.exe spawning child process (Win32K-GRFX kernel exploit marker)
 
-`UC_84_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_86_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -171,7 +171,7 @@ DeviceProcessEvents
 
 ### w3wp.exe spawning interpreter or LOLBin (http.sys exploitation / IIS RCE marker)
 
-`UC_84_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_86_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -194,7 +194,7 @@ DeviceProcessEvents
 
 ### Hyper-V worker process (vmwp.exe / vmms.exe) spawning unexpected child (guest-to-host escape)
 
-`UC_84_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_86_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -219,7 +219,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft Patch Tuesday for June 2026 — Snort rules and prominent vulnerabilitie
 
-`UC_84_1` · phase: **exploit** · confidence: **High**
+`UC_86_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
