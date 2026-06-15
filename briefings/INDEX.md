@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1195 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1198 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,15 +10,20 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-15
 - [152 chrome wallpaper extensions with 105k installs linked to](./2026-06-15/152-chrome-wallpaper-extensions-with-105k-installs-linked-to.md)
+- [china nexus hackers use backdoored pam modules for credentia](./2026-06-15/china-nexus-hackers-use-backdoored-pam-modules-for-credentia.md)
 - [hackers abuse lnk files powershell and python loader to depl](./2026-06-15/hackers-abuse-lnk-files-powershell-and-python-loader-to-depl.md)
+- [hackers use microsoft graph reconnaissance to target payroll](./2026-06-15/hackers-use-microsoft-graph-reconnaissance-to-target-payroll.md)
+- [new attack turned microsoft 365 copilot into 1 click data th](./2026-06-15/new-attack-turned-microsoft-365-copilot-into-1-click-data-th.md)
 - [palo alto warns of active exploitation of pan os globalprote](./2026-06-15/palo-alto-warns-of-active-exploitation-of-pan-os-globalprote.md)
 - [popular wordpress plugin scripts tampered to plant hidden ba](./2026-06-15/popular-wordpress-plugin-scripts-tampered-to-plant-hidden-ba.md)
+- [promptsnatcher ad blocker extensions steal ai chats from cha](./2026-06-15/promptsnatcher-ad-blocker-extensions-steal-ai-chats-from-cha.md)
+- [searchjack campaign uses 23 chrome extensions to hijack sear](./2026-06-15/searchjack-campaign-uses-23-chrome-extensions-to-hijack-sear.md)
 - [sniper dz scams target mena users via fake facebook offers a](./2026-06-15/sniper-dz-scams-target-mena-users-via-fake-facebook-offers-a.md)
-- [threat actor malware platform exposed via unlocked php insta](./2026-06-15/threat-actor-malware-platform-exposed-via-unlocked-php-insta.md)
+- [the government just banned an ai model an engineer s perspec](./2026-06-15/the-government-just-banned-an-ai-model-an-engineer-s-perspec.md)
+- [the onboarding password mistake that creates unnecessary ris](./2026-06-15/the-onboarding-password-mistake-that-creates-unnecessary-ris.md)
 - [winrar vulnerability exploited by russian hackers to deploy ](./2026-06-15/winrar-vulnerability-exploited-by-russian-hackers-to-deploy-.md)
 
 ## 2026-06-14
-- [152 chrome extensions hide ad tracking and fake google searc](./2026-06-14/152-chrome-extensions-hide-ad-tracking-and-fake-google-searc.md)
 - [fbi disrupts massive ai powered phishing service using a mil](./2026-06-14/fbi-disrupts-massive-ai-powered-phishing-service-using-a-mil.md)
 - [when a government pulls an ai model what the fable 5 and myt](./2026-06-14/when-a-government-pulls-an-ai-model-what-the-fable-5-and-myt.md)
 
@@ -39,7 +44,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [langgraph flaw chain exposes self hosted ai agents to remote](./2026-06-12/langgraph-flaw-chain-exposes-self-hosted-ai-agents-to-remote.md)
 - [over 400 arch linux aur packages hijacked to deploy infostea](./2026-06-12/over-400-arch-linux-aur-packages-hijacked-to-deploy-infostea.md)
 - [over 400 arch linux packages compromised to push rootkit inf](./2026-06-12/over-400-arch-linux-packages-compromised-to-push-rootkit-inf.md)
-- [over 73 000 french govt employees affected in tchap messenge](./2026-06-12/over-73-000-french-govt-employees-affected-in-tchap-messenge.md)
 - [rethinking mdr as attackers and defenders embrace ai](./2026-06-12/rethinking-mdr-as-attackers-and-defenders-embrace-ai.md)
 - [shinyhunters exploits oracle peoplesoft zero day cve 2026 35](./2026-06-12/shinyhunters-exploits-oracle-peoplesoft-zero-day-cve-2026-35.md)
 - [tracing digital intent new macos tahoe 26 artifact discovere](./2026-06-12/tracing-digital-intent-new-macos-tahoe-26-artifact-discovere.md)
@@ -104,7 +108,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47724 nebula mesh api endpoints lack ](./2026-06-08/ghsa-critical-cve-2026-47724-nebula-mesh-api-endpoints-lack-.md)
 - [meta blocks nso group s new whatsapp phishing attack files c](./2026-06-08/meta-blocks-nso-group-s-new-whatsapp-phishing-attack-files-c.md)
 - [one character linux kernel flaw enables local root access ex](./2026-06-08/one-character-linux-kernel-flaw-enables-local-root-access-ex.md)
-- [verdantbamboo deploys bsd variant of brickstorm on linux app](./2026-06-08/verdantbamboo-deploys-bsd-variant-of-brickstorm-on-linux-app.md)
 - [when hi this is it comes through microsoft teams](./2026-06-08/when-hi-this-is-it-comes-through-microsoft-teams.md)
 
 ## 2026-06-05
