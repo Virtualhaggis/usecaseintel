@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### mistralai 2.4.6 dropper: curl downloading transformers.pyz from 83.142.209.194
 
-`UC_272_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_271_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceProcessEvents
 
 ### mistralai 2.4.6 dropper: Python interpreter executing /tmp/transformers.pyz as detached session
 
-`UC_272_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_271_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceProcessEvents
 
 ### Outbound network connection to mistralai 2.4.6 dropper C2 (83.142.209.194)
 
-`UC_272_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_271_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceNetworkEvents
 
 ### Drop of /tmp/transformers.pyz on Linux endpoint
 
-`UC_272_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_271_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-wx9m-wx4f-4cmg: Malicious dropper in mistralai 2.4.6 PyPI
 
-`UC_272_2` · phase: **exploit** · confidence: **High**
+`UC_271_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

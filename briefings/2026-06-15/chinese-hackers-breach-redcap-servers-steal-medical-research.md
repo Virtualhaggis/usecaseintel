@@ -11,19 +11,21 @@ By Bill Toulas
 June 15, 2026
 10:00 AM
 0 
-
-
 A China-linked espionage campaign targeted exposed REDCap servers to deploy the InfiniteRed malware and steal sensitive data from a medical institution in North America.
-
-
 Google Threat Intelligence Group (GTIG) researchers attribute the attacks to a threat actor tracked as UNC6508, who remained undetected for more than a year in the victim network.
-
-
-The REDCap platform is widely use…
+The REDCap platform is widely used in medical…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `23.169.65.49`
+- **Domain (defanged):** `BebitaBarefoot774@gmail.com`
+- **SHA256:** `ba6b73b0ca0dc7f86b3b397893ac32d729fd53f9df20643288f141f29d020af7`
+- **SHA256:** `db65c1b9f9e4cb4d729f45ad4b6fcf3e277caf9eb4c875425dec93fd883f9136`
+- **SHA256:** `c1ac43d23f89d41eb4ff131678ab562ab2cfed9aa334b13767ef141d303b0e5b`
+- **SHA256:** `8f0158855a656b629ca76ebca565f18bc25563ded34b65d6771632c20edb68ec`
+- **SHA256:** `51a57bfc9ed3eb6451c1c289607814d59e1698c666fb97ac5f694c398f23d045`
+- **SHA256:** `4efbef69eb3b09bacff892d6a55778d07c418e7f15eba3cf1245e8cdfd8dda0b`
+- **SHA256:** `58bb25777e0aa86bcd2125101e0bca4e8732b03d91bd8d2f205b446a2a8d5c86`
 
 ## MITRE ATT&CK Techniques
 
@@ -33,6 +35,8 @@ The REDCap platform is widely use…
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
+- **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
 - **T1114.003** — Email Forwarding Rule
 - **T1567** — Exfiltration Over Web Service
 - **T1098.002** — Additional Email Delegate Permissions
@@ -51,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### Exchange/Compliance content rule 'Patroit' with external Gmail BCC (UNC6508)
 
-`UC_3_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_11_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +78,7 @@ CloudAppEvents
 
 ### Outbound mail BCC'd to UNC6508 actor dropbox BebitaBarefoot774@gmail.com
 
-`UC_3_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_11_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +97,7 @@ EmailEvents
 
 ### INFINITERED trojanization — unexpected modification of REDCap PHP system files
 
-`UC_3_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_11_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +120,7 @@ DeviceFileEvents
 
 ### REDCap webserver process spawning shell / DB client — cookie-driven INFINITERED backdoor
 
-`UC_3_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_11_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -276,7 +280,17 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `23.169.65.49`, `BebitaBarefoot774@gmail.com`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `ba6b73b0ca0dc7f86b3b397893ac32d729fd53f9df20643288f141f29d020af7`, `db65c1b9f9e4cb4d729f45ad4b6fcf3e277caf9eb4c875425dec93fd883f9136`, `c1ac43d23f89d41eb4ff131678ab562ab2cfed9aa334b13767ef141d303b0e5b`, `8f0158855a656b629ca76ebca565f18bc25563ded34b65d6771632c20edb68ec`, `51a57bfc9ed3eb6451c1c289607814d59e1698c666fb97ac5f694c398f23d045`, `4efbef69eb3b09bacff892d6a55778d07c418e7f15eba3cf1245e8cdfd8dda0b`, `58bb25777e0aa86bcd2125101e0bca4e8732b03d91bd8d2f205b446a2a8d5c86`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 7 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1,24 +1,26 @@
-# [CRIT] AI Phishing Is Crushing SOCs with Alert Volume: How to Reduce Tier 1 Overload
+# [HIGH] Microsoft Defender email security benchmarking: Key insights from one year of data
 
-**Source:** The Hacker News
-**Published:** 2026-06-08
-**Article:** https://thehackernews.com/2026/06/ai-phishing-is-crushing-socs-with-alert.html
+**Source:** Microsoft Security Blog
+**Published:** 2026-06-15
+**Article:** https://www.microsoft.com/en-us/security/blog/2026/06/15/microsoft-defender-email-security-benchmarking-key-insights-from-one-year-of-data/
 
 ## Threat Profile
 
-AI Phishing Is Crushing SOCs with Alert Volume: How to Reduce Tier 1 Overload 
- The Hacker News  Jun 08, 2026 Incident Response / Artificial Intelligence 
-Phishing has always been a numbers game. AI has turned it into a volume machine.
-Attackers can now create convincing emails, fake login pages, and tailored lures in minutes. Every polished message adds another case for Tier 1 to review, another link to inspect, and another alert that cannot be dismissed at a glance.
-As the queue grows, a cre…
+Content types 
+News 
+Products and services 
+Microsoft Defender 
+Microsoft Defender for Office 365 
+Topics 
+Email security 
+Security management 
+Security operations 
+Microsoft publishes quarterly email security benchmarking data comparing Microsoft Defender against secure email gateway (SEG) and integrated cloud email security (ICES) vendors using real-world threat telemetry.
+A year ago, we set out to change how email security effectiveness is measured. With our first benchmarking report in July …
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `13.107.213.44`
-- **IPv4 (defanged):** `143.204.203.52`
-- **Domain (defanged):** `blog.com`
-- **Domain (defanged):** `openvpn.com`
-- **Domain (defanged):** `epleyonlineo.za.com`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
@@ -29,11 +31,8 @@ As the queue grows, a cre…
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1528** — Steal Application Access Token
-- **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1071** — Application Layer Protocol
 
 ## Kill chain phases observed
 
@@ -189,33 +188,6 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### OAuth consent / suspicious app grant
-
-`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action="success"
-      AND Authentication.signature IN (
-        "Consent to application",
-        "Add app role assignment grant to user",
-        "Add OAuth2PermissionGrant",
-        "Add delegated permission grant")
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
-| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-          ActivityObjects, IPAddress, UserAgent
-```
-
 ### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
 
 `UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
@@ -268,14 +240,7 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `13.107.213.44`, `143.204.203.52`, `blog.com`, `openvpn.com`, `epleyonlineo.za.com`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 5 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
