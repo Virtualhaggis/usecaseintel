@@ -1,28 +1,59 @@
-# [CRIT] Researchers Build Self-Replicating AI Worm That Operates Entirely on Local, Open-Weight Models
+# [HIGH] Microsoft 365 Device Code Phishing Campaign Bypasses Password Theft With Legitimate Login Flow
 
-**Source:** The Hacker News
-**Published:** 2026-06-09
-**Article:** https://thehackernews.com/2026/06/researchers-build-self-replicating-ai.html
+**Source:** Cyber Security News
+**Published:** 2026-06-16
+**Article:** https://cybersecuritynews.com/microsoft-365-device-code-phishing-campaign/
 
 ## Threat Profile
 
-Researchers Build Self-Replicating AI Worm That Operates Entirely on Local, Open-Weight Models 
- Swati Khandelwal  Jun 09, 2026 Artificial Intelligence / Network Security 
-University of Toronto researchers have built and tested a proof-of-concept AI-driven computer worm that uses a locally hosted open-weight large language model to reason its way through a network, generate tailored attack strategies for each target it encounters, and replicate itself, all without human intervention and withou…
+A new phishing campaign targeting Microsoft 365 users has been uncovered, and it takes a different approach than most attacks seen in the wild. Instead of trying to steal a victim&#8217;s password directly, this campaign tricks users into completing a real Microsoft authentication process that quietly hands over control of their account to an attacker. [&#8230;] The post Microsoft 365 Device Code Phishing Campaign Bypasses Password Theft With Legitimate Login Flow appeared first on Cyber Securit…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-39987`
-- **CVE:** `CVE-2026-31431`
-- **CVE:** `CVE-2026-43284`
-- **CVE:** `CVE-2026-43500`
-- **CVE:** `CVE-2024-21182`
-- **CVE:** `CVE-2026-0257`
-- **CVE:** `CVE-2026-45659`
+- **IPv4 (defanged):** `162.220.234.41`
+- **IPv4 (defanged):** `162.220.234.66`
+- **IPv4 (defanged):** `162.220.232.57`
+- **IPv4 (defanged):** `162.220.232.99`
+- **IPv4 (defanged):** `162.220.232.235`
+- **IPv4 (defanged):** `162.220.232.55`
+- **IPv4 (defanged):** `162.220.232.223`
+- **IPv4 (defanged):** `162.220.232.230`
+- **IPv4 (defanged):** `162.220.234.32`
+- **IPv4 (defanged):** `162.220.234.34`
+- **IPv4 (defanged):** `162.220.234.161`
+- **Domain (defanged):** `adhere.it.com`
+- **Domain (defanged):** `corpexl.nl`
+- **Domain (defanged):** `horizonex.it.com`
+- **Domain (defanged):** `noventragroup.app`
+- **Domain (defanged):** `sparkaxis.org`
+- **Domain (defanged):** `futureanchor.it.com`
+- **Domain (defanged):** `nextvexharbor.de`
+- **Domain (defanged):** `corpsfileshare.com`
+- **Domain (defanged):** `firmtix.com`
+- **Domain (defanged):** `growthora.app`
+- **Domain (defanged):** `clearledge.me.uk`
+- **Domain (defanged):** `creditora.me.uk`
+- **Domain (defanged):** `stratifylabs.org`
+- **Domain (defanged):** `metroraco.com`
+- **Domain (defanged):** `momentoraco.com`
+- **Domain (defanged):** `vardeno.nl`
+- **Domain (defanged):** `ventoraco.com`
+- **Domain (defanged):** `meetrova.nl`
+- **Domain (defanged):** `horizoralabs.com`
+- **Domain (defanged):** `trenix.nl`
+- **Domain (defanged):** `legalaro.com`
+- **Domain (defanged):** `elevatecore.it.com`
+- **Domain (defanged):** `scalevantaco.com`
+- **Domain (defanged):** `stratavaco.com`
+- **Domain (defanged):** `apexviaco.com`
+- **Domain (defanged):** `covenant.it.com`
+- **Domain (defanged):** `logvault.us`
+- **Domain (defanged):** `taskvault.nl`
+- **Domain (defanged):** `brieflync.nl`
+- **Domain (defanged):** `sign-ins.workers.dev`
 
 ## MITRE ATT&CK Techniques
 
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -30,13 +61,7 @@ University of Toronto researchers have built and tested a proof-of-concept AI-dr
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1021.002** — SMB/Windows Admin Shares
-- **T1569.002** — Service Execution
-- **T1528** — Steal Application Access Token
-- **T1098.001** — Account Manipulation: Additional Cloud Credentials
-- **T1204.004** — User Execution: Malicious Copy and Paste
-- **T1219** — Remote Access Software
-- **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
 
 ## Kill chain phases observed
 
@@ -192,145 +217,14 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### Remote service execution — PsExec / SMB lateral movement
-
-`UC_LATERAL_PSEXEC` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-       OR (Processes.process_name="wmic.exe" AND Processes.process="*/node:*")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("psexec.exe","psexesvc.exe","paexec.exe","smbexec.py")
-   or (FileName =~ "wmic.exe" and ProcessCommandLine has "/node:")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
-| order by Timestamp desc
-```
-
-### OAuth consent / suspicious app grant
-
-`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action="success"
-      AND Authentication.signature IN (
-        "Consent to application",
-        "Add app role assignment grant to user",
-        "Add OAuth2PermissionGrant",
-        "Add delegated permission grant")
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
-| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-          ActivityObjects, IPAddress, UserAgent
-```
-
-### Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha)
-
-`UC_FAKECAPTCHA` · phase: **exploit** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("explorer.exe","RuntimeBroker.exe")
-      AND Processes.process_name IN ("powershell.exe","pwsh.exe","mshta.exe")
-      AND (Processes.process="*iex*" OR Processes.process="*Invoke-Expression*"
-        OR Processes.process="*FromBase64*" OR Processes.process="*DownloadString*"
-        OR Processes.process="*hxxp*" OR Processes.process="*curl*" OR Processes.process="*wget*")
-    by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("explorer.exe","RuntimeBroker.exe")
-| where FileName in~ ("powershell.exe","pwsh.exe","mshta.exe")
-| where ProcessCommandLine matches regex @"(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine
-```
-
-### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
-
-`UC_RMM_TOOLS` · phase: **install** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe","kaseya*.exe")
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("AnyDesk.exe","TeamViewer.exe","TeamViewer_Service.exe",
-        "ScreenConnect.ClientService.exe","ConnectWiseControl.ClientService.exe",
-        "atera_agent.exe","SplashtopStreamer.exe","RustDesk.exe","NinjaOne.exe")
-   or FileName matches regex @"(?i)kaseya.*\.exe"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
-```
-
-### Trusted vendor binary / installer launching unusual children
-
-`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
-      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
-| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
-```
-
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-39987`, `CVE-2026-31431`, `CVE-2026-43284`, `CVE-2026-43500`, `CVE-2024-21182`, `CVE-2026-0257`, `CVE-2026-45659`
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `162.220.234.41`, `162.220.234.66`, `162.220.232.57`, `162.220.232.99`, `162.220.232.235`, `162.220.232.55`, `162.220.232.223`, `162.220.232.230` _(+33 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 4 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

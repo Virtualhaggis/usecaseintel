@@ -98,7 +98,7 @@ _(none detected from narrative keywords)_
 
 ### VS Code / Cursor auto-executing shell via tasks.json runOn:folderOpen (Contagious Interview / UNK_DeadDrop)
 
-`UC_27_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_32_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceProcessEvents
 
 ### Windows VBScript loader spawning CMD to install malicious VSIX (UNK_DeadDrop Windows chain)
 
-`UC_27_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_32_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ VsixInstall
 
 ### C2 callback to UNK_DeadDrop infrastructure (23.137.105.75:5173 and named domains)
 
-`UC_27_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_32_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -173,7 +173,7 @@ DeviceNetworkEvents
 
 ### Malicious VS Code extension marketplace install (ByteBinTools / ToolCraft / OLDev jupyter VSIX)
 
-`UC_27_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_32_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -205,7 +205,7 @@ DeviceFileEvents
 
 ### Git hook auto-execution post-clone (Contagious Interview .githooks/pre-commit)
 
-`UC_27_18` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_32_18` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -234,7 +234,7 @@ HookFiles | union HookExec | order by Timestamp desc
 
 ### DPRK npm supply-chain install (redeem-onchain-sdk / nicegui / period-newline Axios follow-up)
 
-`UC_27_19` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_32_19` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -262,7 +262,7 @@ DeviceProcessEvents
 
 ### Overlord macOS / Linux loader — osascript fake security prompt + curl to staging
 
-`UC_27_20` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_32_20` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

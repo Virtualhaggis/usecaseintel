@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1200 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1199 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,26 +9,26 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-16
-- [attackers exploit three fortinet fortisandbox flaws one patc](./2026-06-16/attackers-exploit-three-fortinet-fortisandbox-flaws-one-patc.md)
 - [china linked sprysocks backdoor expands to windows with driv](./2026-06-16/china-linked-sprysocks-backdoor-expands-to-windows-with-driv.md)
 - [cisa flags litespeed cpanel plugin flaw exploited for root p](./2026-06-16/cisa-flags-litespeed-cpanel-plugin-flaw-exploited-for-root-p.md)
 - [cisa warns of another cpanel plugin flaw exploited in attack](./2026-06-16/cisa-warns-of-another-cpanel-plugin-flaw-exploited-in-attack.md)
 - [cisco releases security updates for actively exploited sd wa](./2026-06-16/cisco-releases-security-updates-for-actively-exploited-sd-wa.md)
+- [critical fortinet fortisandbox flaws now exploited in attack](./2026-06-16/critical-fortinet-fortisandbox-flaws-now-exploited-in-attack.md)
 - [dozens of malicious wallpapers found on steam workshop gamer](./2026-06-16/dozens-of-malicious-wallpapers-found-on-steam-workshop-gamer.md)
 - [fake microsoft alerts used to deploy north korean narwhalrat](./2026-06-16/fake-microsoft-alerts-used-to-deploy-north-korean-narwhalrat.md)
-- [hackers abuse legitimate rmm tools in the quarry irs and ssa](./2026-06-16/hackers-abuse-legitimate-rmm-tools-in-the-quarry-irs-and-ssa.md)
+- [ghosttree attack abused recursive windows junctions to hide ](./2026-06-16/ghosttree-attack-abused-recursive-windows-junctions-to-hide-.md)
+- [hackers weaponize microsoft teams relay to hide ransomware t](./2026-06-16/hackers-weaponize-microsoft-teams-relay-to-hide-ransomware-t.md)
 - [interlock and rhysida ransomware operations share supper bac](./2026-06-16/interlock-and-rhysida-ransomware-operations-share-supper-bac.md)
-- [optinmonster plugin hack exposes 1 2 million wordpress sites](./2026-06-16/optinmonster-plugin-hack-exposes-1-2-million-wordpress-sites.md)
+- [microsoft 365 device code phishing campaign bypasses passwor](./2026-06-16/microsoft-365-device-code-phishing-campaign-bypasses-passwor.md)
+- [new rokarolla android malware steals pins sms codes and cryp](./2026-06-16/new-rokarolla-android-malware-steals-pins-sms-codes-and-cryp.md)
 - [pickle in the middle hijacking vertex ai model uploads for c](./2026-06-16/pickle-in-the-middle-hijacking-vertex-ai-model-uploads-for-c.md)
 - [prc nexus hackers exploit redcap servers to spy on us medica](./2026-06-16/prc-nexus-hackers-exploit-redcap-servers-to-spy-on-us-medica.md)
-- [ransomware ecosystem consolidates around lockbit alumni qili](./2026-06-16/ransomware-ecosystem-consolidates-around-lockbit-alumni-qili.md)
 - [ransomware gang abuses microsoft teams relays to hide malici](./2026-06-16/ransomware-gang-abuses-microsoft-teams-relays-to-hide-malici.md)
 - [windows version of sprysocks linux malware used to attack go](./2026-06-16/windows-version-of-sprysocks-linux-malware-used-to-attack-go.md)
 
 ## 2026-06-15
 - [152 chrome wallpaper extensions with 105k installs linked to](./2026-06-15/152-chrome-wallpaper-extensions-with-105k-installs-linked-to.md)
 - [chinese hackers abused google workspace rules to steal resea](./2026-06-15/chinese-hackers-abused-google-workspace-rules-to-steal-resea.md)
-- [chinese hackers breach redcap servers steal medical research](./2026-06-15/chinese-hackers-breach-redcap-servers-steal-medical-research.md)
 - [cisa kev cve 2026 20262 cisco catalyst sd wan manager direct](./2026-06-15/cisa-kev-cve-2026-20262-cisco-catalyst-sd-wan-manager-direct.md)
 - [cisa kev cve 2026 54420 litespeed cpanel plugin unix symboli](./2026-06-15/cisa-kev-cve-2026-54420-litespeed-cpanel-plugin-unix-symboli.md)
 - [cisco fixes sd wan vmanage flaw exploited in zero day attack](./2026-06-15/cisco-fixes-sd-wan-vmanage-flaw-exploited-in-zero-day-attack.md)
@@ -108,7 +108,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft patch tuesday for june 2026 snort rules and promin](./2026-06-09/microsoft-patch-tuesday-for-june-2026-snort-rules-and-promin.md)
 - [microsoft restores some github repos keeps others offline as](./2026-06-09/microsoft-restores-some-github-repos-keeps-others-offline-as.md)
 - [pythagora io gpt pilot compromised on github shai hulud cred](./2026-06-09/pythagora-io-gpt-pilot-compromised-on-github-shai-hulud-cred.md)
-- [researchers build self replicating ai worm that operates ent](./2026-06-09/researchers-build-self-replicating-ai-worm-that-operates-ent.md)
 - [threat brief active exploitation of pan os cve 2026 0257](./2026-06-09/threat-brief-active-exploitation-of-pan-os-cve-2026-0257.md)
 - [wait binding gyp can do what exploring npm s weirdest build ](./2026-06-09/wait-binding-gyp-can-do-what-exploring-npm-s-weirdest-build-.md)
 - [winrar flaw exploited by russia aligned groups to deploy ste](./2026-06-09/winrar-flaw-exploited-by-russia-aligned-groups-to-deploy-ste.md)

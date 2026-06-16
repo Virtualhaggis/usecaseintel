@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Print Spooler (spoolsv.exe) spawning svchost.exe child — SprySOCKS WIN_PLUS print-processor loader
 
-`UC_10_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_18_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceProcessEvents
 
 ### Kernel driver service registered with .dat image path (SprySOCKS DriverLoader pattern)
 
-`UC_10_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_18_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceEvents
 
 ### SprySOCKS WIN_DRV component .dat filenames written to disk (RawWNPF / DriverLoader)
 
-`UC_10_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_18_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
