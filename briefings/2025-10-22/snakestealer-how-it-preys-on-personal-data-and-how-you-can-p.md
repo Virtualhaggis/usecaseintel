@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### SnakeStealer Telegram Bot Exfiltration via api.telegram.org from Non-Telegram Process
 
-`UC_739_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_738_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceNetworkEvents
 
 ### SnakeStealer SMTP Credential Exfiltration to Public Webmail Relays from Non-Mail Client
 
-`UC_739_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_738_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceNetworkEvents
 
 ### SnakeStealer Startup-Folder Persistence (ageless.vbs / .exe drop in Programs\Startup)
 
-`UC_739_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_738_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceFileEvents
 
 ### SnakeStealer Wi-Fi Credential Harvest via netsh wlan show profile key=clear
 
-`UC_739_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_738_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

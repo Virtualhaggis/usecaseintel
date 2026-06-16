@@ -35,19 +35,19 @@ The way in was a backdoor on their REDCap research servers that stole login cred
 - **T1218** — System Binary Proxy Execution
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
+- **T1098.002** — Account Manipulation: Additional Email Delegate Permissions
+- **T1114.003** — Email Collection: Email Forwarding Rule
+- **T1556** — Modify Authentication Process
+- **T1213** — Data from Information Repositories
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102** — Web Service
 - **T1505.003** — Server Software Component: Web Shell
 - **T1554** — Compromise Host Software Binary
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1573** — Encrypted Channel
-- **T1114.003** — Email Collection: Email Forwarding Rule
-- **T1098.002** — Account Manipulation: Additional Email Delegate Permissions
-- **T1556** — Modify Authentication Process
-- **T1114.002** — Email Collection: Remote Email Collection
-- **T1020** — Automated Exfiltration
-- **T1567** — Exfiltration Over Web Service
+- **T1546** — Event Triggered Execution
+- **T1098.004** — Account Manipulation: SSH Authorized Keys
 - **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1098.001** — Account Manipulation: Additional Cloud Credentials
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1530** — Data from Cloud Storage Object
+- **T1114.002** — Email Collection: Remote Email Collection
 
 ## Kill chain phases observed
 
@@ -55,213 +55,156 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### INFINITERED PHP trojanization of REDCap system files
+### UNC6508 Google Workspace Domain Content Compliance Rule with External BCC
 
-`UC_6_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_12_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created OR Filesystem.action=modified (Filesystem.file_path="*/redcap/*" OR Filesystem.file_path="*/redcap_v*/*") (Filesystem.file_name="*.php" OR Filesystem.file_name="index.php" OR Filesystem.file_name="Authentication.php" OR Filesystem.file_name="Logging.php") (Filesystem.process_name="httpd" OR Filesystem.process_name="apache2" OR Filesystem.process_name="nginx" OR Filesystem.process_name="php-fpm*" OR Filesystem.process_name="www-data") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as object values(All_Changes.user) as user values(All_Changes.src) as src from datamodel=Change.All_Changes where All_Changes.vendor_product="Google Workspace" (All_Changes.action=created OR All_Changes.action=modified) (All_Changes.object_category="compliance_rule" OR All_Changes.object_category="content_compliance" OR All_Changes.change_type="GSUITE_ADMIN") by All_Changes.user All_Changes.object All_Changes.object_path | `drop_dm_object_name(All_Changes)` | search object_path="*bcc*" OR object_path="*@gmail.com*" OR object_path="*forward*" | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
+CloudAppEvents
 | where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where FolderPath has_any ("/redcap/", "/redcap_v", "\\redcap\\", "\\redcap_v")
-| where FileName endswith ".php" or FileName endswith ".inc"
-| where InitiatingProcessFileName in~ ("httpd","apache2","nginx","php-fpm","php-fpm8.1","php-fpm8.2","w3wp.exe","php-cgi.exe")
-   or InitiatingProcessAccountName in~ ("www-data","apache","nginx","httpd")
-| project Timestamp, DeviceName, FolderPath, FileName, SHA256,
-          InitiatingProcessFileName, InitiatingProcessAccountName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc
+| where Application has_cs "Google"
+| where IsAdminOperation == true
+| where ActionType has_any ("CREATE_GMAIL_SETTING","CHANGE_GMAIL_SETTING","Create rule","Update rule","compliance","CREATE_APPLICATION_SETTING","CHANGE_APPLICATION_SETTING")
+| extend RawText = tostring(RawEventData)
+| where RawText has_any ("content_compliance","CONTENT_COMPLIANCE","content compliance","contentCompliance")
+| where RawText has_any ("BCC","Bcc","bcc","forward","copyMessage")
+| where RawText has "gmail.com" or RawText matches regex @"@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
+| project Timestamp, AccountDisplayName, AccountId, AccountObjectId, IPAddress, CountryCode, ActionType, ObjectName, RawText
 ```
 
-### INFINITERED HTTP cookie command-and-control on REDCap web server
+### UNC6508 Content Compliance Rule with Espionage Keywords (Patroit / chikungunya)
 
-`UC_6_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_12_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.dest_category="redcap" OR Web.url="*/redcap/*" OR Web.url="*/redcap_v*" by Web.src Web.dest Web.url Web.http_user_agent Web.http_method Web.cookie | `drop_dm_object_name(Web)`
-| where like(cookie,"%=%") AND (len(cookie) > 200 OR match(cookie,"^[A-Za-z0-9+/=]{120,}$"))
-| join type=inner src [search index=network src_ip="23.169.65.49" earliest=-30d | stats values(src_ip) as src by src]
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP == "23.169.65.49" or LocalIP == "23.169.65.49"
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, LocalIP, LocalPort,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### Google Workspace content compliance rule BCC to external Gmail (UNC6508 'Patroit')
-
-`UC_6_8` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-`gws_admin_audit` event.type="GSUITE_ADMIN" (event.name="CHANGE_GMAIL_SETTING" OR event.name="CREATE_GMAIL_SETTING" OR event.name="CREATE_APPLICATION_SETTING" OR event.name="CHANGE_APPLICATION_SETTING") (parameters.SETTING_NAME="CONTENT_COMPLIANCE" OR parameters.APPLICATION_NAME="Gmail")
-| eval rule_name=coalesce('parameters.RULE_NAME','parameters.SETTING_DESCRIPTION')
-| eval rule_body=coalesce('parameters.NEW_VALUE','parameters.VALUE')
-| where match(lower(rule_body),"bcc|forward|address\\s*added") AND match(lower(rule_body),"@gmail\\.com|@outlook\\.com|@proton(mail)?\\.com|@yandex|@yahoo\\.com")
-  OR match(lower(rule_name),"patroit|patriot|chikungunya")
-| stats min(_time) as firstTime max(_time) as lastTime values(rule_name) as rule values(rule_body) as rule_body by actor.email ipAddress
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object_path) as object_path values(All_Changes.user) as user values(All_Changes.src) as src from datamodel=Change.All_Changes where All_Changes.vendor_product="Google Workspace" by All_Changes.user All_Changes.object | `drop_dm_object_name(All_Changes)` | search object_path="*Patroit*" OR object_path="*chikungunya*" OR object_path="*Guangdong*" OR object_path="*uncrewed*" OR object_path="*offensive cyber*" OR object_path="*FOUO*" OR object_path="*CUI*" OR object_path="*ITAR*" | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 CloudAppEvents
 | where Timestamp > ago(90d)
-| where Application has_any ("Google Workspace","GSuite","Google")
-| where ActionType has_any ("CHANGE_APPLICATION_SETTING","CREATE_APPLICATION_SETTING","CHANGE_GMAIL_SETTING","CREATE_GMAIL_SETTING","content_compliance")
-| extend Raw = tostring(RawEventData)
-| where Raw has_any ("CONTENT_COMPLIANCE","content_compliance","contentCompliance")
-| extend RuleName = tostring(parse_json(Raw).parameters.RULE_NAME),
-         RuleBody = tostring(parse_json(Raw).parameters.NEW_VALUE)
-| where RuleBody has_any ("bcc","forward","address_added") and RuleBody matches regex @"(?i)@(gmail|outlook|proton(mail)?|yandex|yahoo)\.com"
-   or RuleName matches regex @"(?i)patroit|patriot|chikungunya"
-| project Timestamp, AccountDisplayName, AccountId, IPAddress, ActionType,
-          RuleName, RuleBody, CountryCode, UserAgent
+| where Application has_cs "Google"
+| where IsAdminOperation == true
+| where ActionType has_any ("CREATE_GMAIL_SETTING","CHANGE_GMAIL_SETTING","Create rule","Update rule","compliance","CREATE_APPLICATION_SETTING")
+| extend RawText = tostring(RawEventData)
+| where RawText has_any ("Patroit","chikungunya","Guangdong","uncrewed","unmanned aerial","offensive cyber","FOUO","CUI","ITAR","controlled unclassified")
+| project Timestamp, AccountDisplayName, AccountId, IPAddress, CountryCode, ActionType, ObjectName, RawText
+```
+
+### Outbound Connection to UNC6508 C2 Infrastructure (23.169.65.49)
+
+`UC_12_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.src_port) as src_port values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="23.169.65.49" OR All_Traffic.src="23.169.65.49") by All_Traffic.src All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(90d)
+| where RemoteIP == "23.169.65.49" or LocalIP == "23.169.65.49"
+| project Timestamp, DeviceName, ActionType, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemotePort, LocalPort, Protocol, RemoteUrl
 | order by Timestamp desc
 ```
 
-### GWS user-level forwarding/delegation to external free-mail provider
+### INFINITERED Trojanized REDCap System File on Disk (SHA256)
 
-`UC_6_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_12_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-`gws_gmail_audit` (event.name="email_forwarding_out_of_domain" OR event.name="email_log_search" OR event.name="GRANT_DELEGATED_ACCESS" OR event.name="CREATE_EMAIL_MONITOR" OR event.name="forwarding_address_added" OR event.name="filter_creation")
-| rex field=parameters.FORWARDING_ADDRESS "@(?<dst_domain>[^>\"]+)"
-| eval dst_domain=coalesce(dst_domain, mvindex(split(coalesce('parameters.DELEGATED_USER_EMAIL','parameters.EMAIL_MONITOR_DEST_EMAIL'),"@"),1))
-| where match(lower(dst_domain),"^(gmail|outlook|hotmail|protonmail|proton|tutanota|yandex|yahoo|mail\\.ru|qq|163|126|sina)\\.")
-| stats min(_time) as firstTime max(_time) as lastTime values(dst_domain) as dst by actor.email ipAddress event.name
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.user) as user values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("ba6b73b0ca0dc7f86b3b397893ac32d729fd53f9df20643288f141f29d020af7","db65c1b9f9e4cb4d729f45ad4b6fcf3e277caf9eb4c875425dec93fd883f9136","c1ac43d23f89d41eb4ff131678ab562ab2cfed9aa334b13767ef141d303b0e5b","8f0158855a656b629ca76ebca565f18bc25563ded34b65d6771632c20edb68ec","51a57bfc9ed3eb6451c1c289607814d59e1698c666fb97ac5f694c398f23d045","4efbef69eb3b09bacff892d6a55778d07c418e7f15eba3cf1245e8cdfd8dda0b","58bb25777e0aa86bcd2125101e0bca4e8732b03d91bd8d2f205b446a2a8d5c86") by Filesystem.dest Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-CloudAppEvents
-| where Timestamp > ago(60d)
-| where Application has_any ("Google Workspace","GSuite","Gmail")
-| where ActionType in ("email_forwarding_out_of_domain","forwarding_address_added","filter_creation","GRANT_DELEGATED_ACCESS","CREATE_EMAIL_MONITOR")
-| extend Raw = tostring(RawEventData)
-| extend Target = extract(@"(?i)(?:FORWARDING_ADDRESS|DELEGATED_USER_EMAIL|EMAIL_MONITOR_DEST_EMAIL|forwardingAddress)\W+[\"']?([^\"',}\s]+@[^\"',}\s]+)",1,Raw)
-| where Target matches regex @"(?i)@(gmail|outlook|hotmail|protonmail|proton|tutanota|yandex|yahoo|mail\.ru|qq|163|126|sina)\."
-| project Timestamp, AccountDisplayName, AccountId, IPAddress, CountryCode,
-          UserAgent, ActionType, Target, Raw
-| order by Timestamp desc
-```
-
-### Bulk mailbox export or Takeout following recent forwarding/rule change
-
-`UC_6_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-`gws_admin_audit`
-| eval is_rule=if(match(event.name,"(?i)CONTENT_COMPLIANCE|forwarding_address_added|GRANT_DELEGATED_ACCESS|filter_creation|CREATE_EMAIL_MONITOR"),1,0),
-       is_export=if(match(event.name,"(?i)TAKEOUT|VAULT_EXPORT|DATA_EXPORT|DOWNLOAD_USER_DATA|EXPORT_REPORT"),1,0)
-| stats min(_time) as t_rule by actor.email is_rule | where is_rule=1
-| join actor.email [
-    search `gws_admin_audit`
-    | where match(event.name,"(?i)TAKEOUT|VAULT_EXPORT|DATA_EXPORT|DOWNLOAD_USER_DATA|EXPORT_REPORT")
-    | rename _time as t_export]
-| where t_export between (t_rule AND t_rule+604800)
-| table actor.email t_rule t_export event.name parameters.*
-```
-
-**Defender KQL:**
-```kql
-let RuleEvents = CloudAppEvents
-    | where Timestamp > ago(60d)
-    | where Application has_any ("Google Workspace","GSuite","Gmail")
-    | where ActionType matches regex @"(?i)CONTENT_COMPLIANCE|forwarding_address_added|GRANT_DELEGATED_ACCESS|filter_creation|CREATE_EMAIL_MONITOR"
-    | project RuleTime = Timestamp, AccountId, AccountDisplayName, IPAddress, RuleAction = ActionType;
-let Exports = CloudAppEvents
-    | where Timestamp > ago(60d)
-    | where Application has_any ("Google Workspace","GSuite","Vault","Takeout")
-    | where ActionType matches regex @"(?i)TAKEOUT|VAULT_EXPORT|DATA_EXPORT|DOWNLOAD_USER_DATA|EXPORT_REPORT"
-    | project ExportTime = Timestamp, AccountId, ExportAction = ActionType, ExportIP = IPAddress, ObjectName;
-RuleEvents
-| join kind=inner Exports on AccountId
-| where ExportTime between (RuleTime .. RuleTime + 7d)
-| project AccountDisplayName, AccountId, RuleTime, RuleAction, IPAddress,
-          ExportTime, ExportAction, ExportIP, ObjectName
-| order by ExportTime desc
-```
-
-### GWS super-admin account accessing many distinct mailboxes in a short window
-
-`UC_6_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-`gws_gmail_audit` event.name IN ("email_log_search","message_access","mail_lookup","mailbox_login")
-| bucket _time span=1h
-| stats dc(parameters.user_email) as victims_touched values(parameters.user_email) as victims by actor.email _time ipAddress
-| where victims_touched >= 10
-| `security_content_ctime(_time)`
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(30d)
-| where Application has_any ("Google Workspace","GSuite","Gmail")
-| where ActionType in ("email_log_search","message_access","mail_lookup","mailbox_login")
-| extend VictimMailbox = tostring(parse_json(tostring(RawEventData)).parameters.user_email)
-| where isnotempty(VictimMailbox) and AccountId != VictimMailbox
-| summarize VictimsTouched = dcount(VictimMailbox),
-            Victims = make_set(VictimMailbox, 50),
-            FirstSeen = min(Timestamp),
-            LastSeen = max(Timestamp)
-          by AccountId, AccountDisplayName, IPAddress, bin(Timestamp, 1h)
-| where VictimsTouched >= 10
-| order by LastSeen desc
-```
-
-### INFINITERED known-hash file or process IOC sweep
-
-`UC_6_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint where (Processes.process_hash IN ("ba6b73b0ca0dc7f86b3b397893ac32d729fd53f9df20643288f141f29d020af7","db65c1b9f9e4cb4d729f45ad4b6fcf3e277caf9eb4c875425dec93fd883f9136","c1ac43d23f89d41eb4ff131678ab562ab2cfed9aa334b13767ef141d303b0e5b","8f0158855a656b629ca76ebca565f18bc25563ded34b65d6771632c20edb68ec","51a57bfc9ed3eb6451c1c289607814d59e1698c666fb97ac5f694c398f23d045","4efbef69eb3b09bacff892d6a55778d07c418e7f15eba3cf1245e8cdfd8dda0b","58bb25777e0aa86bcd2125101e0bca4e8732b03d91bd8d2f205b446a2a8d5c86")) OR (Filesystem.file_hash IN ("ba6b73b0ca0dc7f86b3b397893ac32d729fd53f9df20643288f141f29d020af7","db65c1b9f9e4cb4d729f45ad4b6fcf3e277caf9eb4c875425dec93fd883f9136","c1ac43d23f89d41eb4ff131678ab562ab2cfed9aa334b13767ef141d303b0e5b","8f0158855a656b629ca76ebca565f18bc25563ded34b65d6771632c20edb68ec","51a57bfc9ed3eb6451c1c289607814d59e1698c666fb97ac5f694c398f23d045","4efbef69eb3b09bacff892d6a55778d07c418e7f15eba3cf1245e8cdfd8dda0b","58bb25777e0aa86bcd2125101e0bca4e8732b03d91bd8d2f205b446a2a8d5c86")) by host process_name file_name file_hash process_hash | `drop_dm_object_name(Endpoint)`
-```
-
-**Defender KQL:**
-```kql
-let IOCs = dynamic([
-  "ba6b73b0ca0dc7f86b3b397893ac32d729fd53f9df20643288f141f29d020af7",
-  "db65c1b9f9e4cb4d729f45ad4b6fcf3e277caf9eb4c875425dec93fd883f9136",
-  "c1ac43d23f89d41eb4ff131678ab562ab2cfed9aa334b13767ef141d303b0e5b",
-  "8f0158855a656b629ca76ebca565f18bc25563ded34b65d6771632c20edb68ec",
-  "51a57bfc9ed3eb6451c1c289607814d59e1698c666fb97ac5f694c398f23d045",
-  "4efbef69eb3b09bacff892d6a55778d07c418e7f15eba3cf1245e8cdfd8dda0b",
-  "58bb25777e0aa86bcd2125101e0bca4e8732b03d91bd8d2f205b446a2a8d5c86"
-]);
+let INFINITERED_HASHES = dynamic(["ba6b73b0ca0dc7f86b3b397893ac32d729fd53f9df20643288f141f29d020af7","db65c1b9f9e4cb4d729f45ad4b6fcf3e277caf9eb4c875425dec93fd883f9136","c1ac43d23f89d41eb4ff131678ab562ab2cfed9aa334b13767ef141d303b0e5b","8f0158855a656b629ca76ebca565f18bc25563ded34b65d6771632c20edb68ec","51a57bfc9ed3eb6451c1c289607814d59e1698c666fb97ac5f694c398f23d045","4efbef69eb3b09bacff892d6a55778d07c418e7f15eba3cf1245e8cdfd8dda0b","58bb25777e0aa86bcd2125101e0bca4e8732b03d91bd8d2f205b446a2a8d5c86"]);
 union isfuzzy=true
 (DeviceFileEvents
-   | where Timestamp > ago(365d) | where SHA256 in (IOCs)
-   | project Timestamp, Source="FileEvent", DeviceName, FileName, FolderPath, SHA256,
-             InitiatingProcessFileName, InitiatingProcessAccountName),
+  | where Timestamp > ago(180d)
+  | where SHA256 in (INFINITERED_HASHES)
+  | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
 (DeviceProcessEvents
-   | where Timestamp > ago(365d) | where SHA256 in (IOCs) or InitiatingProcessSHA256 in (IOCs)
-   | project Timestamp, Source="Process", DeviceName, FileName, FolderPath, SHA256,
-             ProcessCommandLine, AccountName),
-(DeviceNetworkEvents
-   | where Timestamp > ago(365d) | where RemoteIP == "23.169.65.49"
-   | project Timestamp, Source="Network", DeviceName, RemoteIP, RemotePort, RemoteUrl,
-             InitiatingProcessFileName, InitiatingProcessAccountName)
+  | where Timestamp > ago(180d)
+  | where SHA256 in (INFINITERED_HASHES) or InitiatingProcessSHA256 in (INFINITERED_HASHES)
+  | project Timestamp, DeviceName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName)
+```
+
+### Gmail User-Level Forwarding/Filter Rule to External Address
+
+`UC_12_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object_path) as object_path values(All_Changes.user) as user values(All_Changes.src) as src from datamodel=Change.All_Changes where All_Changes.vendor_product="Google Workspace" (All_Changes.action=created OR All_Changes.action=modified) (All_Changes.object_category="filter" OR All_Changes.object_category="forward" OR All_Changes.change_type="USER_SETTINGS") by All_Changes.user All_Changes.object | `drop_dm_object_name(All_Changes)` | rex field=object_path "forward.{0,40}@(?<forward_domain>[A-Za-z0-9.-]+\.[A-Za-z]{2,})" | search forward_domain!="yourorg.com" forward_domain!="yourorg.org" | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let CorporateDomains = dynamic(["yourorg.com","yourorg.org"]);
+CloudAppEvents
+| where Timestamp > ago(30d)
+| where Application has_cs "Google"
+| where ActionType has_any ("email_forwarding_out_of_domain","Create Filter","Email forwarding","FORWARDING_RULE","CHANGE_USER_SETTING")
+| extend RawText = tostring(RawEventData)
+| where RawText has_any ("forward","forwardingAddress","FORWARD")
+| extend FwdDomain = tolower(extract(@"forward[^@]{0,40}@([A-Za-z0-9.-]+\.[A-Za-z]{2,})", 1, RawText))
+| where isnotempty(FwdDomain)
+| where not(FwdDomain in (CorporateDomains))
+| project Timestamp, AccountDisplayName, AccountId, IPAddress, CountryCode, ActionType, ObjectName, FwdDomain, RawText
+```
+
+### Gmail Mailbox Delegation Granted to External Principal
+
+`UC_12_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.user) as user values(All_Changes.object) as object values(All_Changes.object_path) as object_path values(All_Changes.src) as src from datamodel=Change.All_Changes where All_Changes.vendor_product="Google Workspace" (All_Changes.change_type="DELEGATE" OR All_Changes.action="CREATE_DELEGATE" OR All_Changes.action="ADD_DELEGATE") by All_Changes.user All_Changes.object | `drop_dm_object_name(All_Changes)` | rex field=object_path "delegate.{0,40}@(?<delegate_domain>[A-Za-z0-9.-]+\.[A-Za-z]{2,})" | search delegate_domain!="yourorg.com" | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let CorporateDomains = dynamic(["yourorg.com","yourorg.org"]);
+CloudAppEvents
+| where Timestamp > ago(30d)
+| where Application has_cs "Google"
+| where ActionType has_any ("CREATE_DELEGATE","ADD_DELEGATE","DELEGATE_EMAIL","Add mail delegate","mail.delegate")
+| extend RawText = tostring(RawEventData)
+| extend DelegateAddr = tolower(extract(@"([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,})", 1, RawText))
+| extend DelegateDomain = tostring(split(DelegateAddr, "@")[1])
+| where isnotempty(DelegateDomain) and not(DelegateDomain in (CorporateDomains))
+| project Timestamp, AccountDisplayName, AccountId, IPAddress, CountryCode, ActionType, ObjectName, DelegateAddr, DelegateDomain, RawText
+```
+
+### Admin/Service Account Mailbox Fan-Out (Mass Mailbox Access in Short Window)
+
+`UC_12_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count dc(All_Changes.object) as distinct_mailboxes min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as mailboxes values(All_Changes.src) as src from datamodel=Change.All_Changes where All_Changes.vendor_product="Google Workspace" All_Changes.user_category="admin" by All_Changes.user span=1h | `drop_dm_object_name(All_Changes)` | where distinct_mailboxes >= 10 | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(7d)
+| where Application has_cs "Google"
+| where IsAdminOperation == true or AccountType has_any ("admin","service")
+| where ActionType has_any ("View Item","Access","Read mailbox","List Messages","GET_MAILBOX","Impersonate")
+| summarize DistinctMailboxes = dcount(ObjectId), Mailboxes = make_set(ObjectName, 50), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), SrcIPs = make_set(IPAddress, 10), UAs = make_set(UserAgent, 10) by AccountDisplayName, AccountId, bin(Timestamp, 1h)
+| where DistinctMailboxes >= 10
 | order by Timestamp desc
 ```
 

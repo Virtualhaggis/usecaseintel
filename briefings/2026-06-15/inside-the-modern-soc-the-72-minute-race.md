@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### Help-desk-initiated password/MFA reset followed by immediate sign-in from new IP (Scattered Spider)
 
-`UC_1_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_7_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ ResetEvents
 
 ### MFA push-fatigue burst followed by approved sign-in from new device
 
-`UC_1_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_7_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ FatigueBursts
 
 ### Privileged role assignment within 60 minutes of a user's first interactive sign-in from new IP
 
-`UC_1_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ CloudAppEvents
 
 ### Azure VM created in unfamiliar region by recently-elevated admin
 
-`UC_1_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_7_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -152,7 +152,7 @@ CloudAppEvents
 
 ### Bulk file staging via Rclone/WinRAR/7-Zip preceding outbound transfer to cloud storage
 
-`UC_1_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_7_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +184,7 @@ StagingTools
 
 ### Volume Shadow Copy deletion via vssadmin/WMIC/PowerShell/bcdedit (RansomHub pre-impact)
 
-`UC_1_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_7_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

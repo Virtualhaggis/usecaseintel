@@ -1,25 +1,37 @@
-# [CRIT] LiteLLM Flaw CVE-2026-42271 Exploited in the Wild, Chains to Unauthenticated RCE
+# [MED] Hackers Abuse Legitimate RMM Tools in The Quarry IRS and SSA Phishing Campaigns
 
-**Source:** The Hacker News
-**Published:** 2026-06-09
-**Article:** https://thehackernews.com/2026/06/litellm-flaw-cve-2026-42271-exploited.html
+**Source:** Cyber Security News
+**Published:** 2026-06-16
+**Article:** https://cybersecuritynews.com/hackers-abuse-legitimate-rmm-tools/
 
 ## Threat Profile
 
-LiteLLM Flaw CVE-2026-42271 Exploited in the Wild, Chains to Unauthenticated RCE 
- Ravie Lakshmanan  Jun 09, 2026 Vulnerability / Artificial Intelligence 
-The U.S. Cybersecurity and Infrastructure Security Agency (CISA) on Monday added a high-severity flaw impacting BerriAI LiteLLM to its Known Exploited Vulnerabilities ( KEV ) catalog, citing evidence of active exploitation.
-The vulnerability, tracked as CVE-2026-42271 (CVSS score: 8.7), is a command injection vulnerability that could allow a…
+A wave of phishing campaigns targeting American taxpayers has been traced back to a single, highly organized cybercrime operation known as The Quarry. What appeared to be dozens of unrelated incidents impersonating the IRS, Social Security Administration, and platforms like DocuSign turned out to be the work of one developer selling a Phishing-as-a-Service (PhaaS) toolkit [&#8230;] The post Hackers Abuse Legitimate RMM Tools in The Quarry IRS and SSA Phishing Campaigns appeared first on Cyber Se…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2026-42271`
-- **CVE:** `CVE-2026-48710`
-- **CVE:** `CVE-2026-42208`
+- **Domain (defanged):** `estatetaxarchives.com`
+- **Domain (defanged):** `hub.ssa-guidance.com`
+- **Domain (defanged):** `inherittaxpapers.site`
+- **Domain (defanged):** `verify.federal-docviewer.com`
+- **Domain (defanged):** `portal.federalverify-ssaclientportal.com`
+- **Domain (defanged):** `trusttaxportal.com`
+- **Domain (defanged):** `estatetaxrecords.com`
+- **Domain (defanged):** `tax-filecenter-irs.matthewtarwater.com`
+- **Domain (defanged):** `apps.docu-sign.net`
+- **Domain (defanged):** `secure.login-socialsecurity.com`
+- **Domain (defanged):** `hub.ssa-userstatus.com`
+- **Domain (defanged):** `secure.ssa-documentsync.com`
+- **MD5:** `8974830446d35e234881696092aded87`
+- **MD5:** `ef970697c5094c443f0456774cfee9bc`
+- **MD5:** `935413b08ef60cd819b2e1b573fc9050`
+- **MD5:** `2163afa18a3cdfa525b767e0e1baaba1`
+- **MD5:** `1827aa636cd86d1a4064e112aa197303`
+- **MD5:** `00b69eb7f44b5987f68667343aaafb6a`
+- **MD5:** `01ab231bcd9533f90e99651521b6e1bb`
 
 ## MITRE ATT&CK Techniques
 
-- **T1190** — Exploit Public-Facing Application
 - **T1566.002** — Spearphishing Link
 - **T1204.001** — User Execution: Malicious Link
 - **T1059.001** — PowerShell
@@ -27,58 +39,15 @@ The vulnerability, tracked as CVE-2026-42271 (CVSS score: 8.7), is a command inj
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1528** — Steal Application Access Token
-- **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1219** — Remote Access Software
-- **T1195.002** — Compromise Software Supply Chain
-- **T1059** — Command and Scripting Interpreter
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1078** — Valid Accounts
+- **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### LiteLLM CVE-2026-42271 MCP test endpoint POST (preview command injection)
-
-`UC_108_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src values(Web.http_user_agent) as ua values(Web.status) as status from datamodel=Web.Web where Web.http_method=POST (Web.uri_path="/mcp-rest/test/connection" OR Web.uri_path="/mcp-rest/test/tools/list") by Web.dest Web.uri_path | `drop_dm_object_name(Web)` | where status<500 | sort - lastTime
-```
-
-### LiteLLM proxy (uvicorn/python) spawning shell or LOLBin — CVE-2026-42271 post-exploit
-
-`UC_108_8` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.parent_process) as parent_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python","python3","python.exe","python3.exe","uvicorn","uvicorn.exe","gunicorn")) (Processes.parent_process="*litellm*") (Processes.process_name IN ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh","curl","wget","nc","ncat","nslookup","dig","whoami","id","uname","chmod","base64")) by Processes.dest Processes.process_name Processes.parent_process_name Processes.user | `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("python","python3","python.exe","python3.exe","uvicorn","uvicorn.exe","gunicorn")
-| where InitiatingProcessCommandLine has_any ("litellm","litellm.proxy","litellm.main","--port 4000")
-| where FileName in~ ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh.exe","curl","wget","nc","ncat","nslookup","dig","whoami","id","uname","chmod","base64")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessId, FolderPath, SHA256
-| order by Timestamp desc
-```
-
-### Anomalous Host header to LiteLLM (Starlette CVE-2026-48710 BadHost bypass)
-
-`UC_108_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count values(Web.uri_path) as paths values(Web.src) as src values(Web.http_user_agent) as ua from datamodel=Web.Web where (Web.uri_path="/mcp-rest/test/connection" OR Web.uri_path="/mcp-rest/test/tools/list" OR Web.uri_path="/chat/completions" OR Web.uri_path="/v1/chat/completions" OR Web.uri_path="/key/generate") by Web.dest Web.http_host _time | `drop_dm_object_name(Web)` | eventstats values(http_host) as known_hosts by dest | where NOT match(http_host, "<expected-host-regex>") | sort - _time
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -228,33 +197,6 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
-### OAuth consent / suspicious app grant
-
-`UC_OAUTH_ABUSE` · phase: **actions** · confidence: **High**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Authentication.Authentication
-    where Authentication.action="success"
-      AND Authentication.signature IN (
-        "Consent to application",
-        "Add app role assignment grant to user",
-        "Add OAuth2PermissionGrant",
-        "Add delegated permission grant")
-    by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("Consent to application.","Add OAuth2PermissionGrant.","Add delegated permission grant.")
-| project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
-          ActivityObjects, IPAddress, UserAgent
-```
-
 ### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
 
 `UC_RMM_TOOLS` · phase: **install** · confidence: **High**
@@ -282,38 +224,17 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine
 ```
 
-### Trusted vendor binary / installer launching unusual children
-
-`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
-      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
-| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
-```
-
 ### IOC-driven hunts (use shared templates)
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-42271`, `CVE-2026-48710`, `CVE-2026-42208`
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `estatetaxarchives.com`, `hub.ssa-guidance.com`, `inherittaxpapers.site`, `verify.federal-docviewer.com`, `portal.federalverify-ssaclientportal.com`, `trusttaxportal.com`, `estatetaxrecords.com`, `tax-filecenter-irs.matthewtarwater.com` _(+4 more)_
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `8974830446d35e234881696092aded87`, `ef970697c5094c443f0456774cfee9bc`, `935413b08ef60cd819b2e1b573fc9050`, `2163afa18a3cdfa525b767e0e1baaba1`, `1827aa636cd86d1a4064e112aa197303`, `00b69eb7f44b5987f68667343aaafb6a`, `01ab231bcd9533f90e99651521b6e1bb`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: IOCs present, 6 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

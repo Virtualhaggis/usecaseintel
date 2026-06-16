@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1199 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1198 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -8,9 +8,15 @@ _1199 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-06-16
+- [cisa flags litespeed cpanel plugin flaw exploited for root p](./2026-06-16/cisa-flags-litespeed-cpanel-plugin-flaw-exploited-for-root-p.md)
+- [cisco releases security updates for actively exploited sd wa](./2026-06-16/cisco-releases-security-updates-for-actively-exploited-sd-wa.md)
+- [hackers abuse legitimate rmm tools in the quarry irs and ssa](./2026-06-16/hackers-abuse-legitimate-rmm-tools-in-the-quarry-irs-and-ssa.md)
+- [optinmonster plugin hack exposes 1 2 million wordpress sites](./2026-06-16/optinmonster-plugin-hack-exposes-1-2-million-wordpress-sites.md)
+- [ransomware ecosystem consolidates around lockbit alumni qili](./2026-06-16/ransomware-ecosystem-consolidates-around-lockbit-alumni-qili.md)
+
 ## 2026-06-15
 - [152 chrome wallpaper extensions with 105k installs linked to](./2026-06-15/152-chrome-wallpaper-extensions-with-105k-installs-linked-to.md)
-- [china nexus hackers use backdoored pam modules for credentia](./2026-06-15/china-nexus-hackers-use-backdoored-pam-modules-for-credentia.md)
 - [chinese hackers abused google workspace rules to steal resea](./2026-06-15/chinese-hackers-abused-google-workspace-rules-to-steal-resea.md)
 - [chinese hackers breach redcap servers steal medical research](./2026-06-15/chinese-hackers-breach-redcap-servers-steal-medical-research.md)
 - [cisa kev cve 2026 20262 cisco catalyst sd wan manager direct](./2026-06-15/cisa-kev-cve-2026-20262-cisco-catalyst-sd-wan-manager-direct.md)
@@ -21,7 +27,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [dpapisnoop tool extracts credhist hashes for offline windows](./2026-06-15/dpapisnoop-tool-extracts-credhist-hashes-for-offline-windows.md)
 - [eviltokens a phishing attack that doesn t steal your passwor](./2026-06-15/eviltokens-a-phishing-attack-that-doesn-t-steal-your-passwor.md)
 - [ghsa critical cve 2026 53633 vitest browser exposed browser ](./2026-06-15/ghsa-critical-cve-2026-53633-vitest-browser-exposed-browser-.md)
-- [hackers use microsoft graph reconnaissance to target payroll](./2026-06-15/hackers-use-microsoft-graph-reconnaissance-to-target-payroll.md)
 - [inside the modern soc the 72 minute race](./2026-06-15/inside-the-modern-soc-the-72-minute-race.md)
 - [litellm vulnerability chain lets low privilege users take ov](./2026-06-15/litellm-vulnerability-chain-lets-low-privilege-users-take-ov.md)
 - [microsoft defender email security benchmarking key insights ](./2026-06-15/microsoft-defender-email-security-benchmarking-key-insights-.md)
@@ -29,8 +34,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [optinmonster wordpress plugin hacked in cdn supply chain att](./2026-06-15/optinmonster-wordpress-plugin-hacked-in-cdn-supply-chain-att.md)
 - [palo alto warns of active exploitation of pan os globalprote](./2026-06-15/palo-alto-warns-of-active-exploitation-of-pan-os-globalprote.md)
 - [popular wordpress plugin scripts tampered to plant hidden ba](./2026-06-15/popular-wordpress-plugin-scripts-tampered-to-plant-hidden-ba.md)
-- [promptsnatcher ad blocker extensions steal ai chats from cha](./2026-06-15/promptsnatcher-ad-blocker-extensions-steal-ai-chats-from-cha.md)
-- [searchjack campaign uses 23 chrome extensions to hijack sear](./2026-06-15/searchjack-campaign-uses-23-chrome-extensions-to-hijack-sear.md)
 - [simplehelp bug lets hackers create rogue remote support acco](./2026-06-15/simplehelp-bug-lets-hackers-create-rogue-remote-support-acco.md)
 - [sniper dz scams target mena users via fake facebook offers a](./2026-06-15/sniper-dz-scams-target-mena-users-via-fake-facebook-offers-a.md)
 - [the government just banned an ai model an engineer s perspec](./2026-06-15/the-government-just-banned-an-ai-model-an-engineer-s-perspec.md)
@@ -95,7 +98,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 48030 pheditor os command injection i](./2026-06-09/ghsa-critical-cve-2026-48030-pheditor-os-command-injection-i.md)
 - [ghsa critical cve 2026 8467 phoenixstorybook unauthenticated](./2026-06-09/ghsa-critical-cve-2026-8467-phoenixstorybook-unauthenticated.md)
 - [hades pypi attack 19 packages poisoned to auto run bun crede](./2026-06-09/hades-pypi-attack-19-packages-poisoned-to-auto-run-bun-crede.md)
-- [litellm flaw cve 2026 42271 exploited in the wild chains to ](./2026-06-09/litellm-flaw-cve-2026-42271-exploited-in-the-wild-chains-to-.md)
 - [meta to use off site business data for feed and ai personali](./2026-06-09/meta-to-use-off-site-business-data-for-feed-and-ai-personali.md)
 - [miasma worm hits microsoft again azure functions action and ](./2026-06-09/miasma-worm-hits-microsoft-again-azure-functions-action-and-.md)
 - [microsoft patch tuesday for june 2026 snort rules and promin](./2026-06-09/microsoft-patch-tuesday-for-june-2026-snort-rules-and-promin.md)
@@ -114,7 +116,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47252 anyquery applescript jxa code i](./2026-06-08/ghsa-critical-cve-2026-47252-anyquery-applescript-jxa-code-i.md)
 - [ghsa critical cve 2026 47430 cordova plugin inappbrowser ios](./2026-06-08/ghsa-critical-cve-2026-47430-cordova-plugin-inappbrowser-ios.md)
 - [ghsa critical cve 2026 47724 nebula mesh api endpoints lack ](./2026-06-08/ghsa-critical-cve-2026-47724-nebula-mesh-api-endpoints-lack-.md)
-- [one character linux kernel flaw enables local root access ex](./2026-06-08/one-character-linux-kernel-flaw-enables-local-root-access-ex.md)
 - [when hi this is it comes through microsoft teams](./2026-06-08/when-hi-this-is-it-comes-through-microsoft-teams.md)
 
 ## 2026-06-05

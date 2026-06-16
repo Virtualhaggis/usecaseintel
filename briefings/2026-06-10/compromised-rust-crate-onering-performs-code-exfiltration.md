@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Cargo build script spawning git with onering's exfil --pretty=format JSON
 
-`UC_82_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_83_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceProcessEvents
 
 ### build.rs invoking curl POST to Sentry envelope endpoint with code diff payload
 
-`UC_82_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_83_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceProcessEvents
 
 ### Network egress to onering Sentry exfil ingest domain or project envelope path
 
-`UC_82_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_83_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ union
 
 ### Cargo dependency manifest or download pinned to compromised onering 1.4.1
 
-`UC_82_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_83_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
