@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1199 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1200 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -17,6 +17,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [dozens of malicious wallpapers found on steam workshop gamer](./2026-06-16/dozens-of-malicious-wallpapers-found-on-steam-workshop-gamer.md)
 - [fake microsoft alerts used to deploy north korean narwhalrat](./2026-06-16/fake-microsoft-alerts-used-to-deploy-north-korean-narwhalrat.md)
 - [hackers abuse legitimate rmm tools in the quarry irs and ssa](./2026-06-16/hackers-abuse-legitimate-rmm-tools-in-the-quarry-irs-and-ssa.md)
+- [interlock and rhysida ransomware operations share supper bac](./2026-06-16/interlock-and-rhysida-ransomware-operations-share-supper-bac.md)
 - [optinmonster plugin hack exposes 1 2 million wordpress sites](./2026-06-16/optinmonster-plugin-hack-exposes-1-2-million-wordpress-sites.md)
 - [pickle in the middle hijacking vertex ai model uploads for c](./2026-06-16/pickle-in-the-middle-hijacking-vertex-ai-model-uploads-for-c.md)
 - [prc nexus hackers exploit redcap servers to spy on us medica](./2026-06-16/prc-nexus-hackers-exploit-redcap-servers-to-spy-on-us-medica.md)
@@ -97,7 +98,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-09
 - [blinding the watchmen abusing cloud logging services for def](./2026-06-09/blinding-the-watchmen-abusing-cloud-logging-services-for-def.md)
-- [chrome v8 zero day cve 2026 11645 exploited in the wild patc](./2026-06-09/chrome-v8-zero-day-cve-2026-11645-exploited-in-the-wild-patc.md)
 - [cisa kev cve 2026 11645 google chromium v8 out of bounds rea](./2026-06-09/cisa-kev-cve-2026-11645-google-chromium-v8-out-of-bounds-rea.md)
 - [cisa kev cve 2026 20245 cisco catalyst sd wan manager improp](./2026-06-09/cisa-kev-cve-2026-20245-cisco-catalyst-sd-wan-manager-improp.md)
 - [cisa kev cve 2026 7473 arista extensible operating system in](./2026-06-09/cisa-kev-cve-2026-7473-arista-extensible-operating-system-in.md)
@@ -109,6 +109,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft restores some github repos keeps others offline as](./2026-06-09/microsoft-restores-some-github-repos-keeps-others-offline-as.md)
 - [pythagora io gpt pilot compromised on github shai hulud cred](./2026-06-09/pythagora-io-gpt-pilot-compromised-on-github-shai-hulud-cred.md)
 - [researchers build self replicating ai worm that operates ent](./2026-06-09/researchers-build-self-replicating-ai-worm-that-operates-ent.md)
+- [threat brief active exploitation of pan os cve 2026 0257](./2026-06-09/threat-brief-active-exploitation-of-pan-os-cve-2026-0257.md)
 - [wait binding gyp can do what exploring npm s weirdest build ](./2026-06-09/wait-binding-gyp-can-do-what-exploring-npm-s-weirdest-build-.md)
 - [winrar flaw exploited by russia aligned groups to deploy ste](./2026-06-09/winrar-flaw-exploited-by-russia-aligned-groups-to-deploy-ste.md)
 

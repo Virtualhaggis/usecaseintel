@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### SKILL.md written to ~/.claude/skills/ or ~/.openclaw/skills/ (agent-skill install)
 
-`UC_576_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_578_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceFileEvents
 
 ### curl | bash or wget | sh executed by Claude/Cursor/OpenClaw agent process
 
-`UC_576_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_578_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### AI agent process reads cloud-credential, SSH or dotenv files (skill credential theft)
 
-`UC_576_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_578_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceFileEvents
 
 ### Outbound connection to clawhub.ai or skills.sh from CLI agent (skill marketplace fetch)
 
-`UC_576_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_578_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -130,7 +130,7 @@ DeviceNetworkEvents
 
 ### Prompt-injection markers (base64, Unicode tags, 'ignore previous instructions') in SKILL.md content
 
-`UC_576_7` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_578_7` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -207,7 +207,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Snyk Finds Prompt Injection in 36%, 1467 Malicious Payloads in a ToxicSkills Stu
 
-`UC_576_2` · phase: **exploit** · confidence: **High**
+`UC_578_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

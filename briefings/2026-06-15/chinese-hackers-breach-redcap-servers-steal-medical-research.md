@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### Exchange/Compliance content rule 'Patroit' with external Gmail BCC (UNC6508)
 
-`UC_34_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_36_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ CloudAppEvents
 
 ### Outbound mail BCC'd to UNC6508 actor dropbox BebitaBarefoot774@gmail.com
 
-`UC_34_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_36_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ EmailEvents
 
 ### INFINITERED trojanization — unexpected modification of REDCap PHP system files
 
-`UC_34_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_36_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceFileEvents
 
 ### REDCap webserver process spawning shell / DB client — cookie-driven INFINITERED backdoor
 
-`UC_34_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_36_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

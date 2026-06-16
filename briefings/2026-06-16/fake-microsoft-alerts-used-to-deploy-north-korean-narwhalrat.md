@@ -46,18 +46,17 @@ The North Korean state-sponsored hacking group known as ScarCruft (aka APT37) ha
 - **T1053.005** — Scheduled Task
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
-- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1598.003** — Spearphishing Link
+- **T1204.002** — Malicious File
+- **T1059.003** — Windows Command Shell
+- **T1105** — Ingress Tool Transfer
 - **T1036.005** — Match Legitimate Name or Location
+- **T1059.006** — Python
+- **T1140** — Deobfuscate/Decode Files or Information
 - **T1074.001** — Local Data Staging
-- **T1036.004** — Masquerade Task or Service
 - **T1056.001** — Keylogging
-- **T1102.002** — Web Service: Bidirectional Communication
-- **T1567.002** — Exfiltration to Cloud Storage
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1090** — Proxy
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1036.008** — Masquerade File Type
-- **T1620** — Reflective Code Loading
+- **T1102.001** — Dead Drop Resolver
+- **T1090.002** — External Proxy
 
 ## Kill chain phases observed
 
@@ -65,217 +64,156 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Fake Microsoft OTP/security-alert phish with ZIP+LNK attachment (APT37)
+### ScarCruft fake Microsoft Account 'OTP abuse' alert with ZIP attachment
 
-`UC_10_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_14_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Email where Email.file_name="*.lnk" Email.message_direction="inbound" by Email.src_user Email.recipient Email.subject Email.file_name Email.file_hash Email.message_id | `drop_dm_object_name(Email)` | search subject IN ("*Microsoft*account*","*OTP*","*one-time*password*","*security alert*","*abnormal activity*","*account compromise*") AND file_name="*.lnk"
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Email.All_Email where All_Email.action="delivered" All_Email.file_name="*.zip" (All_Email.subject="*Microsoft account*" OR All_Email.subject="*security alert*" OR All_Email.subject="*OTP*" OR All_Email.subject="*one-time password*" OR All_Email.subject="*abnormal activity*") by All_Email.src_user All_Email.recipient All_Email.subject All_Email.file_name All_Email.file_hash | `drop_dm_object_name(All_Email)` | where NOT match(src_user, "(?i)@microsoft\.com$") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let LookbackDays = 14d;
-let LureTerms = dynamic(["microsoft account","one-time password","otp","abnormal activity","account compromise","security alert","unusual sign-in","password change"]);
-let ScarCruftMail = EmailEvents
-    | where Timestamp > ago(LookbackDays)
-    | where EmailDirection == "Inbound" and DeliveryAction in ("Delivered","DeliveredAsSpam")
-    | where Subject has_any (LureTerms);
-ScarCruftMail
+EmailEvents
+| where Timestamp > ago(7d)
+| where EmailDirection == "Inbound" and DeliveryAction == "Delivered"
+| where Subject has_any ("Microsoft account", "security alert", "OTP", "one-time password", "abnormal activity", "password")
+| where not(SenderFromDomain endswith "microsoft.com") and not(SenderMailFromDomain endswith "microsoft.com")
 | join kind=inner (
     EmailAttachmentInfo
-    | where Timestamp > ago(LookbackDays)
-    | where FileType =~ "zip" or FileName endswith ".zip"
-    | project NetworkMessageId, ZipName = FileName, ZipSHA256 = SHA256, ZipSize = FileSize
+    | where Timestamp > ago(7d)
+    | where FileName endswith ".zip"
+    | project NetworkMessageId, AttachmentName = FileName, AttachmentSHA256 = SHA256, FileSize
   ) on NetworkMessageId
-| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromDomain,
-          RecipientEmailAddress, Subject, ZipName, ZipSHA256, ZipSize, DeliveryAction
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderFromDomain, RecipientEmailAddress, Subject, AttachmentName, AttachmentSHA256, FileSize
 | order by Timestamp desc
 ```
 
-### NarwhalRAT scheduled task persistence with Microsoft*Task naming
+### LNK from extracted ZIP spawning batch script that downloads Python and CAT file
 
-`UC_10_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_14_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("schtasks.exe","powershell.exe","cmd.exe") Processes.process="*Microsoft*Task*Machine*" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | regex process="(?i)Microsoft(UserInterfacePictures|MusicLibrariesPackage|[A-Z][A-Za-z]+)(Update|Package)?Ta(s|c)kMachine"
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="explorer.exe" Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe") (Processes.parent_process="*.lnk*" OR Processes.process="*.lnk*" OR Processes.process="*.bat*") (Processes.process="*curl*" OR Processes.process="*bitsadmin*" OR Processes.process="*Invoke-WebRequest*" OR Processes.process="*python*" OR Processes.process="*.cat*") by Processes.dest Processes.user Processes.process Processes.parent_process Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let LookbackDays = 30d;
 DeviceProcessEvents
-| where Timestamp > ago(LookbackDays)
-| where FileName =~ "schtasks.exe" or InitiatingProcessFileName =~ "schtasks.exe"
-   or ProcessCommandLine has_any ("schtasks /create","Register-ScheduledTask","New-ScheduledTask")
-| where ProcessCommandLine matches regex @"(?i)Microsoft[A-Z][A-Za-z]{3,}(Update|Package)?Ta[sc]kMachine"
-   or ProcessCommandLine has_any ("MicrosoftUserInterfacePicturesUpdateTackMachine","MicrosoftMusicLibrariesPackageTaskMachine")
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "explorer.exe"
+| where FileName in~ ("cmd.exe", "powershell.exe", "pwsh.exe", "wscript.exe", "cscript.exe")
+| where ProcessCommandLine has_any (".lnk", ".bat")
+   or ProcessCommandLine has_any ("curl", "bitsadmin", "Invoke-WebRequest", "python", ".cat", "daehoat", "novel21", "fe01.co.kr")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessCommandLine, InitiatingProcessParentFileName, FolderPath
+| order by Timestamp desc
+```
+
+### Scheduled task creation with NarwhalRAT 'Microsoft*TaskMachine' naming convention
+
+`UC_14_12` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="schtasks.exe" Processes.process="*/create*" (Processes.process="*Microsoft*TaskMachine*" OR Processes.process="*Microsoft*TackMachine*" OR Processes.process="*MicrosoftUserInterfacePictures*" OR Processes.process="*MicrosoftMusicLibrariesPackage*") by Processes.dest Processes.user Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+union
+(
+  DeviceProcessEvents
+  | where Timestamp > ago(14d)
+  | where FileName =~ "schtasks.exe"
+  | where ProcessCommandLine has "/create"
+  | where ProcessCommandLine has_any ("MicrosoftUserInterfacePictures", "MicrosoftMusicLibrariesPackage", "TaskMachine", "TackMachine")
+  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+),
+(
+  DeviceFileEvents
+  | where Timestamp > ago(14d)
+  | where FolderPath has @"\System32\Tasks\"
+  | where FileName has_any ("MicrosoftUserInterfacePictures", "MicrosoftMusicLibrariesPackage", "TaskMachine", "TackMachine")
+  | project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine
+)
+| order by Timestamp desc
+```
+
+### NarwhalRAT in-memory loader: python.exe processing a Windows CAT file
+
+`UC_14_13` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="python.exe" Processes.process="*.cat*" by Processes.dest Processes.user Processes.process Processes.parent_process Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName =~ "python.exe" or InitiatingProcessFileName =~ "python.exe"
+| where ProcessCommandLine has ".cat" or InitiatingProcessCommandLine has ".cat"
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName,
-          Parent = InitiatingProcessFileName,
-          ParentCmd = InitiatingProcessCommandLine,
-          Child = FileName, ChildCmd = ProcessCommandLine, SHA256
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### NarwhalRAT %APPDATA%\naverwhale staging directory creation
+### NarwhalRAT staging directory %APPDATA%\naverwhale (Naver Whale browser masquerade)
 
-`UC_10_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_14_14` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\AppData\\Roaming\\naverwhale\\*" by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\AppData\\Roaming\\naverwhale\\*" by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let LookbackDays = 30d;
-DeviceFileEvents
-| where Timestamp > ago(LookbackDays)
-| where FolderPath has @"\AppData\Roaming\naverwhale"
-   or FolderPath has @"\AppData\Local\naverwhale"
-| where InitiatingProcessFileName !in~ ("whale.exe","whale_update.exe","NaverWhaleInstaller.exe")
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### Python process abusing pCloud API with folderid + auth dead-drop parameters
-
-`UC_10_13` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url="*api*pcloud*" Web.url="*folderid=*" Web.url="*auth=*" by Web.src Web.user Web.url Web.http_user_agent Web.process | `drop_dm_object_name(Web)` | where like(process,"%python%") OR like(http_user_agent,"%python%") OR like(http_user_agent,"%requests%")
-```
-
-**Defender KQL:**
-```kql
-let LookbackDays = 14d;
-let PCloudHosts = dynamic(["api.pcloud.com","eapi.pcloud.com","papi.pcloud.com","binapi.pcloud.com"]);
-DeviceNetworkEvents
-| where Timestamp > ago(LookbackDays)
-| where RemoteUrl has_any (PCloudHosts) or RemoteUrl has "pcloud.com"
-| where InitiatingProcessFileName in~ ("python.exe","pythonw.exe","py.exe")
-   or InitiatingProcessCommandLine has_any ("folderid=","auth=")
-   or InitiatingProcessFolderPath has @"\AppData\"
-| join kind=leftouter (
-    DeviceProcessEvents
-    | where Timestamp > ago(LookbackDays)
-    | where FileName in~ ("python.exe","pythonw.exe")
-    | project DeviceId, PyPid = ProcessId, PyCmd = ProcessCommandLine, PyParent = InitiatingProcessFileName
-  ) on DeviceId
-| project Timestamp, DeviceName, InitiatingProcessFileName,
-          InitiatingProcessCommandLine, InitiatingProcessFolderPath,
-          RemoteUrl, RemoteIP, RemotePort, PyCmd, PyParent
-| order by Timestamp desc
-```
-
-### Outbound connection to NarwhalRAT C2 IP set (Korean-hosted infrastructure)
-
-`UC_10_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where (Network_Traffic.dest_ip IN ("121.254.222.10","121.254.222.80","211.239.157.126","218.150.78.198","218.150.78.231","61.100.9.206") OR Network_Traffic.dest="daehoat.com" OR Network_Traffic.dest="*daehoat.com" OR Network_Traffic.dest="novel21.co.kr" OR Network_Traffic.dest="*novel21.co.kr" OR Network_Traffic.dest="fe01.co.kr" OR Network_Traffic.dest="*fe01.co.kr" OR Network_Traffic.dest="webhostingkorea.com" OR Network_Traffic.dest="crwellfood.com") by Network_Traffic.src Network_Traffic.dest Network_Traffic.dest_ip Network_Traffic.dest_port Network_Traffic.app | `drop_dm_object_name(Network_Traffic)`
-```
-
-**Defender KQL:**
-```kql
-let LookbackDays = 30d;
-let NarwhalIPs = dynamic(["121.254.222.10","121.254.222.80","211.239.157.126","218.150.78.198","218.150.78.231","61.100.9.206"]);
-let NarwhalDomains = dynamic(["daehoat.com","novel21.co.kr","fe01.co.kr","webhostingkorea.com","crwellfood.com"]);
 union
 (
-    DeviceNetworkEvents
-    | where Timestamp > ago(LookbackDays)
-    | where RemoteIP in (NarwhalIPs)
-       or RemoteUrl has_any (NarwhalDomains)
-    | project Timestamp, DeviceName, ActionType,
-              InitiatingProcessFileName, InitiatingProcessCommandLine,
-              InitiatingProcessFolderPath, InitiatingProcessSHA256,
-              RemoteIP, RemotePort, RemoteUrl
+  DeviceFileEvents
+  | where Timestamp > ago(14d)
+  | where FolderPath has @"\AppData\Roaming\naverwhale"
+  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine
 ),
 (
-    DeviceEvents
-    | where Timestamp > ago(LookbackDays)
-    | where ActionType == "DnsQueryResponse"
-    | where RemoteUrl has_any (NarwhalDomains)
-    | project Timestamp, DeviceName, ActionType,
-              InitiatingProcessFileName, InitiatingProcessCommandLine,
-              InitiatingProcessFolderPath, InitiatingProcessSHA256,
-              RemoteIP = tostring(parse_json(AdditionalFields).IPAddress),
-              RemotePort = int(null), RemoteUrl
+  DeviceProcessEvents
+  | where Timestamp > ago(14d)
+  | where ProcessCommandLine has @"\AppData\Roaming\naverwhale" or InitiatingProcessCommandLine has @"\AppData\Roaming\naverwhale"
+  | project Timestamp, DeviceName, AccountName, ActionType="ProcessRef", FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine
 )
 | order by Timestamp desc
 ```
 
-### NarwhalRAT loader hash detection across endpoint telemetry
+### NarwhalRAT C2 to daehoat.com / novel21.co.kr / pCloud dead-drop with folderid+auth
 
-`UC_10_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_14_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint where (Endpoint.Processes.process_hash IN ("3715092aa00f380cefe8b4d2eddb7d08","7cef19f9c4480adac0cd4702ff98f46c","7eb9cee1f696727752169f25cf79a338","b6b0602310bb2d4360c52685119aac1b") OR Endpoint.Filesystem.file_hash IN ("3715092aa00f380cefe8b4d2eddb7d08","7cef19f9c4480adac0cd4702ff98f46c","7eb9cee1f696727752169f25cf79a338","b6b0602310bb2d4360c52685119aac1b")) by Endpoint.dest Endpoint.user
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="121.254.222.10" OR All_Traffic.dest="121.254.222.80" OR All_Traffic.dest="211.239.157.126" OR All_Traffic.dest="218.150.78.198" OR All_Traffic.dest="218.150.78.231" OR All_Traffic.dest="61.100.9.206" OR All_Traffic.dest_host="daehoat.com" OR All_Traffic.dest_host="*.daehoat.com" OR All_Traffic.dest_host="novel21.co.kr" OR All_Traffic.dest_host="*.novel21.co.kr" OR All_Traffic.dest_host="fe01.co.kr" OR All_Traffic.dest_host="crwellfood.com" OR All_Traffic.dest_host="webhostingkorea.com") by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let NarwhalHashes = dynamic(["3715092aa00f380cefe8b4d2eddb7d08","7cef19f9c4480adac0cd4702ff98f46c","7eb9cee1f696727752169f25cf79a338","b6b0602310bb2d4360c52685119aac1b"]);
 union
 (
-    DeviceProcessEvents
-    | where Timestamp > ago(90d)
-    | where MD5 in (NarwhalHashes) or InitiatingProcessMD5 in (NarwhalHashes)
-    | project Timestamp, DeviceName, AccountName, Source = "Process",
-              FileName, FolderPath, MD5, SHA256, ProcessCommandLine,
-              InitiatingProcessFileName, InitiatingProcessCommandLine
+  DeviceNetworkEvents
+  | where Timestamp > ago(30d)
+  | where RemoteUrl has_any ("daehoat.com", "novel21.co.kr", "fe01.co.kr", "crwellfood.com", "webhostingkorea.com")
+     or RemoteIP in ("121.254.222.10", "121.254.222.80", "211.239.157.126", "218.150.78.198", "218.150.78.231", "61.100.9.206")
+  | project Timestamp, DeviceName, ActionType, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
 ),
 (
-    DeviceFileEvents
-    | where Timestamp > ago(90d)
-    | where MD5 in (NarwhalHashes)
-    | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, Source = "File",
-              FileName, FolderPath, MD5, SHA256, ProcessCommandLine = InitiatingProcessCommandLine,
-              InitiatingProcessFileName, InitiatingProcessCommandLine
-),
-(
-    DeviceImageLoadEvents
-    | where Timestamp > ago(90d)
-    | where MD5 in (NarwhalHashes)
-    | project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, Source = "ImageLoad",
-              FileName, FolderPath, MD5, SHA256, ProcessCommandLine = InitiatingProcessCommandLine,
-              InitiatingProcessFileName, InitiatingProcessCommandLine
+  DeviceNetworkEvents
+  | where Timestamp > ago(30d)
+  | where RemoteUrl has "api.pcloud.com" or RemoteUrl has "eapi.pcloud.com"
+  | where InitiatingProcessFileName =~ "python.exe" or InitiatingProcessCommandLine has_any ("folderid", "naverwhale")
+  | project Timestamp, DeviceName, ActionType, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
 )
-| order by Timestamp desc
-```
-
-### Compiled Python payload loaded from CAT-file scheduled task
-
-`UC_10_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="taskeng.exe" OR Processes.parent_process_name="svchost.exe" Processes.process_name IN ("python.exe","pythonw.exe") (Processes.process="*.cat*" OR Processes.process="*\\AppData\\*\\python.exe*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where NOT match(process,"(?i)\\\\Program Files\\\\(Python|Anaconda)")
-```
-
-**Defender KQL:**
-```kql
-let LookbackDays = 14d;
-DeviceProcessEvents
-| where Timestamp > ago(LookbackDays)
-| where FileName in~ ("python.exe","pythonw.exe")
-| where ProcessCommandLine has ".cat"
-   or ProcessCommandLine matches regex @"(?i)\\AppData\\(Roaming|Local)\\[^\\]+\\python\.exe"
-   or InitiatingProcessFileName in~ ("taskeng.exe","svchost.exe")
-      and InitiatingProcessCommandLine has_any ("MicrosoftUserInterfacePictures","MicrosoftMusicLibraries","TaskMachine","TackMachine")
-| where InitiatingProcessParentFileName !in~ ("explorer.exe","code.exe","pycharm64.exe","jupyter.exe")
-| project Timestamp, DeviceName, AccountName,
-          Parent = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine,
-          Child = FileName, ChildCmd = ProcessCommandLine, ChildFolder = FolderPath, SHA256
 | order by Timestamp desc
 ```
 
@@ -589,4 +527,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 17 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

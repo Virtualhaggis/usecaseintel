@@ -28,7 +28,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Security implications of cross-origin resource sharing (CORS) in Node.js
 
-`UC_1377_0` · phase: **exploit** · confidence: **High**
+`UC_1379_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Anti-forensic deletion/tampering of macOS Tahoe 26 App.MenuItem Biome stream
 
-`UC_51_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_53_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceFileEvents
 
 ### Non-forensic process bulk-reading the App.MenuItem Biome stream
 
-`UC_51_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_53_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -325,7 +325,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Tracing Digital Intent: New MacOS Tahoe 26 Artifact Discovered
 
-`UC_51_6` · phase: **exploit** · confidence: **High**
+`UC_53_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

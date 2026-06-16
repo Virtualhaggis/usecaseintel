@@ -11,26 +11,53 @@ By Bill Toulas
 June 16, 2026
 06:18 AM
 0 
-
-
 DragonForce ransomware used a custom malware named 'Backdoor.Turn' to hide command-and-control traffic inside Microsoft Teams relay infrastructure.
-
-
 The backdoor abuses the Traversal Using Relays around NAT (TURN) protocol used by Microsoft Teams to distribute messages when a direct connection to the client is unavailable (e.g., clients on a private network).
-
-
-DragonForce …
+DragonForce is a ransomw…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2023-52271`
 - **CVE:** `CVE-2025-61155`
 - **CVE:** `CVE-2025-1055`
+- **IPv4 (defanged):** `62.164.177.25`
+- **IPv4 (defanged):** `192.36.27.51`
+- **Domain (defanged):** `projetosmecanicos.com.br`
+- **Domain (defanged):** `socialbizsolutions.com`
+- **Domain (defanged):** `professionalhomebasedbusiness.com`
+- **Domain (defanged):** `safefire.jo`
+- **Domain (defanged):** `glanz-gmbh.de`
+- **Domain (defanged):** `turnkeyaiagents.com`
+- **Domain (defanged):** `comunidadesparentais.com.br`
+- **Domain (defanged):** `mysimerp.net`
+- **SHA256:** `82b37a92589dfd4d67ca87eb9e52ac8e682e8e60d2211f59074cd5ccc693013b`
+- **SHA256:** `821da79d727351dd67ce5df7950e9a3de6647a3cf474bb3a093f67507fed92a6`
+- **SHA256:** `b6628d201c2a68d2a3de2a87de7a5acfe21b101a97928e1c8d5c82102d967383`
+- **SHA256:** `ce66b8221446c9b6d83f0ce6382f430e519601641e5daaaf1ca7a8a8806cb0b0`
+- **SHA256:** `f174c19902523dcf005fa044b6598403a5e5c0a5982398d1bc0dcc5ec1cd351b`
+- **SHA256:** `142bac0e2148e0d47891b6cd7311195c4acbe33b700fad54a201c52a2bc46219`
+- **SHA256:** `8395b621bb4415090f232c59fc41d24ea41a519b58eabe512f3ae7d2fdf049a3`
+- **SHA256:** `9335f61f8ad276d94455c5b6876fea48152c3cea759f2598c8108ee461fa5759`
+- **SHA256:** `cd078957167e1af4de39aecdb981cd14156fa81d5a9c6ac51e74ae5b6199a12a`
+- **SHA256:** `b16e217cdca19e00c1b68bdfb28ead53b20adeabd6edcd91542f9fbf48942877`
+- **SHA256:** `d20a3c928761fe00ac522eeb474612b5804cd9108453ea8591106d5d4428428e`
+- **SHA256:** `8284c8676cc22c4b2e66826ac16986da7ddecba1f2776b16771be17bfdc45dc2`
+- **SHA256:** `65ab49119c845801f29a57e8aa177146b2ffbd289d4278109b146f933380f951`
+- **SHA256:** `6bbf10bcbef7ac5102b54c81137859891a3802dbacd888be90f990d50e18b0b4`
+- **SHA256:** `252a8bb2eb9c96c5e6cc7cab822e2ed0d508032f9350351221781684e86c03ab`
+- **SHA256:** `8a4033425d36cd99fe23e6faef9764fbf555f362ebdb5b72379342fbbe4c5531`
+- **SHA256:** `e45b18c93d187aac5c4486f57483bc87580e15def82a312bfb377ff16eb96b22`
+- **SHA256:** `087f002df0a02c8c74f3ba5cd99cf29fb9efff38bf57b3d808e34a5dd4200dd2`
+- **SHA256:** `048e18416177de2ead251abdf4d89837f6807c6aba4d5b1debe49adfdecbf05c`
+- **SHA256:** `6f9fbe29f8cc2788e2bc9d631e0eea2a8e9837076837b55838005a0e654f0a9e`
+- **SHA256:** `d0da2832ae1e13a98f7ce7e33a66c1b0d9797b81f69ece134e4462ea55ac923e`
+- **SHA256:** `aea26980059ef2ad11e99556a4edfa1f8ec769fa9f06aa573b81bedf319954b5`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
+- **T1071** — Application Layer Protocol
 - **T1190** — Exploit Public-Facing Application
 - **T1566.004** — Phishing: Spearphishing Voice
 - **T1566** — Phishing
@@ -40,6 +67,7 @@ DragonForce …
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
 - **T1068** — Exploitation for Privilege Escalation
 - **T1562.001** — Impair Defenses: Disable or Modify Tools
@@ -61,7 +89,7 @@ _(none detected from narrative keywords)_
 
 ### DragonForce BYOVD: Huawei/Topaz/K7/ToF drivers + ABYSSWORKER load for EDR kill
 
-`UC_3_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +114,7 @@ union FileHits, LoadHits
 
 ### Backdoor.Turn DLL sideload via legitimate VirtualBox/DbgView host + outbound TURN
 
-`UC_3_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +144,7 @@ DeviceProcessEvents
 
 ### LimitBlankPassword LSA policy modified to enable network use of blank-password accounts
 
-`UC_3_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +165,7 @@ DeviceRegistryEvents
 
 ### Backdoor.Turn C2 over Microsoft Teams TURN relay (3478/3479/443 to MS IP from non-Teams)
 
-`UC_3_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_7_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -336,7 +364,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Ransomware gang abuses Microsoft Teams relays to hide malicious traffic
 
-`UC_3_7` · phase: **exploit** · confidence: **High**
+`UC_7_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -387,10 +415,16 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `62.164.177.25`, `192.36.27.51`, `projetosmecanicos.com.br`, `socialbizsolutions.com`, `professionalhomebasedbusiness.com`, `safefire.jo`, `glanz-gmbh.de`, `turnkeyaiagents.com` _(+2 more)_
+
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2023-52271`, `CVE-2025-61155`, `CVE-2025-1055`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `82b37a92589dfd4d67ca87eb9e52ac8e682e8e60d2211f59074cd5ccc693013b`, `821da79d727351dd67ce5df7950e9a3de6647a3cf474bb3a093f67507fed92a6`, `b6628d201c2a68d2a3de2a87de7a5acfe21b101a97928e1c8d5c82102d967383`, `ce66b8221446c9b6d83f0ce6382f430e519601641e5daaaf1ca7a8a8806cb0b0`, `f174c19902523dcf005fa044b6598403a5e5c0a5982398d1bc0dcc5ec1cd351b`, `142bac0e2148e0d47891b6cd7311195c4acbe33b700fad54a201c52a2bc46219`, `8395b621bb4415090f232c59fc41d24ea41a519b58eabe512f3ae7d2fdf049a3`, `9335f61f8ad276d94455c5b6876fea48152c3cea759f2598c8108ee461fa5759` _(+14 more)_
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 14 use case(s) fired, 25 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
