@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Splunk CVE-2026-20253 — unauth hits on PostgreSQL sidecar recovery endpoints
 
-`UC_55_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_62_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceNetworkEvents
 
 ### Write to Splunk ssg_enable_modular_input.py — CVE-2026-20253 payload drop
 
-`UC_55_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_62_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceFileEvents
 
 ### splunkd spawning interactive shell — CVE-2026-20253 RCE outcome
 
-`UC_55_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_62_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### Splunk service outbound to attacker-controlled PostgreSQL (CVE-2026-20253 /backup phase)
 
-`UC_55_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_62_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +128,7 @@ DeviceNetworkEvents
 
 ### Mass scanning for Splunk management interface / CVE-2026-20253 probing
 
-`UC_55_11` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_62_11` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -348,7 +348,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Critical Splunk Enterprise Flaw Lets Attackers Run Code Without Authentication
 
-`UC_55_6` · phase: **install** · confidence: **High**
+`UC_62_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

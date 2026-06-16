@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### Ivanti Sentry command injection via /mics/api/v2/sentry/mics-config/handleMessage (CVE-2026-10520)
 
-`UC_91_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_98_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceNetworkEvents
 
 ### Ivanti Sentry unauthenticated admin account creation (CVE-2026-10523)
 
-`UC_91_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_98_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceLogonEvents
 
 ### Fortinet FortiSandbox WEB UI command injection HTTP pattern (CVE-2026-25089)
 
-`UC_91_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_98_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### SAP NetWeaver SAML XML signature wrapping anomaly (CVE-2026-44748)
 
-`UC_91_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_98_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ SAP_SAML
 
 ### Unpatched Ivanti Sentry / FortiSandbox / SAP NetWeaver in software inventory
 
-`UC_91_10` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_98_10` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

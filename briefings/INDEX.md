@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1200 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1203 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,6 +11,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-16
 - [china linked sprysocks backdoor expands to windows with driv](./2026-06-16/china-linked-sprysocks-backdoor-expands-to-windows-with-driv.md)
 - [cisa flags litespeed cpanel plugin flaw exploited for root p](./2026-06-16/cisa-flags-litespeed-cpanel-plugin-flaw-exploited-for-root-p.md)
+- [cisa kev cve 2026 48907 widget factory joomla content editor](./2026-06-16/cisa-kev-cve-2026-48907-widget-factory-joomla-content-editor.md)
 - [cisa warns of another cpanel plugin flaw exploited in attack](./2026-06-16/cisa-warns-of-another-cpanel-plugin-flaw-exploited-in-attack.md)
 - [cisco releases security updates for actively exploited sd wa](./2026-06-16/cisco-releases-security-updates-for-actively-exploited-sd-wa.md)
 - [clickfix campaigns expand malware delivery with new loaders ](./2026-06-16/clickfix-campaigns-expand-malware-delivery-with-new-loaders-.md)
@@ -21,11 +22,18 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghosttree attack abused recursive windows junctions to hide ](./2026-06-16/ghosttree-attack-abused-recursive-windows-junctions-to-hide-.md)
 - [ghsa critical cve 2026 48519 langflow unauthenticated rce in](./2026-06-16/ghsa-critical-cve-2026-48519-langflow-unauthenticated-rce-in.md)
 - [ghsa critical cve 2026 48746 vllm openai auth bypass](./2026-06-16/ghsa-critical-cve-2026-48746-vllm-openai-auth-bypass.md)
+- [ghsa critical cve 2026 53753 crawl4ai ast sandbox escape via](./2026-06-16/ghsa-critical-cve-2026-53753-crawl4ai-ast-sandbox-escape-via.md)
+- [ghsa critical cve 2026 54157 lobehub unauthenticated ssrf in](./2026-06-16/ghsa-critical-cve-2026-54157-lobehub-unauthenticated-ssrf-in.md)
+- [ghsa critical ghsa 365w hqf6 vxfg crawl4ai multiple docker a](./2026-06-16/ghsa-critical-ghsa-365w-hqf6-vxfg-crawl4ai-multiple-docker-a.md)
+- [google vertex ai sdk flaw let attackers hijack model uploads](./2026-06-16/google-vertex-ai-sdk-flaw-let-attackers-hijack-model-uploads.md)
 - [hackers weaponize microsoft teams relay to hide ransomware t](./2026-06-16/hackers-weaponize-microsoft-teams-relay-to-hide-ransomware-t.md)
 - [interlock and rhysida ransomware operations share supper bac](./2026-06-16/interlock-and-rhysida-ransomware-operations-share-supper-bac.md)
 - [microsoft 365 device code phishing campaign bypasses passwor](./2026-06-16/microsoft-365-device-code-phishing-campaign-bypasses-passwor.md)
+- [multiple jetbrains ide plugins caught stealing ai keys](./2026-06-16/multiple-jetbrains-ide-plugins-caught-stealing-ai-keys.md)
 - [new rokarolla android malware steals pins sms codes and cryp](./2026-06-16/new-rokarolla-android-malware-steals-pins-sms-codes-and-cryp.md)
+- [new rokarolla android malware targets 217 banking crypto app](./2026-06-16/new-rokarolla-android-malware-targets-217-banking-crypto-app.md)
 - [pickle in the middle hijacking vertex ai model uploads for c](./2026-06-16/pickle-in-the-middle-hijacking-vertex-ai-model-uploads-for-c.md)
+- [prevent npm and python supply chain attacks on developer mac](./2026-06-16/prevent-npm-and-python-supply-chain-attacks-on-developer-mac.md)
 - [ransomware gang abuses microsoft teams relays to hide malici](./2026-06-16/ransomware-gang-abuses-microsoft-teams-relays-to-hide-malici.md)
 - [steam workshop abused to spread malware via wallpaper engine](./2026-06-16/steam-workshop-abused-to-spread-malware-via-wallpaper-engine.md)
 - [windows version of sprysocks linux malware used to attack go](./2026-06-16/windows-version-of-sprysocks-linux-malware-used-to-attack-go.md)
@@ -110,7 +118,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [meta to use off site business data for feed and ai personali](./2026-06-09/meta-to-use-off-site-business-data-for-feed-and-ai-personali.md)
 - [miasma worm hits microsoft again azure functions action and ](./2026-06-09/miasma-worm-hits-microsoft-again-azure-functions-action-and-.md)
 - [microsoft patch tuesday for june 2026 snort rules and promin](./2026-06-09/microsoft-patch-tuesday-for-june-2026-snort-rules-and-promin.md)
-- [microsoft restores some github repos keeps others offline as](./2026-06-09/microsoft-restores-some-github-repos-keeps-others-offline-as.md)
 - [pythagora io gpt pilot compromised on github shai hulud cred](./2026-06-09/pythagora-io-gpt-pilot-compromised-on-github-shai-hulud-cred.md)
 - [threat brief active exploitation of pan os cve 2026 0257](./2026-06-09/threat-brief-active-exploitation-of-pan-os-cve-2026-0257.md)
 - [wait binding gyp can do what exploring npm s weirdest build ](./2026-06-09/wait-binding-gyp-can-do-what-exploring-npm-s-weirdest-build-.md)
@@ -299,8 +306,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-14
 - [cisa kev cve 2026 20182 cisco catalyst sd wan controller aut](./2026-05-14/cisa-kev-cve-2026-20182-cisco-catalyst-sd-wan-controller-aut.md)
 - [frostyneighbor fresh mischief and digital shenanigans](./2026-05-14/frostyneighbor-fresh-mischief-and-digital-shenanigans.md)
-- [ghsa critical cve 2026 44791 n8n has an xml node prototype p](./2026-05-14/ghsa-critical-cve-2026-44791-n8n-has-an-xml-node-prototype-p.md)
-- [ghsa critical cve 2026 44848 portainer missing authorization](./2026-05-14/ghsa-critical-cve-2026-44848-portainer-missing-authorization.md)
 - [ghsa critical cve 2026 44849 portainer has an endpoint secur](./2026-05-14/ghsa-critical-cve-2026-44849-portainer-has-an-endpoint-secur.md)
 - [ghsa critical cve 2026 44990 apostrophe has default xss via ](./2026-05-14/ghsa-critical-cve-2026-44990-apostrophe-has-default-xss-via-.md)
 - [ghsa critical cve 2026 45288 marten has an injection vulnera](./2026-05-14/ghsa-critical-cve-2026-45288-marten-has-an-injection-vulnera.md)
@@ -1017,7 +1022,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-08-09
 - [lessons from aws codebuild s memory dump incident cve 2025 8](./2025-08-09/lessons-from-aws-codebuild-s-memory-dump-incident-cve-2025-8.md)
-- [supply chain security alert num2words pypi package shows sig](./2025-08-09/supply-chain-security-alert-num2words-pypi-package-shows-sig.md)
 
 ## 2025-08-07
 - [meeting the ai mandates with confidence why federal teams tr](./2025-08-07/meeting-the-ai-mandates-with-confidence-why-federal-teams-tr.md)
@@ -1768,7 +1772,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2024-06-13
 - [4 ai coding risks and how to address them](./2024-06-13/4-ai-coding-risks-and-how-to-address-them.md)
-- [cisa kev cve 2024 26169 microsoft windows error reporting se](./2024-06-13/cisa-kev-cve-2024-26169-microsoft-windows-error-reporting-se.md)
 - [cisa kev cve 2024 4358 progress telerik report server authen](./2024-06-13/cisa-kev-cve-2024-4358-progress-telerik-report-server-authen.md)
 - [why vulnerability management falls short in modern applicati](./2024-06-13/why-vulnerability-management-falls-short-in-modern-applicati.md)
 

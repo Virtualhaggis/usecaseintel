@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### G_Wagon npm postinstall spawns python with stdin pipe (fileless payload exec)
 
-`UC_610_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_613_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### G_Wagon dropper: node.exe spawns system tar.exe extracting from stdin (-x -f - -C)
 
-`UC_610_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_613_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceProcessEvents
 
 ### G_Wagon C2 beacon: node.exe or python.exe egress to Appwrite storage buckets
 
-`UC_610_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_613_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceNetworkEvents
 
 ### G_Wagon Python runtime drop into npm cache with lib_core/renderer or python_runtime paths
 
-`UC_610_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_613_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -351,7 +351,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — G_Wagon: npm Package Deploys Python Stealer Targeting 100+ Crypto Wallets
 
-`UC_610_8` · phase: **exploit** · confidence: **High**
+`UC_613_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

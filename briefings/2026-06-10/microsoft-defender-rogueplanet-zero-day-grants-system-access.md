@@ -31,12 +31,18 @@ The anonymous security researcher going by the name Chaotic Eclipse (aka Nightma
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1553.005** — Subvert Trust Controls: Mark-of-the-Web Bypass
-- **T1566.001** — Phishing: Spearphishing Attachment
-- **T1068** — Exploitation for Privilege Escalation
+- **T1204.002** — User Execution: Malicious File
+- **T1218** — System Binary Proxy Execution
+- **T1548.002** — Abuse Elevation Control Mechanism: Bypass User Account Control
 - **T1134.001** — Access Token Manipulation: Token Impersonation/Theft
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1568** — Dynamic Resolution
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
+- **T1055** — Process Injection
+- **T1543.003** — Create or Modify System Process: Windows Service
+- **T1112** — Modify Registry
+- **T1588.006** — Obtain Capabilities: Vulnerabilities
+- **T1203** — Exploitation for Client Execution
 
 ## Kill chain phases observed
 
@@ -44,95 +50,109 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### ISO File Dropped to Downloads — RoguePlanet Defender Exploit Precursor
+### PowerShell Mount-DiskImage by standard user (RoguePlanet pre-condition)
 
-`UC_101_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name="*.iso" Filesystem.file_path="*\\Downloads\\*" Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","outlook.exe","thunderbird.exe") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FileName endswith ".iso"
-| where FolderPath has @"\Downloads\"
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","outlook.exe","thunderbird.exe","olk.exe")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA256, FileSize, FileOriginUrl, InitiatingProcessFileName
-| order by Timestamp desc
-```
-
-### Defender Component (MsMpEng/NisSrv) Spawns Interactive Shell with SYSTEM Integrity
-
-`UC_101_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_108_7` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("MsMpEng.exe","NisSrv.exe","MpDefenderCoreService.exe") Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","bash.exe","sh.exe") Processes.user IN ("SYSTEM","NT AUTHORITY\\SYSTEM") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_integrity_level | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe") AND (Processes.process="*Mount-DiskImage*" OR Processes.process="*Mount-VHD*") AND Processes.process_integrity_level IN ("medium","low") by Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_integrity_level | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("MsMpEng.exe","NisSrv.exe","MpDefenderCoreService.exe")
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","bash.exe","sh.exe")
-| where ProcessIntegrityLevel =~ "System"
-// Filter legitimate Defender housekeeping children
-| where not (FileName =~ "conhost.exe" and InitiatingProcessParentFileName =~ "MpCmdRun.exe")
-| project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentSHA256 = InitiatingProcessSHA256,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          ChildSHA256 = SHA256,
-          ProcessIntegrityLevel
+| where FileName in~ ("powershell.exe", "pwsh.exe")
+| where ProcessCommandLine has_any ("Mount-DiskImage", "Mount-VHD")
+| where ProcessIntegrityLevel in~ ("Medium", "Low")
+| where not (AccountName endswith "$")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessIntegrityLevel, SHA256
 | order by Timestamp desc
 ```
 
-### Connection to RoguePlanet PoC C2 Domain projectnightcrawler.dev
+### SYSTEM-integrity child process spawned by Microsoft Defender component
 
-`UC_101_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_108_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*projectnightcrawler.dev*" by DNS.src DNS.dest DNS.query DNS.answer | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("MsMpEng.exe","NisSrv.exe","MpCmdRun.exe","MsSense.exe","SenseIR.exe","MsSecurityScanner.exe") AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","mshta.exe","bitsadmin.exe","certutil.exe","msbuild.exe") AND Processes.process_integrity_level IN ("system","high") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_integrity_level | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-union
-(DeviceNetworkEvents
-  | where Timestamp > ago(30d)
-  | where RemoteUrl has "projectnightcrawler.dev"
-  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, ProcessName=InitiatingProcessFileName, ProcessCmd=InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, Source="NetworkEvents"),
-(DeviceEvents
-  | where Timestamp > ago(30d)
-  | where ActionType == "DnsQueryResponse"
-  | where AdditionalFields has "projectnightcrawler.dev" or RemoteUrl has "projectnightcrawler.dev"
-  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, ProcessName=InitiatingProcessFileName, ProcessCmd=InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort=int(null), Source="DnsQuery")
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("MsMpEng.exe", "NisSrv.exe", "MpCmdRun.exe", "MsSecurityScanner.exe", "MsSense.exe", "SenseIR.exe")
+| where FileName in~ ("cmd.exe", "powershell.exe", "pwsh.exe", "wscript.exe", "cscript.exe", "rundll32.exe", "regsvr32.exe", "mshta.exe", "bitsadmin.exe", "certutil.exe", "msbuild.exe")
+| where ProcessIntegrityLevel in~ ("System", "High")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, ProcessIntegrityLevel, SHA256
 | order by Timestamp desc
 ```
 
-### Unpatched Assets Vulnerable to Chaotic Eclipse Defender CVE Cluster
+### Non-default DLL image-loaded into MsMpEng / NisSrv scanning process
 
-`UC_101_10` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_108_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-33825","CVE-2026-45498","CVE-2026-41091") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+`sysmon` EventCode=7 (Image="*\\MsMpEng.exe" OR Image="*\\NisSrv.exe" OR Image="*\\MpCmdRun.exe") NOT (ImageLoaded="C:\\Program Files\\Windows Defender\\*" OR ImageLoaded="C:\\ProgramData\\Microsoft\\Windows Defender\\*" OR ImageLoaded="C:\\Windows\\System32\\*" OR ImageLoaded="C:\\Windows\\WinSxS\\*" OR ImageLoaded="C:\\Program Files (x86)\\Microsoft Defender\\*") | stats count min(_time) as firstTime max(_time) as lastTime values(Hashes) as hashes by host user Image ImageLoaded | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceImageLoadEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("MsMpEng.exe", "NisSrv.exe", "MpCmdRun.exe")
+| where not (FolderPath startswith @"C:\Program Files\Windows Defender")
+| where not (FolderPath startswith @"C:\ProgramData\Microsoft\Windows Defender")
+| where not (FolderPath startswith @"C:\Windows\System32")
+| where not (FolderPath startswith @"C:\Windows\WinSxS")
+| where not (FolderPath startswith @"C:\Program Files (x86)\Microsoft Defender")
+| project Timestamp, DeviceName, InitiatingProcessFileName, FileName, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Unauthorized registry tampering against WinDefend / WdNisSvc / Sense service key
+
+`UC_108_10` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path="*\\Services\\WinDefend\\*" OR Registry.registry_path="*\\Services\\WdNisSvc\\*" OR Registry.registry_path="*\\Services\\Sense\\*" OR Registry.registry_path="*\\Microsoft\\Windows Defender\\*") AND Registry.action IN ("modified","created","deleted") AND Registry.process_name!="TrustedInstaller.exe" AND Registry.process_name!="msiexec.exe" AND Registry.process_name!="MsMpEng.exe" AND Registry.process_name!="MpCmdRun.exe" by Registry.dest Registry.user Registry.process_name Registry.process Registry.registry_path Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(7d)
+| where RegistryKey has_any (@"Services\WinDefend", @"Services\WdNisSvc", @"Services\Sense", @"Microsoft\Windows Defender")
+| where ActionType in~ ("RegistryValueSet", "RegistryKeyCreated", "RegistryValueDeleted")
+| where not (InitiatingProcessAccountName endswith "$" and InitiatingProcessFileName =~ "TrustedInstaller.exe")
+| where not (InitiatingProcessFileName in~ ("TrustedInstaller.exe", "MpCmdRun.exe", "MsMpEng.exe", "msiexec.exe", "MsSense.exe"))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, RegistryKey, RegistryValueName, RegistryValueData
+| order by Timestamp desc
+```
+
+### Hosts still vulnerable to Chaotic Eclipse Defender CVE chain (BlueHammer / UnDefend / RedSun)
+
+`UC_108_11` · phase: **recon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count from datamodel=Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-33825","CVE-2026-45498","CVE-2026-41091") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature Vulnerabilities.vendor_product | `drop_dm_object_name(Vulnerabilities)` | sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
-| where CveId in ("CVE-2026-33825","CVE-2026-45498","CVE-2026-41091")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), OpenCVEs=make_set(CveId) by DeviceId, DeviceName, OSPlatform, OSVersion, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate
-| extend ExposureCount=array_length(OpenCVEs)
-| order by ExposureCount desc, LastSeen desc
+| where CveId in~ ("CVE-2026-33825", "CVE-2026-45498", "CVE-2026-41091")
+| where SoftwareVendor =~ "microsoft"
+| where SoftwareName has "defender" or SoftwareName has "antimalware" or SoftwareName has "security"
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, OSPlatform, OSVersion, IsInternetFacing) by DeviceId) on DeviceId
+| project DeviceName, OSPlatform, OSVersion, IsInternetFacing, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -347,4 +367,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

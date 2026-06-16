@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Claude Code Action Read tool exfil: node opens /proc/<pid>/environ on Linux CI runner
 
-`UC_131_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_137_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceFileEvents
 
 ### Claude Code Read tool steered to cloud-credential files on GitHub Actions runner
 
-`UC_131_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_137_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceFileEvents
 
 ### GitHub Actions runner: node from Claude Code Action egresses to non-Anthropic/non-GitHub endpoint
 
-`UC_131_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_137_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
