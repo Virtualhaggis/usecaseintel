@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### AWS CloudTrail trail disabled or deleted (StopLogging / DeleteTrail)
 
-`UC_91_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_93_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ CloudAppEvents
 
 ### AWS CloudTrail S3 destination bucket emptied or deleted
 
-`UC_91_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_93_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ CloudAppEvents
 
 ### AWS CloudTrail UpdateTrail config tampering (S3 destination swap or validation disabled)
 
-`UC_91_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_93_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ CloudAppEvents
 
 ### GCP Cloud Logging sink disabled or deleted
 
-`UC_91_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_93_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ index=gcp sourcetype="google:gcp:pubsub:message" (protoPayload.methodName="googl
 
 ### AWS CloudWatch Logs group deleted or retention shortened to 1 day
 
-`UC_91_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_93_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -152,7 +152,7 @@ CloudAppEvents
 
 ### AWS CloudTrail log file integrity validation disabled (EnableLogFileValidation=false)
 
-`UC_91_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_93_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

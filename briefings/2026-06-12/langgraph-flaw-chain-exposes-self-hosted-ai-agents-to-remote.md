@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### LangGraph get_state_history SQLi via metadata filter (CVE-2025-67644)
 
-`UC_53_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_55_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ _(none detected from narrative keywords)_
 
 ### Shell/LOLBin spawned by LangGraph Python or Node runtime
 
-`UC_53_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_55_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### Vulnerable langgraph / langgraph-checkpoint package version inventory
 
-`UC_53_8` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_55_8` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceTvmSoftwareInventory
 
 ### Outbound public network from LangGraph runtime to non-allowlisted destination
 
-`UC_53_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_55_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ DeviceNetworkEvents
 
 ### File writes to sensitive paths by LangGraph Python/Node runtime
 
-`UC_53_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_55_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

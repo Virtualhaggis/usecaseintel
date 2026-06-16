@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1198 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1199 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,9 +11,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-16
 - [cisa flags litespeed cpanel plugin flaw exploited for root p](./2026-06-16/cisa-flags-litespeed-cpanel-plugin-flaw-exploited-for-root-p.md)
 - [cisco releases security updates for actively exploited sd wa](./2026-06-16/cisco-releases-security-updates-for-actively-exploited-sd-wa.md)
+- [critical fortinet fortisandbox flaws now exploited in attack](./2026-06-16/critical-fortinet-fortisandbox-flaws-now-exploited-in-attack.md)
+- [dozens of malicious wallpapers found on steam workshop gamer](./2026-06-16/dozens-of-malicious-wallpapers-found-on-steam-workshop-gamer.md)
+- [fake microsoft alerts used to deploy north korean narwhalrat](./2026-06-16/fake-microsoft-alerts-used-to-deploy-north-korean-narwhalrat.md)
 - [hackers abuse legitimate rmm tools in the quarry irs and ssa](./2026-06-16/hackers-abuse-legitimate-rmm-tools-in-the-quarry-irs-and-ssa.md)
 - [optinmonster plugin hack exposes 1 2 million wordpress sites](./2026-06-16/optinmonster-plugin-hack-exposes-1-2-million-wordpress-sites.md)
 - [ransomware ecosystem consolidates around lockbit alumni qili](./2026-06-16/ransomware-ecosystem-consolidates-around-lockbit-alumni-qili.md)
+- [windows version of sprysocks linux malware used to attack go](./2026-06-16/windows-version-of-sprysocks-linux-malware-used-to-attack-go.md)
 
 ## 2026-06-15
 - [152 chrome wallpaper extensions with 105k installs linked to](./2026-06-15/152-chrome-wallpaper-extensions-with-105k-installs-linked-to.md)
@@ -45,7 +49,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-13
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-13/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
-- [chinese hackers hijack auth flow spy on isolated network for](./2026-06-13/chinese-hackers-hijack-auth-flow-spy-on-isolated-network-for.md)
 - [critical splunk enterprise flaw lets attackers run code with](./2026-06-13/critical-splunk-enterprise-flaw-lets-attackers-run-code-with.md)
 
 ## 2026-06-12
@@ -97,7 +100,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 7473 arista extensible operating system in](./2026-06-09/cisa-kev-cve-2026-7473-arista-extensible-operating-system-in.md)
 - [ghsa critical cve 2026 48030 pheditor os command injection i](./2026-06-09/ghsa-critical-cve-2026-48030-pheditor-os-command-injection-i.md)
 - [ghsa critical cve 2026 8467 phoenixstorybook unauthenticated](./2026-06-09/ghsa-critical-cve-2026-8467-phoenixstorybook-unauthenticated.md)
-- [hades pypi attack 19 packages poisoned to auto run bun crede](./2026-06-09/hades-pypi-attack-19-packages-poisoned-to-auto-run-bun-crede.md)
 - [meta to use off site business data for feed and ai personali](./2026-06-09/meta-to-use-off-site-business-data-for-feed-and-ai-personali.md)
 - [miasma worm hits microsoft again azure functions action and ](./2026-06-09/miasma-worm-hits-microsoft-again-azure-functions-action-and-.md)
 - [microsoft patch tuesday for june 2026 snort rules and promin](./2026-06-09/microsoft-patch-tuesday-for-june-2026-snort-rules-and-promin.md)
@@ -304,7 +306,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 45411 vm2 has a sandbox breakout usin](./2026-05-14/ghsa-critical-cve-2026-45411-vm2-has-a-sandbox-breakout-usin.md)
 - [ghsa critical cve 2026 46442 flowiseai authenticated host rc](./2026-05-14/ghsa-critical-cve-2026-46442-flowiseai-authenticated-host-rc.md)
 - [ghsa critical ghsa wf8q wvv8 p8jf samanhappy mcphub sse endp](./2026-05-14/ghsa-critical-ghsa-wf8q-wvv8-p8jf-samanhappy-mcphub-sse-endp.md)
-- [kimsuky targets organizations with pebbledash based tools](./2026-05-14/kimsuky-targets-organizations-with-pebbledash-based-tools.md)
 - [ongoing exploitation of cisco catalyst sd wan vulnerabilitie](./2026-05-14/ongoing-exploitation-of-cisco-catalyst-sd-wan-vulnerabilitie.md)
 - [the time of much patching is coming](./2026-05-14/the-time-of-much-patching-is-coming.md)
 

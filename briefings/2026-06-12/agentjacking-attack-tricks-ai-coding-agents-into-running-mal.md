@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Agentjacking C2/exfiltration to advisory-tracker.com (Tenet Sentry-MCP attack)
 
-`UC_51_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_53_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceNetworkEvents
 
 ### AI coding agent (Claude Code / Cursor / Codex) spawning shell that fetch-and-executes remote payload
 
-`UC_51_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_53_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceProcessEvents
 
 ### AI coding agent descendant reading developer credentials / env (Agentjacking credential access)
 
-`UC_51_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_53_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
