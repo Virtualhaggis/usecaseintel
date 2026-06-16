@@ -1,0 +1,116 @@
+{
+  "name": "APT37",
+  "ucs": [
+    {
+      "title": "[LLM] APT37 (ScarCruft) RokRat / Dolphin C2 via cloud-storage APIs (pCloud, Yandex, Dropbox)",
+      "description": "Hunts for non-browser / non-sync processes contacting the legitimate cloud-storage REST endpoints that ScarCruft's RokRat, Dolphin, and Chinotto implants abuse as bidirectional C2 (T1102.002). The combination of pCloud + Yandex + Dropbox + Google Drive API contact from a process that is NOT chrome/edge/firefox/onedrive/dropbox.exe is highly specific to this DPRK actor cluster.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "c2",
+      "conf": "high",
+      "techs": [
+        "T1102.002",
+        "T1071.001",
+        "T1567.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (443) by All_Traffic.src host All_Traffic.app All_Traffic.process_name All_Traffic.user All_Traffic.dest_host\n| `drop_dm_object_name(\"All_Traffic\")`\n| search dest_host IN (\"api.pcloud.com\", \"eapi.pcloud.com\", \"cloud-api.yandex.net\", \"webdav.yandex.ru\", \"content.dropboxapi.com\", \"api.dropboxapi.com\", \"www.googleapis.com\")\n| eval process_name=lower(process_name)\n| where NOT match(process_name, \"(?i)(chrome|msedge|firefox|brave|opera|iexplore|onedrive|dropbox|googledrivefs|yandexdisk|pcloud|safari|outlook)\\.exe$\")\n| eval suspicious_parent=if(match(process_name, \"(?i)(powershell|pwsh|mshta|wscript|cscript|rundll32|regsvr32|cmd|hwp|hword|certutil)\\.exe$\"), 1, 0)\n| stats min(firstTime) as firstTime max(lastTime) as lastTime values(dest_host) as dest_hosts values(dest) as dest_ips dc(dest_host) as distinct_cloud_apis values(process_name) as process_names by host user\n| where distinct_cloud_apis >= 1\n| convert ctime(firstTime) ctime(lastTime)\n| sort - lastTime",
+      "kql": "let RokRatC2Hosts = dynamic([\"api.pcloud.com\",\"eapi.pcloud.com\",\"cloud-api.yandex.net\",\"webdav.yandex.ru\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"www.googleapis.com\"]);\nlet KnownClients = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\"onedrive.exe\",\"dropbox.exe\",\"googledrivefs.exe\",\"yandexdisk.exe\",\"pcloud.exe\",\"safari.exe\",\"outlook.exe\",\"teams.exe\",\"slack.exe\"]);\nDeviceNetworkEvents\n| where Timestamp > ago(7d)\n| where RemoteUrl has_any (RokRatC2Hosts)\n| where InitiatingProcessFileName !in~ (KnownClients)\n| where InitiatingProcessAccountName !endswith \"$\"\n| extend SuspiciousParent = iff(InitiatingProcessFileName in~ (\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"cmd.exe\",\"hwp.exe\",\"hword.exe\",\"certutil.exe\"), true, false)\n| extend IsLolbinTrigger = iff(InitiatingProcessParentFileName in~ (\"hwp.exe\",\"hword.exe\",\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"explorer.exe\",\"winrar.exe\",\"7zfm.exe\"), true, false)\n| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, SuspiciousParent, IsLolbinTrigger, InitiatingProcessSHA256\n| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), HitCount=count(), CloudApisHit=make_set(RemoteUrl), RemoteIPs=make_set(RemoteIP) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, SuspiciousParent, IsLolbinTrigger, InitiatingProcessSHA256\n| where SuspiciousParent or IsLolbinTrigger or HitCount >= 3\n| order by LastSeen desc",
+      "sentinel_kql": "let RokRatC2Hosts = dynamic([\"api.pcloud.com\",\"eapi.pcloud.com\",\"cloud-api.yandex.net\",\"webdav.yandex.ru\",\"content.dropboxapi.com\",\"api.dropboxapi.com\",\"www.googleapis.com\"]);\nlet KnownClients = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"opera.exe\",\"iexplore.exe\",\"onedrive.exe\",\"dropbox.exe\",\"googledrivefs.exe\",\"yandexdisk.exe\",\"pcloud.exe\",\"safari.exe\",\"outlook.exe\",\"teams.exe\",\"slack.exe\"]);\nImWebSession\n| where TimeGenerated > ago(7d)\n| where Url has_any (RokRatC2Hosts) or HttpHostName in~ (RokRatC2Hosts)\n| extend ProcName = tolower(tostring(split(SrcProcessName, \"\\\\\")[-1]))\n| where ProcName !in~ (KnownClients)\n| where SrcUsername !endswith \"$\"\n| extend SuspiciousClient = iff(ProcName in~ (\"powershell.exe\",\"pwsh.exe\",\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"cmd.exe\",\"hwp.exe\",\"hword.exe\",\"certutil.exe\"), true, false)\n| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), HitCount=count(), CloudApisHit=make_set(HttpHostName), RemoteIPs=make_set(DstIpAddr) by DvcHostname, SrcUsername, ProcName, SuspiciousClient\n| where SuspiciousClient or HitCount >= 3\n| order by LastSeen desc",
+      "sigma_yaml": "title: APT37 ScarCruft RokRat Cloud Storage C2\nid: 4f8a7c3b-2d1e-4a9f-bd5c-7e2f6a1b3c4d\nstatus: experimental\ndescription: Detects RokRat / Dolphin / Chinotto C2 beacons from non-browser processes to pCloud / Yandex / Dropbox APIs characteristically abused by APT37.\nreferences:\n  - https://attack.mitre.org/groups/G0067/\nauthor: SOC Detection Engineering\ndate: 2026/06/16\ntags:\n  - attack.command_and_control\n  - attack.t1102.002\n  - attack.t1071.001\n  - attack.g0067\nlogsource:\n  category: network_connection\n  product: windows\ndetection:\n  selection_host:\n    DestinationHostname:\n      - 'api.pcloud.com'\n      - 'eapi.pcloud.com'\n      - 'cloud-api.yandex.net'\n      - 'webdav.yandex.ru'\n      - 'content.dropboxapi.com'\n      - 'api.dropboxapi.com'\n  filter_known_clients:\n    Image|endswith:\n      - '\\chrome.exe'\n      - '\\msedge.exe'\n      - '\\firefox.exe'\n      - '\\brave.exe'\n      - '\\iexplore.exe'\n      - '\\onedrive.exe'\n      - '\\dropbox.exe'\n      - '\\googledrivefs.exe'\n      - '\\yandexdisk.exe'\n      - '\\pcloud.exe'\n      - '\\outlook.exe'\n      - '\\teams.exe'\n  condition: selection_host and not filter_known_clients\nfalsepositives:\n  - Custom backup or sync tools using cloud-storage APIs\n  - Developer scripts using cloud SDKs\nlevel: high",
+      "datadog_query": "source:(windows.sysmon OR windows.defender) @EventID:3 (@DestinationHostname:(api.pcloud.com OR eapi.pcloud.com OR cloud-api.yandex.net OR webdav.yandex.ru OR content.dropboxapi.com OR api.dropboxapi.com)) -@Image:(*\\chrome.exe OR *\\Chrome.exe OR *\\msedge.exe OR *\\MsEdge.exe OR *\\firefox.exe OR *\\Firefox.exe OR *\\OneDrive.exe OR *\\onedrive.exe OR *\\Dropbox.exe OR *\\dropbox.exe OR *\\YandexDisk.exe OR *\\yandexdisk.exe OR *\\pCloud.exe OR *\\pcloud.exe OR *\\GoogleDriveFS.exe OR *\\googledrivefs.exe OR *\\outlook.exe OR *\\OUTLOOK.EXE)",
+      "falcon_logscale_query": "#event_simpleName=DnsRequest DomainName=/^(api\\.pcloud\\.com|eapi\\.pcloud\\.com|cloud-api\\.yandex\\.net|webdav\\.yandex\\.ru|content\\.dropboxapi\\.com|api\\.dropboxapi\\.com)$/i\n| NOT ContextImageFileName=/\\\\(chrome|msedge|firefox|brave|iexplore|onedrive|dropbox|googledrivefs|yandexdisk|pcloud|outlook|teams|slack)\\.exe$/i\n| ContextImageFileName=/\\.exe$/i\n| groupBy([aid, ComputerName, ContextImageFileName, DomainName], function=[count(), min(@timestamp), max(@timestamp)])\n| count > 0",
+      "cloudwatch_query": "",
+      "rationale": "RokRat and the Dolphin successor have a well-documented signature behavior of fetching C2 commands and exfiltrating screenshots via the REST APIs of pCloud, Yandex Disk, Dropbox and Google Drive (Kaspersky / ESET / Cisco Talos reporting from 2017 onward). The exclusion list pins down the unusual case \u2014 a non-browser, non-sync-client process talking to these endpoints \u2014 which is the actual RokRat i",
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "SrcProcessName",
+          "tables_in_scope": [
+            "ImWebSession"
+          ],
+          "suggestion": "SrcHostname",
+          "message": "`SrcProcessName` is not a canonical column of ImWebSession. Did you mean `SrcHostname`?"
+        }
+      ]
+    },
+    {
+      "title": "[LLM] APT37 (ScarCruft) HWP / LNK-in-archive lure \u2192 mshta / PowerShell loader chain",
+      "description": "Catches ScarCruft's hallmark delivery: a Korean-language HWP document or a LNK file packed inside a ZIP/RAR archive (often double-extension or with a benign-looking decoy name) that, when opened, spawns mshta.exe or powershell.exe from an archive utility / hwp.exe / explorer.exe and writes a payload to %APPDATA% or %TEMP%. This parent-child chain is the canonical Group123 / Reaper / InkySquid initial-access pattern.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1059.001",
+        "T1059.005",
+        "T1059.007",
+        "T1027.003",
+        "T1036.008",
+        "T1204.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_hash) as hashes from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (\"hwp.exe\",\"hword.exe\",\"hshow.exe\",\"hcell.exe\",\"winrar.exe\",\"7zfm.exe\",\"7zg.exe\",\"explorer.exe\",\"hancom.exe\")) AND (Processes.process_name IN (\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"cmd.exe\")) by host user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.dest\n| `drop_dm_object_name(\"Processes\")`\n| eval suspicious_payload_path=if(match(process, \"(?i)(\\\\\\\\AppData\\\\\\\\(Roaming|Local)|\\\\\\\\Temp\\\\\\\\|\\\\\\\\Public\\\\\\\\|\\\\\\\\ProgramData\\\\\\\\)\"), 1, 0)\n| eval encoded_or_remote=if(match(process, \"(?i)(-enc|-EncodedCommand|FromBase64String|DownloadString|DownloadFile|IEX|Invoke-Expression|hxxp|http[s]?://|\\\\.hta\\\\b|mshta.*http)\"), 1, 0)\n| eval double_ext=if(match(process, \"(?i)\\\\.(pdf|docx?|hwp|jpg|png|xlsx?|pptx?)\\\\.(lnk|exe|js|vbs|hta|scr)\"), 1, 0)\n| where suspicious_payload_path=1 OR encoded_or_remote=1 OR double_ext=1\n| convert ctime(firstTime) ctime(lastTime)\n| sort - lastTime",
+      "kql": "let HwpArchiveParents = dynamic([\"hwp.exe\",\"hword.exe\",\"hshow.exe\",\"hcell.exe\",\"winrar.exe\",\"7zfm.exe\",\"7zg.exe\",\"explorer.exe\",\"hancom.exe\",\"hpinst.exe\"]);\nlet LolBins = dynamic([\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"cmd.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where InitiatingProcessFileName in~ (HwpArchiveParents)\n| where FileName in~ (LolBins)\n| where AccountName !endswith \"$\"\n| extend CmdLower = tolower(ProcessCommandLine)\n| extend ParentCmdLower = tolower(InitiatingProcessCommandLine)\n| extend SuspiciousPath = CmdLower has_any (@\"\\appdata\\roaming\", @\"\\appdata\\local\\temp\", @\"\\windows\\temp\\\", @\"\\users\\public\\\", @\"\\programdata\\\")\n| extend RemoteOrEncoded = CmdLower has_any (\"-enc\",\"-encodedcommand\",\"frombase64string\",\"downloadstring\",\"downloadfile\",\"iex\",\"invoke-expression\",\"http://\",\"https://\",\".hta\")\n| extend DoubleExtension = ParentCmdLower matches regex @\"\\.(pdf|docx?|hwp|jpg|png|xlsx?|pptx?|txt)\\.(lnk|exe|js|vbs|hta|scr)\\b\"\n| extend KoreanLureMarker = ParentCmdLower matches regex @\"[\\x{AC00}-\\x{D7AF}]\"\n| where SuspiciousPath or RemoteOrEncoded or DoubleExtension\n| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SuspiciousPath, RemoteOrEncoded, DoubleExtension, KoreanLureMarker, InitiatingProcessSHA256, SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "let HwpArchiveParents = dynamic([\"hwp.exe\",\"hword.exe\",\"hshow.exe\",\"hcell.exe\",\"winrar.exe\",\"7zfm.exe\",\"7zg.exe\",\"explorer.exe\",\"hancom.exe\",\"hpinst.exe\"]);\nlet LolBins = dynamic([\"mshta.exe\",\"powershell.exe\",\"pwsh.exe\",\"wscript.exe\",\"cscript.exe\",\"rundll32.exe\",\"regsvr32.exe\",\"cmd.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| extend NewProcLower = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| extend ParentProcLower = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1]))\n| where ParentProcLower in~ (HwpArchiveParents)\n| where NewProcLower in~ (LolBins)\n| where SubjectUserName !endswith \"$\"\n| extend CmdLower = tolower(CommandLine)\n| extend SuspiciousPath = CmdLower has_any (@\"\\appdata\\roaming\", @\"\\appdata\\local\\temp\", @\"\\windows\\temp\\\", @\"\\users\\public\\\", @\"\\programdata\\\")\n| extend RemoteOrEncoded = CmdLower has_any (\"-enc\",\"-encodedcommand\",\"frombase64string\",\"downloadstring\",\"downloadfile\",\"iex\",\"invoke-expression\",\"http://\",\"https://\",\".hta\")\n| extend DoubleExtension = CmdLower matches regex @\"\\.(pdf|docx?|hwp|jpg|png|xlsx?|pptx?|txt)\\.(lnk|exe|js|vbs|hta|scr)\\b\"\n| where SuspiciousPath or RemoteOrEncoded or DoubleExtension\n| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine, SuspiciousPath, RemoteOrEncoded, DoubleExtension\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT37 ScarCruft HWP / LNK Archive Loader Chain\nid: 6c2d8e4a-7f3b-4d1c-9a5e-8b2f1c3d4e5f\nstatus: experimental\ndescription: Detects the ScarCruft (APT37) initial-access pattern where Hancom Office (HWP) or an archive utility spawns mshta/powershell/wscript to drop a payload to %TEMP% / %APPDATA% or execute encoded / remote content. The double-extension lure naming is also characteristic of Group123.\nreferences:\n  - https://attack.mitre.org/groups/G0067/\nauthor: SOC Detection Engineering\ndate: 2026/06/16\ntags:\n  - attack.execution\n  - attack.initial_access\n  - attack.t1059.001\n  - attack.t1204.002\n  - attack.t1036.008\n  - attack.g0067\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  parent_hwp_or_archive:\n    ParentImage|endswith:\n      - '\\hwp.exe'\n      - '\\hword.exe'\n      - '\\hshow.exe'\n      - '\\hcell.exe'\n      - '\\winrar.exe'\n      - '\\7zfm.exe'\n      - '\\7zg.exe'\n      - '\\explorer.exe'\n  child_lolbin:\n    Image|endswith:\n      - '\\mshta.exe'\n      - '\\powershell.exe'\n      - '\\pwsh.exe'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\rundll32.exe'\n      - '\\regsvr32.exe'\n      - '\\cmd.exe'\n  suspicious_payload:\n    CommandLine|contains:\n      - '\\AppData\\Roaming\\'\n      - '\\AppData\\Local\\Temp\\'\n      - '\\Windows\\Temp\\'\n      - '\\Users\\Public\\'\n      - '\\ProgramData\\'\n      - '-EncodedCommand'\n      - 'DownloadString'\n      - 'FromBase64String'\n      - 'IEX'\n      - 'http://'\n      - 'https://'\n      - '.hta'\n  condition: parent_hwp_or_archive and child_lolbin and suspicious_payload\nfalsepositives:\n  - Hancom Office update launchers calling cmd / powershell with self-paths\n  - Admin scripts unzipped via WinRAR that legitimately run PowerShell\nlevel: high",
+      "datadog_query": "source:windows.sysmon @EventID:1 @ParentImage:(*\\hwp.exe OR *\\HWP.EXE OR *\\hword.exe OR *\\Hword.exe OR *\\hshow.exe OR *\\hcell.exe OR *\\winrar.exe OR *\\WinRAR.exe OR *\\7zFM.exe OR *\\7zfm.exe OR *\\7zG.exe OR *\\7zg.exe OR *\\explorer.exe OR *\\Explorer.exe) @Image:(*\\mshta.exe OR *\\MSHTA.EXE OR *\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\wscript.exe OR *\\WScript.exe OR *\\cscript.exe OR *\\CScript.exe OR *\\rundll32.exe OR *\\RunDll32.exe OR *\\regsvr32.exe OR *\\cmd.exe) (@CommandLine:(*AppData\\Roaming* OR *AppData\\Local\\Temp* OR *Windows\\Temp* OR *Users\\Public* OR *ProgramData* OR *-EncodedCommand* OR *FromBase64String* OR *DownloadString* OR *IEX* OR *Invoke-Expression* OR *http\\:\\/\\/* OR *https\\:\\/\\/* OR *\\.hta*))",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(hwp|hword|hshow|hcell|winrar|7zfm|7zg|explorer|hancom|hpinst)\\.exe$/i\n| ImageFileName=/\\\\(mshta|powershell|pwsh|wscript|cscript|rundll32|regsvr32|cmd)\\.exe$/i\n| regex(\"(?i)(\\\\\\\\AppData\\\\\\\\(Roaming|Local\\\\\\\\Temp)|\\\\\\\\Windows\\\\\\\\Temp\\\\\\\\|\\\\\\\\Users\\\\\\\\Public\\\\\\\\|\\\\\\\\ProgramData\\\\\\\\|-EncodedCommand|FromBase64String|DownloadString|IEX|Invoke-Expression|https?://|\\\\.hta)\", field=CommandLine)\n| groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName], function=[count(), collect([CommandLine, SHA256HashData]), min(@timestamp), max(@timestamp)])",
+      "cloudwatch_query": "",
+      "rationale": "APT37's Korean-language targeting drives the inclusion of Hancom Office binaries (hwp/hword/hshow/hcell) as suspicious parents \u2014 almost no other tracked actor produces hwp.exe spawning mshta.exe or PowerShell in Western telemetry. The double-extension regex (.pdf.lnk, .hwp.lnk, etc.) matches the lure naming repeatedly documented by Cisco Talos (Group123) and ESET (Dolphin / RokRat campaigns). Pair",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "AC00",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`AC00` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "D7AF",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`D7AF` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "DoubleExtension",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`DoubleExtension` is not a canonical column of DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "KoreanLureMarker",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`KoreanLureMarker` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "DoubleExtension",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": null,
+          "message": "`DoubleExtension` is not a canonical column of SecurityEvent."
+        }
+      ]
+    }
+  ]
+}

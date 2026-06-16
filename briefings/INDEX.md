@@ -9,14 +9,19 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-16
+- [attackers exploit three fortinet fortisandbox flaws one patc](./2026-06-16/attackers-exploit-three-fortinet-fortisandbox-flaws-one-patc.md)
+- [china linked sprysocks backdoor expands to windows with driv](./2026-06-16/china-linked-sprysocks-backdoor-expands-to-windows-with-driv.md)
 - [cisa flags litespeed cpanel plugin flaw exploited for root p](./2026-06-16/cisa-flags-litespeed-cpanel-plugin-flaw-exploited-for-root-p.md)
+- [cisa warns of another cpanel plugin flaw exploited in attack](./2026-06-16/cisa-warns-of-another-cpanel-plugin-flaw-exploited-in-attack.md)
 - [cisco releases security updates for actively exploited sd wa](./2026-06-16/cisco-releases-security-updates-for-actively-exploited-sd-wa.md)
-- [critical fortinet fortisandbox flaws now exploited in attack](./2026-06-16/critical-fortinet-fortisandbox-flaws-now-exploited-in-attack.md)
 - [dozens of malicious wallpapers found on steam workshop gamer](./2026-06-16/dozens-of-malicious-wallpapers-found-on-steam-workshop-gamer.md)
 - [fake microsoft alerts used to deploy north korean narwhalrat](./2026-06-16/fake-microsoft-alerts-used-to-deploy-north-korean-narwhalrat.md)
 - [hackers abuse legitimate rmm tools in the quarry irs and ssa](./2026-06-16/hackers-abuse-legitimate-rmm-tools-in-the-quarry-irs-and-ssa.md)
 - [optinmonster plugin hack exposes 1 2 million wordpress sites](./2026-06-16/optinmonster-plugin-hack-exposes-1-2-million-wordpress-sites.md)
+- [pickle in the middle hijacking vertex ai model uploads for c](./2026-06-16/pickle-in-the-middle-hijacking-vertex-ai-model-uploads-for-c.md)
+- [prc nexus hackers exploit redcap servers to spy on us medica](./2026-06-16/prc-nexus-hackers-exploit-redcap-servers-to-spy-on-us-medica.md)
 - [ransomware ecosystem consolidates around lockbit alumni qili](./2026-06-16/ransomware-ecosystem-consolidates-around-lockbit-alumni-qili.md)
+- [ransomware gang abuses microsoft teams relays to hide malici](./2026-06-16/ransomware-gang-abuses-microsoft-teams-relays-to-hide-malici.md)
 - [windows version of sprysocks linux malware used to attack go](./2026-06-16/windows-version-of-sprysocks-linux-malware-used-to-attack-go.md)
 
 ## 2026-06-15
@@ -28,7 +33,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisco fixes sd wan vmanage flaw exploited in zero day attack](./2026-06-15/cisco-fixes-sd-wan-vmanage-flaw-exploited-in-zero-day-attack.md)
 - [council of europe investigates shinyhunters data breach clai](./2026-06-15/council-of-europe-investigates-shinyhunters-data-breach-clai.md)
 - [doj seizes cfake socfake deepfake nude sites under take it d](./2026-06-15/doj-seizes-cfake-socfake-deepfake-nude-sites-under-take-it-d.md)
-- [dpapisnoop tool extracts credhist hashes for offline windows](./2026-06-15/dpapisnoop-tool-extracts-credhist-hashes-for-offline-windows.md)
 - [eviltokens a phishing attack that doesn t steal your passwor](./2026-06-15/eviltokens-a-phishing-attack-that-doesn-t-steal-your-passwor.md)
 - [ghsa critical cve 2026 53633 vitest browser exposed browser ](./2026-06-15/ghsa-critical-cve-2026-53633-vitest-browser-exposed-browser-.md)
 - [inside the modern soc the 72 minute race](./2026-06-15/inside-the-modern-soc-the-72-minute-race.md)
@@ -44,7 +48,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the onboarding password mistake that creates unnecessary ris](./2026-06-15/the-onboarding-password-mistake-that-creates-unnecessary-ris.md)
 
 ## 2026-06-14
-- [fbi disrupts massive ai powered phishing service using a mil](./2026-06-14/fbi-disrupts-massive-ai-powered-phishing-service-using-a-mil.md)
 - [when a government pulls an ai model what the fable 5 and myt](./2026-06-14/when-a-government-pulls-an-ai-model-what-the-fable-5-and-myt.md)
 
 ## 2026-06-13
@@ -104,7 +107,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [miasma worm hits microsoft again azure functions action and ](./2026-06-09/miasma-worm-hits-microsoft-again-azure-functions-action-and-.md)
 - [microsoft patch tuesday for june 2026 snort rules and promin](./2026-06-09/microsoft-patch-tuesday-for-june-2026-snort-rules-and-promin.md)
 - [microsoft restores some github repos keeps others offline as](./2026-06-09/microsoft-restores-some-github-repos-keeps-others-offline-as.md)
-- [new frost attack lets websites track what sites and apps you](./2026-06-09/new-frost-attack-lets-websites-track-what-sites-and-apps-you.md)
 - [pythagora io gpt pilot compromised on github shai hulud cred](./2026-06-09/pythagora-io-gpt-pilot-compromised-on-github-shai-hulud-cred.md)
 - [researchers build self replicating ai worm that operates ent](./2026-06-09/researchers-build-self-replicating-ai-worm-that-operates-ent.md)
 - [wait binding gyp can do what exploring npm s weirdest build ](./2026-06-09/wait-binding-gyp-can-do-what-exploring-npm-s-weirdest-build-.md)
@@ -313,7 +315,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [teampcp s mini shai hulud is back a self spreading supply ch](./2026-05-12/teampcp-s-mini-shai-hulud-is-back-a-self-spreading-supply-ch.md)
 
 ## 2026-05-11
-- [inside ad cs escalation unpacking advanced misuse techniques](./2026-05-11/inside-ad-cs-escalation-unpacking-advanced-misuse-techniques.md)
 - [mini shai hulud is back npm worm hits over 160 packages incl](./2026-05-11/mini-shai-hulud-is-back-npm-worm-hits-over-160-packages-incl.md)
 - [tanstack npm packages compromised inside the mini shai hulud](./2026-05-11/tanstack-npm-packages-compromised-inside-the-mini-shai-hulud.md)
 
@@ -1062,7 +1063,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-07-14
 - [cisa kev cve 2025 47812 wing ftp server improper neutralizat](./2025-07-14/cisa-kev-cve-2025-47812-wing-ftp-server-improper-neutralizat.md)
-- [human ai the next era of snyk s vulnerability curation](./2025-07-14/human-ai-the-next-era-of-snyk-s-vulnerability-curation.md)
 
 ## 2025-07-10
 - [cisa kev cve 2025 5777 citrix netscaler adc and gateway out ](./2025-07-10/cisa-kev-cve-2025-5777-citrix-netscaler-adc-and-gateway-out-.md)

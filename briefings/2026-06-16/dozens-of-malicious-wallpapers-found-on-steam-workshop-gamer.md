@@ -51,12 +51,21 @@ Since late 2025, malware has been spreading rapidly through the Steam Workshop, 
 - **T1569.002** — Service Execution
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1204.002** — Malicious File
-- **T1059** — Command and Scripting Interpreter
 - **T1036.005** — Match Legitimate Name or Location
+- **T1204.002** — Malicious File
+- **T1547.001** — Registry Run Keys / Startup Folder
 - **T1574.002** — DLL Side-Loading
+- **T1204.001** — Malicious Link
+- **T1059.001** — PowerShell
+- **T1059.003** — Windows Command Shell
+- **T1056.001** — Keylogging
 - **T1555** — Credentials from Password Stores
+- **T1005** — Data from Local System
+- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1041** — Exfiltration Over C2 Channel
+- **T1105** — Ingress Tool Transfer
+- **T1053.005** — Scheduled Task
+- **T1574.011** — Services Registry Permissions Weakness
 
 ## Kill chain phases observed
 
@@ -64,122 +73,178 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Wallpaper Engine spawning Synaptics.exe or ._cache_GAMEn.exe (trojanized Steam Workshop wallpaper)
+### DarkKomet 'Synaptics.exe' masquerade dropped by Wallpaper Engine workshop content
 
-`UC_1_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("wallpaper32.exe","wallpaper64.exe","Wallpaper Engine.exe","webwallpaper32.exe","webwallpaper64.exe") AND (Processes.process_name IN ("Synaptics.exe","._cache_GAME1.exe") OR Processes.process_name LIKE "._cache_%") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Processes WHERE Processes.process_name="Synaptics.exe" BY Processes.dest Processes.user Processes.process Processes.process_path Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where NOT match(process_path, "(?i)\\\\Program Files( \\(x86\\))?\\\\Synaptics\\\\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where FileName =~ "Synaptics.exe"
+| where not(FolderPath has @"\Program Files\Synaptics\" or FolderPath has @"\Program Files (x86)\Synaptics\")
+| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, SHA256, MD5
+| order by Timestamp desc
+```
+
+### Steam Workshop wallpaper '._cache_GAME1.exe' launcher execution
+
+`UC_7_9` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Processes WHERE Processes.process_name="._cache_GAME1.exe" OR Processes.process_name LIKE "._cache_%.exe" BY Processes.dest Processes.user Processes.process Processes.process_path Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("wallpaper32.exe","wallpaper64.exe","Wallpaper Engine.exe","webwallpaper32.exe","webwallpaper64.exe")
-| where FileName in~ ("Synaptics.exe","._cache_GAME1.exe") or FileName startswith "._cache_"
+| where FileName startswith "._cache_" and FileName endswith ".exe"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessParentFileName, SHA256, MD5
+| order by Timestamp desc
+```
+
+### Wallpaper Engine spawning script interpreters or LOLBins
+
+`UC_7_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Processes WHERE Processes.parent_process_name IN ("wallpaper32.exe","wallpaper64.exe","wallpaper_engine.exe") AND (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","mshta.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe") OR Processes.process_path LIKE "%\\AppData\\Local\\Temp\\%" OR Processes.process_path LIKE "%\\AppData\\Roaming\\%" OR Processes.process_path LIKE "%\\Users\\Public\\%") BY Processes.dest Processes.user Processes.process Processes.process_path Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("wallpaper32.exe","wallpaper64.exe","wallpaper_engine.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","mshta.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe")
+   or FolderPath has_any (@"\AppData\Local\Temp\", @"\AppData\Roaming\", @"\Users\Public\", @"\steamapps\workshop\content\431960\")
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256, MD5
 | order by Timestamp desc
 ```
 
-### DarkKomet Synaptics.exe dropped or executed from user-writable Steam Workshop / Wallpaper Engine paths
+### Trojanised AggregatorHost.dll loaded from non-system path
 
-`UC_1_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="Synaptics.exe" AND (Processes.process_path LIKE "%\\AppData\\%" OR Processes.process_path LIKE "%\\Temp\\%" OR Processes.process_path LIKE "%\\Steam\\steamapps\\workshop\\%" OR Processes.process_path LIKE "%\\Wallpaper Engine\\%" OR Processes.process_path LIKE "%\\Public\\%") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Filesystem WHERE Filesystem.file_name="AggregatorHost.dll" AND NOT (Filesystem.file_path LIKE "%\\Windows\\System32\\%" OR Filesystem.file_path LIKE "%\\Windows\\SysWOW64\\%" OR Filesystem.file_path LIKE "%\\Windows\\WinSxS\\%") BY Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 union
-  (DeviceProcessEvents
-   | where Timestamp > ago(30d)
-   | where FileName =~ "Synaptics.exe"
-   | where FolderPath has_any (@"\AppData\", @"\Temp\", @"\Steam\steamapps\workshop\", @"\Wallpaper Engine\", @"\Public\")
-   | project Timestamp, DeviceName, AccountName, Action="ProcessCreate", FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256, MD5),
-  (DeviceFileEvents
-   | where Timestamp > ago(30d)
-   | where ActionType == "FileCreated"
-   | where FileName =~ "Synaptics.exe"
-   | where FolderPath has_any (@"\AppData\", @"\Temp\", @"\Steam\steamapps\workshop\", @"\Wallpaper Engine\", @"\Public\")
-   | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Action="FileCreate", FileName, FolderPath, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256, MD5)
-| order by Timestamp desc
-```
-
-### Side-loaded AggregatorHost.dll for Steam credential theft (Wallpaper Engine campaign)
-
-`UC_1_10` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("._cache_GAME1.exe") OR Processes.process_name LIKE "._cache_%" by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceImageLoadEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "AggregatorHost.dll"
-| where not (FolderPath startswith @"C:\Windows\System32\" or FolderPath startswith @"C:\Windows\SysWOW64\" or FolderPath startswith @"C:\Windows\WinSxS\")
-| where InitiatingProcessFileName in~ ("wallpaper32.exe","wallpaper64.exe","Wallpaper Engine.exe","webwallpaper32.exe","webwallpaper64.exe","._cache_GAME1.exe","Synaptics.exe")
-   or InitiatingProcessFileName startswith "._cache_"
-| project Timestamp, DeviceName, FolderPath, FileName, SHA256, MD5, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Steam Workshop wallpaper malware C2 callback to 120.48.156.17 / 202.144.192.29 (incl. /ey.php, /audit.php, /download2/Themes2.zip)
-
-`UC_1_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("120.48.156.17","202.144.192.29") by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | append [| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url IN ("*ey.php*","*audit.php*","*Themes2.zip*") AND Web.dest IN ("120.48.156.17","202.144.192.29") by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)]
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in ("120.48.156.17","202.144.192.29")
-   or RemoteUrl has_any ("120.48.156.17","202.144.192.29","/ey.php","/audit.php","/download2/Themes2.zip")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, Protocol
-| order by Timestamp desc
-```
-
-### Kaspersky Steam Workshop wallpaper malware MD5 hash match (DarkKomet / Lumma / Vidar / RenEngine)
-
-`UC_1_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("95856f2ce428c728d9781d3296558068","af080780cca2acd1d082ce01e7cc346a","c133c3dd9f7d6934598025047df41abf","d1693bbff456ae8fa3360446706df6da","8c2cc585ad8a13a72a704c0fda0c9854","b9fa763a53da3eea742d0f3c845a8c09","ded08ae5df7f1b12e5fdb767dbbed0b1","20965254e29104986e11939decd39549","18dedc0009f0927cba6425c84cce9883","0f4f01c6d495abb37403072dd017ce8d","5620f01284329f561b1839a36be55355","fe1f6485013cd5e6d5cf718049b0b8d6","74414ed4b63aadec039b603c32762b80") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | append [| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_hash IN ("95856f2ce428c728d9781d3296558068","af080780cca2acd1d082ce01e7cc346a","c133c3dd9f7d6934598025047df41abf","d1693bbff456ae8fa3360446706df6da","8c2cc585ad8a13a72a704c0fda0c9854","b9fa763a53da3eea742d0f3c845a8c09","ded08ae5df7f1b12e5fdb767dbbed0b1","20965254e29104986e11939decd39549","18dedc0009f0927cba6425c84cce9883","0f4f01c6d495abb37403072dd017ce8d","5620f01284329f561b1839a36be55355","fe1f6485013cd5e6d5cf718049b0b8d6","74414ed4b63aadec039b603c32762b80") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)]
-```
-
-**Defender KQL:**
-```kql
-let IOCs = dynamic([
-  "95856f2ce428c728d9781d3296558068","af080780cca2acd1d082ce01e7cc346a","c133c3dd9f7d6934598025047df41abf",
-  "d1693bbff456ae8fa3360446706df6da","8c2cc585ad8a13a72a704c0fda0c9854","b9fa763a53da3eea742d0f3c845a8c09",
-  "ded08ae5df7f1b12e5fdb767dbbed0b1","20965254e29104986e11939decd39549","18dedc0009f0927cba6425c84cce9883",
-  "0f4f01c6d495abb37403072dd017ce8d","5620f01284329f561b1839a36be55355","fe1f6485013cd5e6d5cf718049b0b8d6",
-  "74414ed4b63aadec039b603c32762b80"
-]);
-union
-  (DeviceProcessEvents
-   | where Timestamp > ago(90d)
-   | where MD5 in (IOCs) or InitiatingProcessMD5 in (IOCs)
-   | project Timestamp, DeviceName, AccountName, Source="ProcessCreate", FileName, FolderPath, ProcessCommandLine, MD5, SHA256),
-  (DeviceFileEvents
-   | where Timestamp > ago(90d)
-   | where MD5 in (IOCs) or InitiatingProcessMD5 in (IOCs)
-   | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source="FileCreate", FileName, FolderPath, ProcessCommandLine=InitiatingProcessCommandLine, MD5, SHA256),
   (DeviceImageLoadEvents
-   | where Timestamp > ago(90d)
-   | where MD5 in (IOCs)
-   | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source="ImageLoad", FileName, FolderPath, ProcessCommandLine=InitiatingProcessCommandLine, MD5, SHA256)
+   | where Timestamp > ago(14d)
+   | where FileName =~ "AggregatorHost.dll"
+   | where not(FolderPath has @"\Windows\System32\" or FolderPath has @"\Windows\SysWOW64\" or FolderPath has @"\Windows\WinSxS\")
+   | project Timestamp, DeviceName, EventKind = "ImageLoad", FileName, FolderPath, SHA256, MD5, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine),
+  (DeviceFileEvents
+   | where Timestamp > ago(14d)
+   | where FileName =~ "AggregatorHost.dll"
+   | where ActionType in ("FileCreated","FileModified","FileRenamed")
+   | where not(FolderPath has @"\Windows\System32\" or FolderPath has @"\Windows\SysWOW64\" or FolderPath has @"\Windows\WinSxS\")
+   | project Timestamp, DeviceName, EventKind = strcat("File:",ActionType), FileName, FolderPath, SHA256, MD5, InitiatingProcessFileName, InitiatingProcessFolderPath = InitiatingProcessFolderPath, InitiatingProcessCommandLine)
+| order by Timestamp desc
+```
+
+### Steam credential file (loginusers.vdf / ssfn*) accessed by non-Steam process
+
+`UC_7_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Filesystem WHERE (Filesystem.file_path LIKE "%\\Steam\\config\\%" OR Filesystem.file_name LIKE "ssfn%" OR Filesystem.file_name IN ("loginusers.vdf","config.vdf")) AND NOT Filesystem.process_name IN ("steam.exe","steamservice.exe","steamwebhelper.exe","steamerrorreporter.exe","steamerrorreporter64.exe") BY Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.process_path | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where (FolderPath has @"\Steam\config\" and (FileName in~ ("loginusers.vdf","config.vdf") or FileName startswith "ssfn"))
+| where InitiatingProcessFileName !in~ ("steam.exe","steamservice.exe","steamwebhelper.exe","steamerrorreporter.exe","steamerrorreporter64.exe","steam_bootstrap.exe","explorer.exe")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, ActionType, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256
+| order by Timestamp desc
+```
+
+### C2 callback to malicious wallpaper campaign infrastructure
+
+`UC_7_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Network_Traffic.All_Traffic WHERE (All_Traffic.dest IN ("120.48.156.17","202.144.192.29")) BY All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name All_Traffic.url | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+union
+  (DeviceNetworkEvents
+   | where Timestamp > ago(30d)
+   | where RemoteIP in ("120.48.156.17","202.144.192.29")
+      or RemoteUrl has_any ("/ey.php","/audit.php","/download2/Themes2.zip")
+   | project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, InitiatingProcessAccountName),
+  (DeviceEvents
+   | where Timestamp > ago(30d)
+   | where ActionType in ("DnsQueryResponse","ConnectionSuccess")
+   | where RemoteIP in ("120.48.156.17","202.144.192.29")
+      or RemoteUrl has_any ("/ey.php","/audit.php","/download2/Themes2.zip")
+   | project Timestamp, DeviceName, RemoteIP, RemotePort=tostring(RemotePort), RemoteUrl, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256=InitiatingProcessSHA256, InitiatingProcessAccountName)
+| order by Timestamp desc
+```
+
+### Known IOC hash match — malicious Steam Workshop wallpaper payloads
+
+`UC_7_14` · phase: **weapon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Processes WHERE Processes.process_hash IN ("95856f2ce428c728d9781d3296558068","af080780cca2acd1d082ce01e7cc346a","c133c3dd9f7d6934598025047df41abf","d1693bbff456ae8fa3360446706df6da","8c2cc585ad8a13a72a704c0fda0c9854","b9fa763a53da3eea742d0f3c845a8c09","ded08ae5df7f1b12e5fdb767dbbed0b1","20965254e29104986e11939decd39549","18dedc0009f0927cba6425c84cce9883","0f4f01c6d495abb37403072dd017ce8d","5620f01284329f561b1839a36be55355","fe1f6485013cd5e6d5cf718049b0b8d6","74414ed4b63aadec039b603c32762b80") BY Processes.dest Processes.user Processes.process_name Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let IOCs = dynamic(["95856f2ce428c728d9781d3296558068","af080780cca2acd1d082ce01e7cc346a","c133c3dd9f7d6934598025047df41abf","d1693bbff456ae8fa3360446706df6da","8c2cc585ad8a13a72a704c0fda0c9854","b9fa763a53da3eea742d0f3c845a8c09","ded08ae5df7f1b12e5fdb767dbbed0b1","20965254e29104986e11939decd39549","18dedc0009f0927cba6425c84cce9883","0f4f01c6d495abb37403072dd017ce8d","5620f01284329f561b1839a36be55355","fe1f6485013cd5e6d5cf718049b0b8d6","74414ed4b63aadec039b603c32762b80"]);
+union
+  (DeviceProcessEvents | where Timestamp > ago(30d) | where MD5 in (IOCs) | project Timestamp, DeviceName, AccountName, Source="DeviceProcessEvents", FileName, FolderPath, MD5, SHA256, ProcessCommandLine, InitiatingProcessFileName),
+  (DeviceFileEvents    | where Timestamp > ago(30d) | where MD5 in (IOCs) | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source="DeviceFileEvents", FileName, FolderPath, MD5, SHA256, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName),
+  (DeviceImageLoadEvents | where Timestamp > ago(30d) | where MD5 in (IOCs) | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source="DeviceImageLoadEvents", FileName, FolderPath, MD5, SHA256, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName)
+| order by Timestamp desc
+```
+
+### Persistence via Steam Workshop wallpaper content path in Run keys / Scheduled Tasks
+
+`UC_7_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime FROM datamodel=Endpoint.Registry WHERE (Registry.registry_path LIKE "%\\CurrentVersion\\Run%" OR Registry.registry_path LIKE "%\\CurrentVersion\\RunOnce%" OR Registry.registry_path LIKE "%\\Image File Execution Options\\%") AND (Registry.registry_value_data LIKE "%\\steamapps\\workshop\\content\\431960\\%" OR Registry.registry_value_data LIKE "%Synaptics.exe%" OR Registry.registry_value_data LIKE "%AggregatorHost.dll%" OR Registry.registry_value_data LIKE "%._cache_%.exe%") BY Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+union
+  (DeviceRegistryEvents
+   | where Timestamp > ago(30d)
+   | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
+   | where RegistryKey has_any (@"\CurrentVersion\Run", @"\CurrentVersion\RunOnce", @"\Image File Execution Options\", @"\Wow6432Node\Microsoft\Windows\CurrentVersion\Run")
+   | where RegistryValueData has_any (@"\steamapps\workshop\content\431960\", "Synaptics.exe", "AggregatorHost.dll", "._cache_")
+   | project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath),
+  (DeviceEvents
+   | where Timestamp > ago(30d)
+   | where ActionType in ("ScheduledTaskCreated","ScheduledTaskUpdated")
+   | where AdditionalFields has_any (@"\steamapps\workshop\content\431960\", "Synaptics.exe", "AggregatorHost.dll", "._cache_")
+   | project Timestamp, DeviceName, AccountName, ActionType, FileName, FolderPath, ProcessCommandLine, AdditionalFields)
 | order by Timestamp desc
 ```
 
@@ -333,7 +398,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Dozens of malicious wallpapers found on Steam Workshop: gamers’ accounts at risk
 
-`UC_1_7` · phase: **exploit** · confidence: **High**
+`UC_7_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -393,4 +458,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
