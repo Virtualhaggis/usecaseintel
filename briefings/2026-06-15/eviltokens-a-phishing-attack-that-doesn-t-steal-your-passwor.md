@@ -74,7 +74,7 @@ _(none detected from narrative keywords)_
 
 ### EvilTokens lure email - inbound message referencing microsoft.com/devicelogin or device code prompts
 
-`UC_45_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_48_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ EmailEvents
 
 ### Successful Entra ID device code OAuth flow sign-in - EvilTokens authorisation handoff
 
-`UC_45_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_48_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ AADSignInEventsBeta
 
 ### Host or user contacting EvilTokens C2 / lure infrastructure (IOC sweep)
 
-`UC_45_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_48_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ DeviceNetworkEvents
 
 ### Inbox rule creation immediately following Entra ID device code sign-in
 
-`UC_45_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_48_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

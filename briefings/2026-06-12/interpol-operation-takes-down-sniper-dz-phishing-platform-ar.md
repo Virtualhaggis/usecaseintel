@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### Sniper Dz seized phishing infrastructure callback (post-takedown beacons)
 
-`UC_64_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_67_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceNetworkEvents
 
 ### Raviral.com Sniper Dz kit endpoints accessed (k_fac.php / track.js)
 
-`UC_64_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_67_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceNetworkEvents
 
 ### Phishing email click landing on Sniper Dz infrastructure (URL/click correlation)
 
-`UC_64_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_67_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ UrlClickEvents
 
 ### Brand-impersonating phishing pages on abused free-hosting platforms (Sniper Dz pattern)
 
-`UC_64_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_67_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

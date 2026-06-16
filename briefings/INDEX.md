@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1199 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1200 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -13,17 +13,21 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa flags litespeed cpanel plugin flaw exploited for root p](./2026-06-16/cisa-flags-litespeed-cpanel-plugin-flaw-exploited-for-root-p.md)
 - [cisa warns of another cpanel plugin flaw exploited in attack](./2026-06-16/cisa-warns-of-another-cpanel-plugin-flaw-exploited-in-attack.md)
 - [cisco releases security updates for actively exploited sd wa](./2026-06-16/cisco-releases-security-updates-for-actively-exploited-sd-wa.md)
+- [clickfix campaigns expand malware delivery with new loaders ](./2026-06-16/clickfix-campaigns-expand-malware-delivery-with-new-loaders-.md)
 - [critical fortinet fortisandbox flaws now exploited in attack](./2026-06-16/critical-fortinet-fortisandbox-flaws-now-exploited-in-attack.md)
 - [critical fortinet fortisandbox vulnerabilities actively expl](./2026-06-16/critical-fortinet-fortisandbox-vulnerabilities-actively-expl.md)
 - [dozens of malicious wallpapers found on steam workshop gamer](./2026-06-16/dozens-of-malicious-wallpapers-found-on-steam-workshop-gamer.md)
 - [fake microsoft alerts used to deploy north korean narwhalrat](./2026-06-16/fake-microsoft-alerts-used-to-deploy-north-korean-narwhalrat.md)
 - [ghosttree attack abused recursive windows junctions to hide ](./2026-06-16/ghosttree-attack-abused-recursive-windows-junctions-to-hide-.md)
+- [ghsa critical cve 2026 48519 langflow unauthenticated rce in](./2026-06-16/ghsa-critical-cve-2026-48519-langflow-unauthenticated-rce-in.md)
+- [ghsa critical cve 2026 48746 vllm openai auth bypass](./2026-06-16/ghsa-critical-cve-2026-48746-vllm-openai-auth-bypass.md)
 - [hackers weaponize microsoft teams relay to hide ransomware t](./2026-06-16/hackers-weaponize-microsoft-teams-relay-to-hide-ransomware-t.md)
 - [interlock and rhysida ransomware operations share supper bac](./2026-06-16/interlock-and-rhysida-ransomware-operations-share-supper-bac.md)
 - [microsoft 365 device code phishing campaign bypasses passwor](./2026-06-16/microsoft-365-device-code-phishing-campaign-bypasses-passwor.md)
 - [new rokarolla android malware steals pins sms codes and cryp](./2026-06-16/new-rokarolla-android-malware-steals-pins-sms-codes-and-cryp.md)
 - [pickle in the middle hijacking vertex ai model uploads for c](./2026-06-16/pickle-in-the-middle-hijacking-vertex-ai-model-uploads-for-c.md)
 - [ransomware gang abuses microsoft teams relays to hide malici](./2026-06-16/ransomware-gang-abuses-microsoft-teams-relays-to-hide-malici.md)
+- [steam workshop abused to spread malware via wallpaper engine](./2026-06-16/steam-workshop-abused-to-spread-malware-via-wallpaper-engine.md)
 - [windows version of sprysocks linux malware used to attack go](./2026-06-16/windows-version-of-sprysocks-linux-malware-used-to-attack-go.md)
 
 ## 2026-06-15
@@ -110,7 +114,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [pythagora io gpt pilot compromised on github shai hulud cred](./2026-06-09/pythagora-io-gpt-pilot-compromised-on-github-shai-hulud-cred.md)
 - [threat brief active exploitation of pan os cve 2026 0257](./2026-06-09/threat-brief-active-exploitation-of-pan-os-cve-2026-0257.md)
 - [wait binding gyp can do what exploring npm s weirdest build ](./2026-06-09/wait-binding-gyp-can-do-what-exploring-npm-s-weirdest-build-.md)
-- [winrar flaw exploited by russia aligned groups to deploy ste](./2026-06-09/winrar-flaw-exploited-by-russia-aligned-groups-to-deploy-ste.md)
 
 ## 2026-06-08
 - [ai brands as bait how threat actors are using the ai hype in](./2026-06-08/ai-brands-as-bait-how-threat-actors-are-using-the-ai-hype-in.md)
@@ -296,7 +299,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-14
 - [cisa kev cve 2026 20182 cisco catalyst sd wan controller aut](./2026-05-14/cisa-kev-cve-2026-20182-cisco-catalyst-sd-wan-controller-aut.md)
 - [frostyneighbor fresh mischief and digital shenanigans](./2026-05-14/frostyneighbor-fresh-mischief-and-digital-shenanigans.md)
-- [ghsa critical cve 2026 44789 n8n http request node paginatio](./2026-05-14/ghsa-critical-cve-2026-44789-n8n-http-request-node-paginatio.md)
 - [ghsa critical cve 2026 44791 n8n has an xml node prototype p](./2026-05-14/ghsa-critical-cve-2026-44791-n8n-has-an-xml-node-prototype-p.md)
 - [ghsa critical cve 2026 44848 portainer missing authorization](./2026-05-14/ghsa-critical-cve-2026-44848-portainer-missing-authorization.md)
 - [ghsa critical cve 2026 44849 portainer has an endpoint secur](./2026-05-14/ghsa-critical-cve-2026-44849-portainer-has-an-endpoint-secur.md)
@@ -306,7 +308,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 45369 utcp cli vulnerable to command ](./2026-05-14/ghsa-critical-cve-2026-45369-utcp-cli-vulnerable-to-command-.md)
 - [ghsa critical cve 2026 45374 deepseek tui task create insecu](./2026-05-14/ghsa-critical-cve-2026-45374-deepseek-tui-task-create-insecu.md)
 - [ghsa critical cve 2026 45411 vm2 has a sandbox breakout usin](./2026-05-14/ghsa-critical-cve-2026-45411-vm2-has-a-sandbox-breakout-usin.md)
-- [ghsa critical cve 2026 46442 flowiseai authenticated host rc](./2026-05-14/ghsa-critical-cve-2026-46442-flowiseai-authenticated-host-rc.md)
 - [ghsa critical ghsa wf8q wvv8 p8jf samanhappy mcphub sse endp](./2026-05-14/ghsa-critical-ghsa-wf8q-wvv8-p8jf-samanhappy-mcphub-sse-endp.md)
 - [ongoing exploitation of cisco catalyst sd wan vulnerabilitie](./2026-05-14/ongoing-exploitation-of-cisco-catalyst-sd-wan-vulnerabilitie.md)
 - [the time of much patching is coming](./2026-05-14/the-time-of-much-patching-is-coming.md)
