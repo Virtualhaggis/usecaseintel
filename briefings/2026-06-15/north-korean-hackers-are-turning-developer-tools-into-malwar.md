@@ -79,18 +79,16 @@ According to a report published by Proofpoint, the threat actor has been found o
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1027** — Obfuscated Files or Information
 - **T1195.002** — Compromise Software Supply Chain
-- **T1059** — Command and Scripting Interpreter
-- **T1546** — Event Triggered Execution
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1059.003** — Windows Command Shell
+- **T1105** — Ingress Tool Transfer
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1041** — Exfiltration Over C2 Channel
 - **T1505** — Server Software Component
-- **T1195** — Supply Chain Compromise
-- **T1102.002** — Web Service: Bidirectional Communication
-- **T1567.002** — Exfiltration to Cloud Storage
-- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
-- **T1059.005** — Command and Scripting Interpreter: Visual Basic
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1546** — Event Triggered Execution
+- **T1195.001** — Compromise Software Dependencies and Development Tools
+- **T1059.007** — JavaScript
+- **T1059.004** — Unix Shell
+- **T1056.002** — GUI Input Capture
 
 ## Kill chain phases observed
 
@@ -98,187 +96,194 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### VS Code / Cursor auto-executes script interpreters via .vscode/tasks.json runOn:folderOpen
+### VS Code / Cursor auto-executing shell via tasks.json runOn:folderOpen (Contagious Interview / UNK_DeadDrop)
 
 `UC_7_14` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("Code.exe","Cursor.exe","code.exe","cursor.exe") AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","bash.exe","sh.exe","curl.exe","certutil.exe") by host Processes.user Processes.parent_process Processes.process Processes.process_name Processes.process_path | `drop_dm_object_name(Processes)` | where lastTime > relative_time(now(), "-7d")
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_hash) as hash from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("Code.exe","Cursor.exe","code.exe","cursor.exe")) (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","cscript.exe","wscript.exe","curl.exe","wget.exe","bash.exe","sh.exe") OR Processes.process IN ("*curl *| sh*","*wget *| sh*","*iwr *iex*","*Invoke-Expression*","*tasks.json*","*eslint-check*","*folderOpen*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where NOT match(process,"(?i)\\\\node_modules\\\\")
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("Code.exe","Cursor.exe","code.exe","cursor.exe")
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","bash.exe","sh.exe","curl.exe","certutil.exe","bitsadmin.exe")
+| where InitiatingProcessFileName in~ ("Code.exe","Cursor.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","cscript.exe","wscript.exe","curl.exe","wget.exe","bash.exe","sh.exe","node.exe")
+   or ProcessCommandLine has_any ("eslint-check","runOn","folderOpen","| sh","| bash","IEX","Invoke-Expression","DownloadString","curl -s","wget -q")
 | where AccountName !endswith "$"
-| where not(InitiatingProcessCommandLine has_any ("--extensionDevelopmentPath","--inspect-extensions"))
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd   = InitiatingProcessCommandLine,
+          ChildImage  = FolderPath,
+          ChildCmd    = ProcessCommandLine,
+          SHA256
 | order by Timestamp desc
 ```
 
-### Creation of .vscode/tasks.json or .githooks/pre-commit in a freshly-cloned repository (TaskJacker / Contagious Interview)
+### Windows VBScript loader spawning CMD to install malicious VSIX (UNK_DeadDrop Windows chain)
 
-`UC_7_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_7_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="tasks.json" OR Filesystem.file_name="pre-commit") AND (Filesystem.file_path="*\\.vscode\\*" OR Filesystem.file_path="*\\.githooks\\*" OR Filesystem.file_path="*/.vscode/*" OR Filesystem.file_path="*/.githooks/*") AND Filesystem.process_name IN ("git.exe","git-remote-https.exe") by host Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.process_name IN ("code.exe","code-cli.exe","cursor.exe") Processes.process IN ("*--install-extension*","*.vsix*") (Processes.parent_process_name IN ("cmd.exe","wscript.exe","cscript.exe","powershell.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
+let VsixInstall = DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileRenamed")
-| where (FileName == "tasks.json" and FolderPath has @"\.vscode\")
-   or (FileName == "pre-commit" and FolderPath has @"\.githooks\")
-| where InitiatingProcessFileName in~ ("git.exe","git-remote-https.exe","git-remote-http.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
+| where FileName in~ ("code.exe","code-cli.exe","Cursor.exe")
+| where ProcessCommandLine has "--install-extension"
+   or ProcessCommandLine has ".vsix";
+VsixInstall
+| where InitiatingProcessFileName in~ ("cmd.exe","wscript.exe","cscript.exe","powershell.exe","pwsh.exe")
+| where InitiatingProcessParentFileName !in~ ("explorer.exe","Code.exe","Cursor.exe")
+| project Timestamp, DeviceName, AccountName,
+          GrandParent = InitiatingProcessParentFileName,
+          Parent = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine,
+          Child = FileName, ChildCmd = ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Beaconing to UNK_DeadDrop / Overlord C2 infrastructure (23.137.105.75:5173 and sibling IPs)
+### C2 callback to UNK_DeadDrop infrastructure (23.137.105.75:5173 and named domains)
 
 `UC_7_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as ports values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("23.137.105.75","170.205.29.83","170.205.30.227") by host All_Traffic.src All_Traffic.dest All_Traffic.user | `drop_dm_object_name(All_Traffic)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as process from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("23.137.105.75","170.205.29.83","170.205.30.227") OR (All_Traffic.dest_ip="23.137.105.75" AND All_Traffic.dest_port=5173)) by All_Traffic.src All_Traffic.user | `drop_dm_object_name(All_Traffic)`
 ```
 
 **Defender KQL:**
 ```kql
+let C2_IPs = dynamic(["23.137.105.75","170.205.29.83","170.205.30.227"]);
+let C2_Domains = dynamic(["empowerpharmacy.space","nxlog.tech","ondofinance.tech","valorecuiting.online","migadyn.info","contacttrixauvex.ink","trixauvex.org","pulsynk.org","mailtrixauvex.ink","mailpulsynk.xyz","mailpredicttogether.ink","predicttocareer.space","onoplanoai.ink","trixauvexnet.ink","recruitvex.us","nowurisch.fit","hyperdevpipline.org","nemesistrade.work","ceronet.work","deep-ai-guard.store"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP in ("23.137.105.75","170.205.29.83","170.205.30.227")
+| where RemoteIP in (C2_IPs)
    or (RemoteIP == "23.137.105.75" and RemotePort == 5173)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, Protocol
+   or RemoteUrl has_any (C2_Domains)
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessFolderPath, RemoteIP, RemotePort, RemoteUrl, Protocol
 | order by Timestamp desc
 ```
 
-### Installation of UNK_DeadDrop / Yeeth-flagged malicious VS Code extensions
+### Malicious VS Code extension marketplace install (ByteBinTools / ToolCraft / OLDev jupyter VSIX)
 
-`UC_7_17` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_17` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process IN ("*jupyter-powerdev*","*jupyter-powertools*","*markdown-mode-devtools*","*ByteBinTools*","*ToolCraft.jupyter*","*OLDev.markdown*") by host Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("ByteBinTools.jupyter-powerdev-2026.6.8.vsix","ToolCraft.jupyter-powertools-3.21.0.vsix","OLDev.markdown-mode-devtools-2.1.0.vsix") OR Filesystem.file_path IN ("*\\.vscode\\extensions\\bytebintools.jupyter-powerdev*","*\\.vscode\\extensions\\toolcraft.jupyter-powertools*","*\\.vscode\\extensions\\oldev.markdown-mode-devtools*")) by Filesystem.dest Filesystem.user Filesystem.file_path | `drop_dm_object_name(Filesystem)`
 ```
 
 **Defender KQL:**
 ```kql
-union
-( DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where ProcessCommandLine has_any ("--install-extension","install-extension")
-  | where ProcessCommandLine has_any ("ByteBinTools.jupyter-powerdev","ToolCraft.jupyter-powertools","OLDev.markdown-mode-devtools","jupyter-powerdev-2026.6.8.vsix","jupyter-powertools-3.21.0.vsix","markdown-mode-devtools-2.1.0.vsix")
-  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName ),
-( DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where FileName has_any ("jupyter-powerdev","jupyter-powertools","markdown-mode-devtools","ByteBinTools","ToolCraft.jupyter","OLDev.markdown")
-  | where FolderPath has_any (@"\.vscode\extensions\",@"\.cursor\extensions\")
-  | project Timestamp, DeviceName, InitiatingProcessAccountName=InitiatingProcessAccountName, FileName, FolderPath, SHA256, InitiatingProcessFileName )
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName in~ (
+    "ByteBinTools.jupyter-powerdev-2026.6.8.vsix",
+    "ToolCraft.jupyter-powertools-3.21.0.vsix",
+    "OLDev.markdown-mode-devtools-2.1.0.vsix")
+   or FolderPath has_any (
+    @"\.vscode\extensions\bytebintools.jupyter-powerdev",
+    @"\.vscode\extensions\toolcraft.jupyter-powertools",
+    @"\.vscode\extensions\oldev.markdown-mode-devtools")
+   or SHA256 in ("35813f4401d3ad77b618275473a556eb47bfa6f4b7439dd8943b19f81aa7252e",
+                 "c935808147f0236c81483d7bbeda4b9d602f3595d5d4057f8115d39e222d1c4b",
+                 "4c0d9b802c075be79e9edb52d88f8dd72e6904f5c58267213745818470945c78",
+                 "62761f38ed194c59abe15c49f09f0ebc431ac852c965180c9327ed84d3a454fb",
+                 "d3ebce2f05fe91a8260e87fd11a6ea17c156703d081b3f91d9bbe5fd6aeedc10")
+| project Timestamp, DeviceName, InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          FileName, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### Malicious Code-extension or VS Code process invoking Microsoft Graph / SharePoint as C2
+### Git hook auto-execution post-clone (Contagious Interview .githooks/pre-commit)
 
-`UC_7_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_7_18` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_url="*graph.microsoft.com*" OR All_Traffic.dest_url="*.sharepoint.com*") AND All_Traffic.app IN ("Code.exe","Cursor.exe","node.exe") by host All_Traffic.user All_Traffic.app All_Traffic.dest_url
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where (Filesystem.file_path IN ("*\\.githooks\\pre-commit*","*/.githooks/pre-commit*","*\\.githooks\\post-checkout*","*/.githooks/post-checkout*")) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
+let HookFiles = DeviceFileEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("Code.exe","Cursor.exe","node.exe","electron.exe")
-| where RemoteUrl has_any ("graph.microsoft.com",".sharepoint.com")
-| where InitiatingProcessFolderPath has_any (@"\.vscode\extensions\",@"\.cursor\extensions\",@"\AppData\Local\Programs\Microsoft VS Code\",@"\Cursor\")
-| where not(InitiatingProcessCommandLine has_any ("ms-vscode.vscode-settings-sync","GitHub.copilot","ms-vscode-remote"))
-| summarize Count=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SampleCmd=any(InitiatingProcessCommandLine), SampleUrl=any(RemoteUrl) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath
-| order by Count desc
+| where FolderPath has ".githooks"
+   and FileName in~ ("pre-commit","post-checkout","post-merge","post-clone")
+| where InitiatingProcessFileName !in~ ("git.exe","GitHubDesktop.exe")
+   or InitiatingProcessCommandLine has_any ("clone","fetch","pull")
+| project Timestamp, DeviceName, AccountName, FolderPath, FileName, SHA256,
+          InitiatingProcessFileName, InitiatingProcessCommandLine;
+let HookExec = DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("git.exe","git-bash.exe","sh.exe","bash.exe")
+   and InitiatingProcessCommandLine has_any ("pre-commit","post-checkout",".githooks")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","cscript.exe","wscript.exe","curl.exe","wget.exe","node.exe","python.exe","python3.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, FileName, ProcessCommandLine;
+HookFiles | union HookExec | order by Timestamp desc
 ```
 
-### Installation of UNK_DeadDrop / Axios-secondary malicious npm packages
+### DPRK npm supply-chain install (redeem-onchain-sdk / nicegui / period-newline Axios follow-up)
 
 `UC_7_19` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("npm.cmd","npm.exe","node.exe","pnpm.cmd","yarn.cmd") AND Processes.process IN ("*redeem-onchain-sdk*","*period-newline*","*nicegui@0.1.4*") by host Processes.user Processes.process Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.process_name IN ("npm.exe","npm-cli.js","yarn.exe","pnpm.exe","node.exe") (Processes.process IN ("*redeem-onchain-sdk*","*nicegui@0.1.4*","*period-newline*")) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
-union
-( DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where InitiatingProcessFileName in~ ("npm.cmd","npm.exe","node.exe","yarn.cmd","pnpm.cmd") or FileName in~ ("npm.cmd","npm.exe","yarn.cmd","pnpm.cmd")
-  | where ProcessCommandLine has_any ("redeem-onchain-sdk","period-newline","nicegui@0.1.4")
-     or InitiatingProcessCommandLine has_any ("redeem-onchain-sdk","period-newline","nicegui@0.1.4")
-  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessCommandLine ),
-( DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where FolderPath has_any (@"\node_modules\redeem-onchain-sdk",@"\node_modules\nicegui",@"\node_modules\period-newline")
-  | project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA256, InitiatingProcessFileName )
-| order by Timestamp desc
-```
-
-### Composer install of compromised Packagist package roberts/leads
-
-`UC_7_20` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("composer.phar","composer","composer.bat","php.exe") AND Processes.process IN ("*roberts/leads*","*roberts\\leads*")) by host Processes.user Processes.process Processes.process_name | `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-union
-( DeviceProcessEvents
-  | where Timestamp > ago(30d)
-  | where (FileName in~ ("composer.phar","composer.bat","php.exe") or InitiatingProcessFileName in~ ("composer.phar","composer.bat","php.exe"))
-  | where ProcessCommandLine has "roberts/leads" or InitiatingProcessCommandLine has "roberts/leads"
-  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessCommandLine ),
-( DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where FolderPath has @"\vendor\roberts\leads"
-  | project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA256, InitiatingProcessFileName )
-| order by Timestamp desc
-```
-
-### VBScript loader → CMD → VS Code extension install chain (UNK_DeadDrop Windows pipeline)
-
-`UC_7_21` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="wscript.exe" AND Processes.process_name IN ("cmd.exe","code.cmd","code.exe","cursor.cmd") by host Processes.user Processes.process Processes.process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where lastTime > relative_time(now(), "-7d")
-```
-
-**Defender KQL:**
-```kql
-let WScriptParent = DeviceProcessEvents
-  | where Timestamp > ago(7d)
-  | where InitiatingProcessFileName =~ "wscript.exe"
-  | where InitiatingProcessCommandLine has_any (".vbs",".vbe",".wsf")
-  | where FileName in~ ("cmd.exe","code.cmd","code.exe","cursor.cmd","cursor.exe")
-  | project CmdTime=Timestamp, DeviceId, DeviceName, AccountName, VBSCmd=InitiatingProcessCommandLine, CmdImage=FileName, CmdFullCmd=ProcessCommandLine, ChainProcessId=ProcessId;
+let BadPackages = dynamic(["redeem-onchain-sdk","period-newline","nicegui@0.1.4"]);
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where (FileName =~ "code.cmd" or FileName =~ "code.exe" or FileName =~ "cursor.cmd")
-   and ProcessCommandLine has "--install-extension"
-| join kind=inner WScriptParent on DeviceId
-| where Timestamp between (CmdTime .. CmdTime + 5m)
-| project CmdTime, InstallTime=Timestamp, DeviceName, AccountName, VBSCmd, CmdFullCmd, InstallCmd=ProcessCommandLine
-| order by CmdTime desc
+| where Timestamp > ago(30d)
+| where FileName in~ ("npm.exe","node.exe","yarn.exe","pnpm.exe","npx.exe")
+| where ProcessCommandLine has_any (BadPackages)
+| union (
+    DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FolderPath has_any (@"\node_modules\redeem-onchain-sdk",@"\node_modules\period-newline",@"\node_modules\nicegui")
+    | where FileName in~ ("package.json","index.js","postinstall.js")
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+              InitiatingProcessFileName, InitiatingProcessCommandLine,
+              FolderPath, FileName, SHA256)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Overlord macOS / Linux loader — osascript fake security prompt + curl to staging
+
+`UC_7_20` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.os IN ("Darwin","Linux","macOS") (Processes.process_name="osascript" Processes.process="*display dialog*" Processes.process="*password*" Processes.process="*with hidden answer*") OR (Processes.process_name IN ("curl","wget") Processes.process IN ("*hyperdevpipline.org*","*nemesistrade.work*","*ceronet.work*","*recruitvex.us*","*deep-ai-guard.store*","*23.137.105.75*")) by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where DeviceName has_any ("mac","linux") or InitiatingProcessFolderPath has_any ("/Users/","/home/","/tmp/")
+| where (FileName == "osascript"
+        and ProcessCommandLine has "display dialog"
+        and ProcessCommandLine has "with hidden answer"
+        and ProcessCommandLine has_any ("password","security","authorize"))
+     or (FileName in ("curl","wget")
+        and ProcessCommandLine has_any ("hyperdevpipline.org","nemesistrade.work","ceronet.work","recruitvex.us","deep-ai-guard.store","23.137.105.75","nxlog.tech","ondofinance.tech"))
+| project Timestamp, DeviceName, AccountName,
+          Parent = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine,
+          Child = FileName, ChildCmd = ProcessCommandLine, SHA256
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -695,4 +700,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 22 use case(s) fired, 32 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 21 use case(s) fired, 30 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

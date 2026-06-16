@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1198 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1199 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -19,6 +19,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [council of europe investigates shinyhunters data breach clai](./2026-06-15/council-of-europe-investigates-shinyhunters-data-breach-clai.md)
 - [doj seizes cfake socfake deepfake nude sites under take it d](./2026-06-15/doj-seizes-cfake-socfake-deepfake-nude-sites-under-take-it-d.md)
 - [dpapisnoop tool extracts credhist hashes for offline windows](./2026-06-15/dpapisnoop-tool-extracts-credhist-hashes-for-offline-windows.md)
+- [eviltokens a phishing attack that doesn t steal your passwor](./2026-06-15/eviltokens-a-phishing-attack-that-doesn-t-steal-your-passwor.md)
 - [ghsa critical cve 2026 53633 vitest browser exposed browser ](./2026-06-15/ghsa-critical-cve-2026-53633-vitest-browser-exposed-browser-.md)
 - [hackers use microsoft graph reconnaissance to target payroll](./2026-06-15/hackers-use-microsoft-graph-reconnaissance-to-target-payroll.md)
 - [inside the modern soc the 72 minute race](./2026-06-15/inside-the-modern-soc-the-72-minute-race.md)

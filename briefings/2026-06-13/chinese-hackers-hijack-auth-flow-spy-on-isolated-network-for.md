@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Velvet Ant GS-Netcat C2 relay lookup to gs.thc.org
 
-`UC_38_3` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_39_3` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceNetworkEvents
 
 ### Velvet Ant backdoored PAM module write (pam_unix.so outside package manager)
 
-`UC_38_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_39_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceFileEvents
 
 ### Trojanized OpenSSH binary write (ssh/sshd/scp replaced outside package manager)
 
-`UC_38_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_39_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceFileEvents
 
 ### Velvet Ant SOCKS5 proxy masquerading as 'smbd -D'
 
-`UC_38_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_39_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ MasqueradeProc
 
 ### Velvet Ant fcgiwrap → SSH/uptime pivot to air-gapped network
 
-`UC_38_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_39_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
