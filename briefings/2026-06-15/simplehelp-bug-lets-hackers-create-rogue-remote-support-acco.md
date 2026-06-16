@@ -11,15 +11,9 @@ By Bill Toulas
 June 15, 2026
 04:06 PM
 0 
-
-
 A vulnerability in the SimpleHelp remote management software allows unauthenticated attackers to create privileged technician accounts on servers using the OpenID Connect (OIDC) authentication protocol.
-
-
 The flaw is tracked as CVE-2026-48558 and received a critical severity rating. It impacts SimpleHelp versions 5.5.15 and older, as well as 6.0 pre-release versions.
-
-
-Researchers …
+Researchers at offensive…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -50,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Rogue SimpleHelp Technician account created via OIDC bypass (CVE-2026-48558)
 
-`UC_1_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_3_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### SimpleHelp 'Remote Access.exe' spawning script interpreters on managed endpoints
 
-`UC_1_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +81,7 @@ DeviceProcessEvents
 
 ### Internet-exposed SimpleHelp servers vulnerable to CVE-2026-48558
 
-`UC_1_6` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_3_6` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +104,7 @@ Vulnerable
 
 ### Newly created SimpleHelp Technician immediately exercises privileged actions
 
-`UC_1_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_3_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,7 +157,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — SimpleHelp bug lets hackers create rogue remote support accounts
 
-`UC_1_3` · phase: **install** · confidence: **High**
+`UC_3_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

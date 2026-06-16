@@ -16,10 +16,10 @@ Accor…
 - **CVE:** `CVE-2024-55591`
 - **CVE:** `CVE-2025-32433`
 - **CVE:** `CVE-2025-33073`
-- **CVE:** `CVE-2026-11645`
-- **CVE:** `CVE-2026-20230`
-- **CVE:** `CVE-2026-23479`
 - **IPv4 (defanged):** `176.120.22.127`
+- **SHA256:** `22b38dad7da097ea03aa28d0614164cd25fafeb1383dbc15047e34c8050f6f67`
+- **SHA256:** `078163d5c16f64caa5a14784323fd51451b8c831c73396b967b4e35e6879937b`
+- **SHA256:** `fe1033335a045c696c900d435119d210361966e2fb5cd1ba3382608cfa2c8e68`
 
 ## MITRE ATT&CK Techniques
 
@@ -395,9 +395,12 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
   - IP / domain IOC(s): `176.120.22.127`
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2024-55591`, `CVE-2025-32433`, `CVE-2025-33073`, `CVE-2026-11645`, `CVE-2026-20230`, `CVE-2026-23479`
+  - CVE(s): `CVE-2024-55591`, `CVE-2025-32433`, `CVE-2025-33073`
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `22b38dad7da097ea03aa28d0614164cd25fafeb1383dbc15047e34c8050f6f67`, `078163d5c16f64caa5a14784323fd51451b8c831c73396b967b4e35e6879937b`, `fe1033335a045c696c900d435119d210361966e2fb5cd1ba3382608cfa2c8e68`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 13 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

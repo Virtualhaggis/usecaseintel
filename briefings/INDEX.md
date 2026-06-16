@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1198 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1199 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -17,10 +17,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 54420 litespeed cpanel plugin unix symboli](./2026-06-15/cisa-kev-cve-2026-54420-litespeed-cpanel-plugin-unix-symboli.md)
 - [cisco fixes sd wan vmanage flaw exploited in zero day attack](./2026-06-15/cisco-fixes-sd-wan-vmanage-flaw-exploited-in-zero-day-attack.md)
 - [council of europe investigates shinyhunters data breach clai](./2026-06-15/council-of-europe-investigates-shinyhunters-data-breach-clai.md)
+- [doj seizes cfake socfake deepfake nude sites under take it d](./2026-06-15/doj-seizes-cfake-socfake-deepfake-nude-sites-under-take-it-d.md)
 - [dpapisnoop tool extracts credhist hashes for offline windows](./2026-06-15/dpapisnoop-tool-extracts-credhist-hashes-for-offline-windows.md)
 - [ghsa critical cve 2026 53633 vitest browser exposed browser ](./2026-06-15/ghsa-critical-cve-2026-53633-vitest-browser-exposed-browser-.md)
 - [hackers abuse lnk files powershell and python loader to depl](./2026-06-15/hackers-abuse-lnk-files-powershell-and-python-loader-to-depl.md)
 - [hackers use microsoft graph reconnaissance to target payroll](./2026-06-15/hackers-use-microsoft-graph-reconnaissance-to-target-payroll.md)
+- [inside the modern soc the 72 minute race](./2026-06-15/inside-the-modern-soc-the-72-minute-race.md)
 - [litellm vulnerability chain lets low privilege users take ov](./2026-06-15/litellm-vulnerability-chain-lets-low-privilege-users-take-ov.md)
 - [microsoft defender email security benchmarking key insights ](./2026-06-15/microsoft-defender-email-security-benchmarking-key-insights-.md)
 - [north korean hackers are turning developer tools into malwar](./2026-06-15/north-korean-hackers-are-turning-developer-tools-into-malwar.md)
@@ -320,7 +322,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 6973 ivanti endpoint manager mobile epmm i](./2026-05-07/cisa-kev-cve-2026-6973-ivanti-endpoint-manager-mobile-epmm-i.md)
 - [fake call logs real payments how callphantom tricks android ](./2026-05-07/fake-call-logs-real-payments-how-callphantom-tricks-android-.md)
 - [pcpjack cloud worm evicts teampcp and steals credentials at ](./2026-05-07/pcpjack-cloud-worm-evicts-teampcp-and-steals-credentials-at-.md)
-- [threat brief exploitation of pan os captive portal zero day ](./2026-05-07/threat-brief-exploitation-of-pan-os-captive-portal-zero-day-.md)
 
 ## 2026-05-06
 - [cisa kev cve 2026 0300 palo alto networks pan os out of boun](./2026-05-06/cisa-kev-cve-2026-0300-palo-alto-networks-pan-os-out-of-boun.md)
