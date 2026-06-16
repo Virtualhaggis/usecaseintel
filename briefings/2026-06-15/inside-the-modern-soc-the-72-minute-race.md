@@ -39,8 +39,19 @@ This marks the beginning of our series, Inside the Modern SOC: Trends and…
 - **T1219** — Remote Access Software
 - **T1621** — Multi-Factor Authentication Request Generation
 - **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1098** — Account Manipulation
+- **T1556.006** — Modify Authentication Process: MFA
+- **T1098.003** — Account Manipulation: Additional Cloud Roles
 - **T1578.002** — Modify Cloud Compute Infrastructure: Create Cloud Instance
+- **T1578.004** — Modify Cloud Compute Infrastructure: Revert Cloud Instance
+- **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1136.003** — Create Account: Cloud Account
+- **T1567.002** — Exfiltration to Cloud Storage
+- **T1048.003** — Exfiltration Over Unencrypted Non-C2 Protocol
+- **T1070.001** — Indicator Removal: Clear Windows Event Logs
+- **T1490** — Inhibit System Recovery
+- **T1021.001** — Remote Services: RDP
+- **T1021.006** — Remote Services: WinRM
+- **T1550.002** — Use Alternate Authentication Material: Pass the Hash
 
 ## Kill chain phases observed
 
@@ -48,78 +59,211 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### MFA push fatigue followed by approved sign-in from new IP (Muddled Libra pattern)
+### MFA fatigue spam: ≥5 failed prompts followed by success approval from new device
 
-`UC_0_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_1_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count as mfa_failures values(Authentication.src) as failed_ips from datamodel=Authentication where Authentication.action="failure" (Authentication.signature_id="50074" OR Authentication.signature_id="50076" OR Authentication.signature_id="500121" OR Authentication.signature_id="50158") earliest=-7d by Authentication.user _time span=10m | where mfa_failures >= 5 | rename Authentication.user as user, _time as fail_window | join type=inner user [| tstats summariesonly=true earliest(_time) as success_time values(Authentication.src) as success_ip from datamodel=Authentication where Authentication.action="success" earliest=-7d by Authentication.user | rename Authentication.user as user] | where success_time >= fail_window AND success_time <= relative_time(fail_window, "+10m") | eval new_ip=if(isnull(mvfind(failed_ips, success_ip)),"yes","no") | where new_ip="yes" | table fail_window success_time user mfa_failures failed_ips success_ip
+| tstats `summariesonly` count from datamodel=Authentication where Authentication.action=failure Authentication.signature_id IN ("50140","500121","50158") by Authentication.user _time span=10m | `drop_dm_object_name(Authentication)` | where count >= 5 | join type=inner user [| tstats `summariesonly` min(_time) as success_time from datamodel=Authentication where Authentication.action=success by Authentication.user | `drop_dm_object_name(Authentication)`] | where success_time > _time AND success_time < _time + 600
 ```
 
 **Defender KQL:**
 ```kql
-let WindowMin = 10m;
-let Threshold = 5;
+let Window = 10m;
 let Failures = AADSignInEventsBeta
-    | where Timestamp > ago(7d)
-    | where ErrorCode in (50074, 50076, 500121, 50158)
-    | summarize FailedCount = count(), FailedIPs = make_set(IPAddress) by AccountUpn, FailWindow = bin(Timestamp, WindowMin);
-let Successes = AADSignInEventsBeta
-    | where Timestamp > ago(7d)
-    | where ErrorCode == 0
-    | where AuthenticationRequirement =~ "multiFactorAuthentication"
-    | project SuccessTime = Timestamp, AccountUpn, SuccessIP = IPAddress, Country, City, DeviceName, Application;
-Failures
-| where FailedCount >= Threshold
-| join kind=inner Successes on AccountUpn
-| where SuccessTime between (FailWindow .. FailWindow + WindowMin)
-| where SuccessIP !in (FailedIPs)
-| project SuccessTime, AccountUpn, FailedCount, FailedIPs, SuccessIP, Country, City, DeviceName, Application
-| order by SuccessTime desc
+| where Timestamp > ago(1d)
+| where ErrorCode in (50140, 500121, 50158)
+| summarize FailureCount = count(), FailureIPs = make_set(IPAddress,5), FirstFail = min(Timestamp), LastFail = max(Timestamp) by AccountUpn, bin(Timestamp, Window)
+| where FailureCount >= 5;
+AADSignInEventsBeta
+| where Timestamp > ago(1d)
+| where ErrorCode == 0 and IsInteractive == true
+| join kind=inner Failures on AccountUpn
+| where Timestamp between (LastFail .. LastFail + 5m)
+| project Timestamp, AccountUpn, IPAddress, Country, City, DeviceName, Application, FailureCount, FailureIPs, FirstFail, LastFail
 ```
 
-### Global Admin role assigned within 60 min of user's first interactive sign-in
+### Help-desk-style password/MFA reset immediately followed by successful sign-in from new geo
 
-`UC_0_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_1_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true earliest(_time) as first_signin from datamodel=Authentication where Authentication.action="success" Authentication.app="Azure Active Directory" earliest=-7d by Authentication.user | rename Authentication.user as user | join type=inner user [| tstats summariesonly=true earliest(_time) as role_assign_time values(All_Changes.object) as role from datamodel=Change where All_Changes.action="modified" All_Changes.change_type="AAA" (All_Changes.object="Global Administrator" OR All_Changes.object="Privileged Role Administrator" OR All_Changes.object="Security Administrator" OR All_Changes.object="Application Administrator" OR All_Changes.object="Cloud Application Administrator") earliest=-7d by All_Changes.user | rename All_Changes.user as user] | eval minutes_elapsed=round((role_assign_time-first_signin)/60,1) | where minutes_elapsed >= 0 AND minutes_elapsed <= 60 | table first_signin role_assign_time minutes_elapsed user role
+| tstats `summariesonly` min(_time) as reset_time from datamodel=Change where Change.action=modified Change.object_category=user Change.change_type IN ("password reset","mfa registered","strongAuthenticationPhoneAppDetail") by Change.src_user Change.user | `drop_dm_object_name(Change)` | rename user as target_user | join type=inner target_user [| tstats `summariesonly` min(_time) as login_time values(Authentication.src) as src_ip from datamodel=Authentication where Authentication.action=success by Authentication.user | `drop_dm_object_name(Authentication)` | rename user as target_user] | where login_time > reset_time AND login_time < reset_time + 1800
 ```
 
 **Defender KQL:**
 ```kql
-let LookbackDays = 7d;
-let WindowMin = 60m;
-let PrivRoles = dynamic(["Global Administrator","Privileged Role Administrator","Security Administrator","Application Administrator","Cloud Application Administrator","Privileged Authentication Administrator"]);
-let RoleAdds = CloudAppEvents
-    | where Timestamp > ago(LookbackDays)
-    | where Application =~ "Office 365" or Application has "Azure"
-    | where ActionType in ("Add member to role.","Add eligible member to role.")
-    | extend RoleName = tostring(parse_json(tostring(RawEventData)).ModifiedProperties[1].NewValue)
-    | extend TargetUpn = tostring(parse_json(tostring(RawEventData)).ObjectId)
-    | where RoleName has_any (PrivRoles) or tostring(ActivityObjects) has_any (PrivRoles)
-    | project AssignTime = Timestamp, TargetUpn, RoleName, InitiatorUpn = AccountDisplayName;
-let FirstSignIn = AADSignInEventsBeta
-    | where Timestamp > ago(LookbackDays)
-    | where ErrorCode == 0 and IsInteractive == true
-    | summarize FirstSignIn = min(Timestamp), FirstIP = arg_min(Timestamp, IPAddress, Country) by AccountUpn;
-RoleAdds
-| join kind=inner FirstSignIn on $left.TargetUpn == $right.AccountUpn
-| where AssignTime between (FirstSignIn .. FirstSignIn + WindowMin)
-| extend MinutesElapsed = datetime_diff('minute', AssignTime, FirstSignIn)
-| project AssignTime, FirstSignIn, MinutesElapsed, TargetUpn, RoleName, InitiatorUpn, FirstIP, Country
-| order by AssignTime desc
+let Resets = AuditLogs
+| where TimeGenerated > ago(1d)
+| where OperationName in ("Reset user password","Update user","Update authentication methods of user","Admin registered security info","Admin updated security info","User registered security info")
+| mv-expand TargetResources
+| extend TargetUpn = tostring(TargetResources.userPrincipalName), Initiator = tostring(InitiatedBy.user.userPrincipalName)
+| where isnotempty(TargetUpn) and TargetUpn != Initiator
+| project ResetTime = TimeGenerated, TargetUpn, Initiator, OperationName;
+Resets
+| join kind=inner (SigninLogs
+    | where TimeGenerated > ago(1d)
+    | where ResultType == 0
+    | project TimeGenerated, UserPrincipalName, IPAddress, Location, AppDisplayName, DeviceDetail
+  ) on $left.TargetUpn == $right.UserPrincipalName
+| where TimeGenerated between (ResetTime .. ResetTime + 30m)
+| join kind=leftouter (IdentityInfo | summarize KnownCountries = make_set(Country) by AccountUpn) on $left.UserPrincipalName == $right.AccountUpn
+| extend NewGeo = iff(Location !in (KnownCountries), true, false)
+| where NewGeo == true
+| project ResetTime, Initiator, UserPrincipalName, SigninTime = TimeGenerated, Location, IPAddress, AppDisplayName, DeviceDetail
 ```
 
-### VM/disk provisioned by identity elevated to admin in last 24h (rogue cloud asset)
+### Privileged role assignment within 15 minutes of first-ever interactive sign-in by user
 
-`UC_0_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_1_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true earliest(_time) as elevation_time from datamodel=Change where All_Changes.change_type="AAA" All_Changes.action="modified" (All_Changes.object="Global Administrator" OR All_Changes.object="Privileged Role Administrator" OR All_Changes.object="Application Administrator" OR All_Changes.object="Contributor" OR All_Changes.object="Owner") earliest=-7d by All_Changes.dest_user | rename All_Changes.dest_user as elevated_user | join type=inner elevated_user [| tstats summariesonly=true earliest(_time) as vm_create_time values(All_Changes.object) as cloud_object values(All_Changes.src) as caller_ip from datamodel=Change where All_Changes.change_type="Azure" (All_Changes.command="Microsoft.Compute/virtualMachines/write" OR All_Changes.command="Microsoft.Compute/disks/write" OR All_Changes.command="Microsoft.Compute/disks/beginGetAccess/action" OR All_Changes.command="Microsoft.Compute/snapshots/write") earliest=-7d by All_Changes.user | rename All_Changes.user as elevated_user] | eval hours_after_elevation=round((vm_create_time-elevation_time)/3600,1) | where hours_after_elevation >= 0 AND hours_after_elevation <= 24 | table elevation_time vm_create_time hours_after_elevation elevated_user cloud_object caller_ip
+| tstats `summariesonly` min(_time) as role_time values(Change.object) as role_assigned from datamodel=Change where Change.change_type="role assignment" by Change.user Change.src_user | `drop_dm_object_name(Change)` | rename user as actor | join type=inner actor [| tstats `summariesonly` min(_time) as first_login from datamodel=Authentication where Authentication.action=success by Authentication.user | `drop_dm_object_name(Authentication)` | rename user as actor] | where role_time < first_login + 900
+```
+
+**Defender KQL:**
+```kql
+let RoleOps = AuditLogs
+| where TimeGenerated > ago(1d)
+| where OperationName in ("Add member to role","Add eligible member to role","Add member to role completed (PIM activation)","Add app role assignment to service principal","Add member to group")
+| mv-expand TargetResources
+| extend TargetUpn = tostring(TargetResources.userPrincipalName), Role = tostring(parse_json(tostring(TargetResources.modifiedProperties))[1].newValue), Initiator = tostring(InitiatedBy.user.userPrincipalName)
+| where Role has_any ("Global Administrator","Privileged Role Administrator","User Administrator","Application Administrator","Cloud Application Administrator","Helpdesk Administrator","Privileged Authentication Administrator")
+| project RoleTime = TimeGenerated, Initiator, TargetUpn, Role;
+RoleOps
+| join kind=inner (SigninLogs
+    | where TimeGenerated > ago(1d)
+    | where ResultType == 0 and IsInteractive == true
+    | summarize FirstLogin = min(TimeGenerated), IPAddress = any(IPAddress), Location = any(Location) by UserPrincipalName) on $left.Initiator == $right.UserPrincipalName
+| where RoleTime between (FirstLogin .. FirstLogin + 15m)
+| project FirstLogin, RoleTime, MinutesAfterLogon = datetime_diff('minute', RoleTime, FirstLogin), Initiator, TargetUpn, Role, IPAddress, Location
+```
+
+### Rogue VM / virtual-disk provisioning followed by cross-tenant disk mount
+
+`UC_1_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Change where Change.change_type="compute provision" by Change.user Change.src Change.object _time span=1h | `drop_dm_object_name(Change)` | join type=left user [| tstats `summariesonly` count as baseline_count from datamodel=Change where Change.change_type="compute provision" earliest=-30d@d latest=-1d@d by Change.user | `drop_dm_object_name(Change)` | rename count as baseline_count] | where isnull(baseline_count) OR baseline_count = 0
+```
+
+### New service principal / app registration granted broad consent within 1h of admin sign-in
+
+`UC_1_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` min(_time) as create_time values(Change.object) as app_name from datamodel=Change where Change.change_type IN ("application created","service principal created") by Change.user | `drop_dm_object_name(Change)` | rename user as Initiator | join type=left Initiator [| tstats `summariesonly` min(_time) as consent_time values(Change.object) as scope from datamodel=Change where Change.change_type="oauth consent" by Change.user | `drop_dm_object_name(Change)` | rename user as Initiator] | where consent_time > create_time AND consent_time < create_time + 3600
+```
+
+**Defender KQL:**
+```kql
+let Risky = dynamic(["Mail.ReadWrite.All","Mail.Send","Mail.Send.All","Files.ReadWrite.All","Sites.FullControl.All","Directory.ReadWrite.All","Application.ReadWrite.All","AppRoleAssignment.ReadWrite.All","RoleManagement.ReadWrite.Directory","User.ReadWrite.All"]);
+let AppCreate = CloudAppEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("Add application.","Add service principal.","Add owner to application.","Add owner to service principal.")
+| extend Initiator = AccountDisplayName, AppName = tostring(parse_json(tostring(RawEventData)).Target[3].ID)
+| project AppCreateTime = Timestamp, Initiator, AppName;
+AppCreate
+| join kind=inner (CloudAppEvents
+    | where Timestamp > ago(7d)
+    | where ActionType in ("Consent to application.","Add app role assignment grant to user.","Add delegated permission grant.")
+    | extend ConsentScope = tostring(parse_json(tostring(RawEventData)).ModifiedProperties)
+    | where ConsentScope has_any (Risky)
+    | project ConsentTime = Timestamp, ConsentInitiator = AccountDisplayName, ConsentScope, AppId = tostring(parse_json(tostring(RawEventData)).ObjectId)) on $left.Initiator == $right.ConsentInitiator
+| where ConsentTime between (AppCreateTime .. AppCreateTime + 1h)
+| project AppCreateTime, ConsentTime, Initiator, AppName, ConsentScope
+```
+
+### Sustained large-volume egress from VPN/RDP gateway host to cloud storage in <72min
+
+`UC_1_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` sum(All_Traffic.bytes_out) as bytes_out values(All_Traffic.dest) as dests from datamodel=Network_Traffic where All_Traffic.dest_category="cloud_storage" OR All_Traffic.dest IN ("*.s3.amazonaws.com","*.blob.core.windows.net","*.storage.googleapis.com","mega.nz","transfer.sh","anonfiles.com","file.io") by All_Traffic.src _time span=1h | `drop_dm_object_name(All_Traffic)` | join type=left src [| tstats `summariesonly` avg(All_Traffic.bytes_out) as baseline from datamodel=Network_Traffic where All_Traffic.dest_category="cloud_storage" earliest=-7d@d latest=-1d@d by All_Traffic.src _time span=1h | `drop_dm_object_name(All_Traffic)` | stats avg(baseline) as baseline by src] | where bytes_out > 5368709120 AND (isnull(baseline) OR bytes_out > baseline * 10)
+```
+
+**Defender KQL:**
+```kql
+let CloudStorage = dynamic(["s3.amazonaws.com","blob.core.windows.net","storage.googleapis.com","mega.nz","transfer.sh","anonfiles.com","file.io","pcloud.com","backblazeb2.com","wasabisys.com","dropboxapi.com","box.com"]);
+let Baseline = DeviceNetworkEvents
+| where Timestamp between (ago(7d) .. ago(2h))
+| where RemoteUrl has_any (CloudStorage)
+| summarize BaselineHourlyBytes = avg(toreal(tostring(parse_json(tostring(AdditionalFields)).bytes_out))) by DeviceName;
+DeviceNetworkEvents
+| where Timestamp > ago(2h)
+| where RemoteUrl has_any (CloudStorage)
+| extend BytesOut = toreal(tostring(parse_json(tostring(AdditionalFields)).bytes_out))
+| summarize TotalBytes = sum(BytesOut), DistinctRemotes = dcount(RemoteUrl), Procs = make_set(InitiatingProcessFileName,8), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, bin(Timestamp, 1h)
+| join kind=leftouter Baseline on DeviceName
+| where TotalBytes > 5368709120 and (isnull(BaselineHourlyBytes) or TotalBytes > BaselineHourlyBytes * 10)
+| project DeviceName, FirstSeen, LastSeen, TotalBytesGB = TotalBytes/1073741824.0, BaselineGB = BaselineHourlyBytes/1073741824.0, DistinctRemotes, Procs
+```
+
+### Pre-impact log clearing (wevtutil) and shadow-copy destruction within 72-min win
+
+`UC_1_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as first_seen max(_time) as last_seen values(Processes.process) as cmd_samples from datamodel=Endpoint.Processes where (Processes.process_name="wevtutil.exe" Processes.process IN ("*cl *","* cl *","*clear-log*")) OR (Processes.process_name="vssadmin.exe" Processes.process="*delete shadows*") OR (Processes.process_name="wmic.exe" Processes.process="*shadowcopy*delete*") OR (Processes.process_name="wbadmin.exe" Processes.process IN ("*delete catalog*","*delete systemstatebackup*","*delete backup*")) OR (Processes.process_name="bcdedit.exe" Processes.process IN ("*recoveryenabled*no*","*bootstatuspolicy*ignoreallfailures*")) by Processes.dest Processes.user _time span=1h | `drop_dm_object_name(Processes)` | stats dc(eval(case(match(cmd_samples,"wevtutil"),"log", match(cmd_samples,"vssadmin|shadowcopy"),"shadow", match(cmd_samples,"wbadmin"),"backup", match(cmd_samples,"bcdedit"),"recovery"))) as DestructiveOpKinds values(cmd_samples) as cmd_samples by dest user _time | where DestructiveOpKinds >= 2
+```
+
+**Defender KQL:**
+```kql
+let Window = 1h;
+let Destructive = DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| extend OpKind = case(
+    FileName =~ "wevtutil.exe" and ProcessCommandLine has_any (" cl "," clear-log","/e:false"), "LogClear",
+    FileName =~ "vssadmin.exe" and ProcessCommandLine has "delete shadows", "ShadowDelete",
+    FileName =~ "wmic.exe" and ProcessCommandLine has_all ("shadowcopy","delete"), "ShadowDelete",
+    FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has_any ("Get-WmiObject Win32_Shadowcopy","Remove-WmiObject Win32_Shadowcopy","Get-CimInstance Win32_Shadowcopy"), "ShadowDelete",
+    FileName =~ "wbadmin.exe" and ProcessCommandLine has_any ("delete catalog","delete systemstatebackup","delete backup"), "BackupCatalogDelete",
+    FileName =~ "bcdedit.exe" and (ProcessCommandLine has_all ("recoveryenabled","no") or ProcessCommandLine has_all ("bootstatuspolicy","ignoreallfailures")), "RecoveryDisable",
+    "")
+| where isnotempty(OpKind)
+| project Timestamp, DeviceName, AccountName, OpKind, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine;
+Destructive
+| summarize DistinctOpKinds = dcount(OpKind), OpsSeen = make_set(OpKind), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Samples = make_set(ProcessCommandLine, 10), Parents = make_set(InitiatingProcessFileName, 5) by DeviceName, AccountName, bin(Timestamp, Window)
+| where DistinctOpKinds >= 2
+| extend WindowMinutes = datetime_diff('minute', LastSeen, FirstSeen)
+| project FirstSeen, LastSeen, WindowMinutes, DeviceName, AccountName, DistinctOpKinds, OpsSeen, Parents, Samples
+```
+
+### Cross-host lateral movement fan-out from a single newly-authed account within 60min
+
+`UC_1_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` min(_time) as first_logon dc(Authentication.dest) as host_count values(Authentication.dest) as hosts values(Authentication.src) as sources from datamodel=Authentication where Authentication.action=success Authentication.authentication_method IN ("RemoteInteractive","Network","NetworkCleartext") by Authentication.user _time span=1h | `drop_dm_object_name(Authentication)` | where host_count >= 3 AND NOT match(user,"\$$")
+```
+
+**Defender KQL:**
+```kql
+let Window = 1h;
+let FanOut = DeviceLogonEvents
+| where Timestamp > ago(1d)
+| where ActionType == "LogonSuccess"
+| where LogonType in ("RemoteInteractive","Network","NetworkCleartext","Interactive")
+| where AccountName !endswith "$" and AccountName !in~ ("system","local service","network service","anonymous logon")
+| summarize HostCount = dcount(DeviceName), Hosts = make_set(DeviceName, 25), Sources = make_set(RemoteIP, 10), Protocols = make_set(LogonType), FirstLogon = min(Timestamp), LastLogon = max(Timestamp) by AccountName, AccountDomain, bin(Timestamp, Window)
+| where HostCount >= 3;
+FanOut
+| join kind=leftouter (DeviceLogonEvents
+    | where Timestamp between (ago(30d) .. ago(1d))
+    | where ActionType == "LogonSuccess"
+    | summarize BaselineHosts = dcount(DeviceName) by AccountName) on AccountName
+| extend BaselineHosts = iff(isempty(BaselineHosts), 0, BaselineHosts)
+| where HostCount > BaselineHosts * 2 or BaselineHosts == 0
+| project FirstLogon, LastLogon, AccountName, AccountDomain, HostCount, BaselineHosts, Hosts, Sources, Protocols
 ```
 
 ### Remote service execution — PsExec / SMB lateral movement
@@ -265,4 +409,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 13 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -1,386 +1,3 @@
-<article class="card" id="art-128" data-art-slug="2026-06-04-ghsa-critical-cve-2026-47708-mcp-for-stata-command-injection"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint"
-  data-targets="vcs,windows"
-  data-uc-count="4" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-47708: MCP-for-Stata: Command injection via log_file_name parameter in Stata command wrapper MCP-for-Stata: Command injection via log_file_name parameter in Stata command wrapper CVE-2026-47708 T1190 [LLM] Stata binary spawning OS shell (CVE-2026-47708 stata-mcp log_file_name injection) [LLM] Stata-authored log file written with shell metacharacters or path traversal in filename (CVE-2026-47708) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47708: MCP-for-Stata: Command injection via log_file_">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-04-ghsa-critical-cve-2026-47708-mcp-for-stata-command-injection" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-4p62-hqp5-g644" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-47708: MCP-for-Stata: Command injection via log_file_name parameter in Stata command wrapper</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-06-04</span>
-    <span>4 use cases</span>
-    <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">MCP-for-Stata: Command injection via log_file_name parameter in Stata command wrapper</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-47708</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-128-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-128"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-128-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Likely</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Stata binary spawning OS shell (CVE-2026-47708 stata-mcp log_file_name injection) · [LLM] Stata-authored log file written with shell metacharacters or path traversal in filename (CVE-2026-47708)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47708: MCP-for-Stata: Command injection via log_file_</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="92f20055d5" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
-  <summary>
-    <span class="uc-title">Stata binary spawning OS shell (CVE-2026-47708 stata-mcp log_file_name injection)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="92f20055d5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the Stata executable (or its Linux/macOS variants) spawning cmd/powershell/sh/bash/python child processes. This is the direct exploitation signal for CVE-2026-47708, where an attacker injects Stata&#x27;s `shell` command via the unsanitised log_file_name parameter on the MCP `stata_do` tool, breaking out of the `log using &quot;...&quot;` string to execute arbitrary OS commands.
-
-Rationale: The article states the injection breaks out of the Stata `log using &quot;...&quot;` string so that `shell &lt;cmd&gt;` is interpreted as a Stata command, which then spawns an OS shell. Stata processes (stata.exe, stata-mp.exe, stata-se.exe, stata-be.exe, xstata variants) legitimately almost never spawn cmd/powershell/sh/bash/python children, so the parent-child pivot from the article&#x27;s exploitation primitive is high-fidelity. Cross-checked against the GHSA advisory body (GHSA-4p62-hqp5-g644) and the linked fix commit which confirms log_file_name was interpolated raw into the Stata command string.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-4p62-hqp5-g644
-  • https://github.com/SepineTam/stata-mcp/commit/e6f945941ae0c7cf5e74a428e0b3dc82b396382f
-  • https://attack.mitre.org/techniques/T1059/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter">T1059</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Windows Command Shell">T1059.003</span> <span class="ind tech" title="Unix Shell">T1059.004</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Researcher do-files that legitimately call Stata&#x27;s `shell` command to run git/make/system tooling</li><li>Stata&#x27;s built-in `python` integration where researchers intentionally exit to a Python interpreter</li><li>Local development of stata-mcp itself where the developer is testing tool invocations</li><li>Stata batch wrappers (e.g. Stata-launch scripts via cmd.exe) where cmd.exe is briefly used to set environment before invoking stata — appears as stata→cmd in reverse direction (parent flip)</li><li>Defender ASR/EDR sensor self-test scripts that intentionally walk every parent-child combination</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ProcessCommandLine has_any (&quot;git &quot;,&quot;make &quot;,&quot;type &quot;,&quot;dir &quot;,&quot;ls -&quot;) and InitiatingProcessCommandLine has &quot;.do&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: pull the full ProcessCommandLine of the child shell and the InitiatingProcessCommandLine of the Stata parent; check whether the Stata cmdline references a `.do` file path that came from an MCP / stata-mcp tool invocation, and whether the child shell command line contains data-exfil patterns (curl/wget/nc/Invoke-WebRequest, base64, /tmp/, /dev/tcp/). Confirm the installed `stata-mcp` pip package version on the host — anything &lt;1.17.3 is vulnerable. Step 2 — Contain: if the shell child issued network/file actions, isolate the host via Defender machine action / EDR network-isolate; kill the parent Stata PID and the stata-mcp Python wrapper process; rotate any credentials the Stata process had filesystem access to. Step 3 — Hunt: pivot on the parent Stata PID&#x27;s file writes (UC2 below) for `.log` files with shell metacharacters in the filename; pivot on the stata-mcp wrapper&#x27;s parent (often python.exe / uvx / pipx) and search for inbound MCP requests carrying `log_file_name</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-128-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-128-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-128-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-128-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-128-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-128-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-128-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName has_any (&quot;stata.exe&quot;,&quot;stata-mp.exe&quot;,&quot;stata-se.exe&quot;,&quot;stata-be.exe&quot;,&quot;xstata.exe&quot;,&quot;xstata-mp.exe&quot;,&quot;xstata-se.exe&quot;,&quot;stata&quot;,&quot;stata-mp&quot;,&quot;stata-se&quot;,&quot;stata-be&quot;)
-| where FileName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;,&quot;zsh.exe&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;zsh&quot;,&quot;python.exe&quot;,&quot;python&quot;,&quot;python3&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256, InitiatingProcessParentFileName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-128-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where ParentProcessName has_any (&quot;stata.exe&quot;,&quot;stata-mp.exe&quot;,&quot;stata-se.exe&quot;,&quot;stata-be.exe&quot;,&quot;xstata.exe&quot;,&quot;xstata-mp.exe&quot;,&quot;xstata-se.exe&quot;)
-| where NewProcessName has_any (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;,&quot;python.exe&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project TimeGenerated, Computer, SubjectUserName, AccountName, ParentProcessName, NewProcessName, CommandLine, ProcessId
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-128-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Stata Binary Spawning OS Shell (CVE-2026-47708 stata-mcp injection)
-id: 7d8e9a1f-3c4b-4e5d-9a6b-2c1d3e4f5a6b
-status: experimental
-description: Detects Stata executables spawning command shells, indicating likely exploitation of CVE-2026-47708 in stata-mcp where the log_file_name parameter is interpolated unsanitised into a Stata command, permitting Stata `shell` command injection.
-references:
-  - https://github.com/advisories/GHSA-4p62-hqp5-g644
-  - https://github.com/SepineTam/stata-mcp/commit/e6f945941ae0c7cf5e74a428e0b3dc82b396382f
-author: detection-pipeline
-date: 2026/06/04
-tags:
-  - attack.t1059
-  - attack.t1059.003
-  - attack.t1059.004
-  - attack.t1190
-  - attack.execution
-  - attack.initial_access
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  selection_parent:
-    ParentImage|endswith:
-      - &#x27;\stata.exe&#x27;
-      - &#x27;\stata-mp.exe&#x27;
-      - &#x27;\stata-se.exe&#x27;
-      - &#x27;\stata-be.exe&#x27;
-      - &#x27;\xstata.exe&#x27;
-      - &#x27;\xstata-mp.exe&#x27;
-      - &#x27;\xstata-se.exe&#x27;
-  selection_child:
-    Image|endswith:
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;\pwsh.exe&#x27;
-      - &#x27;\bash.exe&#x27;
-      - &#x27;\sh.exe&#x27;
-      - &#x27;\python.exe&#x27;
-  condition: selection_parent and selection_child
-falsepositives:
-  - Researcher-authored do-files that intentionally call Stata&#x27;s `shell` command
-  - Legitimate stata-mcp `python` integration that spawns python.exe
-level: high</code></pre></div>
-    <div class="tab-content" id="art-128-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon OR source:windows.security) @ParentImage:(*\\stata.exe OR *\\STATA.exe OR *\\Stata.exe OR *\\stata-mp.exe OR *\\StataMP.exe OR *\\stata-se.exe OR *\\stata-be.exe OR *\\xstata.exe OR *\\xstata-mp.exe OR *\\xstata-se.exe) @Image:(*\\cmd.exe OR *\\CMD.exe OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\bash.exe OR *\\sh.exe OR *\\python.exe OR *\\Python.exe)</code></pre></div>
-    <div class="tab-content" id="art-128-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ParentBaseFileName=/^(stata|stata-mp|stata-se|stata-be|xstata|xstata-mp|xstata-se)(\.exe)?$/i
-| ImageFileName=/\\(cmd|powershell|pwsh|bash|sh|zsh|python3?)\.exe$/i or ImageFileName=/\/(bash|sh|zsh|python3?)$/i
-| groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-128-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-128-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-128-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-128-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;stata.exe&quot;,&quot;stata-mp.exe&quot;,&quot;stata-se.exe&quot;,&quot;stata-be.exe&quot;,&quot;xstata.exe&quot;,&quot;xstata-mp.exe&quot;,&quot;xstata-se.exe&quot;,&quot;stata&quot;,&quot;stata-mp&quot;,&quot;stata-se&quot;,&quot;stata-be&quot;)) AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;,&quot;zsh&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;python.exe&quot;,&quot;python&quot;,&quot;python3&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_id Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-128-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;stata.exe&quot;,&quot;stata-mp.exe&quot;,&quot;stata-se.exe&quot;,&quot;stata-be.exe&quot;,&quot;xstata.exe&quot;,&quot;xstata-mp.exe&quot;,&quot;xstata-se.exe&quot;,&quot;stata&quot;,&quot;stata-mp&quot;,&quot;stata-se&quot;,&quot;stata-be&quot;)) AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;,&quot;zsh&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;python.exe&quot;,&quot;python&quot;,&quot;python3&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_id Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="963f2dba8c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
-  <summary>
-    <span class="uc-title">Stata-authored log file written with shell metacharacters or path traversal in filename (CVE-2026-47708)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="963f2dba8c" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects file writes by Stata or the stata-mcp Python wrapper where the target `.log` filename contains shell metacharacters (`;`, `|`, `&amp;`, backtick, single/double quotes) or path traversal (`..`). The article shows the PoC produces a literal log file whose filename contains the injected payload — even if the `shell` portion fails, the file artifact itself is a deterministic exploitation footprint.
-
-Rationale: The article&#x27;s PoC explicitly shows the generated path becomes `&lt;log_dir&gt;/&#x27;; shell echo pwned &gt; /tmp/pwned.txt; &#x27;.log` — i.e. the log filename literally contains a semicolon, single-quote, and redirection metacharacters, and (per `generate_log_file` having no path-traversal guard) may also contain `..`. Both observations come directly from the article&#x27;s source-code excerpts and PoC. Filtering DeviceFileEvents to Stata/Python writers with `.log` extension narrows scope to near-zero baseline, and the regex on metacharacters/traversal isolates the exploitation artefact from any legitimate workflow.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-4p62-hqp5-g644
-  • https://github.com/SepineTam/stata-mcp/commit/e6f945941ae0c7cf5e74a428e0b3dc82b396382f</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter">T1059</span> <span class="ind tech" title="File and Directory Discovery">T1083</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Researchers using single-quote in legitimate log filenames (e.g. `obama&#x27;speech.log`) — uncommon</li><li>Stata batch runs where the dataset name embedded into the log filename happens to contain a hyphen-prefixed value that looks like `..` (e.g. `panel..2024.log`)</li><li>Test fixtures inside the stata-mcp source tree that exercise the (now-fixed) parsing path</li><li>CI runners that intentionally fuzz the log_file_name parameter post-patch as a regression test</li><li>Backup/sync tools (rsync, OneDrive) writing `.log` artefacts with versioned suffixes that include quote characters</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (TargetFileName matches regex @&quot;^panel\.\.20[0-9]{2}\.log$&quot; or FolderPath has &quot;\\stata-mcp\\tests\\fixtures\\&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: read the full TargetFileName and FolderPath; reconstruct the original `log_file_name` payload the attacker sent to the MCP `stata_do` tool. Pull all sibling file activity (especially writes to /tmp/, %TEMP%, or anywhere outside the configured Stata log_file_path) from the same InitiatingProcessId — path-traversal in the same payload often writes a second file at an arbitrary location. Check the host&#x27;s installed stata-mcp version (`pip show stata-mcp`) — vulnerable is &lt;1.17.3. Step 2 — Contain: kill the Stata + stata-mcp wrapper processes; quarantine the malformed .log file and any second-payload files for IR; restrict the MCP server&#x27;s listener (typically a local HTTP/stdio endpoint) until upgraded to ≥1.17.3. Step 3 — Hunt: pivot on InitiatingProcessId to find any child shells (UC1) and any outbound network connections within the next 60s; search the MCP server&#x27;s request logs (if proxied) for `log_file_name` values containing quote/semicolon/newline characters; expand </div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-128-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-128-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-128-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-128-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-128-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-128-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-128-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where InitiatingProcessFileName has_any (&quot;stata.exe&quot;,&quot;stata-mp.exe&quot;,&quot;stata-se.exe&quot;,&quot;stata-be.exe&quot;,&quot;xstata.exe&quot;,&quot;xstata-mp.exe&quot;,&quot;xstata-se.exe&quot;,&quot;python.exe&quot;,&quot;python&quot;,&quot;python3&quot;)
-| where FileName endswith &quot;.log&quot;
-| where FileName matches regex @&quot;[;|&amp;`&#x27;\&quot;]|\.\.&quot;
-     or InitiatingProcessCommandLine has_any (&quot;stata_mcp&quot;,&quot;stata-mcp&quot;,&quot;log_file_name&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-128-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventType == &quot;FileCreated&quot; or EventType == &quot;FileModified&quot;
-| where ActingProcessName has_any (&quot;stata.exe&quot;,&quot;stata-mp.exe&quot;,&quot;stata-se.exe&quot;,&quot;stata-be.exe&quot;,&quot;xstata.exe&quot;,&quot;xstata-mp.exe&quot;,&quot;xstata-se.exe&quot;,&quot;python.exe&quot;,&quot;python&quot;,&quot;python3&quot;)
-| where TargetFileName endswith &quot;.log&quot;
-| where TargetFileName matches regex @&quot;[;|&amp;`&#x27;\&quot;]|\.\.&quot;
-     or ActingProcessCommandLine has_any (&quot;stata_mcp&quot;,&quot;stata-mcp&quot;,&quot;log_file_name&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFileName, TargetFilePath
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-128-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Stata-Written Log File With Shell Metacharacters or Path Traversal (CVE-2026-47708)
-id: 9b1c2d3e-4a5b-4c6d-8e7f-1a2b3c4d5e6f
-status: experimental
-description: Detects .log files written by Stata or the stata-mcp Python wrapper whose filename contains shell metacharacters (semicolon, pipe, backtick, quote) or path traversal sequences, the deterministic artefact of CVE-2026-47708 exploitation against unpatched stata-mcp installations (&lt;1.17.3).
-references:
-  - https://github.com/advisories/GHSA-4p62-hqp5-g644
-  - https://github.com/SepineTam/stata-mcp/commit/e6f945941ae0c7cf5e74a428e0b3dc82b396382f
-author: detection-pipeline
-date: 2026/06/04
-tags:
-  - attack.t1190
-  - attack.t1059
-  - attack.initial_access
-  - attack.execution
-logsource:
-  category: file_event
-  product: windows
-detection:
-  selection_proc:
-    Image|endswith:
-      - &#x27;\stata.exe&#x27;
-      - &#x27;\stata-mp.exe&#x27;
-      - &#x27;\stata-se.exe&#x27;
-      - &#x27;\stata-be.exe&#x27;
-      - &#x27;\xstata.exe&#x27;
-      - &#x27;\xstata-mp.exe&#x27;
-      - &#x27;\xstata-se.exe&#x27;
-      - &#x27;\python.exe&#x27;
-  selection_ext:
-    TargetFilename|endswith: &#x27;.log&#x27;
-  selection_payload:
-    TargetFilename|contains:
-      - &#x27;;&#x27;
-      - &#x27;|&#x27;
-      - &#x27;`&#x27;
-      - &quot;&#x27;&quot;
-      - &#x27;&quot;&#x27;
-      - &#x27;..&#x27;
-  condition: selection_proc and selection_ext and selection_payload
-falsepositives:
-  - Researchers using single-quote characters in legitimate Stata log filenames (rare)
-level: high</code></pre></div>
-    <div class="tab-content" id="art-128-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @Image:(*\\stata.exe OR *\\STATA.exe OR *\\stata-mp.exe OR *\\stata-se.exe OR *\\stata-be.exe OR *\\xstata.exe OR *\\python.exe) @TargetFilename:(*.log) @TargetFilename:(*\;* OR *\|* OR *\&amp;* OR *..* OR *\`* OR *\&#x27;* OR *\&quot;*)</code></pre></div>
-    <div class="tab-content" id="art-128-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| ContextImageFileName=/(stata|stata-mp|stata-se|stata-be|xstata|xstata-mp|xstata-se|python3?)(\.exe)?$/i
-| TargetFileName=/\.log$/i
-| regex(&quot;[;|&amp;`&#x27;\&quot;]|\\.\\.&quot;, field=TargetFileName)
-| groupBy([aid, ComputerName, UserName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-128-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-128-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-128-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-128-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN (&quot;stata.exe&quot;,&quot;stata-mp.exe&quot;,&quot;stata-se.exe&quot;,&quot;stata-be.exe&quot;,&quot;xstata.exe&quot;,&quot;xstata-mp.exe&quot;,&quot;xstata-se.exe&quot;,&quot;stata&quot;,&quot;stata-mp&quot;,&quot;stata-se&quot;,&quot;stata-be&quot;,&quot;python.exe&quot;,&quot;python&quot;,&quot;python3&quot;)) AND (Filesystem.file_name=&quot;*.log&quot;) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | where match(file_name,&quot;[;|&amp;`&#x27;\&quot;]|\\.\\.&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-128-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN (&quot;stata.exe&quot;,&quot;stata-mp.exe&quot;,&quot;stata-se.exe&quot;,&quot;stata-be.exe&quot;,&quot;xstata.exe&quot;,&quot;xstata-mp.exe&quot;,&quot;xstata-se.exe&quot;,&quot;stata&quot;,&quot;stata-mp&quot;,&quot;stata-se&quot;,&quot;stata-be&quot;,&quot;python.exe&quot;,&quot;python&quot;,&quot;python3&quot;)) AND (Filesystem.file_name=&quot;*.log&quot;) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | where match(file_name,&quot;[;|&amp;`&#x27;\&quot;]|\\.\\.&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-128-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-128-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-128-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-128-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-47708&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-128-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-47708&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-128-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-128-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-128-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-128-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-47708&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-128-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-47708&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="80d642c88e" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47708: MCP-for-Stata: Command injection via log_file_</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="80d642c88e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-128-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-128-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-128-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-128-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47708: MCP-for-Stata: Command injection via log_file_
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/tmp/pwned.txt&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-128-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47708: MCP-for-Stata: Command injection via log_file_
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/tmp/pwned.txt&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-128-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-128-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-128-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-128-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47708: MCP-for-Stata: Command injection via log_file_ ```
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/pwned.txt*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-128-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47708: MCP-for-Stata: Command injection via log_file_ ```
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/tmp/pwned.txt*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-129" data-art-slug="2026-06-04-ghsa-critical-ghsa-jpvj-wpmj-h7rv-supply-chain-compromise-vi"
   data-phases="actions,c2,delivery,exploit,install" data-sev="crit"
   data-techs="T1195.002"
@@ -16607,6 +16224,132 @@ DeviceTvmSoftwareVulnerabilities
 | sort - severity</code></pre><pre class="spl-mode-body" id="art-158-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2022-0492&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-159" data-art-slug="2026-06-02-cisa-kev-cve-2025-48595-android-framework-integer-overflow-v"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2025-48595 — Android Framework Integer Overflow Vulnerability Android Framework contains an integer overflow vulnerability that allows for code execution that could allow for local privilege escalation. Vendor: Android, Product: Framework. Federal patch due: 2026-06-05. CVE-2025-48595  Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-06-02-cisa-kev-cve-2025-48595-android-framework-integer-overflow-v" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2025-48595 — Android Framework Integer Overflow Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2026-06-02</span>
+    <span>1 use case</span>
+    <span>0 techniques</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Android Framework contains an integer overflow vulnerability that allows for code execution that could allow for local privilege escalation. Vendor: Android, Product: Framework. Federal patch due: 2026-06-05.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2025-48595</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-159-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-159"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-159-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-159-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-159-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-159-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-159-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2025-48595&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-159-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2025-48595&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-159-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-159-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-159-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-159-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2025-48595&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-159-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2025-48595&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>

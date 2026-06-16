@@ -11,12 +11,8 @@ By Lawrence Abrams
 June 15, 2026
 05:56 PM
 0 
-
-
 The U.S. Department of Justice announced Friday that it has seized the CFAKE.com and SOCFAKE.com websites, which allegedly hosted nonconsensual AI-generated nude images and videos of women, in what appears to be the first publicly announced domain seizure under the TAKE IT DOWN Act.
-
-
-According to the DOJ, the sites shared sexually explicit digital images, or deepfakes, depic…
+According to the DOJ, the sites shared sexually explicit digital images, or deepfakes, depicting pol…
 
 ## Indicators of Compromise (high-fidelity only)
 
