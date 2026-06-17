@@ -39,13 +39,12 @@ Of the 206 flaws, 39 are rated Critical, and 167 are rated Important in severity
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1210** — Exploitation of Remote Services
+- **T1588.006** — Obtain Capabilities: Vulnerabilities
 - **T1068** — Exploitation for Privilege Escalation
 - **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1134** — Access Token Manipulation
-- **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1112** — Modify Registry
-- **T1499.002** — Endpoint Denial of Service: Service Exhaustion Flood
+- **T1203** — Exploitation for Client Execution
+- **T1559** — Inter-Process Communication
+- **T1499.001** — Endpoint Denial of Service: OS Exhaustion Flood
 
 ## Kill chain phases observed
 
@@ -53,29 +52,33 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### June 2026 Patch Tuesday — exposure hunt for critical Windows CVEs (kernel TCP/IP, HTTP.sys, DHCP, BitLocker, CTFMON)
+### Unpatched June 2026 critical Microsoft CVEs — inventory & exposure pivot
 
 `UC_113_7` · phase: **weapon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-45657","CVE-2026-47291","CVE-2026-44815","CVE-2026-45585","CVE-2026-45655","CVE-2026-45658","CVE-2026-50507","CVE-2026-45586","CVE-2026-49160","CVE-2025-10263","CVE-2026-8863","CVE-2020-17103") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | sort - severity dest
+```
 
 **Defender KQL:**
 ```kql
 let JuneCVEs = dynamic(["CVE-2026-45657","CVE-2026-47291","CVE-2026-44815","CVE-2026-45585","CVE-2026-45655","CVE-2026-45658","CVE-2026-50507","CVE-2026-45586","CVE-2026-49160","CVE-2025-10263","CVE-2026-8863","CVE-2020-17103"]);
 DeviceTvmSoftwareVulnerabilities
-| where Timestamp > ago(1d)
+| where Timestamp > ago(2d)
 | where CveId in (JuneCVEs)
-| join kind=leftouter (DeviceTvmSoftwareVulnerabilitiesKB | summarize arg_max(LastModifiedTime, CvssScore, IsExploitAvailable) by CveId) on CveId
-| summarize MissingCVEs = make_set(CveId), CveCount = dcount(CveId), MaxCvss = max(CvssScore), AnyExploitAvailable = max(toint(IsExploitAvailable)), LatestSeen = max(Timestamp) by DeviceName, DeviceId, OSPlatform, OSVersion
-| where CveCount > 0
-| order by AnyExploitAvailable desc, MaxCvss desc, CveCount desc
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, IsInternetFacing, OSPlatform, OSVersion, PublicIP) by DeviceId) on DeviceId
+| project Timestamp, DeviceName, OSPlatform, OSVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing, PublicIP
+| order by IsInternetFacing desc, VulnerabilitySeverityLevel asc
 ```
 
-### RoguePlanet — cmd.exe spawned by Microsoft Defender MsMpEng.exe (Defender SYSTEM-LPE race condition)
+### RoguePlanet PoC — cmd/powershell spawned by MsMpEng.exe with SYSTEM integrity
 
 `UC_113_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_integrity_level) as integrity from datamodel=Endpoint.Processes where Processes.parent_process_name="MsMpEng.exe" (Processes.process_name="cmd.exe" OR Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="MsMpEng.exe" AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","conhost.exe") AND Processes.process_integrity_level="system" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
@@ -83,72 +86,77 @@ DeviceTvmSoftwareVulnerabilities
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where InitiatingProcessFileName =~ "MsMpEng.exe"
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","conhost.exe")
-| where FileName != "conhost.exe" or ProcessCommandLine has_any ("-Command","-EncodedCommand","/c ","/k ")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe")
 | where ProcessIntegrityLevel in~ ("System","High")
-| project Timestamp, DeviceName, AccountName, AccountSid,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentSHA256 = InitiatingProcessSHA256,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          IntegrityLevel = ProcessIntegrityLevel,
-          ParentIntegrity = InitiatingProcessIntegrityLevel,
-          SHA256
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, ProcessIntegrityLevel, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### GreenPlasma — privileged child process spawned by ctfmon.exe (CTFMON LPE CVE-2026-45586)
+### CVE-2026-44815 DHCP Client RCE — anomalous child of svchost hosting Dhcp service
 
 `UC_113_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_integrity_level) as integrity from datamodel=Endpoint.Processes where Processes.parent_process_name="ctfmon.exe" Processes.process_integrity_level IN ("system","high") NOT Processes.user IN ("*$","NT AUTHORITY\\SYSTEM") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.parent_process_name="svchost.exe" AND Processes.parent_process="*-s Dhcp*" AND Processes.process_name!="conhost.exe" AND Processes.process_name!="WerFault.exe" AND Processes.process_name!="WerFaultSecure.exe" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process Processes.process_integrity_level | `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName =~ "ctfmon.exe"
-| where AccountName !endswith "$"
-| where AccountName !in~ ("system","local service","network service")
-| where ProcessIntegrityLevel in~ ("System","High")
-| where InitiatingProcessIntegrityLevel !in~ ("System","High")  // privilege jump child > parent
-| project Timestamp, DeviceName, AccountName, AccountSid,
-          ParentCmd = InitiatingProcessCommandLine,
-          ParentIntegrity = InitiatingProcessIntegrityLevel,
-          ChildImage = FolderPath, ChildCmd = ProcessCommandLine,
-          ChildIntegrity = ProcessIntegrityLevel, TokenElevation = ProcessTokenElevation,
-          SHA256
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName =~ "svchost.exe"
+| where InitiatingProcessCommandLine has "-s Dhcp" and InitiatingProcessCommandLine !has "DhcpServer"
+| where FileName !in~ ("conhost.exe","WerFault.exe","WerFaultSecure.exe")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, ProcessIntegrityLevel, InitiatingProcessCommandLine, InitiatingProcessIntegrityLevel, SHA256
 | order by Timestamp desc
 ```
 
-### HTTP/2 Bomb (CVE-2026-49160) — MaxHeadersCount mitigation rollout / absence hunt
+### GreenPlasma (CVE-2026-45586) — ctfmon.exe spawning child process
 
-`UC_113_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_113_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as value_data values(Registry.action) as action from datamodel=Endpoint.Registry where Registry.registry_path="*\\Services\\HTTP\\Parameters*" Registry.registry_value_name="MaxHeadersCount" by Registry.dest Registry.registry_path Registry.registry_value_name | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.parent_process_name="ctfmon.exe" by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_integrity_level Processes.parent_process | `drop_dm_object_name(Processes)` | where process_integrity_level IN ("high","system") OR process_name!="conhost.exe"
 ```
 
 **Defender KQL:**
 ```kql
-DeviceRegistryEvents
-| where Timestamp > ago(30d)
-| where RegistryValueName =~ "MaxHeadersCount"
-   or RegistryKey has_any (@"\Services\HTTP\Parameters", @"\HTTP2\Parameters", @"\HTTP3\Parameters")
-| extend MitigationAction = case(
-    ActionType == "RegistryValueSet" and toint(RegistryValueData) > 0, "MITIGATION_APPLIED",
-    ActionType == "RegistryValueDeleted", "MITIGATION_REMOVED",
-    ActionType == "RegistryValueSet" and toint(RegistryValueData) == 0, "MITIGATION_DISABLED_ZERO",
-    "OTHER")
-| project Timestamp, DeviceName, ActionType, MitigationAction,
-          RegistryKey, RegistryValueName, RegistryValueData,
-          PreviousRegistryValueData,
-          InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName =~ "ctfmon.exe"
+| where FileName !=~ "conhost.exe"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, ProcessIntegrityLevel, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessIntegrityLevel, SHA256
 | order by Timestamp desc
+```
+
+### HTTP/2 Bomb (CVE-2026-49160) — IIS hosts missing MaxHeadersCount mitigation registry
+
+`UC_113_11` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true dc(Processes.dest) as IIS_Hosts from datamodel=Endpoint.Processes where Processes.process_name="w3wp.exe" by Processes.dest | `drop_dm_object_name(Processes)` | join type=left dest [| tstats summariesonly=true count from datamodel=Endpoint.Registry where Registry.registry_path="*\\Services\\HTTP\\Parameters*" AND Registry.registry_value_name="MaxHeadersCount" by Registry.dest | `drop_dm_object_name(Registry)` | rename count as Mitigation_Set] | where isnull(Mitigation_Set)
+```
+
+**Defender KQL:**
+```kql
+let IIS_Hosts = DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where FileName =~ "w3wp.exe" or InitiatingProcessFileName =~ "w3wp.exe"
+    | summarize by DeviceId, DeviceName;
+let Mitigated = DeviceRegistryEvents
+    | where Timestamp > ago(60d)
+    | where RegistryKey has @"\Services\HTTP\Parameters"
+    | where RegistryValueName =~ "MaxHeadersCount"
+    | where toint(RegistryValueData) between (1 .. 1000)
+    | summarize by DeviceId;
+IIS_Hosts
+| join kind=leftanti Mitigated on DeviceId
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, IsInternetFacing, PublicIP, OSVersion) by DeviceId) on DeviceId
+| project DeviceName, IsInternetFacing, PublicIP, OSVersion, MitigationStatus = "MaxHeadersCount NOT set — vulnerable to HTTP/2 Bomb"
+| order by IsInternetFacing desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -409,4 +417,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

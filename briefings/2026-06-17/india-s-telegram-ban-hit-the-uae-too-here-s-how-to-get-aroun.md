@@ -11,15 +11,9 @@ By Ax Sharma
 June 17, 2026
 09:12 AM
 0 
-
-
 India has banned Telegram until June 22 after the platform was used to sell access to leaked exam materials.
-
-
 Telegram CEO Pavel Durov accuses Indian telecom Reliance of using BGP hijacking to enforce the block, disrupting access for users as far away as the UAE.
-
-
-Digital rights group, the Internet Freedom Foundation (IFF) calls the ban a disproportionate, "constitutionally incomp…
+Digital rights group, the Internet Freedom Foundation (IFF) calls the ban a disproportionate, "constitutionally incompatible" resp…
 
 ## Indicators of Compromise (high-fidelity only)
 

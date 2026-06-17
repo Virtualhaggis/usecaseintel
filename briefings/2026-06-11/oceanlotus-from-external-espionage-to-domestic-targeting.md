@@ -67,12 +67,13 @@ Our tracking of OceanLotus activities from 2024–2026 reveals a shift in operat
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
 - **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1090** — Proxy
 - **T1071.004** — Application Layer Protocol: DNS
-- **T1059** — Command and Scripting Interpreter
+- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
 - **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1573** — Encrypted Channel
+- **T1059** — Command and Scripting Interpreter
+- **T1105** — Ingress Tool Transfer
+- **T1048.003** — Exfiltration Over Alternative Protocol
 
 ## Kill chain phases observed
 
@@ -80,119 +81,145 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Network egress to OceanLotus SPECTRALVIPER C2 IPs (2024-2026 campaigns)
+### OceanLotus SPECTRALVIPER C2 — outbound to known C&C IPs
 
 `UC_100_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstSeen max(_time) as lastSeen values(All_Traffic.dest_port) as dest_ports values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest in ("139.162.11.152","142.91.98.77","139.180.128.42","139.99.33.239","166.88.77.186","103.119.47.104","38.60.245.37","194.68.26.241") by All_Traffic.src, All_Traffic.user, All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | eval threat_actor="OceanLotus/APT32", malware="SPECTRALVIPER" | sort - lastSeen
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip IN ("139.162.11.152","142.91.98.77","139.180.128.42","139.99.33.239","166.88.77.186","103.119.47.104","38.60.245.37","194.68.26.241") by All_Traffic.src All_Traffic.src_ip All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app All_Traffic.user
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let C2IPs = dynamic(["139.162.11.152","142.91.98.77","139.180.128.42","139.99.33.239","166.88.77.186","103.119.47.104","38.60.245.37","194.68.26.241"]);
+let OceanLotusC2 = dynamic(["139.162.11.152","142.91.98.77","139.180.128.42","139.99.33.239","166.88.77.186","103.119.47.104","38.60.245.37","194.68.26.241"]);
 DeviceNetworkEvents
-| where Timestamp > ago(90d)
-| where RemoteIP in (C2IPs)
+| where Timestamp > ago(30d)
+| where RemoteIP in (OceanLotusC2)
 | where ActionType in ("ConnectionSuccess","ConnectionAttempt")
-| project Timestamp, DeviceName, DeviceId, RemoteIP, RemotePort, Protocol, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, InitiatingProcessAccountName
+| project Timestamp, DeviceName, DeviceId, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessSHA256,
+          InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### DNS resolution for OceanLotus SPECTRALVIPER C2 domains
+### OceanLotus SPECTRALVIPER C2 — DNS queries to known C&C domains
 
 `UC_100_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstSeen max(_time) as lastSeen values(DNS.answer) as resolved_ips from datamodel=Network_Resolution.DNS where DNS.query in ("financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com","*.financemachinelearning.com","*.gatewayrvcenter.com","*.coachcybersecurity.com","*.mxprodesign.com","*.power-sync-services.com","*.leadingfilipinoteams.com") by DNS.src, DNS.query | `drop_dm_object_name(DNS)` | eval threat_actor="OceanLotus/APT32", malware="SPECTRALVIPER"
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com") OR DNS.query="*.financemachinelearning.com" OR DNS.query="*.gatewayrvcenter.com" OR DNS.query="*.coachcybersecurity.com" OR DNS.query="*.mxprodesign.com" OR DNS.query="*.power-sync-services.com" OR DNS.query="*.leadingfilipinoteams.com" by DNS.src DNS.query DNS.answer DNS.record_type
+| `drop_dm_object_name(DNS)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let C2Domains = dynamic(["financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com"]);
+let OceanLotusDomains = dynamic(["financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com"]);
 DeviceEvents
-| where Timestamp > ago(90d)
+| where Timestamp > ago(30d)
 | where ActionType == "DnsQueryResponse"
-| extend QueriedName = tolower(tostring(parse_json(AdditionalFields).QueryName))
-| where QueriedName has_any (C2Domains) or QueriedName endswith ".financemachinelearning.com" or QueriedName endswith ".gatewayrvcenter.com" or QueriedName endswith ".coachcybersecurity.com" or QueriedName endswith ".mxprodesign.com" or QueriedName endswith ".power-sync-services.com" or QueriedName endswith ".leadingfilipinoteams.com"
-| project Timestamp, DeviceName, DeviceId, QueriedName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA256, InitiatingProcessAccountName
+| extend Query = tostring(parse_json(AdditionalFields).DnsQueryString)
+| where Query has_any (OceanLotusDomains)
+   or RemoteUrl has_any (OceanLotusDomains)
+| project Timestamp, DeviceName, DeviceId, Query, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessSHA256
 | order by Timestamp desc
 ```
 
-### SPECTRALVIPER known SHA1 sample sighting (ESET 2024-2026 IOC bundle)
+### SPECTRALVIPER known-bad SHA1 — file write or execution on disk
 
 `UC_100_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstSeen max(_time) as lastSeen values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_hash in ("D511B77459673EC42163F19E300FF1D233B6C39F","59A8553A4F8130F576AB234E0B220BE4D4DA0E98","9CA1A5C7F79882DB913534C1E62B26BCDCB9F6DD","A8E2BBBFCB86500322D2367744FA12755AB0C165","F74F1FEB62B662CDA489FDB2453727824E55ACB9","F8F8209987CA7F139DE6A62F9E6EE21BD2AE93A9","19A69F856EFA811C376F68E4FEB0997B4724F8BD","490194E9BB5128ECA8693AD9E610891C2ED185AF","51176139B0B2220B802C1578A4994DF68DF5BCD1","91F042F59BE4BDCB6E5EA21B91DECD731C175B54","A177ED0BFFEB1EFE1D9D31D72A82EF2625AE646D","B7B2D2DB544F9EEA74453CDF2B8BEEA58CF07C48","4AD36AD6C165B5174967020CB1A3358F78D7A283","57352B3CEEE32216E5AA20BAA848483D7AB5A6FB","9BC06DF9F932746A05EE728C8B103BD3BA6BF395","865A1739337D3303B3AB02C5E694C22B79C42B7D","41CB8CD78B8DB76563E4F972ABE817CEEE9CF9B0","0037DBB0FEA981D02F6F76DE81EBAEFCB68B7D20","5D6194BB48FEBB91A10D1462461A012FAFC0918B","B028E947150764A71DEEF498DE6F8C95ECCCB445") by Processes.dest, Processes.user, Processes.process_name | `drop_dm_object_name(Processes)` | eval malware="SPECTRALVIPER", threat_actor="OceanLotus/APT32"
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_sha1 IN ("D511B77459673EC42163F19E300FF1D233B6C39F","59A8553A4F8130F576AB234E0B220BE4D4DA0E98","9CA1A5C7F79882DB913534C1E62B26BCDCB9F6DD","A8E2BBBFCB86500322D2367744FA12755AB0C165","F74F1FEB62B662CDA489FDB2453727824E55ACB9","F8F8209987CA7F139DE6A62F9E6EE21BD2AE93A9","19A69F856EFA811C376F68E4FEB0997B4724F8BD","490194E9BB5128ECA8693AD9E610891C2ED185AF","51176139B0B2220B802C1578A4994DF68DF5BCD1","91F042F59BE4BDCB6E5EA21B91DECD731C175B54","A177ED0BFFEB1EFE1D9D31D72A82EF2625AE646D","B7B2D2DB544F9EEA74453CDF2B8BEEA58CF07C48","4AD36AD6C165B5174967020CB1A3358F78D7A283","57352B3CEEE32216E5AA20BAA848483D7AB5A6FB","9BC06DF9F932746A05EE728C8B103BD3BA6BF395","865A1739337D3303B3AB02C5E694C22B79C42B7D","41CB8CD78B8DB76563E4F972ABE817CEEE9CF9B0","0037DBB0FEA981D02F6F76DE81EBAEFCB68B7D20","5D6194BB48FEBB91A10D1462461A012FAFC0918B","B028E947150764A71DEEF498DE6F8C95ECCCB445") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_sha1 Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 let SpectralViperSHA1 = dynamic(["D511B77459673EC42163F19E300FF1D233B6C39F","59A8553A4F8130F576AB234E0B220BE4D4DA0E98","9CA1A5C7F79882DB913534C1E62B26BCDCB9F6DD","A8E2BBBFCB86500322D2367744FA12755AB0C165","F74F1FEB62B662CDA489FDB2453727824E55ACB9","F8F8209987CA7F139DE6A62F9E6EE21BD2AE93A9","19A69F856EFA811C376F68E4FEB0997B4724F8BD","490194E9BB5128ECA8693AD9E610891C2ED185AF","51176139B0B2220B802C1578A4994DF68DF5BCD1","91F042F59BE4BDCB6E5EA21B91DECD731C175B54","A177ED0BFFEB1EFE1D9D31D72A82EF2625AE646D","B7B2D2DB544F9EEA74453CDF2B8BEEA58CF07C48","4AD36AD6C165B5174967020CB1A3358F78D7A283","57352B3CEEE32216E5AA20BAA848483D7AB5A6FB","9BC06DF9F932746A05EE728C8B103BD3BA6BF395","865A1739337D3303B3AB02C5E694C22B79C42B7D","41CB8CD78B8DB76563E4F972ABE817CEEE9CF9B0","0037DBB0FEA981D02F6F76DE81EBAEFCB68B7D20","5D6194BB48FEBB91A10D1462461A012FAFC0918B","B028E947150764A71DEEF498DE6F8C95ECCCB445"]);
-union isfuzzy=true
-  (DeviceProcessEvents | where Timestamp > ago(180d) | where SHA1 in (SpectralViperSHA1) or InitiatingProcessSHA1 in (SpectralViperSHA1) | project Timestamp, Source="ProcessEvents", DeviceName, FileName, FolderPath, SHA1, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName),
-  (DeviceFileEvents   | where Timestamp > ago(180d) | where SHA1 in (SpectralViperSHA1) | project Timestamp, Source="FileEvents", DeviceName, FileName, FolderPath, SHA1, ProcessCommandLine="", InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName=InitiatingProcessAccountName),
-  (DeviceImageLoadEvents | where Timestamp > ago(180d) | where SHA1 in (SpectralViperSHA1) | project Timestamp, Source="ImageLoad", DeviceName, FileName, FolderPath, SHA1, ProcessCommandLine="", InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName=InitiatingProcessAccountName)
+union
+  (DeviceProcessEvents
+    | where Timestamp > ago(90d)
+    | where SHA1 in (SpectralViperSHA1) or InitiatingProcessSHA1 in (SpectralViperSHA1)
+    | project Timestamp, EventTable="DeviceProcessEvents", DeviceName, FileName, FolderPath, SHA1, ProcessCommandLine,
+              InitiatingProcessFileName, InitiatingProcessSHA1, AccountName),
+  (DeviceFileEvents
+    | where Timestamp > ago(90d)
+    | where SHA1 in (SpectralViperSHA1) or InitiatingProcessSHA1 in (SpectralViperSHA1)
+    | project Timestamp, EventTable="DeviceFileEvents", DeviceName, FileName, FolderPath, SHA1, ProcessCommandLine="",
+              InitiatingProcessFileName, InitiatingProcessSHA1, AccountName=InitiatingProcessAccountName)
 | order by Timestamp desc
 ```
 
-### FireAnt Metakit updater spawning unexpected child (supply-chain compromise)
+### FireAnt Metakit supply-chain — malicious update spawning suspicious child
 
 `UC_100_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstSeen values(Processes.process) as cmdline values(Processes.process_hash) as child_hash from datamodel=Endpoint.Processes where (Processes.parent_process_name="*FireAnt*" OR Processes.parent_process_name="*Metakit*" OR Processes.parent_process="*\\FireAnt\\*" OR Processes.parent_process="*\\Metakit\\*") AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","certutil.exe","bitsadmin.exe","curl.exe","wget.exe","msbuild.exe","installutil.exe") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name | `drop_dm_object_name(Processes)` | eval threat_actor="OceanLotus/APT32", campaign="FireAnt Metakit supply-chain"
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="FireAnt*" OR Processes.parent_process="*\\FireAnt*" OR Processes.parent_process="*\\Metakit*") (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","certutil.exe","bitsadmin.exe","curl.exe") OR Processes.process_path IN ("*\\Temp\\*","*\\AppData\\Local\\Temp\\*","*\\AppData\\Roaming\\*","*\\ProgramData\\*\\Temp\\*")) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_sha1
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(180d)
-| where (InitiatingProcessFileName has_any ("FireAnt","Metakit") or InitiatingProcessFolderPath has_any ("\\FireAnt\\","\\Metakit\\","\\FireAnt Metakit\\"))
-| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","certutil.exe","bitsadmin.exe","curl.exe","wget.exe","msbuild.exe","installutil.exe")
-  or (FolderPath has_any ("\\Users\\Public\\","\\ProgramData\\","\\AppData\\Local\\Temp\\","\\AppData\\Roaming\\") and FileName endswith ".exe")
+| where Timestamp > ago(90d)
+| where InitiatingProcessFileName has_any ("FireAnt","Metakit")
+   or InitiatingProcessFolderPath has_any ("\\FireAnt\\","\\Metakit\\","\\FireAnt Metakit\\")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","certutil.exe","bitsadmin.exe","curl.exe","wmic.exe")
+   or FolderPath has_any (@"\AppData\Local\Temp\", @"\AppData\Roaming\", @"\ProgramData\", @"\Users\Public\")
+| where AccountName !endswith "$"
 | project Timestamp, DeviceName, AccountName,
-          Parent = InitiatingProcessFileName,
-          ParentPath = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          ParentSHA256 = InitiatingProcessSHA256,
-          Child = FileName,
-          ChildPath = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          ChildSHA256 = SHA256
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessSHA1,
+          FileName, FolderPath, ProcessCommandLine, SHA1
 | order by Timestamp desc
 ```
 
-### Sustained low-volume beaconing to OceanLotus SPECTRALVIPER C2 (long-tail persistence)
+### OceanLotus historical C2 — DNS tunneling to unusually long subdomain (Denis/SOUNDBITE)
 
 `UC_100_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count as conn_count dc(_time) as distinct_seconds values(All_Traffic.dest_port) as ports from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest in ("139.162.11.152","142.91.98.77","139.180.128.42","139.99.33.239","166.88.77.186","103.119.47.104","38.60.245.37","194.68.26.241") by All_Traffic.src, All_Traffic.dest, _time span=1d | `drop_dm_object_name(All_Traffic)` | stats count as distinct_days sum(conn_count) as total_conns values(dest) as c2_ips by src | where distinct_days >= 5 | eval threat_actor="OceanLotus/APT32", malware="SPECTRALVIPER", note="sustained beacon pattern over >=5 distinct days"
+| tstats `summariesonly` count from datamodel=Network_Resolution.DNS where DNS.message_type="QUERY" by DNS.src DNS.query DNS.record_type _time
+| `drop_dm_object_name(DNS)`
+| rex field=query "^(?<sub>[^.]+)\.(?<sld>[^.]+\.[^.]+)$"
+| eval sub_len = len(sub)
+| where sub_len >= 30 AND record_type IN ("A","AAAA","TXT","NULL")
+| stats count min(_time) as firstTime max(_time) as lastTime dc(sub) as distinct_subs by src sld
+| where distinct_subs > 20 AND count > 50
+| convert ctime(firstTime) ctime(lastTime)
+| sort - distinct_subs
 ```
 
 **Defender KQL:**
 ```kql
-let C2IPs = dynamic(["139.162.11.152","142.91.98.77","139.180.128.42","139.99.33.239","166.88.77.186","103.119.47.104","38.60.245.37","194.68.26.241"]);
-let C2Domains = dynamic(["financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in (C2IPs) or RemoteUrl has_any (C2Domains)
-| summarize ConnCount = count(),
-            DistinctDays = dcount(bin(Timestamp, 1d)),
-            FirstSeen = min(Timestamp),
-            LastSeen = max(Timestamp),
-            Processes = make_set(InitiatingProcessFileName, 10),
-            Destinations = make_set(strcat(RemoteIP, ":", tostring(RemotePort)), 20)
-            by DeviceId, DeviceName
-| where DistinctDays >= 5    // sustained presence, not a one-off click
-| order by LastSeen desc
+DeviceEvents
+| where Timestamp > ago(7d)
+| where ActionType == "DnsQueryResponse"
+| extend Query = tolower(tostring(parse_json(AdditionalFields).DnsQueryString))
+| where isnotempty(Query)
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","safari.exe","opera.exe")
+| extend Subdomain = tostring(split(Query, ".")[0])
+| extend SubLen = strlen(Subdomain)
+| extend SLD = strcat(tostring(split(Query, ".")[-2]), ".", tostring(split(Query, ".")[-1]))
+| where SubLen >= 30
+| summarize DistinctSubs = dcount(Subdomain), QueryCount = count(),
+            SampleQuery = any(Query), FirstSeen = min(Timestamp), LastSeen = max(Timestamp)
+            by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, SLD
+| where DistinctSubs >= 20 and QueryCount >= 50
+| order by DistinctSubs desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -430,4 +457,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 14 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

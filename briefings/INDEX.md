@@ -15,6 +15,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa warns of oracle peoplesoft 0 day vulnerability exploite](./2026-06-17/cisa-warns-of-oracle-peoplesoft-0-day-vulnerability-exploite.md)
 - [errtraffic maas uses fake recaptcha and cloudflare turnstile](./2026-06-17/errtraffic-maas-uses-fake-recaptcha-and-cloudflare-turnstile.md)
 - [fishmonger hackers expands sprysocks backdoor from linux to ](./2026-06-17/fishmonger-hackers-expands-sprysocks-backdoor-from-linux-to-.md)
+- [fortibleed 70 000 fortinet firewalls compromised in massive ](./2026-06-17/fortibleed-70-000-fortinet-firewalls-compromised-in-massive-.md)
+- [fortibleed leak exposes fortinet vpn credentials for 73 000 ](./2026-06-17/fortibleed-leak-exposes-fortinet-vpn-credentials-for-73-000-.md)
 - [from china with tenderness](./2026-06-17/from-china-with-tenderness.md)
 - [india s telegram ban hit the uae too here s how to get aroun](./2026-06-17/india-s-telegram-ban-hit-the-uae-too-here-s-how-to-get-aroun.md)
 - [kodak confirms data breach claimed by shinyhunters extortion](./2026-06-17/kodak-confirms-data-breach-claimed-by-shinyhunters-extortion.md)
@@ -31,7 +33,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa warns of another cpanel plugin flaw exploited in attack](./2026-06-16/cisa-warns-of-another-cpanel-plugin-flaw-exploited-in-attack.md)
 - [cisco releases security updates for actively exploited sd wa](./2026-06-16/cisco-releases-security-updates-for-actively-exploited-sd-wa.md)
 - [clickfix campaigns expand malware delivery with new loaders ](./2026-06-16/clickfix-campaigns-expand-malware-delivery-with-new-loaders-.md)
-- [critical fortinet fortisandbox flaws now exploited in attack](./2026-06-16/critical-fortinet-fortisandbox-flaws-now-exploited-in-attack.md)
 - [dozens of malicious wallpapers found on steam workshop gamer](./2026-06-16/dozens-of-malicious-wallpapers-found-on-steam-workshop-gamer.md)
 - [fake microsoft alerts used to deploy north korean narwhalrat](./2026-06-16/fake-microsoft-alerts-used-to-deploy-north-korean-narwhalrat.md)
 - [fishmonger s arsenal upgraded sprysocks for windows](./2026-06-16/fishmonger-s-arsenal-upgraded-sprysocks-for-windows.md)
@@ -52,7 +53,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [prevent npm and python supply chain attacks on developer mac](./2026-06-16/prevent-npm-and-python-supply-chain-attacks-on-developer-mac.md)
 - [ransomware gang abuses microsoft teams relays to hide malici](./2026-06-16/ransomware-gang-abuses-microsoft-teams-relays-to-hide-malici.md)
 - [steam workshop abused to spread malware via wallpaper engine](./2026-06-16/steam-workshop-abused-to-spread-malware-via-wallpaper-engine.md)
-- [windows version of sprysocks linux malware used to attack go](./2026-06-16/windows-version-of-sprysocks-linux-malware-used-to-attack-go.md)
 
 ## 2026-06-15
 - [152 chrome wallpaper extensions with 105k installs linked to](./2026-06-15/152-chrome-wallpaper-extensions-with-105k-installs-linked-to.md)

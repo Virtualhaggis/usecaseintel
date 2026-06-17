@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable google-cloud-aiplatform SDK install (CVE-2026-2473 — pre-1.148.0)
 
-`UC_42_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_44_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### Vertex AI default staging bucket squatting — predictable bucket pattern access
 
-`UC_42_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_44_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -330,7 +330,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pickle in the Middle – Hijacking Vertex AI Model Uploads for Cross-Tenant RCE
 
-`UC_42_7` · phase: **exploit** · confidence: **High**
+`UC_44_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
