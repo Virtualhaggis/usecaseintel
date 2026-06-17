@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1204 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1205 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,6 +11,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-17
 - [clickfix campaign uses etherhiding and guloader to infect wi](./2026-06-17/clickfix-campaign-uses-etherhiding-and-guloader-to-infect-wi.md)
 - [ghostwriter hackers abuse gmail admin themed emails to steal](./2026-06-17/ghostwriter-hackers-abuse-gmail-admin-themed-emails-to-steal.md)
+- [mastra npm packages compromised](./2026-06-17/mastra-npm-packages-compromised.md)
+- [new oniondrop loader campaign uses gainmsg c2 to deliver leg](./2026-06-17/new-oniondrop-loader-campaign-uses-gainmsg-c2-to-deliver-leg.md)
+- [unc3753 uses screen sharing sessions and rmm tools to exfilt](./2026-06-17/unc3753-uses-screen-sharing-sessions-and-rmm-tools-to-exfilt.md)
 
 ## 2026-06-16
 - [china linked sprysocks backdoor expands to windows with driv](./2026-06-16/china-linked-sprysocks-backdoor-expands-to-windows-with-driv.md)
@@ -32,7 +35,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 54157 lobehub unauthenticated ssrf in](./2026-06-16/ghsa-critical-cve-2026-54157-lobehub-unauthenticated-ssrf-in.md)
 - [ghsa critical ghsa 365w hqf6 vxfg crawl4ai multiple docker a](./2026-06-16/ghsa-critical-ghsa-365w-hqf6-vxfg-crawl4ai-multiple-docker-a.md)
 - [google vertex ai sdk flaw let attackers hijack model uploads](./2026-06-16/google-vertex-ai-sdk-flaw-let-attackers-hijack-model-uploads.md)
-- [hackers weaponize microsoft teams relay to hide ransomware t](./2026-06-16/hackers-weaponize-microsoft-teams-relay-to-hide-ransomware-t.md)
 - [malicious jetbrains marketplace plugins steal ai api keys fr](./2026-06-16/malicious-jetbrains-marketplace-plugins-steal-ai-api-keys-fr.md)
 - [microsoft 365 device code phishing campaign bypasses passwor](./2026-06-16/microsoft-365-device-code-phishing-campaign-bypasses-passwor.md)
 - [multiple jetbrains ide plugins caught stealing ai keys](./2026-06-16/multiple-jetbrains-ide-plugins-caught-stealing-ai-keys.md)
@@ -1022,9 +1024,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2007 0671 microsoft office excel remote code ex](./2025-08-12/cisa-kev-cve-2007-0671-microsoft-office-excel-remote-code-ex.md)
 - [cisa kev cve 2013 3893 microsoft internet explorer resource ](./2025-08-12/cisa-kev-cve-2013-3893-microsoft-internet-explorer-resource-.md)
 - [cisa kev cve 2025 8088 rarlab winrar path traversal vulnerab](./2025-08-12/cisa-kev-cve-2025-8088-rarlab-winrar-path-traversal-vulnerab.md)
-
-## 2025-08-09
-- [lessons from aws codebuild s memory dump incident cve 2025 8](./2025-08-09/lessons-from-aws-codebuild-s-memory-dump-incident-cve-2025-8.md)
 
 ## 2025-08-07
 - [meeting the ai mandates with confidence why federal teams tr](./2025-08-07/meeting-the-ai-mandates-with-confidence-why-federal-teams-tr.md)

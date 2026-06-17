@@ -89,7 +89,7 @@ _(none detected from narrative keywords)_
 
 ### DragonForce BYOVD: Huawei/Topaz/K7/ToF drivers + ABYSSWORKER load for EDR kill
 
-`UC_30_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_31_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ union FileHits, LoadHits
 
 ### Backdoor.Turn DLL sideload via legitimate VirtualBox/DbgView host + outbound TURN
 
-`UC_30_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_31_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,7 +144,7 @@ DeviceProcessEvents
 
 ### LimitBlankPassword LSA policy modified to enable network use of blank-password accounts
 
-`UC_30_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_31_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -165,7 +165,7 @@ DeviceRegistryEvents
 
 ### Backdoor.Turn C2 over Microsoft Teams TURN relay (3478/3479/443 to MS IP from non-Teams)
 
-`UC_30_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_31_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -364,7 +364,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Ransomware gang abuses Microsoft Teams relays to hide malicious traffic
 
-`UC_30_9` · phase: **exploit** · confidence: **High**
+`UC_31_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

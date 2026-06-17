@@ -35,9 +35,11 @@ The security flaw patched by Fortinet relates to a command injection vulnerabili
 - **T1195.002** — Compromise Software Supply Chain
 - **T1059** — Command and Scripting Interpreter
 - **T1136.001** — Create Account: Local Account
-- **T1078** — Valid Accounts
+- **T1078.003** — Valid Accounts: Local Accounts
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1606.002** — Forge Web Credentials: SAML Tokens
+- **T1083** — File and Directory Discovery
+- **T1059.003** — Windows Command Shell
+- **T1059.004** — Unix Shell
 
 ## Kill chain phases observed
 
@@ -45,124 +47,126 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Ivanti Sentry command injection via /mics/api/v2/sentry/mics-config/handleMessage (CVE-2026-10520)
+### Ivanti Sentry handleMessage endpoint exploit attempt (CVE-2026-10520)
 
-`UC_100_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_101_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_method) as methods values(Web.status) as statuses values(Web.src) as src_ips values(Web.user_agent) as user_agents from datamodel=Web where Web.url="*/mics/api/v2/sentry/mics-config/handleMessage*" by Web.dest Web.site Web.url_path | `drop_dm_object_name(Web)` | where statuses!=401 AND statuses!=403 | eval risk="Ivanti Sentry CVE-2026-10520 endpoint hit" | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.http_user_agent) as ua values(Web.status) as status from datamodel=Web where Web.url="*/mics/api/v2/sentry/mics-config/handleMessage*" by Web.src Web.dest Web.url | `drop_dm_object_name(Web)` | where status>=200 AND status<500 | sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where ActionType in ("ConnectionSuccess","HttpConnectionInspected")
 | where RemoteUrl has "/mics/api/v2/sentry/mics-config/handleMessage"
    or AdditionalFields has "/mics/api/v2/sentry/mics-config/handleMessage"
 | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, AdditionalFields
 | order by Timestamp desc
 ```
 
-### Ivanti Sentry unauthenticated admin account creation (CVE-2026-10523)
+### Ivanti Sentry post-auth-bypass new administrator account creation (CVE-2026-10523)
 
-`UC_100_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_101_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Changes.src) as src values(All_Changes.user) as actor values(All_Changes.object) as new_admin from datamodel=Change.Account_Management where (All_Changes.action=created OR All_Changes.action=modified) AND (All_Changes.object_category="administrator" OR All_Changes.object_category="admin") AND (All_Changes.dest="*sentry*" OR All_Changes.dvc="*sentry*" OR All_Changes.app="MobileIron Sentry" OR All_Changes.app="Ivanti Sentry") by All_Changes.dest All_Changes.app | `drop_dm_object_name(All_Changes)` | where actor IN ("-","unauthenticated","anonymous","") OR isnull(actor) | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count from datamodel=Change where Change.action="created" Change.object_category="user" Change.result="*admin*" (Change.dest="*sentry*" OR Change.src="*sentry*" OR Change.vendor_product="MobileIron*" OR Change.vendor_product="Ivanti Sentry*") by Change.dest Change.user Change.src Change.object | `drop_dm_object_name(Change)` | sort - count
 ```
 
 **Defender KQL:**
 ```kql
-let SentryHosts = DeviceInfo
-    | where Timestamp > ago(7d)
-    | where DeviceName has_any ("sentry","mobileiron")
-    | summarize by DeviceId, DeviceName;
-DeviceLogonEvents
+// Sentry appliances are not Defender-instrumented — pivot on internal admin who SHOULD have triggered the create, then assert that admin had no recent interactive session before the create
+DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where DeviceId in ((SentryHosts | project DeviceId))
-   or RemoteDeviceName has_any ("sentry","mobileiron")
-| where ActionType in ("LogonSuccess","LogonAttempted")
-| where AccountName !endswith "$"
-| join kind=leftanti (
-    DeviceLogonEvents
-    | where Timestamp between (ago(30d) .. ago(1d))
-    | summarize by AccountName
-) on AccountName
-| project Timestamp, DeviceName, AccountName, AccountDomain, LogonType, RemoteIP, RemoteDeviceName, InitiatingProcessFileName
-| order by Timestamp desc
+| where RemoteUrl has_any ("/mics/admin","/mifs/admin","sentry")
+| where RemotePort in (443, 8443)
+| summarize Hits = count(), FirstHit = min(Timestamp), LastHit = max(Timestamp) by DeviceName, InitiatingProcessAccountName, RemoteIP, RemoteUrl
+| where Hits == 1 and FirstHit > ago(1d)
+| order by FirstHit desc
 ```
 
-### Fortinet FortiSandbox WEB UI command injection HTTP pattern (CVE-2026-25089)
+### Fortinet FortiSandbox WEB UI command injection probing (CVE-2026-25089)
 
-`UC_100_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_101_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as methods values(Web.status) as statuses values(Web.url) as urls values(Web.user_agent) as uas from datamodel=Web where (Web.dest="*fortisandbox*" OR Web.site="*fortisandbox*" OR Web.url="*/cgi-bin/fsa*" OR Web.url="*/login/*" AND Web.site="*sandbox*") by Web.src Web.dest Web.url_path | `drop_dm_object_name(Web)` | eval urlstr=mvjoin(urls," ") | where match(urlstr, "(?i)(%0a|%0d|%26%26|%7c%7c|%24%28|%60|;\s*(id|whoami|uname|wget|curl|cat\s+/etc)|\|\s*(id|whoami|sh|bash|nc)|`[^`]+`|\$\([^)]+\))") | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count values(Web.http_method) as method values(Web.status) as status from datamodel=Web where Web.dest_category="FortiSandbox" OR Web.dest="*fortisandbox*" OR Web.http_user_agent="*FortiSandbox*" by Web.src Web.dest Web.url Web.url_length | `drop_dm_object_name(Web)` | rex field=url "(?<inj>[;|&`$\(\)]|%3B|%7C|%26|%60|%24%28)" | where isnotnull(inj) OR url_length>1024 | sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where ActionType in ("ConnectionSuccess","HttpConnectionInspected")
-| where RemoteUrl has_any ("fortisandbox","/cgi-bin/fsa","FortiSandbox")
-   or AdditionalFields has_any ("fortisandbox","FortiSandbox")
-| extend Url = tolower(strcat(tostring(RemoteUrl)," ",tostring(AdditionalFields)))
-| where Url matches regex @"(%0a|%0d|%26%26|%7c%7c|%24%28|%60|;\s*(id|whoami|uname|wget|curl|cat\s+/etc)|\|\s*(id|whoami|sh|bash|nc)|`[^`]+`|\$\([^)]+\))"
-| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, AdditionalFields, InitiatingProcessFileName
+| where RemoteUrl matches regex @"(?i)fortisandbox"
+   or AdditionalFields has "FortiSandbox"
+| where RemoteUrl matches regex @"(?i)(%3B|%7C|%26|%60|%24%28|\$\(|;|`|\|)"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
-### SAP NetWeaver SAML XML signature wrapping anomaly (CVE-2026-44748)
+### SAP NetWeaver AS Java Web Container directory-traversal probing (CVE-2026-40128)
 
-`UC_100_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_101_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Authentication.src) as src values(Authentication.dest) as sap_host values(Authentication.app) as app from datamodel=Authentication where Authentication.app="SAP NetWeaver" AND Authentication.authentication_method="SAML" AND Authentication.action=success by Authentication.user Authentication.user_id | `drop_dm_object_name(Authentication)` | join type=left user [ | tstats summariesonly=true values(Authentication.src) as idp_src values(_time) as idp_time count as idp_count from datamodel=Authentication where Authentication.app IN ("AzureAD","Okta","PingFederate","ADFS") AND Authentication.authentication_method="SAML" by Authentication.user | `drop_dm_object_name(Authentication)` ] | where isnull(idp_count) OR idp_count=0 | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count values(Web.http_method) as method values(Web.status) as status from datamodel=Web where (Web.dest_port IN (50000,50001,8000,8001,44300,44301) OR Web.dest="*netweaver*" OR Web.dest="*sap*") by Web.src Web.dest Web.url Web.url_length | `drop_dm_object_name(Web)` | rex field=url "(?<traversal>(\.\./){2,}|(\.\.%2[Ff]){2,}|%2e%2e%2f|%252e%252e%252f|\.\.%5[Cc])" | where isnotnull(traversal) | sort - count
 ```
 
 **Defender KQL:**
 ```kql
-let SAP_SAML = AlertEvidence
-    | where Timestamp > ago(7d)
-    | where AdditionalFields has_any ("SAP NetWeaver","SAML","ABAP")
-    | project Timestamp, AccountUpn, RemoteIP, AdditionalFields;
-let IdpSAML = AADSignInEventsBeta
-    | where Timestamp > ago(7d)
-    | where AuthenticationRequirement has "singleFactor" or AuthenticationDetails has "SAML" or ResourceDisplayName has_any ("SAP","NetWeaver","ABAP")
-    | summarize IdpHits=count(), LastIdpSignin=max(Timestamp) by AccountUpn, IPAddress, ResourceDisplayName;
-SAP_SAML
-| join kind=leftouter IdpSAML on AccountUpn
-| where isnull(IdpHits) or IdpHits == 0 or RemoteIP != IPAddress
-| project Timestamp, AccountUpn, SAPSourceIP=RemoteIP, IdpSourceIP=IPAddress, IdpHits, ResourceDisplayName, AdditionalFields
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemotePort in (50000, 50001, 8000, 8001, 44300, 44301) or RemoteUrl matches regex @"(?i)(netweaver|/irj/|/sap/bc/|/sap/public/)"
+| where RemoteUrl matches regex @"(?i)(\.\./){2,}|(\.\.%2[fF]){2,}|%2e%2e%2f|%252e%252e%252f|\.\.%5[cC]"
+| project Timestamp, DeviceName, InitiatingProcessFileName, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
-### Unpatched Ivanti Sentry / FortiSandbox / SAP NetWeaver in software inventory
+### Unpatched Ivanti Sentry / FortiSandbox / SAP NetWeaver inventory hunt
 
-`UC_100_10` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_101_10` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count values(Vulnerabilities.signature) as cve values(Vulnerabilities.severity) as severity from datamodel=Vulnerabilities where Vulnerabilities.signature IN ("CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128") by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.vendor_product | `drop_dm_object_name(Vulnerabilities)`
+| inputlookup cmdb_assets.csv
+| eval cve_list=split("CVE-2026-25089 CVE-2026-10520 CVE-2026-10523 CVE-2026-44748 CVE-2026-27671 CVE-2026-22732 CVE-2026-40128", " ")
+| search (product="Ivanti Sentry" AND NOT (version IN ("R10.5.2*","R10.6.2*","R10.7.1*"))) OR (product="FortiSandbox*" AND (version IN ("5.0.0","5.0.1","5.0.2","5.0.3","5.0.4","5.0.5","4.4.0","4.4.1","4.4.2","4.4.3","4.4.4","4.4.5","4.4.6","4.4.7","4.4.8"))) OR (product IN ("SAP NetWeaver AS ABAP","SAP NetWeaver AS Java","SAP Commerce Cloud","SAP Data Hub"))
+| table host product version internet_facing owner
 ```
 
 **Defender KQL:**
 ```kql
-let TargetCves = dynamic(["CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128"]);
 DeviceTvmSoftwareVulnerabilities
-| where CveId in (TargetCves)
-| join kind=leftouter (
-    DeviceInfo
-    | summarize arg_max(Timestamp, OSPlatform, IsInternetFacing, MachineGroup) by DeviceId
-) on DeviceId
-| project DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing, MachineGroup
+| where CveId in ("CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128")
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, IsInternetFacing, PublicIP, OSPlatform) by DeviceId) on DeviceId
+| project DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing, PublicIP
 | order by IsInternetFacing desc, VulnerabilitySeverityLevel asc
+```
+
+### Post-RCE child process from SAP / Ivanti vendor service accounts
+
+`UC_101_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("disp+work.exe","sapstartsrv.exe","sapwebdisp.exe","icman.exe","jstart.exe","jcontrol.exe","mi_server.exe","sentry.exe","MIServer.exe","java.exe") OR Processes.parent_process_path="*\\SAP\\*" OR Processes.parent_process_path="*\\MobileIron\\*" OR Processes.parent_process_path="*\\Ivanti\\*") (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","bash.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","certutil.exe","bitsadmin.exe","curl.exe","wget.exe","whoami.exe","net.exe","netstat.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("disp+work.exe","sapstartsrv.exe","sapwebdisp.exe","icman.exe","jstart.exe","jcontrol.exe","mi_server.exe","sentry.exe","MIServer.exe")
+   or InitiatingProcessFolderPath has_any (@"\SAP\", @"\MobileIron\", @"\Ivanti\")
+   or (InitiatingProcessFileName =~ "java.exe" and InitiatingProcessCommandLine has_any ("sap.com","netweaver","mobileiron","ivanti.mics","com.mobileiron"))
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","bash.exe","sh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","certutil.exe","bitsadmin.exe","curl.exe","wget.exe","whoami.exe","net.exe","netstat.exe","systeminfo.exe","tasklist.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -374,4 +378,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
