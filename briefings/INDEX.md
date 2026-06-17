@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1205 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1206 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,7 +11,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-17
 - [clickfix campaign uses etherhiding and guloader to infect wi](./2026-06-17/clickfix-campaign-uses-etherhiding-and-guloader-to-infect-wi.md)
 - [ghostwriter hackers abuse gmail admin themed emails to steal](./2026-06-17/ghostwriter-hackers-abuse-gmail-admin-themed-emails-to-steal.md)
-- [mastra npm packages compromised](./2026-06-17/mastra-npm-packages-compromised.md)
+- [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-17/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
 - [new oniondrop loader campaign uses gainmsg c2 to deliver leg](./2026-06-17/new-oniondrop-loader-campaign-uses-gainmsg-c2-to-deliver-leg.md)
 - [unc3753 uses screen sharing sessions and rmm tools to exfilt](./2026-06-17/unc3753-uses-screen-sharing-sessions-and-rmm-tools-to-exfilt.md)
 
@@ -26,6 +26,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [critical fortinet fortisandbox vulnerabilities actively expl](./2026-06-16/critical-fortinet-fortisandbox-vulnerabilities-actively-expl.md)
 - [dozens of malicious wallpapers found on steam workshop gamer](./2026-06-16/dozens-of-malicious-wallpapers-found-on-steam-workshop-gamer.md)
 - [fake microsoft alerts used to deploy north korean narwhalrat](./2026-06-16/fake-microsoft-alerts-used-to-deploy-north-korean-narwhalrat.md)
+- [fishmonger s arsenal upgraded sprysocks for windows](./2026-06-16/fishmonger-s-arsenal-upgraded-sprysocks-for-windows.md)
 - [ghosttree attack abused recursive windows junctions to hide ](./2026-06-16/ghosttree-attack-abused-recursive-windows-junctions-to-hide-.md)
 - [ghsa critical cve 2026 48519 langflow unauthenticated rce in](./2026-06-16/ghsa-critical-cve-2026-48519-langflow-unauthenticated-rce-in.md)
 - [ghsa critical cve 2026 48746 vllm openai auth bypass](./2026-06-16/ghsa-critical-cve-2026-48746-vllm-openai-auth-bypass.md)
