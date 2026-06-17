@@ -1,0 +1,198 @@
+{
+  "name": "Bluenoroff",
+  "ucs": [
+    {
+      "title": "[LLM] Bluenoroff (Sapphire Sleet / TA444) ISO/VHD recruiter-lure \u2192 explorer-spawned script-host fetch from cloud storage",
+      "description": "Hunts the SnatchCrypto / DangerousPassword delivery chain: a messaging/browser client drops an ISO/IMG/VHD container, the user mounts and clicks the LNK inside, and explorer.exe spawns mshta/wscript/cscript/powershell/regsvr32/rundll32 whose command line pulls a second stage from Dropbox, Google Drive, Notion, OneDrive or a compromised WordPress site \u2014 Bluenoroff's signature crypto/fintech intrusion path documented by Kaspersky, Mandiant (TA444 / APT38) and Microsoft (Sapphire Sleet).",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "delivery",
+      "conf": "high",
+      "techs": [
+        "T1204.001",
+        "T1204.002",
+        "T1059.001",
+        "T1059.005",
+        "T1059.007",
+        "T1218.005",
+        "T1027",
+        "T1105"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_name=\"*.iso\" OR Filesystem.file_name=\"*.img\" OR Filesystem.file_name=\"*.vhd\" OR Filesystem.file_name=\"*.vhdx\") AND (Filesystem.process_name IN (\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"outlook.exe\",\"teams.exe\",\"slack.exe\",\"telegram.exe\",\"discord.exe\",\"whatsapp.exe\",\"thunderbird.exe\")) by _time Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | rename _time as drop_time, process_name as drop_source, file_name as container | join type=inner dest user [ | tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.parent_process_name=explorer.exe AND Processes.process_name IN (\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"powershell.exe\",\"pwsh.exe\",\"rundll32.exe\",\"regsvr32.exe\") AND (Processes.process=\"*.lnk*\" OR Processes.process=\"*http*\" OR Processes.process=\"*DownloadString*\" OR Processes.process=\"*Invoke-WebRequest*\" OR Processes.process=\"*IEX*\" OR Processes.process=\"*certutil*\" OR Processes.process=\"*scrobj.dll*\" OR Processes.process=\"*\\\\Volume\\\\*\" OR Processes.process=\"*\\\\Device\\\\Cdrom*\") by _time Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | rename _time as exec_time, process_name as child_proc, process as child_cmd ] | where exec_time >= drop_time AND (exec_time - drop_time) <= 3600 | eval delay_sec = exec_time - drop_time | table drop_time exec_time delay_sec dest user container drop_source child_proc child_cmd | sort - exec_time",
+      "kql": "let LookbackDays = 14d;\nlet ContainerExts = dynamic([\".iso\",\".img\",\".vhd\",\".vhdx\"]);\nlet ScriptHosts = dynamic([\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"powershell.exe\",\"pwsh.exe\",\"rundll32.exe\",\"regsvr32.exe\"]);\nlet DeliveryApps = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"outlook.exe\",\"teams.exe\",\"slack.exe\",\"telegram.exe\",\"discord.exe\",\"whatsapp.exe\",\"thunderbird.exe\"]);\nlet ContainerDrops =\n    DeviceFileEvents\n    | where Timestamp > ago(LookbackDays)\n    | where ActionType in~ (\"FileCreated\",\"FileRenamed\")\n    | where FileName has_any (ContainerExts)\n    | where InitiatingProcessFileName in~ (DeliveryApps)\n    | project DropTime = Timestamp, DeviceId, DeviceName,\n              AccountName = InitiatingProcessAccountName,\n              Container   = FileName,\n              ContainerPath = FolderPath,\n              DeliveryApp = InitiatingProcessFileName;\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where AccountName !endswith \"$\"\n| where InitiatingProcessFileName =~ \"explorer.exe\"\n| where FileName in~ (ScriptHosts)\n| where ProcessCommandLine has_any (\".lnk\", \"http://\", \"https://\", \"DownloadString\",\n      \"Invoke-WebRequest\", \"IEX\", \"Invoke-Expression\", \"certutil\", \"bitsadmin\",\n      \"scrobj.dll\", \"\\\\Volume{\", \"\\\\DeviceId\\\\Cdrom\")        // 2nd-stage fetch from mounted container\n| join kind=inner ContainerDrops on DeviceId\n| where Timestamp between (DropTime .. DropTime + 1h)              // mount-then-click typically <1h\n| extend DelaySec = datetime_diff('second', Timestamp, DropTime)\n| project DropTime, ExecTime = Timestamp, DelaySec,\n          DeviceName, AccountName,\n          Container, DeliveryApp,\n          ChildProcess = FileName,\n          ChildCmd     = ProcessCommandLine,\n          SHA256\n| order by ExecTime desc",
+      "sentinel_kql": "let LookbackDays = 14d;\nlet ContainerExts = dynamic([\".iso\",\".img\",\".vhd\",\".vhdx\"]);\nlet ScriptHosts = dynamic([\"mshta.exe\",\"wscript.exe\",\"cscript.exe\",\"powershell.exe\",\"pwsh.exe\",\"rundll32.exe\",\"regsvr32.exe\"]);\nlet DeliveryApps = dynamic([\"chrome.exe\",\"msedge.exe\",\"firefox.exe\",\"brave.exe\",\"outlook.exe\",\"teams.exe\",\"slack.exe\",\"telegram.exe\",\"discord.exe\",\"whatsapp.exe\",\"thunderbird.exe\"]);\nlet ContainerDrops =\n    ImFileEvent\n    | where TimeGenerated > ago(LookbackDays)\n    | where EventType == \"FileCreated\"\n    | where TargetFileName has_any (ContainerExts)\n    | where ActingProcessName has_any (DeliveryApps)\n    | project DropTime = TimeGenerated, DvcHostname, ActorUsername,\n              Container = TargetFileName, DeliveryApp = ActingProcessName;\nImProcessCreate\n| where TimeGenerated > ago(LookbackDays)\n| where ActorUsername !endswith \"$\"\n| where ActingProcessName =~ \"explorer.exe\"\n| where TargetProcessName has_any (ScriptHosts)\n| where TargetProcessCommandLine has_any (\".lnk\", \"http://\", \"https://\", \"DownloadString\",\n      \"Invoke-WebRequest\", \"IEX\", \"Invoke-Expression\", \"certutil\", \"bitsadmin\",\n      \"scrobj.dll\", \"\\\\Volume{\", \"\\\\Device\\\\Cdrom\")\n| join kind=inner ContainerDrops on DvcHostname\n| where TimeGenerated between (DropTime .. DropTime + 1h)\n| extend DelaySec = datetime_diff('second', TimeGenerated, DropTime)\n| project DropTime, ExecTime = TimeGenerated, DelaySec,\n          DvcHostname, ActorUsername,\n          Container, DeliveryApp,\n          ChildProcess = TargetProcessName,\n          ChildCmd     = TargetProcessCommandLine\n| order by ExecTime desc",
+      "sigma_yaml": "",
+      "datadog_query": "source:windows.sysmon @EventID:1 @ParentImage:(*\\\\explorer.exe OR *\\\\Explorer.exe OR *\\\\EXPLORER.EXE) @Image:(*\\\\mshta.exe OR *\\\\MSHTA.EXE OR *\\\\wscript.exe OR *\\\\WScript.exe OR *\\\\WSCRIPT.EXE OR *\\\\cscript.exe OR *\\\\CScript.exe OR *\\\\CSCRIPT.EXE OR *\\\\powershell.exe OR *\\\\PowerShell.exe OR *\\\\POWERSHELL.EXE OR *\\\\pwsh.exe OR *\\\\rundll32.exe OR *\\\\RUNDLL32.EXE OR *\\\\regsvr32.exe OR *\\\\REGSVR32.EXE) @CommandLine:(*.lnk* OR *http\\://* OR *https\\://* OR *DownloadString* OR *Invoke-WebRequest* OR *IEX* OR *certutil* OR *scrobj.dll* OR *\\\\Volume\\{* OR *\\\\Device\\\\Cdrom*)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ParentBaseFileName=/^explorer\\.exe$/i ImageFileName=/(mshta|wscript|cscript|powershell|pwsh|rundll32|regsvr32)\\.exe$/i\n| regex(\"(?i)(\\\\.lnk|https?://|DownloadString|Invoke-WebRequest|\\\\bIEX\\\\b|certutil|scrobj\\\\.dll|\\\\\\\\Volume\\\\{|\\\\\\\\Device\\\\\\\\Cdrom)\", field=CommandLine)\n| join({#event_simpleName=FileWritten | regex(\"(?i)\\\\.(iso|img|vhdx?|vhd)$\", field=TargetFileName) | ContextImageFileName=/(chrome|msedge|firefox|brave|outlook|teams|slack|telegram|discord|whatsapp|thunderbird)\\.exe$/i}, field=aid, include=[TargetFileName,ContextImageFileName])\n| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine, TargetFileName, ContextImageFileName], function=count())",
+      "cloudwatch_query": "",
+      "rationale": "ISO/IMG/VHD containers around a LNK are the documented Bluenoroff lure shape (Kaspersky SnatchCrypto, GReAT 2022-2024 reports; Microsoft Sapphire Sleet write-ups; Mandiant TA444 tracking; CrowdStrike STARDUST CHOLLIMA crypto-theft campaigns). The actor uses the container format specifically to bypass Mark-of-the-Web on the inner LNK, then leans on living-off-the-land script hosts to fetch the seco",
+      "_field_issues_autofix": [
+        "Device -> DeviceId"
+      ],
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Invoke",
+          "tables_in_scope": [
+            "DeviceFileEvents",
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Invoke` is not a canonical column of DeviceFileEvents, DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "WebRequest",
+          "tables_in_scope": [
+            "DeviceFileEvents",
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`WebRequest` is not a canonical column of DeviceFileEvents, DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "IEX",
+          "tables_in_scope": [
+            "DeviceFileEvents",
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`IEX` is not a canonical column of DeviceFileEvents, DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Expression",
+          "tables_in_scope": [
+            "DeviceFileEvents",
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Expression` is not a canonical column of DeviceFileEvents, DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Volume",
+          "tables_in_scope": [
+            "DeviceFileEvents",
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Volume` is not a canonical column of DeviceFileEvents, DeviceProcessEvents."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Cdrom",
+          "tables_in_scope": [
+            "DeviceFileEvents",
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`Cdrom` is not a canonical column of DeviceFileEvents, DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "Invoke",
+          "tables_in_scope": [
+            "ImFileEvent",
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`Invoke` is not a canonical column of ImFileEvent, ImProcessCreate."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "WebRequest",
+          "tables_in_scope": [
+            "ImFileEvent",
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`WebRequest` is not a canonical column of ImFileEvent, ImProcessCreate."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "IEX",
+          "tables_in_scope": [
+            "ImFileEvent",
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`IEX` is not a canonical column of ImFileEvent, ImProcessCreate."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Expression",
+          "tables_in_scope": [
+            "ImFileEvent",
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`Expression` is not a canonical column of ImFileEvent, ImProcessCreate."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Volume",
+          "tables_in_scope": [
+            "ImFileEvent",
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`Volume` is not a canonical column of ImFileEvent, ImProcessCreate."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Device",
+          "tables_in_scope": [
+            "ImFileEvent",
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`Device` is not a canonical column of ImFileEvent, ImProcessCreate."
+        },
+        {
+          "kind": "unknown_field",
+          "field": "Cdrom",
+          "tables_in_scope": [
+            "ImFileEvent",
+            "ImProcessCreate"
+          ],
+          "suggestion": null,
+          "message": "`Cdrom` is not a canonical column of ImFileEvent, ImProcessCreate."
+        }
+      ]
+    },
+    {
+      "title": "[LLM] APT38 / BeagleBoyz post-SWIFT-fraud destructive cleanup sequence (shadow-copy + BCD + event-log + USN-journal wipe)",
+      "description": "Hunts the multi-command destructive cleanup APT38 (FireEye/Mandiant), BeagleBoyz (CISA AA20-239A), and NICKEL GLADSTONE have run on victim banking/SWIFT endpoints after fraudulent transactions to destroy forensic artifacts: VSS shadow deletion, Windows Backup catalog deletion, BCD recovery sabotage, event-log clearing, USN journal deletion, and cipher /w free-space wipe \u2014 fired within the same short window on the same host.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1485",
+        "T1490",
+        "T1070.001",
+        "T1070.004",
+        "T1529",
+        "T1059.003"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.user!=*$ AND (Processes.process=\"*vssadmin*delete*shadows*\" OR Processes.process=\"*wmic*shadowcopy*delete*\" OR Processes.process=\"*wbadmin*delete*catalog*\" OR Processes.process=\"*bcdedit*bootstatuspolicy*ignoreallfailures*\" OR Processes.process=\"*bcdedit*recoveryenabled*no*\" OR Processes.process=\"*wevtutil*cl*Security*\" OR Processes.process=\"*wevtutil*cl*System*\" OR Processes.process=\"*wevtutil*cl*Application*\" OR Processes.process=\"*fsutil*usn*deletejournal*\" OR Processes.process=\"*cipher*/w:*\" OR Processes.process=\"*format*/fs:NTFS*/q*/y*\") by _time span=15m Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | stats values(process) as wiper_cmds dc(process) as distinct_cmds min(_time) as first_seen max(_time) as last_seen values(parent_process_name) as parents by dest user _time | where distinct_cmds >= 2 | convert ctime(first_seen) ctime(last_seen) | sort - first_seen",
+      "kql": "let LookbackDays = 7d;\nlet WiperPatterns = dynamic([\n    \"vssadmin delete shadows\",\n    \"vssadmin.exe delete shadows\",\n    \"wmic shadowcopy delete\",\n    \"wbadmin delete catalog\",\n    \"bootstatuspolicy ignoreallfailures\",\n    \"recoveryenabled no\",         // 'recoveryenabled No' caught by =~/has\n    \"wevtutil cl security\",\n    \"wevtutil cl system\",\n    \"wevtutil cl application\",\n    \"fsutil usn deletejournal\",\n    \"cipher /w:\",\n    \"format /fs:ntfs\"\n  ]);\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where AccountName !endswith \"$\"\n| where AccountName !in~ (\"system\",\"local service\",\"network service\")\n| where ProcessCommandLine has_any (WiperPatterns)\n| extend Bucket = bin(Timestamp, 15m)        // 15m = empirical APT38 cleanup-batch window\n| summarize WiperCmds   = make_set(ProcessCommandLine, 25),\n            DistinctCmds = dcount(ProcessCommandLine),\n            FirstSeen   = min(Timestamp),\n            LastSeen    = max(Timestamp),\n            Parents     = make_set(InitiatingProcessFileName, 10),\n            ParentCmds  = make_set(InitiatingProcessCommandLine, 10)\n            by DeviceId, DeviceName, AccountName, Bucket\n| where DistinctCmds >= 2                    // 2+ distinct destructive cmds in 15m = sequence\n| order by FirstSeen desc",
+      "sentinel_kql": "let LookbackDays = 7d;\nlet WiperPatterns = dynamic([\n    \"vssadmin delete shadows\",\n    \"vssadmin.exe delete shadows\",\n    \"wmic shadowcopy delete\",\n    \"wbadmin delete catalog\",\n    \"bootstatuspolicy ignoreallfailures\",\n    \"recoveryenabled no\",\n    \"wevtutil cl security\",\n    \"wevtutil cl system\",\n    \"wevtutil cl application\",\n    \"fsutil usn deletejournal\",\n    \"cipher /w:\",\n    \"format /fs:ntfs\"\n  ]);\nSecurityEvent\n| where TimeGenerated > ago(LookbackDays)\n| where EventID == 4688\n| where SubjectUserName !endswith \"$\"\n| where SubjectUserName !in~ (\"SYSTEM\",\"LOCAL SERVICE\",\"NETWORK SERVICE\")\n| where CommandLine has_any (WiperPatterns)\n| extend Bucket = bin(TimeGenerated, 15m)\n| summarize WiperCmds   = make_set(CommandLine, 25),\n            DistinctCmds = dcount(CommandLine),\n            FirstSeen   = min(TimeGenerated),\n            LastSeen    = max(TimeGenerated),\n            Parents     = make_set(ParentProcessName, 10)\n            by Computer, SubjectUserName, Bucket\n| where DistinctCmds >= 2\n| order by FirstSeen desc",
+      "sigma_yaml": "title: APT38 / BeagleBoyz destructive post-fraud cleanup commands\nid: 9c4f1e7a-6b32-4d5e-8b91-2c0a5f3d7e88\nstatus: experimental\ndescription: Detects individual destructive-cleanup commands that comprise the post-SWIFT-fraud wipe pattern attributed to APT38 / BeagleBoyz / NICKEL GLADSTONE (CISA AA20-239A, Mandiant APT38 report). SIEM-side correlation should fire when 2+ distinct commands from this rule hit the same host within 15 minutes.\nreferences:\n    - https://attack.mitre.org/groups/G0098/\n    - https://www.cisa.gov/news-events/cybersecurity-advisories/aa20-239a\n    - https://content.fireeye.com/apt/rpt-apt38\nauthor: SOC Detection Engineering\ndate: 2026/06/17\ntags:\n    - attack.impact\n    - attack.t1485\n    - attack.t1490\n    - attack.t1070.001\n    - attack.t1070.004\n    - attack.g0098\nlogsource:\n    category: process_creation\n    product: windows\ndetection:\n    selection_vssadmin:\n        CommandLine|contains|all:\n            - 'vssadmin'\n            - 'delete'\n            - 'shadows'\n    selection_wmic_shadow:\n        CommandLine|contains|all:\n            - 'wmic'\n            - 'shadowcopy'\n            - 'delete'\n    selection_wbadmin:\n        CommandLine|contains|all:\n            - 'wbadmin'\n            - 'delete'\n            - 'catalog'\n    selection_bcdedit:\n        CommandLine|contains:\n            - 'bootstatuspolicy ignoreallfailures'\n            - 'recoveryenabled no'\n            - 'recoveryenabled No'\n    selection_wevtutil:\n        CommandLine|contains:\n            - 'wevtutil cl Security'\n            - 'wevtutil cl System'\n            - 'wevtutil cl Application'\n    selection_fsutil:\n        CommandLine|contains: 'fsutil usn deletejournal'\n    selection_cipher:\n        CommandLine|contains: 'cipher /w:'\n    condition: 1 of selection_*\nfields:\n    - User\n    - Computer\n    - CommandLine\n    - ParentImage\nfalsepositives:\n    - Disaster-recovery drills\n    - Sysadmin manually wiping a decommissioned host\nlevel: high\n",
+      "datadog_query": "source:windows.sysmon @EventID:1 @CommandLine:(*vssadmin*delete*shadows* OR *VSSADMIN*DELETE*SHADOWS* OR *wmic*shadowcopy*delete* OR *wbadmin*delete*catalog* OR *bootstatuspolicy*ignoreallfailures* OR *BOOTSTATUSPOLICY*IGNOREALLFAILURES* OR *recoveryenabled*no* OR *recoveryenabled*No* OR *wevtutil*cl*Security* OR *wevtutil*cl*System* OR *wevtutil*cl*Application* OR *fsutil*usn*deletejournal* OR *cipher*\\/w\\:*)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 \n| regex(\"(?i)(vssadmin\\\\s+delete\\\\s+shadows|wmic\\\\s+shadowcopy\\\\s+delete|wbadmin\\\\s+delete\\\\s+catalog|bcdedit.*bootstatuspolicy\\\\s+ignoreallfailures|bcdedit.*recoveryenabled\\\\s+no|wevtutil\\\\s+cl\\\\s+(security|system|application)|fsutil\\\\s+usn\\\\s+deletejournal|cipher\\\\s+/w:)\", field=CommandLine)\n| UserName!=/\\$$/\n| bucket(span=15m, function=[count(field=CommandLine, distinct=true, as=distinctCmds), min(_time, as=firstSeen), max(_time, as=lastSeen), collect([CommandLine, ImageFileName])], field=[aid, ComputerName, UserName])\n| distinctCmds >= 2",
+      "cloudwatch_query": "",
+      "rationale": "Mandiant's APT38 report and CISA advisory AA20-239A both call out the post-fraud wipe sequence \u2014 VSS deletion, BCD sabotage to defeat recovery, event-log clearing, USN-journal removal, and cipher /w over free space \u2014 as a Bluenoroff/APT38 hallmark distinguishing them from purely-spying DPRK clusters like Lazarus/HIDDEN COBRA. The 2+ distinct destructive commands within 15 minutes on a single host "
+    }
+  ]
+}

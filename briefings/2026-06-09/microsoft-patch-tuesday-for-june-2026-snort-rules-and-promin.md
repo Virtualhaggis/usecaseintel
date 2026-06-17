@@ -51,12 +51,15 @@ Out of 32 "critical" entries, 28 are remote code execution (RCE) vulnerabili
 
 - **T1190** — Exploit Public-Facing Application
 - **T1543.003** — Persistence (article-specific)
-- **T1505.003** — Server Software Component: Web Shell
+- **T1210** — Exploitation of Remote Services
 - **T1203** — Exploitation for Client Execution
-- **T1021.001** — Remote Services: Remote Desktop Protocol
-- **T1068** — Exploitation for Privilege Escalation
+- **T1566.002** — Spearphishing Link
+- **T1204.002** — Malicious File
+- **T1059.001** — PowerShell
+- **T1059.003** — Windows Command Shell
 - **T1611** — Escape to Host
-- **T1566.001** — Spearphishing Attachment
+- **T1068** — Exploitation for Privilege Escalation
+- **T1499.004** — Application or System Exploitation
 
 ## Kill chain phases observed
 
@@ -64,169 +67,207 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### HTTP.sys CVE-2026-47291 post-exploit — w3wp.exe spawning script/LOLBin child after IIS crash
+### June 2026 Patch Tuesday — exposure inventory for critical RCE CVEs
 
-`UC_118_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_119_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image from datamodel=Endpoint.Processes where Processes.parent_process_name="w3wp.exe" (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","mshta.exe","certutil.exe","bitsadmin.exe","curl.exe","net.exe","whoami.exe")) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where user="NT AUTHORITY\\SYSTEM" OR user="IIS APPPOOL*" | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-42985","CVE-2026-47291","CVE-2026-44803","CVE-2026-44812","CVE-2026-42992","CVE-2026-44799","CVE-2026-44801","CVE-2026-47289","CVE-2026-48563","CVE-2026-45607","CVE-2026-45641","CVE-2026-47652","CVE-2026-45657","CVE-2026-48574","CVE-2026-42987","CVE-2026-44815","CVE-2026-45456","CVE-2026-45458","CVE-2026-47635","CVE-2026-45461","CVE-2026-45463","CVE-2026-45472","CVE-2026-45474","CVE-2026-44810","CVE-2026-32193","CVE-2026-45648","CVE-2026-47644","CVE-2026-45476","CVE-2026-26142") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature
+| `drop_dm_object_name(Vulnerabilities)`
+| stats values(cve) as missing_cves dc(cve) as missing_cve_count min(firstSeen) as firstSeen max(lastSeen) as lastSeen by dest
+| where missing_cve_count > 0
+| sort - missing_cve_count
 ```
 
 **Defender KQL:**
 ```kql
-// CVE-2026-47291 http.sys integer-overflow post-exploit: w3wp.exe spawning shell/LOLBin children
-let Lookback = 7d;
-let SuspiciousChildren = dynamic(["cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","mshta.exe","certutil.exe","bitsadmin.exe","curl.exe","net.exe","net1.exe","whoami.exe","nltest.exe"]);
+let JuneCriticalCVEs = dynamic(["CVE-2026-42985","CVE-2026-47291","CVE-2026-44803","CVE-2026-44812","CVE-2026-42992","CVE-2026-44799","CVE-2026-44801","CVE-2026-47289","CVE-2026-48563","CVE-2026-45607","CVE-2026-45641","CVE-2026-47652","CVE-2026-45657","CVE-2026-48574","CVE-2026-42987","CVE-2026-44815","CVE-2026-45456","CVE-2026-45458","CVE-2026-47635","CVE-2026-45461","CVE-2026-45463","CVE-2026-45472","CVE-2026-45474","CVE-2026-44810","CVE-2026-32193","CVE-2026-45648","CVE-2026-47644","CVE-2026-45476","CVE-2026-26142"]);
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
+| where CveId in (JuneCriticalCVEs)
+| where VulnerabilitySeverityLevel in ("Critical","High")
+| join kind=leftouter (DeviceTvmSoftwareVulnerabilitiesKB | project CveId, IsExploitAvailable, CvssScore) on CveId
+| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
+            MissingCVEs = make_set(CveId), AffectedProducts = make_set(SoftwareName),
+            RecommendedKBs = make_set(RecommendedSecurityUpdateId),
+            ExploitAvailableCVEs = make_set_if(CveId, IsExploitAvailable == true)
+            by DeviceId, DeviceName, OSPlatform, OSVersion
+| extend MissingCount = array_length(MissingCVEs)
+| order by array_length(ExploitAvailableCVEs) desc, MissingCount desc
+```
+
+### Remote Desktop Client (mstsc.exe) spawning anomalous child after outbound RDP — malicious-server RCE
+
+`UC_119_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+  from datamodel=Endpoint.Processes
+  where Processes.parent_process_name="mstsc.exe"
+    AND NOT Processes.process_name IN ("mstsc.exe","conhost.exe","WerFault.exe","wermgr.exe","splwow64.exe","rdpclip.exe","rdpinit.exe")
+  by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| where NOT match(user, "\\$$")
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
 DeviceProcessEvents
-| where Timestamp > ago(Lookback)
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName =~ "mstsc.exe"
+| where FileName !in~ ("conhost.exe","WerFault.exe","wermgr.exe","splwow64.exe","rdpclip.exe","rdpinit.exe","mstsc.exe")
+| where AccountName !endswith "$"
+| extend SuspChild = FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","msbuild.exe","installutil.exe","whoami.exe","net.exe","net1.exe")
+| extend SuspPath = FolderPath has_any (@"\Users\Public\",@"\AppData\Local\Temp\",@"\AppData\Roaming\",@"\ProgramData\",@"\Windows\Temp\")
+| where SuspChild or SuspPath
+| project Timestamp, DeviceName, AccountName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath, ChildCmd = ProcessCommandLine,
+          SHA256, InitiatingProcessSHA256
+| order by Timestamp desc
+```
+
+### Outlook/Word spawning script interpreter or LOLBin — preview-pane type-confusion RCE (CVE-2026-45456/45458/47635)
+
+`UC_119_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+  from datamodel=Endpoint.Processes
+  where Processes.parent_process_name IN ("OUTLOOK.EXE","outlook.exe","WINWORD.EXE","winword.exe")
+    AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","msbuild.exe","installutil.exe","msiexec.exe")
+  by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| where NOT match(user, "\\$$")
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let SuspChildren = dynamic(["powershell.exe","pwsh.exe","cmd.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","curl.exe","wget.exe","msbuild.exe","installutil.exe","msiexec.exe","hh.exe"]);
+let OfficeParents = dynamic(["outlook.exe","winword.exe"]);
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ (OfficeParents)
+| where FileName in~ (SuspChildren)
+   or FolderPath has_any (@"\Users\Public\",@"\AppData\Local\Temp\",@"\AppData\Roaming\Microsoft\Templates\",@"\AppData\Roaming\Microsoft\Word\STARTUP\",@"\AppData\Roaming\Microsoft\Outlook\",@"\ProgramData\")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine,
+          SHA256, InitiatingProcessSHA256
+| order by Timestamp desc
+```
+
+### IIS w3wp.exe spawning shell or recon LOLBin — potential HTTP.sys integer-overflow (CVE-2026-47291) post-exploit
+
+`UC_119_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+  from datamodel=Endpoint.Processes
+  where Processes.parent_process_name="w3wp.exe"
+    AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","certutil.exe","bitsadmin.exe","whoami.exe","net.exe","net1.exe","nltest.exe","systeminfo.exe","tasklist.exe","ipconfig.exe","arp.exe","wmic.exe","hostname.exe","quser.exe")
+  by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let ReconShells = dynamic(["cmd.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","certutil.exe","bitsadmin.exe","whoami.exe","net.exe","net1.exe","nltest.exe","systeminfo.exe","tasklist.exe","ipconfig.exe","arp.exe","wmic.exe","hostname.exe","quser.exe"]);
+DeviceProcessEvents
+| where Timestamp > ago(7d)
 | where InitiatingProcessFileName =~ "w3wp.exe"
-| where FileName in~ (SuspiciousChildren)
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, AccountDomain,
-          ParentCmd = InitiatingProcessCommandLine,
-          ParentPath = InitiatingProcessFolderPath,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          SHA256
+| where FileName in~ (ReconShells)
+| project Timestamp, DeviceName, AccountName,
+          AppPool = InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, InitiatingProcessAccountSid,
+          ChildImage = FolderPath, ChildCmd = ProcessCommandLine,
+          SHA256, InitiatingProcessSHA256
 | order by Timestamp desc
 ```
 
-### RDC Client CVE-2026-42985 — mstsc.exe spawns child or connects to non-corporate RDP server
+### Hyper-V worker process (vmwp.exe) anomalous child or unexpected hardware-resource access — guest-to-host escape (CVE-2026-45607/45641/47652)
 
-`UC_118_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_119_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image from datamodel=Endpoint.Processes where Processes.parent_process_name="mstsc.exe" Processes.process_name!="mstsc.exe" Processes.process_name!="conhost.exe" Processes.process_name!="WerFault.exe" by Processes.dest Processes.user Processes.parent_process Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+  from datamodel=Endpoint.Processes
+  where Processes.parent_process_name IN ("vmwp.exe","vmms.exe","vmcompute.exe","vmsp.exe")
+    AND NOT Processes.process_name IN ("vmwp.exe","vmms.exe","vmcompute.exe","vmsp.exe","WerFault.exe","conhost.exe","wermgr.exe")
+  by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-// CVE-2026-42985 RDC client heap overflow — mstsc.exe spawning unexpected children OR connecting to non-corporate RDP server
-let Lookback = 7d;
-let CorpRdpRanges = dynamic(["10.","172.16.","172.17.","172.18.","172.19.","172.20.","172.21.","172.22.","172.23.","172.24.","172.25.","172.26.","172.27.","172.28.","172.29.","172.30.","172.31.","192.168."]);
-let KnownChildren = dynamic(["conhost.exe","mstsc.exe","werfault.exe","rdpinit.exe","rdpclip.exe","tabtip.exe","splwow64.exe"]);
-let ChildSpawn = DeviceProcessEvents
-    | where Timestamp > ago(Lookback)
-    | where InitiatingProcessFileName =~ "mstsc.exe"
-    | where FileName !in~ (KnownChildren)
-    | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessCommandLine, SHA256;
-let ExternalRdp = DeviceNetworkEvents
-    | where Timestamp > ago(Lookback)
-    | where InitiatingProcessFileName =~ "mstsc.exe"
-    | where RemotePort == 3389 and ActionType == "ConnectionSuccess"
+let HypervProcs = dynamic(["vmwp.exe","vmms.exe","vmcompute.exe","vmsp.exe"]);
+let AllowedChildren = dynamic(["vmwp.exe","vmms.exe","vmcompute.exe","vmsp.exe","WerFault.exe","conhost.exe","wermgr.exe"]);
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ (HypervProcs)
+| where FileName !in~ (AllowedChildren)
+| extend SuspChild = FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","wscript.exe","cscript.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","whoami.exe","net.exe","net1.exe","nltest.exe","reg.exe","sc.exe","schtasks.exe","wmic.exe")
+| extend SuspPath = FolderPath has_any (@"\Users\Public\",@"\AppData\",@"\ProgramData\",@"\Windows\Temp\",@"\Windows\Tasks\")
+| where SuspChild or SuspPath
+| project Timestamp, DeviceName, AccountName, InitiatingProcessAccountSid,
+          ParentImage = InitiatingProcessFileName,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath, ChildCmd = ProcessCommandLine,
+          SHA256, InitiatingProcessSHA256
+| order by Timestamp desc
+```
+
+### Windows Kernel BugCheck following inbound network burst — possible CVE-2026-45657 TCP/IP UAF exploitation
+
+`UC_119_7` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as crash_count min(_time) as crash_time max(_time) as last_crash_time from datamodel=Endpoint.Filesystem where source="WinEventLog:System" (EventCode=1001 OR EventCode=41 OR EventCode=6008) by host
+| join type=inner host
+  [| tstats `summariesonly` count as inbound_count dc(All_Traffic.src_ip) as distinct_src from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (80,135,139,445,3389,5985) AND All_Traffic.direction="inbound" earliest=-1h by All_Traffic.dest as host
+    | rename All_Traffic.dest as host]
+| where inbound_count > 1000 OR distinct_src > 50
+| sort - crash_time
+```
+
+**Defender KQL:**
+```kql
+let CrashWindow = 2h;
+let Crashes = DeviceEvents
+    | where Timestamp > ago(7d)
+    | where ActionType in ("UnexpectedShutdown","OsBugCheck","KernelCrash")
+    | project CrashTime = Timestamp, DeviceId, DeviceName, CrashDetails = AdditionalFields;
+Crashes
+| join kind=inner (
+    DeviceNetworkEvents
+    | where Timestamp > ago(7d)
+    | where ActionType == "InboundConnectionAccepted" or ActionType == "ConnectionAccepted"
     | where RemoteIPType == "Public"
-    | where not(RemoteIP startswith_cs CorpRdpRanges[0] or RemoteIP startswith_cs "192.168.")
-    | project Timestamp, DeviceName, RemoteIP, RemoteUrl, InitiatingProcessAccountName;
-union ChildSpawn, ExternalRdp
-| order by Timestamp desc
-```
-
-### Win32K GRFX CVE-2026-44803/44812 — dwm.exe or csrss.exe spawning anomalous child or crashing
-
-`UC_118_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("dwm.exe","csrss.exe") Processes.process_name!="conhost.exe" Processes.process_name!="WerFault.exe" Processes.process_name!="WerFaultSecure.exe" Processes.process_name!="fontdrvhost.exe" by Processes.dest Processes.user Processes.parent_process Processes.process_name | `drop_dm_object_name(Processes)` | where user="NT AUTHORITY\\SYSTEM" OR user="NT AUTHORITY\\LOCAL SERVICE" | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-// CVE-2026-44803 / CVE-2026-44812 Win32K GRFX integer overflow — dwm.exe / csrss.exe anomalous child spawn
-let Lookback = 7d;
-let KnownChildren = dynamic(["conhost.exe","WerFault.exe","WerFaultSecure.exe","fontdrvhost.exe","winlogon.exe","smss.exe","csrss.exe"]);
-DeviceProcessEvents
-| where Timestamp > ago(Lookback)
-| where InitiatingProcessFileName in~ ("dwm.exe", "csrss.exe")
-| where FileName !in~ (KnownChildren)
-| where AccountName !endswith "$" or AccountName =~ "system"
-| project Timestamp, DeviceName, AccountName, AccountSid,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          ChildIntegrity = ProcessIntegrityLevel,
-          SHA256
-| order by Timestamp desc
-```
-
-### Hyper-V CVE-2026-45607/45641/47652 — vmwp.exe spawning anomalous child or crashing on host
-
-`UC_118_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("vmwp.exe","vmms.exe","vmcompute.exe") Processes.process_name!="conhost.exe" Processes.process_name!="WerFault.exe" Processes.process_name!="vmwp.exe" by Processes.dest Processes.user Processes.parent_process Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-// CVE-2026-45607 / 45641 / 47652 Hyper-V guest-to-host escape — vmwp.exe / vmms.exe anomalous child on host
-let Lookback = 7d;
-let KnownChildren = dynamic(["conhost.exe","WerFault.exe","WerFaultSecure.exe","vmwp.exe","vmcompute.exe","vmconnect.exe","vmms.exe"]);
-let SuspiciousAnything = DeviceProcessEvents
-    | where Timestamp > ago(Lookback)
-    | where InitiatingProcessFileName in~ ("vmwp.exe","vmms.exe","vmcompute.exe")
-    | where FileName !in~ (KnownChildren)
-    | project Timestamp, DeviceName, AccountName,
-              ParentProcess = InitiatingProcessFileName,
-              ParentCmd = InitiatingProcessCommandLine,
-              ChildImage = FolderPath,
-              ChildCmd = ProcessCommandLine,
-              ChildIntegrity = ProcessIntegrityLevel,
-              SHA256;
-let WorkerCrashes = DeviceEvents
-    | where Timestamp > ago(Lookback)
-    | where ActionType in ("ProcessCrash","WerFault")
-    | where InitiatingProcessFileName in~ ("vmwp.exe","vmms.exe","vmcompute.exe")
-            or FileName in~ ("vmwp.exe","vmms.exe","vmcompute.exe")
-    | project Timestamp, DeviceName, ActionType, FileName, AdditionalFields;
-union SuspiciousAnything, WorkerCrashes
-| order by Timestamp desc
-```
-
-### Outlook Preview Pane CVE-2026-45456/45458/47635 — OUTLOOK.EXE → WINWORD.EXE → script/LOLBin chain
-
-`UC_118_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image from datamodel=Endpoint.Processes where Processes.parent_process_name="winword.exe" (Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","certutil.exe","bitsadmin.exe","curl.exe","wmic.exe","hh.exe","msiexec.exe")) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | join type=inner dest parent_process_name [| tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.parent_process_name="outlook.exe" Processes.process_name="winword.exe" by Processes.dest Processes.parent_process_name | `drop_dm_object_name(Processes)`] | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-// CVE-2026-45456 / 45458 / 47635 Office type-confusion via Outlook (classic) preview pane → Word rendering → exploit child
-let Lookback = 7d;
-let ScriptyChildren = dynamic(["powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","regsvr32.exe","certutil.exe","bitsadmin.exe","curl.exe","wmic.exe","hh.exe","msiexec.exe","msbuild.exe"]);
-let WordSpawnedByOutlook = DeviceProcessEvents
-    | where Timestamp > ago(Lookback)
-    | where InitiatingProcessFileName =~ "OUTLOOK.EXE"
-    | where FileName =~ "WINWORD.EXE"
-    | project ParentSpawnTs = Timestamp, DeviceName, WordPid = ProcessId,
-              OutlookCmd = InitiatingProcessCommandLine, WordCmd = ProcessCommandLine,
-              AccountName;
-DeviceProcessEvents
-| where Timestamp > ago(Lookback)
-| where InitiatingProcessFileName =~ "WINWORD.EXE"
-| where FileName in~ (ScriptyChildren)
-| where AccountName !endswith "$"
-| project ChildTs = Timestamp, DeviceName, AccountName, WordPid = InitiatingProcessId,
-          WordCmd = InitiatingProcessCommandLine,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          SHA256
-| join kind=inner WordSpawnedByOutlook on DeviceName, WordPid
-| where ChildTs between (ParentSpawnTs .. ParentSpawnTs + 5m)
-| project ChildTs, DeviceName, AccountName, OutlookCmd, WordCmd, ChildImage, ChildCmd, SHA256
-| order by ChildTs desc
+    | summarize InboundCount = count(), UniqueSrcIPs = dcount(RemoteIP), SampleRemotes = make_set(RemoteIP, 10), TargetPorts = make_set(LocalPort, 10)
+              by DeviceId, NetWindowEnd = bin(Timestamp, CrashWindow)
+    | where InboundCount > 500 or UniqueSrcIPs > 25
+) on DeviceId
+| where CrashTime between (NetWindowEnd - CrashWindow .. NetWindowEnd + CrashWindow)
+| project CrashTime, DeviceName, InboundCount, UniqueSrcIPs, SampleRemotes, TargetPorts, CrashDetails
+| order by CrashTime desc
 ```
 
 ### Article-specific behavioural hunt — Microsoft Patch Tuesday for June 2026 — Snort rules and prominent vulnerabilitie
 
-`UC_118_1` · phase: **exploit** · confidence: **High**
+`UC_119_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -283,4 +324,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

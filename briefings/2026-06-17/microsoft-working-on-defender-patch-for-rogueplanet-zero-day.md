@@ -11,21 +11,16 @@ By Sergiu Gatlan
 June 17, 2026
 04:32 AM
 0 
-
-
 Microsoft confirmed that it's working on a security patch for a Defender zero-day vulnerability named "RoguePlanet," disclosed one week ago.
-
-
-The security researcher who published a RoguePlanet exploit during the June 2026 Patch Tuesday (known as Nightmare Eclipse) said it affects fully patched Windows 10 and Windows 11 devices and allows attackers to spawn command prompts with SYSTEM…
+The security researcher who published a RoguePlanet exploit during the June 2026 Patch Tuesday (known as Nightmare Eclipse) said it affects fully patched Windows 10 and Windows 11 devices and allows attackers to spawn command prompts with SYSTEM privile…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-50656`
 - **CVE:** `CVE-2026-33825`
-- **CVE:** `CVE-2026-41091`
 - **CVE:** `CVE-2026-45498`
-- **CVE:** `CVE-2026-45586`
 - **CVE:** `CVE-2026-45585`
+- **CVE:** `CVE-2026-45586`
 - **CVE:** `CVE-2020-17103`
 - **Domain (defanged):** `projectnightcrawler.dev`
 
@@ -46,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Microsoft Defender Engine (MsMpEng) spawning interactive shell - RoguePlanet CVE-2026-50656
 
-`UC_1_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_5_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +66,7 @@ DeviceProcessEvents
 
 ### Endpoint DNS / web access to Nightmare Eclipse exploit-hosting domain projectnightcrawler.dev
 
-`UC_1_3` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_5_3` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +102,7 @@ union
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2026-50656`, `CVE-2026-33825`, `CVE-2026-41091`, `CVE-2026-45498`, `CVE-2026-45586`, `CVE-2026-45585`, `CVE-2020-17103`
+  - CVE(s): `CVE-2026-50656`, `CVE-2026-33825`, `CVE-2026-45498`, `CVE-2026-45585`, `CVE-2026-45586`, `CVE-2020-17103`
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
   - IP / domain IOC(s): `projectnightcrawler.dev`

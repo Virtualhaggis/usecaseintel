@@ -33,7 +33,7 @@ The security flaw patched by Fortinet relates to a command injection vulnerabili
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1059** — Command and Scripting Interpreter
 - **T1592.002** — Gather Victim Host Information: Software
 
 ## Kill chain phases observed
@@ -42,55 +42,54 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Ivanti Sentry pre-auth RCE — POST to /mics/api/v2/sentry/mics-config/handleMessage (CVE-2026-10520)
+### Ivanti Sentry CVE-2026-10520 exploit attempt via /mics/api/v2/sentry/mics-config/handleMessage
 
-`UC_103_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_106_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agents values(Web.status) as status values(Web.src) as src_ips dc(Web.src) as src_count from datamodel=Web.Web where Web.http_method=POST Web.url="*/mics/api/v2/sentry/mics-config/handleMessage*" by Web.dest, Web.url | `drop_dm_object_name(Web)` | where status<500 OR src_count>1 | eval cve="CVE-2026-10520", endpoint="Ivanti Sentry MICS handleMessage" | sort - lastTime
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.user_agent) as user_agent values(Web.status) as status from datamodel=Web where Web.url="*/mics/api/v2/sentry/mics-config/handleMessage*" by Web.src, Web.dest, Web.url | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(30d)
 | where RemoteUrl has "/mics/api/v2/sentry/mics-config/handleMessage"
-   or InitiatingProcessCommandLine has "/mics/api/v2/sentry/mics-config/handleMessage"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
-          InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
+   or AdditionalFields has "mics-config/handleMessage"
+| project Timestamp, DeviceName, DeviceId, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName, InitiatingProcessAccountSid
 | order by Timestamp desc
 ```
 
-### Unpatched Ivanti Sentry / FortiSandbox / SAP NetWeaver CVE-2026 inventory exposure
+### Pre-patch Ivanti Sentry / FortiSandbox / SAP NetWeaver versions exposed to the article CVEs
 
-`UC_103_7` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_106_7` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-`vulnerability_indextime`
-| search cve_id IN ("CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128")
-| stats min(_time) as first_seen max(_time) as last_seen dc(dest) as affected_assets values(dest) as hosts values(signature) as software_version by cve_id, vendor_product
-| eval first_seen=strftime(first_seen,"%Y-%m-%d %H:%M"), last_seen=strftime(last_seen,"%Y-%m-%d %H:%M")
-| sort - affected_assets
+| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(Vulnerabilities.signature) as signature values(Vulnerabilities.severity) as severity values(Vulnerabilities.vendor_product) as vendor_product from datamodel=Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128") by Vulnerabilities.dest, Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | `security_content_ctime(firstSeen)` | `security_content_ctime(lastSeen)` | sort - severity
 ```
 
 **Defender KQL:**
 ```kql
-let TargetCVEs = dynamic(["CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128"]);
+let article_cves = dynamic(["CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128"]);
 DeviceTvmSoftwareVulnerabilities
-| where Timestamp > ago(1d)
-| where CveId in (TargetCVEs)
+| where CveId in (article_cves)
+| join kind=leftouter (
+    DeviceInfo
+    | summarize arg_max(Timestamp, IsInternetFacing, PublicIP, OSPlatform, MachineGroup) by DeviceId
+  ) on DeviceId
 | join kind=leftouter (
     DeviceTvmSoftwareVulnerabilitiesKB
-    | summarize arg_max(LastModifiedTime, CvssScore, IsExploitAvailable, VulnerabilityDescription) by CveId
+    | summarize arg_max(LastModifiedTime, CvssScore, IsExploitAvailable, PublishedDate) by CveId
   ) on CveId
-| summarize AffectedDevices = dcount(DeviceId),
-            DeviceSample = make_set(DeviceName, 25),
-            Versions = make_set(SoftwareVersion, 10),
-            arg_max(Timestamp, *)
-            by CveId, SoftwareVendor, SoftwareName, RecommendedSecurityUpdate, VulnerabilitySeverityLevel, CvssScore, IsExploitAvailable
-| order by CvssScore desc, AffectedDevices desc
+| project DeviceName, DeviceId, IsInternetFacing, PublicIP, OSPlatform, MachineGroup,
+          SoftwareVendor, SoftwareName, SoftwareVersion,
+          CveId, CvssScore, IsExploitAvailable, VulnerabilitySeverityLevel,
+          RecommendedSecurityUpdate, RecommendedSecurityUpdateId
+| order by IsInternetFacing desc, CvssScore desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations

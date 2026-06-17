@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1204 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1205 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,16 +10,19 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-17
 - [144 mastra npm packages compromised via hijacked contributor](./2026-06-17/144-mastra-npm-packages-compromised-via-hijacked-contributor.md)
+- [cisa orders feds to patch max severity joomla plugin flaw by](./2026-06-17/cisa-orders-feds-to-patch-max-severity-joomla-plugin-flaw-by.md)
 - [cisa warns of actively exploited joomla jce flaw allowing ph](./2026-06-17/cisa-warns-of-actively-exploited-joomla-jce-flaw-allowing-ph.md)
 - [deno based rat uses microsoft teams impersonation and mailbo](./2026-06-17/deno-based-rat-uses-microsoft-teams-impersonation-and-mailbo.md)
 - [from china with tenderness](./2026-06-17/from-china-with-tenderness.md)
 - [hackers abuse steam workshop application wallpapers to hijac](./2026-06-17/hackers-abuse-steam-workshop-application-wallpapers-to-hijac.md)
 - [hackers use rokarolla android malware to disable google play](./2026-06-17/hackers-use-rokarolla-android-malware-to-disable-google-play.md)
 - [kodak confirms data breach claimed by shinyhunters extortion](./2026-06-17/kodak-confirms-data-breach-claimed-by-shinyhunters-extortion.md)
+- [malicious jetbrains plugins steal ai api keys as chrome exte](./2026-06-17/malicious-jetbrains-plugins-steal-ai-api-keys-as-chrome-exte.md)
 - [microsoft working on defender patch for rogueplanet zero day](./2026-06-17/microsoft-working-on-defender-patch-for-rogueplanet-zero-day.md)
-- [unc3753 uses screen sharing sessions and rmm tools to exfilt](./2026-06-17/unc3753-uses-screen-sharing-sessions-and-rmm-tools-to-exfilt.md)
+- [the top 10 attack surface exposures in 2026](./2026-06-17/the-top-10-attack-surface-exposures-in-2026.md)
 
 ## 2026-06-16
+- [a forgotten contributor account compromised the entire mastr](./2026-06-16/a-forgotten-contributor-account-compromised-the-entire-mastr.md)
 - [china linked sprysocks backdoor expands to windows with driv](./2026-06-16/china-linked-sprysocks-backdoor-expands-to-windows-with-driv.md)
 - [cisa flags litespeed cpanel plugin flaw exploited for root p](./2026-06-16/cisa-flags-litespeed-cpanel-plugin-flaw-exploited-for-root-p.md)
 - [cisa kev cve 2026 48907 widget factory joomla content editor](./2026-06-16/cisa-kev-cve-2026-48907-widget-factory-joomla-content-editor.md)
@@ -63,7 +66,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [north korean hackers are turning developer tools into malwar](./2026-06-15/north-korean-hackers-are-turning-developer-tools-into-malwar.md)
 - [palo alto warns of active exploitation of pan os globalprote](./2026-06-15/palo-alto-warns-of-active-exploitation-of-pan-os-globalprote.md)
 - [popular wordpress plugin scripts tampered to plant hidden ba](./2026-06-15/popular-wordpress-plugin-scripts-tampered-to-plant-hidden-ba.md)
-- [simplehelp bug lets hackers create rogue remote support acco](./2026-06-15/simplehelp-bug-lets-hackers-create-rogue-remote-support-acco.md)
 - [sniper dz scams target mena users via fake facebook offers a](./2026-06-15/sniper-dz-scams-target-mena-users-via-fake-facebook-offers-a.md)
 - [the government just banned an ai model an engineer s perspec](./2026-06-15/the-government-just-banned-an-ai-model-an-engineer-s-perspec.md)
 - [the onboarding password mistake that creates unnecessary ris](./2026-06-15/the-onboarding-password-mistake-that-creates-unnecessary-ris.md)
@@ -113,7 +115,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 48063 baileys has message upsert hist](./2026-06-10/ghsa-critical-cve-2026-48063-baileys-has-message-upsert-hist.md)
 - [ivanti fortinet and sap release patches for multiple critica](./2026-06-10/ivanti-fortinet-and-sap-release-patches-for-multiple-critica.md)
 - [langflow vulnerability cve 2026 5027 exploited for unauthent](./2026-06-10/langflow-vulnerability-cve-2026-5027-exploited-for-unauthent.md)
-- [microsoft defender rogueplanet zero day grants system access](./2026-06-10/microsoft-defender-rogueplanet-zero-day-grants-system-access.md)
 - [microsoft patches record 206 flaws including three zero days](./2026-06-10/microsoft-patches-record-206-flaws-including-three-zero-days.md)
 
 ## 2026-06-09
