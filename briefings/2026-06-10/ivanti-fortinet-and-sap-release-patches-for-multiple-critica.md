@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Ivanti Sentry pre-auth RCE — POST to /mics/api/v2/sentry/mics-config/handleMessage (CVE-2026-10520)
 
-`UC_102_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_103_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceNetworkEvents
 
 ### Unpatched Ivanti Sentry / FortiSandbox / SAP NetWeaver CVE-2026 inventory exposure
 
-`UC_102_7` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_103_7` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

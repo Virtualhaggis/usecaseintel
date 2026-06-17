@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Hades Campaign: Python process fetching Bun v1.3.14 runtime from oven-sh GitHub release
 
-`UC_119_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_120_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceNetworkEvents
 
 ### Hades Campaign: Bun runtime executed from /tmp/b/bun running _index.js
 
-`UC_119_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_120_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### Hades Campaign: Sentinel flag file /tmp/.bun_ran created (single-shot execution guardrail)
 
-`UC_119_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_120_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceFileEvents
 
 ### Hades Campaign: Bun process accessing /proc/<pid>/mem of GitHub Actions Runner.Worker
 
-`UC_119_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_120_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceFileEvents
 
 ### Hades Campaign: Bun spawning Python with Mach VM / task_for_pid ctypes payload on macOS
 
-`UC_119_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_120_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ DeviceProcessEvents
 
 ### Hades Campaign: Install of tainted PyPI package at affected version
 
-`UC_119_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_120_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -185,7 +185,7 @@ DeviceProcessEvents
 
 ### Hades Campaign: Creation of _hooks.py or _runtime.bin in Python package tree
 
-`UC_119_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_120_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -458,7 +458,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blo
 
-`UC_119_7` · phase: **exploit** · confidence: **High**
+`UC_120_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

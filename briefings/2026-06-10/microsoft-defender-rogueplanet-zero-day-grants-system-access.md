@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### PowerShell Mount-DiskImage by standard user (RoguePlanet pre-condition)
 
-`UC_112_7` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_113_7` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceProcessEvents
 
 ### SYSTEM-integrity child process spawned by Microsoft Defender component
 
-`UC_112_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_113_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### Non-default DLL image-loaded into MsMpEng / NisSrv scanning process
 
-`UC_112_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_113_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceImageLoadEvents
 
 ### Unauthorized registry tampering against WinDefend / WdNisSvc / Sense service key
 
-`UC_112_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_113_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceRegistryEvents
 
 ### Hosts still vulnerable to Chaotic Eclipse Defender CVE chain (BlueHammer / UnDefend / RedSun)
 
-`UC_112_11` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_113_11` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

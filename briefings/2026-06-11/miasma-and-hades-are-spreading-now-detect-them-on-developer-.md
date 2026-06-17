@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Miasma/Hades known-bad SHA256 execution on developer endpoint
 
-`UC_86_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_87_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ union
 
 ### Phantom Gyp: small binding.gyp written into node_modules during npm install
 
-`UC_86_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_87_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceFileEvents
 
 ### Hades on-import payload: python interpreter spawns Bun runtime download
 
-`UC_86_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_87_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ StageA
 
 ### Editor/AI tool auto-execute config file dropped into project tree by package manager or git
 
-`UC_86_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_87_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceFileEvents
 
 ### VS Code/Cursor/Claude/Gemini spawns interpreter referencing folderOpen or SessionStart hook script
 
-`UC_86_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_87_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -168,7 +168,7 @@ DeviceProcessEvents
 
 ### Bun runtime egress to npm/PyPI publish endpoints or attacker-controlled GitHub repos
 
-`UC_86_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_87_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -241,7 +241,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Miasma and Hades Are Spreading Now: Detect Them on Developer Machines with Suspi
 
-`UC_86_3` · phase: **exploit** · confidence: **High**
+`UC_87_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

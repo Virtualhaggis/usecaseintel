@@ -66,7 +66,7 @@ _(none detected from narrative keywords)_
 
 ### HTTP.sys CVE-2026-47291 post-exploit — w3wp.exe spawning script/LOLBin child after IIS crash
 
-`UC_117_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_118_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceProcessEvents
 
 ### RDC Client CVE-2026-42985 — mstsc.exe spawns child or connects to non-corporate RDP server
 
-`UC_117_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_118_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ union ChildSpawn, ExternalRdp
 
 ### Win32K GRFX CVE-2026-44803/44812 — dwm.exe or csrss.exe spawning anomalous child or crashing
 
-`UC_117_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_118_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +154,7 @@ DeviceProcessEvents
 
 ### Hyper-V CVE-2026-45607/45641/47652 — vmwp.exe spawning anomalous child or crashing on host
 
-`UC_117_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_118_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -189,7 +189,7 @@ union SuspiciousAnything, WorkerCrashes
 
 ### Outlook Preview Pane CVE-2026-45456/45458/47635 — OUTLOOK.EXE → WINWORD.EXE → script/LOLBin chain
 
-`UC_117_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_118_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -226,7 +226,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft Patch Tuesday for June 2026 — Snort rules and prominent vulnerabilitie
 
-`UC_117_1` · phase: **exploit** · confidence: **High**
+`UC_118_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

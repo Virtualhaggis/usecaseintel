@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### WP admin browser loads poisoned Awesome Motive CDN api.min.js (OptinMonster/TrustPulse/PushEngage)
 
-`UC_50_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_52_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceNetworkEvents
 
 ### Outbound C2 to Tidio-impersonating exfil host (tidio.cc / 84.201.6.54)
 
-`UC_50_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_52_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceNetworkEvents
 
 ### Backdoor WordPress plugin folder created (Content Delivery Helper / Database Optimizer)
 
-`UC_50_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_52_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceFileEvents
 
 ### Rogue WordPress administrator account created (developer_api1 / dev_xxxxxx pattern)
 
-`UC_50_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_52_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -182,7 +182,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OptinMonster WordPress plugin hacked in CDN supply-chain attack
 
-`UC_50_2` · phase: **exploit** · confidence: **High**
+`UC_52_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

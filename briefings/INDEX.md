@@ -9,8 +9,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-17
+- [cisa warns of actively exploited joomla jce flaw allowing ph](./2026-06-17/cisa-warns-of-actively-exploited-joomla-jce-flaw-allowing-ph.md)
 - [clickfix campaign uses etherhiding and guloader to infect wi](./2026-06-17/clickfix-campaign-uses-etherhiding-and-guloader-to-infect-wi.md)
-- [ghostwriter hackers abuse gmail admin themed emails to steal](./2026-06-17/ghostwriter-hackers-abuse-gmail-admin-themed-emails-to-steal.md)
+- [deno based rat uses microsoft teams impersonation and mailbo](./2026-06-17/deno-based-rat-uses-microsoft-teams-impersonation-and-mailbo.md)
+- [hackers abuse steam workshop application wallpapers to hijac](./2026-06-17/hackers-abuse-steam-workshop-application-wallpapers-to-hijac.md)
+- [hackers use rokarolla android malware to disable google play](./2026-06-17/hackers-use-rokarolla-android-malware-to-disable-google-play.md)
 - [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-17/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
 - [new oniondrop loader campaign uses gainmsg c2 to deliver leg](./2026-06-17/new-oniondrop-loader-campaign-uses-gainmsg-c2-to-deliver-leg.md)
 - [unc3753 uses screen sharing sessions and rmm tools to exfilt](./2026-06-17/unc3753-uses-screen-sharing-sessions-and-rmm-tools-to-exfilt.md)
@@ -23,7 +26,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisco releases security updates for actively exploited sd wa](./2026-06-16/cisco-releases-security-updates-for-actively-exploited-sd-wa.md)
 - [clickfix campaigns expand malware delivery with new loaders ](./2026-06-16/clickfix-campaigns-expand-malware-delivery-with-new-loaders-.md)
 - [critical fortinet fortisandbox flaws now exploited in attack](./2026-06-16/critical-fortinet-fortisandbox-flaws-now-exploited-in-attack.md)
-- [critical fortinet fortisandbox vulnerabilities actively expl](./2026-06-16/critical-fortinet-fortisandbox-vulnerabilities-actively-expl.md)
 - [dozens of malicious wallpapers found on steam workshop gamer](./2026-06-16/dozens-of-malicious-wallpapers-found-on-steam-workshop-gamer.md)
 - [fake microsoft alerts used to deploy north korean narwhalrat](./2026-06-16/fake-microsoft-alerts-used-to-deploy-north-korean-narwhalrat.md)
 - [fishmonger s arsenal upgraded sprysocks for windows](./2026-06-16/fishmonger-s-arsenal-upgraded-sprysocks-for-windows.md)
@@ -37,7 +39,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa 365w hqf6 vxfg crawl4ai multiple docker a](./2026-06-16/ghsa-critical-ghsa-365w-hqf6-vxfg-crawl4ai-multiple-docker-a.md)
 - [google vertex ai sdk flaw let attackers hijack model uploads](./2026-06-16/google-vertex-ai-sdk-flaw-let-attackers-hijack-model-uploads.md)
 - [malicious jetbrains marketplace plugins steal ai api keys fr](./2026-06-16/malicious-jetbrains-marketplace-plugins-steal-ai-api-keys-fr.md)
-- [microsoft 365 device code phishing campaign bypasses passwor](./2026-06-16/microsoft-365-device-code-phishing-campaign-bypasses-passwor.md)
 - [multiple jetbrains ide plugins caught stealing ai keys](./2026-06-16/multiple-jetbrains-ide-plugins-caught-stealing-ai-keys.md)
 - [new rokarolla android malware steals pins sms codes and cryp](./2026-06-16/new-rokarolla-android-malware-steals-pins-sms-codes-and-cryp.md)
 - [new rokarolla android malware targets 217 banking crypto app](./2026-06-16/new-rokarolla-android-malware-targets-217-banking-crypto-app.md)
@@ -52,7 +53,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [chinese hackers abused google workspace rules to steal resea](./2026-06-15/chinese-hackers-abused-google-workspace-rules-to-steal-resea.md)
 - [cisa kev cve 2026 20262 cisco catalyst sd wan manager direct](./2026-06-15/cisa-kev-cve-2026-20262-cisco-catalyst-sd-wan-manager-direct.md)
 - [cisa kev cve 2026 54420 litespeed cpanel plugin unix symboli](./2026-06-15/cisa-kev-cve-2026-54420-litespeed-cpanel-plugin-unix-symboli.md)
-- [cisco fixes sd wan vmanage flaw exploited in zero day attack](./2026-06-15/cisco-fixes-sd-wan-vmanage-flaw-exploited-in-zero-day-attack.md)
 - [doj seizes cfake socfake deepfake nude sites under take it d](./2026-06-15/doj-seizes-cfake-socfake-deepfake-nude-sites-under-take-it-d.md)
 - [eviltokens a phishing attack that doesn t steal your passwor](./2026-06-15/eviltokens-a-phishing-attack-that-doesn-t-steal-your-passwor.md)
 - [ghsa critical cve 2026 53633 vitest browser exposed browser ](./2026-06-15/ghsa-critical-cve-2026-53633-vitest-browser-exposed-browser-.md)
