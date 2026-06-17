@@ -10423,9 +10423,9 @@ DeviceFileEvents
   data-sources="StepSecurity"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="endpoint,network,web"
-  data-targets="azure,linux,m365,macos,vcs,windows"
-  data-uc-count="13" data-llm-uc-count="5"
-  data-search="Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blocked by Python Linter On June 8, 2026, multiple Graph ML PyPI packages in the bioinformatics ecosystem were compromised in the Hades campaign, deploying cross-platform memory scrapers, AI prompt injections to misdirect scanners, and a token-revocation wiper.  T1027 T1059.001 T1190 T1195.002 T1555.003 [LLM] Python interpreter downloads oven-sh Bun runtime v1.3.14 from GitHub releases at import time [LLM] Bun runtime executed from temp directory by Python interpreter (Hades vF203 loader) [LLM] Cross-platform memory scraping of GitHub Actions Runner.Worker process [LLM] Malicious _hooks.py / _runtime.bin files created in Pythagora gpt-pilot checkout [LLM] pip / uv install of known-compromised Hades Campaign PyPI package versions Beaconing — periodic outbound to small set of destinations Remote service execution — PsExec / SMB lateral movement Phishing-link click correlated to endpoint execution Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) PowerShell encoded / obfuscated command RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blo">
+  data-targets="azure,linux,m365,macos,windows"
+  data-uc-count="15" data-llm-uc-count="7"
+  data-search="Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blocked by Python Linter On June 8, 2026, multiple Graph ML PyPI packages in the bioinformatics ecosystem were compromised in the Hades campaign, deploying cross-platform memory scrapers, AI prompt injections to misdirect scanners, and a token-revocation wiper.  T1027 T1059.001 T1190 T1195.002 T1555.003 [LLM] Hades Campaign: Python process fetching Bun v1.3.14 runtime from oven-sh GitHub release [LLM] Hades Campaign: Bun runtime executed from /tmp/b/bun running _index.js [LLM] Hades Campaign: Sentinel flag file /tmp/.bun_ran created (single-shot execution guardrail) [LLM] Hades Campaign: Bun process accessing /proc/&lt;pid&gt;/mem of GitHub Actions Runner.Worker [LLM] Hades Campaign: Bun spawning Python with Mach VM / task_for_pid ctypes payload on macOS [LLM] Hades Campaign: Install of tainted PyPI package at affected version [LLM] Hades Campaign: Creation of _hooks.py or _runtime.bin in Python package tree Beaconing — periodic outbound to small set of destinations Remote service execution — PsExec / SMB lateral movement Phishing-link click correlated to endpoint execution Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) PowerShell encoded / obfuscated command RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard Trusted vendor binary / installer launching unusual children Article-specific behavioural hunt — Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blo">
   <div class="sev-ribbon high">High</div>
   <button class="share-btn card-share" data-share-art="2026-06-09-pythagora-io-gpt-pilot-compromised-on-github-shai-hulud-cred" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -10434,7 +10434,7 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge ">StepSecurity</span></div>
   <div class="pubmeta">
     <span>2026-06-09</span>
-    <span>13 use cases</span>
+    <span>15 use cases</span>
     <span>5 techniques</span>
     <span>6 kill-chain phases detected</span>
   </div>
@@ -10483,115 +10483,73 @@ DeviceFileEvents
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Malicious _hooks.py / _runtime.bin files created in Pythagora gpt-pilot checkout · [LLM] pip / uv install of known-compromised Hades Campaign PyPI package versions · Phishing-link click correlated to endpoint execution</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Hades Campaign: Python process fetching Bun v1.3.14 runtime from oven-sh GitHub release · [LLM] Hades Campaign: Install of tainted PyPI package at affected version · Phishing-link click correlated to endpoint execution</em></div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Fake CAPTCHA / clipboard-injected PowerShell (ClickFix / FakeCaptcha) · PowerShell encoded / obfuscated command · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blo</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Python interpreter downloads oven-sh Bun runtime v1.3.14 from GitHub releases at import time · [LLM] Bun runtime executed from temp directory by Python interpreter (Hades vF203 loader) · RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Hades Campaign: Bun runtime executed from /tmp/b/bun running _index.js · [LLM] Hades Campaign: Sentinel flag file /tmp/.bun_ran created (single-shot execution guardrail) · [LLM] Hades Campaign: Creation of _hooks.py or _runtime.bin in Python package tree · RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard</em></div>
 <div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ Beaconing — periodic outbound to small set of destinations</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Cross-platform memory scraping of GitHub Actions Runner.Worker process · Remote service execution — PsExec / SMB lateral movement</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Hades Campaign: Bun process accessing /proc/&lt;pid&gt;/mem of GitHub Actions Runner.Worker · [LLM] Hades Campaign: Bun spawning Python with Mach VM / task_for_pid ctypes payload on macOS · Remote service execution — PsExec / SMB lateral movement</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="fb9bb76f20" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="665a84f09f" data-platforms="datadog,def,falcon,sent,spl" data-targets="linux,windows" open>
   <summary>
-    <span class="uc-title">Python interpreter downloads oven-sh Bun runtime v1.3.14 from GitHub releases at import time</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-title">Hades Campaign: Python process fetching Bun v1.3.14 runtime from oven-sh GitHub release</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="fb9bb76f20" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="665a84f09f" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts for the Hades Campaign entry hook embedded in compromised PyPI packages (ensmallen, embiggen, gpsea, pyphetools, etc.). The deobfuscated import hook in __init__.py downloads bun-{linux,darwin,windows}-{x64,aarch64}.zip from github.com/oven-sh/bun/releases/download/bun-v1.3.14/. A Python package fetching a Bun runtime at import is not legitimate behaviour.
+    <div class="uc-desc">Hunts for the Hades loader&#x27;s stager step where the embedded Python __init__.py hook downloads the standalone Bun runtime (v1.3.14) ZIP from the oven-sh GitHub release URL via urllib. The specific version-pinned URL and python initiator together are not produced by legitimate workflows on dev/CI hosts that don&#x27;t already manage Bun.
 
-Rationale: Anchors on the exact URL prefix github.com/oven-sh/bun/releases/download/bun-v1.3.14/ and the four ZIP filename variants enumerated in the deobfuscated hook. A Python interpreter pulling a Bun runtime at import is highly anomalous — Bun is a Node.js alternative, not a Python dependency.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer manually scripting a Bun install from a Python helper (`subprocess.run([&#x27;python&#x27;,&#x27;install_bun.py&#x27;])`)</li><li>Polyglot test/CI tooling that legitimately bootstraps Bun in Python build steps</li><li>Security researcher reproducing the Hades sample in a sandbox</li><li>Educational notebooks demonstrating multi-runtime tooling</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;install_bun.py&quot;,&quot;setup_bun.py&quot;,&quot;build/bootstrap&quot;) and AccountName endswith &quot;-build&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Identify the parent Python invocation — capture ProcessCommandLine and the site-packages folder. Cross-check against the affected PyPI package list (ensmallen 0.8.101, mflux-streamlit 0.0.3/0.0.4, nhmpy 2.4.7, ppkt2synergy 0.1.1, embiggen 0.11.97, gpsea 0.9.14, pyphetools 0.9.120). Step 2 (contain): Isolate the host, kill any running `bun` process, remove `/tmp/.bun_ran` and the `bun` binary from `/tmp/b/` (or %TEMP%\b\), uninstall the offending package with `pip uninstall --yes &lt;pkg&gt;`. Rotate any developer secrets exposed via env vars on the host. Step 3 (hunt): Pivot DeviceProcessEvents for the same SHA256 of the dropped bun binary across the fleet, search EmailEvents/audit logs for the install command, check GitHub Actions runner inventory for Runner.Worker exposure.</div></details>
+Rationale: Anchors on the exact stager URL string `oven-sh/bun/releases/download/bun-v1.3.14` quoted verbatim from the deobfuscated __init__.py hook, plus python parentage required by the loader. Both signals together drop FP rate sharply.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span> <span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer manually installing bun via official curl|bash script that happens to be wrapped in a python helper</li><li>CI pipeline using bun for a legitimate JS project where setup.py invokes bun bootstrap</li><li>Docker image build steps that pre-fetch bun-v1.3.14 ZIP for a pinned base image</li><li>Security researcher reproducing the Hades sample in a sandbox</li><li>Internal tooling that mirrors GitHub releases via python script</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and InitiatingProcessCommandLine !has_any (&quot;bun-install-test&quot;, &quot;sandbox&quot;, &quot;unit_test&quot;) and DeviceName !startswith &quot;sec-research-&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): pull the originating Python process tree and the package path that triggered the import — identify which PyPI package&#x27;s __init__.py is the entry point. Cross-check the installed version against the Hades affected-package matrix (mflux-streamlit 0.0.3/0.0.4, nhmpy 2.4.7, ppkt2synergy 0.1.1, embiggen 0.11.97, gpsea 0.9.14, pyphetools 0.9.120, ensmallen 0.8.101). Step 2 (contain): isolate the host, revoke any GitHub PAT / cloud credentials cached on it, rotate runner registration tokens if this was a self-hosted Actions runner. Step 3 (hunt): pivot on /tmp/b/bun and /tmp/.bun_ran across the fleet, search for any other host that pulled the same release URL in the last 30 days, and inspect requirements.txt / poetry.lock files across repos for the tainted package versions.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-115-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-115-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-115-uc0-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-115-uc0-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-115-uc0-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-115-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-115-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let Lookback = 14d;
-// Hades Campaign import hook fetches a Bun runtime zip from oven-sh/bun releases
-let NetSide = DeviceNetworkEvents
-  | where Timestamp &gt; ago(Lookback)
-  | where InitiatingProcessFileName in~ (&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;pythonw.exe&quot;)
-  | where RemoteUrl has &quot;oven-sh/bun/releases/download&quot; or RemoteUrl has &quot;github.com/oven-sh/bun&quot;
-  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, RemoteUrl, RemoteIP, InitiatingProcessCommandLine, InitiatingProcessFolderPath, ReportId, DeviceId;
-let FileSide = DeviceFileEvents
-  | where Timestamp &gt; ago(Lookback)
-  | where ActionType == &quot;FileCreated&quot;
-  | where FileName matches regex @&quot;^bun-(linux|darwin|windows)-(x64|aarch64)\.zip$&quot; or FileName =~ &quot;b.zip&quot;
-  | where InitiatingProcessFileName in~ (&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;python&quot;,&quot;python3&quot;)
-  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessCommandLine, ReportId, DeviceId;
-NetSide | union FileSide
+    <div class="tab-content active" id="art-115-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName has_any (&quot;python&quot;, &quot;python3&quot;, &quot;python.exe&quot;, &quot;pip&quot;, &quot;pip3&quot;)
+| where RemoteUrl has &quot;oven-sh/bun/releases/download/bun-v1.3.14&quot;
+   or RemoteUrl matches regex @&quot;(?i)oven-sh/bun/releases/download/bun-v1\.3\.14/bun-(linux|darwin|windows)-(x64|aarch64)\.zip&quot;
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-115-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let Lookback = 14d;
-ImNetworkSession
-| where TimeGenerated &gt; ago(Lookback)
-| where ActingProcessName has_any (&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;python&quot;,&quot;python3&quot;)
-| where Url has_any (&quot;oven-sh/bun/releases/download&quot;,&quot;github.com/oven-sh/bun&quot;)
-| project TimeGenerated, DvcHostname, SrcUsername, Url, DstIpAddr, ActingProcessName, ActingProcessCommandLine
-| union (
-    ImFileEvent
-    | where TimeGenerated &gt; ago(Lookback)
-    | where EventType == &quot;FileCreated&quot;
-    | where ActingProcessName has_any (&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;python&quot;,&quot;python3&quot;)
-    | where TargetFileName matches regex @&quot;^bun-(linux|darwin|windows)-(x64|aarch64)\.zip$&quot; or TargetFileName =~ &quot;b.zip&quot;
-    | project TimeGenerated, DvcHostname, ActorUsername, TargetFileName, TargetFilePath, ActingProcessName, ActingProcessCommandLine
-  )
+    <div class="tab-content" id="art-115-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+ImWebSession
+| where TimeGenerated &gt; ago(LookbackDays)
+| where Url has &quot;oven-sh/bun/releases/download/bun-v1.3.14&quot;
+| where SrcUsername != &quot;&quot; or DvcHostname != &quot;&quot;
+| project TimeGenerated, DvcHostname, SrcIpAddr, SrcUsername, Url, HttpUserAgent = HttpRequestHeaderUserAgent, DstHostname
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-115-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Python Downloads Bun Runtime From oven-sh GitHub Release (Hades Campaign)
-id: 7e1d4c9b-6a52-4f5a-9bda-0d3b2c4ea801
-description: Detects Python processes downloading the Bun runtime ZIP from github.com/oven-sh/bun/releases/download/bun-v1.3.14/ as observed in the Hades Campaign PyPI compromise.
-references:
-  - https://www.stepsecurity.io/blog/pythagora-io-gpt-pilot-compromised-on-github-shai-hulud-credential-stealer-blocked-by-python-linter
-author: SOC Detection Engineering
-date: 2026/06/12
-tags:
-  - attack.initial_access
-  - attack.t1195.002
-  - attack.t1105
-logsource:
-  category: file_event
-  product: windows
-detection:
-  selection_proc:
-    Image|endswith:
-      - &#x27;\python.exe&#x27;
-      - &#x27;\python3.exe&#x27;
-      - &#x27;\pythonw.exe&#x27;
-  selection_file:
-    TargetFilename|re: &#x27;(?i)bun-(linux|darwin|windows)-(x64|aarch64)\.zip$&#x27;
-  condition: selection_proc and selection_file
-falsepositives:
-  - Developers manually scripting Bun installs from Python
-level: high</code></pre></div>
-    <div class="tab-content" id="art-115-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @Image:(*\python.exe OR *\Python.exe OR *\python3.exe OR *\pythonw.exe) @DestinationHostname:(github.com OR objects.githubusercontent.com)</code></pre></div>
-    <div class="tab-content" id="art-115-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/(python|python3|pythonw)(\.exe)?$/i
-| join({#event_simpleName=DnsRequest DomainName=/(github\.com|githubusercontent\.com)/i ContextImageFileName=/(python|python3)(\.exe)?$/i}, field=aid, include=[DomainName])
-| groupBy([aid, ComputerName, ContextImageFileName, DomainName, RemoteAddressIP4], function=count())</code></pre></div>
-    <div class="tab-content" id="art-115-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image from datamodel=Endpoint.Processes where (Processes.process_name=&quot;python*&quot; OR Processes.parent_process_name=&quot;python*&quot;) (Processes.process=&quot;*oven-sh/bun/releases/download/bun-v1.3.14*&quot; OR Processes.process=&quot;*bun-linux-x64.zip*&quot; OR Processes.process=&quot;*bun-linux-aarch64.zip*&quot; OR Processes.process=&quot;*bun-darwin-x64.zip*&quot; OR Processes.process=&quot;*bun-darwin-aarch64.zip*&quot; OR Processes.process=&quot;*bun-windows-x64.zip*&quot;) by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-115-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image from datamodel=Endpoint.Processes where (Processes.process_name=&quot;python*&quot; OR Processes.parent_process_name=&quot;python*&quot;) (Processes.process=&quot;*oven-sh/bun/releases/download/bun-v1.3.14*&quot; OR Processes.process=&quot;*bun-linux-x64.zip*&quot; OR Processes.process=&quot;*bun-linux-aarch64.zip*&quot; OR Processes.process=&quot;*bun-darwin-x64.zip*&quot; OR Processes.process=&quot;*bun-darwin-aarch64.zip*&quot; OR Processes.process=&quot;*bun-windows-x64.zip*&quot;) by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+    <div class="tab-content" id="art-115-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.auditd OR linux.syslog) (@process.name:(python OR python3 OR pip OR pip3) OR @Image:(*\python.exe OR *\python3.exe OR *\pip.exe)) (@DestinationHostname:github.com @network.destination.url:*oven-sh/bun/releases/download/bun-v1.3.14* OR @http.url:*oven-sh/bun/releases/download/bun-v1.3.14*)</code></pre></div>
+    <div class="tab-content" id="art-115-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>(#event_simpleName=DnsRequest OR #event_simpleName=NetworkConnectIP4) ContextImageFileName=/(python|python3|pip|pip3)$/i
+| (DomainName=/github\.com$/i OR DomainName=/objects\.githubusercontent\.com$/i)
+| join({#event_simpleName=ProcessRollup2 CommandLine=/bun-v1\.3\.14/i}, field=aid, include=[CommandLine, ImageFileName])
+| groupBy([aid, ComputerName, ContextImageFileName, DomainName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-115-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url=&quot;*oven-sh/bun/releases/download/bun-v1.3.14*&quot; by Web.src, Web.dest, Web.user, Web.url, Web.http_user_agent, Web.process_name | `drop_dm_object_name(Web)` | where match(process_name, &quot;(?i)python|pip|urllib&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-115-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url=&quot;*oven-sh/bun/releases/download/bun-v1.3.14*&quot; by Web.src, Web.dest, Web.user, Web.url, Web.http_user_agent, Web.process_name | `drop_dm_object_name(Web)` | where match(process_name, &quot;(?i)python|pip|urllib&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="7a5e30ebf4" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="be8fb4cebc" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Bun runtime executed from temp directory by Python interpreter (Hades vF203 loader)</span>
+    <span class="uc-title">Hades Campaign: Bun runtime executed from /tmp/b/bun running _index.js</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="7a5e30ebf4" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="be8fb4cebc" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the Hades Campaign second-stage: the import hook executes the dropped Bun binary from /tmp/b/bun (or %TEMP%\b\bun) with `run _index.js`, where _index.js is located by crawling sys.path. The parent-Python → child-Bun-in-tempdir process tree is the campaign&#x27;s defining behavioural signature.
+    <div class="uc-desc">Detects execution of the dropped Bun binary at /tmp/b/bun with the malicious _index.js bundle as its argument — the exact path and argument pair produced by the Hades Python loader. Legitimate Bun installs land in ~/.bun, not /tmp/b, so this combination is high-fidelity.
 
-Rationale: Anchors on the exact loader chain shown in the deobfuscated hook: parent=python, child=bun, command-line contains `_index.js`, image path under the temp-`b` subdirectory the hook creates. Bun spawned by Python in a tempdir is unique to this campaign.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span> <span class="ind tech" title="Signed Binary Proxy Execution">T1218</span></div>
+Rationale: Path `/tmp/b/bun` and argument `_index.js` are reproduced verbatim from the deobfuscated Python loader and the Bun-runs-the-bundle step described in the article. No legitimate workflow places bun at this path.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span> <span class="ind tech" title="User Execution: Malicious Image">T1204.003</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Polyglot test runners that explicitly spawn Bun from Python wrapper scripts</li><li>Local developer experiments with Bun + Python interop</li><li>Security analyst detonating the sample in a sandbox VM</li><li>CI/CD scripts intentionally bootstrapping Bun via a Python helper (rare)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (AccountName endswith &quot;-ci&quot; and InitiatingProcessCommandLine has &quot;polyglot_runner.py&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Capture the full process tree (python → bun → _index.js) plus the SHA256 of the bun binary and the resolved path to _index.js. Compare bun&#x27;s SHA256 to the official oven-sh/bun v1.3.14 release hash — a match still indicates compromise since the loader is legitimate Bun running attacker JS. Step 2 (contain): Kill the bun process, delete the `b/` temp directory, remove `/tmp/.bun_ran` flag file, isolate the host. Step 3 (hunt): Pivot DeviceNetworkEvents from this DeviceId in the next 1h window for outbound C2 (campaign deploys cross-platform memory scrapers + GitHub-based exfil); check for Runner.Worker process memory access; review which PyPI package&#x27;s __init__.py was the entry — the site-packages parent of `_index.js` identifies the compromised package.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Malware analyst manually re-running the bun binary in a forensic VM</li><li>Red-team purple-team exercise replaying the Hades chain</li><li>Misconfigured developer script that aliases bun to /tmp during prototyping</li><li>Container build using /tmp/b as a scratch path that happens to land bun there</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and DeviceName !startswith &quot;sec-sandbox-&quot; and AccountName !in~ (&quot;malware-analyst&quot;, &quot;redteam&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): grab the SHA256 of the bun binary at /tmp/b/bun and the _index.js bundle next to it — submit to your malware sandbox. Capture the parent process tree to identify the originating Python package. Step 2 (contain): kill the bun process, delete /tmp/b/, delete /tmp/.bun_ran, isolate the host, and rotate any credentials cached in environment variables on that host (GitHub Actions runners cache GITHUB_TOKEN, AWS_*, NPM_TOKEN). Step 3 (hunt): hunt fleet-wide for any process whose ImageFileName matches /tmp/b/bun in the last 90 days; pivot to the AES-256-GCM blob decryption pattern (look for /tmp/.bun_ran sentinel files); audit recent pip installs for the tainted package versions.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-115-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-115-uc1-sentinel">Sentinel KQL</button>
@@ -10601,279 +10559,305 @@ Rationale: Anchors on the exact loader chain shown in the deobfuscated hook: par
       <button class="tab-btn" data-target="art-115-uc1-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-115-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(14d)
-| where InitiatingProcessFileName in~ (&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;pythonw.exe&quot;)
-| where FileName in~ (&quot;bun&quot;,&quot;bun.exe&quot;)
-| where FolderPath has_any (@&quot;\Temp\b\&quot;, @&quot;\AppData\Local\Temp\b\&quot;, &quot;/tmp/b/&quot;, &quot;/var/folders/&quot;)
-   or ProcessCommandLine has &quot;_index.js&quot;
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, SHA256
+| where Timestamp &gt; ago(7d)
+| where FileName =~ &quot;bun&quot;
+| where FolderPath has_any (&quot;/tmp/b/&quot;, &quot;/private/tmp/b/&quot;)
+| where ProcessCommandLine has &quot;_index.js&quot; or ProcessCommandLine matches regex @&quot;(?i)run\s+/?.*_index\.js&quot;
+| project Timestamp, DeviceName, AccountName, FolderPath, FileName, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-115-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(14d)
-| where ParentProcessName has_any (&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;python&quot;,&quot;python3&quot;,&quot;pythonw.exe&quot;)
-| where TargetProcessName has_any (&quot;bun&quot;,&quot;bun.exe&quot;)
-| where TargetProcessCommandLine has &quot;_index.js&quot;
-   or TargetProcessCommandLine has_any (@&quot;\Temp\b\&quot;, &quot;/tmp/b/&quot;, &quot;/var/folders/&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ParentProcessName, ParentProcessCommandLine, SHA256</code></pre></div>
-    <div class="tab-content" id="art-115-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Bun Runtime Spawned From Temp Directory By Python (Hades Campaign Loader)
-id: 8b2e7d3f-4c91-4b2e-a07d-f5e6a8c91b22
-description: Detects the Hades Campaign loader where the malicious PyPI __init__.py hook executes a downloaded Bun runtime from a temporary directory with `run _index.js`.
+    <div class="tab-content" id="art-115-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+ImProcessCreate
+| where TimeGenerated &gt; ago(LookbackDays)
+| where ActingProcessName endswith &quot;/bun&quot; or ActingProcessName =~ &quot;bun&quot;
+| where ActingProcessCommandLine has_any (&quot;/tmp/b/bun&quot;, &quot;/private/tmp/b/bun&quot;)
+| where ActingProcessCommandLine has &quot;_index.js&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName, ParentProcessCommandLine, SHA256
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-115-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Hades Bun Runtime Executed from /tmp/b with _index.js
+id: 7e2c9af1-3b6e-4d10-9e2a-1c6e0a8d5f44
+description: Detects execution of the Hades Campaign Bun runtime dropped to /tmp/b/bun invoking the malicious _index.js bundle.
 references:
   - https://www.stepsecurity.io/blog/pythagora-io-gpt-pilot-compromised-on-github-shai-hulud-credential-stealer-blocked-by-python-linter
 author: SOC Detection Engineering
-date: 2026/06/12
+date: 2026/06/17
 tags:
   - attack.execution
-  - attack.t1059.006
   - attack.t1059.007
+  - attack.t1204.003
 logsource:
   category: process_creation
-  product: windows
+  product: linux
 detection:
-  selection:
-    ParentImage|endswith:
-      - &#x27;\python.exe&#x27;
-      - &#x27;\python3.exe&#x27;
-      - &#x27;\pythonw.exe&#x27;
-    Image|endswith: &#x27;\bun.exe&#x27;
-  cmdline:
-    CommandLine|contains:
-      - &#x27;_index.js&#x27;
-      - &#x27;\Temp\b\&#x27;
-  condition: selection and cmdline
+  selection_path:
+    Image|contains:
+      - &#x27;/tmp/b/bun&#x27;
+      - &#x27;/private/tmp/b/bun&#x27;
+  selection_cmd:
+    CommandLine|contains: &#x27;_index.js&#x27;
+  condition: selection_path and selection_cmd
 falsepositives:
-  - Developers writing polyglot Python+Bun build tooling
+  - Security researcher reproducing the sample in a sandbox
 level: high</code></pre></div>
-    <div class="tab-content" id="art-115-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\python.exe OR *\Python.exe OR *\python3.exe) @Image:(*\bun.exe OR *\Bun.exe) @CommandLine:(*_index.js* OR *\Temp\b\* OR */tmp/b/*)</code></pre></div>
-    <div class="tab-content" id="art-115-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^(python3?|pythonw)(\.exe)?$/i ImageFileName=/[\\\/]bun(\.exe)?$/i
-| regex(&quot;(_index\\.js|[\\\\/]Temp[\\\\/]b[\\\\/]|/tmp/b/|/var/folders/)&quot;, field=CommandLine)
+    <div class="tab-content" id="art-115-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.auditd) (@Image:(*\tmp\b\bun OR *\private\tmp\b\bun OR */tmp/b/bun) OR @process.executable.path:(/tmp/b/bun OR /private/tmp/b/bun)) (@CommandLine:*_index.js* OR @process.command_line:*_index.js*)</code></pre></div>
+    <div class="tab-content" id="art-115-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\/tmp\/b\/bun$/i CommandLine=/_index\.js/i
 | groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine, ParentBaseFileName, SHA256HashData], function=count())</code></pre></div>
-    <div class="tab-content" id="art-115-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;python*&quot; (Processes.process_name=&quot;bun&quot; OR Processes.process_name=&quot;bun.exe&quot;) (Processes.process_path=&quot;*\\Temp\\b\\*&quot; OR Processes.process_path=&quot;/tmp/b/*&quot; OR Processes.process_path=&quot;/var/folders/*/b/*&quot; OR Processes.process=&quot;*_index.js*&quot;) by host Processes.user Processes.process_name Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`</code></pre><pre class="spl-mode-body" id="art-115-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as image from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;python*&quot; (Processes.process_name=&quot;bun&quot; OR Processes.process_name=&quot;bun.exe&quot;) (Processes.process_path=&quot;*\\Temp\\b\\*&quot; OR Processes.process_path=&quot;/tmp/b/*&quot; OR Processes.process_path=&quot;/var/folders/*/b/*&quot; OR Processes.process=&quot;*_index.js*&quot;) by host Processes.user Processes.process_name Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`</code></pre></div></div>
+    <div class="tab-content" id="art-115-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_path=&quot;/tmp/b/*&quot; OR Processes.process_path=&quot;/private/tmp/b/*&quot;) Processes.process_name=&quot;bun&quot; Processes.process=&quot;*_index.js*&quot; by Processes.dest, Processes.user, Processes.process_path, Processes.process, Processes.parent_process_name, Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-115-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_path=&quot;/tmp/b/*&quot; OR Processes.process_path=&quot;/private/tmp/b/*&quot;) Processes.process_name=&quot;bun&quot; Processes.process=&quot;*_index.js*&quot; by Processes.dest, Processes.user, Processes.process_path, Processes.process, Processes.parent_process_name, Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="3ba5b3a0b4" data-platforms="datadog,def,falcon,sent,spl" data-targets="linux,macos,windows">
+<details class="uc" data-uc-slug="d8b919cd57" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Cross-platform memory scraping of GitHub Actions Runner.Worker process</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-title">Hades Campaign: Sentinel flag file /tmp/.bun_ran created (single-shot execution guardrail)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="3ba5b3a0b4" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="d8b919cd57" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the Hades Campaign credential-exfil stage. On Linux runners the malware reads /proc/{pid}/maps and /proc/{pid}/mem of the Runner.Worker process; on macOS it uses ctypes-loaded libc with task_for_pid + vm_region_basic_info_64. Either signal on a GitHub Actions runner host is high-fidelity credential theft.
+    <div class="uc-desc">Detects creation of the /tmp/.bun_ran flag file that the Hades Python import hook uses as a single-execution-per-boot guard. This filename is unique to this campaign and should not appear anywhere on production hosts.
 
-Rationale: Anchors on the article&#x27;s exact memory-scrape primitives: /proc/{pid}/mem and /proc/{pid}/maps for Linux, and the ctypes Mach APIs (task_for_pid, vm_region_basic_info_64, mach_task_self_) for macOS — plus the specific target process name `Runner.Worker`. These appear nowhere in benign development workflows.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="OS Credential Dumping">T1003</span> <span class="ind tech" title="Process Discovery">T1057</span> <span class="ind tech" title="Credentials In Files">T1552.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate observability tools (py-spy, gdb attach, perf script) reading /proc/&lt;pid&gt;/mem on dev workstations</li><li>Memory profiling of self-hosted runner debug sessions</li><li>macOS Activity Monitor / Instruments probing process VM regions</li><li>Security tooling (e.g. Lacework, Sysdig) sampling process memory for inventory</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessFileName in~ (&quot;py-spy&quot;,&quot;gdb&quot;,&quot;perf&quot;,&quot;lacework_agent&quot;) or InitiatingProcessCommandLine has_any (&quot;py-spy dump&quot;,&quot;py-spy record&quot;,&quot;gdb -p&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the host is a GitHub Actions self-hosted runner (check for ~/_work/, actions-runner/ directory, Runner.Listener process). Pull the full /proc reader&#x27;s parent chain — should resolve to a python or bun process from a recently-installed PyPI package. Step 2 (contain): Stop the runner service (`./svc.sh stop`), revoke the runner registration token, rotate ALL secrets the runner has access to (repository secrets, environment secrets, OIDC tokens, cloud credentials assumed by jobs in the past 14 days). Treat every secret accessible to that runner as compromised. Step 3 (hunt): Pull GitHub audit log for workflow runs on that runner since the suspected install; review outbound network from runner to api.github.com (the campaign exfils via GitHub); search organization repos for new private repos named like `Shai-Hulud` or unexpected commits authored by tokens issued to the runner.</div></details>
+Rationale: The filename `.bun_ran` and its `/tmp/` parent are quoted verbatim from the deobfuscated `_G = _O.path.join(_T.gettempdir(), &quot;.bun_ran&quot;)` line in the article. The name is unique enough that any creation event is detection-grade.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Execution Guardrails">T1480</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Forensic analyst replaying the Hades sample inside a sandbox</li><li>Hash-collision in another project&#x27;s temp-file scheme (extremely unlikely given filename specificity)</li><li>Threat-hunt tooling that drops decoy bait files in /tmp</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and DeviceName !startswith &quot;sec-sandbox-&quot; and InitiatingProcessAccountName !in~ (&quot;malware-analyst&quot;, &quot;redteam-ops&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): identify the InitiatingProcessFileName that wrote .bun_ran — likely python3 invoking the obfuscated __init__.py hook. Capture the process tree and pull the source __init__.py path. Step 2 (contain): kill the bun process if running, delete /tmp/.bun_ran AND /tmp/b/, isolate the host, rotate any secrets cached in the host&#x27;s environment (CI runner tokens, cloud credentials). Step 3 (hunt): pivot fleet-wide on this filename via `DeviceFileEvents` / `ImFileEvent` for the last 90 days; for each hit, pull the tainted Python package install events; check repo manifests across the org for the Hades affected-package versions.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-115-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-115-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-115-uc2-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-115-uc2-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-115-uc2-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-115-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-115-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Hades Campaign Runner.Worker memory scrape — Linux /proc reads and macOS Mach VM APIs
-let LinuxScrape = DeviceProcessEvents
-  | where Timestamp &gt; ago(14d)
-  | where ProcessCommandLine matches regex @&quot;/proc/\d+/(mem|maps)&quot;
-  | where InitiatingProcessFileName in~ (&quot;python&quot;,&quot;python3&quot;,&quot;bun&quot;)
-     or FileName in~ (&quot;python&quot;,&quot;python3&quot;,&quot;bun&quot;,&quot;cat&quot;,&quot;dd&quot;,&quot;strings&quot;);
-let MacScrape = DeviceProcessEvents
-  | where Timestamp &gt; ago(14d)
-  | where InitiatingProcessFileName in~ (&quot;python&quot;,&quot;python3&quot;)
-  | where ProcessCommandLine has_any (&quot;task_for_pid&quot;,&quot;vm_region_basic_info_64&quot;,&quot;mach_task_self_&quot;,&quot;vm_read_overwrite&quot;)
-     or ProcessCommandLine has &quot;Runner.Worker&quot;;
-let RunnerContext = DeviceProcessEvents
-  | where Timestamp &gt; ago(14d)
-  | where InitiatingProcessFileName in~ (&quot;python&quot;,&quot;python3&quot;,&quot;bun&quot;) or InitiatingProcessParentFileName in~ (&quot;Runner.Listener&quot;,&quot;Runner.Worker&quot;)
-  | where ProcessCommandLine has &quot;Runner.Worker&quot;;
-LinuxScrape | union MacScrape | union RunnerContext
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine
+    <div class="tab-content active" id="art-115-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType == &quot;FileCreated&quot;
+| where FileName == &quot;.bun_ran&quot;
+| where FolderPath has_any (&quot;/tmp/&quot;, &quot;/private/tmp/&quot;, &quot;\\Temp\\&quot;)
+| project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName, InitiatingProcessAccountName
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-115-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let Lookback = 14d;
-ImProcessCreate
-| where TimeGenerated &gt; ago(Lookback)
-| where (ParentProcessName has_any (&quot;python&quot;,&quot;python3&quot;,&quot;bun&quot;))
-   and (TargetProcessCommandLine matches regex @&quot;/proc/\d+/(mem|maps)&quot;
-        or TargetProcessCommandLine has_any (&quot;task_for_pid&quot;,&quot;vm_region_basic_info_64&quot;,&quot;mach_task_self_&quot;,&quot;Runner.Worker&quot;))
-| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ParentProcessName, ParentProcessCommandLine
-| union (
-    Syslog
-    | where TimeGenerated &gt; ago(Lookback)
-    | where Facility == &quot;authpriv&quot; or ProcessName == &quot;audit&quot;
-    | where SyslogMessage matches regex @&quot;/proc/\d+/(mem|maps)&quot; and (SyslogMessage has &quot;python&quot; or SyslogMessage has &quot;bun&quot;)
-    | project TimeGenerated, DvcHostname=Computer, ActorUsername=&quot;&quot;, TargetProcessName=ProcessName, TargetProcessCommandLine=SyslogMessage, ParentProcessName=&quot;&quot;, ParentProcessCommandLine=&quot;&quot;
-  )
+    <div class="tab-content" id="art-115-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+ImFileEvent
+| where TimeGenerated &gt; ago(LookbackDays)
+| where EventType == &quot;FileCreated&quot;
+| where TargetFileName == &quot;.bun_ran&quot;
+| where TargetFilePath has_any (&quot;/tmp/&quot;, &quot;/private/tmp/&quot;, &quot;\\Temp\\&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, TargetFileName, ActingProcessName, ActingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-115-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd (@process.command_line:(*&quot;/proc/&quot;*&quot;/mem&quot;* OR *&quot;/proc/&quot;*&quot;/maps&quot;* OR *task_for_pid* OR *Runner.Worker*) AND @process.executable.path:(*python* OR *bun*))</code></pre></div>
-    <div class="tab-content" id="art-115-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>(#event_simpleName=ProcessRollup2 OR #event_simpleName=SyntheticProcessRollup2)
-| ParentBaseFileName=/^(python3?|bun)$/i OR ImageFileName=/[\\\/](python3?|bun)$/i
-| regex(&quot;(/proc/[0-9]+/(mem|maps)|task_for_pid|vm_region_basic_info_64|mach_task_self_|Runner\\.Worker)&quot;, field=CommandLine)
-| groupBy([aid, ComputerName, ImageFileName, ParentBaseFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-115-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;python*&quot; OR Processes.parent_process_name=&quot;bun*&quot;) (Processes.process=&quot;*Runner.Worker*&quot; OR Processes.process=&quot;*/proc/*/mem*&quot; OR Processes.process=&quot;*/proc/*/maps*&quot; OR Processes.process=&quot;*task_for_pid*&quot; OR Processes.process=&quot;*vm_region_basic_info*&quot; OR Processes.process=&quot;*mach_task_self*&quot;) by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`</code></pre><pre class="spl-mode-body" id="art-115-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;python*&quot; OR Processes.parent_process_name=&quot;bun*&quot;) (Processes.process=&quot;*Runner.Worker*&quot; OR Processes.process=&quot;*/proc/*/mem*&quot; OR Processes.process=&quot;*/proc/*/maps*&quot; OR Processes.process=&quot;*task_for_pid*&quot; OR Processes.process=&quot;*vm_region_basic_info*&quot; OR Processes.process=&quot;*mach_task_self*&quot;) by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`</code></pre></div></div>
+    <div class="tab-content" id="art-115-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Hades Campaign Single-Shot Sentinel File .bun_ran
+id: a91d0fbe-2c47-4e22-8f3a-6b1c8d2f0a91
+description: Detects creation of /tmp/.bun_ran — the single-execution-per-boot guardrail file written by the Hades Bun loader.
+references:
+  - https://www.stepsecurity.io/blog/pythagora-io-gpt-pilot-compromised-on-github-shai-hulud-credential-stealer-blocked-by-python-linter
+author: SOC Detection Engineering
+date: 2026/06/17
+tags:
+  - attack.defense_evasion
+  - attack.t1480
+  - attack.t1027
+logsource:
+  category: file_event
+  product: linux
+detection:
+  selection:
+    TargetFilename|endswith: &#x27;/.bun_ran&#x27;
+  condition: selection
+falsepositives:
+  - Malware analyst reproducing the sample
+level: high</code></pre></div>
+    <div class="tab-content" id="art-115-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.auditd OR linux.syslog) (@EventID:11 OR @auditd.type:PATH) (@TargetFilename:(*/tmp/.bun_ran OR */private/tmp/.bun_ran OR *\Temp\.bun_ran) OR @file.path:(/tmp/.bun_ran OR /private/tmp/.bun_ran))</code></pre></div>
+    <div class="tab-content" id="art-115-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/\/(private\/)?tmp\/\.bun_ran$/i
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName, ContextProcessId], function=count())</code></pre></div>
+    <div class="tab-content" id="art-115-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=&quot;created&quot; (Filesystem.file_path=&quot;/tmp/*&quot; OR Filesystem.file_path=&quot;/private/tmp/*&quot;) Filesystem.file_name=&quot;.bun_ran&quot; by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.process_name, Filesystem.process_path | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-115-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=&quot;created&quot; (Filesystem.file_path=&quot;/tmp/*&quot; OR Filesystem.file_path=&quot;/private/tmp/*&quot;) Filesystem.file_name=&quot;.bun_ran&quot; by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.process_name, Filesystem.process_path | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="149cd1eb08" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="ce3cb39053" data-platforms="datadog,def,falcon,sent,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Malicious _hooks.py / _runtime.bin files created in Pythagora gpt-pilot checkout</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-title">Hades Campaign: Bun process accessing /proc/&lt;pid&gt;/mem of GitHub Actions Runner.Worker</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="149cd1eb08" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="ce3cb39053" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the on-endpoint outcome of the GitHub force-push attack documented in the article timeline: the malicious commit (065ee8eb) by the compromised LeonOstrez account introduced _hooks.py, _runtime.bin, and modified __init__.py. Any developer who pulled main between 11:13 and ~12:00 UTC on 2026-06-08 received these files on disk.
+    <div class="uc-desc">Hunts for the Linux memory-scrape stage where the bun-executed payload walks /proc/&lt;pid&gt;/maps and reads /proc/&lt;pid&gt;/mem of the GitHub Actions Runner.Worker process to dump environment secrets. The combination of bun as initiator + /proc/*/mem read + Runner.Worker target is unique to this campaign.
 
-Rationale: Article Table 2 names the malicious commit 065ee8eb as adding exactly _hooks.py and _runtime.bin plus modifying __init__.py. Pairing these filenames with a git/IDE writer captures the moment the malicious commit lands on a developer machine — before any execution happens.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Dependencies and Development Tools">T1195.001</span> <span class="ind tech" title="Compromise Client Software Binary">T1554</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal repos with their own benign _hooks.py file unrelated to gpt-pilot</li><li>Developer creating a placeholder _runtime.bin for an unrelated project</li><li>IDE template scaffolding that generates similarly-named files</li><li>Pre-2026-06-08 cached copies in old checkouts being re-extracted</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (FolderPath has_any (&quot;\\node_modules\\&quot;,&quot;\\.venv\\&quot;,&quot;\\site-packages\\&quot;) and not (FolderPath has_any (&quot;gpt-pilot&quot;,&quot;pythagora&quot;)))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Resolve the FolderPath to determine which git repo the files landed in — confirm it&#x27;s a clone of github.com/Pythagora-io/gpt-pilot. Run `git log --all _hooks.py _runtime.bin` in the checkout to extract the commit SHA (expect 065ee8eb if compromised pre-revert). Step 2 (contain): Delete the working checkout, force users off the compromised branch, advise `git fetch &amp;&amp; git reset --hard origin/main` only AFTER confirming origin/main has been reverted by the maintainers. Block the LeonOstrez user/PAT at the GitHub org level. Step 3 (hunt): For every host that received these files, pivot to UC1/UC2 detections — did the developer ever run `python` or open the project in an IDE after the pull? If yes, treat as a UC2/UC3 incident and rotate credentials accessible from that workstation.</div></details>
+Rationale: Anchors on the article&#x27;s described Linux scrape method (`/proc/{pid}/mem` + `/proc/{pid}/maps` read) and pins the target PID to the Runner.Worker process. Bun as the file-access initiator is the campaign-unique element — debuggers and profilers won&#x27;t be named `bun`.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="OS Credential Dumping: Proc Filesystem">T1003.007</span> <span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Sysadmin running gdb / strace against Runner.Worker for troubleshooting (filtered by parent name)</li><li>Performance profiler attached to runner during CI debugging session</li><li>Memory forensics tool (LiME, AVML) capturing live memory for IR</li><li>Container runtime monitoring tool that introspects /proc (rare to read mem)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and InitiatingProcessFolderPath has &quot;/tmp/b&quot; and InitiatingProcessFileName !in~ (&quot;gdb&quot;, &quot;strace&quot;, &quot;ltrace&quot;, &quot;perf&quot;, &quot;lime&quot;, &quot;avml&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): confirm the bun process is from /tmp/b/bun and not a sanctioned bun install — pull its parent process tree. Capture the Runner.Worker PID being read and pull the GitHub Actions workflow that runner was executing. Step 2 (contain): kill bun, isolate the runner host, immediately revoke GITHUB_TOKEN / any short-lived OIDC tokens / cloud credentials the runner had access to during that workflow. Treat all secrets cached in the runner&#x27;s env as compromised. Step 3 (hunt): hunt for additional Runner.Worker memory reads across the runner fleet for 30 days; correlate to which workflows ran during the bun-active window; rotate every secret that touched those workflows.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-115-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-115-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-115-uc3-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-115-uc3-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-115-uc3-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-115-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-115-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where FileName in~ (&quot;_hooks.py&quot;,&quot;_runtime.bin&quot;)
-   or (FileName =~ &quot;__init__.py&quot; and FolderPath has_any (&quot;gpt-pilot&quot;,&quot;pythagora&quot;))
-| where InitiatingProcessFileName has_any (&quot;git.exe&quot;,&quot;git&quot;,&quot;gh.exe&quot;,&quot;gh&quot;,&quot;Code.exe&quot;,&quot;cursor.exe&quot;,&quot;pycharm64.exe&quot;,&quot;PyCharm&quot;,&quot;idea64.exe&quot;)
-   or InitiatingProcessParentFileName has_any (&quot;git.exe&quot;,&quot;git&quot;,&quot;gh.exe&quot;)
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+    <div class="tab-content active" id="art-115-uc3-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+let RunnerPids = DeviceProcessEvents
+    | where Timestamp &gt; ago(LookbackDays)
+    | where FileName =~ &quot;Runner.Worker&quot; or FileName endswith &quot;Runner.Worker&quot;
+    | project DeviceId, RunnerPid = ProcessId, RunnerStart = ProcessCreationTime;
+DeviceFileEvents
+| where Timestamp &gt; ago(LookbackDays)
+| where InitiatingProcessFileName =~ &quot;bun&quot;
+| where FolderPath matches regex @&quot;^/proc/[0-9]+/&quot;
+| where FileName in (&quot;mem&quot;, &quot;maps&quot;)
+| extend TargetPid = toint(extract(@&quot;^/proc/([0-9]+)/&quot;, 1, FolderPath))
+| join kind=inner RunnerPids on $left.DeviceId == $right.DeviceId, $left.TargetPid == $right.RunnerPid
+| project Timestamp, DeviceName, FolderPath, FileName, TargetPid, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-115-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(30d)
-| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where TargetFileName in~ (&quot;_hooks.py&quot;,&quot;_runtime.bin&quot;)
-   or (TargetFileName =~ &quot;__init__.py&quot; and TargetFilePath has_any (&quot;gpt-pilot&quot;,&quot;pythagora&quot;))
-| where ActingProcessName has_any (&quot;git.exe&quot;,&quot;git&quot;,&quot;gh.exe&quot;,&quot;gh&quot;,&quot;Code.exe&quot;,&quot;cursor.exe&quot;,&quot;pycharm64.exe&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, TargetFileName, TargetFilePath, TargetFileSHA256, ActingProcessName, ActingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-115-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Hades Campaign Malicious Files Dropped Into gpt-pilot Checkout
-id: 9c4a1b6d-3f2e-49a1-bb15-8e7d4f0a3b91
-description: Detects the malicious _hooks.py / _runtime.bin files (and the modified __init__.py inside the gpt-pilot/pythagora repo) introduced by the LeonOstrez account force-push on 2026-06-08.
-references:
-  - https://www.stepsecurity.io/blog/pythagora-io-gpt-pilot-compromised-on-github-shai-hulud-credential-stealer-blocked-by-python-linter
-author: SOC Detection Engineering
-date: 2026/06/12
-tags:
-  - attack.initial_access
-  - attack.t1195.001
-  - attack.t1554
-logsource:
-  category: file_event
-  product: windows
-detection:
-  hades_files:
-    TargetFilename|endswith:
-      - &#x27;\_hooks.py&#x27;
-      - &#x27;\_runtime.bin&#x27;
-  git_writer:
-    Image|endswith:
-      - &#x27;\git.exe&#x27;
-      - &#x27;\gh.exe&#x27;
-      - &#x27;\Code.exe&#x27;
-      - &#x27;\cursor.exe&#x27;
-      - &#x27;\pycharm64.exe&#x27;
-  condition: hades_files and git_writer
-falsepositives:
-  - Pre-existing internal files named _hooks.py unrelated to the campaign
-level: high</code></pre></div>
-    <div class="tab-content" id="art-115-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@TargetFilename:(*\_hooks.py OR *\_runtime.bin) OR (@TargetFilename:*\__init__.py AND @TargetFilename:(*\gpt-pilot\* OR *\pythagora\*))) @Image:(*\git.exe OR *\Git.exe OR *\gh.exe OR *\Code.exe OR *\cursor.exe OR *\pycharm64.exe)</code></pre></div>
-    <div class="tab-content" id="art-115-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| TargetFileName=/[\\\/](_hooks\.py|_runtime\.bin)$/i OR (TargetFileName=/[\\\/]__init__\.py$/i AND regex(&quot;(gpt-pilot|pythagora)&quot;, field=TargetFileName))
-| ContextImageFileName=/(git|gh|Code|cursor|pycharm64|idea64)(\.exe)?$/i
-| groupBy([aid, ComputerName, UserName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-115-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where Filesystem.action=&quot;created&quot; (Filesystem.file_name=&quot;_hooks.py&quot; OR Filesystem.file_name=&quot;_runtime.bin&quot;) (Filesystem.process_name=&quot;git*&quot; OR Filesystem.process_name=&quot;gh*&quot; OR Filesystem.process_name=&quot;code*&quot; OR Filesystem.process_name=&quot;cursor*&quot; OR Filesystem.process_name=&quot;pycharm*&quot;) by host Filesystem.user Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)`</code></pre><pre class="spl-mode-body" id="art-115-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where Filesystem.action=&quot;created&quot; (Filesystem.file_name=&quot;_hooks.py&quot; OR Filesystem.file_name=&quot;_runtime.bin&quot;) (Filesystem.process_name=&quot;git*&quot; OR Filesystem.process_name=&quot;gh*&quot; OR Filesystem.process_name=&quot;code*&quot; OR Filesystem.process_name=&quot;cursor*&quot; OR Filesystem.process_name=&quot;pycharm*&quot;) by host Filesystem.user Filesystem.file_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)`</code></pre></div></div>
+    <div class="tab-content" id="art-115-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+let RunnerPids = ImProcessCreate
+    | where TimeGenerated &gt; ago(LookbackDays)
+    | where ActingProcessName endswith &quot;/Runner.Worker&quot; or ActingProcessName =~ &quot;Runner.Worker&quot;
+    | project DvcHostname, RunnerPid = ActingProcessId, RunnerStart = EventStartTime;
+ImFileEvent
+| where TimeGenerated &gt; ago(LookbackDays)
+| where ActingProcessName endswith &quot;/bun&quot; or ActingProcessName =~ &quot;bun&quot;
+| where TargetFilePath matches regex @&quot;^/proc/[0-9]+/(mem|maps)$&quot;
+| extend TargetPid = toint(extract(@&quot;^/proc/([0-9]+)/&quot;, 1, TargetFilePath))
+| join kind=inner RunnerPids on $left.DvcHostname == $right.DvcHostname, $left.TargetPid == $right.RunnerPid
+| project TimeGenerated, DvcHostname, TargetFilePath, TargetPid, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-115-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:linux.auditd @auditd.type:(SYSCALL OR PATH) @process.name:bun (@file.path:(/proc/*/mem OR /proc/*/maps) OR @path.name:(*/proc/*/mem OR */proc/*/maps))</code></pre></div>
+    <div class="tab-content" id="art-115-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileOpenInfo ContextImageFileName=/bun$/i TargetFileName=/^\/proc\/\d+\/(mem|maps)$/
+| join({#event_simpleName=ProcessRollup2 ImageFileName=/Runner\.Worker$/i | rename(TargetProcessId, RunnerPid)}, field=[aid], include=[RunnerPid])
+| regex(&quot;^/proc/(?&lt;probedPid&gt;\d+)/&quot;, field=TargetFileName)
+| probedPid = RunnerPid
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName, RunnerPid], function=count())</code></pre></div>
+    <div class="tab-content" id="art-115-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=&quot;bun&quot; by Processes.dest, Processes.user, Processes.process_id, Processes.process_path | `drop_dm_object_name(Processes)` | rename process_id as ContextProcessId | join type=inner dest [ | tstats summariesonly=t count from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;/proc/*/mem&quot; OR Filesystem.file_path=&quot;/proc/*/maps&quot;) by Filesystem.dest, Filesystem.file_path, Filesystem.process_name, Filesystem.process_id | `drop_dm_object_name(Filesystem)` | where process_name=&quot;bun&quot; | rename process_id as ContextProcessId ] | where match(file_path, &quot;/proc/\d+/(mem|maps)&quot;)</code></pre><pre class="spl-mode-body" id="art-115-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=&quot;bun&quot; by Processes.dest, Processes.user, Processes.process_id, Processes.process_path | `drop_dm_object_name(Processes)` | rename process_id as ContextProcessId | join type=inner dest [ | tstats summariesonly=false count from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;/proc/*/mem&quot; OR Filesystem.file_path=&quot;/proc/*/maps&quot;) by Filesystem.dest, Filesystem.file_path, Filesystem.process_name, Filesystem.process_id | `drop_dm_object_name(Filesystem)` | where process_name=&quot;bun&quot; | rename process_id as ContextProcessId ] | where match(file_path, &quot;/proc/\d+/(mem|maps)&quot;)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="2498035e89" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="c0d442769c" data-platforms="datadog,def,falcon,sent,spl" data-targets="linux,macos,windows">
   <summary>
-    <span class="uc-title">pip / uv install of known-compromised Hades Campaign PyPI package versions</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="2498035e89" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Hades Campaign: Bun spawning Python with Mach VM / task_for_pid ctypes payload on macOS</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="c0d442769c" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Alerts on installation of any PyPI package version explicitly named in the Hades Campaign affected-versions table. Catches both pre-detection installs (already on disk) and ongoing installs from CI pipelines that pin to vulnerable versions.
+    <div class="uc-desc">Hunts for the macOS memory scraper stage where the Bun loader decrypts blob vF2015 and spawns Python invoking ctypes against libc to call task_for_pid + vm_region_basic_info_64 against Runner.Worker. The bun→python parent/child on macOS combined with ctypes/Mach references is article-specific.
 
-Rationale: Anchored to the exact (package, version) pairs in the article&#x27;s Affected Versions table. Version-pinned matches give near-zero false positive rate — the only way to hit is to install the named version. File-side fallback catches lockfile installs that don&#x27;t appear in process telemetry.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher / IR detonating the sample in a sandbox</li><li>Internal copies of the package mirror cached pre-compromise (versions match but artifacts are clean)</li><li>Reproducibility build of an old project still pinning the vulnerable version after maintainers re-release a clean version under the same number</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName has_any (&quot;malware-sandbox&quot;,&quot;ir-detonation&quot;,&quot;securitylab&quot;) or AccountName in~ (&quot;malware-analyst&quot;,&quot;ir-detonator&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Identify the host and user that ran the install — pull the full pip command line, requirements.txt / pyproject.toml path, and any CI job ID. Confirm site-packages contains the package by reading FolderPath. Step 2 (contain): `pip uninstall --yes &lt;pkg&gt;` on the host, delete cached wheels from ~/.cache/pip/wheels/, remove the package from any requirements files and rebuild lockfiles. If the host is a CI runner, stop the runner and rotate its secrets per UC3 runbook. Step 3 (hunt): Cross-reference with UC1 (Bun download) and UC2 (Bun execution) on the same DeviceId in the +24h window — if either fires, escalate. Search internal package mirrors / Artifactory caches for the affected versions and quarantine them. Notify affected developers to rotate any tokens that lived in their environment.</div></details>
+Rationale: Anchors on the bun→python parent/child relationship from the article&#x27;s macOS scraper section, with the bun parent constrained to the malware drop path `/tmp/b/bun`. ScriptControlScanInfo enrichment in Falcon pulls in the ctypes/Mach VM API strings (`task_for_pid`, `vm_region_basic_info_64`) verbatim quoted in the article&#x27;s Python snippet.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="OS Credential Dumping">T1003</span> <span class="ind tech" title="Native API">T1106</span> <span class="ind tech" title="Command and Scripting Interpreter: Python">T1059.006</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer testing bun-driven Python scripts during local development</li><li>macOS sysadmin debugging tool that uses Python + Mach VM APIs (uncommon)</li><li>Security researcher reproducing the Hades macOS scraper</li><li>Profiler/instrumentation framework that spawns Python helper from bun</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and ActingProcessCommandLine !has &quot;--bun-test&quot; and DeviceName !startswith &quot;sec-research-mac&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): pull the Python process command line and any ScriptContent captured by AMSI/Falcon — confirm presence of task_for_pid / vm_region_basic_info_64 strings. Identify the parent bun binary path. Step 2 (contain): kill bun + the python child, isolate the macOS host (likely a self-hosted Actions runner), revoke all credentials the runner had access to including Apple Developer signing keys and notarization tokens if applicable. Step 3 (hunt): hunt for any macOS host across the fleet with parent_process_name=bun spawning python over the last 90 days; pull the decrypted Python blob from disk if recoverable for IOC extraction; rotate runner registration tokens.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-115-uc4-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-115-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-115-uc4-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-115-uc4-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-115-uc4-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-115-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-115-uc4-kql"><pre><button class="copy-btn">COPY</button><code>let Pkgs = dynamic([&quot;ensmallen==0.8.101&quot;,&quot;ensmallen 0.8.101&quot;,&quot;mflux-streamlit==0.0.3&quot;,&quot;mflux-streamlit==0.0.4&quot;,&quot;nhmpy==2.4.7&quot;,&quot;ppkt2synergy==0.1.1&quot;,&quot;embiggen==0.11.97&quot;,&quot;gpsea==0.9.14&quot;,&quot;pyphetools==0.9.120&quot;]);
-let ProcSide = DeviceProcessEvents
-  | where Timestamp &gt; ago(30d)
-  | where FileName in~ (&quot;pip.exe&quot;,&quot;pip&quot;,&quot;pip3.exe&quot;,&quot;pip3&quot;,&quot;uv.exe&quot;,&quot;uv&quot;,&quot;poetry.exe&quot;,&quot;poetry&quot;)
-     or InitiatingProcessFileName in~ (&quot;pip&quot;,&quot;pip3&quot;,&quot;pip.exe&quot;,&quot;pip3.exe&quot;,&quot;uv&quot;,&quot;poetry&quot;)
-  | where ProcessCommandLine has_any (Pkgs)
-  | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine, FolderPath;
-let FileSide = DeviceFileEvents
-  | where Timestamp &gt; ago(30d)
-  | where ActionType == &quot;FileCreated&quot;
-  | where FolderPath has &quot;site-packages&quot;
-  | where FolderPath matches regex @&quot;(?i)site-packages[\\/](ensmallen|mflux[_-]streamlit|nhmpy|ppkt2synergy|embiggen|gpsea|pyphetools)([\\/-]|$)&quot;
-  | where FileName endswith &quot;.py&quot; or FileName endswith &quot;METADATA&quot; or FileName endswith &quot;RECORD&quot;
-  | summarize FilesDropped=count(), AnyFile=any(FolderPath), FirstSeen=min(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine
-  | project Timestamp=FirstSeen, DeviceName, AccountName=&quot;(from-installer)&quot;, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessCommandLine, FolderPath=AnyFile;
-ProcSide | union FileSide
+    <div class="tab-content active" id="art-115-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where DeviceName has_any (&quot;mac&quot;, &quot;darwin&quot;) or InitiatingProcessFolderPath has_any (&quot;/private/tmp/&quot;, &quot;/Users/&quot;)
+| where InitiatingProcessFileName =~ &quot;bun&quot;
+| where InitiatingProcessFolderPath has_any (&quot;/tmp/b&quot;, &quot;/private/tmp/b&quot;)
+| where FileName has_any (&quot;python&quot;, &quot;python3&quot;, &quot;Python&quot;)
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-115-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let Pkgs = dynamic([&quot;ensmallen==0.8.101&quot;,&quot;mflux-streamlit==0.0.3&quot;,&quot;mflux-streamlit==0.0.4&quot;,&quot;nhmpy==2.4.7&quot;,&quot;ppkt2synergy==0.1.1&quot;,&quot;embiggen==0.11.97&quot;,&quot;gpsea==0.9.14&quot;,&quot;pyphetools==0.9.120&quot;]);
+    <div class="tab-content" id="art-115-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
 ImProcessCreate
-| where TimeGenerated &gt; ago(30d)
-| where TargetProcessName has_any (&quot;pip&quot;,&quot;pip3&quot;,&quot;uv&quot;,&quot;poetry&quot;)
-   or ParentProcessName has_any (&quot;pip&quot;,&quot;pip3&quot;,&quot;uv&quot;,&quot;poetry&quot;)
-| where TargetProcessCommandLine has_any (Pkgs)
-| project TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ParentProcessName
-| union (
-    ImFileEvent
-    | where TimeGenerated &gt; ago(30d)
-    | where EventType == &quot;FileCreated&quot;
-    | where TargetFilePath has &quot;site-packages&quot;
-    | where TargetFilePath matches regex @&quot;(?i)site-packages[\\/](ensmallen|mflux[_-]streamlit|nhmpy|ppkt2synergy|embiggen|gpsea|pyphetools)([\\/-]|$)&quot;
-    | summarize FirstSeen=min(TimeGenerated), Path=any(TargetFilePath) by DvcHostname, ActorUsername, ActingProcessName
-    | project TimeGenerated=FirstSeen, DvcHostname, ActorUsername, TargetProcessName=ActingProcessName, TargetProcessCommandLine=Path, ParentProcessName=&quot;&quot;
-  )
+| where TimeGenerated &gt; ago(LookbackDays)
+| where DvcOs has_any (&quot;macOS&quot;, &quot;Darwin&quot;, &quot;darwin&quot;)
+| where ParentProcessName endswith &quot;/bun&quot; or ParentProcessName =~ &quot;bun&quot;
+| where ParentProcessCommandLine has_any (&quot;/tmp/b/bun&quot;, &quot;/private/tmp/b/bun&quot;)
+| where ActingProcessName has_any (&quot;python&quot;, &quot;python3&quot;, &quot;Python&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName, ParentProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-115-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Hades Campaign Compromised PyPI Package Install
-id: 4d92c8e1-7b34-4d6f-913c-6a8e2f1d05a4
-description: Detects pip / uv / poetry installation of any PyPI package version listed in the Hades Campaign affected-versions table (ensmallen 0.8.101, embiggen 0.11.97, etc.).
+    <div class="tab-content" id="art-115-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.auditd OR linux.syslog) @process.name:(python OR python3) @parent.process.name:bun (@process.command_line:(*task_for_pid* OR *mach_task_self* OR *vm_region_basic_info*) OR @process.executable.path:(/tmp/b/bun OR /private/tmp/b/bun))</code></pre></div>
+    <div class="tab-content" id="art-115-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/(python|python3)$/i ParentBaseFileName=/^bun$/i
+| ParentImageFileName=/\/(private\/)?tmp\/b\/bun$/i
+| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine, ParentImageFileName], function=count())
+| join({#event_simpleName=ScriptControlScanInfo ScriptContent=/task_for_pid|mach_task_self|vm_region_basic_info_64/i}, field=aid, include=[ScriptContent])</code></pre></div>
+    <div class="tab-content" id="art-115-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;bun&quot; Processes.process_name IN (&quot;python&quot;, &quot;python3&quot;, &quot;Python&quot;) by Processes.dest, Processes.user, Processes.process_path, Processes.process, Processes.parent_process_path, Processes.parent_process | `drop_dm_object_name(Processes)` | where match(process, &quot;(?i)task_for_pid|mach_task_self|vm_region_basic_info|ctypes\.CDLL.*libc|find_library\(.*c.*\)&quot;) OR match(parent_process, &quot;(?i)/tmp/b/bun&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-115-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;bun&quot; Processes.process_name IN (&quot;python&quot;, &quot;python3&quot;, &quot;Python&quot;) by Processes.dest, Processes.user, Processes.process_path, Processes.process, Processes.parent_process_path, Processes.parent_process | `drop_dm_object_name(Processes)` | where match(process, &quot;(?i)task_for_pid|mach_task_self|vm_region_basic_info|ctypes\.CDLL.*libc|find_library\(.*c.*\)&quot;) OR match(parent_process, &quot;(?i)/tmp/b/bun&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="7add5f3119" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Hades Campaign: Install of tainted PyPI package at affected version</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="7add5f3119" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects pip / poetry / uv installing one of the seven PyPI packages confirmed compromised by the Hades Campaign at the exact affected version pin. Per-version match avoids false alerts on legitimate later-or-earlier clean releases.
+
+Rationale: Every package name + version is quoted verbatim from the article&#x27;s affected-versions table. Pinning to exact version avoids alerting on clean later releases.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain: Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Reproducibility test where a researcher pins one of these versions in a sandbox</li><li>CI rebuild of a historical commit that locked one of these versions before the compromise was published</li><li>Misconfigured requirements.txt that hasn&#x27;t been refreshed since the compromise window</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and DeviceName !startswith &quot;threat-intel-sandbox&quot; and InitiatingProcessAccountName !in~ (&quot;ti-research&quot;, &quot;malware-analyst&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): identify the host and workflow that requested the install — was it a dev workstation, a CI runner, or a data-science notebook? Capture the requirements.txt / poetry.lock / pyproject.toml that pinned the version. Step 2 (contain): isolate the host, kill any Python interpreter that has the tainted package loaded, immediately revoke every credential the host has access to (cloud, SSH, GitHub PATs, npm tokens). Force-uninstall the package and delete site-packages residue. Step 3 (hunt): grep the entire org&#x27;s source repos for these package@version pins; check PyPI mirror / artifactory caches; pull all CI runs that consumed the tainted artifact in the last 30 days and treat their secrets as compromised.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-115-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-115-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-115-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-115-uc5-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-115-uc5-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-115-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-115-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(14d)
+| where FileName has_any (&quot;pip&quot;, &quot;pip3&quot;, &quot;pip.exe&quot;, &quot;poetry&quot;, &quot;uv&quot;, &quot;uv.exe&quot;, &quot;python&quot;, &quot;python3&quot;, &quot;python.exe&quot;)
+| where ProcessCommandLine has &quot;install&quot;
+| where ProcessCommandLine has_any (
+    &quot;mflux-streamlit==0.0.3&quot;, &quot;mflux-streamlit==0.0.4&quot;,
+    &quot;nhmpy==2.4.7&quot;,
+    &quot;ppkt2synergy==0.1.1&quot;,
+    &quot;embiggen==0.11.97&quot;,
+    &quot;gpsea==0.9.14&quot;,
+    &quot;pyphetools==0.9.120&quot;,
+    &quot;ensmallen==0.8.101&quot;
+  )
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-115-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 14d;
+let TaintedPackages = dynamic([
+  &quot;mflux-streamlit==0.0.3&quot;, &quot;mflux-streamlit==0.0.4&quot;,
+  &quot;nhmpy==2.4.7&quot;, &quot;ppkt2synergy==0.1.1&quot;,
+  &quot;embiggen==0.11.97&quot;, &quot;gpsea==0.9.14&quot;,
+  &quot;pyphetools==0.9.120&quot;, &quot;ensmallen==0.8.101&quot;
+]);
+ImProcessCreate
+| where TimeGenerated &gt; ago(LookbackDays)
+| where ActingProcessName has_any (&quot;pip&quot;, &quot;pip3&quot;, &quot;poetry&quot;, &quot;uv&quot;, &quot;python&quot;, &quot;python3&quot;)
+| where ActingProcessCommandLine has &quot;install&quot;
+| mv-expand pkg = TaintedPackages to typeof(string)
+| where ActingProcessCommandLine has pkg
+| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName, MatchedPackage = pkg
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-115-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Hades Campaign Tainted PyPI Package Install
+id: c2f8b6d4-19a3-4c87-9e2a-7d5f3b8c1a02
+description: Detects pip/poetry/uv installation of one of the seven PyPI packages confirmed compromised by the Hades Campaign at the affected version pin.
 references:
   - https://www.stepsecurity.io/blog/pythagora-io-gpt-pilot-compromised-on-github-shai-hulud-credential-stealer-blocked-by-python-linter
 author: SOC Detection Engineering
-date: 2026/06/12
+date: 2026/06/17
 tags:
   - attack.initial_access
   - attack.t1195.002
 logsource:
   category: process_creation
-  product: windows
 detection:
-  installer:
+  selection_installer:
     Image|endswith:
+      - &#x27;/pip&#x27;
+      - &#x27;/pip3&#x27;
+      - &#x27;/poetry&#x27;
+      - &#x27;/uv&#x27;
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
       - &#x27;\pip.exe&#x27;
-      - &#x27;\pip3.exe&#x27;
-      - &#x27;\uv.exe&#x27;
-      - &#x27;\poetry.exe&#x27;
-  pkg:
+      - &#x27;\python.exe&#x27;
+  selection_install_verb:
+    CommandLine|contains: &#x27;install&#x27;
+  selection_tainted:
     CommandLine|contains:
-      - &#x27;ensmallen==0.8.101&#x27;
       - &#x27;mflux-streamlit==0.0.3&#x27;
       - &#x27;mflux-streamlit==0.0.4&#x27;
       - &#x27;nhmpy==2.4.7&#x27;
@@ -10881,15 +10865,94 @@ detection:
       - &#x27;embiggen==0.11.97&#x27;
       - &#x27;gpsea==0.9.14&#x27;
       - &#x27;pyphetools==0.9.120&#x27;
-  condition: installer and pkg
+      - &#x27;ensmallen==0.8.101&#x27;
+  condition: selection_installer and selection_install_verb and selection_tainted
 falsepositives:
-  - Security research / IR teams intentionally installing the sample in an isolated sandbox
-level: critical</code></pre></div>
-    <div class="tab-content" id="art-115-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @Image:(*\pip.exe OR *\pip3.exe OR *\uv.exe OR *\poetry.exe OR *\python.exe) @CommandLine:(*ensmallen==0.8.101* OR *mflux-streamlit==0.0.3* OR *mflux-streamlit==0.0.4* OR *nhmpy==2.4.7* OR *ppkt2synergy==0.1.1* OR *embiggen==0.11.97* OR *gpsea==0.9.14* OR *pyphetools==0.9.120*)</code></pre></div>
-    <div class="tab-content" id="art-115-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/[\\\/](pip3?|uv|poetry|python3?)(\.exe)?$/i
-| regex(&quot;(ensmallen==0\\.8\\.101|mflux-streamlit==0\\.0\\.(3|4)|nhmpy==2\\.4\\.7|ppkt2synergy==0\\.1\\.1|embiggen==0\\.11\\.97|gpsea==0\\.9\\.14|pyphetools==0\\.9\\.120)&quot;, field=CommandLine)
-| groupBy([aid, ComputerName, UserName, CommandLine, ImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-115-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;pip.exe&quot;,&quot;pip&quot;,&quot;pip3.exe&quot;,&quot;pip3&quot;,&quot;uv.exe&quot;,&quot;uv&quot;,&quot;poetry.exe&quot;,&quot;poetry&quot;) OR Processes.parent_process_name IN (&quot;pip.exe&quot;,&quot;pip&quot;,&quot;pip3&quot;,&quot;uv&quot;,&quot;poetry&quot;)) (Processes.process=&quot;*ensmallen==0.8.101*&quot; OR Processes.process=&quot;*ensmallen 0.8.101*&quot; OR Processes.process=&quot;*mflux-streamlit==0.0.3*&quot; OR Processes.process=&quot;*mflux-streamlit==0.0.4*&quot; OR Processes.process=&quot;*nhmpy==2.4.7*&quot; OR Processes.process=&quot;*ppkt2synergy==0.1.1*&quot; OR Processes.process=&quot;*embiggen==0.11.97*&quot; OR Processes.process=&quot;*gpsea==0.9.14*&quot; OR Processes.process=&quot;*pyphetools==0.9.120*&quot;) by host Processes.user Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`</code></pre><pre class="spl-mode-body" id="art-115-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where (Processes.process_name IN (&quot;pip.exe&quot;,&quot;pip&quot;,&quot;pip3.exe&quot;,&quot;pip3&quot;,&quot;uv.exe&quot;,&quot;uv&quot;,&quot;poetry.exe&quot;,&quot;poetry&quot;) OR Processes.parent_process_name IN (&quot;pip.exe&quot;,&quot;pip&quot;,&quot;pip3&quot;,&quot;uv&quot;,&quot;poetry&quot;)) (Processes.process=&quot;*ensmallen==0.8.101*&quot; OR Processes.process=&quot;*ensmallen 0.8.101*&quot; OR Processes.process=&quot;*mflux-streamlit==0.0.3*&quot; OR Processes.process=&quot;*mflux-streamlit==0.0.4*&quot; OR Processes.process=&quot;*nhmpy==2.4.7*&quot; OR Processes.process=&quot;*ppkt2synergy==0.1.1*&quot; OR Processes.process=&quot;*embiggen==0.11.97*&quot; OR Processes.process=&quot;*gpsea==0.9.14*&quot; OR Processes.process=&quot;*pyphetools==0.9.120*&quot;) by host Processes.user Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`</code></pre></div></div>
+  - Threat-intel team reproducing the sample in an isolated environment
+level: high</code></pre></div>
+    <div class="tab-content" id="art-115-uc5-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.auditd OR windows.security) (@Image:(*\pip.exe OR *\python.exe OR *\pip3* OR */python OR */python3 OR */pip OR */poetry OR */uv) OR @process.name:(pip OR pip3 OR python OR python3 OR poetry OR uv)) (@CommandLine:*install* OR @process.command_line:*install*) (@CommandLine:(*mflux-streamlit==0.0.3* OR *mflux-streamlit==0.0.4* OR *nhmpy==2.4.7* OR *ppkt2synergy==0.1.1* OR *embiggen==0.11.97* OR *gpsea==0.9.14* OR *pyphetools==0.9.120* OR *ensmallen==0.8.101*) OR @process.command_line:(*mflux-streamlit==0.0.3* OR *mflux-streamlit==0.0.4* OR *nhmpy==2.4.7* OR *ppkt2synergy==0.1.1* OR *embiggen==0.11.97* OR *gpsea==0.9.14* OR *pyphetools==0.9.120* OR *ensmallen==0.8.101*))</code></pre></div>
+    <div class="tab-content" id="art-115-uc5-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/(pip|pip3|python|python3|poetry|uv)(\.exe)?$/i CommandLine=/install/i CommandLine=/(mflux-streamlit==0\.0\.[34]|nhmpy==2\.4\.7|ppkt2synergy==0\.1\.1|embiggen==0\.11\.97|gpsea==0\.9\.14|pyphetools==0\.9\.120|ensmallen==0\.8\.101)/i
+| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-115-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;pip&quot;, &quot;pip3&quot;, &quot;pip.exe&quot;, &quot;poetry&quot;, &quot;uv&quot;, &quot;uv.exe&quot;) OR (Processes.process_name IN (&quot;python&quot;, &quot;python3&quot;, &quot;python.exe&quot;) AND Processes.process=&quot;*pip*install*&quot;) by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name | `drop_dm_object_name(Processes)` | search process IN (&quot;*mflux-streamlit==0.0.3*&quot;, &quot;*mflux-streamlit==0.0.4*&quot;, &quot;*nhmpy==2.4.7*&quot;, &quot;*ppkt2synergy==0.1.1*&quot;, &quot;*embiggen==0.11.97*&quot;, &quot;*gpsea==0.9.14*&quot;, &quot;*pyphetools==0.9.120*&quot;, &quot;*ensmallen==0.8.101*&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-115-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;pip&quot;, &quot;pip3&quot;, &quot;pip.exe&quot;, &quot;poetry&quot;, &quot;uv&quot;, &quot;uv.exe&quot;) OR (Processes.process_name IN (&quot;python&quot;, &quot;python3&quot;, &quot;python.exe&quot;) AND Processes.process=&quot;*pip*install*&quot;) by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name | `drop_dm_object_name(Processes)` | search process IN (&quot;*mflux-streamlit==0.0.3*&quot;, &quot;*mflux-streamlit==0.0.4*&quot;, &quot;*nhmpy==2.4.7*&quot;, &quot;*ppkt2synergy==0.1.1*&quot;, &quot;*embiggen==0.11.97*&quot;, &quot;*gpsea==0.9.14*&quot;, &quot;*pyphetools==0.9.120*&quot;, &quot;*ensmallen==0.8.101*&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="48d739e263" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Hades Campaign: Creation of _hooks.py or _runtime.bin in Python package tree</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="48d739e263" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects creation of the unique _hooks.py or _runtime.bin filenames that the Hades attacker introduced in the malicious force-pushed gpt-pilot commit (and which match the campaign&#x27;s package-staging convention). These filenames don&#x27;t appear in legitimate Python packaging conventions.
+
+Rationale: Filenames `_hooks.py` and `_runtime.bin` come directly from the article&#x27;s Table 2 row identifying what the malicious gpt-pilot commit added. Constraining the writer to git/pip/python/IDEs scopes to repo-clone and package-install events.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Event Triggered Execution">T1546</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal project legitimately using _hooks.py for a custom hook framework</li><li>Code generator template that emits _runtime.bin as a build artifact</li><li>Historical reclone of a benign repo that happened to use this naming</li><li>Migration script renaming hook modules to underscore-prefixed names</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and not (InitiatingProcessFolderPath has_any (&quot;/opt/internal-framework/&quot;, &quot;\\InternalTooling\\&quot;) and InitiatingProcessAccountName in~ (&quot;devops-bot&quot;, &quot;build-svc&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): identify the source repo or PyPI package the file belongs to — diff against the upstream to determine if this is the Hades commit. If the file is _hooks.py, grep its content for `.bun_ran` / `oven-sh/bun` / `urlretrieve` — confirming Hades. Step 2 (contain): isolate the host, kill any python/bun children spawned since the file landed, revoke runner / dev credentials, remove the file and any sibling __init__.py modification. Step 3 (hunt): pivot fleet-wide on these filenames; search source repos via your SAST/SCM API for the same filenames committed in the last 90 days; check internal artifact mirrors for tainted package versions.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-115-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-115-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-115-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-115-uc6-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-115-uc6-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-115-uc6-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-115-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(14d)
+| where ActionType == &quot;FileCreated&quot;
+| where FileName in~ (&quot;_hooks.py&quot;, &quot;_runtime.bin&quot;)
+| where InitiatingProcessFileName has_any (&quot;git&quot;, &quot;pip&quot;, &quot;pip3&quot;, &quot;python&quot;, &quot;python3&quot;, &quot;code&quot;, &quot;Code.exe&quot;, &quot;cursor&quot;, &quot;git.exe&quot;)
+| project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessParentFileName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-115-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 14d;
+ImFileEvent
+| where TimeGenerated &gt; ago(LookbackDays)
+| where EventType == &quot;FileCreated&quot;
+| where TargetFileName in~ (&quot;_hooks.py&quot;, &quot;_runtime.bin&quot;)
+| where ActingProcessName has_any (&quot;git&quot;, &quot;pip&quot;, &quot;python&quot;, &quot;poetry&quot;, &quot;uv&quot;, &quot;code&quot;, &quot;cursor&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, TargetFileName, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-115-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Hades Campaign _hooks.py or _runtime.bin Dropped in Python Package
+id: f3a82c4d-91e7-46b1-8c93-2d4f6e0b1c8a
+description: Detects creation of _hooks.py or _runtime.bin in a Python project tree by git/pip/python/IDE processes — files unique to the Hades Campaign malicious commit pattern.
+references:
+  - https://www.stepsecurity.io/blog/pythagora-io-gpt-pilot-compromised-on-github-shai-hulud-credential-stealer-blocked-by-python-linter
+author: SOC Detection Engineering
+date: 2026/06/17
+tags:
+  - attack.initial_access
+  - attack.t1195.002
+logsource:
+  category: file_event
+detection:
+  selection_file:
+    TargetFilename|endswith:
+      - &#x27;/_hooks.py&#x27;
+      - &#x27;/_runtime.bin&#x27;
+      - &#x27;\_hooks.py&#x27;
+      - &#x27;\_runtime.bin&#x27;
+  selection_proc:
+    Image|endswith:
+      - &#x27;/git&#x27;
+      - &#x27;/pip&#x27;
+      - &#x27;/python&#x27;
+      - &#x27;/python3&#x27;
+      - &#x27;\git.exe&#x27;
+      - &#x27;\pip.exe&#x27;
+      - &#x27;\python.exe&#x27;
+      - &#x27;\Code.exe&#x27;
+      - &#x27;\cursor.exe&#x27;
+  condition: selection_file and selection_proc
+falsepositives:
+  - Internal project that legitimately uses _hooks.py for a custom hook framework
+level: high</code></pre></div>
+    <div class="tab-content" id="art-115-uc6-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.auditd OR linux.syslog) (@EventID:11 OR @auditd.type:PATH) (@TargetFilename:(*\_hooks.py OR */_hooks.py OR *\_runtime.bin OR */_runtime.bin) OR @file.name:(_hooks.py OR _runtime.bin)) (@Image:(*\git.exe OR *\pip.exe OR *\python.exe OR *\Code.exe OR *\cursor.exe) OR @process.name:(git OR pip OR pip3 OR python OR python3 OR code OR cursor))</code></pre></div>
+    <div class="tab-content" id="art-115-uc6-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/(\/|\\)(_hooks\.py|_runtime\.bin)$/i ContextImageFileName=/(git|pip|pip3|python|python3|poetry|uv|Code|cursor)(\.exe)?$/i
+| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-115-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=&quot;created&quot; Filesystem.file_name IN (&quot;_hooks.py&quot;, &quot;_runtime.bin&quot;) by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.process_name, Filesystem.process_path | `drop_dm_object_name(Filesystem)` | where NOT match(file_path, &quot;(?i)\\\\\.cache\\\\|/\.cache/|node_modules|\\\\AppData\\\\Local\\\\pip\\\\|/site-packages/test/&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-115-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=&quot;created&quot; Filesystem.file_name IN (&quot;_hooks.py&quot;, &quot;_runtime.bin&quot;) by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.process_name, Filesystem.process_path | `drop_dm_object_name(Filesystem)` | where NOT match(file_path, &quot;(?i)\\\\\.cache\\\\|/\.cache/|node_modules|\\\\AppData\\\\Local\\\\pip\\\\|/site-packages/test/&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
@@ -10907,11 +10970,11 @@ level: critical</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-115-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-115-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-115-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-115-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-115-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-115-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-115-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-115-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(1d)
 | where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
 | project DeviceName, RemoteIP, RemotePort, Timestamp
@@ -10924,7 +10987,7 @@ level: critical</code></pre></div>
     by DeviceName, RemoteIP, RemotePort
 | where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
 | order by conn_count desc</code></pre></div>
-    <div class="tab-content" id="art-115-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+    <div class="tab-content" id="art-115-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(2h)
 | where DvcAction != &quot;Block&quot;
 | where ipv4_is_private(DstIpAddr) == false
@@ -10934,7 +10997,7 @@ level: critical</code></pre></div>
 | where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
 | order by ConnCount desc
 </code></pre></div>
-    <div class="tab-content" id="art-115-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    <div class="tab-content" id="art-115-uc7-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -10943,7 +11006,7 @@ level: critical</code></pre></div>
 | eval delta = _time - prev_time
 | stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
 | where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre><pre class="spl-mode-body" id="art-115-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
+| sort - count</code></pre><pre class="spl-mode-body" id="art-115-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -10970,12 +11033,12 @@ level: critical</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-115-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-115-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-115-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-115-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-115-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-115-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-115-uc8-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-115-uc8-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-115-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-115-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName in~ (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
@@ -10983,7 +11046,7 @@ level: critical</code></pre></div>
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by Timestamp desc
 </code></pre></div>
-    <div class="tab-content" id="art-115-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-115-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688            // process-create (audit-policy required)
 | where Account !endswith &quot;$&quot;
@@ -10995,7 +11058,7 @@ level: critical</code></pre></div>
           ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-115-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: PsExec / SMB Lateral Movement Tooling Execution
+    <div class="tab-content" id="art-115-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: PsExec / SMB Lateral Movement Tooling Execution
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d03
 status: experimental
 description: |
@@ -11035,12 +11098,12 @@ falsepositives:
       a known-admin-host watchlist
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-115-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-115-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
        OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-115-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-115-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;psexec.exe&quot;,&quot;psexesvc.exe&quot;,&quot;paexec.exe&quot;,&quot;smbexec.py&quot;)
        OR (Processes.process_name=&quot;wmic.exe&quot; AND Processes.process=&quot;*/node:*&quot;)
@@ -11072,11 +11135,11 @@ for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-115-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-115-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-115-uc7-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-115-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-115-uc9-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-115-uc9-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-115-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+    <div class="tab-content active" id="art-115-uc9-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
 // Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
 // never spawn a non-browser child process, so the join eliminates the
 // 99% of noise that makes a raw click query unactionable.
@@ -11116,7 +11179,7 @@ DeviceProcessEvents
           Subject, Url, UrlDomain, ActionType,
           FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-115-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+    <div class="tab-content" id="art-115-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
 // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
 // non-browser child process. Lower fidelity than the Defender version.
 let LookbackDays = 7d;
@@ -11141,7 +11204,7 @@ SecurityEvent
           NewProcessName, CommandLine, Sender, Subject
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-115-uc7-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc7-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+    <div class="tab-content" id="art-115-uc9-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc9-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats `summariesonly` earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -11173,7 +11236,7 @@ SecurityEvent
 | where delta_sec &gt;= 0 AND delta_sec &lt;= 60
 | table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
         clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-115-uc7-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-115-uc9-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats summariesonly=false earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -11223,19 +11286,19 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-115-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-115-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-115-uc8-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-115-uc8-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-115-uc10-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-115-uc10-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-115-uc10-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-115-uc10-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-115-uc8-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-115-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(iex|invoke-expression|frombase64|downloadstring|hxxp|curl |wget )&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-115-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-115-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -11249,7 +11312,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-115-uc8-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
+    <div class="tab-content" id="art-115-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: FakeCaptcha / ClickFix - Clipboard-Injected PowerShell from Explorer
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d06
 status: experimental
 description: |
@@ -11293,7 +11356,7 @@ falsepositives:
     - IT-driven scripted automation that admins paste-launch
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-115-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-115-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -11301,7 +11364,7 @@ level: high
         OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*hxxp*&quot; OR Processes.process=&quot;*curl*&quot; OR Processes.process=&quot;*wget*&quot;)
     by Processes.dest, Processes.user, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-115-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-115-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;explorer.exe&quot;,&quot;RuntimeBroker.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;)
@@ -11327,19 +11390,19 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-115-uc9-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-115-uc9-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-115-uc9-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-115-uc9-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-115-uc11-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-115-uc11-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-115-uc11-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-115-uc11-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-115-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-115-uc11-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
 | where ProcessCommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
 | project Timestamp, DeviceName, AccountName, ProcessCommandLine,
           InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-115-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-115-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -11350,7 +11413,7 @@ level: high
           CommandLine, ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-115-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
+    <div class="tab-content" id="art-115-uc11-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d08
 status: experimental
 description: |
@@ -11396,7 +11459,7 @@ falsepositives:
       cross-shell escaping
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-115-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-115-uc11-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc11-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
       AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
@@ -11405,7 +11468,7 @@ level: high
         OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
         OR Processes.process=&quot;*Net.WebClient*&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-115-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-115-uc11-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
       AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
@@ -11432,12 +11495,12 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-115-uc10-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-115-uc10-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-115-uc10-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-115-uc10-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-115-uc12-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-115-uc12-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-115-uc12-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-115-uc12-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-115-uc10-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-115-uc12-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where FileName in~ (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
@@ -11445,7 +11508,7 @@ level: high
         &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;)
    or FileName matches regex @&quot;(?i)kaseya.*\.exe&quot;
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-115-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-115-uc12-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -11462,7 +11525,7 @@ level: high
           CommandLine, ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-115-uc10-sigma"><pre><button class="copy-btn">COPY</button><code>title: Remote-Management (RMM) Tool Execution
+    <div class="tab-content" id="art-115-uc12-sigma"><pre><button class="copy-btn">COPY</button><code>title: Remote-Management (RMM) Tool Execution
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0c
 status: experimental
 description: |
@@ -11497,13 +11560,13 @@ falsepositives:
       tool exclusion list per environment.
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-115-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc10-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-115-uc12-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc12-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc12-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc12-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
         &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
         &quot;atera_agent.exe&quot;,&quot;SplashtopStreamer.exe&quot;,&quot;RustDesk.exe&quot;,&quot;NinjaOne.exe&quot;,&quot;kaseya*.exe&quot;)
     by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-115-uc10-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-115-uc12-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.process_name IN (&quot;AnyDesk.exe&quot;,&quot;TeamViewer.exe&quot;,&quot;TeamViewer_Service.exe&quot;,
         &quot;ScreenConnect.ClientService.exe&quot;,&quot;ConnectWiseControl.ClientService.exe&quot;,
@@ -11527,18 +11590,18 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-115-uc11-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-115-uc11-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-115-uc11-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-115-uc11-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-115-uc13-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-115-uc13-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-115-uc13-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-115-uc13-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-115-uc11-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-115-uc13-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
 | where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-115-uc11-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+    <div class="tab-content" id="art-115-uc13-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
 // article (matching shape with the Defender query).
 SecurityEvent
 | where TimeGenerated &gt; ago(7d)
@@ -11558,7 +11621,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-115-uc11-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+    <div class="tab-content" id="art-115-uc13-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
 status: experimental
 description: |
@@ -11600,12 +11663,12 @@ falsepositives:
       article before alerting.
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-115-uc11-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc11-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc11-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc11-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-115-uc13-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc13-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc13-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc13-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-115-uc11-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-115-uc13-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
       AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
@@ -11628,11 +11691,11 @@ level: medium
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-115-uc12-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-115-uc12-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-115-uc12-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-115-uc14-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-115-uc14-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-115-uc14-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-115-uc12-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blo
+    <div class="tab-content active" id="art-115-uc14-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blo
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -11652,7 +11715,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-115-uc12-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-115-uc14-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blo
@@ -11675,7 +11738,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-115-uc12-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc12-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc12-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc12-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blo ```
+    <div class="tab-content" id="art-115-uc14-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-115-uc14-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-115-uc14-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-115-uc14-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blo ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;__init__.py&quot;,&quot;_index.js&quot;,&quot;node.js&quot;,&quot;kernel32.dll&quot;,&quot;updater.py&quot;,&quot;ai_setup.sh&quot;,&quot;gh-token-monitor.sh&quot;,&quot;token-monitor.sh&quot;))
@@ -11691,7 +11754,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-115-uc12-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blo ```
+]</code></pre><pre class="spl-mode-body" id="art-115-uc14-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blo ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;__init__.py&quot;,&quot;_index.js&quot;,&quot;node.js&quot;,&quot;kernel32.dll&quot;,&quot;updater.py&quot;,&quot;ai_setup.sh&quot;,&quot;gh-token-monitor.sh&quot;,&quot;token-monitor.sh&quot;))

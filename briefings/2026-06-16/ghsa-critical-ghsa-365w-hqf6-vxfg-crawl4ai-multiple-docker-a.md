@@ -26,11 +26,11 @@ The `output_path` parameter accepts arbitrary filesystem paths with no validatio
 
 - **T1204.002** — User Execution: Malicious File
 - **T1190** — Exploit Public-Facing Application
-- **T1083** — File and Directory Discovery
-- **T1552.005** — Cloud Instance Metadata API
-- **T1046** — Network Service Discovery
+- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
+- **T1090** — Proxy
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1078** — Valid Accounts
-- **T1059.007** — JavaScript
+- **T1083** — File and Directory Discovery
 
 ## Kill chain phases observed
 
@@ -38,77 +38,69 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Crawl4AI /screenshot or /pdf path traversal via output_path parameter
+### Crawl4AI SSRF: outbound to cloud metadata or RFC1918 from crawler process
 
-`UC_2_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_3_1` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as method values(Web.status) as status from datamodel=Web where Web.uri_path IN ("/screenshot","/pdf","/screenshot/","/pdf/") Web.http_method=POST by Web.src Web.dest Web.uri_path Web.http_user_agent | `drop_dm_object_name(Web)` | search url="*..*" OR url="*%2e%2e*" OR url="*output_path*..*" OR url="*output_path*%2f..*" | where method="POST"
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where (All_Traffic.dest="169.254.169.254" OR All_Traffic.dest="100.100.100.200" OR All_Traffic.dest="fd00:ec2::254" OR All_Traffic.dest_category="internal" OR cidrmatch("10.0.0.0/8",All_Traffic.dest) OR cidrmatch("172.16.0.0/12",All_Traffic.dest) OR cidrmatch("192.168.0.0/16",All_Traffic.dest) OR cidrmatch("127.0.0.0/8",All_Traffic.dest) OR cidrmatch("169.254.0.0/16",All_Traffic.dest)) by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app, All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | search app="*python*" OR app="*uvicorn*" OR app="*gunicorn*" OR process_name="*python*" OR process_name="*uvicorn*" OR process_name="*gunicorn*"
 ```
 
 **Defender KQL:**
 ```kql
-// Detect the *effect* of the Crawl4AI path-traversal: chromium/playwright/python writing to paths outside /tmp/crawl4ai-outputs/ on the Crawl4AI container host
-DeviceFileEvents
+let MetadataIPs = dynamic(["169.254.169.254","100.100.100.200","fd00:ec2::254"]);
+DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("chrome","chromium","headless_shell","python","python3","uvicorn")
-| where InitiatingProcessCommandLine has_any ("crawl4ai","uvicorn","fastapi","playwright")
-| where ActionType in ("FileCreated","FileModified")
-| where not(FolderPath startswith "/tmp/crawl4ai-outputs/")
-| where FolderPath startswith "/etc/" or FolderPath startswith "/root/" or FolderPath startswith "/home/" or FolderPath startswith "/var/" or FolderPath startswith "/usr/" or FileName in~ ("authorized_keys",".bashrc",".profile",".bash_profile","crontab")
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where RemoteIP in (MetadataIPs) or RemoteIPType in ("Private","Loopback","LinkLocal")
+| where InitiatingProcessFileName has_any ("python","python3","uvicorn","gunicorn","chrome","chromium","headless_shell")
+   or InitiatingProcessCommandLine has_any ("crawl4ai","crawl4ai.server","deploy.docker.server","playwright")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteIP, RemotePort, RemoteUrl, RemoteIPType
 | order by Timestamp desc
 ```
 
-### Crawl4AI container SSRF egress to cloud metadata or RFC1918 ranges
+### Crawl4AI /execute_js endpoint POST — arbitrary JavaScript RCE vector
 
-`UC_2_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_3_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as app values(All_Traffic.user) as user from datamodel=Network_Traffic where (All_Traffic.dest_ip="169.254.169.254" OR All_Traffic.dest IN ("metadata.google.internal","metadata","instance-data") OR cidrmatch("10.0.0.0/8", All_Traffic.dest_ip) OR cidrmatch("172.16.0.0/12", All_Traffic.dest_ip) OR cidrmatch("192.168.0.0/16", All_Traffic.dest_ip) OR cidrmatch("127.0.0.0/8", All_Traffic.dest_ip) OR cidrmatch("169.254.0.0/16", All_Traffic.dest_ip)) by All_Traffic.src All_Traffic.src_ip All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.process | `drop_dm_object_name(All_Traffic)` | search src IN ("crawl4ai-*","*crawl4ai*") OR process IN ("python","python3","chrome","chromium","headless_shell","uvicorn")
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method="POST" AND (Web.url="*/execute_js*" OR Web.uri_path="*/execute_js*") by Web.src, Web.dest, Web.dest_port, Web.url, Web.http_user_agent, Web.status | `drop_dm_object_name(Web)` | where dest_port=11235 OR dest_port=80 OR dest_port=443 OR dest_port=8000 OR dest_port=8080
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("chrome","chromium","headless_shell","python","python3","uvicorn")
-   or InitiatingProcessCommandLine has_any ("crawl4ai","uvicorn server:app","playwright")
-| where RemoteIP == "169.254.169.254"
-   or RemoteUrl has_any ("169.254.169.254","metadata.google.internal","metadata.azure.com","instance-data")
-   or ipv4_is_in_range(RemoteIP, "10.0.0.0/8")
-   or ipv4_is_in_range(RemoteIP, "172.16.0.0/12")
-   or ipv4_is_in_range(RemoteIP, "192.168.0.0/16")
-   or ipv4_is_in_range(RemoteIP, "127.0.0.0/8")
-   or ipv4_is_in_range(RemoteIP, "169.254.0.0/16")
-| where RemoteIP != "127.0.0.1" or RemotePort !in (5000,8000,8080,11235)  // exclude self-loopback
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, LocalIP, LocalPort
+| where RemotePort in (11235, 80, 443, 8000, 8080) or LocalPort in (11235, 80, 443, 8000, 8080)
+| where RemoteUrl has "/execute_js" or AdditionalFields has "/execute_js"
+| project Timestamp, DeviceName, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, LocalIP, LocalPort, RemoteUrl
 | order by Timestamp desc
 ```
 
-### Unauthenticated access to Crawl4AI /monitor/* endpoints incl. destructive cleanup
+### Crawl4AI unauthenticated /monitor/* access (auth-bypass CWE-306)
 
-`UC_2_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3_3` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as method values(Web.status) as status values(Web.http_user_agent) as ua from datamodel=Web where Web.uri_path IN ("/monitor","/monitor/","/monitor/ws","/monitor/actions/cleanup","/monitor/actions") OR Web.uri_path="/monitor/*" by Web.src Web.dest Web.uri_path Web.url | `drop_dm_object_name(Web)` | where status IN ("200","101","204") | eval is_destructive=if(match(uri_path,"/monitor/actions/"),1,0) | search status=200 OR is_destructive=1
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.url="*/monitor*" OR Web.uri_path="*/monitor*") by Web.src, Web.dest, Web.dest_port, Web.url, Web.http_method, Web.status, Web.http_user_agent | `drop_dm_object_name(Web)` | where status>=200 AND status<400
 ```
 
-### Crawl4AI /execute_js endpoint invocation (pre-patch arbitrary JS / SSRF)
-
-`UC_2_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as method values(Web.status) as status values(Web.bytes_in) as bytes_in values(Web.http_user_agent) as ua from datamodel=Web where Web.uri_path IN ("/execute_js","/execute_js/") OR (Web.uri_path IN ("/crawl","/crawl/stream","/md","/llm","/crawl/job","/llm/job","/screenshot","/pdf") AND (Web.url="*%3A%3Affff%3A*" OR Web.url="*::ffff:*" OR Web.url="*169.254.169.254*" OR Web.url="*metadata.google.internal*")) by Web.src Web.dest Web.uri_path Web.url Web.http_method | `drop_dm_object_name(Web)`
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has "/monitor" or AdditionalFields has "/monitor"
+| where RemotePort in (11235, 80, 443, 8000, 8080)
+| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName
+| order by Timestamp desc
 ```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-365w-hqf6-vxfg: Crawl4AI: Multiple Docker API Vulnerabili
 
-`UC_2_0` · phase: **install** · confidence: **High**
+`UC_3_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,4 +134,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 4 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
