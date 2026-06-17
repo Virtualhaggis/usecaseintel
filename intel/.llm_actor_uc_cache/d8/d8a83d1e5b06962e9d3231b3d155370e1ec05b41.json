@@ -1,0 +1,80 @@
+{
+  "name": "Volt Typhoon",
+  "ucs": [
+    {
+      "title": "[LLM] Volt Typhoon / VOLTZITE NTDS.dit theft via ntdsutil 'IFM create full' on non-DC host",
+      "description": "Hunts the signature Volt Typhoon (a.k.a. Vanguard Panda / VOLTZITE / Bronze Silhouette / Insidious Taurus) LOTL credential-dump pattern documented in CISA AA24-038A: invoking ntdsutil.exe with 'activate instance ntds' + 'ifm' + 'create full' to export NTDS.dit and the SYSTEM hive into C:\\Windows\\Temp without touching LSASS. The TTP is intentionally chosen to evade EDR memory-scrapers and AV signatures.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1003.003",
+        "T1059.003",
+        "T1078.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.parent_process) as parent_cmd values(Processes.process) as cmd values(Processes.dest) as dest from datamodel=Endpoint.Processes where (Processes.process_name=\"ntdsutil.exe\" OR Processes.process=\"*ntdsutil*\") by Processes.user Processes.process_name Processes.parent_process_name host\n| `drop_dm_object_name(\"Processes\")`\n| where match(cmd, \"(?i)(ifm|create\\s+full|create\\s+no\\s+defrag|ac\\s+i\\s+ntds|activate\\s+instance\\s+ntds)\")\n| where NOT match(user, \"(?i)\\$$\")\n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`\n| sort - firstTime",
+      "kql": "// Volt Typhoon ntdsutil IFM credential dump \u2014 CISA AA24-038A\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName =~ \"ntdsutil.exe\"\n    or InitiatingProcessFileName =~ \"ntdsutil.exe\"\n    or ProcessCommandLine has \"ntdsutil\"\n| where ProcessCommandLine has_any (\"ifm\", \"create full\", \"create no defrag\", \"ac i ntds\", \"activate instance ntds\")\n| where AccountName !endswith \"$\"   // exclude machine/system\n| where AccountName !in~ (\"system\",\"local service\",\"network service\")\n| project Timestamp, DeviceName, AccountName,\n          ParentImage = InitiatingProcessFileName,\n          ParentCmd   = InitiatingProcessCommandLine,\n          ChildImage  = FolderPath,\n          ChildCmd    = ProcessCommandLine,\n          SHA256, InitiatingProcessAccountName, IsInitiatingProcessRemoteSession\n| order by Timestamp desc",
+      "sentinel_kql": "// Volt Typhoon ntdsutil IFM credential dump \u2014 CISA AA24-038A (Sentinel / 4688)\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where NewProcessName endswith \"\\\\ntdsutil.exe\" or CommandLine has \"ntdsutil\"\n| where CommandLine has_any (\"ifm\", \"create full\", \"create no defrag\", \"ac i ntds\", \"activate instance ntds\")\n| where SubjectUserName !endswith \"$\"\n| where SubjectUserName !in~ (\"system\",\"local service\",\"network service\")\n| project TimeGenerated, Computer,\n          Actor = SubjectUserName,\n          Target = TargetUserName,\n          ParentProcessName,\n          NewProcessName,\n          CommandLine,\n          TokenElevationType\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Volt Typhoon NTDS.dit Theft via ntdsutil IFM\nid: 8a2c1e4d-5f9b-4a3b-bc1d-7f2e9d8a6c54\nstatus: experimental\ndescription: |\n  Detects ntdsutil.exe invoked with `activate instance ntds` + `ifm` + `create full`\n  to export NTDS.dit and the SYSTEM hive. Signature LOTL credential-dumping technique\n  used by Volt Typhoon / VOLTZITE / Vanguard Panda per CISA AA24-038A.\nreferences:\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-038a\nauthor: SOC Detection Engineering\ndate: 2026/06/17\ntags:\n  - attack.credential_access\n  - attack.t1003.003\n  - attack.g1017\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_proc:\n    - Image|endswith: '\\ntdsutil.exe'\n    - CommandLine|contains: 'ntdsutil'\n  selection_args:\n    CommandLine|contains:\n      - 'ifm'\n      - 'create full'\n      - 'create no defrag'\n      - 'ac i ntds'\n      - 'activate instance ntds'\n  filter_machine:\n    User|endswith: '$'\n  condition: selection_proc and selection_args and not filter_machine\nfalsepositives:\n  - Authorised DC backup or pre-staged install-from-media (verify change ticket and host role).\nlevel: high",
+      "datadog_query": "source:windows.security @EventID:4688 @Image:(*\\\\ntdsutil.exe OR *\\\\NTDSUTIL.EXE OR *\\\\NTDSUtil.exe) @CommandLine:(*ifm* OR *IFM* OR *\"create full\"* OR *\"create no defrag\"* OR *\"ac i ntds\"* OR *\"activate instance ntds\"*) -@SubjectUserName:*$",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2\n| ImageFileName=/\\\\ntdsutil\\.exe$/i OR regex(\"ntdsutil\", field=CommandLine)\n| CommandLine=/(ifm|create\\s+full|create\\s+no\\s+defrag|ac\\s+i\\s+ntds|activate\\s+instance\\s+ntds)/i\n| NOT UserName=/\\$$/\n| groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine], function=[count(as=hits), min(@timestamp, as=first_seen), max(@timestamp, as=last_seen)])",
+      "cloudwatch_query": "",
+      "rationale": "ntdsutil IFM is rare in any environment \u2014 legitimate use is constrained to authorised DC promotions / backups. CISA AA24-038A explicitly attributes the exact argument string `\"activate instance ntds\" \"ifm\" \"create full c:\\Windows\\Temp\\Pro\"` to Volt Typhoon, and CrowdStrike (Vanguard Panda) and Dragos (VOLTZITE) corroborate. Pairing the binary with the IFM-specific subcommand cluster filters out ot",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceProcessEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ]
+    },
+    {
+      "title": "[LLM] Volt Typhoon LOTL host-enumeration burst (net/nltest/systeminfo/wmic/netstat within minutes)",
+      "description": "Hunts the densely-clustered native-tool reconnaissance burst Volt Typhoon (VOLTZITE / Vanguard Panda) runs immediately after gaining a foothold on a victim \u2014 per CISA/NSA/FBI AA24-038A and Microsoft's Volt Typhoon profile: rapid sequential `net user/group`, `nltest /dclist /domain_trusts`, `systeminfo`, `tasklist /v`, `ipconfig /all`, `netstat -ano`, `whoami /all`, `wmic` queries, all from a non-admin or interactive context. The high distinct-binary count in a tight window is what differentiates the actor from sysadmin one-off use.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "medium",
+      "techs": [
+        "T1016",
+        "T1018",
+        "T1033",
+        "T1049",
+        "T1057",
+        "T1069.001",
+        "T1069.002",
+        "T1082"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process_name) as binaries values(Processes.process) as cmds values(Processes.parent_process_name) as parents dc(Processes.process_name) as recon_count from datamodel=Endpoint.Processes where Processes.process_name IN (\"net.exe\",\"net1.exe\",\"nltest.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"ipconfig.exe\",\"netstat.exe\",\"whoami.exe\",\"quser.exe\",\"arp.exe\",\"route.exe\",\"hostname.exe\",\"wmic.exe\",\"reg.exe\") by Processes.dest Processes.user _time span=10m\n| `drop_dm_object_name(\"Processes\")`\n| where recon_count >= 6 AND NOT match(user, \"(?i)\\$$\")\n| where NOT match(mvjoin(cmds,\" \"), \"(?i)sccm|ccmexec|backup|qualys|tenable|tanium|defender\")\n| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`\n| sort - firstTime",
+      "kql": "// Volt Typhoon LOTL discovery burst \u2014 AA24-038A / Microsoft Volt Typhoon profile\nlet LookbackHours = 24h;\nlet WindowMinutes = 10m;\nlet Threshold = 6;   // empirical: 90-day P99 of sysadmin recon binaries-per-10m = 4\nlet ReconBins = dynamic([\n    \"net.exe\",\"net1.exe\",\"nltest.exe\",\"systeminfo.exe\",\"tasklist.exe\",\n    \"ipconfig.exe\",\"netstat.exe\",\"whoami.exe\",\"quser.exe\",\"arp.exe\",\n    \"route.exe\",\"hostname.exe\",\"wmic.exe\",\"reg.exe\"\n]);\nDeviceProcessEvents\n| where Timestamp > ago(LookbackHours)\n| where AccountName !endswith \"$\"\n| where AccountName !in~ (\"system\",\"local service\",\"network service\")\n| where FileName in~ (ReconBins)\n| where (FileName =~ \"net.exe\"      and ProcessCommandLine has_any (\"user\",\"group\",\"localgroup\",\"accounts\",\"view\",\"session\"))\n     or (FileName =~ \"nltest.exe\"   and ProcessCommandLine has_any (\"/dclist\",\"/domain_trusts\",\"/dsgetdc\"))\n     or (FileName =~ \"tasklist.exe\" and ProcessCommandLine has_any (\"/v\",\"/svc\"))\n     or (FileName =~ \"ipconfig.exe\" and ProcessCommandLine has \"/all\")\n     or (FileName =~ \"netstat.exe\"  and ProcessCommandLine has_any (\"-ano\",\"-an\"))\n     or (FileName =~ \"whoami.exe\"   and ProcessCommandLine has_any (\"/all\",\"/priv\",\"/groups\"))\n     or (FileName =~ \"wmic.exe\"     and ProcessCommandLine has_any (\"computersystem\",\"process\",\"useraccount\",\"ntdomain\",\"group\",\"qfe\"))\n     or (FileName =~ \"reg.exe\"      and ProcessCommandLine has_any (\"query HKLM\",\"query HKCU\",\"query \\\\\\\\\"))\n     or FileName in~ (\"systeminfo.exe\",\"quser.exe\",\"arp.exe\",\"route.exe\",\"hostname.exe\")\n// drop known scanners/agents (tune to environment)\n| where InitiatingProcessFileName !in~ (\"ccmexec.exe\",\"smsexec.exe\",\"sense.exe\",\"taniumclient.exe\",\"qualysagent.exe\")\n| summarize ReconCount  = dcount(FileName),\n            Binaries    = make_set(FileName, 20),\n            SampleCmds  = make_set(ProcessCommandLine, 20),\n            Parents     = make_set(InitiatingProcessFileName, 10),\n            FirstSeen   = min(Timestamp),\n            LastSeen    = max(Timestamp),\n            RemoteSess  = any(IsInitiatingProcessRemoteSession)\n        by DeviceName, AccountName, bin(Timestamp, WindowMinutes)\n| where ReconCount >= Threshold\n| extend WindowDurationSec = datetime_diff('second', LastSeen, FirstSeen)\n| order by FirstSeen desc",
+      "sentinel_kql": "// Volt Typhoon LOTL discovery burst \u2014 Sentinel 4688\nlet LookbackHours = 24h;\nlet WindowMinutes = 10m;\nlet Threshold = 6;\nlet ReconBins = dynamic([\n    \"net.exe\",\"net1.exe\",\"nltest.exe\",\"systeminfo.exe\",\"tasklist.exe\",\n    \"ipconfig.exe\",\"netstat.exe\",\"whoami.exe\",\"quser.exe\",\"arp.exe\",\n    \"route.exe\",\"hostname.exe\",\"wmic.exe\",\"reg.exe\"\n]);\nSecurityEvent\n| where TimeGenerated > ago(LookbackHours)\n| where EventID == 4688\n| where SubjectUserName !endswith \"$\"\n| where SubjectUserName !in~ (\"system\",\"local service\",\"network service\")\n| extend ImgName = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| where ImgName in (ReconBins)\n| where (ImgName == \"net.exe\"      and CommandLine has_any (\"user\",\"group\",\"localgroup\",\"accounts\",\"view\",\"session\"))\n     or (ImgName == \"nltest.exe\"   and CommandLine has_any (\"/dclist\",\"/domain_trusts\",\"/dsgetdc\"))\n     or (ImgName == \"tasklist.exe\" and CommandLine has_any (\"/v\",\"/svc\"))\n     or (ImgName == \"ipconfig.exe\" and CommandLine has \"/all\")\n     or (ImgName == \"netstat.exe\"  and CommandLine has_any (\"-ano\",\"-an\"))\n     or (ImgName == \"whoami.exe\"   and CommandLine has_any (\"/all\",\"/priv\",\"/groups\"))\n     or (ImgName == \"wmic.exe\"     and CommandLine has_any (\"computersystem\",\"process\",\"useraccount\",\"ntdomain\",\"group\",\"qfe\"))\n     or (ImgName == \"reg.exe\"      and CommandLine has_any (\"query HKLM\",\"query HKCU\",\"query \\\\\\\\\"))\n     or ImgName in (\"systeminfo.exe\",\"quser.exe\",\"arp.exe\",\"route.exe\",\"hostname.exe\")\n| summarize ReconCount  = dcount(ImgName),\n            Binaries    = make_set(ImgName, 20),\n            SampleCmds  = make_set(CommandLine, 20),\n            Parents     = make_set(ParentProcessName, 10),\n            FirstSeen   = min(TimeGenerated),\n            LastSeen    = max(TimeGenerated)\n        by Computer, SubjectUserName, bin(TimeGenerated, WindowMinutes)\n| where ReconCount >= Threshold\n| extend WindowDurationSec = datetime_diff('second', LastSeen, FirstSeen)\n| order by FirstSeen desc",
+      "sigma_yaml": "",
+      "datadog_query": "source:windows.security @EventID:4688 @Image:(*\\\\net.exe OR *\\\\Net.exe OR *\\\\net1.exe OR *\\\\nltest.exe OR *\\\\NLTEST.EXE OR *\\\\systeminfo.exe OR *\\\\SYSTEMINFO.EXE OR *\\\\tasklist.exe OR *\\\\TASKLIST.EXE OR *\\\\ipconfig.exe OR *\\\\IPCONFIG.EXE OR *\\\\netstat.exe OR *\\\\NETSTAT.EXE OR *\\\\whoami.exe OR *\\\\WHOAMI.EXE OR *\\\\quser.exe OR *\\\\wmic.exe OR *\\\\WMIC.EXE OR *\\\\reg.exe OR *\\\\REG.EXE) @CommandLine:(*user* OR *group* OR *\"/dclist\"* OR *\"/domain_trusts\"* OR *\"/all\"* OR *\"-ano\"* OR *computersystem* OR *useraccount* OR *ntdomain*) -@SubjectUserName:*$",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2\n| ImageFileName=/\\\\(net|net1|nltest|systeminfo|tasklist|ipconfig|netstat|whoami|quser|arp|route|hostname|wmic|reg)\\.exe$/i\n| NOT UserName=/\\$$/\n| NOT ParentBaseFileName=/(ccmexec|smsexec|sense|taniumclient|qualysagent)\\.exe$/i\n| bin_match := if(\n    (ImageFileName=/\\\\net\\.exe$/i AND CommandLine=/\\s(user|group|localgroup|accounts|view|session)\\b/i)\n  OR (ImageFileName=/\\\\nltest\\.exe$/i AND CommandLine=/(\\/dclist|\\/domain_trusts|\\/dsgetdc)/i)\n  OR (ImageFileName=/\\\\tasklist\\.exe$/i AND CommandLine=/(\\/v|\\/svc)/i)\n  OR (ImageFileName=/\\\\ipconfig\\.exe$/i AND CommandLine=/\\/all/i)\n  OR (ImageFileName=/\\\\netstat\\.exe$/i AND CommandLine=/-(ano|an)\\b/i)\n  OR (ImageFileName=/\\\\whoami\\.exe$/i AND CommandLine=/(\\/all|\\/priv|\\/groups)/i)\n  OR (ImageFileName=/\\\\wmic\\.exe$/i AND CommandLine=/(computersystem|process|useraccount|ntdomain|group|qfe)/i)\n  OR (ImageFileName=/\\\\(systeminfo|quser|arp|route|hostname)\\.exe$/i)\n  , 1, 0)\n| bin_match=1\n| groupBy([aid, ComputerName, UserName], function=[count(field=ImageFileName, distinct=true, as=recon_count), collect([ImageFileName, CommandLine, ParentBaseFileName]), min(@timestamp, as=first_seen), max(@timestamp, as=last_seen)])\n| recon_count >= 6",
+      "cloudwatch_query": "",
+      "rationale": "Volt Typhoon's distinguishing operational signature is not any single command \u2014 every binary here is a legitimate Windows utility \u2014 it is the *density* of native-tool enumeration immediately after access, by a non-machine account, on a single host, in minutes. CISA AA24-038A documents the exact recipe (net user/group, nltest /dclist /domain_trusts, systeminfo, tasklist /v, ipconfig /all, netstat -",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "IsInitiatingProcessRemoteSession",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": "InitiatingProcessTokenElevation",
+          "message": "`IsInitiatingProcessRemoteSession` is not a canonical column of DeviceProcessEvents. Did you mean `InitiatingProcessTokenElevation`?"
+        }
+      ]
+    }
+  ]
+}

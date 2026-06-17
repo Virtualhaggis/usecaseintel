@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### AWS CloudTrail StopLogging or DeleteTrail invoked
 
-`UC_119_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_124_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### S3 DeleteBucket on CloudTrail log destination bucket
 
-`UC_119_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_124_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ _(none detected from narrative keywords)_
 
 ### GCP Cloud Logging Sink disabled or deleted (log router tampering)
 
-`UC_119_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_124_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ _(none detected from narrative keywords)_
 
 ### GCP Cloud Logging bucket delete-requested
 
-`UC_119_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_124_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ _(none detected from narrative keywords)_
 
 ### KMS DisableKey or ScheduleKeyDeletion on CloudTrail-encryption key
 
-`UC_119_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_124_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ _(none detected from narrative keywords)_
 
 ### Privilege escalation to logging-admin permissions (CloudTrail / Logs full access)
 
-`UC_119_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_124_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### AWS IAM role trust policy created with set-qualified operator on GitHub OIDC sub claim
 
-`UC_252_0` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_255_0` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### AssumeRoleWithWebIdentity from GitHub OIDC with unexpected repo/branch sub claim
 
-`UC_252_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_255_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

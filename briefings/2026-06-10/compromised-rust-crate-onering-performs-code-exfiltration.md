@@ -19,12 +19,12 @@ Blog Vulnerabilities & Threats Compromised Rust crate onering performs code exfi
 - **T1555.003** — Credentials from Web Browsers
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1005** — Data from Local System
 - **T1195.001** — Compromise Software Dependencies and Development Tools
-- **T1059** — Command and Scripting Interpreter
-- **T1041** — Exfiltration Over C2 Channel
-- **T1567** — Exfiltration Over Web Service
 - **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1041** — Exfiltration Over C2 Channel
+- **T1059** — Command and Scripting Interpreter
+- **T1199** — Trusted Relationship
+- **T1213.003** — Data from Information Repositories: Code Repositories
 
 ## Kill chain phases observed
 
@@ -32,99 +32,104 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Cargo build script spawning git with onering's exfil --pretty=format JSON
+### Outbound to onering crate C2 Sentry ingest endpoint (o4511539639222272)
 
-`UC_114_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_120_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("git.exe","git") Processes.process="*log*" Processes.process="*--pretty=format*" Processes.process="*commit*" Processes.process="*%H*" Processes.process="*author*" Processes.process="*%an*" Processes.parent_process_name IN ("build-script-build.exe","build_script_build.exe","build-script-build","cargo.exe","rustc.exe") by Processes.dest Processes.user Processes.process Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="o4511539639222272.ingest.de.sentry.io" OR All_Traffic.dest="*4511539669368912*" OR All_Traffic.url="*o4511539639222272.ingest.de.sentry.io/api/4511539669368912/envelope*") by All_Traffic.src All_Traffic.dest All_Traffic.user All_Traffic.process | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("git.exe", "git")
-| where ProcessCommandLine has "log"
-| where ProcessCommandLine has "--pretty=format"
-| where ProcessCommandLine has_all ("commit", "%H", "author", "%an", "email", "%ae")
-| where InitiatingProcessFileName has_any ("build-script-build.exe", "build_script_build.exe", "build-script-build", "cargo.exe", "rustc.exe")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### build.rs invoking curl POST to Sentry envelope endpoint with code diff payload
-
-`UC_114_5` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("curl.exe","curl") (Processes.process="*o4511539639222272.ingest.de.sentry.io*" OR Processes.process="*4511539669368912/envelope*" OR Processes.process="*application/x-sentry-envelope*") Processes.parent_process_name IN ("build-script-build.exe","build_script_build.exe","build-script-build","cargo.exe","rustc.exe") by Processes.dest Processes.user Processes.process Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("curl.exe", "curl")
-| where ProcessCommandLine has_any ("o4511539639222272.ingest.de.sentry.io", "4511539669368912/envelope", "application/x-sentry-envelope", "8197ee42c4f59c83f4cc6d48f5bae821")
-| where InitiatingProcessFileName has_any ("build-script-build.exe", "build_script_build.exe", "build-script-build", "cargo.exe", "rustc.exe")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### Network egress to onering Sentry exfil ingest domain or project envelope path
-
-`UC_114_6` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*o4511539639222272.ingest.de.sentry.io*" OR Web.url="*/api/4511539669368912/envelope*") by Web.src Web.user Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-union
+// onering crate Sentry C2 — exact org/project from article
+let OneringSentryHost = "o4511539639222272.ingest.de.sentry.io";
+let OneringProjectId = "4511539669368912";
+union isfuzzy=true
 (DeviceNetworkEvents
- | where Timestamp > ago(30d)
- | where RemoteUrl has "o4511539639222272.ingest.de.sentry.io" or RemoteUrl has "4511539669368912/envelope"
- | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteUrl, RemoteIP, RemotePort),
+  | where Timestamp > ago(30d)
+  | where RemoteUrl has OneringSentryHost or RemoteUrl has OneringProjectId
+  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, EventTable="DeviceNetworkEvents"),
 (DeviceEvents
- | where Timestamp > ago(30d)
- | where ActionType == "DnsQueryResponse"
- | where AdditionalFields has "o4511539639222272.ingest.de.sentry.io"
- | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, AdditionalFields)
+  | where Timestamp > ago(30d)
+  | where ActionType == "DnsQueryResponse"
+  | where AdditionalFields has OneringSentryHost or RemoteUrl has OneringSentryHost
+  | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort=int(null), EventTable="DeviceEvents-DNS")
 | order by Timestamp desc
 ```
 
-### Cargo dependency manifest or download pinned to compromised onering 1.4.1
+### Cargo build-script-build spawning curl/PowerShell to Sentry envelope endpoint
 
-`UC_114_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_120_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*crates.io*" OR Web.url="*static.crates.io*") (Web.url="*onering/1.4.1*" OR Web.url="*onering-1.4.1.crate*") by Web.src Web.user Web.url Web.http_method | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmdline from datamodel=Endpoint.Processes where (Processes.parent_process_name="build-script-build*" OR Processes.parent_process="*\\target\\*\\build\\*build-script-build*" OR Processes.parent_process="*/target/*/build/*build-script-build*") (Processes.process_name IN ("curl.exe","curl","powershell.exe","pwsh.exe","wget","wget.exe")) (Processes.process="*sentry.io*" OR Processes.process="*x-sentry-envelope*" OR Processes.process="*ingest.de.sentry.io*" OR Processes.process="*4511539669368912*") by host Processes.user Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-union
-(DeviceNetworkEvents
- | where Timestamp > ago(30d)
- | where RemoteUrl has "crates.io" and (RemoteUrl has "onering/1.4.1" or RemoteUrl has "onering-1.4.1.crate")
- | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl),
-(DeviceFileEvents
- | where Timestamp > ago(30d)
- | where FileName in~ ("Cargo.lock", "Cargo.toml")
- | where InitiatingProcessFileName in~ ("cargo.exe", "cargo")
- | project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessCommandLine),
-(DeviceFileEvents
- | where Timestamp > ago(30d)
- | where FolderPath has ".cargo\\registry\\cache" or FolderPath has ".cargo/registry/cache"
- | where FileName has "onering-1.4.1"
- | project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA256)
+// onering build.rs payload: build-script-build -> curl POST envelope
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where (InitiatingProcessFileName matches regex @"(?i)^build[-_]script[-_]build(\.exe)?$"
+      or InitiatingProcessFolderPath matches regex @"(?i)[\\/]target[\\/](debug|release)[\\/]build[\\/].+[\\/]build[-_]script[-_]build")
+| where FileName in~ ("curl.exe","curl","powershell.exe","pwsh.exe","wget.exe","wget")
+| where ProcessCommandLine has_any ("sentry.io","x-sentry-envelope","ingest.de.sentry.io","4511539669368912","8197ee42c4f59c83f4cc6d48f5bae821","o4511539639222272")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Cargo manifest / lockfile references onering crate
+
+`UC_120_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name IN ("cargo.exe","cargo","rustc.exe","rustc") AND (Processes.process="*onering*" OR Processes.process="*1.4.1*onering*" OR Processes.process="*onering*1.4.1*")) OR (Processes.process_name IN ("git.exe","git") AND Processes.process="*github.com/cenotelie/onering*") by host Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+
+| append [ | tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("Cargo.toml","Cargo.lock")) by host Filesystem.file_path Filesystem.user | `drop_dm_object_name(Filesystem)` | search file_path="*onering*" OR file_path="*" ]
+```
+
+**Defender KQL:**
+```kql
+// Hunt for onering 1.4.1 ingestion via Cargo or git clone
+let OneringStrings = dynamic(["onering","cenotelie/onering"]);
+let ProcSignals = DeviceProcessEvents
+  | where Timestamp > ago(90d)
+  | where (FileName in~ ("cargo.exe","cargo","rustc.exe","rustc") and ProcessCommandLine has_any (OneringStrings))
+       or (FileName in~ ("git.exe","git") and ProcessCommandLine has "cenotelie/onering")
+       or (ProcessCommandLine has "cargo add" and ProcessCommandLine has "onering")
+  | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, EvidenceType="ProcessCmdline";
+let FileSignals = DeviceFileEvents
+  | where Timestamp > ago(90d)
+  | where FileName in~ ("Cargo.toml","Cargo.lock")
+  | where InitiatingProcessFileName in~ ("cargo.exe","cargo","code.exe","rust-analyzer.exe","rust-analyzer","git.exe","git")
+  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, ProcessCommandLine=FolderPath, InitiatingProcessFileName, EvidenceType="CargoManifestWrite";
+union ProcSignals, FileSignals
+| order by Timestamp desc
+```
+
+### Cargo build script harvesting git log/diff (onering build.rs payload)
+
+`UC_120_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmdline from datamodel=Endpoint.Processes where Processes.process_name IN ("git.exe","git") (Processes.parent_process_name="build-script-build*" OR Processes.parent_process="*\\target\\*\\build\\*build-script-build*" OR Processes.parent_process="*/target/*/build/*build-script-build*" OR Processes.parent_process_name="build_script_build*") (Processes.process="*diff HEAD^ HEAD*" OR Processes.process="*--pretty=format:{\"commit\"*" OR Processes.process="*log -n 1*--pretty*") by host Processes.user Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// onering build.rs: build-script-build -> git log/diff harvest
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("git.exe","git")
+| where InitiatingProcessFileName matches regex @"(?i)^build[-_]script[-_]build(\.exe)?$"
+     or InitiatingProcessFolderPath matches regex @"(?i)[\\/]target[\\/](debug|release)[\\/]build[\\/].+[\\/]build[-_]script[-_]build"
+| where ProcessCommandLine has_any ("diff HEAD^ HEAD", "--pretty=format:{\"commit\"", "log -n 1")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine
 | order by Timestamp desc
 ```
 

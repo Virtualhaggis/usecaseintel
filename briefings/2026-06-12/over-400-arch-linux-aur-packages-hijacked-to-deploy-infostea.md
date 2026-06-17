@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### Atomic Arch: makepkg child spawning npm install atomic-lockfile or bun install js-digest
 
-`UC_78_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_85_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceProcessEvents
 
 ### Atomic Arch: deps ELF execution by SHA256/MD5 or src/hooks/deps path
 
-`UC_78_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_85_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ union
 
 ### Atomic Arch: systemd unit with Restart=always dropped by non-package-manager process
 
-`UC_78_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_85_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ DeviceFileEvents
 
 ### Atomic Arch: eBPF rootkit pinned maps hidden_pids/hidden_names/hidden_inodes in /sys/fs/bpf/
 
-`UC_78_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_85_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ DeviceFileEvents
 
 ### Atomic Arch: outbound HTTP upload to temp.sh from developer/build host
 
-`UC_78_15` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_85_15` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -161,7 +161,7 @@ DeviceNetworkEvents
 
 ### Atomic Arch: non-Tor-aware process connecting to local SOCKS proxy on 9050/9150
 
-`UC_78_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_85_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -462,7 +462,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Over 400 Arch Linux AUR Packages Hijacked to Deploy Infostealer and eBPF Rootkit
 
-`UC_78_10` · phase: **exploit** · confidence: **High**
+`UC_85_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

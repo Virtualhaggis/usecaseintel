@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1207 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1206 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,9 +12,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [144 mastra npm packages compromised via hijacked contributor](./2026-06-17/144-mastra-npm-packages-compromised-via-hijacked-contributor.md)
 - [cisa orders feds to patch max severity joomla plugin flaw by](./2026-06-17/cisa-orders-feds-to-patch-max-severity-joomla-plugin-flaw-by.md)
 - [cisa warns of actively exploited joomla jce flaw allowing ph](./2026-06-17/cisa-warns-of-actively-exploited-joomla-jce-flaw-allowing-ph.md)
+- [crypto clipper campaign abuses fake reviews ai narrators and](./2026-06-17/crypto-clipper-campaign-abuses-fake-reviews-ai-narrators-and.md)
+- [forrester names microsoft a leader in the 2026 extended dete](./2026-06-17/forrester-names-microsoft-a-leader-in-the-2026-extended-dete.md)
 - [fortibleed 70 000 fortinet firewalls compromised in massive ](./2026-06-17/fortibleed-70-000-fortinet-firewalls-compromised-in-massive-.md)
 - [fortibleed leak exposes fortinet vpn credentials for 73 000 ](./2026-06-17/fortibleed-leak-exposes-fortinet-vpn-credentials-for-73-000-.md)
 - [from china with tenderness](./2026-06-17/from-china-with-tenderness.md)
+- [ghsa critical cve 2026 55450 langflow unauthenticated file u](./2026-06-17/ghsa-critical-cve-2026-55450-langflow-unauthenticated-file-u.md)
+- [ghsa critical cve 2026 55471 hapi fhir xxe in xsltutilities ](./2026-06-17/ghsa-critical-cve-2026-55471-hapi-fhir-xxe-in-xsltutilities-.md)
 - [gitbait phishing campaign abuses github pages to attack fina](./2026-06-17/gitbait-phishing-campaign-abuses-github-pages-to-attack-fina.md)
 - [hackers abuse cloud logging services to evade detection and ](./2026-06-17/hackers-abuse-cloud-logging-services-to-evade-detection-and-.md)
 - [hackers use clickfix prompt to install msi package and launc](./2026-06-17/hackers-use-clickfix-prompt-to-install-msi-package-and-launc.md)
@@ -27,6 +31,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [the top 10 attack surface exposures in 2026](./2026-06-17/the-top-10-attack-surface-exposures-in-2026.md)
 
 ## 2026-06-16
+- [a day in the life of an ai engineer in snyk s lisbon office](./2026-06-16/a-day-in-the-life-of-an-ai-engineer-in-snyk-s-lisbon-office.md)
 - [a forgotten contributor account compromised the entire mastr](./2026-06-16/a-forgotten-contributor-account-compromised-the-entire-mastr.md)
 - [china linked sprysocks backdoor expands to windows with driv](./2026-06-16/china-linked-sprysocks-backdoor-expands-to-windows-with-driv.md)
 - [cisa flags litespeed cpanel plugin flaw exploited for root p](./2026-06-16/cisa-flags-litespeed-cpanel-plugin-flaw-exploited-for-root-p.md)
@@ -117,7 +122,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 48063 baileys has message upsert hist](./2026-06-10/ghsa-critical-cve-2026-48063-baileys-has-message-upsert-hist.md)
 - [ivanti fortinet and sap release patches for multiple critica](./2026-06-10/ivanti-fortinet-and-sap-release-patches-for-multiple-critica.md)
 - [langflow vulnerability cve 2026 5027 exploited for unauthent](./2026-06-10/langflow-vulnerability-cve-2026-5027-exploited-for-unauthent.md)
-- [microsoft patches record 206 flaws including three zero days](./2026-06-10/microsoft-patches-record-206-flaws-including-three-zero-days.md)
 
 ## 2026-06-09
 - [blinding the watchmen abusing cloud logging services for def](./2026-06-09/blinding-the-watchmen-abusing-cloud-logging-services-for-def.md)
@@ -190,9 +194,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47429 when vitest ui server is listen](./2026-06-01/ghsa-critical-cve-2026-47429-when-vitest-ui-server-is-listen.md)
 - [miasma supply chain attack malicious code found in redhat cl](./2026-06-01/miasma-supply-chain-attack-malicious-code-found-in-redhat-cl.md)
 
-## 2026-05-30
-- [malicious npm packages abuse dependency confusion to profile](./2026-05-30/malicious-npm-packages-abuse-dependency-confusion-to-profile.md)
-
 ## 2026-05-29
 - [cisa kev cve 2026 0257 palo alto networks pan os authenticat](./2026-05-29/cisa-kev-cve-2026-0257-palo-alto-networks-pan-os-authenticat.md)
 - [fix sca issues at scale in your terminal with snyk remediati](./2026-05-29/fix-sca-issues-at-scale-in-your-terminal-with-snyk-remediati.md)
@@ -208,7 +209,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 47410 praisonai platform jwt signing ](./2026-05-29/ghsa-critical-cve-2026-47410-praisonai-platform-jwt-signing-.md)
 - [ghsa critical cve 2026 47416 praisonai platform any workspac](./2026-05-29/ghsa-critical-cve-2026-47416-praisonai-platform-any-workspac.md)
 - [how relay network adopted ai coding securely and built the f](./2026-05-29/how-relay-network-adopted-ai-coding-securely-and-built-the-f.md)
-- [microsoft is named a leader in the 2026 gartner magic quadra](./2026-05-29/microsoft-is-named-a-leader-in-the-2026-gartner-magic-quadra.md)
 - [what s in the container analyzing vulnerabilities risks and ](./2026-05-29/what-s-in-the-container-analyzing-vulnerabilities-risks-and-.md)
 
 ## 2026-05-28
@@ -317,9 +317,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 20182 cisco catalyst sd wan controller aut](./2026-05-14/cisa-kev-cve-2026-20182-cisco-catalyst-sd-wan-controller-aut.md)
 - [frostyneighbor fresh mischief and digital shenanigans](./2026-05-14/frostyneighbor-fresh-mischief-and-digital-shenanigans.md)
 - [ghsa critical cve 2026 45288 marten has an injection vulnera](./2026-05-14/ghsa-critical-cve-2026-45288-marten-has-an-injection-vulnera.md)
-- [ghsa critical cve 2026 45311 deepseek tui run tests tool ena](./2026-05-14/ghsa-critical-cve-2026-45311-deepseek-tui-run-tests-tool-ena.md)
 - [ghsa critical cve 2026 45369 utcp cli vulnerable to command ](./2026-05-14/ghsa-critical-cve-2026-45369-utcp-cli-vulnerable-to-command-.md)
-- [ghsa critical cve 2026 45374 deepseek tui task create insecu](./2026-05-14/ghsa-critical-cve-2026-45374-deepseek-tui-task-create-insecu.md)
 - [ghsa critical cve 2026 45411 vm2 has a sandbox breakout usin](./2026-05-14/ghsa-critical-cve-2026-45411-vm2-has-a-sandbox-breakout-usin.md)
 - [ghsa critical ghsa wf8q wvv8 p8jf samanhappy mcphub sse endp](./2026-05-14/ghsa-critical-ghsa-wf8q-wvv8-p8jf-samanhappy-mcphub-sse-endp.md)
 - [ongoing exploitation of cisco catalyst sd wan vulnerabilitie](./2026-05-14/ongoing-exploitation-of-cisco-catalyst-sd-wan-vulnerabilitie.md)
@@ -2205,4 +2203,3 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [snyk learn now aligns with the nist nice workforce framework](./2023-06-07/snyk-learn-now-aligns-with-the-nist-nice-workforce-framework.md)
 - [snyk welcomes enso enabling security leaders to scale their ](./2023-06-07/snyk-welcomes-enso-enabling-security-leaders-to-scale-their-.md)
 - [snyklaunch june 23 insights and deepcode ai enable faster fi](./2023-06-07/snyklaunch-june-23-insights-and-deepcode-ai-enable-faster-fi.md)
-- [what can you do with an enriched sbom a parlay quickstart gu](./2023-06-07/what-can-you-do-with-an-enriched-sbom-a-parlay-quickstart-gu.md)
