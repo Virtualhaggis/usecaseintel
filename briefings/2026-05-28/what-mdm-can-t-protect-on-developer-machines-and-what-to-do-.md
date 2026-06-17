@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### Cyberhaven trojanized Chrome extension C2 callback to cyberhavenext.pro
 
-`UC_211_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_212_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceNetworkEvents
 
 ### Mini Shai-Hulud npm worm exfil to filev2.getsession.org
 
-`UC_211_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_212_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceNetworkEvents
 
 ### Shai-Hulud worm GitHub Action workflow file dropped under .github/workflows
 
-`UC_211_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_212_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceFileEvents
 
 ### postmark-mcp BCC exfil to giftshop.club
 
-`UC_211_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_212_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ union Net, Mail
 
 ### npm/yarn/pnpm postinstall hook spawning credential-harvest tooling
 
-`UC_211_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_212_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

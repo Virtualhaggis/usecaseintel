@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Ivanti Sentry CVE-2026-10520 exploit attempt via /mics/api/v2/sentry/mics-config/handleMessage
 
-`UC_107_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_109_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### Devices running unpatched Ivanti Sentry / FortiSandbox / SAP NetWeaver versions (June 2026 advisory)
 
-`UC_107_7` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_109_7` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

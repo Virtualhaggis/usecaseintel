@@ -83,7 +83,7 @@ _(none detected from narrative keywords)_
 
 ### OceanLotus SPECTRALVIPER C2 — outbound to known C&C IPs
 
-`UC_100_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_102_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceNetworkEvents
 
 ### OceanLotus SPECTRALVIPER C2 — DNS queries to known C&C domains
 
-`UC_100_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_102_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ DeviceEvents
 
 ### SPECTRALVIPER known-bad SHA1 — file write or execution on disk
 
-`UC_100_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_102_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +162,7 @@ union
 
 ### FireAnt Metakit supply-chain — malicious update spawning suspicious child
 
-`UC_100_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_102_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -188,7 +188,7 @@ DeviceProcessEvents
 
 ### OceanLotus historical C2 — DNS tunneling to unusually long subdomain (Denis/SOUNDBITE)
 
-`UC_100_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_102_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -397,7 +397,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus: From external espionage to domestic targeting
 
-`UC_100_8` · phase: **exploit** · confidence: **High**
+`UC_102_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

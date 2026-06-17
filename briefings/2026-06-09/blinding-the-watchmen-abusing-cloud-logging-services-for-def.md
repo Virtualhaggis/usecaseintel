@@ -42,9 +42,10 @@ Executi…
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
 - **T1562.008** — Impair Defenses: Disable or Modify Cloud Logs
-- **T1070.001** — Indicator Removal: Clear Windows Event Logs
-- **T1070** — Indicator Removal
-- **T1486** — Data Encrypted for Impact
+- **T1562** — Impair Defenses
+- **T1070.001** — Indicator Removal: Clear Windows Event Logs (cloud analog)
+- **T1485** — Data Destruction
+- **T1486** — Data Encrypted for Impact (logs unreadable)
 - **T1098.003** — Account Manipulation: Additional Cloud Roles
 - **T1548.005** — Abuse Elevation Control Mechanism: Temporary Elevated Cloud Access
 
@@ -54,122 +55,77 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### AWS CloudTrail StopLogging API call suspending audit trail delivery
+### AWS CloudTrail StopLogging or DeleteTrail invoked
 
-`UC_118_4` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.object_category="cloud" All_Changes.command="StopLogging" by All_Changes.user All_Changes.object All_Changes.src All_Changes.result All_Changes.vendor_region | `drop_dm_object_name(All_Changes)` | where result!="failure" | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where Application == "Amazon Web Services"
-| where ActionType == "StopLogging"
-| project Timestamp, AccountDisplayName, AccountId, IPAddress, CountryCode, UserAgent, ActionType, ObjectName, RawEventData
-| order by Timestamp desc
-```
-
-### AWS S3 bucket deletion targeting CloudTrail log destination
-
-`UC_118_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_119_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.object_category="cloud" All_Changes.command="DeleteBucket" by All_Changes.user All_Changes.object All_Changes.src All_Changes.result All_Changes.vendor_region | `drop_dm_object_name(All_Changes)` | where result!="failure" AND (like(object,"%cloudtrail%") OR like(object,"%audit%") OR like(object,"%-log%") OR like(object,"aws-logs-%")) | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.object_category=cloud All_Changes.command IN ("StopLogging","DeleteTrail","UpdateTrail") All_Changes.status=success by All_Changes.user All_Changes.src All_Changes.command All_Changes.object All_Changes.vendor_account All_Changes.vendor_region
+| `drop_dm_object_name(All_Changes)`
+| where command="UpdateTrail" OR command="StopLogging" OR command="DeleteTrail"
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 ```
 
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where Application == "Amazon Web Services"
-| where ActionType == "DeleteBucket"
-| where ObjectName has_any ("cloudtrail","audit","-log","aws-logs")
-| project Timestamp, AccountDisplayName, IPAddress, CountryCode, UserAgent, ObjectName, ActivityObjects, RawEventData
-| order by Timestamp desc
-```
+### S3 DeleteBucket on CloudTrail log destination bucket
 
-### GCP Cloud Logging sink disabled via UpdateSink (disabled=true)
-
-`UC_118_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_119_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.object_category="cloud" All_Changes.command="google.logging.v2.ConfigServiceV2.UpdateSink" by All_Changes.user All_Changes.object All_Changes.src All_Changes.result | `drop_dm_object_name(All_Changes)` | where result!="failure" | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.object_category=cloud All_Changes.command IN ("DeleteBucket","DeleteObject","DeleteObjects") All_Changes.status=success by All_Changes.user All_Changes.src All_Changes.command All_Changes.object All_Changes.vendor_account
+| `drop_dm_object_name(All_Changes)`
+| join type=left object [
+    | tstats `summariesonly` values(All_Changes.object) as TrailBucket from datamodel=Change where All_Changes.object_category=cloud All_Changes.command=CreateTrail
+  ]
+| where command="DeleteBucket" OR (command IN ("DeleteObject","DeleteObjects") AND isnotnull(TrailBucket))
+| `security_content_ctime(firstTime)`
 ```
 
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where Application == "Google Cloud Platform"
-| where ActionType has "UpdateSink" or ActivityType has "google.logging.v2.ConfigServiceV2.UpdateSink"
-| where RawEventData has "\"disabled\":true" or RawEventData has "\"disabled\": true"
-| project Timestamp, AccountDisplayName, IPAddress, CountryCode, UserAgent, ActionType, ObjectName, RawEventData
-| order by Timestamp desc
-```
+### GCP Cloud Logging Sink disabled or deleted (log router tampering)
 
-### GCP log bucket deletion (DELETE_REQUESTED) via logging.buckets.delete
-
-`UC_118_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_119_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.object_category="cloud" All_Changes.command="google.logging.v2.ConfigServiceV2.DeleteBucket" by All_Changes.user All_Changes.object All_Changes.src All_Changes.result | `drop_dm_object_name(All_Changes)` | where result!="failure" | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.object_category=cloud All_Changes.command IN ("google.logging.v2.ConfigServiceV2.UpdateSink","google.logging.v2.ConfigServiceV2.DeleteSink") All_Changes.status=success by All_Changes.user All_Changes.src All_Changes.command All_Changes.object All_Changes.vendor_account
+| `drop_dm_object_name(All_Changes)`
+| `security_content_ctime(firstTime)`
 ```
 
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where Application == "Google Cloud Platform"
-| where ActivityType has "google.logging.v2.ConfigServiceV2.DeleteBucket" or ActionType has "DeleteBucket"
-| project Timestamp, AccountDisplayName, IPAddress, CountryCode, UserAgent, ActivityType, ObjectName, RawEventData
-| order by Timestamp desc
-```
+### GCP Cloud Logging bucket delete-requested
 
-### AWS CloudTrail UpdateTrail with KMS key change (encryption-based log impairment)
-
-`UC_118_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_119_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.object_category="cloud" (All_Changes.command="UpdateTrail" OR All_Changes.command="PutKeyPolicy") by All_Changes.user All_Changes.object All_Changes.src All_Changes.command All_Changes.result | `drop_dm_object_name(All_Changes)` | where result!="failure" | join type=left user [ search index=aws_cloudtrail eventName=UpdateTrail | rename userIdentity.arn as user | table user kmsKeyId ] | where command="UpdateTrail" AND isnotnull(kmsKeyId) | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.object_category=cloud All_Changes.command="google.logging.v2.ConfigServiceV2.DeleteBucket" All_Changes.status=success by All_Changes.user All_Changes.src All_Changes.command All_Changes.object All_Changes.vendor_account
+| `drop_dm_object_name(All_Changes)`
+| `security_content_ctime(firstTime)`
 ```
 
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where Application == "Amazon Web Services"
-| where ActionType == "UpdateTrail"
-| where RawEventData has "kmsKeyId"
-| project Timestamp, AccountDisplayName, IPAddress, CountryCode, UserAgent, ObjectName, RawEventData
-| order by Timestamp desc
-```
+### KMS DisableKey or ScheduleKeyDeletion on CloudTrail-encryption key
 
-### IAM policy grant of cloudtrail/logs admin to unprivileged principal
-
-`UC_118_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_119_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.object_category="cloud" All_Changes.command IN ("AttachUserPolicy","AttachRolePolicy","PutUserPolicy","PutRolePolicy","CreatePolicy","CreatePolicyVersion","google.iam.admin.v1.SetIamPolicy") by All_Changes.user All_Changes.object All_Changes.src All_Changes.command All_Changes.result _raw | `drop_dm_object_name(All_Changes)` | where result!="failure" AND (match(_raw,"(?i)cloudtrail:(\*|StopLogging|DeleteTrail|UpdateTrail|PutEventSelectors)") OR match(_raw,"(?i)logs:(\*|DeleteLogGroup|DeleteLogStream)") OR match(_raw,"(?i)logging\.(admin|configWriter|buckets\.delete|sinks\.update)") OR match(_raw,"AWSCloudTrail_FullAccess")) | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.object_category=cloud All_Changes.command IN ("DisableKey","ScheduleKeyDeletion","PutKeyPolicy","RevokeGrant") All_Changes.status=success by All_Changes.user All_Changes.src All_Changes.command All_Changes.object All_Changes.vendor_account
+| `drop_dm_object_name(All_Changes)`
+| `security_content_ctime(firstTime)`
 ```
 
-**Defender KQL:**
-```kql
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where Application in ("Amazon Web Services","Google Cloud Platform")
-| where ActionType in ("AttachUserPolicy","AttachRolePolicy","PutUserPolicy","PutRolePolicy","CreatePolicy","CreatePolicyVersion","SetIamPolicy")
-| where RawEventData has_any ("cloudtrail:*","cloudtrail:StopLogging","cloudtrail:DeleteTrail","cloudtrail:UpdateTrail","logs:*","logs:DeleteLogGroup","logging.admin","logging.configWriter","logging.buckets.delete","logging.sinks.update","AWSCloudTrail_FullAccess")
-| project Timestamp, AccountDisplayName, AccountId, IPAddress, CountryCode, UserAgent, ActionType, ObjectName, RawEventData
-| order by Timestamp desc
+### Privilege escalation to logging-admin permissions (CloudTrail / Logs full access)
+
+`UC_119_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.object_category=cloud All_Changes.command IN ("AttachUserPolicy","AttachRolePolicy","AttachGroupPolicy","PutUserPolicy","PutRolePolicy") All_Changes.status=success by All_Changes.user All_Changes.src All_Changes.command All_Changes.object All_Changes.object_attrs All_Changes.vendor_account
+| `drop_dm_object_name(All_Changes)`
+| where match(object_attrs, "(?i)(CloudTrail|CloudWatchLogs|cloudtrail:\*|logs:\*|logging\.admin)")
+| `security_content_ctime(firstTime)`
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -347,4 +303,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 10 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

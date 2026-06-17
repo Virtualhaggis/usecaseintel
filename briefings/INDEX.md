@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1206 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1207 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,17 +12,18 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [144 mastra npm packages compromised via hijacked contributor](./2026-06-17/144-mastra-npm-packages-compromised-via-hijacked-contributor.md)
 - [cisa orders feds to patch max severity joomla plugin flaw by](./2026-06-17/cisa-orders-feds-to-patch-max-severity-joomla-plugin-flaw-by.md)
 - [cisa warns of actively exploited joomla jce flaw allowing ph](./2026-06-17/cisa-warns-of-actively-exploited-joomla-jce-flaw-allowing-ph.md)
-- [cisa warns of oracle peoplesoft 0 day vulnerability exploite](./2026-06-17/cisa-warns-of-oracle-peoplesoft-0-day-vulnerability-exploite.md)
-- [errtraffic maas uses fake recaptcha and cloudflare turnstile](./2026-06-17/errtraffic-maas-uses-fake-recaptcha-and-cloudflare-turnstile.md)
-- [fishmonger hackers expands sprysocks backdoor from linux to ](./2026-06-17/fishmonger-hackers-expands-sprysocks-backdoor-from-linux-to-.md)
 - [fortibleed 70 000 fortinet firewalls compromised in massive ](./2026-06-17/fortibleed-70-000-fortinet-firewalls-compromised-in-massive-.md)
 - [fortibleed leak exposes fortinet vpn credentials for 73 000 ](./2026-06-17/fortibleed-leak-exposes-fortinet-vpn-credentials-for-73-000-.md)
 - [from china with tenderness](./2026-06-17/from-china-with-tenderness.md)
+- [gitbait phishing campaign abuses github pages to attack fina](./2026-06-17/gitbait-phishing-campaign-abuses-github-pages-to-attack-fina.md)
+- [hackers abuse cloud logging services to evade detection and ](./2026-06-17/hackers-abuse-cloud-logging-services-to-evade-detection-and-.md)
+- [hackers use clickfix prompt to install msi package and launc](./2026-06-17/hackers-use-clickfix-prompt-to-install-msi-package-and-launc.md)
+- [hackers use fake software update prompts to steal passwords ](./2026-06-17/hackers-use-fake-software-update-prompts-to-steal-passwords-.md)
 - [india s telegram ban hit the uae too here s how to get aroun](./2026-06-17/india-s-telegram-ban-hit-the-uae-too-here-s-how-to-get-aroun.md)
+- [junior hacker used tailscale and openssh to keep access afte](./2026-06-17/junior-hacker-used-tailscale-and-openssh-to-keep-access-afte.md)
 - [kodak confirms data breach claimed by shinyhunters extortion](./2026-06-17/kodak-confirms-data-breach-claimed-by-shinyhunters-extortion.md)
 - [malicious jetbrains plugins steal ai api keys as chrome exte](./2026-06-17/malicious-jetbrains-plugins-steal-ai-api-keys-as-chrome-exte.md)
 - [microsoft working on defender patch for rogueplanet zero day](./2026-06-17/microsoft-working-on-defender-patch-for-rogueplanet-zero-day.md)
-- [multiple jetbrains ide plugins 70 000 installs caught steali](./2026-06-17/multiple-jetbrains-ide-plugins-70-000-installs-caught-steali.md)
 - [the top 10 attack surface exposures in 2026](./2026-06-17/the-top-10-attack-surface-exposures-in-2026.md)
 
 ## 2026-06-16

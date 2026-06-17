@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### GCS bucket creation matching Vertex AI predictable staging pattern (bucket squatting precursor)
 
-`UC_32_6` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_34_6` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable google-cloud-aiplatform SDK install detected (<1.148.0)
 
-`UC_32_7` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_34_7` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceProcessEvents
 
 ### Vertex AI Model.upload artifactUri / staging_bucket references cross-project GCS bucket
 
-`UC_32_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_34_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +102,7 @@ DeviceProcessEvents
 
 ### Rapid object overwrite race in Vertex AI staging bucket (Pickle-in-the-Middle replacement)
 
-`UC_32_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_34_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceProcessEvents
 
 ### Vertex AI model deployed with artifactUri pointing to externally-owned GCS bucket
 
-`UC_32_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_34_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

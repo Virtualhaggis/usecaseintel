@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### mcp-remote OAuth authorization_endpoint RCE (CVE-2025-6514) — node spawning shell
 
-`UC_157_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_158_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceProcessEvents
 
 ### Vulnerable mcp-remote (CVE-2025-6514) version present on hosts
 
-`UC_157_3` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_158_3` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
