@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Rogue SimpleHelp Technician account created via OIDC bypass (CVE-2026-48558)
 
-`UC_48_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_49_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### SimpleHelp 'Remote Access.exe' spawning script interpreters on managed endpoints
 
-`UC_48_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_49_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### Internet-exposed SimpleHelp servers vulnerable to CVE-2026-48558
 
-`UC_48_6` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_49_6` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ Vulnerable
 
 ### Newly created SimpleHelp Technician immediately exercises privileged actions
 
-`UC_48_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_49_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -157,7 +157,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — SimpleHelp bug lets hackers create rogue remote support accounts
 
-`UC_48_3` · phase: **install** · confidence: **High**
+`UC_49_3` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

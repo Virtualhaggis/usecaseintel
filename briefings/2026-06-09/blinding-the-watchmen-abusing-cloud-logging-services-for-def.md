@@ -41,11 +41,12 @@ Executi…
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1562.001** — Impair Defenses: Disable or Modify Tools
 - **T1562.008** — Impair Defenses: Disable or Modify Cloud Logs
-- **T1070.004** — Indicator Removal: File Deletion
-- **T1530** — Data from Cloud Storage
-- **T1070.007** — Indicator Removal: Clear Network Connection History
+- **T1070.001** — Indicator Removal: Clear Windows Event Logs
+- **T1485** — Data Destruction
+- **T1098.003** — Account Manipulation: Additional Cloud Roles
+- **T1526** — Cloud Service Discovery
+- **T1619** — Cloud Storage Object Discovery
 
 ## Kill chain phases observed
 
@@ -53,124 +54,124 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### AWS CloudTrail trail disabled or deleted (StopLogging / DeleteTrail)
+### AWS CloudTrail trail disabled or deleted (StopLogging / DeleteTrail / PutEventSelectors)
 
 `UC_116_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=aws sourcetype="aws:cloudtrail" eventSource="cloudtrail.amazonaws.com" (eventName="StopLogging" OR eventName="DeleteTrail") NOT errorCode="*" | stats min(_time) as firstSeen, count by userIdentity.arn, userIdentity.type, sourceIPAddress, awsRegion, eventName, requestParameters.name | where count >= 1
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.user) as user values(All_Changes.src) as src from datamodel=Change where All_Changes.vendor_product="AWS CloudTrail" (All_Changes.command="StopLogging" OR All_Changes.command="DeleteTrail" OR All_Changes.command="PutEventSelectors" OR All_Changes.command="UpdateTrail") All_Changes.status=success by All_Changes.object All_Changes.user All_Changes.src All_Changes.command | `drop_dm_object_name(All_Changes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 CloudAppEvents
 | where Timestamp > ago(7d)
-| where Application == "Amazon Web Services"
-| where ActionType in ("StopLogging", "DeleteTrail")
-| extend TrailName = tostring(parse_json(tostring(RawEventData)).requestParameters.name)
-| project Timestamp, AccountDisplayName, AccountObjectId, ActionType, TrailName, IPAddress, CountryCode, UserAgent, RawEventData
+| where Application has "Amazon Web Services"
+| where ActionType in~ ("StopLogging", "DeleteTrail", "PutEventSelectors", "UpdateTrail")
+| extend TrailName = tostring(RawEventData.requestParameters.name)
+| extend ErrorCode = tostring(RawEventData.errorCode)
+| where isempty(ErrorCode)
+| project Timestamp, ActionType, AccountDisplayName, AccountId, IPAddress, CountryCode, TrailName, UserAgent, ActivityObjects, RawEventData
 | order by Timestamp desc
 ```
 
-### AWS CloudTrail S3 destination bucket emptied or deleted
+### S3 bucket housing CloudTrail logs deleted or emptied (DeleteBucket / bulk DeleteObject)
 
 `UC_116_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=aws sourcetype="aws:cloudtrail" eventSource="s3.amazonaws.com" eventName="DeleteBucket" NOT errorCode="*" | rename requestParameters.bucketName as bucketName | join type=left bucketName [ search index=aws sourcetype="aws:cloudtrail" eventSource="cloudtrail.amazonaws.com" eventName IN ("CreateTrail","UpdateTrail","GetTrail") | rename requestParameters.s3BucketName as bucketName | stats values(requestParameters.name) as trailName by bucketName ] | where isnotnull(trailName) | stats min(_time) as firstSeen, count by userIdentity.arn, sourceIPAddress, bucketName, trailName
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.user) as user values(All_Changes.src) as src from datamodel=Change where All_Changes.vendor_product="AWS CloudTrail" (All_Changes.command="DeleteBucket" OR All_Changes.command="DeleteObject" OR All_Changes.command="DeleteObjects" OR All_Changes.command="DeleteBucketPolicy") All_Changes.status=success by All_Changes.object All_Changes.user All_Changes.src All_Changes.command | search All_Changes.object IN ("*cloudtrail*","*audit*","*log*","*trail*") | `drop_dm_object_name(All_Changes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+let LogBucketHints = dynamic(["cloudtrail","audit","trail-logs","-logs-","logarchive"]);
 CloudAppEvents
 | where Timestamp > ago(7d)
-| where Application == "Amazon Web Services"
-| where ActionType == "DeleteBucket"
-| extend BucketName = tostring(parse_json(tostring(RawEventData)).requestParameters.bucketName)
+| where Application has "Amazon Web Services"
+| where ActionType in~ ("DeleteBucket","DeleteObject","DeleteObjects","DeleteBucketPolicy")
+| extend BucketName = tostring(RawEventData.requestParameters.bucketName)
 | where isnotempty(BucketName)
-| project Timestamp, AccountDisplayName, AccountObjectId, BucketName, IPAddress, CountryCode, UserAgent, RawEventData
-| order by Timestamp desc
+| where BucketName has_any (LogBucketHints)
+| extend ErrorCode = tostring(RawEventData.errorCode)
+| where isempty(ErrorCode)
+| summarize Events = count(), Actions = make_set(ActionType), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by BucketName, AccountDisplayName, IPAddress, UserAgent
+| where Events >= 1
+| order by LastSeen desc
 ```
 
-### AWS CloudTrail UpdateTrail config tampering (S3 destination swap or validation disabled)
+### GCP Cloud Logging sink disabled via UpdateSink (disabled=true)
 
-`UC_116_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_116_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=aws sourcetype="aws:cloudtrail" eventSource="cloudtrail.amazonaws.com" eventName="UpdateTrail" NOT errorCode="*" | rename requestParameters.name as trailName, requestParameters.s3BucketName as newBucket, requestParameters.enableLogFileValidation as logValidation | eval evasion=case(logValidation=="false","validation_disabled", isnotnull(newBucket),"destination_swapped", 1==1,"other") | where evasion!="other" | stats min(_time) as firstSeen, values(evasion) as evasionType, count by userIdentity.arn, sourceIPAddress, trailName, newBucket, logValidation
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.user) as user values(All_Changes.src) as src from datamodel=Change where All_Changes.vendor_product="Google Cloud Platform" (All_Changes.command="google.logging.v2.ConfigServiceV2.UpdateSink" OR All_Changes.command="google.logging.v2.ConfigServiceV2.DeleteSink" OR All_Changes.command="google.logging.v2.ConfigServiceV2.DeleteBucket") All_Changes.status=success by All_Changes.object All_Changes.user All_Changes.src All_Changes.command | `drop_dm_object_name(All_Changes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 CloudAppEvents
 | where Timestamp > ago(7d)
-| where Application == "Amazon Web Services"
-| where ActionType == "UpdateTrail"
-| extend Raw = parse_json(tostring(RawEventData))
-| extend TrailName = tostring(Raw.requestParameters.name)
-| extend NewBucket = tostring(Raw.requestParameters.s3BucketName)
-| extend LogValidation = tostring(Raw.requestParameters.enableLogFileValidation)
-| where isnotempty(NewBucket) or LogValidation == "false"
-| project Timestamp, AccountDisplayName, AccountObjectId, TrailName, NewBucket, LogValidation, IPAddress, UserAgent, RawEventData
+| where Application has "Google Cloud"
+| where ActionType has_any ("UpdateSink","DeleteSink","DeleteBucket")
+| extend MethodName = tostring(RawEventData.protoPayload.methodName)
+| extend SinkDisabled = tostring(RawEventData.protoPayload.request.sink.disabled)
+| extend ResourceName = tostring(RawEventData.protoPayload.resourceName)
+| extend PrincipalEmail = tostring(RawEventData.protoPayload.authenticationInfo.principalEmail)
+| extend CallerIp = tostring(RawEventData.protoPayload.requestMetadata.callerIp)
+| where MethodName has_any ("ConfigServiceV2.UpdateSink","ConfigServiceV2.DeleteSink","ConfigServiceV2.DeleteBucket")
+| where (MethodName has "UpdateSink" and SinkDisabled =~ "true") or MethodName has "DeleteSink" or MethodName has "DeleteBucket"
+| project Timestamp, MethodName, PrincipalEmail, CallerIp, ResourceName, SinkDisabled, RawEventData
 | order by Timestamp desc
 ```
 
-### GCP Cloud Logging sink disabled or deleted
+### IAM policy attached or written granting logging-impairment permissions
 
-`UC_116_7` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-index=gcp sourcetype="google:gcp:pubsub:message" (protoPayload.methodName="google.logging.v2.ConfigServiceV2.DeleteSink" OR (protoPayload.methodName="google.logging.v2.ConfigServiceV2.UpdateSink" AND protoPayload.request.sink.disabled=true)) | stats min(_time) as firstSeen, count by protoPayload.authenticationInfo.principalEmail, protoPayload.requestMetadata.callerIp, protoPayload.methodName, protoPayload.resourceName, resource.labels.project_id
-```
-
-### AWS CloudWatch Logs group deleted or retention shortened to 1 day
-
-`UC_116_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_116_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=aws sourcetype="aws:cloudtrail" eventSource="logs.amazonaws.com" (eventName="DeleteLogGroup" OR (eventName="PutRetentionPolicy" AND requestParameters.retentionInDays<=1)) NOT errorCode="*" | rename requestParameters.logGroupName as logGroup, requestParameters.retentionInDays as retentionDays | stats min(_time) as firstSeen, values(eventName) as actions, values(retentionDays) as retentionDays, count by userIdentity.arn, sourceIPAddress, logGroup
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.user) as user values(All_Changes.src) as src values(All_Changes.object_attrs) as policy from datamodel=Change where All_Changes.vendor_product="AWS CloudTrail" (All_Changes.command="PutUserPolicy" OR All_Changes.command="PutRolePolicy" OR All_Changes.command="PutGroupPolicy" OR All_Changes.command="AttachUserPolicy" OR All_Changes.command="AttachRolePolicy" OR All_Changes.command="CreatePolicyVersion") by All_Changes.object All_Changes.user All_Changes.src All_Changes.command | search policy IN ("*cloudtrail:StopLogging*","*cloudtrail:DeleteTrail*","*cloudtrail:PutEventSelectors*","*logs:DeleteLogGroup*","*logs:DeleteLogStream*","*s3:DeleteBucket*","*s3:DeleteObject*","*AdministratorAccess*") | `drop_dm_object_name(All_Changes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+let LoggingActions = dynamic(["cloudtrail:StopLogging","cloudtrail:DeleteTrail","cloudtrail:PutEventSelectors","cloudtrail:UpdateTrail","logs:DeleteLogGroup","logs:DeleteLogStream","s3:DeleteBucket","s3:DeleteObject","kms:DisableKey","kms:ScheduleKeyDeletion"]);
 CloudAppEvents
 | where Timestamp > ago(7d)
-| where Application == "Amazon Web Services"
-| where ActionType in ("DeleteLogGroup", "PutRetentionPolicy")
-| extend Req = parse_json(tostring(RawEventData)).requestParameters
-| extend LogGroup = tostring(Req.logGroupName)
-| extend RetentionDays = toint(Req.retentionInDays)
-| where ActionType == "DeleteLogGroup" or (ActionType == "PutRetentionPolicy" and RetentionDays <= 1)
-| project Timestamp, AccountDisplayName, AccountObjectId, ActionType, LogGroup, RetentionDays, IPAddress, UserAgent, RawEventData
+| where Application has "Amazon Web Services"
+| where ActionType in~ ("PutUserPolicy","PutRolePolicy","PutGroupPolicy","AttachUserPolicy","AttachRolePolicy","CreatePolicyVersion")
+| extend PolicyDoc = tostring(RawEventData.requestParameters.policyDocument)
+| extend PolicyArn = tostring(RawEventData.requestParameters.policyArn)
+| extend TargetUser = tostring(RawEventData.requestParameters.userName)
+| extend TargetRole = tostring(RawEventData.requestParameters.roleName)
+| where PolicyDoc has_any (LoggingActions) or PolicyArn has_any ("AdministratorAccess","PowerUserAccess")
+| project Timestamp, ActionType, AccountDisplayName, IPAddress, TargetUser, TargetRole, PolicyArn, PolicyDoc
 | order by Timestamp desc
 ```
 
-### AWS CloudTrail log file integrity validation disabled (EnableLogFileValidation=false)
+### Enumeration of cloud logging configuration (CloudTrail DescribeTrails / GCP ListSinks burst)
 
-`UC_116_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_116_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-index=aws sourcetype="aws:cloudtrail" eventSource="cloudtrail.amazonaws.com" (eventName="UpdateTrail" OR eventName="CreateTrail") requestParameters.enableLogFileValidation=false NOT errorCode="*" | rename requestParameters.name as trailName | stats min(_time) as firstSeen, count by userIdentity.arn, userIdentity.type, sourceIPAddress, awsRegion, trailName, eventName
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.command) as commands dc(All_Changes.command) as unique_commands from datamodel=Change where All_Changes.vendor_product IN ("AWS CloudTrail","Google Cloud Platform") (All_Changes.command="DescribeTrails" OR All_Changes.command="GetTrailStatus" OR All_Changes.command="ListTrails" OR All_Changes.command="GetEventSelectors" OR All_Changes.command="ListBuckets" OR All_Changes.command="GetBucketPolicy" OR All_Changes.command="GetBucketLogging" OR All_Changes.command="google.logging.v2.ConfigServiceV2.ListSinks" OR All_Changes.command="google.logging.v2.ConfigServiceV2.GetSink" OR All_Changes.command="google.logging.v2.ConfigServiceV2.ListBuckets") by All_Changes.user All_Changes.src span=10m | where unique_commands >= 4 | `drop_dm_object_name(All_Changes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+let DiscoveryActions = dynamic(["DescribeTrails","GetTrailStatus","ListTrails","GetEventSelectors","ListBuckets","GetBucketPolicy","GetBucketLogging","ListSinks","GetSink","ListLogBuckets"]);
 CloudAppEvents
 | where Timestamp > ago(7d)
-| where Application == "Amazon Web Services"
-| where ActionType in ("UpdateTrail", "CreateTrail")
-| extend Req = parse_json(tostring(RawEventData)).requestParameters
-| extend TrailName = tostring(Req.name)
-| extend LogValidation = tostring(Req.enableLogFileValidation)
-| where LogValidation == "false"
-| project Timestamp, AccountDisplayName, AccountObjectId, ActionType, TrailName, LogValidation, IPAddress, UserAgent, RawEventData
-| order by Timestamp desc
+| where Application has_any ("Amazon Web Services","Google Cloud")
+| where ActionType has_any (DiscoveryActions)
+| summarize UniqueActions = dcount(ActionType), Actions = make_set(ActionType, 20), Calls = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by AccountDisplayName, AccountId, IPAddress, bin(Timestamp, 10m)
+| where UniqueActions >= 4
+| order by LastSeen desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -348,4 +349,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 10 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

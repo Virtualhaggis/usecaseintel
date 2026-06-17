@@ -64,7 +64,7 @@ _(none detected from narrative keywords)_
 
 ### PlugX phishing lure — 'Meeting Invitation' email linking to gesecole.net ZIP
 
-`UC_515_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_514_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ let LureSubjects = dynamic(["Meeting Invitation","Invitation_Letter","Invitation
 
 ### Renamed MSBuild.exe executing inline .csproj from user-writable path
 
-`UC_515_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_514_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceProcessEvents | where Timestamp > ago(7d) | where FileName =~ "msbuild.exe
 
 ### PlugX DLL side-load — G DATA Avk.exe running from C:\Users\Public\GDatas\
 
-`UC_515_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_514_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceProcessEvents | where Timestamp > ago(7d) | where FileName =~ "avk.exe" or
 
 ### PlugX persistence — Run key 'G DATA' pointing to C:\Users\Public\GDatas\Avk.exe
 
-`UC_515_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_514_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceRegistryEvents | where Timestamp > ago(30d) | where ActionType in ("Regist
 
 ### PlugX C2 egress — connections to decoraat.net / decoorat.net / gesecole.net
 
-`UC_515_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_514_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -334,7 +334,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — PlugX Meeting Invitation via MSBuild and GDATA
 
-`UC_515_7` · phase: **exploit** · confidence: **High**
+`UC_514_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

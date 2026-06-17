@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1206 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1204 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,13 +9,14 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-17
+- [144 mastra npm packages compromised via hijacked contributor](./2026-06-17/144-mastra-npm-packages-compromised-via-hijacked-contributor.md)
 - [cisa warns of actively exploited joomla jce flaw allowing ph](./2026-06-17/cisa-warns-of-actively-exploited-joomla-jce-flaw-allowing-ph.md)
-- [clickfix campaign uses etherhiding and guloader to infect wi](./2026-06-17/clickfix-campaign-uses-etherhiding-and-guloader-to-infect-wi.md)
 - [deno based rat uses microsoft teams impersonation and mailbo](./2026-06-17/deno-based-rat-uses-microsoft-teams-impersonation-and-mailbo.md)
+- [from china with tenderness](./2026-06-17/from-china-with-tenderness.md)
 - [hackers abuse steam workshop application wallpapers to hijac](./2026-06-17/hackers-abuse-steam-workshop-application-wallpapers-to-hijac.md)
 - [hackers use rokarolla android malware to disable google play](./2026-06-17/hackers-use-rokarolla-android-malware-to-disable-google-play.md)
-- [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-17/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
-- [new oniondrop loader campaign uses gainmsg c2 to deliver leg](./2026-06-17/new-oniondrop-loader-campaign-uses-gainmsg-c2-to-deliver-leg.md)
+- [kodak confirms data breach claimed by shinyhunters extortion](./2026-06-17/kodak-confirms-data-breach-claimed-by-shinyhunters-extortion.md)
+- [microsoft working on defender patch for rogueplanet zero day](./2026-06-17/microsoft-working-on-defender-patch-for-rogueplanet-zero-day.md)
 - [unc3753 uses screen sharing sessions and rmm tools to exfilt](./2026-06-17/unc3753-uses-screen-sharing-sessions-and-rmm-tools-to-exfilt.md)
 
 ## 2026-06-16
@@ -60,7 +61,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [litellm vulnerability chain lets low privilege users take ov](./2026-06-15/litellm-vulnerability-chain-lets-low-privilege-users-take-ov.md)
 - [microsoft defender email security benchmarking key insights ](./2026-06-15/microsoft-defender-email-security-benchmarking-key-insights-.md)
 - [north korean hackers are turning developer tools into malwar](./2026-06-15/north-korean-hackers-are-turning-developer-tools-into-malwar.md)
-- [optinmonster wordpress plugin hacked in cdn supply chain att](./2026-06-15/optinmonster-wordpress-plugin-hacked-in-cdn-supply-chain-att.md)
 - [palo alto warns of active exploitation of pan os globalprote](./2026-06-15/palo-alto-warns-of-active-exploitation-of-pan-os-globalprote.md)
 - [popular wordpress plugin scripts tampered to plant hidden ba](./2026-06-15/popular-wordpress-plugin-scripts-tampered-to-plant-hidden-ba.md)
 - [simplehelp bug lets hackers create rogue remote support acco](./2026-06-15/simplehelp-bug-lets-hackers-create-rogue-remote-support-acco.md)
@@ -123,7 +123,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 7473 arista extensible operating system in](./2026-06-09/cisa-kev-cve-2026-7473-arista-extensible-operating-system-in.md)
 - [ghsa critical cve 2026 48030 pheditor os command injection i](./2026-06-09/ghsa-critical-cve-2026-48030-pheditor-os-command-injection-i.md)
 - [ghsa critical cve 2026 8467 phoenixstorybook unauthenticated](./2026-06-09/ghsa-critical-cve-2026-8467-phoenixstorybook-unauthenticated.md)
-- [meta to use off site business data for feed and ai personali](./2026-06-09/meta-to-use-off-site-business-data-for-feed-and-ai-personali.md)
 - [miasma worm hits microsoft again azure functions action and ](./2026-06-09/miasma-worm-hits-microsoft-again-azure-functions-action-and-.md)
 - [microsoft patch tuesday for june 2026 snort rules and promin](./2026-06-09/microsoft-patch-tuesday-for-june-2026-snort-rules-and-promin.md)
 - [pythagora io gpt pilot compromised on github shai hulud cred](./2026-06-09/pythagora-io-gpt-pilot-compromised-on-github-shai-hulud-cred.md)
@@ -646,9 +645,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 21525 microsoft windows null pointer deref](./2026-02-10/cisa-kev-cve-2026-21525-microsoft-windows-null-pointer-deref.md)
 - [cisa kev cve 2026 21533 microsoft windows improper privilege](./2026-02-10/cisa-kev-cve-2026-21533-microsoft-windows-improper-privilege.md)
 - [how a malicious google skill on clawhub tricks users into in](./2026-02-10/how-a-malicious-google-skill-on-clawhub-tricks-users-into-in.md)
-
-## 2026-02-08
-- [the gru illegals](./2026-02-08/the-gru-illegals.md)
 
 ## 2026-02-05
 - [280 leaky skills how openclaw clawhub are exposing api keys ](./2026-02-05/280-leaky-skills-how-openclaw-clawhub-are-exposing-api-keys-.md)
