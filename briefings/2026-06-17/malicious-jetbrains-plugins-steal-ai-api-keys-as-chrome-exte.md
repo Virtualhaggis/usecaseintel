@@ -23,9 +23,12 @@ Cybersecurity researchers have flagged a "coordinated malware campaign" on the J
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1567** — Exfiltration Over Web Service
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1056.003** — Web Portal Capture
-- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1119** — Automated Collection
+- **T1048.003** — Exfiltration Over Unencrypted Non-C2 Protocol
+- **T1547.014** — Boot or Logon Autostart Execution: Active Setup
+- **T1505.003** — Server Software Component
 
 ## Kill chain phases observed
 
@@ -33,65 +36,108 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### JetBrains IDE outbound to malicious AI-plugin exfil IP 39.107.60.51
+### JetBrains IDE plaintext HTTP egress to public IP (LLMjacking exfil pattern)
 
-`UC_3_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_12_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_ports values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="39.107.60.51" by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.process All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | where match(process, "(?i)(idea64|idea|pycharm64|pycharm|webstorm64|phpstorm64|rubymine64|clion64|goland64|datagrip64|rider64|fleet|appcode)\.exe$") OR match(app, "(?i)jetbrains|intellij|pycharm|webstorm|phpstorm|rubymine|clion|goland|datagrip|rider|fleet")
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.app) as app values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic where All_Traffic.dest="39.107.60.51" by All_Traffic.dest All_Traffic.dest_port All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+let JetBrainsProcs = dynamic(["idea64.exe","idea.exe","pycharm64.exe","webstorm64.exe","phpstorm64.exe","clion64.exe","rider64.exe","goland64.exe","datagrip64.exe","rustrover64.exe","rubymine64.exe","appcode.exe","studio64.exe"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP == "39.107.60.51"
-| where InitiatingProcessFileName in~ ("idea64.exe","idea.exe","pycharm64.exe","pycharm.exe","webstorm64.exe","phpstorm64.exe","rubymine64.exe","clion64.exe","goland64.exe","datagrip64.exe","rider64.exe","fleet.exe","appcode.exe")
-    or InitiatingProcessFolderPath has_any (@"\JetBrains\", "jetbrains")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, Protocol
+| extend IsJetBrainsHost = InitiatingProcessFileName in~ (JetBrainsProcs)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, Protocol, IsJetBrainsHost
 | order by Timestamp desc
 ```
 
-### Malicious Chrome adblocker extension install (PromptSnatcher IDs)
+### Malicious JetBrains Marketplace plugin package-ID dropped under user plugins dir
 
-`UC_3_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_12_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files values(Filesystem.process) as process from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\Extensions\\iojpcjjdfhlcbgjnpngcmaojmlokmeii\\*" OR Filesystem.file_path="*\\Extensions\\jcbjcocinigpbgfpnhlpagidbmlngnnn\\*") by Filesystem.dest Filesystem.user Filesystem.file_path | `drop_dm_object_name(Filesystem)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("*\\JetBrains\\*\\plugins\\*org.sm.yms.toolkit*","*\\JetBrains\\*\\plugins\\*com.json.simple.kit*","*\\JetBrains\\*\\plugins\\*org.bug.find.tools*","*\\JetBrains\\*\\plugins\\*org.translate.ai.simple*","*\\JetBrains\\*\\plugins\\*com.yy.test.ai.simple*","*\\JetBrains\\*\\plugins\\*com.dev.ai.toolkit*","*\\JetBrains\\*\\plugins\\*com.json.view.simple*","*\\JetBrains\\*\\plugins\\*com.my.git.ai.kit*","*\\JetBrains\\*\\plugins\\*org.check.ai.ds*","*\\JetBrains\\*\\plugins\\*com.review.tool.code*","*\\JetBrains\\*\\plugins\\*org.code.assist.dev.tool*","*\\JetBrains\\*\\plugins\\*com.coder.ai.dpt*","*\\JetBrains\\*\\plugins\\*com.my.code.tools*","*\\JetBrains\\*\\plugins\\*ord.cp.code.ai.kit*","*\\JetBrains\\*\\plugins\\*com.dp.git.ai.tool*") by host Filesystem.user Filesystem.file_path | `drop_dm_object_name(Filesystem)`
 ```
 
 **Defender KQL:**
 ```kql
+let MaliciousPkgIds = dynamic(["org.sm.yms.toolkit","com.json.simple.kit","org.bug.find.tools","org.translate.ai.simple","com.yy.test.ai.simple","com.dev.ai.toolkit","com.json.view.simple","com.my.git.ai.kit","org.check.ai.ds","com.review.tool.code","org.code.assist.dev.tool","com.coder.ai.dpt","com.my.code.tools","ord.cp.code.ai.kit","com.dp.git.ai.tool"]);
 DeviceFileEvents
-| where Timestamp > ago(180d)
-| where ActionType in ("FileCreated","FileRenamed","FileModified")
-| where FolderPath has_any (@"\Extensions\iojpcjjdfhlcbgjnpngcmaojmlokmeii\", @"\Extensions\jcbjcocinigpbgfpnhlpagidbmlngnnn\")
-| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Files = make_set(FileName, 25), Writers = make_set(InitiatingProcessFileName, 5) by DeviceName, InitiatingProcessAccountName, ExtensionId = extract(@"\\Extensions\\([a-z]{32})\\", 1, FolderPath)
-| order by FirstSeen desc
+| where Timestamp > ago(30d)
+| where FolderPath has "JetBrains" and FolderPath has "plugins"
+| where FolderPath has_any (MaliciousPkgIds) or FileName has_any (MaliciousPkgIds)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, FolderPath, SHA256, ActionType
+| order by Timestamp desc
 ```
 
-### JetBrains plugin install matching Aikido malicious DeepSeek/CodeGPT plugin set
+### Malicious Chrome ad-blocker extension installed (Smart Adblocker / Adblock for Browser)
 
-`UC_3_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_12_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files values(Filesystem.process) as process from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\JetBrains\\*\\plugins\\*" OR Filesystem.file_path="*\\.IntelliJIdea*\\config\\plugins\\*" OR Filesystem.file_path="*\\.PyCharm*\\config\\plugins\\*" OR Filesystem.file_path="*\\.WebStorm*\\config\\plugins\\*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | search file_path IN ("*DeepSeek Junit*","*DeepSeek Git Commit*","*DeepSeek FindBugs*","*DeepSeek AI Chat*","*DeepSeek Dev AI*","*DeepSeek AI Coding*","*AI FindBugs*","*AI Git Commitor*","*AI Coder Review*","*DeepSeek Coder AI*","*AI Coder Assistant*","*DeepSeek Code Review*","*CodeGPT AI Assistant*","*DeepSeek AI Assist*","*Coding Simple Tool*")
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\Chrome\\User Data\\*\\Extensions\\iojpcjjdfhlcbgjnpngcmaojmlokmeii\\*" OR Filesystem.file_path="*\\Chrome\\User Data\\*\\Extensions\\jcbjcocinigpbgfpnhlpagidbmlngnnn\\*") by host Filesystem.file_path | `drop_dm_object_name(Filesystem)`
 ```
 
 **Defender KQL:**
 ```kql
-let MaliciousPluginNames = dynamic(["DeepSeek Junit Test","DeepSeek Git Commit","DeepSeek FindBugs","DeepSeek AI Chat","DeepSeek Dev AI","DeepSeek AI Coding","AI FindBugs","AI Git Commitor","AI Coder Review","DeepSeek Coder AI","AI Coder Assistant","DeepSeek Code Review","CodeGPT AI Assistant","DeepSeek AI Assist","Coding Simple Tool"]);
-let MaliciousPluginIds = dynamic(["org.sm.yms.toolkit","com.json.simple.kit","org.bug.find.tools","org.translate.ai.simple","com.yy.test.ai.simple","com.dev.ai.toolkit","com.json.view.simple","com.my.git.ai.kit","org.check.ai.ds","com.review.tool.code","org.code.assist.dev.tool","com.coder.ai.dpt","com.my.code.tools","ord.cp.code.ai.kit","com.dp.git.ai.tool"]);
+let BadExtIds = dynamic(["iojpcjjdfhlcbgjnpngcmaojmlokmeii","jcbjcocinigpbgfpnhlpagidbmlngnnn"]);
 DeviceFileEvents
-| where Timestamp > ago(240d)
-| where ActionType in ("FileCreated","FileRenamed","FileModified")
-| where FolderPath has "plugins" and (FolderPath has @"\JetBrains\" or FolderPath has @"\.IntelliJIdea" or FolderPath has @"\.PyCharm" or FolderPath has @"\.WebStorm" or FolderPath has @"\.PhpStorm" or FolderPath has @"\.GoLand" or FolderPath has @"\.RubyMine" or FolderPath has @"\.CLion" or FolderPath has @"\.DataGrip" or FolderPath has @"\.Rider")
-| where FolderPath has_any (MaliciousPluginNames) or FileName has_any (MaliciousPluginIds) or FolderPath has_any (MaliciousPluginIds)
-| summarize FirstSeen = min(Timestamp), Files = make_set(FileName, 50) by DeviceName, InitiatingProcessAccountName, FolderPath, InitiatingProcessFileName
-| order by FirstSeen desc
+| where Timestamp > ago(90d)
+| where FolderPath has_any ("\\Chrome\\User Data\\","/Chrome/Default/Extensions/","/google-chrome/Default/Extensions/","/Application Support/Google/Chrome/Default/Extensions/")
+| where FolderPath has_any (BadExtIds)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, FolderPath, ActionType
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count() by DeviceName, InitiatingProcessAccountName, FolderPath
+| order by LastSeen desc
+```
+
+### JetBrains IDE process initiates plaintext HTTP POST to external IP
+
+`UC_12_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic where All_Traffic.app IN ("idea64.exe","idea.exe","pycharm64.exe","webstorm64.exe","phpstorm64.exe","clion64.exe","rider64.exe","goland64.exe","datagrip64.exe","rustrover64.exe","rubymine64.exe") All_Traffic.dest_port=80 NOT (All_Traffic.dest IN ("10.0.0.0/8","172.16.0.0/12","192.168.0.0/16","127.0.0.0/8","169.254.0.0/16")) by host All_Traffic.app All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)`
+```
+
+**Defender KQL:**
+```kql
+let JetBrainsProcs = dynamic(["idea64.exe","idea.exe","pycharm64.exe","webstorm64.exe","phpstorm64.exe","clion64.exe","rider64.exe","goland64.exe","datagrip64.exe","rustrover64.exe","rubymine64.exe","appcode.exe","studio64.exe"]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ (JetBrainsProcs)
+| where RemotePort == 80
+| where RemoteIPType == "Public"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, Protocol
+| summarize Hits=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Destinations=make_set(RemoteIP, 50) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName
+| order by LastSeen desc
+```
+
+### JetBrains plugin manifest dropped under user-writable plugins directory by non-IDE process
+
+`UC_12_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.file_name IN ("plugin.xml") Filesystem.file_path="*\\JetBrains\\*\\plugins\\*" NOT Filesystem.process_name IN ("idea64.exe","idea.exe","pycharm64.exe","webstorm64.exe","phpstorm64.exe","clion64.exe","rider64.exe","goland64.exe","datagrip64.exe","rustrover64.exe","rubymine64.exe","toolbox.exe") by host Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+let JetBrainsProcs = dynamic(["idea64.exe","idea.exe","pycharm64.exe","webstorm64.exe","phpstorm64.exe","clion64.exe","rider64.exe","goland64.exe","datagrip64.exe","rustrover64.exe","rubymine64.exe","toolbox.exe","appcode.exe","studio64.exe"]);
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName =~ "plugin.xml"
+| where FolderPath has "JetBrains" and FolderPath has "plugins"
+| where InitiatingProcessFileName !in~ (JetBrainsProcs)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, FolderPath, FileName, ActionType
+| order by Timestamp desc
 ```
 
 ### Suspicious browser extension installation
@@ -182,4 +228,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 7 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -25,93 +25,12 @@ With time-to-exploit now down to a sin…
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1212** — Exploitation for Credential Access
-- **T1595.002** — Vulnerability Scanning
-- **T1595.003** — Wordlist Scanning
-- **T1592.002** — Gather Victim Host Information: Software
-- **T1657** — Financial Theft
-- **T1485** — Data Destruction
-- **T1595.001** — Active Scanning: Scanning IP Blocks
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### MongoBleed CVE-2025-14847 unauthenticated memory disclosure against exposed MongoDB
-
-`UC_0_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count, values(All_Traffic.src) as src_ips, dc(All_Traffic.src) as distinct_sources, min(_time) as first_seen, max(_time) as last_seen from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=27017 (All_Traffic.direction=inbound OR All_Traffic.transport=tcp) NOT (All_Traffic.src IN ("10.0.0.0/8","172.16.0.0/12","192.168.0.0/16")) by All_Traffic.dest, All_Traffic.src, _time span=1h | `drop_dm_object_name(All_Traffic)` | where count > 10 | eval mongobleed_cve="CVE-2025-14847" | sort -count
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("InboundConnectionAccepted","ConnectionAcknowledged","ConnectionSuccess")
-| where LocalPort == 27017
-| where RemoteIPType == "Public"
-| summarize ConnectionCount = count(), DistinctSourceIPs = dcount(RemoteIP), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), SampleSources = make_set(RemoteIP, 10) by DeviceName, DeviceId
-| where ConnectionCount > 10
-| join kind=leftouter (DeviceTvmSoftwareVulnerabilities | where CveId == "CVE-2025-14847" | project DeviceId, CveId, VulnerabilitySeverityLevel) on DeviceId
-| project FirstSeen, LastSeen, DeviceName, ConnectionCount, DistinctSourceIPs, SampleSources, CveId, VulnerabilitySeverityLevel
-| order by ConnectionCount desc
-```
-
-### External enumeration of Swagger / OpenAPI / API documentation endpoints
-
-`UC_0_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count, dc(Web.url) as distinct_paths, values(Web.url) as urls, values(Web.http_user_agent) as user_agents, min(_time) as first_seen, max(_time) as last_seen from datamodel=Web.Web where (Web.url="*swagger*" OR Web.url="*api-docs*" OR Web.url="*openapi.json*" OR Web.url="*openapi.yaml*" OR Web.url="*/v1/docs*" OR Web.url="*/v2/api-docs*" OR Web.url="*/v3/api-docs*" OR Web.url="*swagger-ui*" OR Web.url="*api-explorer*" OR Web.url="*redoc*") Web.status IN (200,304) NOT (Web.src IN ("10.0.0.0/8","172.16.0.0/12","192.168.0.0/16")) by Web.src, Web.dest, _time span=1h | `drop_dm_object_name(Web)` | where count > 5 OR distinct_paths >= 3 | sort -count
-```
-
-### PLEASE_READ_ME-style ransom-note artifact dropped on database host
-
-`UC_0_7` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count, values(Filesystem.file_path) as paths, values(Filesystem.process_name) as procs, min(_time) as first_seen from datamodel=Endpoint.Filesystem where Filesystem.action IN ("created","modified","renamed") (Filesystem.file_name="PLEASE_READ_ME*" OR Filesystem.file_name="please_read_me*" OR Filesystem.file_name="READ_ME_TO_RECOVER*" OR Filesystem.file_name="README_TO_RECOVER_YOUR_DATA*" OR Filesystem.file_name="PLEASE_READ*") by Filesystem.dest, Filesystem.user, Filesystem.file_name, _time span=15m | `drop_dm_object_name(Filesystem)` | sort 0 - _time
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileRenamed","FileModified")
-| where FileName matches regex @"(?i)^(please[_\-\s]?read[_\-\s]?me|read[_\-\s]?me[_\-\s]?to[_\-\s]?recover|readme[_\-\s]?for[_\-\s]?decrypt|recover[_\-\s]?your[_\-\s]?data)"
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, OSPlatform, IsInternetFacing) by DeviceId) on DeviceId
-| project Timestamp, DeviceName, OSPlatform, IsInternetFacing, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
-| order by Timestamp desc
-```
-
-### Single source scanning multiple top-10 exposed database/admin/legacy ports
-
-`UC_0_8` · phase: **recon** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count, dc(All_Traffic.dest_port) as distinct_ports, values(All_Traffic.dest_port) as ports_hit, dc(All_Traffic.dest) as distinct_targets, min(_time) as first_seen, max(_time) as last_seen from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (3306,5432,3389,161,1900,123,111,27017) NOT (All_Traffic.src IN ("10.0.0.0/8","172.16.0.0/12","192.168.0.0/16")) by All_Traffic.src, _time span=1h | `drop_dm_object_name(All_Traffic)` | where distinct_ports >= 4 | sort -distinct_ports
-```
-
-**Defender KQL:**
-```kql
-let TopExposurePorts = dynamic([3306, 5432, 3389, 161, 1900, 123, 111, 27017]);
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where ActionType in ("InboundConnectionAccepted","ConnectionAcknowledged","ConnectionSuccess","ConnectionAttempt")
-| where RemoteIPType == "Public"
-| where LocalPort in (TopExposurePorts)
-| summarize DistinctPortsScanned = dcount(LocalPort), DistinctTargets = dcount(DeviceName), PortsList = make_set(LocalPort), TargetsList = make_set(DeviceName, 10), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Hits = count() by RemoteIP, bin(Timestamp, 1h)
-| where DistinctPortsScanned >= 4
-| order by DistinctPortsScanned desc, Hits desc
-```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -236,4 +155,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### JDY botnet distributed reconnaissance scan against perimeter from SOHO IP cohort
 
-`UC_104_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_105_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceNetworkEvents
 
 ### Internet-facing edge devices exposing CVE-2026-35616 (JDY weaponization target)
 
-`UC_104_7` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_105_7` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Internal SOHO/IoT host scanning external destinations (JDY botnet member behaviour)
 
-`UC_104_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_105_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### MIPS/MIPSel architecture-specific payload write (JDY shell-script dropper indicator)
 
-`UC_104_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_105_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

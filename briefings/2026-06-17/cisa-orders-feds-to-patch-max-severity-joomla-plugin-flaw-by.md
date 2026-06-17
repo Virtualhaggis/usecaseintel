@@ -11,22 +11,22 @@ By Sergiu Gatlan
 June 17, 2026
 06:09 AM
 0 
-
-
 The U.S. Cybersecurity and Infrastructure Security Agency (CISA) has ordered federal agencies to patch a maximum-severity flaw in the Widget Factory Joomla Content Editor (JCE) plugin that is being actively exploited in the wild.
-
-
-Tracked as CVE-2026-48907 , this vulnerability can be exploited by threat actors without privileges to achieve code execution via low-complexity atta…
+Tracked as CVE-2026-48907 , this vulnerability can be exploited by threat actors without privileges to achieve code execution via low-complexity attacks targ…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **CVE:** `CVE-2026-48907`
+- **IPv4 (defanged):** `107.149.130.5`
+- **IPv4 (defanged):** `92.38.150.143`
+- **IPv4 (defanged):** `45.153.129.241`
 
 ## MITRE ATT&CK Techniques
 
 - **T1190** — Exploit Public-Facing Application
-- **T1505.003** — Web Shell
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1071** — Application Layer Protocol
+- **T1505.003** — Server Software Component: Web Shell
+- **T1595.002** — Active Scanning: Vulnerability Scanning
 
 ## Kill chain phases observed
 
@@ -34,59 +34,45 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### JCE Joomla profiles.import unauthenticated exploit request (CVE-2026-48907)
+### Joomla JCE profile.import unauthenticated RCE attempt (CVE-2026-48907)
 
-`UC_1_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as methods values(Web.http_user_agent) as user_agents values(Web.status) as statuses from datamodel=Web where (Web.url="*option=com_jce*" AND Web.url="*profiles.import*") OR (Web.uri_query="*com_jce*" AND Web.uri_query="*profiles.import*") by Web.src Web.dest Web.url
-| `drop_dm_object_name(Web)`
-| sort - lastTime
-```
-
-### PHP webshell dropped under Joomla web-root by web-server process (post-CVE-2026-48907)
-
-`UC_1_2` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_10_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_hash) as hashes from datamodel=Endpoint.Filesystem where (Filesystem.file_name="*.php" OR Filesystem.file_name="*.phtml" OR Filesystem.file_name="*.phar") AND (Filesystem.file_path="*/tmp/*" OR Filesystem.file_path="*/components/com_jce/*" OR Filesystem.file_path="*/media/com_jce/*" OR Filesystem.file_path="*/images/*" OR Filesystem.file_path="*/media/*") AND (Filesystem.process_name IN ("apache2","httpd","nginx","php-fpm*","php","w3wp.exe","www-data")) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name
-| `drop_dm_object_name(Filesystem)`
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src values(Web.status) as status from datamodel=Web.Web where Web.url="*com_jce*" AND (Web.url="*task=plugin*" OR Web.url="*profile*" OR Web.url="*imgmanager*" OR Web.url="*filemanager*") by Web.dest Web.http_method Web.user_agent | `drop_dm_object_name(Web)` | where status<400 OR status=200 | `security_content_ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
+DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileRenamed","FileModified")
-| where FileName endswith ".php" or FileName endswith ".phtml" or FileName endswith ".phar" or FileName endswith ".php5" or FileName endswith ".php7"
-| where FolderPath has_any ("/tmp/","/components/com_jce/","/media/com_jce/","/images/","/media/","\\components\\com_jce\\","\\images\\","\\media\\")
-| where InitiatingProcessFileName in~ ("apache2","httpd","nginx","php-fpm","php-fpm7.4","php-fpm8.0","php-fpm8.1","php-fpm8.2","php-fpm8.3","php","w3wp.exe")
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256, FileSize, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessFolderPath
+| where LocalPort in (80, 443, 8080, 8443)
+| where RemoteIPType == "Public"
+| where InitiatingProcessFileName in~ ("w3wp.exe","httpd.exe","apache2","nginx","php-fpm")
+| where RemoteUrl has_any ("com_jce","index.php?option=com_jce","task=plugin","imgmanager","filemanager")
+   or AdditionalFields has_any ("com_jce","profile.import")
+| project Timestamp, DeviceName, RemoteIP, RemoteUrl, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### Web-server / PHP process spawning shell or recon binary (Joomla JCE webshell execution)
+### Inbound HTTP from published CVE-2026-48907 JCE exploitation IPs
 
-`UC_1_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_10_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("apache2","httpd","nginx","php-fpm","php-fpm7.4","php-fpm8.0","php-fpm8.1","php-fpm8.2","php-fpm8.3","php","w3wp.exe")) AND (Processes.process_name IN ("sh","bash","dash","zsh","ksh","python","python3","perl","ruby","wget","curl","nc","ncat","socat","whoami","id","uname","powershell.exe","cmd.exe","certutil.exe","bitsadmin.exe")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process
-| `drop_dm_object_name(Processes)`
-| sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_port values(All_Traffic.dest) as dest from datamodel=Network_Traffic.All_Traffic where All_Traffic.src in ("107.149.130.5","92.38.150.143","45.153.129.241") AND All_Traffic.dest_port in (80,443,8080,8443) by All_Traffic.src All_Traffic.action | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("apache2","httpd","nginx","php-fpm","php-fpm7.4","php-fpm8.0","php-fpm8.1","php-fpm8.2","php-fpm8.3","php","w3wp.exe")
-| where FileName in~ ("sh","bash","dash","zsh","ksh","python","python3","perl","ruby","wget","curl","nc","ncat","socat","whoami","id","uname","hostname","powershell.exe","cmd.exe","certutil.exe","bitsadmin.exe")
-| where InitiatingProcessCommandLine !has "akeeba" and InitiatingProcessCommandLine !has "composer"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("InboundConnectionAccepted","ConnectionSuccess","ConnectionFound")
+| where RemoteIP in ("107.149.130.5","92.38.150.143","45.153.129.241")
+| where LocalPort in (80, 443, 8080, 8443)
+| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalIP, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType
 | order by Timestamp desc
 ```
 
@@ -97,7 +83,10 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2026-48907`
 
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `107.149.130.5`, `92.38.150.143`, `45.153.129.241`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 4 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, IOCs present, 4 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

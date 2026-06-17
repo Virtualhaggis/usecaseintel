@@ -51,58 +51,67 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### AWS CloudTrail StopLogging / DeleteTrail / UpdateTrail / PutEventSelectors — audit-trail blinding
+### AWS CloudTrail StopLogging API call disabling audit trail
 
-`UC_117_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_118_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Change.user) as user values(Change.src) as src values(Change.object) as trail values(Change.command) as command from datamodel=Change where Change.vendor_product="AWS CloudTrail" Change.command IN ("StopLogging","DeleteTrail","UpdateTrail","PutEventSelectors") Change.status="success" by Change.user Change.object Change.command | `drop_dm_object_name(Change)` | where NOT match(user,"(?i)(ci-cd|terraform|backup-svc|aws-controltower)") | eval firstTime=strftime(firstTime,"%Y-%m-%d %H:%M:%S"), lastTime=strftime(lastTime,"%Y-%m-%d %H:%M:%S")
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.src) as src values(All_Changes.user) as user values(All_Changes.object) as trail_name from datamodel=Change where All_Changes.vendor_product="AWS CloudTrail" All_Changes.command="StopLogging" by All_Changes.user All_Changes.object All_Changes.status | `drop_dm_object_name(All_Changes)` | where status="success" | convert ctime(firstTime) ctime(lastTime)
 ```
 
-### AWS S3 DeleteBucket targeting CloudTrail log destination bucket
+### AWS CloudTrail trail deletion via DeleteTrail API
 
-`UC_117_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_118_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count values(Change.user) as user values(Change.src) as src values(Change.object) as bucket from datamodel=Change where Change.vendor_product="AWS CloudTrail" Change.command="DeleteBucket" Change.status="success" Change.object IN ("*cloudtrail*","*aws-cloudtrail-logs-*","*audit-logs*","*-logs-*") by Change.user Change.object _time span=1h | `drop_dm_object_name(Change)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.src) as src values(All_Changes.object) as trail_name from datamodel=Change where All_Changes.vendor_product="AWS CloudTrail" All_Changes.command IN ("DeleteTrail","PutEventSelectors") All_Changes.status="success" by All_Changes.user All_Changes.command All_Changes.object | `drop_dm_object_name(All_Changes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
-### GCP Cloud Logging sink disabled or deleted — log router tampering
+### S3 DeleteBucket targeting a CloudTrail log destination bucket
 
-`UC_117_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_118_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count values(Change.user) as user values(Change.src) as src values(Change.object) as sink from datamodel=Change where Change.vendor_product="Google Cloud Platform" Change.command IN ("google.logging.v2.ConfigServiceV2.UpdateSink","google.logging.v2.ConfigServiceV2.DeleteSink") Change.status="success" by Change.user Change.object Change.command _time | `drop_dm_object_name(Change)` | search command="*DeleteSink" OR (command="*UpdateSink" AND _raw="*\"disabled\":true*")
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.src) as src values(All_Changes.user) as user from datamodel=Change where All_Changes.vendor_product="AWS CloudTrail" All_Changes.command="DeleteBucket" All_Changes.status="success" by All_Changes.object | `drop_dm_object_name(All_Changes)` | rename object as bucket_name | join type=left bucket_name [ | tstats `summariesonly` count as object_deletes from datamodel=Change where All_Changes.vendor_product="AWS CloudTrail" All_Changes.command="DeleteObject" by All_Changes.object | `drop_dm_object_name(All_Changes)` | rename object as bucket_name ] | where object_deletes > 50 OR isnull(object_deletes) | convert ctime(firstTime) ctime(lastTime)
 ```
 
-### GCP Cloud Logging log bucket DELETE_REQUESTED — 7-day shadow window
+### S3 PutBucketLogging disabling access logs or DeleteBucketPolicy stripping CloudTrail writes
 
-`UC_117_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_118_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count values(Change.user) as user values(Change.src) as src values(Change.object) as bucket from datamodel=Change where Change.vendor_product="Google Cloud Platform" Change.command="google.logging.v2.ConfigServiceV2.DeleteBucket" Change.status="success" by Change.user Change.object _time | `drop_dm_object_name(Change)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.src) as src values(All_Changes.user) as user values(All_Changes.object) as bucket from datamodel=Change where All_Changes.vendor_product="AWS CloudTrail" All_Changes.command IN ("PutBucketLogging","DeleteBucketPolicy","PutBucketPolicy") All_Changes.status="success" by All_Changes.user All_Changes.command All_Changes.object | `drop_dm_object_name(All_Changes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
-### AWS S3 PutBucketLogging disabling server access logs
+### GCP Cloud Logging sink disabled or deleted to break log routing
 
-`UC_117_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_118_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count values(Change.user) as user values(Change.src) as src values(Change.object) as bucket from datamodel=Change where Change.vendor_product="AWS CloudTrail" Change.command="PutBucketLogging" Change.status="success" by Change.user Change.object _time _raw | `drop_dm_object_name(Change)` | search NOT _raw="*LoggingEnabled*TargetBucket*"
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.src) as src values(All_Changes.object) as sink_name from datamodel=Change where All_Changes.vendor_product="Google Cloud Platform" All_Changes.command IN ("google.logging.v2.ConfigServiceV2.UpdateSink","google.logging.v2.ConfigServiceV2.DeleteSink") All_Changes.status="success" by All_Changes.user All_Changes.command All_Changes.object | `drop_dm_object_name(All_Changes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
-### Cloud logging enumeration followed by disablement within 15 minutes
+### GCP Cloud Logging bucket deletion entering 7-day DELETE_REQUESTED state
 
-`UC_117_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_118_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Change where (Change.vendor_product="AWS CloudTrail" OR Change.vendor_product="Google Cloud Platform") Change.command IN ("DescribeTrails","GetTrailStatus","ListTrails","GetEventSelectors","google.logging.v2.ConfigServiceV2.ListSinks","google.logging.v2.ConfigServiceV2.GetSink","google.logging.v2.ConfigServiceV2.ListBuckets") by Change.user _time span=15m | `drop_dm_object_name(Change)` | rename count as DiscoveryCount, user as Principal | join type=inner Principal [| tstats `summariesonly` count as DisableCount values(Change.command) as DisableActions from datamodel=Change where Change.command IN ("StopLogging","DeleteTrail","PutEventSelectors","google.logging.v2.ConfigServiceV2.DeleteSink","google.logging.v2.ConfigServiceV2.UpdateSink","google.logging.v2.ConfigServiceV2.DeleteBucket") by Change.user _time span=15m | `drop_dm_object_name(Change)` | rename user as Principal] | where DisableCount > 0
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.src) as src values(All_Changes.object) as bucket from datamodel=Change where All_Changes.vendor_product="Google Cloud Platform" All_Changes.command="google.logging.v2.ConfigServiceV2.DeleteBucket" All_Changes.status="success" by All_Changes.user All_Changes.object | `drop_dm_object_name(All_Changes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+### Cloud logging service discovery followed by destructive logging API call
+
+`UC_118_10` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` min(_time) as discovery_time from datamodel=Change where All_Changes.vendor_product="AWS CloudTrail" All_Changes.command IN ("DescribeTrails","GetTrail","GetEventSelectors","ListTrails","GetBucketLogging","GetBucketPolicy") by All_Changes.user | `drop_dm_object_name(All_Changes)` | rename user as principal | join type=inner principal [ | tstats `summariesonly` min(_time) as evasion_time values(All_Changes.command) as evasion_action values(All_Changes.object) as evasion_target from datamodel=Change where All_Changes.vendor_product="AWS CloudTrail" All_Changes.command IN ("StopLogging","DeleteTrail","PutEventSelectors","DeleteBucket","PutBucketLogging") by All_Changes.user | `drop_dm_object_name(All_Changes)` | rename user as principal ] | eval delay_seconds = evasion_time - discovery_time | where delay_seconds > 0 AND delay_seconds <= 1800 | convert ctime(discovery_time) ctime(evasion_time)
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -280,4 +289,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 10 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 11 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -44,52 +44,41 @@ _(none detected from narrative keywords)_
 
 ### Ivanti Sentry CVE-2026-10520 exploit attempt via /mics/api/v2/sentry/mics-config/handleMessage
 
-`UC_106_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_107_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as http_method values(Web.user_agent) as user_agent values(Web.status) as status from datamodel=Web where Web.url="*/mics/api/v2/sentry/mics-config/handleMessage*" by Web.src, Web.dest, Web.url | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count, values(Web.http_method) as methods, values(Web.http_user_agent) as user_agents, values(Web.status) as statuses, min(_time) as first_seen, max(_time) as last_seen from datamodel=Web where Web.url="*/mics/api/v2/sentry/mics-config/handleMessage*" by Web.src, Web.dest, Web.url
+| `drop_dm_object_name(Web)`
+| eval first_seen=strftime(first_seen,"%Y-%m-%d %H:%M:%S"), last_seen=strftime(last_seen,"%Y-%m-%d %H:%M:%S")
+| sort - count
+```
+
+### Devices running unpatched Ivanti Sentry / FortiSandbox / SAP NetWeaver versions (June 2026 advisory)
+
+`UC_107_7` · phase: **recon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count, values(Vulnerabilities.signature) as signature, values(Vulnerabilities.severity) as severity, min(_time) as first_seen, max(_time) as last_seen from datamodel=Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128") by Vulnerabilities.dest, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| eval first_seen=strftime(first_seen,"%Y-%m-%d %H:%M:%S"), last_seen=strftime(last_seen,"%Y-%m-%d %H:%M:%S")
+| sort 0 cve, dest
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has "/mics/api/v2/sentry/mics-config/handleMessage"
-   or AdditionalFields has "mics-config/handleMessage"
-| project Timestamp, DeviceName, DeviceId, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessAccountSid
-| order by Timestamp desc
-```
-
-### Pre-patch Ivanti Sentry / FortiSandbox / SAP NetWeaver versions exposed to the article CVEs
-
-`UC_106_7` · phase: **recon** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen values(Vulnerabilities.signature) as signature values(Vulnerabilities.severity) as severity values(Vulnerabilities.vendor_product) as vendor_product from datamodel=Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128") by Vulnerabilities.dest, Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | `security_content_ctime(firstSeen)` | `security_content_ctime(lastSeen)` | sort - severity
-```
-
-**Defender KQL:**
-```kql
-let article_cves = dynamic(["CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128"]);
+let advisory_cves = dynamic(["CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128"]);
 DeviceTvmSoftwareVulnerabilities
-| where CveId in (article_cves)
+| where Timestamp > ago(1d)
+| where CveId in (advisory_cves)
 | join kind=leftouter (
     DeviceInfo
-    | summarize arg_max(Timestamp, IsInternetFacing, PublicIP, OSPlatform, MachineGroup) by DeviceId
+    | where Timestamp > ago(1d)
+    | summarize arg_max(Timestamp, IsInternetFacing, PublicIP) by DeviceId
   ) on DeviceId
-| join kind=leftouter (
-    DeviceTvmSoftwareVulnerabilitiesKB
-    | summarize arg_max(LastModifiedTime, CvssScore, IsExploitAvailable, PublishedDate) by CveId
-  ) on CveId
-| project DeviceName, DeviceId, IsInternetFacing, PublicIP, OSPlatform, MachineGroup,
-          SoftwareVendor, SoftwareName, SoftwareVersion,
-          CveId, CvssScore, IsExploitAvailable, VulnerabilitySeverityLevel,
-          RecommendedSecurityUpdate, RecommendedSecurityUpdateId
-| order by IsInternetFacing desc, CvssScore desc
+| project Timestamp, DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing, PublicIP
+| order by IsInternetFacing desc, VulnerabilitySeverityLevel desc, SoftwareVendor asc, DeviceName asc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1205 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1206 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -12,13 +12,15 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [144 mastra npm packages compromised via hijacked contributor](./2026-06-17/144-mastra-npm-packages-compromised-via-hijacked-contributor.md)
 - [cisa orders feds to patch max severity joomla plugin flaw by](./2026-06-17/cisa-orders-feds-to-patch-max-severity-joomla-plugin-flaw-by.md)
 - [cisa warns of actively exploited joomla jce flaw allowing ph](./2026-06-17/cisa-warns-of-actively-exploited-joomla-jce-flaw-allowing-ph.md)
-- [deno based rat uses microsoft teams impersonation and mailbo](./2026-06-17/deno-based-rat-uses-microsoft-teams-impersonation-and-mailbo.md)
+- [cisa warns of oracle peoplesoft 0 day vulnerability exploite](./2026-06-17/cisa-warns-of-oracle-peoplesoft-0-day-vulnerability-exploite.md)
+- [errtraffic maas uses fake recaptcha and cloudflare turnstile](./2026-06-17/errtraffic-maas-uses-fake-recaptcha-and-cloudflare-turnstile.md)
+- [fishmonger hackers expands sprysocks backdoor from linux to ](./2026-06-17/fishmonger-hackers-expands-sprysocks-backdoor-from-linux-to-.md)
 - [from china with tenderness](./2026-06-17/from-china-with-tenderness.md)
-- [hackers abuse steam workshop application wallpapers to hijac](./2026-06-17/hackers-abuse-steam-workshop-application-wallpapers-to-hijac.md)
-- [hackers use rokarolla android malware to disable google play](./2026-06-17/hackers-use-rokarolla-android-malware-to-disable-google-play.md)
+- [india s telegram ban hit the uae too here s how to get aroun](./2026-06-17/india-s-telegram-ban-hit-the-uae-too-here-s-how-to-get-aroun.md)
 - [kodak confirms data breach claimed by shinyhunters extortion](./2026-06-17/kodak-confirms-data-breach-claimed-by-shinyhunters-extortion.md)
 - [malicious jetbrains plugins steal ai api keys as chrome exte](./2026-06-17/malicious-jetbrains-plugins-steal-ai-api-keys-as-chrome-exte.md)
 - [microsoft working on defender patch for rogueplanet zero day](./2026-06-17/microsoft-working-on-defender-patch-for-rogueplanet-zero-day.md)
+- [multiple jetbrains ide plugins 70 000 installs caught steali](./2026-06-17/multiple-jetbrains-ide-plugins-70-000-installs-caught-steali.md)
 - [the top 10 attack surface exposures in 2026](./2026-06-17/the-top-10-attack-surface-exposures-in-2026.md)
 
 ## 2026-06-16
@@ -57,7 +59,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [chinese hackers abused google workspace rules to steal resea](./2026-06-15/chinese-hackers-abused-google-workspace-rules-to-steal-resea.md)
 - [cisa kev cve 2026 20262 cisco catalyst sd wan manager direct](./2026-06-15/cisa-kev-cve-2026-20262-cisco-catalyst-sd-wan-manager-direct.md)
 - [cisa kev cve 2026 54420 litespeed cpanel plugin unix symboli](./2026-06-15/cisa-kev-cve-2026-54420-litespeed-cpanel-plugin-unix-symboli.md)
-- [doj seizes cfake socfake deepfake nude sites under take it d](./2026-06-15/doj-seizes-cfake-socfake-deepfake-nude-sites-under-take-it-d.md)
 - [eviltokens a phishing attack that doesn t steal your passwor](./2026-06-15/eviltokens-a-phishing-attack-that-doesn-t-steal-your-passwor.md)
 - [ghsa critical cve 2026 53633 vitest browser exposed browser ](./2026-06-15/ghsa-critical-cve-2026-53633-vitest-browser-exposed-browser-.md)
 - [inside the modern soc the 72 minute race](./2026-06-15/inside-the-modern-soc-the-72-minute-race.md)
