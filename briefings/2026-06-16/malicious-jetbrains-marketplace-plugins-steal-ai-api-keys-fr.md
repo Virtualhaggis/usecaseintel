@@ -11,15 +11,9 @@ By Lawrence Abrams
 June 16, 2026
 05:54 PM
 0 
-
-
 At least 15 malicious plugins found on the JetBrains Marketplace were designed to steal AI API keys from developers.
-
-
 The campaign, discovered by Aikido Security, includes plugins that act as AI coding assistants, code-review tools, and Git utilities powered by popular AI services such as OpenAI, DeepSeek, and SiliconFlow.
-
-
-"We detected a coordinated malware campaign…
+"We detected a coordinated malware campaign on the JetB…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -43,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious JetBrains Marketplace plugin install by ID (Aikido campaign)
 
-`UC_0_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_4_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +57,7 @@ DeviceFileEvents
 
 ### JetBrains IDE outbound to attacker C2 39.107.60.51 over plaintext HTTP
 
-`UC_0_2` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_4_2` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +78,7 @@ DeviceNetworkEvents
 
 ### Outbound HTTP request to URI path /api/software/key (plugin exfil endpoint)
 
-`UC_0_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_4_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +96,7 @@ DeviceNetworkEvents
 
 ### JetBrains IDE plaintext HTTP to bare-IP destination (no domain) — plugin exfil shape
 
-`UC_0_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_4_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

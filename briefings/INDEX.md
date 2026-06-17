@@ -1,12 +1,16 @@
 # Briefings — full archive
 
-_1203 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1204 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-06-17
+- [clickfix campaign uses etherhiding and guloader to infect wi](./2026-06-17/clickfix-campaign-uses-etherhiding-and-guloader-to-infect-wi.md)
+- [ghostwriter hackers abuse gmail admin themed emails to steal](./2026-06-17/ghostwriter-hackers-abuse-gmail-admin-themed-emails-to-steal.md)
 
 ## 2026-06-16
 - [china linked sprysocks backdoor expands to windows with driv](./2026-06-16/china-linked-sprysocks-backdoor-expands-to-windows-with-driv.md)
@@ -22,12 +26,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghosttree attack abused recursive windows junctions to hide ](./2026-06-16/ghosttree-attack-abused-recursive-windows-junctions-to-hide-.md)
 - [ghsa critical cve 2026 48519 langflow unauthenticated rce in](./2026-06-16/ghsa-critical-cve-2026-48519-langflow-unauthenticated-rce-in.md)
 - [ghsa critical cve 2026 48746 vllm openai auth bypass](./2026-06-16/ghsa-critical-cve-2026-48746-vllm-openai-auth-bypass.md)
+- [ghsa critical cve 2026 49468 litellm authentication bypass v](./2026-06-16/ghsa-critical-cve-2026-49468-litellm-authentication-bypass-v.md)
+- [ghsa critical cve 2026 49980 rclone unauthenticated command ](./2026-06-16/ghsa-critical-cve-2026-49980-rclone-unauthenticated-command-.md)
 - [ghsa critical cve 2026 53753 crawl4ai ast sandbox escape via](./2026-06-16/ghsa-critical-cve-2026-53753-crawl4ai-ast-sandbox-escape-via.md)
 - [ghsa critical cve 2026 54157 lobehub unauthenticated ssrf in](./2026-06-16/ghsa-critical-cve-2026-54157-lobehub-unauthenticated-ssrf-in.md)
 - [ghsa critical ghsa 365w hqf6 vxfg crawl4ai multiple docker a](./2026-06-16/ghsa-critical-ghsa-365w-hqf6-vxfg-crawl4ai-multiple-docker-a.md)
 - [google vertex ai sdk flaw let attackers hijack model uploads](./2026-06-16/google-vertex-ai-sdk-flaw-let-attackers-hijack-model-uploads.md)
 - [hackers weaponize microsoft teams relay to hide ransomware t](./2026-06-16/hackers-weaponize-microsoft-teams-relay-to-hide-ransomware-t.md)
-- [interlock and rhysida ransomware operations share supper bac](./2026-06-16/interlock-and-rhysida-ransomware-operations-share-supper-bac.md)
 - [malicious jetbrains marketplace plugins steal ai api keys fr](./2026-06-16/malicious-jetbrains-marketplace-plugins-steal-ai-api-keys-fr.md)
 - [microsoft 365 device code phishing campaign bypasses passwor](./2026-06-16/microsoft-365-device-code-phishing-campaign-bypasses-passwor.md)
 - [multiple jetbrains ide plugins caught stealing ai keys](./2026-06-16/multiple-jetbrains-ide-plugins-caught-stealing-ai-keys.md)
@@ -306,8 +311,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-14
 - [cisa kev cve 2026 20182 cisco catalyst sd wan controller aut](./2026-05-14/cisa-kev-cve-2026-20182-cisco-catalyst-sd-wan-controller-aut.md)
 - [frostyneighbor fresh mischief and digital shenanigans](./2026-05-14/frostyneighbor-fresh-mischief-and-digital-shenanigans.md)
-- [ghsa critical cve 2026 44849 portainer has an endpoint secur](./2026-05-14/ghsa-critical-cve-2026-44849-portainer-has-an-endpoint-secur.md)
-- [ghsa critical cve 2026 44990 apostrophe has default xss via ](./2026-05-14/ghsa-critical-cve-2026-44990-apostrophe-has-default-xss-via-.md)
 - [ghsa critical cve 2026 45288 marten has an injection vulnera](./2026-05-14/ghsa-critical-cve-2026-45288-marten-has-an-injection-vulnera.md)
 - [ghsa critical cve 2026 45311 deepseek tui run tests tool ena](./2026-05-14/ghsa-critical-cve-2026-45311-deepseek-tui-run-tests-tool-ena.md)
 - [ghsa critical cve 2026 45369 utcp cli vulnerable to command ](./2026-05-14/ghsa-critical-cve-2026-45369-utcp-cli-vulnerable-to-command-.md)

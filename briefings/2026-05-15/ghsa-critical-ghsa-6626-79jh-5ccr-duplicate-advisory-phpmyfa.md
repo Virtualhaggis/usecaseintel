@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### phpMyFAQ /admin/check unauthenticated TOTP brute-force (CVE GHSA-9pq7-mfwh-xx2j)
 
-`UC_299_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_301_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### phpMyFAQ 2FA bypass success: /admin/check brute burst followed by authenticated /admin/ access
 
-`UC_299_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_301_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

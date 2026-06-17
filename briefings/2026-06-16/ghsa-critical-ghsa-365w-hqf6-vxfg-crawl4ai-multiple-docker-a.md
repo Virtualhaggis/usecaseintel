@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Crawl4AI SSRF: outbound to cloud metadata or RFC1918 from crawler process
 
-`UC_3_1` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_7_1` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceNetworkEvents
 
 ### Crawl4AI /execute_js endpoint POST — arbitrary JavaScript RCE vector
 
-`UC_3_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceNetworkEvents
 
 ### Crawl4AI unauthenticated /monitor/* access (auth-bypass CWE-306)
 
-`UC_3_3` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_7_3` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-365w-hqf6-vxfg: Crawl4AI: Multiple Docker API Vulnerabili
 
-`UC_3_0` · phase: **install** · confidence: **High**
+`UC_7_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

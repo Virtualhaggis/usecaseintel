@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Outbound traffic to tidio.cc or 84.201.6.54 (Awesome Motive supply-chain C2)
 
-`UC_54_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_56_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceNetworkEvents
 
 ### Tampered PushEngage SDK fetched from clientcdn.pushengage.com during exposure window
 
-`UC_54_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_56_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceNetworkEvents
 
 ### Rogue WordPress admin account created matching developer_api1 / dev_xxxxxx
 
-`UC_54_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_56_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ union
 
 ### Suspicious WordPress plugin folder created (content-delivery-helper / database-optimizer)
 
-`UC_54_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_56_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -136,7 +136,7 @@ DeviceFileEvents
 
 ### WordPress PHP process spawning shell from wp-content directory
 
-`UC_54_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_56_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -215,7 +215,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Popular WordPress Plugin Scripts Tampered to Plant Hidden Backdoors on Sites
 
-`UC_54_4` · phase: **exploit** · confidence: **High**
+`UC_56_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
