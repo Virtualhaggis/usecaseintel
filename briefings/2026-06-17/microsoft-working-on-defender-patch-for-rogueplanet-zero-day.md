@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Microsoft Defender Engine (MsMpEng) spawning interactive shell - RoguePlanet CVE-2026-50656
 
-`UC_26_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_28_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceProcessEvents
 
 ### Endpoint DNS / web access to Nightmare Eclipse exploit-hosting domain projectnightcrawler.dev
 
-`UC_26_3` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_28_3` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

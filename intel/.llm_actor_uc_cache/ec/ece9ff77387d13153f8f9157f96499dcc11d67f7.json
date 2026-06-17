@@ -1,0 +1,57 @@
+{
+  "name": "Volt Typhoon",
+  "ucs": [
+    {
+      "title": "[LLM] Volt Typhoon NTDS.dit theft via ntdsutil 'IFM' snapshot on domain controllers",
+      "description": "Detects the exact ntdsutil command chain Volt Typhoon (a.k.a. Vanguard Panda / VOLTZITE / BRONZE SILHOUETTE) uses in CISA AA24-038A to dump Active Directory's NTDS.dit + SYSTEM hive to a staging directory ('activate instance ntds' + 'ifm' + 'create full <path>'). This LOLBIN-only credential-access pivot is on every Volt Typhoon intrusion in CISA/NSA/FBI reporting and is rarely run by legitimate admins outside disaster-recovery rehearsals.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1003.003",
+        "T1059.003",
+        "T1218"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.parent_process_name) as parents from datamodel=Endpoint.Processes where Processes.process_name=ntdsutil.exe (Processes.process=\"*ifm*\" Processes.process=\"*create full*\" OR Processes.process=\"*ac i ntds*\" OR Processes.process=\"*activate instance ntds*\") by host Processes.user Processes.process_name Processes.dest | `drop_dm_object_name(\"Processes\")` | where NOT match(user, \"\\$$\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "DeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName =~ \"ntdsutil.exe\"\n| where ProcessCommandLine has_all (\"ifm\", \"create full\")\n   or ProcessCommandLine has \"ac i ntds\"\n   or ProcessCommandLine has \"activate instance ntds\"\n| where AccountName !endswith \"$\"\n| where AccountName !in~ (\"system\",\"local service\",\"network service\")\n| project Timestamp, DeviceName, AccountName,\n          ParentImage = InitiatingProcessFileName,\n          ParentCmd   = InitiatingProcessCommandLine,\n          ProcessCommandLine, SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "SecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| where NewProcessName endswith \"\\\\ntdsutil.exe\"\n| where CommandLine has_all (\"ifm\", \"create full\")\n   or CommandLine has \"ac i ntds\"\n   or CommandLine has \"activate instance ntds\"\n| where SubjectUserName !endswith \"$\"\n| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: Volt Typhoon NTDS.dit Theft via ntdsutil IFM Snapshot\nid: 8a4c2f7b-9d12-4b3e-9f0a-3e2c1f6e9a7d\nstatus: experimental\ndescription: Detects ntdsutil being used with 'IFM' / 'create full' / 'activate instance ntds' arguments \u2014 the specific NTDS.dit extraction chain attributed to Volt Typhoon (Vanguard Panda) in CISA AA24-038A.\nreferences:\n  - https://www.cisa.gov/news-events/cybersecurity-advisories/aa24-038a\nauthor: SOC Detection Engineering\ndate: 2026/06/17\ntags:\n  - attack.credential_access\n  - attack.t1003.003\n  - attack.g1017\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_image:\n    Image|endswith: '\\ntdsutil.exe'\n  selection_args:\n    - CommandLine|contains|all:\n        - 'ifm'\n        - 'create full'\n    - CommandLine|contains: 'ac i ntds'\n    - CommandLine|contains: 'activate instance ntds'\n  filter_machine_acct:\n    User|endswith: '$'\n  condition: selection_image and selection_args and not filter_machine_acct\nfalsepositives:\n  - Authorized AD disaster-recovery / IFM media creation by domain admins\nlevel: high\n",
+      "datadog_query": "source:windows.sysmon @EventID:1 @Image:(*\\ntdsutil.exe OR *\\NTDSUtil.exe OR *\\NTDSUTIL.EXE) (@CommandLine:(*ifm* AND *\"create full\"*) OR @CommandLine:*\"ac i ntds\"* OR @CommandLine:*\"activate instance ntds\"*) -@User:*$",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ImageFileName=/\\\\ntdsutil\\.exe$/i\n| CommandLine=/(ifm.*create\\s+full|ac\\s+i\\s+ntds|activate\\s+instance\\s+ntds)/i\n| NOT UserName=/\\$$/\n| groupBy([aid, ComputerName, UserName, ParentBaseFileName, CommandLine], function=count())",
+      "cloudwatch_query": "",
+      "rationale": "The ntdsutil 'ac i ntds' + 'ifm' + 'create full' chain is the verbatim DC-credential-dump procedure Volt Typhoon used at the US Pacific water utility and the Guam communications intrusion (per CISA AA24-038A and Microsoft MERCURY/VOLTZITE writeups). Because Volt Typhoon's signature is strict LOTL \u2014 no Mimikatz, no custom droppers \u2014 high-signal hooks are necessarily on these built-in administrative"
+    },
+    {
+      "title": "[LLM] Volt Typhoon LOTL discovery burst \u2014 multiple host-recon LOLBins from one parent within minutes",
+      "description": "Volt Typhoon's hands-on-keyboard reconnaissance signature is a fast burst of built-in Windows discovery commands (whoami, ipconfig /all, netstat -ano, net user/group, systeminfo, tasklist /v, nltest, quser, route print, arp -a, query user, wmic) spawned by a single cmd.exe / PowerShell parent within a few minutes. CISA, Microsoft, and CrowdStrike (Vanguard Panda) reporting all flag this exact post-edge-device-compromise enumeration burst as the actor's tradecraft fingerprint.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "actions",
+      "conf": "high",
+      "techs": [
+        "T1033",
+        "T1016",
+        "T1049",
+        "T1057",
+        "T1069.002",
+        "T1082",
+        "T1087.002"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats `security_content_summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as commands dc(Processes.process_name) as tool_count values(Processes.process_name) as tools from datamodel=Endpoint.Processes where Processes.process_name IN (whoami.exe, ipconfig.exe, netstat.exe, net.exe, net1.exe, systeminfo.exe, tasklist.exe, quser.exe, nltest.exe, arp.exe, route.exe, query.exe, wmic.exe, hostname.exe) by host Processes.user Processes.parent_process_id Processes.parent_process_name _time span=5m | `drop_dm_object_name(\"Processes\")` | where tool_count >= 5 AND NOT match(user, \"\\$$\") AND match(parent_process_name, \"(?i)(cmd|powershell|pwsh|wmiprvse|services)\\.exe\") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let ReconBins = dynamic([\"whoami.exe\",\"ipconfig.exe\",\"netstat.exe\",\"net.exe\",\"net1.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"quser.exe\",\"nltest.exe\",\"arp.exe\",\"route.exe\",\"query.exe\",\"wmic.exe\",\"hostname.exe\"]);\nDeviceProcessEvents\n| where Timestamp > ago(7d)\n| where FileName in~ (ReconBins)\n| where AccountName !endswith \"$\"\n| where AccountName !in~ (\"system\",\"local service\",\"network service\")\n| where InitiatingProcessFileName in~ (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"wmiprvse.exe\",\"services.exe\",\"explorer.exe\")\n| summarize Distinct = dcount(FileName),\n            Tools    = make_set(FileName, 32),\n            FirstSeen = min(Timestamp),\n            LastSeen  = max(Timestamp),\n            SampleCmds = make_set(ProcessCommandLine, 32)\n            by DeviceName, AccountName, InitiatingProcessId, InitiatingProcessFileName,\n               Bucket = bin(Timestamp, 5m)\n| where Distinct >= 5\n| order by FirstSeen desc",
+      "sentinel_kql": "let ReconBins = dynamic([\"whoami.exe\",\"ipconfig.exe\",\"netstat.exe\",\"net.exe\",\"net1.exe\",\"systeminfo.exe\",\"tasklist.exe\",\"quser.exe\",\"nltest.exe\",\"arp.exe\",\"route.exe\",\"query.exe\",\"wmic.exe\",\"hostname.exe\"]);\nSecurityEvent\n| where TimeGenerated > ago(7d)\n| where EventID == 4688\n| extend Binary = tolower(tostring(split(NewProcessName, \"\\\\\")[-1]))\n| extend ParentBinary = tolower(tostring(split(ParentProcessName, \"\\\\\")[-1]))\n| where Binary in (ReconBins)\n| where SubjectUserName !endswith \"$\"\n| where ParentBinary in~ (\"cmd.exe\",\"powershell.exe\",\"pwsh.exe\",\"wmiprvse.exe\",\"services.exe\",\"explorer.exe\")\n| summarize Distinct = dcount(Binary),\n            Tools    = make_set(Binary, 32),\n            FirstSeen = min(TimeGenerated),\n            LastSeen  = max(TimeGenerated),\n            SampleCmds = make_set(CommandLine, 32)\n            by Computer, SubjectUserName, ProcessId, ParentBinary,\n               Bucket = bin(TimeGenerated, 5m)\n| where Distinct >= 5\n| order by FirstSeen desc",
+      "sigma_yaml": "",
+      "datadog_query": "source:windows.sysmon @EventID:1 @ParentImage:(*\\cmd.exe OR *\\CMD.EXE OR *\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\wmiprvse.exe OR *\\WmiPrvSE.exe) @Image:(*\\whoami.exe OR *\\WHOAMI.EXE OR *\\ipconfig.exe OR *\\IPCONFIG.EXE OR *\\netstat.exe OR *\\NETSTAT.EXE OR *\\net.exe OR *\\NET.EXE OR *\\net1.exe OR *\\NET1.EXE OR *\\systeminfo.exe OR *\\SYSTEMINFO.EXE OR *\\tasklist.exe OR *\\TASKLIST.EXE OR *\\quser.exe OR *\\QUSER.EXE OR *\\nltest.exe OR *\\NLTEST.EXE OR *\\arp.exe OR *\\ARP.EXE OR *\\route.exe OR *\\ROUTE.EXE OR *\\wmic.exe OR *\\WMIC.EXE OR *\\hostname.exe OR *\\HOSTNAME.EXE) -@User:*$",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ImageFileName=/\\\\(whoami|ipconfig|netstat|net1?|systeminfo|tasklist|quser|nltest|arp|route|query|wmic|hostname)\\.exe$/i ParentBaseFileName=/(cmd|powershell|pwsh|wmiprvse|services|explorer)\\.exe$/i\n| NOT UserName=/\\$$/\n| groupBy([aid, ComputerName, UserName, ParentBaseFileName, bin(_time, 5m)], function={count(field=ImageFileName, distinct=true, as=tool_count) | collect([ImageFileName, CommandLine])})\n| tool_count >= 5",
+      "cloudwatch_query": "",
+      "rationale": "Volt Typhoon's intrusions are uniquely characterised by LOTL-only post-exploitation \u2014 no implants, no Mimikatz, no Cobalt Strike. Microsoft's May 2023 Volt Typhoon advisory and CISA AA24-038A both publish almost identical recon-command lists run within the same logon session, often invoked from a single cmd.exe spawned by w3wp.exe or a webshell on a public-facing Fortinet/Ivanti/NetScaler applianc"
+    }
+  ]
+}
