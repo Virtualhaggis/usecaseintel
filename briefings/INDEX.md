@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1204 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1207 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,9 +9,17 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-18
+- [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-18/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
+- [evilginx aitm attack captures microsoft credentials mfa toke](./2026-06-18/evilginx-aitm-attack-captures-microsoft-credentials-mfa-toke.md)
 - [from package to postinstall payload inside the mastra npm su](./2026-06-18/from-package-to-postinstall-payload-inside-the-mastra-npm-su.md)
+- [hackers abuse powershell commands to deliver smartrat throug](./2026-06-18/hackers-abuse-powershell-commands-to-deliver-smartrat-throug.md)
+- [hackers abuse powershell vbscript and bat files to deliver x](./2026-06-18/hackers-abuse-powershell-vbscript-and-bat-files-to-deliver-x.md)
 - [hackers actively exploiting wordpress smtp plugin with 100 0](./2026-06-18/hackers-actively-exploiting-wordpress-smtp-plugin-with-100-0.md)
+- [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-18/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
+- [miasma and hades are spreading now detect them on developer ](./2026-06-18/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)
 - [microsoft confirms defender rogueplanet 0 day exploit and wo](./2026-06-18/microsoft-confirms-defender-rogueplanet-0-day-exploit-and-wo.md)
+- [prevent npm and python supply chain attacks on developer mac](./2026-06-18/prevent-npm-and-python-supply-chain-attacks-on-developer-mac.md)
+- [rust clipboard hijacker uses fake github stars and virustota](./2026-06-18/rust-clipboard-hijacker-uses-fake-github-stars-and-virustota.md)
 - [splunk ai toolkit vulnerability enables arbitrary os command](./2026-06-18/splunk-ai-toolkit-vulnerability-enables-arbitrary-os-command.md)
 
 ## 2026-06-17
@@ -26,8 +34,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [from china with tenderness](./2026-06-17/from-china-with-tenderness.md)
 - [ghsa critical cve 2026 55450 langflow unauthenticated file u](./2026-06-17/ghsa-critical-cve-2026-55450-langflow-unauthenticated-file-u.md)
 - [ghsa critical cve 2026 55471 hapi fhir xxe in xsltutilities ](./2026-06-17/ghsa-critical-cve-2026-55471-hapi-fhir-xxe-in-xsltutilities-.md)
-- [gitbait phishing campaign abuses github pages to attack fina](./2026-06-17/gitbait-phishing-campaign-abuses-github-pages-to-attack-fina.md)
-- [hackers abuse cloud logging services to evade detection and ](./2026-06-17/hackers-abuse-cloud-logging-services-to-evade-detection-and-.md)
 - [india s telegram ban hit the uae too here s how to get aroun](./2026-06-17/india-s-telegram-ban-hit-the-uae-too-here-s-how-to-get-aroun.md)
 - [junior hacker used tailscale and openssh to keep access afte](./2026-06-17/junior-hacker-used-tailscale-and-openssh-to-keep-access-afte.md)
 - [kodak confirms data breach claimed by shinyhunters extortion](./2026-06-17/kodak-confirms-data-breach-claimed-by-shinyhunters-extortion.md)
@@ -60,7 +66,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [new rokarolla android malware steals pins sms codes and cryp](./2026-06-16/new-rokarolla-android-malware-steals-pins-sms-codes-and-cryp.md)
 - [new rokarolla android malware targets 217 banking crypto app](./2026-06-16/new-rokarolla-android-malware-targets-217-banking-crypto-app.md)
 - [pickle in the middle hijacking vertex ai model uploads for c](./2026-06-16/pickle-in-the-middle-hijacking-vertex-ai-model-uploads-for-c.md)
-- [prevent npm and python supply chain attacks on developer mac](./2026-06-16/prevent-npm-and-python-supply-chain-attacks-on-developer-mac.md)
 - [steam workshop abused to spread malware via wallpaper engine](./2026-06-16/steam-workshop-abused-to-spread-malware-via-wallpaper-engine.md)
 
 ## 2026-06-15
@@ -84,7 +89,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [when a government pulls an ai model what the fable 5 and myt](./2026-06-14/when-a-government-pulls-an-ai-model-what-the-fable-5-and-myt.md)
 
 ## 2026-06-13
-- [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-13/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
 - [critical splunk enterprise flaw lets attackers run code with](./2026-06-13/critical-splunk-enterprise-flaw-lets-attackers-run-code-with.md)
 
 ## 2026-06-12
@@ -108,7 +112,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 48039 meta ads mcp unauthenticated ht](./2026-06-11/ghsa-critical-cve-2026-48039-meta-ads-mcp-unauthenticated-ht.md)
 - [ghsa critical cve 2026 48062 codeigniter4 has a validation b](./2026-06-11/ghsa-critical-cve-2026-48062-codeigniter4-has-a-validation-b.md)
 - [github to disable npm install scripts by default to stop sup](./2026-06-11/github-to-disable-npm-install-scripts-by-default-to-stop-sup.md)
-- [miasma and hades are spreading now detect them on developer ](./2026-06-11/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)
 - [new attacks trick openclaw ai agent into running code and le](./2026-06-11/new-attacks-trick-openclaw-ai-agent-into-running-code-and-le.md)
 - [new greatxml exploit bypasses windows bitlocker via recovery](./2026-06-11/new-greatxml-exploit-bypasses-windows-bitlocker-via-recovery.md)
 - [npm v12 delivers one of the biggest security improvements in](./2026-06-11/npm-v12-delivers-one-of-the-biggest-security-improvements-in.md)

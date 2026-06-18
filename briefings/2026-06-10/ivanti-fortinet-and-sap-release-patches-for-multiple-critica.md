@@ -33,7 +33,9 @@ The security flaw patched by Fortinet relates to a command injection vulnerabili
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1592.002** — Gather Victim Host Information: Software
+- **T1136** — Create Account
+- **T1078** — Valid Accounts
+- **T1083** — File and Directory Discovery
 
 ## Kill chain phases observed
 
@@ -41,38 +43,58 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Ivanti Sentry MICS handleMessage endpoint exploitation attempt (CVE-2026-10520 / CVE-2026-10523)
+### Ivanti Sentry MICS handleMessage unauthenticated command injection (CVE-2026-10520)
 
-`UC_120_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_123_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as methods values(Web.http_user_agent) as user_agents values(Web.status) as status from datamodel=Web where Web.url="*/mics/api/v2/sentry/mics-config/handleMessage*" by Web.src, Web.dest, Web.url
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as methods values(Web.user_agent) as user_agents values(Web.status) as statuses values(Web.src) as src_ips from datamodel=Web where Web.url="*/mics/api/v2/sentry/mics-config/handleMessage*" by Web.dest, Web.url
 | `drop_dm_object_name(Web)`
-| eval firstTime=strftime(firstTime,"%Y-%m-%d %H:%M:%S"), lastTime=strftime(lastTime,"%Y-%m-%d %H:%M:%S")
-| sort - lastTime
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
-### Vulnerable SAP NetWeaver / Ivanti Sentry / FortiSandbox version inventory (June 2026 patch wave)
+### Asset exposure inventory for the June 2026 Ivanti / Fortinet / SAP critical CVE batch
 
-`UC_120_7` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_123_7` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstSeen from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128") by Vulnerabilities.dest, Vulnerabilities.cve, Vulnerabilities.severity, Vulnerabilities.signature, Vulnerabilities.vendor_product
+| tstats summariesonly=true count values(Vulnerabilities.signature) as signatures values(Vulnerabilities.severity) as severities min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128") by Vulnerabilities.dest, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| eval firstSeen=strftime(firstSeen,"%Y-%m-%d %H:%M:%S")
-| sort severity dest
+| convert ctime(firstTime) ctime(lastTime)
+| sort 0 - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
-| where Timestamp > ago(1d)
 | where CveId in ("CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128")
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, IsInternetFacing, OSPlatform, MachineGroup) by DeviceId) on DeviceId
-| project DeviceName, DeviceId, OSPlatform, MachineGroup, IsInternetFacing, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by IsInternetFacing desc, VulnerabilitySeverityLevel asc, DeviceName asc
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, DeviceName, OSPlatform, IsInternetFacing, PublicIP, MachineGroup) by DeviceId) on DeviceId
+| project Timestamp, DeviceName, OSPlatform, MachineGroup, IsInternetFacing, PublicIP, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, AffectedSoftwareSku
+| order by IsInternetFacing desc, VulnerabilitySeverityLevel desc, Timestamp desc
+```
+
+### Ivanti Sentry administrator account created via MICS auth-bypass (CVE-2026-10523)
+
+`UC_123_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count values(Change.user) as users values(Change.src) as src_ips values(Change.object) as new_accounts min(_time) as firstTime max(_time) as lastTime from datamodel=Change where Change.action="created" Change.object_category="user" Change.dest="*sentry*" by Change.dest, Change.object, Change.user
+| `drop_dm_object_name(Change)`
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+### SAP NetWeaver Java Web Container directory-traversal probe (CVE-2026-40128)
+
+`UC_123_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as methods values(Web.user_agent) as user_agents values(Web.status) as statuses from datamodel=Web where (Web.url="*/irj/*" OR Web.url="*/webdynpro/*" OR Web.url="*/j2ee/*" OR Web.url="*/sap/*") (Web.url="*../*" OR Web.url="*..%2f*" OR Web.url="*..%5c*" OR Web.url="*%2e%2e%2f*" OR Web.url="*%2e%2e/*") by Web.src, Web.dest, Web.url
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -284,4 +306,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

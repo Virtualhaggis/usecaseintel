@@ -235,7 +235,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — CanisterWorm: How a Self-Propagating npm Worm Is Spreading Backdoors Across the
 
-`UC_444_6` · phase: **exploit** · confidence: **High**
+`UC_446_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

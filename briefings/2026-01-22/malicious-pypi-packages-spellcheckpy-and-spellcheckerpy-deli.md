@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### PyPI install of malicious typosquat spellcheckpy or spellcheckerpy
 
-`UC_622_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_624_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### Python parent spawns detached 'python3 -' child reading payload from stdin
 
-`UC_622_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_624_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceProcessEvents
 
 ### C2 beacon or stage-2 fetch to updatenet[.]work / 172.86.73.139 / dothebest[.]store
 
-`UC_622_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_624_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -343,7 +343,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Malicious PyPI Packages spellcheckpy and spellcheckerpy Deliver Python RAT
 
-`UC_622_9` · phase: **exploit** · confidence: **High**
+`UC_624_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

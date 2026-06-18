@@ -65,7 +65,7 @@ _(none detected from narrative keywords)_
 
 ### FireAnt Metakit.exe spawning setup.exe — malicious update download chain
 
-`UC_112_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_115_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceProcessEvents
 
 ### SPECTRALVIPER DLL side-load — DtlCrashCatch.dll dropped/loaded from non-system path
 
-`UC_112_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_115_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ union
 
 ### SPECTRALVIPER injection into OneDrive.Sync.Service.exe
 
-`UC_112_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_115_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceNetworkEvents
 
 ### OceanLotus / SPECTRALVIPER C2 infrastructure callouts
 
-`UC_112_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_115_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -168,7 +168,7 @@ union
 
 ### SPECTRALVIPER SHA1 IOC sightings — file write, process exec, image load
 
-`UC_112_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_115_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -455,7 +455,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus Hits Vietnam Investors With SPECTRALVIPER in FireAnt Attack
 
-`UC_112_9` · phase: **exploit** · confidence: **High**
+`UC_115_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### Outbound POST to onering Sentry exfil endpoint (o4511539639222272.ingest.de.sentry.io)
 
-`UC_124_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_127_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -53,7 +53,7 @@ DeviceNetworkEvents
 
 ### Cargo build-time git log/diff exfil pattern (onering build.rs)
 
-`UC_124_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_127_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### curl/wget POST with Sentry envelope Content-Type spawned by build script
 
-`UC_124_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_127_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceProcessEvents
 
 ### Cargo/rustc build script spawning network or git utilities (build.rs LOLBin abuse)
 
-`UC_124_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_127_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

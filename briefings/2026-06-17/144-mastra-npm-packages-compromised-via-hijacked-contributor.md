@@ -1,34 +1,34 @@
 # [HIGH] 144 Mastra npm Packages Compromised via Hijacked Contributor Account
 
-**Source:** The Hacker News, Aikido, StepSecurity
+**Source:** The Hacker News, Aikido
 **Published:** 2026-06-17
 **Article:** https://thehackernews.com/2026/06/144-mastra-npm-packages-compromised-via.html
 
 ## Threat Profile
 
-Back to Blog Threat Intel @mastra npm Packages Compromised On 2026-06-17, an attacker with access to the @mastra npm organization published malicious new versions of 13 packages across the Mastra AI framework ecosystem. Each infected package adds easy-day-js — a newly created typosquat of the popular dayjs date library — as a production dependency. The easy-day-js@1.11.22 package contains a postinstall hook that runs a heavily obfuscated setup.cjs file, which downloads and executes a second-stag…
+Blog Vulnerabilities & Threats Over 140 popular Mastra npm Packages Hit by Supply Chain Attack Over 140 popular Mastra npm Packages Hit by Supply Chain Attack Written by Ilyas Makari Published on: Jun 17, 2026 On June 17th we detected a large-scale supply chain attack targeting the entire @mastra npm scope, a popular open-source AI agent framework. An attacker republished 141 packages in a burst between 01:15 and 02:00 UTC, silently injecting a malicious dependency into every one of them. The af…
 
 ## Indicators of Compromise (high-fidelity only)
 
 - **IPv4 (defanged):** `23.254.164.92`
 - **IPv4 (defanged):** `23.254.164.123`
-- **Domain (defanged):** `hwsrv-1327786.hostwindsdns.com`
-- **Domain (defanged):** `hwsrv-1327785.hostwindsdns.com`
-- **SHA256:** `221c45a790dec2a296af57969e1165a16f8f49733aeab64c0bbd768d9943badf`
-- **SHA256:** `4a8860240e4231c3a74c81949be655a28e096a7d72f38fbe84e5b37636b98417`
-- **SHA256:** `ae70dd4f6bc0d1c8c2848e4e6b51934626c4818dcb5af99d080ddbd7dc337185`
+- **Domain (defanged):** `https://23.254.164.92:8000/update/49890878`
+- **Domain (defanged):** `https://23.254.164.123:443/49890878`
 
 ## MITRE ATT&CK Techniques
 
 - **T1071.001** — Web Protocols
 - **T1071.004** — DNS
 - **T1071** — Application Layer Protocol
+- **T1176** — Browser Extensions
+- **T1539** — Steal Web Session Cookie
+- **T1555.003** — Credentials from Web Browsers
+- **T1005** — Data from Local System
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
-- **T1204.002** — User Execution: Malicious File
+- **T1195.002** — Compromise Software Supply Chain
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1546.016** — Event Triggered Execution: Installer Packages
-- **T1195.002** — Compromise Software Supply Chain
 - **T1105** — Ingress Tool Transfer
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1571** — Non-Standard Port
@@ -36,7 +36,6 @@ Back to Blog Threat Intel @mastra npm Packages Compromised On 2026-06-17, an att
 - **T1564.003** — Hidden Window
 - **T1199** — Trusted Relationship
 - **T1083** — File and Directory Discovery
-- **T1005** — Data from Local System
 - **T1552.001** — Unsecured Credentials: Credentials in Files
 - **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
 
@@ -48,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### easy-day-js postinstall hook running node setup.cjs --no-warnings
 
-`UC_31_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_38_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +67,7 @@ DeviceProcessEvents
 
 ### Outbound HTTPS to Mastra supply-chain C2 23.254.164.92:8000 and 23.254.164.123:443
 
-`UC_31_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_38_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +91,7 @@ DeviceNetworkEvents
 
 ### Node spawning detached script from %TEMP% with 24-hex filename and host:port argv (stage-2)
 
-`UC_31_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_38_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +111,7 @@ DeviceProcessEvents
 
 ### npm install referencing compromised @mastra packages or easy-day-js dependency
 
-`UC_31_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_38_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +131,7 @@ DeviceProcessEvents
 
 ### Mastra dropper beacon file .pkg_history/.pkg_logs created by node in temp directory
 
-`UC_31_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_38_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -153,7 +152,7 @@ DeviceFileEvents
 
 ### node.exe reading developer credential files shortly after npm install (Mastra stage-2)
 
-`UC_31_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_38_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -218,6 +217,90 @@ DeviceNetworkEvents
 | order by conn_count desc
 ```
 
+### Suspicious browser extension installation
+
+`UC_BROWSER_EXT` · phase: **install** · confidence: **Medium**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Registry
+    where (Registry.registry_path="*\Software\Google\Chrome\Extensions\*"
+        OR Registry.registry_path="*\Software\Microsoft\Edge\Extensions\*"
+        OR Registry.registry_path="*\Software\Mozilla\Firefox\Extensions\*")
+    by Registry.dest, Registry.registry_path, Registry.registry_value_data, Registry.registry_value_name, Registry.user
+| `drop_dm_object_name(Registry)`
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where RegistryKey has_any ("\Software\Google\Chrome\Extensions\","\Software\Microsoft\Edge\Extensions\","\Software\Mozilla\Firefox\Extensions\")
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
+          InitiatingProcessFileName, InitiatingProcessAccountName
+```
+
+### Infostealer — non-browser process accessing browser cookie/login DBs
+
+`UC_BROWSER_STEALER` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path="*\Google\Chrome\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Google\Chrome\User Data\*\Cookies*"
+        OR Filesystem.file_path="*\Microsoft\Edge\User Data\*\Login Data*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\logins.json*"
+        OR Filesystem.file_path="*\Mozilla\Firefox\Profiles\*\cookies.sqlite*")
+      AND NOT Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Google\Chrome\User Data\", @"\Microsoft\Edge\User Data\", @"\Mozilla\Firefox\Profiles\")
+| where FileName in~ ("Login Data","Cookies","logins.json","cookies.sqlite")
+| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+```
+
+### Crypto-wallet file/keystore access by non-wallet process
+
+`UC_CRYPTO_WALLET` · phase: **actions** · confidence: **High**
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where (Filesystem.file_path="*\Ethereum\keystore\*"
+        OR Filesystem.file_path="*\Bitcoin\wallet.dat"
+        OR Filesystem.file_path="*\Exodus\exodus.wallet*"
+        OR Filesystem.file_path="*\Electrum\wallets\*"
+        OR Filesystem.file_path="*\MetaMask\*"
+        OR Filesystem.file_path="*\Phantom\*"
+        OR Filesystem.file_path="*\Atomic\Local Storage\*")
+      AND NOT Filesystem.process_name IN ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
+    by Filesystem.dest, Filesystem.process_name, Filesystem.file_path, Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessAccountName !endswith "$"
+| where FolderPath has_any (@"\Ethereum\keystore\", @"\Bitcoin\", @"\Exodus\", @"\Electrum\wallets\", @"\MetaMask\", @"\Phantom\", @"\Atomic\Local Storage\")
+| where InitiatingProcessFileName !in~ ("MetaMask.exe","Exodus.exe","Atomic.exe","electrum.exe","Bitcoin.exe","Phantom.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FolderPath, FileName, ActionType
+```
+
 ### PowerShell encoded / obfuscated command
 
 `UC_PS_OBFUSCATED` · phase: **exploit** · confidence: **High**
@@ -247,53 +330,28 @@ DeviceProcessEvents
           InitiatingProcessFileName, InitiatingProcessCommandLine
 ```
 
-### Article-specific behavioural hunt — 144 Mastra npm Packages Compromised via Hijacked Contributor Account
+### Trusted vendor binary / installer launching unusual children
 
-`UC_31_4` · phase: **exploit** · confidence: **High**
+`UC_SUPPLY_CHAIN` · phase: **exploit** · confidence: **Medium**
 
 **Splunk SPL (CIM):**
 ```spl
-``` Article-specific bespoke detection — 144 Mastra npm Packages Compromised via Hijacked Contributor Account ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
-    where (Processes.process_name IN ("node.js"))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
+    where Processes.parent_process_name IN ("setup.exe","installer.exe","update.exe")
+      AND Processes.process_name IN ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN ("created","modified")
-      AND (Filesystem.file_name IN ("node.js"))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]
 ```
 
 **Defender KQL:**
 ```kql
-// Article-specific bespoke detection — 144 Mastra npm Packages Compromised via Hijacked Contributor Account
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName in~ ("node.js"))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated","FileModified")
-| where (FileName in~ ("node.js"))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc
+| where Timestamp > ago(7d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("setup.exe","installer.exe","update.exe")
+| where FileName in~ ("powershell.exe","cmd.exe","rundll32.exe","regsvr32.exe","mshta.exe","wscript.exe","cscript.exe","wmic.exe","bitsadmin.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
 ### IOC-driven hunts (use shared templates)
@@ -301,12 +359,9 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `23.254.164.92`, `23.254.164.123`, `hwsrv-1327786.hostwindsdns.com`, `hwsrv-1327785.hostwindsdns.com`
-
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `221c45a790dec2a296af57969e1165a16f8f49733aeab64c0bbd768d9943badf`, `4a8860240e4231c3a74c81949be655a28e096a7d72f38fbe84e5b37636b98417`, `ae70dd4f6bc0d1c8c2848e4e6b51934626c4818dcb5af99d080ddbd7dc337185`
+  - IP / domain IOC(s): `23.254.164.92`, `23.254.164.123`, `https://23.254.164.92:8000/update/49890878`, `https://23.254.164.123:443/49890878`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
