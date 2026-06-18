@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### AUR helper or makepkg spawning npm/node to install atomic-lockfile or js-digest
 
-`UC_86_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_87_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceProcessEvents
 
 ### AUR build process egress to temp.sh or github.com/fardewoak/nodejs-argo
 
-`UC_86_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_87_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ union
 
 ### Non-browser process fan-out reading SSH/npm/Docker/AWS/browser credential stores on Arch host
 
-`UC_86_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_87_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceFileEvents
 
 ### eBPF program load or pinned object created from non-system parent on Arch host
 
-`UC_86_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_87_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -165,7 +165,7 @@ DeviceFileEvents
 
 ### Persistence written to user shell init or systemd user units from AUR build/install scriptlet
 
-`UC_86_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_87_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

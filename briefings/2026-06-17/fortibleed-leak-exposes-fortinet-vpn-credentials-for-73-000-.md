@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### FortiGate SSL VPN successful login from anonymizer/new-geography post-FortiBleed
 
-`UC_19_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_21_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceLogonEvents
 
 ### FortiGate SSL VPN authentication brute-force burst (FortiBleed harvesting campaign)
 
-`UC_19_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_21_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceNetworkEvents
 
 ### Microsoft SQL Server brute-force burst correlated with FortiBleed operator MO
 
-`UC_19_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_21_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -118,7 +118,7 @@ DeviceEvents
 
 ### FortiGate management/admin portal login success from public internet source
 
-`UC_19_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_21_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

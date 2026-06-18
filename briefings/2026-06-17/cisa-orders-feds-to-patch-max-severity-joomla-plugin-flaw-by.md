@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### Joomla JCE profile.import unauthenticated RCE attempt (CVE-2026-48907)
 
-`UC_28_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_29_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceNetworkEvents
 
 ### Inbound HTTP from published CVE-2026-48907 JCE exploitation IPs
 
-`UC_28_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_29_3` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

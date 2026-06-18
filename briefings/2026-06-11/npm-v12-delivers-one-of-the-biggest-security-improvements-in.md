@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### npm/node install-time spawn downloads Bun runtime (Shai-Hulud worm pattern)
 
-`UC_104_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_105_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceProcessEvents
 
 ### npm/node install-time process beaconing to webhook.site, sfrclak.com or 142.11.206.73
 
-`UC_104_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_105_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### Implicit node-gyp rebuild from binding.gyp spawns suspicious build child
 
-`UC_104_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_105_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceProcessEvents
 
 ### npm install-time process reads .npmrc, SSH key, or cloud-credential file
 
-`UC_104_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_105_12` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -176,7 +176,7 @@ DeviceFileEvents
 
 ### npm lifecycle script harvests secrets via TruffleHog or chains to GitHub API
 
-`UC_104_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_105_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -436,7 +436,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — npm v12 delivers one of the biggest security improvements in years
 
-`UC_104_8` · phase: **exploit** · confidence: **High**
+`UC_105_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

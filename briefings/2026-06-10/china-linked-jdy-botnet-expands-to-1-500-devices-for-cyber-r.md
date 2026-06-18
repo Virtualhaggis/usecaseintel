@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### SOHO/IoT/edge host outbound connection to Tor directory authority (JDY C2)
 
-`UC_117_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_118_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceNetworkEvents
 
 ### Internal host emitting JDY-style high-fan-out TCP/TLS/UDP/ICMP probing
 
-`UC_117_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_118_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ DeviceNetworkEvents
 
 ### Arch-specific shell dropper downloading JDY MIPS/MIPSEL payload
 
-`UC_117_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_118_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ DeviceProcessEvents
 
 ### JDY payload self-deletion from disk immediately after execve
 
-`UC_117_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_118_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

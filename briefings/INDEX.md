@@ -1,12 +1,16 @@
 # Briefings — full archive
 
-_1203 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1204 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-06-18
+- [from package to postinstall payload inside the mastra npm su](./2026-06-18/from-package-to-postinstall-payload-inside-the-mastra-npm-su.md)
+- [microsoft confirms defender rogueplanet 0 day exploit and wo](./2026-06-18/microsoft-confirms-defender-rogueplanet-0-day-exploit-and-wo.md)
 
 ## 2026-06-17
 - [144 mastra npm packages compromised via hijacked contributor](./2026-06-17/144-mastra-npm-packages-compromised-via-hijacked-contributor.md)
@@ -16,7 +20,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [crypto clipper campaign abuses fake reviews ai narrators and](./2026-06-17/crypto-clipper-campaign-abuses-fake-reviews-ai-narrators-and.md)
 - [crypto clipper uses tor and worm like propagation for persis](./2026-06-17/crypto-clipper-uses-tor-and-worm-like-propagation-for-persis.md)
 - [forrester names microsoft a leader in the 2026 extended dete](./2026-06-17/forrester-names-microsoft-a-leader-in-the-2026-extended-dete.md)
-- [fortibleed 70 000 fortinet firewalls compromised in massive ](./2026-06-17/fortibleed-70-000-fortinet-firewalls-compromised-in-massive-.md)
 - [fortibleed leak exposes fortinet vpn credentials for 73 000 ](./2026-06-17/fortibleed-leak-exposes-fortinet-vpn-credentials-for-73-000-.md)
 - [from china with tenderness](./2026-06-17/from-china-with-tenderness.md)
 - [ghsa critical cve 2026 55450 langflow unauthenticated file u](./2026-06-17/ghsa-critical-cve-2026-55450-langflow-unauthenticated-file-u.md)

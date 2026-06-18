@@ -81,7 +81,7 @@ _(none detected from narrative keywords)_
 
 ### OceanLotus SPECTRALVIPER C2 connection to ESET-disclosed IPs/domains
 
-`UC_112_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_113_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ DeviceNetworkEvents
 
 ### SPECTRALVIPER known-sample SHA1 execution or filesystem write
 
-`UC_112_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_113_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ union isfuzzy=true
 
 ### FireAnt Metakit supply-chain: update binary spawning unusual child
 
-`UC_112_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_113_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ DeviceProcessEvents
 
 ### First-seen connection to recently-registered SPECTRALVIPER-shape C2 domain
 
-`UC_112_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_113_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -353,7 +353,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus: From external espionage to domestic targeting
 
-`UC_112_8` · phase: **exploit** · confidence: **High**
+`UC_113_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

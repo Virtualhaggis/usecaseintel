@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### NTFS junction creation via cmd.exe mklink /J
 
-`UC_52_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_53_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### NTFS reparse point manipulation via fsutil reparsepoint
 
-`UC_52_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_53_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceProcessEvents
 
 ### GhostTree pattern: multiple NTFS junctions created under same parent within minutes
 
-`UC_52_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_53_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -193,7 +193,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — GhostTree Attack Abused Recursive Windows Junctions to Hide Malware
 
-`UC_52_3` · phase: **exploit** · confidence: **High**
+`UC_53_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

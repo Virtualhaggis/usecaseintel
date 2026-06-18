@@ -1,3 +1,286 @@
+<article class="card" id="art-282" data-art-slug="2026-05-19-ghsa-critical-cve-2026-45695-kopia-rce-via-ssh-proxycommand-"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="GitHub Security Advisories"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="linux,vcs,windows"
+  data-uc-count="3" data-llm-uc-count="2"
+  data-search="[GHSA / CRITICAL] CVE-2026-45695: Kopia: RCE via SSH ProxyCommand Injection Kopia: RCE via SSH ProxyCommand Injection CVE-2026-45695 T1190 [LLM] Kopia process spawns ssh with -oProxyCommand= argument (CVE-2026-45695) [LLM] SSH process spawned by Kopia invokes a shell child (ProxyCommand execution) Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-05-19-ghsa-critical-cve-2026-45695-kopia-rce-via-ssh-proxycommand-" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://github.com/advisories/GHSA-2q4c-3mrw-63c3" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-45695: Kopia: RCE via SSH ProxyCommand Injection</a></h2>
+  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
+  <div class="pubmeta">
+    <span>2026-05-19</span>
+    <span>3 use cases</span>
+    <span>1 technique</span>
+    <span>4 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Kopia: RCE via SSH ProxyCommand Injection</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-45695</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-282-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-282"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-282-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Detected</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Kopia process spawns ssh with -oProxyCommand= argument (CVE-2026-45695)</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] SSH process spawned by Kopia invokes a shell child (ProxyCommand execution)</em></div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="e7cda44f92" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
+  <summary>
+    <span class="uc-title">Kopia process spawns ssh with -oProxyCommand= argument (CVE-2026-45695)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="e7cda44f92" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects exploitation of Kopia&#x27;s unauthenticated SFTP/externalSSH path injection. When the vulnerable /api/v1/repo/exists handler invokes blob.NewStorage with attacker-supplied sshArguments, the kopia process directly forks ssh with a -oProxyCommand= token that OpenSSH then executes via $SHELL -c. The kopia→ssh parent/child with ProxyCommand in the child argv is a near-zero-FP signature of this RCE.
+
+Rationale: Uses the exact narrow signature described in the advisory: kopia process (vulnerable handler) directly invoking exec.CommandContext(&quot;ssh&quot;, ...) with a ProxyCommand token. The string &#x27;ProxyCommand&#x27; in an ssh argv whose parent is kopia has effectively no benign use case outside intentional SFTP jump-host setups. Cross-checked against the GHSA advisory, the Kopia v0.22.3 source references in the article, and the fix PR #5354.
+
+Cross-checked against:
+  • https://github.com/kopia/kopia/pull/5354
+  • https://github.com/kopia/kopia/blob/v0.22.3/repo/blob/sftp/sftp_storage.go
+  • https://nvd.nist.gov/vuln/detail/CVE-2026-45695</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Command and Scripting Interpreter: Windows Command Shell">T1059.003</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Kopia operator manually configuring an SFTP repository through a corporate SSH bastion using ProxyCommand</li><li>Internal automation/Ansible role that sets up Kopia SFTP backends with a documented ProxyCommand to traverse network segmentation</li><li>Backup admin testing externalSSH SFTP configuration against an internal hardened jump host</li><li>Red-team exercise simulating CVE-2026-45695 exploitation</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName in~ (&quot;backup-bastion-01&quot;,&quot;backup-bastion-02&quot;) and InitiatingProcessCommandLine has &quot;server start&quot; and InitiatingProcessCommandLine has &quot;--tls-cert&quot; and ProcessCommandLine has_any (&quot;bastion.internal&quot;,&quot;jump.corp.local&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Capture the full child ssh command line and any subsequent child processes of that ssh PID (look for /bin/sh -c, bash -c, cmd.exe /c). Pull the kopia HTTP access log for the same host around the event time and grep for POST /api/v1/repo/exists; capture the source IP. Confirm whether kopia was started with --without-password and bound to a non-loopback interface.
+Step 2 (contain): Stop the kopia server process immediately, block inbound to the Kopia HTTP port (default 51515) at the host firewall, and isolate the host if any shell child of ssh was observed. Rotate any credentials/keys reachable from the kopia process user.
+Step 3 (hunt): Sweep all hosts running kopia &lt;= 0.22.3 for the same parent/child pattern over the last 30 days, query egress for the kopia HTTP port from untrusted networks, and review the kopia process user&#x27;s bash/zsh history and crontabs for persistence dropped during the window.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-282-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-282-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-282-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-282-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-282-uc0-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-282-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-282-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;kopia&quot;,&quot;kopia.exe&quot;,&quot;kopia-ui&quot;,&quot;kopia-ui.exe&quot;)
+| where FileName in~ (&quot;ssh&quot;,&quot;ssh.exe&quot;)
+| where ProcessCommandLine has &quot;ProxyCommand&quot;
+| where AccountName !endswith &quot;$&quot;
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FolderPath, ProcessCommandLine, ProcessId, InitiatingProcessId, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-282-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ParentProcessName has_any (&quot;kopia&quot;,&quot;kopia.exe&quot;,&quot;kopia-ui&quot;,&quot;kopia-ui.exe&quot;)
+| where ActingProcessName has_any (&quot;ssh&quot;,&quot;ssh.exe&quot;)
+| where ActingProcessCommandLine has &quot;ProxyCommand&quot;
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine, ActingProcessId
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-282-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Kopia Spawning SSH with ProxyCommand Argument (CVE-2026-45695)
+id: 7c6f8e2a-3b21-4d8b-b9f6-9a4d0c1f5e21
+description: Detects exploitation of Kopia CVE-2026-45695 where the unauthenticated /api/v1/repo/exists handler triggers the kopia process to invoke ssh with an attacker-controlled -oProxyCommand= argument, leading to command execution as the kopia user.
+references:
+  - https://github.com/advisories/GHSA-2q4c-3mrw-63c3
+  - https://github.com/kopia/kopia/pull/5354
+author: SOC Detection Engineering
+date: 2026/05/20
+tags:
+  - attack.initial_access
+  - attack.execution
+  - attack.t1190
+  - attack.t1059.004
+  - attack.t1059.003
+  - cve.2026.45695
+logsource:
+  category: process_creation
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - &#x27;/kopia&#x27;
+      - &#x27;\kopia.exe&#x27;
+      - &#x27;/kopia-ui&#x27;
+      - &#x27;\kopia-ui.exe&#x27;
+  selection_child:
+    Image|endswith:
+      - &#x27;/ssh&#x27;
+      - &#x27;\ssh.exe&#x27;
+  selection_arg:
+    CommandLine|contains: &#x27;ProxyCommand&#x27;
+  condition: all of selection_*
+falsepositives:
+  - Legitimate Kopia SFTP repository configurations that intentionally use ProxyCommand to traverse a jump host (rare; should be tightly controlled).
+level: critical</code></pre></div>
+    <div class="tab-content" id="art-282-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:linux.auditd OR source:windows.sysmon) @ParentImage:(*/kopia OR *\\kopia.exe OR *\\Kopia.exe OR */kopia-ui OR *\\kopia-ui.exe) @Image:(*/ssh OR *\\ssh.exe OR *\\SSH.EXE) @CommandLine:(*ProxyCommand* OR *proxycommand*)</code></pre></div>
+    <div class="tab-content" id="art-282-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^kopia(-ui)?(\.exe)?$/i ImageFileName=/[\\\/]ssh(\.exe)?$/i
+| regex(&quot;(?i)proxycommand&quot;, field=CommandLine)
+| groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-282-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-282-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-282-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-282-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;kopia&quot;,&quot;kopia.exe&quot;,&quot;kopia-ui&quot;,&quot;kopia-ui.exe&quot;) AND Processes.process_name IN (&quot;ssh&quot;,&quot;ssh.exe&quot;) AND (Processes.process=&quot;*ProxyCommand*&quot; OR Processes.process=&quot;*-oProxyCommand*&quot; OR Processes.process=&quot;*-o ProxyCommand*&quot;) by host Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-282-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;kopia&quot;,&quot;kopia.exe&quot;,&quot;kopia-ui&quot;,&quot;kopia-ui.exe&quot;) AND Processes.process_name IN (&quot;ssh&quot;,&quot;ssh.exe&quot;) AND (Processes.process=&quot;*ProxyCommand*&quot; OR Processes.process=&quot;*-oProxyCommand*&quot; OR Processes.process=&quot;*-o ProxyCommand*&quot;) by host Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="cfa982b21d" data-platforms="datadog,def,falcon,sent,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">SSH process spawned by Kopia invokes a shell child (ProxyCommand execution)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="cfa982b21d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the second-stage execution arm of CVE-2026-45695: OpenSSH evaluates -oProxyCommand=&lt;cmd&gt; by invoking $SHELL -c &lt;cmd&gt; before any TCP connect. The resulting kopia → ssh → (sh|bash|cmd|powershell) grand-parent/parent/child chain is the artifact of arbitrary code running as the kopia service account.
+
+Rationale: This is the exact execution chain the advisory describes — OpenSSH spawns $SHELL -c &lt;attacker_cmd&gt; before attempting TCP, so the shell child of ssh is the observable smoking gun. Pairing it with a kopia grand-parent (via SshPid join) removes essentially all benign ssh ProxyCommand use. Confirmed against the GHSA advisory text and OpenSSH ProxyCommand documented behaviour.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-2q4c-3mrw-63c3
+  • https://man.openbsd.org/ssh_config.5#ProxyCommand
+  • https://github.com/kopia/kopia/pull/5354</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: Unix Shell">T1059.004</span> <span class="ind tech" title="Command and Scripting Interpreter: PowerShell">T1059.001</span> <span class="ind tech" title="Command and Scripting Interpreter: Windows Command Shell">T1059.003</span> <span class="ind tech" title="Exploitation for Client Execution">T1203</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Kopia SFTP backend deliberately configured with ProxyCommand=nc/corkscrew through a corporate proxy</li><li>Backup admin manually launching ssh via the kopia CLI session with a ProxyCommand for jump-host traversal</li><li>Misconfigured backup automation that wraps ssh with a netcat-based tunnel</li><li>Diagnostic ssh invocation by the kopia process user during troubleshooting</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;corkscrew&quot;,&quot;nc -X&quot;,&quot;connect-proxy&quot;) and DeviceName startswith &quot;backup-&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Capture the ShellCmd value — this is the literal attacker payload. Resolve the source IP of the originating POST /api/v1/repo/exists in the kopia application log and the Kopia HTTP port&#x27;s network logs. Verify Kopia version is &lt;= 0.22.3 and check for --without-password flag in the kopia systemd unit / launch args.
+Step 2 (contain): Kill the spawned shell PID and any descendants, stop the kopia service, firewall-block the Kopia HTTP listener from non-loopback, and put the host into containment if the shell ran anything beyond a no-op probe. Preserve memory and the kopia binary for forensics.
+Step 3 (hunt): Search 30 days of process telemetry for ssh→shell children whose ssh grand-parent was kopia. Pivot on the kopia service user to find any new cron entries, ~/.ssh/authorized_keys mutations, SUID drops, or outbound C2 connections. Identify all internet-reachable Kopia instances in the org and confirm patch status.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-282-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-282-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-282-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-282-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-282-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-282-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let kopia_ssh =
+    DeviceProcessEvents
+    | where Timestamp &gt; ago(7d)
+    | where InitiatingProcessFileName in~ (&quot;kopia&quot;,&quot;kopia.exe&quot;,&quot;kopia-ui&quot;,&quot;kopia-ui.exe&quot;)
+    | where FileName in~ (&quot;ssh&quot;,&quot;ssh.exe&quot;)
+    | project SshTime = Timestamp, DeviceId, SshPid = ProcessId, SshCmd = ProcessCommandLine, KopiaCmd = InitiatingProcessCommandLine;
+DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;ssh&quot;,&quot;ssh.exe&quot;)
+| where FileName in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;pwsh&quot;)
+| join kind=inner kopia_ssh on $left.DeviceId == $right.DeviceId and $left.InitiatingProcessId == $right.SshPid
+| where Timestamp between (SshTime .. SshTime + 30s)
+| project Timestamp, DeviceName, AccountName, KopiaCmd, SshCmd, ShellImage = FolderPath, ShellCmd = ProcessCommandLine, SshPid
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-282-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let kopia_ssh =
+    ImProcessCreate
+    | where TimeGenerated &gt; ago(7d)
+    | where ParentProcessName has_any (&quot;kopia&quot;,&quot;kopia.exe&quot;,&quot;kopia-ui&quot;,&quot;kopia-ui.exe&quot;)
+    | where ActingProcessName has_any (&quot;ssh&quot;,&quot;ssh.exe&quot;)
+    | project SshTime = TimeGenerated, DvcHostname, SshPid = ActingProcessId, SshCmd = ActingProcessCommandLine, KopiaCmd = ParentProcessCommandLine;
+ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ParentProcessName has_any (&quot;ssh&quot;,&quot;ssh.exe&quot;)
+| where ActingProcessName has_any (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;pwsh&quot;)
+| join kind=inner kopia_ssh on $left.DvcHostname == $right.DvcHostname and $left.ParentProcessId == $right.SshPid
+| where TimeGenerated between (SshTime .. SshTime + 30s)
+| project TimeGenerated, DvcHostname, ActorUsername, KopiaCmd, SshCmd, ShellName = ActingProcessName, ShellCmd = ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-282-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:linux.auditd OR source:windows.sysmon) @ParentImage:(*/ssh OR *\\ssh.exe OR *\\SSH.EXE) @Image:(*/sh OR */bash OR */dash OR */zsh OR */ksh OR *\\cmd.exe OR *\\CMD.EXE OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe) @CommandLine:(*-c*)</code></pre></div>
+    <div class="tab-content" id="art-282-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/^ssh(\.exe)?$/i ImageFileName=/[\\\/](sh|bash|dash|zsh|ksh|cmd\.exe|powershell\.exe|pwsh(\.exe)?)$/i
+| join({
+    #event_simpleName=ProcessRollup2 ParentBaseFileName=/^kopia(-ui)?(\.exe)?$/i ImageFileName=/[\\\/]ssh(\.exe)?$/i
+    | rename(TargetProcessId, as=SshParentPid)
+    | select([aid, SshParentPid])
+  }, field=[aid, ParentProcessId], key=[aid, SshParentPid], include=[SshParentPid])
+| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-282-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-282-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-282-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-282-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;ssh&quot;,&quot;ssh.exe&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;pwsh&quot;) by host Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | join type=inner host parent_process [| tstats summariesonly=t count from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;ssh&quot;,&quot;ssh.exe&quot;) AND Processes.parent_process_name IN (&quot;kopia&quot;,&quot;kopia.exe&quot;,&quot;kopia-ui&quot;,&quot;kopia-ui.exe&quot;) by host Processes.process as parent_process | `drop_dm_object_name(Processes)`] | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-282-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;ssh&quot;,&quot;ssh.exe&quot;) AND Processes.process_name IN (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;ksh&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;pwsh&quot;) by host Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | join type=inner host parent_process [| tstats summariesonly=false count from datamodel=Endpoint.Processes where Processes.process_name IN (&quot;ssh&quot;,&quot;ssh.exe&quot;) AND Processes.parent_process_name IN (&quot;kopia&quot;,&quot;kopia.exe&quot;,&quot;kopia-ui&quot;,&quot;kopia-ui.exe&quot;) by host Processes.process as parent_process | `drop_dm_object_name(Processes)`] | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-282-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-282-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-282-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-282-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-45695&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-282-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2026-45695&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-282-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-282-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-282-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-282-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-45695&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-282-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2026-45695&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
 <article class="card" id="art-284" data-art-slug="2026-05-19-microsoft-s-durabletask-package-on-pypi-compromised-mini-sha"
   data-phases="actions,c2,exploit,install,recon" data-sev="high"
   data-techs="T1190,T1528,T1555.003"
@@ -14206,898 +14489,6 @@ level: critical
         where Processes.process_hash IN (&quot;2172dae9a5a695e00e0e4609e7db0207d8566d225f7e815fada246ae995c0f9b&quot;)
         by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
      | `drop_dm_object_name(Processes)`]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-314" data-art-slug="2026-05-15-malicious-node-ipc-versions-published-to-npm-in-suspected-ma"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
-  data-techs="T1027,T1190,T1195.002,T1555.003"
-  data-sources="Snyk"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="cloud,endpoint,network"
-  data-targets="linux,windows"
-  data-uc-count="9" data-llm-uc-count="5"
-  data-search="Malicious node-ipc versions published to npm in suspected maintainer account compromise On May 14, 2026, multiple malicious versions of the popular npm package node-ipc were published to the npm registry. Current public reporting identifies node...  T1027 T1190 T1195.002 T1555.003 [LLM] Outbound egress to node-ipc stealer infrastructure (azurestaticprovider[.]net / 37.16.75.69) [LLM] DNS lookup for azurestaticprovider[.]net node-ipc exfil domain [LLM] node-ipc stealer __ntw=1 environment marker in process command line [LLM] Malicious node-ipc package landed on disk under node_modules [LLM] node.js process staging credential dump in nt-* temp directory PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children Network connections to article IPs / domains Article-specific behavioural hunt — Malicious node-ipc versions published to npm in suspected maintainer account com">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-05-15-malicious-node-ipc-versions-published-to-npm-in-suspected-ma" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/malicious-node-ipc-versions-published-npm/" target="_blank" rel="noopener">Malicious node-ipc versions published to npm in suspected maintainer account compromise</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2026-05-15</span>
-    <span>9 use cases</span>
-    <span>4 techniques</span>
-    <span>6 kill-chain phases detected</span>
-  </div>
-  <p class="summary">On May 14, 2026, multiple malicious versions of the popular npm package node-ipc were published to the npm registry. Current public reporting identifies node...</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Credentials from Web Browsers">T1555.003</span></div>
-<div class="ind-group"><span class="ind-label">Domains</span><span class="ind ">azurestaticprovider.net</span> <span class="ind ">sh.azurestaticprovider.net</span></div>
-<div class="ind-group"><span class="ind-label">IPs</span><span class="ind ">37.16.75.69</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-314-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-314"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-314-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Malicious node-ipc package landed on disk under node_modules</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ PowerShell encoded / obfuscated command · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Malicious node-ipc versions published to npm in suspected maintainer account com</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] node-ipc stealer __ntw=1 environment marker in process command line</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] DNS lookup for azurestaticprovider[.]net node-ipc exfil domain · Network connections to article IPs / domains</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Outbound egress to node-ipc stealer infrastructure (azurestaticprovider[.]net / 37.16.75.69) · [LLM] node.js process staging credential dump in nt-* temp directory</em></div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="c8c31cc246" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
-  <summary>
-    <span class="uc-title">Outbound egress to node-ipc stealer infrastructure (azurestaticprovider[.]net / 37.16.75.69)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="c8c31cc246" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects network connections to attacker-owned exfiltration infrastructure used by the malicious node-ipc 9.1.6 / 9.2.3 / 12.0.1 npm packages published 14 May 2026. Any host reaching these atoms after package install should be treated as a credential-theft incident.
-
-Rationale: Pivots on two atomic IOCs explicitly named in the Snyk advisory (37.16.75.69 and azurestaticprovider.net), each independently corroborated by StepSecurity and Upwind. No expected legitimate traffic to either atom — attacker-owned exfil infrastructure.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack
-  • https://www.upwind.io/feed/malicious-node-ipc-npm-package-credential-theft
-  • https://thehackernews.com/2026/05/stealer-backdoor-found-in-3-node-ipc.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span> <span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Researcher / red-team sandbox intentionally detonating a node-ipc IOC sample</li><li>Threat-intel platform validating IOC reachability from an enrichment sensor</li><li>Internal honeypot or canary host instrumented to call known-bad domains for SOC training</li><li>DNS-over-HTTPS resolver logs caching previous lookups when no real connection was made</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName has_any (&quot;sandbox&quot;,&quot;detonator&quot;,&quot;sentinel-ti-&quot;,&quot;honeypot&quot;) or InitiatingProcessFileName in~ (&quot;thor.exe&quot;,&quot;loki.exe&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): On any hit, immediately enumerate the initiating process tree (InitiatingProcessFileName + parent) — confirm whether the originating process is node.exe / node and which package directory was loaded. Pull `npm ls node-ipc` and lockfile contents from the host. Step 2 (contain): Isolate the device, block 37.16.75.69 and *.azurestaticprovider.net at egress, kill the offending node process, and revoke ALL credentials accessible from that environment (npm tokens, GitHub PATs, AWS keys, SSH, kubeconfig, GCP service accounts, Terraform state, shell-history-resident secrets). Step 3 (hunt): Pivot on the firing host&#x27;s outbound connections for the prior 7 days to surface staging/recon connections; sweep CI runners and developer laptops for the affected node-ipc versions and for the related UCs (DNS lookups, __ntw=1 marker, nt-* temp dirs).</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-314-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-314-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-314-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-314-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-314-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-314-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-314-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteIP == &quot;37.16.75.69&quot;
-   or RemoteUrl has_any (&quot;azurestaticprovider.net&quot;,&quot;sh.azurestaticprovider.net&quot;)
-| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, Protocol,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, InitiatingProcessParentFileName,
-          InitiatingProcessAccountName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-314-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
-(CommonSecurityLog
- | where TimeGenerated &gt; ago(30d)
- | where DestinationIP == &quot;37.16.75.69&quot;
-    or DestinationHostName has &quot;azurestaticprovider.net&quot;
-    or RequestURL has &quot;azurestaticprovider.net&quot;
- | project TimeGenerated, SourceUserName, SourceIP, SourceHostName, DestinationIP, DestinationHostName, DestinationPort, RequestURL, DeviceVendor, DeviceProduct),
-(ImNetworkSession
- | where TimeGenerated &gt; ago(30d)
- | where DstIpAddr == &quot;37.16.75.69&quot;
-    or DstHostname has &quot;azurestaticprovider.net&quot;
-    or Url has &quot;azurestaticprovider.net&quot;
- | project TimeGenerated, SrcIpAddr, SrcHostname, SrcUsername, DstIpAddr, DstHostname, DstPortNumber, Url, EventProduct)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-314-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to node-ipc Stealer Infrastructure (azurestaticprovider.net)
-id: 8b9d2a31-7e54-4d12-9a2b-3c8f1e0b4a76
-description: Detects outbound connections to attacker-controlled infrastructure used by the malicious node-ipc 9.1.6 / 9.2.3 / 12.0.1 npm supply-chain payload published on 14 May 2026.
-references:
-  - https://snyk.io/blog/malicious-node-ipc-versions-published-npm/
-  - https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack
-  - https://www.upwind.io/feed/malicious-node-ipc-npm-package-credential-theft
-author: SOC Detection Engineering
-date: 2026/05/19
-tags:
-  - attack.exfiltration
-  - attack.t1041
-  - attack.command_and_control
-  - attack.t1071.001
-  - attack.initial_access
-  - attack.t1195.002
-logsource:
-  category: network_connection
-  product: windows
-detection:
-  selection_ip:
-    DestinationIp: &#x27;37.16.75.69&#x27;
-  selection_host:
-    DestinationHostname|contains:
-      - &#x27;azurestaticprovider.net&#x27;
-  condition: selection_ip or selection_host
-falsepositives:
-  - None expected; infrastructure is attacker-owned per StepSecurity, Snyk, Upwind, and Socket analysis
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-314-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon @EventID:3 (@DestinationIp:37.16.75.69 OR @DestinationHostname:(*azurestaticprovider.net* OR *AzureStaticProvider.net*))) OR (source:linux.auditd (@network.destination.ip:37.16.75.69 OR @network.destination.domain:*azurestaticprovider.net*)) OR (source:windows.defender (@FilePath:*azurestaticprovider.net* OR @ThreatName:*node-ipc*))</code></pre></div>
-    <div class="tab-content" id="art-314-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>(#event_simpleName=NetworkConnectIP4 OR #event_simpleName=NetworkConnectIP6 OR #event_simpleName=DnsRequest)
-| (RemoteAddressIP4=&quot;37.16.75.69&quot; OR RemoteAddressIP6=&quot;37.16.75.69&quot; OR DomainName=/azurestaticprovider\.net$/i)
-| groupBy([aid, ComputerName, ContextImageFileName, ContextProcessId, RemoteAddressIP4, RemotePort, DomainName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-314-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-314-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-314-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-314-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as app values(All_Traffic.process) as process values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic where (All_Traffic.dest=&quot;37.16.75.69&quot; OR All_Traffic.dest_host=&quot;azurestaticprovider.net&quot; OR All_Traffic.dest_host=&quot;sh.azurestaticprovider.net&quot; OR All_Traffic.dest_host=&quot;*.azurestaticprovider.net&quot;) by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-314-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as app values(All_Traffic.process) as process values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic where (All_Traffic.dest=&quot;37.16.75.69&quot; OR All_Traffic.dest_host=&quot;azurestaticprovider.net&quot; OR All_Traffic.dest_host=&quot;sh.azurestaticprovider.net&quot; OR All_Traffic.dest_host=&quot;*.azurestaticprovider.net&quot;) by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="ef51ce1089" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">DNS lookup for azurestaticprovider[.]net node-ipc exfil domain</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="ef51ce1089" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Surfaces hosts resolving the attacker-controlled domain azurestaticprovider.net (or sh.azurestaticprovider.net) used by the malicious node-ipc payload, even when the subsequent TCP egress is firewall-blocked. DNS-layer pivot catches hosts that loaded the package but did not complete exfiltration.
-
-Rationale: DNS pivot catches the same campaign at an earlier layer than TCP egress and survives proxy-level blocks. Domain is unique to this campaign and referenced verbatim in StepSecurity, Upwind, and Snyk advisories. ContextImageFileName lets the analyst confirm node.exe / npm as the requesting process.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack
-  • https://www.upwind.io/feed/malicious-node-ipc-npm-package-credential-theft</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: DNS">T1071.004</span> <span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Threat-intel enrichment sensor doing IOC reachability checks</li><li>DNS server forwarding cache-warmup queries from another resolver</li><li>Security researcher / SOC analyst running curl/dig from a jump host</li><li>RPZ logging shows blocked queries — confirms detection efficacy, not malicious activity</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName has_any (&quot;ti-enrich-&quot;,&quot;sandbox-&quot;,&quot;honeypot-&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Identify the requesting process via ContextImageFileName / InitiatingProcessFileName — confirm node.exe / npm / yarn / pnpm as parent and pull the host&#x27;s package-lock.json for node-ipc versions 9.1.6 / 9.2.3 / 12.0.1. Step 2 (contain): Sinkhole or RPZ-block *.azurestaticprovider.net at the resolver, isolate any developer/CI host where the lookup originated, rotate all credentials reachable from that environment (npm, GitHub, AWS, SSH, kube, Terraform state, GCP). Step 3 (hunt): Cross-reference against UC1 (TCP egress) to see whether exfiltration completed; if no TCP follow-on the credentials may still be unexposed — but assume compromise. Sweep the org for additional node-ipc installs via npm/yarn/pnpm lockfile inventory.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-314-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-314-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-314-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-314-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-314-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-314-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-314-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(30d)
-| where RemoteUrl has &quot;azurestaticprovider.net&quot;
-   or RemoteUrl endswith &quot;.azurestaticprovider.net&quot;
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Hits=count(),
-            SampleProc=any(InitiatingProcessFileName),
-            SampleCmd=any(InitiatingProcessCommandLine),
-            SampleUser=any(InitiatingProcessAccountName)
-            by DeviceName, RemoteUrl
-| order by FirstSeen asc</code></pre></div>
-    <div class="tab-content" id="art-314-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
-(DnsEvents
- | where TimeGenerated &gt; ago(30d)
- | where Name has &quot;azurestaticprovider.net&quot;
- | project TimeGenerated, Computer, ClientIP, Name, QueryType, ResultCode),
-(ImDnsActivity
- | where TimeGenerated &gt; ago(30d)
- | where DnsQuery has &quot;azurestaticprovider.net&quot;
- | project TimeGenerated, SrcIpAddr, SrcHostname, SrcUsername, DnsQuery, DnsResponseName, DnsResponseCodeName, EventProduct)
-| order by TimeGenerated asc</code></pre></div>
-    <div class="tab-content" id="art-314-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: DNS Query for node-ipc Stealer Domain (azurestaticprovider.net)
-id: 5e2f81a0-3b6c-49f3-8e1c-a78c2b6f9d12
-description: Detects DNS resolution of azurestaticprovider.net / sh.azurestaticprovider.net, the C2/exfil domain hard-coded in the malicious node-ipc 9.1.6 / 9.2.3 / 12.0.1 packages.
-references:
-  - https://snyk.io/blog/malicious-node-ipc-versions-published-npm/
-  - https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack
-author: SOC Detection Engineering
-date: 2026/05/19
-tags:
-  - attack.command_and_control
-  - attack.t1071.004
-  - attack.exfiltration
-  - attack.t1041
-logsource:
-  category: dns
-detection:
-  selection:
-    QueryName|endswith:
-      - &#x27;azurestaticprovider.net&#x27;
-  condition: selection
-falsepositives:
-  - Threat-intel enrichment lookups from named sensors
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-314-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon @EventID:22 @QueryName:*azurestaticprovider.net*) OR (source:dns @dns.question.name:*azurestaticprovider.net*) OR (source:linux.syslog @network.destination.domain:*azurestaticprovider.net*)</code></pre></div>
-    <div class="tab-content" id="art-314-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
-| DomainName=/azurestaticprovider\.net$/i
-| groupBy([aid, ComputerName, ContextImageFileName, ContextProcessId, DomainName, FirstIP4Record], function=count())
-| count &gt; 0</code></pre></div>
-    <div class="tab-content" id="art-314-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-314-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-314-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-314-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(DNS.query_type) as qtype values(DNS.answer) as answer from datamodel=Network_Resolution where DNS.query=&quot;azurestaticprovider.net&quot; OR DNS.query=&quot;*.azurestaticprovider.net&quot; by DNS.src DNS.query DNS.dest | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-314-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(DNS.query_type) as qtype values(DNS.answer) as answer from datamodel=Network_Resolution where DNS.query=&quot;azurestaticprovider.net&quot; OR DNS.query=&quot;*.azurestaticprovider.net&quot; by DNS.src DNS.query DNS.dest | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="eb5c974e89" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">node-ipc stealer __ntw=1 environment marker in process command line</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="eb5c974e89" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts for the __ntw=1 environment-variable marker reportedly used by the malicious node-ipc payload to signal that a child has already inherited the stealer context (preventing re-entry). Presence of this token in any process or child command-line is a high-fidelity indicator the payload executed on the host.
-
-Rationale: `__ntw=1` is a campaign-specific environment marker called out verbatim in the Snyk advisory and corroborated by StepSecurity — no mainstream npm package or build tool uses this token. Single-string match on CommandLine works because env vars set inline (e.g. `__ntw=1 node ...`) and parent-spawned children with that prefix surface in EDR command-line telemetry.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack
-  • https://www.upwind.io/feed/malicious-node-ipc-npm-package-credential-theft</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span> <span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher / IR analyst reproducing the malware on a sandbox</li><li>Internal threat-hunt query stored in an analyst&#x27;s shell history that gets re-exec&#x27;d</li><li>Sigma/test harness firing a synthetic event with the literal IOC for tuning</li><li>Documentation file or README opened in an editor whose telemetry surfaces __ntw=1 in the process arglist of a grep/findstr</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName has_any (&quot;sandbox-&quot;,&quot;detonator-&quot;,&quot;malware-rev-&quot;) or InitiatingProcessFileName in~ (&quot;grep.exe&quot;,&quot;findstr.exe&quot;,&quot;rg.exe&quot;,&quot;sigma-cli&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Pull the full process tree around the hit — parent (likely node.exe / npm / yarn / pnpm), command line, and SHA256. Confirm whether node_modules/node-ipc/node-ipc.cjs exists on the host and what version is recorded in package-lock.json or yarn.lock. Step 2 (contain): Isolate the host, kill the node process tree, quarantine the affected package directory, and rotate every credential category named in the advisory (npm, GitHub PAT/SSH, AWS / Azure / GCP, kubeconfig, Terraform state, ~/.bash_history-resident secrets, AI/dev-tool API keys). Step 3 (hunt): Sweep all hosts in the org for the same IOC, then pivot to UC1/UC2 (egress + DNS) for the same host&#x27;s prior 7 days to confirm exfiltration completion.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-314-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-314-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-314-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-314-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-314-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-314-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-314-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where ProcessCommandLine has &quot;__ntw=1&quot;
-   or InitiatingProcessCommandLine has &quot;__ntw=1&quot;
-| project Timestamp, DeviceName, AccountName,
-          FileName, FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, InitiatingProcessParentFileName, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-314-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>union isfuzzy=true
-(ImProcessCreate
- | where TimeGenerated &gt; ago(30d)
- | where ActingProcessCommandLine has &quot;__ntw=1&quot;
-    or ParentProcessCommandLine has &quot;__ntw=1&quot;
-    or TargetProcessCommandLine has &quot;__ntw=1&quot;
- | project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, ParentProcessName, ParentProcessCommandLine, TargetProcessCommandLine, EventProduct),
-(SecurityEvent
- | where TimeGenerated &gt; ago(30d)
- | where EventID == 4688
- | where CommandLine has &quot;__ntw=1&quot; or ParentProcessName has &quot;__ntw=1&quot;
- | project TimeGenerated, Computer, Account, NewProcessName, CommandLine, ParentProcessName, ProcessId)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-314-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: node-ipc Stealer __ntw Environment Marker in Process Command Line
-id: 3a7b1c92-d50e-4a8b-9c12-1d5f6e8a3b41
-description: Detects the __ntw=1 environment-variable marker reported by Snyk / StepSecurity as a signal flag used by the malicious node-ipc credential stealer to track already-spawned child processes.
-references:
-  - https://snyk.io/blog/malicious-node-ipc-versions-published-npm/
-  - https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack
-author: SOC Detection Engineering
-date: 2026/05/19
-tags:
-  - attack.execution
-  - attack.t1059.007
-  - attack.defense_evasion
-  - attack.t1027
-  - attack.initial_access
-  - attack.t1195.002
-logsource:
-  category: process_creation
-detection:
-  selection:
-    CommandLine|contains: &#x27;__ntw=1&#x27;
-  condition: selection
-falsepositives:
-  - None known; the variable name is non-standard and not used by mainstream tooling
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-314-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon @EventID:1 @CommandLine:*__ntw=1*) OR (source:windows.security @EventID:4688 @CommandLine:*__ntw=1*) OR (source:linux.auditd (@process.command_line:*__ntw=1* OR @auditd.type:EXECVE @process.command_line:*__ntw=1*))</code></pre></div>
-    <div class="tab-content" id="art-314-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>(#event_simpleName=ProcessRollup2 OR #event_simpleName=SyntheticProcessRollup2)
-| regex(&quot;__ntw=1&quot;, field=CommandLine)
-| groupBy([aid, ComputerName, UserName, ImageFileName, ParentBaseFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-314-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-314-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-314-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-314-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.parent_process) as parent_cmd values(Processes.process_path) as proc_path from datamodel=Endpoint.Processes where Processes.process=&quot;*__ntw=1*&quot; OR Processes.parent_process=&quot;*__ntw=1*&quot; by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-314-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.parent_process) as parent_cmd values(Processes.process_path) as proc_path from datamodel=Endpoint.Processes where Processes.process=&quot;*__ntw=1*&quot; OR Processes.parent_process=&quot;*__ntw=1*&quot; by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="083caabae2" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Malicious node-ipc package landed on disk under node_modules</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="083caabae2" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Hunts for file-system writes of node-ipc.cjs into any node_modules/node-ipc/ directory after the 14 May 2026 publication window, surfacing developer workstations, CI runners, build containers, and artifact registries that installed a candidate-malicious release. Pair with version triage (9.1.6 / 9.2.3 / 12.0.1).
-
-Rationale: Anchors on the exact CommonJS file Snyk identifies as malicious (`node-ipc.cjs`) and the canonical install path (`node_modules/node-ipc/`). Time-bound to the publication window so analysts only see installs that could be the bad versions. Hunting tier because a hit alone does not prove the version is malicious — needs package.json/lockfile triage as Step 1.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack
-  • https://www.upwind.io/feed/malicious-node-ipc-npm-package-credential-theft
-  • https://thehackernews.com/2026/05/stealer-backdoor-found-in-3-node-ipc.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer installing a still-uncompromised legacy version (e.g. 12.0.0) after the cutoff</li><li>CI cache warmup writing node-ipc into a build container from a private mirror with safe versions</li><li>Docker image layer-extraction surfacing node-ipc.cjs writes from older base images</li><li>Local node_modules vendoring during yarn/pnpm migrations (massive file-create bursts that include node-ipc)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Read the sibling `package.json` (`FolderPath/../package.json`) on each host and confirm version. Versions 9.1.6, 9.2.3, 12.0.1 = malicious; anything else = downgrade or pin. Step 2 (contain): On confirmed malicious version — isolate the host, delete the affected node_modules tree, clear the npm/yarn/pnpm cache, refresh the lockfile pinning to a safe version, and treat all credentials accessible from that environment as exposed. Step 3 (hunt): Inventory ALL artifact registries (Artifactory, Nexus, internal npm proxy), CI cache volumes, ephemeral build worker images, and Docker layers for the same file; pivot to UC1/UC2/UC3 on each candidate host.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-314-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-314-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-314-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-314-uc3-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-314-uc3-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-314-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-314-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt;= datetime(2026-05-14T00:00:00Z)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where FileName =~ &quot;node-ipc.cjs&quot;
-| where FolderPath has &quot;node_modules&quot; and FolderPath has &quot;node-ipc&quot;
-| project Timestamp, DeviceName, FolderPath, FileName, FileSize, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessFolderPath
-| order by Timestamp asc</code></pre></div>
-    <div class="tab-content" id="art-314-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt;= datetime(2026-05-14T00:00:00Z)
-| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileCreate&quot;)
-| where TargetFileName =~ &quot;node-ipc.cjs&quot;
-| where TargetFilePath has &quot;node_modules&quot; and TargetFilePath has &quot;node-ipc&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, TargetFileName, TargetFileSize, TargetFileSHA256, ActingProcessName, ActingProcessCommandLine, EventProduct
-| order by TimeGenerated asc</code></pre></div>
-    <div class="tab-content" id="art-314-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Malicious node-ipc CommonJS Bundle Written Under node_modules (May 2026)
-id: c41a83d7-2e0b-4f6a-90ef-7d8b1c2a5e09
-description: Detects creation/modification of node_modules/node-ipc/node-ipc.cjs after 14 May 2026, the publication date of the malicious 9.1.6, 9.2.3, and 12.0.1 releases.
-references:
-  - https://snyk.io/blog/malicious-node-ipc-versions-published-npm/
-  - https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack
-author: SOC Detection Engineering
-date: 2026/05/19
-tags:
-  - attack.initial_access
-  - attack.t1195.002
-  - attack.command_and_control
-  - attack.t1105
-logsource:
-  category: file_event
-detection:
-  selection_name:
-    TargetFilename|endswith:
-      - &#x27;/node_modules/node-ipc/node-ipc.cjs&#x27;
-      - &#x27;\node_modules\node-ipc\node-ipc.cjs&#x27;
-  condition: selection_name
-falsepositives:
-  - Legitimate install of a non-malicious node-ipc version; triage by reading the parent package.json version field
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-314-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon @EventID:11 (@TargetFilename:*\\node_modules\\node-ipc\\node-ipc.cjs OR @TargetFilename:*/node_modules/node-ipc/node-ipc.cjs)) OR (source:linux.auditd @auditd.type:PATH @file.path:*/node_modules/node-ipc/node-ipc.cjs)</code></pre></div>
-    <div class="tab-content" id="art-314-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| regex(&quot;(/|\\\\)node_modules(/|\\\\)node-ipc(/|\\\\)node-ipc\\.cjs$&quot;, field=TargetFileName, flags=i)
-| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName, UserName], function=min(@timestamp))
-| _time &gt;= 1747180800000</code></pre></div>
-    <div class="tab-content" id="art-314-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-314-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-314-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-314-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as proc values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;node-ipc.cjs&quot; AND Filesystem.file_path=&quot;*node_modules*node-ipc*&quot; AND Filesystem.action=&quot;created&quot; by Filesystem.dest Filesystem.file_path | `drop_dm_object_name(Filesystem)` | where firstTime &gt;= relative_time(now(),&quot;-30d@d&quot;) AND firstTime &gt;= strptime(&quot;2026-05-14T00:00:00&quot;,&quot;%Y-%m-%dT%H:%M:%S&quot;) | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-314-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as proc values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;node-ipc.cjs&quot; AND Filesystem.file_path=&quot;*node_modules*node-ipc*&quot; AND Filesystem.action=&quot;created&quot; by Filesystem.dest Filesystem.file_path | `drop_dm_object_name(Filesystem)` | where firstTime &gt;= relative_time(now(),&quot;-30d@d&quot;) AND firstTime &gt;= strptime(&quot;2026-05-14T00:00:00&quot;,&quot;%Y-%m-%dT%H:%M:%S&quot;) | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="d37cb3233a" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">node.js process staging credential dump in nt-* temp directory</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="d37cb3233a" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the staging artefact the malicious node-ipc payload writes — a temp directory matching `$TMPDIR/nt-*` populated by a node process — used to compress harvested SSH / cloud / kube / GitHub / Terraform / shell-history credentials before exfil. Catches the campaign at the collection layer even if egress is firewall-blocked.
-
-Rationale: Combines two campaign-specific behaviours from the Snyk advisory: (a) the temp directory prefix `nt-` and (b) a node process as the writer. Threshold of ≥3 distinct files per directory suppresses single-file noise while still firing on the credential-dump fan-out (90+ categories). Catches the campaign at the collection step even when egress is blocked.
-
-Cross-checked against:
-  • https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack
-  • https://www.upwind.io/feed/malicious-node-ipc-npm-package-credential-theft</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Staged: Local Data Staging">T1074.001</span> <span class="ind tech" title="Unsecured Credentials: Credentials In Files">T1552.001</span> <span class="ind tech" title="Archive Collected Data: Archive via Utility">T1560.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Node.js test framework (e.g. some Jest/Mocha snapshot tooling) writing nt-prefixed scratch files</li><li>Node.js native build (node-gyp) using temp scratch directories during compile</li><li>Electron app&#x27;s installer/updater extracting nt-prefixed temp artefacts on Windows</li><li>A developer running a CLI tool whose temp prefix happens to begin with &#x27;nt&#x27;</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessCommandLine has_any (&quot;node-gyp&quot;,&quot;electron-builder&quot;,&quot;jest&quot;,&quot;mocha&quot;) or InitiatingProcessParentFileName in~ (&quot;npm.exe&quot;,&quot;yarn.exe&quot;,&quot;pnpm.exe&quot;) and DistinctFiles &lt; 10)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Pull the file inventory inside the matching nt-* directory — confirm presence of files resembling credential artefacts (id_rsa, .aws/credentials, kubeconfig, .gitconfig, .npmrc, .terraformrc, .bash_history). Check the writing process tree for node-ipc on disk. Step 2 (contain): Kill the node process, isolate the host, preserve the nt-* directory for forensics, and rotate every credential the host had access to (treat as fully compromised; the staging dir confirms collection occurred). Step 3 (hunt): Pivot to UC1/UC2 (azurestaticprovider.net + 37.16.75.69 egress) on the same host to determine whether the stage was exfiltrated; sweep CI runners for the same staging pattern.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-314-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-314-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-314-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-314-uc4-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-314-uc4-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-314-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-314-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;node&quot;)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
-| where FolderPath matches regex @&quot;(?i)([\\/]Temp[\\/]nt-|/tmp/nt-|/var/folders/.+?/T/nt-)&quot;
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp),
-            DistinctFiles=dcount(FileName), SampleFiles=make_set(FileName, 25),
-            TotalBytes=sum(FileSize)
-            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFolderPath, FolderPath
-| where DistinctFiles &gt;= 3
-| order by FirstSeen asc</code></pre></div>
-    <div class="tab-content" id="art-314-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(30d)
-| where ActingProcessName has_any (&quot;node.exe&quot;,&quot;node&quot;)
-| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where TargetFilePath matches regex @&quot;(?i)([\\/]Temp[\\/]nt-|/tmp/nt-|/var/folders/.+?/T/nt-)&quot;
-| summarize FirstSeen=min(TimeGenerated), DistinctFiles=dcount(TargetFileName),
-            SampleFiles=make_set(TargetFileName, 25), TotalBytes=sum(TargetFileSize)
-            by DvcHostname, ActorUsername, TargetFilePath, EventProduct
-| where DistinctFiles &gt;= 3
-| order by FirstSeen asc</code></pre></div>
-    <div class="tab-content" id="art-314-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Node.js Process Writes to nt-* Temp Directory (node-ipc Stealer Staging)
-id: f0c5e842-9a16-4a3d-b71e-2c0d8e5fa317
-description: Detects a Node.js process creating files in a temp directory matching the nt-* prefix reportedly used by the malicious node-ipc 9.1.6 / 9.2.3 / 12.0.1 payload to stage harvested credentials before exfiltration.
-references:
-  - https://snyk.io/blog/malicious-node-ipc-versions-published-npm/
-  - https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack
-author: SOC Detection Engineering
-date: 2026/05/19
-tags:
-  - attack.collection
-  - attack.t1074.001
-  - attack.credential_access
-  - attack.t1552.001
-logsource:
-  category: file_event
-detection:
-  selection_image:
-    Image|endswith:
-      - &#x27;\node.exe&#x27;
-      - &#x27;/node&#x27;
-  selection_path:
-    TargetFilename|contains:
-      - &#x27;\Temp\nt-&#x27;
-      - &#x27;/tmp/nt-&#x27;
-      - &#x27;/T/nt-&#x27;
-  condition: selection_image and selection_path
-falsepositives:
-  - Legitimate Node.js tooling that happens to use an nt- prefix for scratch files (rare)
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-314-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon @EventID:11 @Image:(*\\node.exe OR *\\Node.exe) (@TargetFilename:*\\Temp\\nt-* OR @TargetFilename:*\\AppData\\Local\\Temp\\nt-*)) OR (source:linux.auditd @process.name:node (@file.path:/tmp/nt-* OR @file.path:/var/folders/*/T/nt-*))</code></pre></div>
-    <div class="tab-content" id="art-314-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| ContextImageFileName=/[\\\\/]node(\\.exe)?$/i
-| regex(&quot;([\\\\/]Temp[\\\\/]nt-|/tmp/nt-|/var/folders/.+?/T/nt-)&quot;, field=TargetFileName, flags=i)
-| groupBy([aid, ComputerName, UserName, ContextImageFileName], function={
-    distinct_count := count(field=TargetFileName, distinct=true)
-  })
-| distinct_count &gt;= 3</code></pre></div>
-    <div class="tab-content" id="art-314-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-314-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-314-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-314-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files dc(Filesystem.file_name) as file_count from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;*\\Temp\\nt-*&quot; OR Filesystem.file_path=&quot;*/tmp/nt-*&quot; OR Filesystem.file_path=&quot;*/var/folders/*/T/nt-*&quot;) AND Filesystem.process_name IN (&quot;node.exe&quot;,&quot;node&quot;) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | where file_count &gt;= 3 | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-314-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files dc(Filesystem.file_name) as file_count from datamodel=Endpoint.Filesystem where (Filesystem.file_path=&quot;*\\Temp\\nt-*&quot; OR Filesystem.file_path=&quot;*/tmp/nt-*&quot; OR Filesystem.file_path=&quot;*/var/folders/*/T/nt-*&quot;) AND Filesystem.process_name IN (&quot;node.exe&quot;,&quot;node&quot;) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | where file_count &gt;= 3 | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="27f9f5bb66" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">PowerShell encoded / obfuscated command</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="27f9f5bb66" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Encoded or obfuscated PowerShell — common across loaders, recon, and post-exploitation.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="PowerShell">T1059.001</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-314-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-314-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-314-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-314-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-314-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-| where ProcessCommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-314-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\pwsh.exe&quot;
-| where CommandLine matches regex @&quot;(?i)(-enc|encodedcommand|frombase64string|-nop|-w\s+hidden|invoke-expression|iex\s*\(|downloadstring|net\.webclient)&quot;
-| project TimeGenerated, Computer, Account, NewProcessName,
-          CommandLine, ParentProcessName
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-314-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Obfuscated / Encoded PowerShell Execution
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d08
-status: experimental
-description: |
-    PowerShell launched with -EncodedCommand, base64 strings, hidden
-    window, no-profile, bypass policy, IEX / Invoke-Expression / Net
-    .WebClient.DownloadString — combinations indicating evasion.
-references:
-    - https://attack.mitre.org/techniques/T1059/001/
-    - https://attack.mitre.org/techniques/T1027/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1059.001
-    - attack.t1027
-    - attack.execution
-    - attack.defense-evasion
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_image:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-    selection_args:
-        CommandLine|contains:
-            - &#x27;-enc &#x27;
-            - &#x27;EncodedCommand&#x27;
-            - &#x27;FromBase64String&#x27;
-            - &#x27;Invoke-Expression&#x27;
-            - &#x27;IEX(&#x27;
-            - &#x27;DownloadString&#x27;
-            - &#x27;Net.WebClient&#x27;
-            - &#x27;-w hidden&#x27;
-            - &#x27;-WindowStyle Hidden&#x27;
-            - &#x27;-nop&#x27;
-            - &#x27;-NoProfile&#x27;
-            - &#x27;-ep bypass&#x27;
-            - &#x27;-ExecutionPolicy Bypass&#x27;
-    condition: selection_image and selection_args
-falsepositives:
-    - DevOps tooling that legitimately uses encoded command for
-      cross-shell escaping
-level: high
-</code></pre></div>
-    <div class="tab-content" id="art-314-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-314-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-314-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-314-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-      AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
-        OR Processes.process=&quot;*FromBase64String*&quot; OR Processes.process=&quot;*-nop*&quot;
-        OR Processes.process=&quot;*-w hidden*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
-        OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
-        OR Processes.process=&quot;*Net.WebClient*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-314-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-      AND (Processes.process=&quot;*-enc *&quot; OR Processes.process=&quot;*EncodedCommand*&quot;
-        OR Processes.process=&quot;*FromBase64String*&quot; OR Processes.process=&quot;*-nop*&quot;
-        OR Processes.process=&quot;*-w hidden*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot;
-        OR Processes.process=&quot;*IEX(*&quot; OR Processes.process=&quot;*DownloadString*&quot;
-        OR Processes.process=&quot;*Net.WebClient*&quot;)
-    by Processes.dest, Processes.user, Processes.process_name, Processes.process, Processes.parent_process_name
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-314-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-314-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-314-uc6-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-314-uc6-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-314-uc6-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-314-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-314-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-314-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-314-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-314-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-314-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-314-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="15168726a3" data-platforms="def,sent,sigma,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Network connections to article IPs / domains</span>
-    <span class="uc-phase">Command &amp; Control</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="15168726a3" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Outbound traffic to attacker infrastructure named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol">T1071</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web</span> <span class="ind">Network_Resolution.DNS</span> <span class="ind">DeviceNetworkEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-314-uc7-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-314-uc7-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-314-uc7-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-314-uc7-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-314-uc7-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where RemoteIP in (&quot;37.16.75.69&quot;) or RemoteUrl has_any (&quot;azurestaticprovider.net&quot;, &quot;sh.azurestaticprovider.net&quot;)
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-314-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>let BadIPs     = dynamic([&quot;37.16.75.69&quot;]);
-let BadDomains = dynamic([&quot;azurestaticprovider.net&quot;, &quot;sh.azurestaticprovider.net&quot;]);
-ImNetworkSession
-| where TimeGenerated &gt; ago(7d)
-| where DstIpAddr in (BadIPs)
-   or Url has_any (BadDomains)
-| project TimeGenerated, DvcHostname, DstIpAddr, DstPortNumber, Url, NetworkProtocol
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-314-uc7-sigma"><pre><button class="copy-btn">COPY</button><code>title: Outbound Connection to Article-Named IP / Domain
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0f
-status: experimental
-description: |
-    Replace `__IP_LIST__` / `__DOMAIN_LIST__` placeholders with
-    article-specific destinations. For dynamic IOC management, use a
-    watchlist or external feed.
-references:
-    - https://attack.mitre.org/tactics/TA0011/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.command-and-control
-logsource:
-    category: network_connection
-    product: windows
-detection:
-    selection_ip:
-        DestinationIp:
-            - &#x27;__IP_PLACEHOLDER_1__&#x27;
-            - &#x27;__IP_PLACEHOLDER_2__&#x27;
-    selection_domain:
-        DestinationHostname:
-            - &#x27;__DOMAIN_PLACEHOLDER_1__&#x27;
-            - &#x27;__DOMAIN_PLACEHOLDER_2__&#x27;
-    condition: selection_ip or selection_domain
-falsepositives:
-    - None on a true-positive IOC match
-level: critical
-</code></pre></div>
-    <div class="tab-content" id="art-314-uc7-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-314-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-314-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-314-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;37.16.75.69&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats `summariesonly` count from datamodel=Web
-        where Web.dest IN (&quot;azurestaticprovider.net&quot;, &quot;sh.azurestaticprovider.net&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;azurestaticprovider.net&quot;, &quot;sh.azurestaticprovider.net&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre><pre class="spl-mode-body" id="art-314-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Network_Traffic.All_Traffic
-    where All_Traffic.dest IN (&quot;37.16.75.69&quot;)
-    by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| append
-    [| tstats summariesonly=false count from datamodel=Web
-        where Web.dest IN (&quot;azurestaticprovider.net&quot;, &quot;sh.azurestaticprovider.net&quot;)
-        by Web.src, Web.dest, Web.url, Web.user
-     | `drop_dm_object_name(Web)`]
-| append
-    [| tstats summariesonly=false count from datamodel=Network_Resolution.DNS
-        where DNS.query IN (&quot;azurestaticprovider.net&quot;, &quot;sh.azurestaticprovider.net&quot;)
-        by DNS.src, DNS.query, DNS.answer
-     | `drop_dm_object_name(DNS)`]</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="4f8abf3ce0" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Malicious node-ipc versions published to npm in suspected maintainer account com</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="4f8abf3ce0" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-314-uc8-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-314-uc8-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-314-uc8-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-314-uc8-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Malicious node-ipc versions published to npm in suspected maintainer account com
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/dev/null&quot;) or FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-314-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — Malicious node-ipc versions published to npm in suspected maintainer account com
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/dev/null&quot;) or FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-314-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-314-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-314-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-314-uc8-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Malicious node-ipc versions published to npm in suspected maintainer account com ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/dev/null*&quot; OR Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-314-uc8-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Malicious node-ipc versions published to npm in suspected maintainer account com ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/dev/null*&quot; OR Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
   </div>
 </details></div>
 </article>

@@ -75,7 +75,7 @@ _(none detected from narrative keywords)_
 
 ### DarkKomet 'Synaptics.exe' masquerade dropped by Wallpaper Engine workshop content
 
-`UC_58_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_59_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceProcessEvents
 
 ### Steam Workshop wallpaper '._cache_GAME1.exe' launcher execution
 
-`UC_58_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_59_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### Wallpaper Engine spawning script interpreters or LOLBins
 
-`UC_58_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_59_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +133,7 @@ DeviceProcessEvents
 
 ### Trojanised AggregatorHost.dll loaded from non-system path
 
-`UC_58_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_59_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +159,7 @@ union
 
 ### Steam credential file (loginusers.vdf / ssfn*) accessed by non-Steam process
 
-`UC_58_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_59_12` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -179,7 +179,7 @@ DeviceFileEvents
 
 ### C2 callback to malicious wallpaper campaign infrastructure
 
-`UC_58_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_59_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -205,7 +205,7 @@ union
 
 ### Known IOC hash match — malicious Steam Workshop wallpaper payloads
 
-`UC_58_14` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_59_14` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -224,7 +224,7 @@ union
 
 ### Persistence via Steam Workshop wallpaper content path in Run keys / Scheduled Tasks
 
-`UC_58_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_59_15` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -398,7 +398,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Dozens of malicious wallpapers found on Steam Workshop: gamers’ accounts at risk
 
-`UC_58_7` · phase: **exploit** · confidence: **High**
+`UC_59_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -27,14 +27,15 @@ PostHog's engineering team is merging roughly as many pull requests through Slac
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1567** — Exfiltration Over Web Service
+- **T1059** — Command and Scripting Interpreter
+- **T1546.016** — Installer Packages
 - **T1176** — Browser Extensions
-- **T1547.013** — Boot or Logon Autostart Execution: XDG Autostart Entries
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1552.004** — Unsecured Credentials: Private Keys
+- **T1505.005** — Server Software Component: IDE Extensions
+- **T1195.001** — Compromise Software Dependencies and Development Tools
+- **T1552.001** — Credentials In Files
+- **T1552.004** — Private Keys
 - **T1555** — Credentials from Password Stores
-- **T1071.003** — Application Layer Protocol: Mail Protocols
-- **T1048.003** — Exfiltration Over Alternative Protocol: Exfiltration Over Unencrypted Non-C2 Protocol
 
 ## Kill chain phases observed
 
@@ -42,130 +43,136 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Outbound C2 from process tree of npm/yarn install within 3 minutes
+### DNS or network egress to giftshop.club (postmark-mcp exfil channel)
 
-`UC_116_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_117_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t min(_time) as install_time values(Processes.process) as install_cmd values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","npm.exe","npm.cmd","yarn.exe","yarn.cmd","pnpm.exe","pnpm.cmd") OR Processes.process IN ("*npm install*","*npm ci*","*yarn add*","*pnpm install*","*pnpm add*")) by Processes.dest
-| `drop_dm_object_name(Processes)`
-| join type=inner dest [
-    | tstats summariesonly=t min(_time) as net_time values(All_Traffic.dest_ip) as remote_ip values(All_Traffic.dest_port) as remote_port values(All_Traffic.app) as net_proc from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("node.exe","npm.exe","yarn.exe","pnpm.exe","sh.exe","cmd.exe","powershell.exe","python.exe") NOT All_Traffic.dest IN ("registry.npmjs.org","registry.yarnpkg.com","github.com","*.githubusercontent.com","pypi.org","files.pythonhosted.org") by All_Traffic.dest
-    | `drop_dm_object_name(All_Traffic)`
-  ]
-| where net_time >= install_time AND net_time <= (install_time + 180)
-| table dest user install_cmd net_proc remote_ip remote_port install_time net_time
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution where DNS.query IN ("giftshop.club","*.giftshop.club","sfrclak.com","*.sfrclak.com") by DNS.src DNS.query DNS.dest | `drop_dm_object_name(DNS)` | append [| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where All_Traffic.dest IN ("142.11.206.73","45.32.150.251","45.32.151.157","70.34.242.255") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)`] | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let WindowSec = 180;
-let InstallProcs = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where (InitiatingProcessFileName in~ ("node.exe","npm.exe","npm.cmd","yarn.exe","yarn.cmd","pnpm.exe","pnpm.cmd")
-          or ProcessCommandLine has_any ("npm install","npm ci","yarn add","pnpm install","pnpm add"))
-    | project InstallTime = Timestamp, DeviceId, DeviceName, AccountName,
-              InstallCmd = ProcessCommandLine,
-              InstallChild = FileName;
+let BadDomains = dynamic(["giftshop.club","sfrclak.com"]);
+let BadIPs = dynamic(["142.11.206.73","45.32.150.251","45.32.151.157","70.34.242.255"]);
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteIPType == "Public"
-| where InitiatingProcessFileName in~ ("node.exe","npm.exe","npm.cmd","yarn.exe","yarn.cmd","pnpm.exe","sh.exe","cmd.exe","powershell.exe","pwsh.exe","python.exe","python3.exe")
-| where not (RemoteUrl has_any ("registry.npmjs.org","registry.yarnpkg.com","github.com","githubusercontent.com","pypi.org","files.pythonhosted.org","objects.githubusercontent.com"))
-| join kind=inner InstallProcs on DeviceId
-| where Timestamp between (InstallTime .. InstallTime + WindowSec * 1s)
-| project NetworkTime = Timestamp, DeviceName, AccountName, InstallCmd,
-          NetProc = InitiatingProcessFileName,
-          NetCmd = InitiatingProcessCommandLine,
-          RemoteIP, RemoteUrl, RemotePort
-| order by NetworkTime desc
+| where Timestamp > ago(30d)
+| where RemoteIP in (BadIPs)
+    or RemoteUrl has_any (BadDomains)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemoteUrl, RemotePort
+| order by Timestamp desc
 ```
 
-### VS Code extension directory mutated by non-VS Code process (Glassworm shape)
+### Postinstall hook from freshly-installed npm package spawning network / shell child
 
-`UC_116_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_117_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as first_seen values(Filesystem.file_name) as files values(Filesystem.process_name) as writer from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\.vscode\\extensions\\*" Filesystem.process_name!="Code.exe" Filesystem.process_name!="code.exe" Filesystem.process_name!="Code - Insiders.exe" Filesystem.process_name!="msiexec.exe" Filesystem.process_name!="explorer.exe" by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path
-| `drop_dm_object_name(Filesystem)`
-| where match(file_path, "\\.(js|json|vsix|node|dll|exe|sh|ps1)$")
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("npm.exe","node.exe","yarn.exe","pnpm.exe","npx.exe","bun.exe") AND (Processes.parent_process has "postinstall" OR Processes.parent_process has "run-script" OR Processes.parent_process has "lifecycle") AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe","curl.exe","certutil.exe","bitsadmin.exe","bash.exe","sh.exe") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("npm.exe","node.exe","yarn.exe","pnpm.exe","npx.exe","bun.exe")
+| where InitiatingProcessCommandLine has_any ("postinstall","preinstall","install","run-script","lifecycle")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","wscript.exe","cscript.exe","mshta.exe","curl.exe","certutil.exe","bitsadmin.exe","bash.exe","sh.exe","node.exe")
+    or ProcessCommandLine has_any ("curl ","wget ","Invoke-WebRequest","DownloadString","IEX ","base64 -d","FromBase64String","-EncodedCommand")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### VS Code / IDE marketplace extension install (Glassworm-style)
+
+`UC_117_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\.vscode\\extensions\\*" OR Filesystem.file_path="*\\.vscode-insiders\\extensions\\*" OR Filesystem.file_path="*\\Cursor\\User\\extensions\\*" OR Filesystem.file_path="*\\.windsurf\\extensions\\*" OR Filesystem.file_path="*\\JetBrains\\*\\plugins\\*" OR Filesystem.file_name="*.vsix") AND Filesystem.action="created" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FolderPath has @"\.vscode\extensions\" or FolderPath has @"/.vscode/extensions/" or FolderPath has @"\.vscode-server\extensions\"
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where InitiatingProcessFileName !in~ ("code.exe","code - insiders.exe","code-insiders.exe","codium.exe","cursor.exe","msiexec.exe","explorer.exe","updater.exe","squirreltemp.exe","setup.exe")
-| where InitiatingProcessAccountName !endswith "$"
-| where FileName endswith ".js" or FileName endswith ".json" or FileName endswith ".vsix" or FileName endswith ".node" or FileName endswith ".dll" or FileName endswith ".exe" or FileName endswith ".sh" or FileName endswith ".ps1"
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          Writer = InitiatingProcessFileName,
-          WriterCmd = InitiatingProcessCommandLine,
-          WriterParent = InitiatingProcessParentFileName,
-          FolderPath, FileName, SHA256
+| where ActionType == "FileCreated"
+| where FolderPath has_any (@"\.vscode\extensions\", @"\.vscode-insiders\extensions\", @"\Cursor\User\extensions\", @"\.windsurf\extensions\", @"\JetBrains\")
+    or FileName endswith ".vsix"
+| where FileName endswith ".js" or FileName endswith ".vsix" or FileName endswith "package.json" or FileName endswith ".node" or FileName endswith ".dll" or FileName endswith ".exe"
+| where InitiatingProcessFileName !in~ ("msiexec.exe","trustedinstaller.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256
 | order by Timestamp desc
 ```
 
-### Developer-credential file read by non-IDE / non-CLI process
+### Anomalous git push / branch-protection bypass by developer endpoint
 
-`UC_116_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_117_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as first_seen values(Filesystem.file_name) as files values(Filesystem.process_name) as reader from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\.npmrc" OR Filesystem.file_path="*\\.aws\\credentials" OR Filesystem.file_path="*\\.ssh\\id_*" OR Filesystem.file_path="*\\.kube\\config" OR Filesystem.file_path="*\\.docker\\config.json" OR Filesystem.file_path="*\\.netrc" OR Filesystem.file_path="*\\AppData\\Roaming\\gh\\hosts.yml" OR Filesystem.file_path="*\\.config\\gh\\hosts.yml") Filesystem.process_name!="Code.exe" Filesystem.process_name!="code.exe" Filesystem.process_name!="git.exe" Filesystem.process_name!="ssh.exe" Filesystem.process_name!="ssh-agent.exe" Filesystem.process_name!="gh.exe" Filesystem.process_name!="aws.exe" Filesystem.process_name!="kubectl.exe" Filesystem.process_name!="docker.exe" Filesystem.process_name!="explorer.exe" by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path
-| `drop_dm_object_name(Filesystem)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="git.exe" AND (Processes.process has "push --force" OR Processes.process has "push -f " OR Processes.process has "push --delete" OR Processes.process has "branch -D ") by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | eval hour=strftime(firstTime,"%H") | where (hour<"07" OR hour>"20") | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let CredFiles = dynamic([".npmrc",".aws\\credentials",".ssh\\id_rsa",".ssh\\id_ed25519",".ssh\\id_ecdsa",".kube\\config",".docker\\config.json",".netrc","gh\\hosts.yml"]);
-let LegitReaders = dynamic(["code.exe","code - insiders.exe","code-insiders.exe","cursor.exe","git.exe","ssh.exe","ssh-agent.exe","sshd.exe","gh.exe","aws.exe","kubectl.exe","docker.exe","docker-desktop.exe","explorer.exe","backup.exe","onedrive.exe","pwsh.exe","powershell.exe","cmd.exe","bash.exe","node.exe","npm.exe","yarn.exe","pnpm.exe","helm.exe"]);
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "git.exe"
+| where ProcessCommandLine has_any ("push --force","push -f ","push --delete","branch -D ","reset --hard origin/main","reset --hard origin/master")
+| extend Hour = datetime_part("hour", Timestamp)
+| where Hour < 7 or Hour > 20
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, ProcessCommandLine
+| order by Timestamp desc
+```
+
+### Developer credential file access by non-developer process
+
+`UC_117_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\.ssh\\id_*" OR Filesystem.file_path="*\\.ssh\\config" OR Filesystem.file_name=".npmrc" OR Filesystem.file_name=".git-credentials" OR Filesystem.file_name="credentials" OR Filesystem.file_path="*\\.aws\\credentials" OR Filesystem.file_path="*\\.docker\\config.json" OR Filesystem.file_path="*\\.kube\\config") AND NOT (Filesystem.process_name IN ("ssh.exe","git.exe","npm.exe","node.exe","aws.exe","kubectl.exe","docker.exe","code.exe","explorer.exe")) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let CredPaths = dynamic([@"\.ssh\id_",@"\.ssh\config",@"\.npmrc",@"\.git-credentials",@"\.aws\credentials",@"\.docker\config.json",@"\.kube\config",@"\AppData\Roaming\gh\hosts.yml",@"\AppData\Roaming\GitHub CLI\"]);
+let AllowedReaders = dynamic(["ssh.exe","git.exe","npm.exe","node.exe","aws.exe","kubectl.exe","docker.exe","code.exe","explorer.exe","gh.exe","plink.exe","openssh.exe","sshd.exe"]);
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where ActionType == "FileCreated" or ActionType == "FileModified" or ActionType startswith "FileOpen"
-| where FolderPath has_any (CredFiles) or FileName in~ (".npmrc","credentials","id_rsa","id_ed25519","id_ecdsa","config","hosts.yml",".netrc")
-| where FolderPath has_any ("\\Users\\","\\home\\")
-| where InitiatingProcessFileName !in~ (LegitReaders)
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| where FolderPath has_any (CredPaths) or FileName in~ (".npmrc",".git-credentials","credentials","id_rsa","id_ed25519")
+| where InitiatingProcessFileName !in~ (AllowedReaders)
 | where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          Reader = InitiatingProcessFileName,
-          ReaderCmd = InitiatingProcessCommandLine,
-          ReaderParent = InitiatingProcessParentFileName,
-          FolderPath, FileName
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, FolderPath, FileName
 | order by Timestamp desc
 ```
 
-### Newly-installed npm/pip package spawns SMTP / mail-protocol outbound
+### MCP server / AI-agent process making egress to non-allowlisted host
 
-`UC_116_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_117_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as first_seen values(All_Traffic.dest) as dest values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.process) as cmd from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("node.exe","npm.exe","yarn.exe","pnpm.exe","python.exe","python3.exe","pip.exe") All_Traffic.dest_port IN (25,465,587,2525,143,993,110,995) by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where (All_Traffic.app="node.exe" OR All_Traffic.app="python.exe" OR All_Traffic.app="npx.exe") AND All_Traffic.dest_port IN (80,443,8080,8443) AND NOT (All_Traffic.dest IN ("registry.npmjs.org","pypi.org","files.pythonhosted.org","api.openai.com","api.anthropic.com")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)`
 ```
 
 **Defender KQL:**
 ```kql
+let McpHosts = dynamic(["node.exe","npx.exe","python.exe","pythonw.exe","bun.exe","deno.exe"]);
+let KnownGood = dynamic(["registry.npmjs.org","pypi.org","files.pythonhosted.org","api.openai.com","api.anthropic.com","api.github.com","objects.githubusercontent.com"]);
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("node.exe","npm.exe","npm.cmd","yarn.exe","yarn.cmd","pnpm.exe","python.exe","python3.exe","pip.exe","pip3.exe")
-| where RemotePort in (25, 465, 587, 2525, 143, 993, 110, 995)
+| where InitiatingProcessFileName in~ (McpHosts)
+| where InitiatingProcessCommandLine has_any ("mcp","@modelcontextprotocol","stdio","--server","server.js","server.py")
 | where RemoteIPType == "Public"
-| extend MailProto = case(RemotePort in (25,2525), "SMTP",
-                          RemotePort == 465, "SMTPS",
-                          RemotePort == 587, "Submission",
-                          RemotePort in (143,993), "IMAP",
-                          RemotePort in (110,995), "POP3", "Other")
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          Proc = InitiatingProcessFileName,
-          Cmd = InitiatingProcessCommandLine,
-          ParentProc = InitiatingProcessParentFileName,
-          RemoteIP, RemoteUrl, RemotePort, MailProto
+| where not(RemoteUrl has_any (KnownGood))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
 | order by Timestamp desc
 ```
 
@@ -206,4 +213,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

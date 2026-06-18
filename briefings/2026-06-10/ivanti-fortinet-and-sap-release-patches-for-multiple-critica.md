@@ -34,8 +34,9 @@ The security flaw patched by Fortinet relates to a command injection vulnerabili
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1059** — Command and Scripting Interpreter
-- **T1059.004** — Unix Shell
-- **T1592.004** — Gather Victim Host Information: Client Configurations
+- **T1083** — File and Directory Discovery
+- **T1006** — Direct Volume Access
+- **T1592** — Gather Victim Host Information
 
 ## Kill chain phases observed
 
@@ -43,64 +44,64 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Ivanti Sentry CVE-2026-10520 MICS handleMessage RCE endpoint hit
+### Ivanti Sentry MICS handleMessage RCE (CVE-2026-10520)
 
-`UC_119_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_120_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.status) as status values(Web.http_method) as method values(Web.src) as src from datamodel=Web.Web where Web.url="*/mics/api/v2/sentry/mics-config/handleMessage*" by Web.dest Web.src | rename Web.* as * | `drop_dm_object_name(Web)` | where status IN ("200","302") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as method values(Web.status) as status values(Web.http_user_agent) as user_agent values(Web.dest) as dest from datamodel=Web where Web.url="*mics/api/v2/sentry/mics-config/handleMessage*" by Web.src, Web.url | `drop_dm_object_name("Web")` | eval cve="CVE-2026-10520" | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where RemoteUrl has "/mics/api/v2/sentry/mics-config/handleMessage"
-   or AdditionalFields has "/mics/api/v2/sentry/mics-config/handleMessage"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, AdditionalFields
+| where RemoteUrl has "mics/api/v2/sentry/mics-config/handleMessage"
+   or RemoteUrl has "mics-config/handleMessage"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
-### FortiSandbox WEB UI command injection CVE-2026-25089 exploit attempt
+### SAP NetWeaver AS Java Directory Traversal (CVE-2026-40128)
 
-`UC_119_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_120_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as method values(Web.status) as status values(Web.src) as src from datamodel=Web.Web where (Web.dest_category="fortisandbox" OR Web.url="*fortisandbox*" OR Web.http_user_agent="*FortiSandbox*") AND (Web.url="*%7C*" OR Web.url="*%3B*" OR Web.url="*%24%28*" OR Web.url="*%60*" OR Web.url="*%26%26*") by Web.dest Web.src | rename Web.* as * | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as method values(Web.status) as status values(Web.http_user_agent) as user_agent from datamodel=Web where (Web.url="*/sap/*" OR Web.url="*/irj/*" OR Web.url="*/nwa/*" OR Web.url="*/webdynpro/*") AND (Web.url="*../*" OR Web.url="*..%2f*" OR Web.url="*..%2F*" OR Web.url="*%2e%2e%2f*" OR Web.url="*%2E%2E%2F*" OR Web.url="*%252e%252e%252f*" OR Web.url="*..%5c*" OR Web.url="*..%5C*") by Web.src, Web.dest, Web.url | `drop_dm_object_name("Web")` | eval cve="CVE-2026-40128" | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where RemoteUrl has_any ("fortisandbox", "/cgi-bin/", "/api/v1/", "/login/")
-| where RemoteUrl has_any ("%7C", "%3B", "%24%28", "%60", "%26%26", "|", ";", "$(", "`")
-| project Timestamp, DeviceName, InitiatingProcessFileName, RemoteIP, RemoteUrl, RemotePort
+| where RemoteUrl has_any ("/sap/", "/irj/", "/nwa/", "/webdynpro/")
+| where RemoteUrl has_any ("../", "..%2f", "..%2F", "%2e%2e/", "%2E%2E/", "%2e%2e%2f", "%2E%2E%2F", "%252e%252e%252f", "..%5c", "..%5C")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
-### Inventory of unpatched Ivanti Sentry, FortiSandbox, and SAP NetWeaver vulnerable to disclosed CVEs
+### Asset inventory exposure to June-2026 Ivanti/Fortinet/SAP CVE batch
 
-`UC_119_8` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_120_8` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Vulnerabilities.signature) as signature values(Vulnerabilities.cve) as cve values(Vulnerabilities.severity) as severity from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128") by Vulnerabilities.dest | rename Vulnerabilities.* as * | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128") by Vulnerabilities.dest, Vulnerabilities.cve, Vulnerabilities.severity, Vulnerabilities.signature | `drop_dm_object_name("Vulnerabilities")` | convert ctime(firstSeen) ctime(lastSeen) | sort - severity dest
 ```
 
 **Defender KQL:**
 ```kql
+let TargetCves = dynamic(["CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128"]);
 DeviceTvmSoftwareVulnerabilities
-| where Timestamp > ago(1d)
-| where CveId in ("CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128")
+| where CveId in (TargetCves)
 | join kind=leftouter (
     DeviceInfo
-    | summarize arg_max(Timestamp, OSPlatform, OSVersion, PublicIP, IsInternetFacing) by DeviceId
+    | summarize arg_max(Timestamp, IsInternetFacing, PublicIP, MachineGroup, OSPlatform) by DeviceId
   ) on DeviceId
-| project CveId, VulnerabilitySeverityLevel, DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate, IsInternetFacing
-| order by IsInternetFacing desc, CveId asc
+| project DeviceName, DeviceId, IsInternetFacing, PublicIP, MachineGroup, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by IsInternetFacing desc, VulnerabilitySeverityLevel desc, DeviceName asc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -312,4 +313,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
