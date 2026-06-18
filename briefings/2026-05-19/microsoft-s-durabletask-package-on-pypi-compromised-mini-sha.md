@@ -185,7 +185,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Microsoft's durabletask package on PyPi Compromised. Mini Shai Hulud attacks aga
 
-`UC_311_7` · phase: **exploit** · confidence: **High**
+`UC_312_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

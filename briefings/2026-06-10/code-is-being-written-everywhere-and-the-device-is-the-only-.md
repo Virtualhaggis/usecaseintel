@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious postmark-mcp npm package install or egress to giftshop.club C2
 
-`UC_150_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_154_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ union Installs, Egress, Files
 
 ### Postmark-MCP backdoor BCC exfil — outbound email to *@giftshop.club
 
-`UC_150_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_154_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ EmailEvents
 
 ### npm/pnpm/yarn postinstall hook reads developer cloud credentials
 
-`UC_150_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_154_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceFileEvents
 
 ### GlassWorm — VS Code Code.exe spawning child with Solana RPC or Open VSX egress
 
-`UC_150_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_154_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

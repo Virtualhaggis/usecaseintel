@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### node.exe spawn loading vulnerable PraisonAI AgentOS package (npm:praisonai 1.6.0-1.7.1)
 
-`UC_14_1` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_22_1` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceProcessEvents
 
 ### Unauthenticated requests to PraisonAI AgentOS /api/agents or /api/chat endpoints
 
-`UC_14_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_22_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

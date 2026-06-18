@@ -66,7 +66,7 @@ _(none detected from narrative keywords)_
 
 ### ScarCruft fake Microsoft Account 'OTP abuse' alert with ZIP attachment
 
-`UC_97_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_102_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ EmailEvents
 
 ### LNK from extracted ZIP spawning batch script that downloads Python and CAT file
 
-`UC_97_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_102_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceProcessEvents
 
 ### Scheduled task creation with NarwhalRAT 'Microsoft*TaskMachine' naming convention
 
-`UC_97_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_102_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ union
 
 ### NarwhalRAT in-memory loader: python.exe processing a Windows CAT file
 
-`UC_97_13` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_102_13` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -163,7 +163,7 @@ DeviceProcessEvents
 
 ### NarwhalRAT staging directory %APPDATA%\naverwhale (Naver Whale browser masquerade)
 
-`UC_97_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_102_14` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -190,7 +190,7 @@ union
 
 ### NarwhalRAT C2 to daehoat.com / novel21.co.kr / pCloud dead-drop with folderid+auth
 
-`UC_97_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_102_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

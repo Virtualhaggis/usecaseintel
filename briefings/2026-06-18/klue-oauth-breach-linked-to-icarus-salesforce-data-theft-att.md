@@ -11,21 +11,13 @@ By Lawrence Abrams
 June 18, 2026
 10:19 AM
 0 
-
-
 Market intelligence platform Klue suffered a OAuth breach that enabled the "Icarus" threat actors to steal Salesforce CRM data from multiple organizations in an ongoing extortion campaign.
-
-
-Sources told BleepingComputer of the attack yesterday, telling us that numerous organizations had their Salesforce data stolen and were now being extorted by the relatively new extortion gr…
+Sources told BleepingComputer of the attack yesterday, telling us that numerous organizations had their Salesforce data stolen and were now being extorted by the relatively new extortion group.
+Cyb…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **IPv4 (defanged):** `138.226.246.94`
-- **IPv4 (defanged):** `212.86.125.24`
-- **IPv4 (defanged):** `213.111.148.90`
-- **IPv4 (defanged):** `94.154.32.160`
-- **Domain (defanged):** `robinskitchen.com.au`
-- **Domain (defanged):** `klue.com`
+- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
 
 ## MITRE ATT&CK Techniques
 
@@ -36,7 +28,6 @@ Sources told BleepingComputer of the attack yesterday, telling us that numerous 
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1071** — Application Layer Protocol
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1090** — Proxy
 - **T1199** — Trusted Relationship
@@ -55,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Network egress to Icarus extortion C2 IPs (Klue OAuth campaign)
 
-`UC_17_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_25_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +74,7 @@ union isfuzzy=true
 
 ### Klue Battlecards connected-app activity from Icarus IPs in Salesforce
 
-`UC_17_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_25_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +97,7 @@ CloudAppEvents
 
 ### Salesforce REST API /sobjects schema enumeration burst per principal
 
-`UC_17_7` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_25_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +124,7 @@ CloudAppEvents
 
 ### Salesforce REST API /query burst — >500 calls in 15-minute window
 
-`UC_17_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_25_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -269,14 +260,7 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
-### IOC-driven hunts (use shared templates)
-
-These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
-
-- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `138.226.246.94`, `212.86.125.24`, `213.111.148.90`, `94.154.32.160`, `robinskitchen.com.au`, `klue.com`
-
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 8 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

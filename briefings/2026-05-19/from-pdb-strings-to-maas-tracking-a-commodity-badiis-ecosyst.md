@@ -78,7 +78,7 @@ _(none detected from narrative keywords)_
 
 ### BadIIS demo.pdb variant known SHA256 file/process hashes
 
-`UC_313_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_314_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -97,7 +97,7 @@ union
 
 ### BadIIS C2 IP / domain beacon (lee.6686ty.vip, iis.01nmwe.xyz)
 
-`UC_313_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_314_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceNetworkEvents
 
 ### IIS worker (w3wp.exe) initiating outbound connection to public IP
 
-`UC_313_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_314_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ DeviceNetworkEvents
 
 ### IIS native module DLL drop or applicationHost.config modification by non-IIS process
 
-`UC_313_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_314_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +162,7 @@ DeviceFileEvents
 
 ### IIS worker (w3wp.exe) writing robots.txt / .php / .js into web root
 
-`UC_313_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_314_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -253,7 +253,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — From PDB strings to MaaS: Tracking a commodity BadIIS ecosystem used by Chinese-
 
-`UC_313_4` · phase: **exploit** · confidence: **High**
+`UC_314_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

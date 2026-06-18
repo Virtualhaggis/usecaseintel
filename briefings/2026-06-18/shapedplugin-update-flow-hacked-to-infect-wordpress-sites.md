@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### ShapedPlugin backdoor C2 beacon to generate.2faplugin.org / 194.76.217.28
 
-`UC_30_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_37_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceNetworkEvents
 
 ### LicenseLoader.php dropped into WordPress plugins directory
 
-`UC_30_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_37_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceFileEvents
 
 ### Fake woocommerce-subscription / woocommerce-notification plugin directory created
 
-`UC_30_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_37_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

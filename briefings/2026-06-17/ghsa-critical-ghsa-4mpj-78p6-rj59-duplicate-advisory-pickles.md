@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable picklescan (<1.0.4 / CVE-2025-1889) present in software inventory
 
-`UC_54_0` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_60_0` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ union VulnByCve, VulnByVersion
 
 ### Python deserialising a pickle/model file spawns shell or LOLBin (CVE-2025-1889 exec() outcome)
 
-`UC_54_1` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_60_1` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

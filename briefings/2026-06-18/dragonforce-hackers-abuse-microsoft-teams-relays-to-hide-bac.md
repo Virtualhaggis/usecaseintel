@@ -68,144 +68,12 @@ According to findings from Broadcom-owned Symantec and Carbon Black, the backdoo
 - **T1003.001** — LSASS Memory
 - **T1003** — OS Credential Dumping
 - **T1204.002** — User Execution: Malicious File
-- **T1068** — Exploitation for Privilege Escalation
-- **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1014** — Rootkit
-- **T1055** — Process Injection
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1090** — Proxy
-- **T1102** — Web Service
-- **T1090.002** — Proxy: External Proxy
-- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### BYOVD: Vulnerable Huawei/3rd-party driver drop (HWAuidoOs2Ec.sys + DragonForce kit)
-
-`UC_28_12` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="HWAuidoOs2Ec.sys" OR Filesystem.file_name="wsftprm.sys" OR Filesystem.file_name="GameDriverX64.sys" OR Filesystem.file_name="K7RKScan.sys") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_guid Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-union
-(DeviceFileEvents
-| where Timestamp > ago(60d)
-| where FileName in~ ("HWAuidoOs2Ec.sys","wsftprm.sys","GameDriverX64.sys","K7RKScan.sys")
-| project Timestamp, DeviceName, Source="FileWrite", FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
-(DeviceImageLoadEvents
-| where Timestamp > ago(60d)
-| where FileName in~ ("HWAuidoOs2Ec.sys","wsftprm.sys","GameDriverX64.sys","K7RKScan.sys")
-| project Timestamp, DeviceName, Source="ImageLoad", FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName=InitiatingProcessAccountName)
-| order by Timestamp desc
-```
-
-### Backdoor.Turn injection target: DbgView64.exe with outbound public network
-
-`UC_28_13` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest_port) as dest_port min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app="DbgView64.exe" OR All_Traffic.process_name="DbgView64.exe" by All_Traffic.src All_Traffic.user All_Traffic.app
-| `drop_dm_object_name(All_Traffic)`
-| where isnotnull(dest_ip)
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(60d)
-| where InitiatingProcessFileName =~ "DbgView64.exe"
-| where RemoteIPType == "Public"
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessSHA256, RemoteIP, RemotePort, RemoteUrl, Protocol
-| order by Timestamp desc
-```
-
-### Non-Teams process beaconing to Microsoft Teams / Skype relay infrastructure (Ghost Calls)
-
-`UC_28_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count dc(All_Traffic.dest) as dest_count values(All_Traffic.dest) as dests min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="*.relay.skype.com" OR All_Traffic.dest="*.teams.microsoft.com" OR All_Traffic.dest="*.skype.com" OR All_Traffic.dest="*.lync.com") AND NOT (All_Traffic.app IN ("ms-teams.exe","teams.exe","msteams.exe","msedge.exe","msedgewebview2.exe","chrome.exe","firefox.exe","outlook.exe","skype.exe","skypeforbusiness.exe","lync.exe")) by All_Traffic.src All_Traffic.user All_Traffic.app
-| `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has_any (".relay.skype.com",".teams.microsoft.com",".skype.com",".lync.com",".teams.live.com")
-| where InitiatingProcessFileName !in~ ("ms-teams.exe","teams.exe","msteams.exe","msedge.exe","msedgewebview2.exe","chrome.exe","firefox.exe","outlook.exe","onedrive.exe","officeclicktorun.exe","skype.exe","skypeforbusiness.exe","lync.exe","communicator.exe","brave.exe","opera.exe","iexplore.exe")
-| where InitiatingProcessAccountName !endswith "$"
-| where isnotempty(InitiatingProcessFileName)
-| summarize Conns=count(), DistinctUrls=dcount(RemoteUrl), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SampleUrls=make_set(RemoteUrl, 8), SampleCmd=any(InitiatingProcessCommandLine), SampleSHA256=any(InitiatingProcessSHA256) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessAccountName
-| order by LastSeen desc
-```
-
-### Backdoor.Turn / DragonForce C2 infrastructure (IP + domain IOCs)
-
-`UC_28_15` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("62.164.177.25","192.36.27.51") OR All_Traffic.dest IN ("projetosmecanicos.com.br","socialbizsolutions.com","professionalhomebasedbusiness.com","safefire.jo","glanz-gmbh.de","turnkeyaiagents.com","comunidadesparentais.com.br","mysimerp.net")) by All_Traffic.src All_Traffic.user All_Traffic.app All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let badIps = dynamic(["62.164.177.25","192.36.27.51"]);
-let badDomains = dynamic(["projetosmecanicos.com.br","socialbizsolutions.com","professionalhomebasedbusiness.com","safefire.jo","glanz-gmbh.de","turnkeyaiagents.com","comunidadesparentais.com.br","mysimerp.net"]);
-DeviceNetworkEvents
-| where Timestamp > ago(90d)
-| where RemoteIP in (badIps) or RemoteUrl has_any (badDomains)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessSHA256, RemoteIP, RemoteUrl, RemotePort, Protocol
-| order by Timestamp desc
-```
-
-### Backdoor.Turn / DragonForce SHA256 hash hits
-
-`UC_28_16` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("82b37a92589dfd4d67ca87eb9e52ac8e682e8e60d2211f59074cd5ccc693013b","821da79d727351dd67ce5df7950e9a3de6647a3cf474bb3a093f67507fed92a6","b6628d201c2a68d2a3de2a87de7a5acfe21b101a97928e1c8d5c82102d967383","ce66b8221446c9b6d83f0ce6382f430e519601641e5daaaf1ca7a8a8806cb0b0","f174c19902523dcf005fa044b6598403a5e5c0a5982398d1bc0dcc5ec1cd351b","142bac0e2148e0d47891b6cd7311195c4acbe33b700fad54a201c52a2bc46219","8395b621bb4415090f232c59fc41d24ea41a519b58eabe512f3ae7d2fdf049a3","9335f61f8ad276d94455c5b6876fea48152c3cea759f2598c8108ee461fa5759","cd078957167e1af4de39aecdb981cd14156fa81d5a9c6ac51e74ae5b6199a12a","b16e217cdca19e00c1b68bdfb28ead53b20adeabd6edcd91542f9fbf48942877","d20a3c928761fe00ac522eeb474612b5804cd9108453ea8591106d5d4428428e","8284c8676cc22c4b2e66826ac16986da7ddecba1f2776b16771be17bfdc45dc2","65ab49119c845801f29a57e8aa177146b2ffbd289d4278109b146f933380f951","6bbf10bcbef7ac5102b54c81137859891a3802dbacd888be90f990d50e18b0b4","252a8bb2eb9c96c5e6cc7cab822e2ed0d508032f9350351221781684e86c03ab","8a4033425d36cd99fe23e6faef9764fbf555f362ebdb5b72379342fbbe4c5531","e45b18c93d187aac5c4486f57483bc87580e15def82a312bfb377ff16eb96b22","087f002df0a02c8c74f3ba5cd99cf29fb9efff38bf57b3d808e34a5dd4200dd2","048e18416177de2ead251abdf4d89837f6807c6aba4d5b1debe49adfdecbf05c","6f9fbe29f8cc2788e2bc9d631e0eea2a8e9837076837b55838005a0e654f0a9e") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_hash
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let badHashes = dynamic(["82b37a92589dfd4d67ca87eb9e52ac8e682e8e60d2211f59074cd5ccc693013b","821da79d727351dd67ce5df7950e9a3de6647a3cf474bb3a093f67507fed92a6","b6628d201c2a68d2a3de2a87de7a5acfe21b101a97928e1c8d5c82102d967383","ce66b8221446c9b6d83f0ce6382f430e519601641e5daaaf1ca7a8a8806cb0b0","f174c19902523dcf005fa044b6598403a5e5c0a5982398d1bc0dcc5ec1cd351b","142bac0e2148e0d47891b6cd7311195c4acbe33b700fad54a201c52a2bc46219","8395b621bb4415090f232c59fc41d24ea41a519b58eabe512f3ae7d2fdf049a3","9335f61f8ad276d94455c5b6876fea48152c3cea759f2598c8108ee461fa5759","cd078957167e1af4de39aecdb981cd14156fa81d5a9c6ac51e74ae5b6199a12a","b16e217cdca19e00c1b68bdfb28ead53b20adeabd6edcd91542f9fbf48942877","d20a3c928761fe00ac522eeb474612b5804cd9108453ea8591106d5d4428428e","8284c8676cc22c4b2e66826ac16986da7ddecba1f2776b16771be17bfdc45dc2","65ab49119c845801f29a57e8aa177146b2ffbd289d4278109b146f933380f951","6bbf10bcbef7ac5102b54c81137859891a3802dbacd888be90f990d50e18b0b4","252a8bb2eb9c96c5e6cc7cab822e2ed0d508032f9350351221781684e86c03ab","8a4033425d36cd99fe23e6faef9764fbf555f362ebdb5b72379342fbbe4c5531","e45b18c93d187aac5c4486f57483bc87580e15def82a312bfb377ff16eb96b22","087f002df0a02c8c74f3ba5cd99cf29fb9efff38bf57b3d808e34a5dd4200dd2","048e18416177de2ead251abdf4d89837f6807c6aba4d5b1debe49adfdecbf05c","6f9fbe29f8cc2788e2bc9d631e0eea2a8e9837076837b55838005a0e654f0a9e"]);
-union
-(DeviceProcessEvents
-  | where Timestamp > ago(90d)
-  | where SHA256 in (badHashes) or InitiatingProcessSHA256 in (badHashes)
-  | project Timestamp, DeviceName, Source="Process", FileName, FolderPath, MatchedHash=iff(SHA256 in (badHashes), SHA256, InitiatingProcessSHA256), AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine),
-(DeviceFileEvents
-  | where Timestamp > ago(90d)
-  | where SHA256 in (badHashes)
-  | project Timestamp, DeviceName, Source="File", FileName, FolderPath, MatchedHash=SHA256, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine=""),
-(DeviceImageLoadEvents
-  | where Timestamp > ago(90d)
-  | where SHA256 in (badHashes)
-  | project Timestamp, DeviceName, Source="ImageLoad", FileName, FolderPath, MatchedHash=SHA256, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine="")
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -439,7 +307,7 @@ DeviceEvents
 
 ### Article-specific behavioural hunt — DragonForce Hackers Abuse Microsoft Teams Relays to Hide Backdoor.Turn C2 Traffi
 
-`UC_28_11` · phase: **exploit** · confidence: **High**
+`UC_35_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -502,4 +370,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 17 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

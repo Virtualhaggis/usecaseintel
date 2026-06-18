@@ -30,7 +30,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-7f79-rvx6-vxc4: Duplicate Advisory: Picklescan does not b
 
-`UC_58_0` · phase: **exploit** · confidence: **High**
+`UC_64_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

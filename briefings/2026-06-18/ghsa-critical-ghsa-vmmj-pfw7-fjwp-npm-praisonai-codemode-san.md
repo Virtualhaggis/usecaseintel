@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Installation of vulnerable npm praisonai package (GHSA-vmmj-pfw7-fjwp)
 
-`UC_16_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_24_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceProcessEvents
 
 ### PraisonAI codeMode Function-constructor sandbox escape payload
 
-`UC_16_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_24_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ let escape_patterns = dynamic(["constructor.constructor","process.mainModule.req
 
 ### node.exe spawning shell or LOLBin child — post-codeMode-escape execution
 
-`UC_16_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_24_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### PraisonAI codeMode blocklist trigger — sandbox probing in application logs
 
-`UC_16_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_24_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -140,7 +140,7 @@ let blocklist_strings = dynamic(["Blocked pattern detected:","Code contains bloc
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-vmmj-pfw7-fjwp: npm PraisonAI codeMode sandbox escape via
 
-`UC_16_0` · phase: **exploit** · confidence: **High**
+`UC_24_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

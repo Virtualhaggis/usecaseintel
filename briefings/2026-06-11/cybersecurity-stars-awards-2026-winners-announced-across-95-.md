@@ -58,7 +58,7 @@ _(none detected from narrative keywords)_
 
 ### Miasma worm GitHub commit-search C2 magic strings on command line or script
 
-`UC_141_16` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_146_16` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ union ProcHits, NetHits
 
 ### Miasma supply-chain worm leaked repo clone, install or fetch
 
-`UC_141_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_146_17` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -593,7 +593,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Cybersecurity Stars Awards 2026: Winners Announced Across 95 Categories
 
-`UC_141_15` · phase: **exploit** · confidence: **High**
+`UC_146_15` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

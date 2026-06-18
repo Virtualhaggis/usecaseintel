@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable picklescan (CVE-2025-71325) inventory via TVM
 
-`UC_57_1` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_63_1` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Picklescan CLI invocation on endpoint (vulnerable-scanner exposure hunt)
 
-`UC_57_2` · phase: **install** · confidence: **Low** · AI-generated for this article
+`UC_63_2` · phase: **install** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

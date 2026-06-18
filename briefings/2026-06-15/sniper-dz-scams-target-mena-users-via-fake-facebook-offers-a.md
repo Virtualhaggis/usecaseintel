@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Sniper Dz PhaaS infrastructure delivered via inbound email URLs
 
-`UC_114_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_119_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ EmailEvents
 
 ### User click-through on Sniper Dz redirect URL (Safe Links)
 
-`UC_114_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_119_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -97,7 +97,7 @@ UrlClickEvents
 
 ### DNS or network egress to Sniper Dz infrastructure (IP and host indicators)
 
-`UC_114_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_119_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

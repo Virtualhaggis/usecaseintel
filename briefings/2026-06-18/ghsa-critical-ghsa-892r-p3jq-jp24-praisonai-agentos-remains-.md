@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### PraisonAI AgentOS launched with 0.0.0.0 bind exposing unauthenticated /api/chat (CVE-2026-40151)
 
-`UC_21_1` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_28_1` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceProcessEvents
 
 ### Unauthenticated POST to PraisonAI /api/chat from external network (CVE-2026-40151 exploitation)
 
-`UC_21_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_28_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Mastra supply-chain C2 traffic to 23.254.164.92 / 23.254.164.123
 
-`UC_40_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_45_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceNetworkEvents
 
 ### Node.js postinstall executing setup.cjs --no-warnings (easy-day-js dropper)
 
-`UC_40_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_45_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceProcessEvents
 
 ### easy-day-js typosquat installed in node_modules (setup.cjs + package.json drop)
 
-`UC_40_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_45_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ DeviceFileEvents
 
 ### easy-day-js dropper writes .pkg_history / .pkg_logs beacon files in temp
 
-`UC_40_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_45_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceFileEvents
 
 ### easy-day-js dropper self-deletes setup.cjs from node_modules (forensic evasion)
 
-`UC_40_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_45_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -245,7 +245,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Mastra npm Supply Chain Attack: 140+ Packages Backdoored via easy-day-js Typosqu
 
-`UC_40_4` · phase: **exploit** · confidence: **High**
+`UC_45_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
