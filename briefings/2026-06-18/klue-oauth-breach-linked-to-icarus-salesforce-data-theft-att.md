@@ -17,7 +17,14 @@ Cyb…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `138.226.246.94`
+- **IPv4 (defanged):** `212.86.125.24`
+- **IPv4 (defanged):** `213.111.148.90`
+- **IPv4 (defanged):** `94.154.32.160`
+- **Domain (defanged):** `gofile.io`
+- **Domain (defanged):** `house.com.au`
+- **Domain (defanged):** `robinskitchen.com.au`
+- **Domain (defanged):** `baccarat.com.au`
 
 ## MITRE ATT&CK Techniques
 
@@ -28,15 +35,14 @@ Cyb…
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1071** — Application Layer Protocol
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1090** — Proxy
+- **T1567** — Exfiltration Over Web Service
 - **T1199** — Trusted Relationship
-- **T1078.004** — Valid Accounts: Cloud Accounts
+- **T1530** — Data from Cloud Storage
 - **T1526** — Cloud Service Discovery
 - **T1087.004** — Account Discovery: Cloud Account
-- **T1530** — Data from Cloud Storage
-- **T1567** — Exfiltration Over Web Service
-- **T1119** — Automated Collection
+- **T1213** — Data from Information Repositories
 
 ## Kill chain phases observed
 
@@ -44,41 +50,41 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Network egress to Icarus extortion C2 IPs (Klue OAuth campaign)
+### Outbound/SaaS connections to Icarus extortion group IPs (Klue/Salesforce campaign)
 
-`UC_25_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_27_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.user) as user values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest in ("138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160") OR All_Traffic.src in ("138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160") by All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_port) as dest_ports values(All_Traffic.src) as src values(All_Traffic.dest) as dest from datamodel=Network_Traffic where (All_Traffic.dest in ("138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160") OR All_Traffic.src in ("138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160")) by All_Traffic.src All_Traffic.dest All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 let IcarusIPs = dynamic(["138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160"]);
 union isfuzzy=true
-( DeviceNetworkEvents
-  | where Timestamp > ago(30d)
-  | where RemoteIP in (IcarusIPs)
-  | project Timestamp, Source="Endpoint", DeviceName, AccountName=InitiatingProcessAccountName, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine ),
-( CloudAppEvents
-  | where Timestamp > ago(30d)
-  | where IPAddress in (IcarusIPs)
-  | project Timestamp, Source="SaaS", DeviceName=ObjectName, AccountName=AccountDisplayName, RemoteIP=IPAddress, RemotePort=int(null), InitiatingProcessFileName=Application, InitiatingProcessCommandLine=tostring(RawEventData) ),
-( AADSignInEventsBeta
-  | where Timestamp > ago(30d)
-  | where IPAddress in (IcarusIPs)
-  | project Timestamp, Source="AAD", DeviceName=DeviceName, AccountName=AccountUpn, RemoteIP=IPAddress, RemotePort=int(null), InitiatingProcessFileName=Application, InitiatingProcessCommandLine=UserAgent )
+(DeviceNetworkEvents
+ | where Timestamp > ago(30d)
+ | where RemoteIP in (IcarusIPs)
+ | project Timestamp, Source="DeviceNetworkEvents", DeviceName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
+(CloudAppEvents
+ | where Timestamp > ago(30d)
+ | where IPAddress in (IcarusIPs)
+ | project Timestamp, Source="CloudAppEvents", Application, ActionType, AccountDisplayName, IPAddress, UserAgent, ObjectName, ActivityType),
+(AADSignInEventsBeta
+ | where Timestamp > ago(30d)
+ | where IPAddress in (IcarusIPs)
+ | project Timestamp, Source="AADSignIn", AccountUpn, Application, ApplicationId, IPAddress, UserAgent, Country, ErrorCode)
 | order by Timestamp desc
 ```
 
-### Klue Battlecards connected-app activity from Icarus IPs in Salesforce
+### Klue Battlecards connected app Salesforce activity from Icarus IPs
 
-`UC_25_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_27_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-`cim_Web_indexes` (sourcetype=salesforce* OR sourcetype=*cloudapps*) (connected_app="Klue*" OR app="Klue*" OR application="Klue*") (src_ip IN ("138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160") OR uri_path="*klue*") | stats min(_time) as firstTime max(_time) as lastTime count by src_ip user connected_app uri_path | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+`salesforce_event_monitoring` (CLIENT_NAME="Klue" OR CLIENT_NAME="Battlecards" OR APPLICATION_NAME="Klue Battlecards" OR CONNECTED_APP_NAME="Klue*") AND (CLIENT_IP="138.226.246.94" OR CLIENT_IP="212.86.125.24" OR CLIENT_IP="213.111.148.90" OR CLIENT_IP="94.154.32.160") | stats count min(_time) as firstSeen max(_time) as lastSeen values(URI) as uris values(USER_ID) as users dc(URI) as distinctEndpoints by CLIENT_IP CONNECTED_APP_NAME | convert ctime(firstSeen) ctime(lastSeen) | sort - count
 ```
 
 **Defender KQL:**
@@ -86,22 +92,28 @@ union isfuzzy=true
 let IcarusIPs = dynamic(["138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160"]);
 CloudAppEvents
 | where Timestamp > ago(30d)
-| where Application has "Salesforce"
-| extend ConnectedApp = tostring(RawEventData.ApplicationName), Uri = tostring(RawEventData.URI)
+| where Application has_any ("Salesforce")
 | where IPAddress in (IcarusIPs)
-   or ConnectedApp has "Klue Battlecards"
-   or tostring(RawEventData) has_any ("Klue Battlecards","klue.com")
-| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, City, CountryCode, ISP, Application, ActionType, ConnectedApp, Uri, UserAgent, ActivityType, ObjectName
-| order by Timestamp desc
+   or tostring(RawEventData) has_any ("Klue","Battlecards")
+| extend KlueApp = tostring(RawEventData) has_any ("Klue","Battlecards")
+| where KlueApp or IPAddress in (IcarusIPs)
+| summarize EventCount = count(),
+            FirstSeen = min(Timestamp),
+            LastSeen = max(Timestamp),
+            ActionTypes = make_set(ActionType, 20),
+            Objects = make_set(ObjectName, 20),
+            UserAgents = make_set(UserAgent, 10)
+          by AccountDisplayName, IPAddress, Application, City, CountryCode
+| order by FirstSeen desc
 ```
 
-### Salesforce REST API /sobjects schema enumeration burst per principal
+### Salesforce REST API mass /sobjects enumeration via OAuth connected app
 
-`UC_25_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_27_7` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-`cim_Web_indexes` sourcetype=salesforce* uri_path="*/services/data/v*/sobjects*" | bucket _time span=1h | stats dc(uri_path) as DistinctObjectPaths count as TotalHits values(connected_app) as ConnectedApps values(src_ip) as SrcIPs by _time user | where DistinctObjectPaths > 30 | sort - _time
+`salesforce_event_monitoring` URI="*/services/data/v59.0/sobjects*" | bin _time span=15m | stats count dc(URI) as distinct_sobjects values(URI) as sample_uris min(_time) as firstSeen max(_time) as lastSeen by _time CLIENT_IP USER_ID CONNECTED_APP_NAME | where count > 50 OR distinct_sobjects > 20 | convert ctime(firstSeen) ctime(lastSeen) | sort - count
 ```
 
 **Defender KQL:**
@@ -109,26 +121,27 @@ CloudAppEvents
 CloudAppEvents
 | where Timestamp > ago(7d)
 | where Application has "Salesforce"
-| extend Uri = tostring(RawEventData.URI), ConnectedApp = tostring(RawEventData.ApplicationName)
-| where Uri matches regex @"/services/data/v\d+\.\d+/sobjects"
-| summarize DistinctObjectPaths = dcount(Uri),
-            TotalHits = count(),
-            FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
-            SampleConnectedApps = make_set(ConnectedApp, 10),
-            SampleIPs = make_set(IPAddress, 10),
+| extend Uri = tostring(parse_json(tostring(RawEventData)).URI)
+| extend ClientId = tostring(parse_json(tostring(RawEventData)).CLIENT_ID)
+| extend ConnectedApp = tostring(parse_json(tostring(RawEventData)).CONNECTED_APP_NAME)
+| where Uri has "/services/data/v59.0/sobjects" or ActivityType has "sobjects"
+| summarize ApiCalls = count(),
+            DistinctEndpoints = dcount(Uri),
+            FirstSeen = min(Timestamp),
+            LastSeen = max(Timestamp),
             SampleUris = make_set(Uri, 25)
-            by bin(Timestamp, 1h), AccountDisplayName, AccountObjectId
-| where DistinctObjectPaths > 30   // legit integrations hit a small fixed set; Icarus walks the catalog
-| order by Timestamp desc
+          by bin(Timestamp, 15m), AccountDisplayName, IPAddress, ConnectedApp, ClientId
+| where ApiCalls > 50 or DistinctEndpoints > 20
+| order by FirstSeen desc
 ```
 
-### Salesforce REST API /query burst — >500 calls in 15-minute window
+### Salesforce /query API burst exfiltration via single OAuth principal
 
-`UC_25_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_27_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-`cim_Web_indexes` sourcetype=salesforce* uri_path="*/services/data/v*/query*" | bucket _time span=15m | stats count as QueryCount dc(uri_path) as DistinctQueries values(connected_app) as ConnectedApp values(src_ip) as SrcIPs by _time user | where QueryCount > 500 | sort - QueryCount
+`salesforce_event_monitoring` URI="*/services/data/v59.0/query*" | bin _time span=15m | stats count as queryCount dc(URI) as distinctQueries sum(ROW_COUNT) as totalRows values(USER_ID) as users by _time CLIENT_IP CONNECTED_APP_NAME USER_ID | where queryCount >= 500 OR totalRows >= 100000 | sort - queryCount
 ```
 
 **Defender KQL:**
@@ -136,16 +149,18 @@ CloudAppEvents
 CloudAppEvents
 | where Timestamp > ago(7d)
 | where Application has "Salesforce"
-| extend Uri = tostring(RawEventData.URI), ConnectedApp = tostring(RawEventData.ApplicationName)
-| where Uri matches regex @"/services/data/v\d+\.\d+/query"
+| extend Uri = tostring(parse_json(tostring(RawEventData)).URI)
+| extend ConnectedApp = tostring(parse_json(tostring(RawEventData)).CONNECTED_APP_NAME)
+| extend RowsReturned = tolong(parse_json(tostring(RawEventData)).ROW_COUNT)
+| where Uri has "/services/data/v59.0/query" or ActivityType has "Query"
 | summarize QueryCount = count(),
             DistinctQueries = dcount(Uri),
-            FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
-            BurstSeconds = datetime_diff('second', max(Timestamp), min(Timestamp)),
-            SrcIPs = make_set(IPAddress, 10),
-            ConnectedApps = make_set(ConnectedApp, 5)
-            by bin(Timestamp, 15m), AccountDisplayName, AccountObjectId
-| where QueryCount > 500   // ReliaQuest observed ~1000 queries in a 15-min window from Icarus
+            TotalRows = sum(RowsReturned),
+            FirstSeen = min(Timestamp),
+            LastSeen = max(Timestamp),
+            UserAgents = make_set(UserAgent, 5)
+          by bin(Timestamp, 15m), AccountDisplayName, IPAddress, ConnectedApp
+| where QueryCount >= 500 or TotalRows >= 100000
 | order by QueryCount desc
 ```
 
@@ -260,7 +275,14 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `138.226.246.94`, `212.86.125.24`, `213.111.148.90`, `94.154.32.160`, `gofile.io`, `house.com.au`, `robinskitchen.com.au`, `baccarat.com.au`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

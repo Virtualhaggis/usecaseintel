@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Hackers Abuse Microsoft Fondue.exe to Side-Load APPWIZ.cpl and Execute Malware
 
-`UC_13_2` · phase: **exploit** · confidence: **High**
+`UC_15_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

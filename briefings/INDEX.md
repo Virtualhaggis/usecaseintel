@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1203 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1194 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,9 +11,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-18
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-18/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
 - [cisa kev cve 2026 20253 splunk enterprise missing authentica](./2026-06-18/cisa-kev-cve-2026-20253-splunk-enterprise-missing-authentica.md)
+- [close encounters of the human kind](./2026-06-18/close-encounters-of-the-human-kind.md)
 - [dragonforce hackers abuse microsoft teams relays to hide bac](./2026-06-18/dragonforce-hackers-abuse-microsoft-teams-relays-to-hide-bac.md)
 - [f5 issues out of band patches for critical nginx vulnerabili](./2026-06-18/f5-issues-out-of-band-patches-for-critical-nginx-vulnerabili.md)
 - [f5 patches nginx vulnerability that enables code execution a](./2026-06-18/f5-patches-nginx-vulnerability-that-enables-code-execution-a.md)
+- [f5 patches two critical nginx open source flaws enabling rem](./2026-06-18/f5-patches-two-critical-nginx-open-source-flaws-enabling-rem.md)
 - [fortibleed leak exposes fortinet vpn credentials for 73 000 ](./2026-06-18/fortibleed-leak-exposes-fortinet-vpn-credentials-for-73-000-.md)
 - [from package to postinstall payload inside the mastra npm su](./2026-06-18/from-package-to-postinstall-payload-inside-the-mastra-npm-su.md)
 - [ghsa critical cve 2026 54003 kirby external initialization o](./2026-06-18/ghsa-critical-cve-2026-54003-kirby-external-initialization-o.md)
@@ -41,6 +43,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-18/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
 - [miasma and hades are spreading now detect them on developer ](./2026-06-18/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)
 - [microsoft details windows clipper malware campaign using usb](./2026-06-18/microsoft-details-windows-clipper-malware-campaign-using-usb.md)
+- [nintendo confirms data stolen in webmd subsidiary cyberattac](./2026-06-18/nintendo-confirms-data-stolen-in-webmd-subsidiary-cyberattac.md)
 - [police cleans nearly 15 000 socgholish infected sites tied t](./2026-06-18/police-cleans-nearly-15-000-socgholish-infected-sites-tied-t.md)
 - [prevent npm and python supply chain attacks on developer mac](./2026-06-18/prevent-npm-and-python-supply-chain-attacks-on-developer-mac.md)
 - [shapedplugin update flow hacked to infect wordpress sites](./2026-06-18/shapedplugin-update-flow-hacked-to-infect-wordpress-sites.md)
@@ -55,18 +58,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [crypto clipper uses tor and worm like propagation for persis](./2026-06-17/crypto-clipper-uses-tor-and-worm-like-propagation-for-persis.md)
 - [forrester names microsoft a leader in the 2026 extended dete](./2026-06-17/forrester-names-microsoft-a-leader-in-the-2026-extended-dete.md)
 - [from china with tenderness](./2026-06-17/from-china-with-tenderness.md)
-- [ghsa critical cve 2026 32966 apache dolphinscheduler datasou](./2026-06-17/ghsa-critical-cve-2026-32966-apache-dolphinscheduler-datasou.md)
-- [ghsa critical cve 2026 32967 apache dolphinscheduler the v2 ](./2026-06-17/ghsa-critical-cve-2026-32967-apache-dolphinscheduler-the-v2-.md)
-- [ghsa critical cve 2026 50203 apache airflow sftp provider pa](./2026-06-17/ghsa-critical-cve-2026-50203-apache-airflow-sftp-provider-pa.md)
 - [ghsa critical cve 2026 55450 langflow unauthenticated file u](./2026-06-17/ghsa-critical-cve-2026-55450-langflow-unauthenticated-file-u.md)
 - [ghsa critical cve 2026 55471 hapi fhir xxe in xsltutilities ](./2026-06-17/ghsa-critical-cve-2026-55471-hapi-fhir-xxe-in-xsltutilities-.md)
-- [ghsa critical ghsa 4mpj 78p6 rj59 duplicate advisory pickles](./2026-06-17/ghsa-critical-ghsa-4mpj-78p6-rj59-duplicate-advisory-pickles.md)
-- [ghsa critical ghsa 5rph q42j 36j9 duplicate advisory pickles](./2026-06-17/ghsa-critical-ghsa-5rph-q42j-36j9-duplicate-advisory-pickles.md)
-- [ghsa critical ghsa 6v84 v468 3c7f duplicate advisory pickles](./2026-06-17/ghsa-critical-ghsa-6v84-v468-3c7f-duplicate-advisory-pickles.md)
-- [ghsa critical ghsa 7f79 rvx6 vxc4 duplicate advisory pickles](./2026-06-17/ghsa-critical-ghsa-7f79-rvx6-vxc4-duplicate-advisory-pickles.md)
-- [ghsa critical ghsa 82fg 2r99 h7v6 duplicate advisory pickles](./2026-06-17/ghsa-critical-ghsa-82fg-2r99-h7v6-duplicate-advisory-pickles.md)
-- [ghsa critical ghsa j6c9 qvp8 699f duplicate advisory pickles](./2026-06-17/ghsa-critical-ghsa-j6c9-qvp8-699f-duplicate-advisory-pickles.md)
-- [ghsa critical ghsa rmpp 8wf5 xx5q duplicate advisory pickles](./2026-06-17/ghsa-critical-ghsa-rmpp-8wf5-xx5q-duplicate-advisory-pickles.md)
 - [india s telegram ban hit the uae too here s how to get aroun](./2026-06-17/india-s-telegram-ban-hit-the-uae-too-here-s-how-to-get-aroun.md)
 - [junior hacker used tailscale and openssh to keep access afte](./2026-06-17/junior-hacker-used-tailscale-and-openssh-to-keep-access-afte.md)
 - [malicious jetbrains plugins steal ai api keys as chrome exte](./2026-06-17/malicious-jetbrains-plugins-steal-ai-api-keys-as-chrome-exte.md)
@@ -133,7 +126,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-11
 - [a tale of two eras](./2026-06-11/a-tale-of-two-eras.md)
-- [ai broke vulnerability management that s why cisos are movin](./2026-06-11/ai-broke-vulnerability-management-that-s-why-cisos-are-movin.md)
 - [cisa kev cve 2026 10520 ivanti sentry os command injection v](./2026-06-11/cisa-kev-cve-2026-10520-ivanti-sentry-os-command-injection-v.md)
 - [cybersecurity stars awards 2026 winners announced across 95 ](./2026-06-11/cybersecurity-stars-awards-2026-winners-announced-across-95-.md)
 - [ghsa critical cve 2026 48039 meta ads mcp unauthenticated ht](./2026-06-11/ghsa-critical-cve-2026-48039-meta-ads-mcp-unauthenticated-ht.md)
@@ -322,7 +314,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-14
 - [cisa kev cve 2026 20182 cisco catalyst sd wan controller aut](./2026-05-14/cisa-kev-cve-2026-20182-cisco-catalyst-sd-wan-controller-aut.md)
 - [frostyneighbor fresh mischief and digital shenanigans](./2026-05-14/frostyneighbor-fresh-mischief-and-digital-shenanigans.md)
-- [ongoing exploitation of cisco catalyst sd wan vulnerabilitie](./2026-05-14/ongoing-exploitation-of-cisco-catalyst-sd-wan-vulnerabilitie.md)
 - [the time of much patching is coming](./2026-05-14/the-time-of-much-patching-is-coming.md)
 
 ## 2026-05-12

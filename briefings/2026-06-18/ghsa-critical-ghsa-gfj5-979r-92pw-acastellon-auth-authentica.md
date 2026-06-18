@@ -20,8 +20,11 @@ The validateToken middleware contains a service-to-service bypass for auth-user:
 
 - **T1204.002** — User Execution: Malicious File
 - **T1190** — Exploit Public-Facing Application
+- **T1078.004** — Valid Accounts: Cloud Accounts
 - **T1078** — Valid Accounts
+- **T1068** — Exploitation for Privilege Escalation
 - **T1556** — Modify Authentication Process
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
@@ -29,37 +32,45 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### @acastellon/auth validateToken() bypass via spoofable 'auth-user: service-brother' header
+### @acastellon/auth bypass — spoofed 'auth-user: service-brother' header from untrusted source
 
-`UC_2_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_5_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as http_method values(Web.http_user_agent) as ua values(Web.dest) as dest from datamodel=Web.Web where (Web.http_request_headers="*auth-user: service-brother*" OR Web.http_request_headers="*auth-user:service-brother*" OR Web.http_request_headers="*Auth-User: service-brother*") by Web.src Web.user Web.dest Web.url _time span=1m | `drop_dm_object_name("Web")` | rename src as src_ip | eval is_admin_flag=if(match(http_request_headers,"(?i)is-admin\s*:\s*true"),"yes","no") | where firstTime > relative_time(now(),"-7d")
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_user_agent_length>0 (Web.http_request_headers="*auth-user: service-brother*" OR Web.http_request_headers="*auth-user:service-brother*") by Web.src Web.dest Web.url Web.http_method Web.status Web.http_user_agent | `drop_dm_object_name(Web)` | search NOT src IN (10.0.0.0/8,172.16.0.0/12,192.168.0.0/16) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
-**Defender KQL:**
-```kql
-// Surfaces auth-user: service-brother header in WAF/proxy events forwarded to Defender via custom connectors
-let Lookback = 7d;
-DeviceNetworkEvents
-| where Timestamp > ago(Lookback)
-| where RemotePort in (80, 443, 8080, 8443)
-| where InitiatingProcessFileName has_any ("node.exe", "node", "nginx", "haproxy", "envoy")
-| join kind=inner (
-    AlertEvidence
-    | where Timestamp > ago(Lookback)
-    | where AdditionalFields has "auth-user" and AdditionalFields has "service-brother"
-) on DeviceId
-| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          AdditionalFields
-| order by Timestamp desc
+### @acastellon/auth bypass — auth-user spoof combined with is-admin / is-* privilege headers
+
+`UC_5_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.http_request_headers="*auth-user: service-brother*" OR Web.http_request_headers="*auth-user:service-brother*") (Web.http_request_headers="*is-admin: true*" OR Web.http_request_headers="*is-admin:true*" OR Web.http_request_headers="*is-superuser:*" OR Web.http_request_headers="*is-internal:*") by Web.src Web.dest Web.url Web.http_method Web.status | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+### @acastellon/auth bypass — Host header reflection matching getHostName() check
+
+`UC_5_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.http_request_headers="*auth-user: service-brother*" OR Web.http_request_headers="*auth-user:service-brother*") by Web.src Web.dest Web.dest_host Web.url Web.http_method Web.status Web.vendor_product | `drop_dm_object_name(Web)` | rex field=http_request_headers "(?i)host\s*:\s*(?<HostHeader>[^\r\n]+)" | eval HostMismatch=if(match(HostHeader,"(?i)".dest_host),"match","mismatch") | where HostMismatch="mismatch" OR isnull(dest_host) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+### @acastellon/auth bypass — anomalous endpoints accessed under 'service-brother' identity
+
+`UC_5_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Web.Web where (Web.http_request_headers="*auth-user: service-brother*" OR Web.http_request_headers="*auth-user:service-brother*") by _time Web.src Web.dest Web.url Web.http_method | `drop_dm_object_name(Web)` | bin _time span=1d | eventstats values(url) as BaselineUrls by dest | eval IsNewUrl=if(mvfind(BaselineUrls,url)>=0,0,1) | where IsNewUrl=1 OR http_method IN ("DELETE","PUT","PATCH") | stats count min(_time) as firstSeen max(_time) as lastSeen values(url) as Urls values(http_method) as Methods by src dest | where count > 0
 ```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-gfj5-979r-92pw: @acastellon/auth: Authentication bypass v
 
-`UC_2_0` · phase: **exploit** · confidence: **High**
+`UC_5_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,4 +120,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 2 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

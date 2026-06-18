@@ -33,7 +33,7 @@ _(none detected from narrative keywords)_
 
 ### Chromium launched with command-execution launcher switches (Crawl4AI GHSA-r253-r9jw-qg44)
 
-`UC_0_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_3_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceProcessEvents
 
 ### Chromium browser parent of shell or network utility child (Crawl4AI extra_args post-exploit)
 
-`UC_0_1` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_3_1` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceProcessEvents
 
 ### Crawl4AI /crawl* endpoint hit with Chromium launcher-switch payload in request body
 
-`UC_0_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_3_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

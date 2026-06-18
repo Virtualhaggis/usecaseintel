@@ -10,12 +10,16 @@ Threat actors exploited a trusted third-party SaaS integration to silently harve
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `138.226.246.94`
+- **IPv4 (defanged):** `212.86.125.24`
+- **IPv4 (defanged):** `213.111.148.90`
+- **IPv4 (defanged):** `94.154.32.160`
 
 ## MITRE ATT&CK Techniques
 
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
+- **T1071** — Application Layer Protocol
 
 ## Kill chain phases observed
 
@@ -50,7 +54,14 @@ CloudAppEvents
           ActivityObjects, IPAddress, UserAgent
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `138.226.246.94`, `212.86.125.24`, `213.111.148.90`, `94.154.32.160`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 1 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

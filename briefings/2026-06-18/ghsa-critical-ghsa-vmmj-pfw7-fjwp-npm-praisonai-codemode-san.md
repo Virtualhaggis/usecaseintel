@@ -21,15 +21,10 @@ The implementation does not create an isolation boundary. It applies a small reg
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
-- **T1195.002** — Compromise Software Supply Chain
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1480** — Execution Guardrails
-- **T1211** — Exploitation for Defense Evasion
-- **T1059** — Command and Scripting Interpreter
-- **T1059.001** — PowerShell
-- **T1059.003** — Windows Command Shell
-- **T1059.004** — Unix Shell
-- **T1212** — Exploitation for Credential Access
+- **T1068** — Exploitation for Privilege Escalation
+- **T1611** — Escape to Host
+- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
@@ -37,110 +32,55 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Installation of vulnerable npm praisonai package (GHSA-vmmj-pfw7-fjwp)
+### Node.js spawned shell/utility from praisonai codeMode context (sandbox escape post-exploitation)
 
-`UC_24_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_26_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("npm.exe","npm.cmd","yarn.exe","yarn.cmd","pnpm.exe","pnpm.cmd","node.exe") AND Processes.process="*praisonai*" AND (Processes.process="*install*" OR Processes.process="* add *" OR Processes.process="* i *") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="node.exe" OR Processes.parent_process_name="node") AND (Processes.parent_process LIKE "%praisonai%" OR Processes.parent_process LIKE "%code-mode%" OR Processes.parent_process LIKE "%codeMode%") AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","sh","bash","zsh","printf","printf.exe","wscript.exe","cscript.exe","curl.exe","wget.exe") by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where FileName in~ ("npm.exe","npm.cmd","yarn.exe","yarn.cmd","pnpm.exe","pnpm.cmd","node.exe")
-    or InitiatingProcessFileName in~ ("npm.exe","yarn.exe","pnpm.exe")
-| where ProcessCommandLine has "praisonai"
-| where ProcessCommandLine has_any ("install"," add "," i ","add praisonai","install praisonai")
+| where InitiatingProcessFileName in~ ("node.exe","node")
+| where InitiatingProcessCommandLine has_any ("praisonai","code-mode","codeMode")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","sh","bash","zsh","dash","printf","printf.exe","wscript.exe","cscript.exe","curl.exe","wget.exe")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| project Timestamp, DeviceName, AccountName, ParentCmd=InitiatingProcessCommandLine, ParentImage=InitiatingProcessFolderPath, ChildImage=FolderPath, ChildCmd=ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### PraisonAI codeMode Function-constructor sandbox escape payload
+### PraisonAI codeMode prototype-chain escape payload (constructor.constructor / mainModule.require strings)
 
-`UC_24_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_26_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*constructor.constructor*" OR Processes.process="*process.mainModule.require*" OR Processes.process="*return process*constructor*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="node.exe" OR Processes.process_name="node") AND (Processes.process LIKE "%constructor.constructor%" OR Processes.process LIKE "%mainModule.require%" OR Processes.process LIKE "%return process%") by Processes.dest Processes.user Processes.process Processes.process_id Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let escape_patterns = dynamic(["constructor.constructor","process.mainModule.require","return process","with (sandbox)"]);
-(union isfuzzy=true
-    (DeviceProcessEvents
-     | where Timestamp > ago(30d)
-     | where ProcessCommandLine has_any (escape_patterns)
-        or InitiatingProcessCommandLine has_any (escape_patterns)
-     | project Timestamp, DeviceName, AccountName, Source="Process", FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine),
-    (DeviceFileEvents
-     | where Timestamp > ago(30d)
-     | where ActionType in ("FileCreated","FileModified")
-     | where FileName endswith ".js" or FileName endswith ".ts" or FileName endswith ".mjs" or FileName endswith ".cjs" or FileName endswith ".json"
-     | where InitiatingProcessFileName in~ ("node.exe","npm.exe","pnpm.exe","yarn.exe")
-     | where InitiatingProcessCommandLine has_any (escape_patterns)
-        or FolderPath has "praisonai"
-     | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source="File", FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine)
-)
-| order by Timestamp desc
-```
-
-### node.exe spawning shell or LOLBin child — post-codeMode-escape execution
-
-`UC_24_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd_lines from datamodel=Endpoint.Processes where Processes.parent_process_name="node.exe" AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wmic.exe","certutil.exe","bitsadmin.exe","curl.exe","wget.exe","sh","bash","dash","zsh","mshta.exe","rundll32.exe","regsvr32.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.parent_process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName =~ "node.exe"
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wmic.exe","certutil.exe","bitsadmin.exe","curl.exe","wget.exe","sh","bash","dash","zsh","mshta.exe","rundll32.exe","regsvr32.exe","whoami.exe","net.exe","reg.exe")
-| where AccountName !endswith "$"
-| extend PraisonAILoaded = iff(InitiatingProcessCommandLine has "praisonai" or InitiatingProcessFolderPath has "praisonai", "yes", "unknown")
-| project Timestamp, DeviceName, AccountName, ParentImage=InitiatingProcessFolderPath, ParentCmd=InitiatingProcessCommandLine, ChildImage=FolderPath, ChildCmd=ProcessCommandLine, PraisonAILoaded, SHA256
-| order by PraisonAILoaded desc, Timestamp desc
-```
-
-### PraisonAI codeMode blocklist trigger — sandbox probing in application logs
-
-`UC_24_4` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*praisonai*" OR Filesystem.file_name="*.log" OR Filesystem.file_name="*stderr*") by Filesystem.dest Filesystem.user Filesystem.process_name | `drop_dm_object_name(Filesystem)` | join type=outer dest [ | tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process="*Blocked pattern detected*" OR Processes.process="*Code contains blocked patterns for security*" by Processes.dest | `drop_dm_object_name(Processes)` ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let blocklist_strings = dynamic(["Blocked pattern detected:","Code contains blocked patterns for security","require\\s*\\(\\s*['\"]fs['\"]","require\\s*\\(\\s*['\"]child_process['\"]"]);
-(union isfuzzy=true
-    (DeviceProcessEvents
-     | where Timestamp > ago(30d)
-     | where ProcessCommandLine has_any (blocklist_strings) or InitiatingProcessCommandLine has_any (blocklist_strings)
-     | project Timestamp, DeviceName, AccountName, Source="Process", FileName, ProcessCommandLine, InitiatingProcessFileName),
-    (DeviceFileEvents
-     | where Timestamp > ago(30d)
-     | where InitiatingProcessFileName =~ "node.exe"
-     | where FolderPath has_any ("praisonai","\\logs\\","\\log\\","stderr")
-     | where FileName endswith ".log" or FileName endswith ".err" or FileName endswith ".txt" or FileName endswith ".json"
-     | summarize WriteCount=count(), Files=make_set(FileName, 25) by bin(Timestamp, 1h), DeviceName, InitiatingProcessAccountName, FolderPath
-     | where WriteCount >= 3)
-)
+union
+(DeviceProcessEvents
+  | where Timestamp > ago(14d)
+  | where FileName in~ ("node.exe","node")
+  | where ProcessCommandLine has_any ("constructor.constructor","mainModule.require","return process")
+  | project Timestamp, DeviceName, AccountName, EvidenceKind="cmdline", Image=FolderPath, Detail=ProcessCommandLine),
+(DeviceFileEvents
+  | where Timestamp > ago(14d)
+  | where InitiatingProcessFileName in~ ("node.exe","node")
+  | where FolderPath has "node_modules\\praisonai" or FolderPath has "node_modules/praisonai" or FileName has "code-mode"
+  | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, EvidenceKind="file", Image=InitiatingProcessFolderPath, Detail=FolderPath)
 | order by Timestamp desc
 ```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-vmmj-pfw7-fjwp: npm PraisonAI codeMode sandbox escape via
 
-`UC_24_0` · phase: **exploit** · confidence: **High**
+`UC_26_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -190,4 +130,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 5 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

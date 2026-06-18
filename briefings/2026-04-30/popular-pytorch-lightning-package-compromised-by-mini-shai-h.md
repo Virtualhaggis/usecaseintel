@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Mini Shai-Hulud: Python subprocess spawns `_runtime/start.py` from lightning site-packages
 
-`UC_357_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_356_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### Mini Shai-Hulud PyPI payload known SHA256 (start.py / router_runtime.js)
 
-`UC_357_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_356_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ union
 
 ### Mini Shai-Hulud: Bun runtime executing `router_runtime.js` (2nd-stage stealer)
 
-`UC_357_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_356_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -186,7 +186,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Popular PyTorch Lightning Package Compromised by Mini Shai-Hulud
 
-`UC_357_4` · phase: **exploit** · confidence: **High**
+`UC_356_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

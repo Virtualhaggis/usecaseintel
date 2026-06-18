@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### JetBrains IDE process connects to malicious plugin C2 39.107.60.51
 
-`UC_91_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_92_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -54,7 +54,7 @@ DeviceNetworkEvents
 
 ### Inspected HTTP POST to /api/software/ with attacker's static X-Api-Key header
 
-`UC_91_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_92_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceNetworkEvents
 
 ### Malicious JetBrains Marketplace plugin ID present in IDE plugins folder
 
-`UC_91_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_92_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

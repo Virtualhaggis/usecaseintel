@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious tanstack npm postinstall hook executing postinstall.cjs
 
-`UC_364_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_363_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### Svix Ingest webhook exfiltration relay (src_3387PLMB2uhXOBe3Q8sHu)
 
-`UC_364_12` · phase: **exfiltration** · confidence: **High** · AI-generated for this article
+`UC_363_12` · phase: **exfiltration** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceNetworkEvents
 
 ### Node.js postinstall reading .env / .env.* during package install
 
-`UC_364_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_363_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceFileEvents
 
 ### Known-bad tanstack 2.0.4-2.0.7 package tarball SHA256 file hash on disk
 
-`UC_364_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_363_14` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -422,7 +422,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Someone published four versions of a fake "tanstack" package in 27 minutes to st
 
-`UC_364_10` · phase: **exploit** · confidence: **High**
+`UC_363_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
