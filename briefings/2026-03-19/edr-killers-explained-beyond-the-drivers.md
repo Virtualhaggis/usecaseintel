@@ -51,7 +51,7 @@ _(none detected from narrative keywords)_
 
 ### BYOVD: Genshin Impact mhyprot.sys driver dropped/loaded outside legitimate game install (Embargo evil-mhyprot-cli)
 
-`UC_469_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_470_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ union
 
 ### EDRSilencer-style WFP filter blocking outbound traffic from named EDR binaries
 
-`UC_469_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_470_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -128,7 +128,7 @@ union
 
 ### EDR-Freeze: WerFaultSecure.exe abused to suspend AV/EDR processes via MiniDumpWriteDump race
 
-`UC_469_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_470_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -456,7 +456,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — EDR killers explained: Beyond the drivers
 
-`UC_469_8` · phase: **exploit** · confidence: **High**
+`UC_470_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

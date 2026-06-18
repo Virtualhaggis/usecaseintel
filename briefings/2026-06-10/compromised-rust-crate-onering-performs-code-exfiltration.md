@@ -19,12 +19,11 @@ Blog Vulnerabilities & Threats Compromised Rust crate onering performs code exfi
 - **T1555.003** — Credentials from Web Browsers
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1567** — Exfiltration Over Web Service
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1005** — Data from Local System
-- **T1213.003** — Code Repositories
 - **T1041** — Exfiltration Over C2 Channel
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1105** — Ingress Tool Transfer
+- **T1005** — Data from Local System
+- **T1213.003** — Data from Information Repositories: Code Repositories
 - **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
 
 ## Kill chain phases observed
@@ -33,138 +32,102 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Outbound connection to onering crate's Sentry-disguised C2 ingest endpoint
+### Outbound traffic to onering Sentry exfiltration endpoint (org o4511539639222272)
 
-`UC_122_4` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user from datamodel=Web where Web.url="*o4511539639222272.ingest.de.sentry.io*" OR Web.url="*4511539669368912/envelope*" OR Web.http_user_agent="*8197ee42c4f59c83f4cc6d48f5bae821*" by Web.src Web.dest Web.process | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has "o4511539639222272.ingest.de.sentry.io"
-   or RemoteUrl has "4511539669368912/envelope"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
-```
-
-### Rust build-script-build-*.exe initiating outbound public network connection
-
-`UC_122_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_123_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic where All_Traffic.app="build-script-build*" OR All_Traffic.process="*build-script-build*" All_Traffic.dest_category="public" by All_Traffic.src All_Traffic.process All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*o4511539639222272.ingest.de.sentry.io*" OR Web.url="*4511539669368912/envelope*" OR Web.http_user_agent="*8197ee42c4f59c83f4cc6d48f5bae821*") by Web.src Web.dest Web.user Web.url Web.http_method Web.app | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName startswith "build-script-build"
-| where RemoteIPType == "Public"
-| where InitiatingProcessParentFileName in~ ("cargo.exe","rustc.exe")
-   or InitiatingProcessFolderPath has @"\target\"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessParentFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
+| where RemoteUrl has "o4511539639222272.ingest.de.sentry.io"
+    or RemoteUrl has "4511539669368912/envelope"
+    or InitiatingProcessCommandLine has_any ("o4511539639222272.ingest.de.sentry.io", "8197ee42c4f59c83f4cc6d48f5bae821")
+| project Timestamp, DeviceName, RemoteUrl, RemoteIP, RemotePort,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### Cargo build script invoking git log --pretty=format JSON and git diff HEAD^ HEAD
+### curl invocation posting to onering Sentry envelope endpoint
 
-`UC_122_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_123_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name="git.exe" OR Processes.process_name="git" (Processes.process="*--pretty=format*commit*author*email*" OR Processes.process="*diff HEAD^ HEAD*" OR Processes.process="*diff*HEAD%5E*HEAD*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="curl.exe" OR Processes.process_name="curl") AND (Processes.process="*o4511539639222272.ingest.de.sentry.io*" OR Processes.process="*8197ee42c4f59c83f4cc6d48f5bae821*" OR Processes.process="*4511539669368912/envelope*" OR Processes.process="*application/x-sentry-envelope*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "git.exe" or FileName =~ "git"
-| where ProcessCommandLine has_all ("--pretty=format","commit","author","email","date","subject")
-   or ProcessCommandLine has "diff HEAD^ HEAD"
-   or ProcessCommandLine matches regex @"(?i)diff\s+HEAD\^\s+HEAD"
-| where InitiatingProcessFileName startswith "build-script-build"
-   or InitiatingProcessParentFileName in~ ("cargo.exe","rustc.exe")
-   or InitiatingProcessFolderPath has @"\target\"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessFolderPath
+| where Timestamp > ago(7d)
+| where FileName in~ ("curl.exe", "curl")
+| where ProcessCommandLine has_any (
+    "o4511539639222272.ingest.de.sentry.io",
+    "8197ee42c4f59c83f4cc6d48f5bae821",
+    "4511539669368912/envelope",
+    "application/x-sentry-envelope"
+  )
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
-### Curl invoked from Rust build context with Sentry envelope Content-Type header
+### Git source-code harvest (log + diff HEAD^ HEAD) spawned from cargo build context
 
-`UC_122_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_123_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process_name="curl.exe" OR Processes.process_name="curl") Processes.process="*x-sentry-envelope*" by Processes.dest Processes.user Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="git.exe" OR Processes.process_name="git") AND (Processes.process="*--pretty=format:{*\"commit\"*" OR (Processes.process="*diff*" AND Processes.process="*HEAD^*" AND Processes.process="*HEAD*")) AND (Processes.parent_process_name="cargo.exe" OR Processes.parent_process_name="cargo" OR Processes.parent_process_name="rustc.exe" OR Processes.parent_process_name="rustc" OR Processes.parent_process_name="build-script-build.exe" OR Processes.parent_process_name="build-script-build" OR Processes.parent_process_name="build-script-main.exe" OR Processes.parent_process_name="build-script-main") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+let cargoParents = dynamic(["cargo.exe","cargo","rustc.exe","rustc"]);
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "curl.exe" or FileName =~ "curl"
-| where ProcessCommandLine has "x-sentry-envelope"
-   or ProcessCommandLine has "application/x-sentry-envelope"
-   or ProcessCommandLine has "/envelope/"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessFolderPath
+| where Timestamp > ago(7d)
+| where FileName in~ ("git.exe", "git")
+| where (ProcessCommandLine has "diff" and ProcessCommandLine has "HEAD^" and ProcessCommandLine has "HEAD")
+    or ProcessCommandLine has "--pretty=format:{\"commit\""
+    or ProcessCommandLine has "--pretty=format:{%22commit%22"
+| where InitiatingProcessFileName startswith "build-script"
+    or InitiatingProcessFileName in~ (cargoParents)
+    or InitiatingProcessParentFileName in~ (cargoParents)
+    or InitiatingProcessParentFileName startswith "build-script"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
-### Cargo.toml or Cargo.lock pinning compromised onering 1.4.1
+### onering 1.4.1 Rust crate extracted to cargo registry source cache
 
-`UC_122_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_123_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path from datamodel=Endpoint.Filesystem where (Filesystem.file_name="Cargo.toml" OR Filesystem.file_name="Cargo.lock") by Filesystem.dest Filesystem.user Filesystem.process_name | `drop_dm_object_name(Filesystem)` | join type=outer dest [| tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process="*cargo add onering*" OR Processes.process="*cargo install onering*") by Processes.dest Processes.process | `drop_dm_object_name(Processes)`] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\.cargo\\registry\\src\\*onering-1.4.1*" OR Filesystem.file_path="*/.cargo/registry/src/*onering-1.4.1*") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let FileWrites = DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where FileName in~ ("Cargo.toml","Cargo.lock")
-    | where ActionType in ("FileCreated","FileModified")
-    | project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine;
-let ProcessCmds = DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where ProcessCommandLine has "onering"
-    | where FileName in~ ("cargo.exe","cargo")
-    | where ProcessCommandLine has_any ("add","install","update")
-    | project Timestamp, DeviceName, ProcessCommandLine, AccountName, InitiatingProcessFolderPath;
-union FileWrites, ProcessCmds
-| order by Timestamp desc
-```
-
-### Sentry envelope POST payload pattern in proxy / HTTP capture
-
-`UC_122_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url from datamodel=Web where Web.http_method="POST" Web.url="*ingest*sentry.io*envelope*" (Web.http_content_type="application/x-sentry-envelope" OR Web.http_user_agent!="sentry*") NOT Web.dest_domain IN ("sentry.your-corp.example") by Web.src Web.dest Web.user Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
+DeviceFileEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has ".ingest." and RemoteUrl has ".sentry.io"
-| where RemoteUrl has "/envelope/"
-| where InitiatingProcessFileName !in~ ("sentry-cli.exe","node.exe","python.exe","java.exe")
-   or InitiatingProcessParentFileName in~ ("cargo.exe","rustc.exe")
-   or InitiatingProcessFileName startswith "build-script-build"
-   or InitiatingProcessFileName =~ "curl.exe"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessParentFileName, RemoteUrl, RemoteIP
-| order by Timestamp desc
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| where FolderPath has @"\.cargo\registry\src\" or FolderPath has "/.cargo/registry/src/"
+| where FolderPath has "onering-1.4.1" or FileName has "onering-1.4.1"
+| summarize FilesWritten=dcount(FileName), FirstSeen=min(Timestamp), LastSeen=max(Timestamp),
+            SampleFiles=make_set(FileName, 10), SampleFolder=any(FolderPath)
+            by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName
+| order by FirstSeen desc
 ```
 
 ### Suspicious browser extension installation
@@ -255,4 +218,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 10 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

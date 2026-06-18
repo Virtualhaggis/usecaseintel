@@ -43,7 +43,6 @@ Executi…
 - **T1195.002** — Compromise Software Supply Chain
 - **T1562.008** — Impair Defenses: Disable or Modify Cloud Logs
 - **T1485** — Data Destruction
-- **T1070.008** — Indicator Removal: Clear Mailbox Data
 
 ## Kill chain phases observed
 
@@ -51,49 +50,150 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### AWS CloudTrail StopLogging — attacker blinds the audit trail
+### AWS CloudTrail StopLogging API invocation (logging disablement)
 
-`UC_126_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_127_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Changes.user) as user values(All_Changes.src) as src_ip values(All_Changes.object) as trail_name from datamodel=Change where All_Changes.action=modified All_Changes.command=StopLogging All_Changes.status=success by All_Changes.user All_Changes.src All_Changes.object | `drop_dm_object_name(All_Changes)` | where user!="AWSService"
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as trail_name values(All_Changes.command) as command from datamodel=Change where All_Changes.action="stopped" All_Changes.object_category="AWS CloudTrail" OR (All_Changes.vendor_product="AWS CloudTrail" All_Changes.command="StopLogging") by All_Changes.user All_Changes.src All_Changes.vendor_account All_Changes.vendor_region
+| `drop_dm_object_name("All_Changes")`
+| where firstTime > relative_time(now(), "-24h")
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
-### S3 DeleteBucket on a CloudTrail logging-destination bucket
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(24h)
+| where Application in ("Amazon Web Services", "AWS")
+| where ActionType =~ "StopLogging"
+   or (ActionType has "StopLogging" and ObjectType has_any ("Trail","CloudTrail"))
+| extend RawData = parse_json(RawEventData)
+| extend TrailName = tostring(RawData.requestParameters.name),
+         CallerType = tostring(RawData.userIdentity.type),
+         CallerArn = tostring(RawData.userIdentity.arn),
+         ErrorCode = tostring(RawData.errorCode)
+| where isempty(ErrorCode)
+| project Timestamp, AccountDisplayName, CallerType, CallerArn, IPAddress, CountryCode, TrailName, ObjectName, UserAgent, ActionType
+| order by Timestamp desc
+```
 
-`UC_126_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+### AWS S3 DeleteBucket targeting a CloudTrail log destination bucket
+
+`UC_127_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Changes.user) as user values(All_Changes.src) as src_ip values(All_Changes.object) as bucket from datamodel=Change where All_Changes.command=DeleteBucket All_Changes.status=success by All_Changes.user All_Changes.src All_Changes.object | `drop_dm_object_name(All_Changes)` | lookup cloudtrail_destination_buckets bucket OUTPUT trail_arn | where isnotnull(trail_arn)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.command) as command values(All_Changes.object) as bucket from datamodel=Change where All_Changes.action="deleted" All_Changes.object_category="S3 Bucket" (All_Changes.object="*cloudtrail*" OR All_Changes.object="*-logs-*" OR All_Changes.object="*audit*" OR All_Changes.object="*log-archive*") by All_Changes.user All_Changes.src All_Changes.vendor_account All_Changes.vendor_region
+| `drop_dm_object_name("All_Changes")`
+| where firstTime > relative_time(now(), "-24h")
+```
+
+**Defender KQL:**
+```kql
+let LogBucketHints = dynamic(["cloudtrail","audit","log-archive","-logs-","securitylogs","loggingbucket"]);
+CloudAppEvents
+| where Timestamp > ago(24h)
+| where Application in ("Amazon Web Services","AWS")
+| where ActionType =~ "DeleteBucket"
+| extend RawData = parse_json(RawEventData)
+| extend BucketName = tolower(tostring(RawData.requestParameters.bucketName)),
+         CallerType = tostring(RawData.userIdentity.type),
+         CallerArn = tostring(RawData.userIdentity.arn),
+         ErrorCode = tostring(RawData.errorCode)
+| where isempty(ErrorCode)
+| where BucketName has_any (LogBucketHints)
+| project Timestamp, AccountDisplayName, CallerType, CallerArn, IPAddress, CountryCode, BucketName, UserAgent
+| order by Timestamp desc
+```
+
+### AWS CloudTrail DeleteTrail removing the trail configuration
+
+`UC_127_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as trail_name from datamodel=Change where All_Changes.action="deleted" All_Changes.object_category="AWS CloudTrail" OR (All_Changes.vendor_product="AWS CloudTrail" All_Changes.command="DeleteTrail") by All_Changes.user All_Changes.src All_Changes.vendor_account All_Changes.vendor_region
+| `drop_dm_object_name("All_Changes")`
+| where firstTime > relative_time(now(), "-24h")
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(24h)
+| where Application in ("Amazon Web Services","AWS")
+| where ActionType =~ "DeleteTrail"
+| extend RawData = parse_json(RawEventData)
+| extend TrailName = tostring(RawData.requestParameters.name),
+         CallerType = tostring(RawData.userIdentity.type),
+         CallerArn = tostring(RawData.userIdentity.arn),
+         ErrorCode = tostring(RawData.errorCode)
+| where isempty(ErrorCode)
+| project Timestamp, AccountDisplayName, CallerType, CallerArn, IPAddress, CountryCode, TrailName, UserAgent
+| order by Timestamp desc
 ```
 
 ### GCP Cloud Logging sink disabled via logging.sinks.update
 
-`UC_126_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_127_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Changes.user) as user values(All_Changes.src) as src_ip values(All_Changes.object) as sink_name from datamodel=Change where All_Changes.command="google.logging.v2.ConfigServiceV2.UpdateSink" All_Changes.status=success by All_Changes.user All_Changes.src All_Changes.object | `drop_dm_object_name(All_Changes)` | search _raw="*\"disabled\": true*"
+`gcp_pubsub` protoPayload.methodName="google.logging.v2.ConfigServiceV2.UpdateSink" "protoPayload.request.sink.disabled"=true
+| rename protoPayload.authenticationInfo.principalEmail as principal, protoPayload.requestMetadata.callerIp as src_ip, protoPayload.request.sink.name as sink_name, protoPayload.request.sink.destination as sink_destination, resource.labels.project_id as project_id
+| stats min(_time) as firstTime max(_time) as lastTime count by principal, src_ip, sink_name, sink_destination, project_id
+| where firstTime > relative_time(now(), "-24h")
 ```
 
-### GCP log bucket deletion via logging.buckets.delete
-
-`UC_126_7` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Changes.user) as user values(All_Changes.src) as src_ip values(All_Changes.object) as bucket from datamodel=Change where All_Changes.command="google.logging.v2.ConfigServiceV2.DeleteBucket" All_Changes.status=success by All_Changes.user All_Changes.src All_Changes.object | `drop_dm_object_name(All_Changes)`
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(24h)
+| where Application in ("Google Cloud Platform","Google Cloud")
+| where ActionType has "UpdateSink" or ActionType =~ "google.logging.v2.ConfigServiceV2.UpdateSink"
+| extend RawData = parse_json(RawEventData)
+| extend SinkName = tostring(RawData.protoPayload.request.sink.name),
+         SinkDestination = tostring(RawData.protoPayload.request.sink.destination),
+         Disabled = tobool(RawData.protoPayload.request.sink.disabled),
+         Principal = tostring(RawData.protoPayload.authenticationInfo.principalEmail),
+         CallerIp = tostring(RawData.protoPayload.requestMetadata.callerIp),
+         ProjectId = tostring(RawData.resource.labels.project_id)
+| where Disabled == true
+| project Timestamp, Principal, CallerIp, ProjectId, SinkName, SinkDestination, AccountDisplayName, IPAddress
+| order by Timestamp desc
 ```
 
-### Bulk DeleteObject sweep against a CloudTrail S3 destination
+### GCP log bucket deletion via logging.buckets.delete (DELETE_REQUESTED)
 
-`UC_126_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_127_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as objects from datamodel=Change where All_Changes.command=DeleteObject All_Changes.status=success by All_Changes.user All_Changes.src _time span=5m | `drop_dm_object_name(All_Changes)` | where count > 100 | lookup cloudtrail_destination_buckets bucket as objects OUTPUT trail_arn | where isnotnull(trail_arn)
+`gcp_pubsub` protoPayload.methodName="google.logging.v2.ConfigServiceV2.DeleteBucket"
+| rename protoPayload.authenticationInfo.principalEmail as principal, protoPayload.requestMetadata.callerIp as src_ip, protoPayload.resourceName as bucket_resource, resource.labels.project_id as project_id
+| where NOT match(principal, "(?i)gserviceaccount\.com$") OR match(principal, "(?i)(compute@developer|cloudservices@cloudservices)\.gserviceaccount\.com")=false
+| stats min(_time) as firstTime max(_time) as lastTime count by principal, src_ip, bucket_resource, project_id
+| where firstTime > relative_time(now(), "-24h")
+```
+
+**Defender KQL:**
+```kql
+CloudAppEvents
+| where Timestamp > ago(24h)
+| where Application in ("Google Cloud Platform","Google Cloud")
+| where ActionType has "DeleteBucket" and ActionType has "logging"
+   or ActionType =~ "google.logging.v2.ConfigServiceV2.DeleteBucket"
+| extend RawData = parse_json(RawEventData)
+| extend BucketResource = tostring(RawData.protoPayload.resourceName),
+         Principal = tostring(RawData.protoPayload.authenticationInfo.principalEmail),
+         CallerIp = tostring(RawData.protoPayload.requestMetadata.callerIp),
+         ProjectId = tostring(RawData.resource.labels.project_id),
+         ErrorCode = tostring(RawData.protoPayload.status.code)
+| where ErrorCode in ("","0")
+| project Timestamp, Principal, CallerIp, ProjectId, BucketResource, AccountDisplayName, IPAddress
+| order by Timestamp desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -271,4 +371,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 9 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 9 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### DynoWiper / ZOV wiper known-bad SHA-1 hash execution
 
-`UC_603_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_604_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceProcessEvents
 
 ### Executable dropped into C:\inetpub\pub\ shared directory
 
-`UC_603_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_604_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceFileEvents
 
 ### DynoWiper schtask.exe / *_update.exe execution from C:\inetpub\pub\
 
-`UC_603_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_604_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceProcessEvents
 
 ### Sandworm SOCKS5 C2 egress to 31.172.71[.]5 (Fornex) or progamevl.ru
 
-`UC_603_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_604_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceNetworkEvents
 
 ### Mass file-content overwrite by single non-system process from non-standard path
 
-`UC_603_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_604_13` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -355,7 +355,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — DynoWiper update: Technical analysis and attribution
 
-`UC_603_8` · phase: **exploit** · confidence: **High**
+`UC_604_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1205 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1203 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -38,7 +38,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [china linked sprysocks backdoor expands to windows with driv](./2026-06-16/china-linked-sprysocks-backdoor-expands-to-windows-with-driv.md)
 - [cisa flags litespeed cpanel plugin flaw exploited for root p](./2026-06-16/cisa-flags-litespeed-cpanel-plugin-flaw-exploited-for-root-p.md)
 - [cisa kev cve 2026 48907 widget factory joomla content editor](./2026-06-16/cisa-kev-cve-2026-48907-widget-factory-joomla-content-editor.md)
-- [cisa warns of another cpanel plugin flaw exploited in attack](./2026-06-16/cisa-warns-of-another-cpanel-plugin-flaw-exploited-in-attack.md)
 - [cisco releases security updates for actively exploited sd wa](./2026-06-16/cisco-releases-security-updates-for-actively-exploited-sd-wa.md)
 - [clickfix campaigns expand malware delivery with new loaders ](./2026-06-16/clickfix-campaigns-expand-malware-delivery-with-new-loaders-.md)
 - [dozens of malicious wallpapers found on steam workshop gamer](./2026-06-16/dozens-of-malicious-wallpapers-found-on-steam-workshop-gamer.md)
@@ -881,7 +880,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-10-22
 - [cisa kev cve 2025 61932 motex lanscope endpoint manager impr](./2025-10-22/cisa-kev-cve-2025-61932-motex-lanscope-endpoint-manager-impr.md)
-- [snakestealer how it preys on personal data and how you can p](./2025-10-22/snakestealer-how-it-preys-on-personal-data-and-how-you-can-p.md)
 - [why we built evo from my heart](./2025-10-22/why-we-built-evo-from-my-heart.md)
 
 ## 2025-10-20
