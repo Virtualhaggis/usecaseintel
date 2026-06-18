@@ -6,7 +6,7 @@
   data-splunk-cats="cloud,endpoint,web"
   data-targets="aws,azure,gcp,m365,windows"
   data-uc-count="12" data-llm-uc-count="8"
-  data-search="Blinding the Watchmen: Abusing Cloud Logging Services for Defense Evasion and Visibility Unit 42 research examines attack scenarios targeting cloud logging services. Learn how to defend against log manipulation and defense evasion. The post Blinding the Watchmen: Abusing Cloud Logging Services for Defense Evasion and Visibility appeared first on Unit 42 .  T1190 T1566 [LLM] AWS CloudTrail StopLogging API invoked on a trail [LLM] AWS CloudTrail trail deletion or event selector scope-narrowing [LLM] S3 DeleteBucket targeting a CloudTrail log destination [LLM] S3 PutBucketLogging disabled or target bucket removed [LLM] GCP Logging Sink disabled, deleted, or updated [LLM] GCP log bucket deletion (DELETE_REQUESTED state) [LLM] CloudWatch log group deleted or retention reduced [LLM] IAM policy denies CloudTrail or logging read/write for other principals Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Trusted vendor binary / installer launching unusual children">
+  data-search="Blinding the Watchmen: Abusing Cloud Logging Services for Defense Evasion and Visibility Unit 42 research examines attack scenarios targeting cloud logging services. Learn how to defend against log manipulation and defense evasion. The post Blinding the Watchmen: Abusing Cloud Logging Services for Defense Evasion and Visibility appeared first on Unit 42 .  T1190 T1566 [LLM] AWS CloudTrail StopLogging API invoked — trail intentionally blinded [LLM] AWS CloudTrail DeleteTrail — entire audit configuration removed [LLM] AWS S3 DeleteBucket targeting a CloudTrail log destination bucket [LLM] CloudTrail PutEventSelectors reducing scope of recorded events [LLM] Google Cloud Logging sink disabled or destination redirected [LLM] Google Cloud Logging bucket deletion request (log archive destruction) [LLM] S3 PutBucketLogging removing or redirecting access logging [LLM] S3 DeleteObjects burst against a CloudTrail log destination prefix Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Trusted vendor binary / installer launching unusual children">
   <div class="sev-ribbon high">High</div>
   <button class="share-btn card-share" data-share-art="2026-06-09-blinding-the-watchmen-abusing-cloud-logging-services-for-def" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -68,28 +68,28 @@
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Office app spawning script/LOLBin child process · Trusted vendor binary / installer launching unusual children</em></div>
 <div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] AWS CloudTrail StopLogging API invoked on a trail · [LLM] AWS CloudTrail trail deletion or event selector scope-narrowing · [LLM] S3 DeleteBucket targeting a CloudTrail log destination · [LLM] S3 PutBucketLogging disabled or target bucket removed · [LLM] GCP Logging Sink disabled, deleted, or updated · [LLM] GCP log bucket deletion (DELETE_REQUESTED state) · [LLM] CloudWatch log group deleted or retention reduced · [LLM] IAM policy denies CloudTrail or logging read/write for other principals</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] AWS CloudTrail StopLogging API invoked — trail intentionally blinded · [LLM] AWS CloudTrail DeleteTrail — entire audit configuration removed · [LLM] AWS S3 DeleteBucket targeting a CloudTrail log destination bucket · [LLM] CloudTrail PutEventSelectors reducing scope of recorded events · [LLM] Google Cloud Logging sink disabled or destination redirected · [LLM] Google Cloud Logging bucket deletion request (log archive destruction) · [LLM] S3 PutBucketLogging removing or redirecting access logging · [LLM] S3 DeleteObjects burst against a CloudTrail log destination prefix</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="dbe3c32a7b" data-platforms="cloudwatch,datadog,def,sent,sigma,spl" data-targets="aws" open>
+  <div class="usecases"><details class="uc" data-uc-slug="8b3057a007" data-platforms="cloudwatch,datadog,def,sent,sigma,spl" data-targets="aws" open>
   <summary>
-    <span class="uc-title">AWS CloudTrail StopLogging API invoked on a trail</span>
+    <span class="uc-title">AWS CloudTrail StopLogging API invoked — trail intentionally blinded</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="dbe3c32a7b" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="8b3057a007" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts the article&#x27;s Technique 1: an attacker with cloudtrail:StopLogging permissions invokes the StopLogging API to halt event recording on a specific trail, creating an immediate visibility gap for downstream SIEM/SOAR pipelines that depend on the trail.
+    <div class="uc-desc">Detects invocation of the CloudTrail StopLogging API, which halts log delivery to S3 for a specific trail. The article identifies this as the most direct way attackers blind defenders before downstream action.
 
-Rationale: Article Technique 1 names the exact API (StopLogging) and permission (cloudtrail:StopLogging). StopLogging is a state-changing management event that legitimate operations rarely invoke; pairing eventName with success (no errorCode) yields very low FP.
+Rationale: Article Technique 1 explicitly names the cloudtrail:StopLogging permission and stop-logging API as the primary blinding step. Trail-name pivot lets analysts immediately confirm scope.
 
 Cross-checked against:
   • https://attack.mitre.org/techniques/T1562/008/
   • https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_StopLogging.html</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Planned trail decommissioning during account consolidation</li><li>Cost-optimization scripts toggling trails off in dev/sandbox accounts</li><li>Terraform/CloudFormation drift correction stopping a duplicate trail</li><li>Authorized red-team exercise rehearsing log evasion</li><li>IaC migration moving from per-region trails to an org-wide trail</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and userIdentity.arn not like /role\/break-glass-/ and userIdentity.userName not like /^terraform-/</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm caller identity, sourceIPAddress, and user-agent against IAM owners and change tickets; pivot on the same principal&#x27;s CloudTrail activity in the prior 1 hour for recon (ListTrails, DescribeTrails). Step 2 (contain): Re-enable the trail with StartLogging, rotate the calling principal&#x27;s credentials, and add an SCP denying cloudtrail:StopLogging outside break-glass roles. Step 3 (hunt): Within +/- 1 hour search for IAM privilege escalation (AttachUserPolicy / CreateAccessKey), S3 bucket policy changes on the log destination, and any KMS key disabling on the trail&#x27;s encryption key.</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span> <span class="ind">Authentication.Authentication</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Cloud team tearing down a duplicate trail during account consolidation</li><li>Terraform/CloudFormation drift remediation that recreates a trail and briefly stops the old one</li><li>AWS Solutions Architect engagement testing alert pipelines in a sandbox account</li><li>Cost-control automation rotating to a Lake-only ingestion path</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where CallerType !in (&quot;AWSService&quot;) | where not(CallerArn has_any (&quot;terraform-deploy&quot;, &quot;cloudformation-stacksets&quot;, &quot;control-tower&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the principal (userIdentity.arn) and check whether the call originated from a known IaC role (Terraform/CloudFormation) or a human user from an expected console IP. Pull the last 24h of activity for that principal. 2) Contain: if the caller is unexpected, immediately call StartLogging on the trail, rotate the caller&#x27;s access keys / revoke active sessions for the IAM role, and apply an SCP that denies cloudtrail:StopLogging org-wide. 3) Hunt: within 4 hours either side, look for IAM privilege escalation (AttachUserPolicy/PutUserPolicy), S3 bucket deletions, KMS key disables, GuardDuty disablement, or assume-role chains landing on the same identity.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-125-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-125-uc0-sentinel">Sentinel KQL</button>
@@ -99,28 +99,33 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-125-uc0-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-125-uc0-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
-| where Timestamp &gt; ago(24h)
+| where Timestamp &gt; ago(7d)
 | where Application == &quot;Amazon Web Services&quot;
-| where ActionType =~ &quot;StopLogging&quot;
-| extend trailName = tostring(parse_json(tostring(RawEventData)).requestParameters.name)
-| extend errorCode = tostring(parse_json(tostring(RawEventData)).errorCode)
-| where isempty(errorCode)
-| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, UserAgent, trailName, ActionType, RawEventData
+| where ActionType == &quot;StopLogging&quot;
+| extend RawData = parse_json(RawEventData)
+| extend TrailName = tostring(RawData.requestParameters.name),
+         CallerArn  = tostring(RawData.userIdentity.arn),
+         CallerType = tostring(RawData.userIdentity.type),
+         AwsRegion  = tostring(RawData.awsRegion),
+         ErrorCode  = tostring(RawData.errorCode)
+| where isempty(ErrorCode)
+| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, CountryCode, UserAgent, ActionType, TrailName, CallerArn, CallerType, AwsRegion
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-125-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>AWSCloudTrail
-| where TimeGenerated &gt; ago(24h)
-| where EventName == &quot;StopLogging&quot;
+| where TimeGenerated &gt; ago(7d)
+| where EventSource =~ &quot;cloudtrail.amazonaws.com&quot;
+| where EventName =~ &quot;StopLogging&quot;
 | where isempty(ErrorCode)
-| extend trailName = tostring(parse_json(tostring(RequestParameters)).name)
-| project TimeGenerated, UserIdentityType, UserIdentityArn, UserIdentityUserName, SourceIpAddress, UserAgent, AWSRegion, trailName, RequestParameters
+| extend TrailName = tostring(parse_json(RequestParameters).name)
+| project TimeGenerated, EventName, TrailName, UserIdentityArn, UserIdentityType, SourceIpAddress, AwsRegion, UserAgent
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-125-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: AWS CloudTrail Logging Stopped
-id: 3a4f5b9c-1f2d-4e8a-9c0b-77a7e3c5d8a1
-description: Detects the AWS CloudTrail StopLogging API call which halts event recording on a trail, a classic defense-evasion step described by Unit 42.
+    <div class="tab-content" id="art-125-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: AWS CloudTrail StopLogging
+id: 6a8e3b40-9b1f-4a55-8f1e-5b9f2c1a9d11
+description: Detects invocation of the CloudTrail StopLogging API which halts log delivery to S3.
 references:
   - https://unit42.paloaltonetworks.com/cloud-logging-defense-evasion/
 author: SOC Detection Engineering
-date: 2026/06/17
+date: 2026/06/18
 tags:
   - attack.defense_evasion
   - attack.t1562.008
@@ -135,36 +140,37 @@ detection:
     errorCode|exists: true
   condition: selection and not filter_failed
 level: high</code></pre></div>
-    <div class="tab-content" id="art-125-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:StopLogging @evt.outcome:success</code></pre></div>
+    <div class="tab-content" id="art-125-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:StopLogging @evt.outcome:success -@errorCode:*</code></pre></div>
     <div class="tab-content" id="art-125-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
-fields @timestamp, eventName, eventSource, userIdentity.type, userIdentity.arn, userIdentity.userName, sourceIPAddress, userAgent, awsRegion, requestParameters.name, errorCode
+fields @timestamp, eventName, eventSource, awsRegion, sourceIPAddress, userAgent, userIdentity.type, userIdentity.arn, userIdentity.userName, requestParameters.name
 | filter eventSource = &quot;cloudtrail.amazonaws.com&quot;
       and eventName = &quot;StopLogging&quot;
       and not isPresent(errorCode)
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-125-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-125-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-125-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-125-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_product=&quot;AWS CloudTrail&quot; All_Changes.action=success (All_Changes.command=&quot;StopLogging&quot; OR All_Changes.object_category=&quot;trail&quot; AND All_Changes.change_type=&quot;StopLogging&quot;) by All_Changes.user All_Changes.src All_Changes.object All_Changes.command All_Changes.user_agent | `drop_dm_object_name(All_Changes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-125-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_product=&quot;AWS CloudTrail&quot; All_Changes.action=success (All_Changes.command=&quot;StopLogging&quot; OR All_Changes.object_category=&quot;trail&quot; AND All_Changes.change_type=&quot;StopLogging&quot;) by All_Changes.user All_Changes.src All_Changes.object All_Changes.command All_Changes.user_agent | `drop_dm_object_name(All_Changes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+| sort @timestamp desc
+| limit 200</code></pre></div>
+    <div class="tab-content" id="art-125-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-125-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-125-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-125-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_account=&quot;aws&quot; All_Changes.action=&quot;modified&quot; All_Changes.object_category=&quot;cloud_trail&quot; All_Changes.command IN (&quot;StopLogging&quot;,&quot;cloudtrail.amazonaws.com:StopLogging&quot;) by All_Changes.user All_Changes.src All_Changes.object All_Changes.user_agent All_Changes.status | `drop_dm_object_name(&quot;All_Changes&quot;)` | where status=&quot;success&quot; | rename object as trail_name | eval risk_object=user, risk_score=80 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-125-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_account=&quot;aws&quot; All_Changes.action=&quot;modified&quot; All_Changes.object_category=&quot;cloud_trail&quot; All_Changes.command IN (&quot;StopLogging&quot;,&quot;cloudtrail.amazonaws.com:StopLogging&quot;) by All_Changes.user All_Changes.src All_Changes.object All_Changes.user_agent All_Changes.status | `drop_dm_object_name(&quot;All_Changes&quot;)` | where status=&quot;success&quot; | rename object as trail_name | eval risk_object=user, risk_score=80 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="634dd4dd44" data-platforms="cloudwatch,datadog,def,sent,sigma,spl" data-targets="aws">
+<details class="uc" data-uc-slug="8c05d2b445" data-platforms="cloudwatch,datadog,def,sent,sigma,spl" data-targets="aws">
   <summary>
-    <span class="uc-title">AWS CloudTrail trail deletion or event selector scope-narrowing</span>
+    <span class="uc-title">AWS CloudTrail DeleteTrail — entire audit configuration removed</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="634dd4dd44" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="8c05d2b445" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Targets Technique 3 (delete log router): an attacker removes the CloudTrail trail outright, or shrinks PutEventSelectors so management/data events stop flowing to S3 — both blind downstream SIEM ingestion of the article&#x27;s named trail resource.
+    <div class="uc-desc">Detects deletion of an entire CloudTrail trail (not just disabling). The article highlights this as a permanent way to destroy the configuration that links events to the S3 sink.
 
-Rationale: Article calls out the trail as the configuration unit that delivers logs to S3. Deletion or scope-narrowing of selectors directly matches the &#x27;Delete Log Router&#x27; technique. Successful invocations from non-automation principals are inherently rare.
+Rationale: Article Technique 1 / Table 2 list trail destruction as a high-impact blinding action. DeleteTrail is rarer and higher-fidelity than StopLogging — almost never benign outside scripted teardown.
 
 Cross-checked against:
   • https://attack.mitre.org/techniques/T1562/008/
-  • https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_PutEventSelectors.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span> <span class="ind tech" title="Indicator Removal: Clear Network Connection History">T1070.007</span></div>
+  • https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_DeleteTrail.html</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Terraform plan applying legitimate trail configuration changes</li><li>Organization migrating from regional to org-wide trail</li><li>Removing a duplicate trail created during incident-response testing</li><li>AWS Config rule auto-remediation re-applying event-selector standards</li><li>Authorized cost-reduction exercise excluding noisy data events</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and userIdentity.arn not like /role\/AWSControlTowerExecution/ and userAgent not like /cloudformation\.amazonaws\.com/</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Identify the calling principal and correlate with change-management tickets; verify the trail&#x27;s role (org-wide vs. per-account) and what coverage was lost. Step 2 (contain): Recreate the trail using prior IaC state, restore event selectors to baseline, suspend the calling principal pending review. Step 3 (hunt): Look for follow-on actions in the gap window — CreateAccessKey, AssumeRole into privileged roles, S3 GetObject sprees, RunInstances in unusual regions.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Cloud-platform team decommissioning a duplicate org trail after migrating to AWS Organizations trail</li><li>Sandbox/dev account cleanup at sprint end</li><li>Terraform destroy on a short-lived workshop environment</li><li>Control Tower lifecycle removing a legacy trail during landing-zone upgrade</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where CallerType != &quot;AWSService&quot; | where TrailName !startswith &quot;sandbox-&quot; | where TrailName !startswith &quot;workshop-&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm whether the deleted trail was the primary audit trail (cross-check trail name vs. organization-level standard). Validate caller identity, source IP, user agent. 2) Contain: if unauthorized, recreate the trail with the original S3 bucket + KMS key, attach an SCP denying cloudtrail:DeleteTrail to all non-break-glass roles, and rotate credentials for the caller. 3) Hunt: pivot on the principal for IAM changes (PutUserPolicy, CreateAccessKey), S3 bucket policy modifications, KMS DisableKey calls, and any RunInstances/AssumeRole within 6 hours before the deletion to scope likely follow-on activity.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-125-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-125-uc1-sentinel">Sentinel KQL</button>
@@ -174,180 +180,452 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-125-uc1-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-125-uc1-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
-| where Timestamp &gt; ago(24h)
+| where Timestamp &gt; ago(7d)
 | where Application == &quot;Amazon Web Services&quot;
-| where ActionType in~ (&quot;DeleteTrail&quot;, &quot;PutEventSelectors&quot;, &quot;UpdateTrail&quot;)
-| extend raw = parse_json(tostring(RawEventData))
-| extend errorCode = tostring(raw.errorCode)
-| extend trailName = tostring(raw.requestParameters.name)
-| extend selectors = tostring(raw.requestParameters.eventSelectors)
-| where isempty(errorCode)
-| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, UserAgent, ActionType, trailName, selectors, RawEventData
+| where ActionType == &quot;DeleteTrail&quot;
+| extend RawData = parse_json(RawEventData)
+| extend TrailName = tostring(RawData.requestParameters.name),
+         CallerArn = tostring(RawData.userIdentity.arn),
+         CallerType = tostring(RawData.userIdentity.type),
+         AwsRegion = tostring(RawData.awsRegion),
+         ErrorCode = tostring(RawData.errorCode)
+| where isempty(ErrorCode)
+| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, CountryCode, UserAgent, ActionType, TrailName, CallerArn, CallerType, AwsRegion
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-125-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>AWSCloudTrail
-| where TimeGenerated &gt; ago(24h)
-| where EventName in (&quot;DeleteTrail&quot;, &quot;PutEventSelectors&quot;, &quot;UpdateTrail&quot;)
+| where TimeGenerated &gt; ago(7d)
+| where EventSource =~ &quot;cloudtrail.amazonaws.com&quot;
+| where EventName =~ &quot;DeleteTrail&quot;
 | where isempty(ErrorCode)
-| extend trailName = tostring(parse_json(tostring(RequestParameters)).name)
-| extend selectors = tostring(parse_json(tostring(RequestParameters)).eventSelectors)
-| project TimeGenerated, EventName, UserIdentityType, UserIdentityArn, UserIdentityUserName, SourceIpAddress, UserAgent, AWSRegion, trailName, selectors
+| extend TrailName = tostring(parse_json(RequestParameters).name)
+| project TimeGenerated, EventName, TrailName, UserIdentityArn, UserIdentityType, SourceIpAddress, AwsRegion, UserAgent
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-125-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: AWS CloudTrail Trail Deleted or Event Selectors Narrowed
-id: 5e7c2a48-b3f4-4d8b-a3c1-d2e9b1f4a205
-description: Detects DeleteTrail or PutEventSelectors/UpdateTrail calls that remove or shrink CloudTrail capture scope.
+    <div class="tab-content" id="art-125-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: AWS CloudTrail DeleteTrail
+id: 7b9f4c51-a02e-4b66-9027-6c0e3d2bae22
+description: Detects DeleteTrail API call which permanently removes a CloudTrail trail configuration.
 references:
   - https://unit42.paloaltonetworks.com/cloud-logging-defense-evasion/
 author: SOC Detection Engineering
-date: 2026/06/17
+date: 2026/06/18
 tags:
   - attack.defense_evasion
   - attack.t1562.008
-  - attack.t1070.007
 logsource:
   product: aws
   service: cloudtrail
 detection:
   selection:
     eventSource: cloudtrail.amazonaws.com
-    eventName:
-      - DeleteTrail
-      - PutEventSelectors
-      - UpdateTrail
+    eventName: DeleteTrail
   filter_failed:
     errorCode|exists: true
   condition: selection and not filter_failed
 level: high</code></pre></div>
-    <div class="tab-content" id="art-125-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:(DeleteTrail OR PutEventSelectors OR UpdateTrail) @evt.outcome:success</code></pre></div>
+    <div class="tab-content" id="art-125-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:DeleteTrail @evt.outcome:success -@errorCode:*</code></pre></div>
     <div class="tab-content" id="art-125-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
-fields @timestamp, eventName, eventSource, userIdentity.type, userIdentity.arn, userIdentity.userName, sourceIPAddress, userAgent, awsRegion, requestParameters.name, requestParameters.eventSelectors, errorCode
+fields @timestamp, eventName, eventSource, awsRegion, sourceIPAddress, userAgent, userIdentity.type, userIdentity.arn, userIdentity.userName, requestParameters.name
 | filter eventSource = &quot;cloudtrail.amazonaws.com&quot;
-      and eventName in [&quot;DeleteTrail&quot;, &quot;PutEventSelectors&quot;, &quot;UpdateTrail&quot;]
+      and eventName = &quot;DeleteTrail&quot;
       and not isPresent(errorCode)
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-125-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-125-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-125-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-125-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_product=&quot;AWS CloudTrail&quot; (All_Changes.command IN (&quot;DeleteTrail&quot;,&quot;PutEventSelectors&quot;,&quot;UpdateTrail&quot;)) All_Changes.action=success by All_Changes.user All_Changes.user_agent All_Changes.src All_Changes.object All_Changes.command | `drop_dm_object_name(All_Changes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-125-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_product=&quot;AWS CloudTrail&quot; (All_Changes.command IN (&quot;DeleteTrail&quot;,&quot;PutEventSelectors&quot;,&quot;UpdateTrail&quot;)) All_Changes.action=success by All_Changes.user All_Changes.user_agent All_Changes.src All_Changes.object All_Changes.command | `drop_dm_object_name(All_Changes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+| sort @timestamp desc
+| limit 200</code></pre></div>
+    <div class="tab-content" id="art-125-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-125-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-125-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-125-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_account=&quot;aws&quot; All_Changes.action=&quot;deleted&quot; All_Changes.object_category=&quot;cloud_trail&quot; All_Changes.command IN (&quot;DeleteTrail&quot;,&quot;cloudtrail.amazonaws.com:DeleteTrail&quot;) by All_Changes.user All_Changes.src All_Changes.object All_Changes.user_agent All_Changes.status | `drop_dm_object_name(&quot;All_Changes&quot;)` | where status=&quot;success&quot; | rename object as trail_name | eval risk_object=user, risk_score=90 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-125-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_account=&quot;aws&quot; All_Changes.action=&quot;deleted&quot; All_Changes.object_category=&quot;cloud_trail&quot; All_Changes.command IN (&quot;DeleteTrail&quot;,&quot;cloudtrail.amazonaws.com:DeleteTrail&quot;) by All_Changes.user All_Changes.src All_Changes.object All_Changes.user_agent All_Changes.status | `drop_dm_object_name(&quot;All_Changes&quot;)` | where status=&quot;success&quot; | rename object as trail_name | eval risk_object=user, risk_score=90 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="cd14c956da" data-platforms="cloudwatch,datadog,def,sent,spl" data-targets="aws">
+<details class="uc" data-uc-slug="f6e027974a" data-platforms="cloudwatch,datadog,def,sent,sigma,spl" data-targets="aws">
   <summary>
-    <span class="uc-title">S3 DeleteBucket targeting a CloudTrail log destination</span>
+    <span class="uc-title">AWS S3 DeleteBucket targeting a CloudTrail log destination bucket</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="cd14c956da" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="f6e027974a" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts Technique 2: an attacker with s3:DeleteBucket (and s3:DeleteObject to empty it) destroys the S3 bucket that holds CloudTrail log files, removing both live ingestion and the forensic archive in one call.
+    <div class="uc-desc">Detects deletion of an S3 bucket that is acting as a CloudTrail log destination, eliminating the historical log archive. The article calls out s3:DeleteBucket + s3:DeleteObject as the path to destroy the storage destination.
 
-Rationale: Article explicitly walks through s3:DeleteBucket plus s3:DeleteObject on the trail&#x27;s destination bucket. Pairing the DeleteBucket call with a burst of DeleteObject on the same bucket name catches the article-described &#x27;empty then drop&#x27; sequence; restricting to bucket names containing cloudtrail/audit/logs targets the forensic archive specifically.
+Rationale: Article Technique 2 explicitly cites s3:DeleteBucket + s3:DeleteObject combined with the article-Figure-2 &#x27;bucket no longer exists&#x27; notification. Bucket-name hint plus trail-association join keeps fidelity high.
 
 Cross-checked against:
   • https://attack.mitre.org/techniques/T1485/
   • https://docs.aws.amazon.com/AmazonS3/latest/API/API_DeleteBucket.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Destruction">T1485</span> <span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span></div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span> <span class="ind tech" title="Data Destruction">T1485</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Lifecycle migration that archives old logs and tears down legacy bucket</li><li>Decommissioning sandbox/POC trails after a project completes</li><li>Lifecycle policy mass-expiring objects (legit DeleteObject burst)</li><li>Test bucket with &#x27;audit&#x27; in the name being torn down by a developer</li><li>Terraform destroy in dev account</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and userAgent not like /cloudformation\.amazonaws\.com/ and userIdentity.userName not like /^terraform-/</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Identify the bucket&#x27;s role from Config history / IaC; confirm whether it was the trail destination via DescribeTrails point-in-time. Step 2 (contain): Halt the calling principal, restore from cross-region replica or AWS Backup if enabled, re-point any orphan trail at a new bucket. Step 3 (hunt): Pivot on caller for prior 24h S3 PutBucketPolicy / object exfiltration; check whether replication or Object Lock was disabled earlier.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Cloud-platform team consolidating multiple legacy log buckets into a central archive bucket</li><li>Lifecycle rotation of empty regional trail buckets after switching to an org-wide trail</li><li>Sandbox cleanup of a temporary &#x27;cloudtrail-test-*&#x27; bucket created by a workshop</li><li>Terraform destroy of a decommissioned account&#x27;s audit stack</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where BucketName !startswith &quot;sandbox-&quot; and BucketName !startswith &quot;workshop-&quot; | where CallerArn !has_any (&quot;terraform-deploy&quot;, &quot;cloudformation-stacksets&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: was the deletion preceded by S3 versioning/MFA-delete being disabled, or by an Object Lock retention removal? Pull the bucket policy + access-log history for the prior 30 days. 2) Contain: restore the bucket from any cross-region replica or AWS Backup vault, recreate with Object Lock + MFA delete, freeze the caller&#x27;s credentials. 3) Hunt: check for prior DeleteObjects / large-scale DeleteObject calls on the bucket (forensic destruction), preceding PutBucketPolicy that removed deny-deletion guardrails, and any GuardDuty/Config rule disablement by the same principal.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-125-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-125-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-125-uc2-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-125-uc2-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-125-uc2-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-125-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-125-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let LogBuckets = dynamic([&quot;cloudtrail-logs&quot;,&quot;aws-cloudtrail&quot;,&quot;audit-logs&quot;]); // replace with org-specific list
+    <div class="tab-content active" id="art-125-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let TrailBuckets = CloudAppEvents
+    | where Timestamp &gt; ago(30d)
+    | where Application == &quot;Amazon Web Services&quot;
+    | where ActionType in (&quot;CreateTrail&quot;,&quot;UpdateTrail&quot;)
+    | extend Raw = parse_json(RawEventData)
+    | extend B = tostring(Raw.requestParameters.s3BucketName)
+    | where isnotempty(B)
+    | summarize by B;
 CloudAppEvents
-| where Timestamp &gt; ago(24h)
+| where Timestamp &gt; ago(7d)
 | where Application == &quot;Amazon Web Services&quot;
-| where ActionType in~ (&quot;DeleteBucket&quot;,&quot;DeleteObject&quot;)
-| extend raw = parse_json(tostring(RawEventData))
-| extend bucketName = tostring(raw.requestParameters.bucketName)
-| extend errorCode = tostring(raw.errorCode)
-| where isempty(errorCode)
-| where bucketName has_any (LogBuckets) or bucketName has_any (&quot;cloudtrail&quot;,&quot;audit&quot;,&quot;logs&quot;)
-| summarize Actions = make_set(ActionType), ObjectDeletes = countif(ActionType=~&quot;DeleteObject&quot;), BucketDelete = countif(ActionType=~&quot;DeleteBucket&quot;) by bin(Timestamp,15m), AccountDisplayName, IPAddress, bucketName
-| where BucketDelete &gt; 0 or ObjectDeletes &gt; 100
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-125-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let LogBuckets = dynamic([&quot;cloudtrail&quot;,&quot;audit&quot;,&quot;logs&quot;]);
-AWSCloudTrail
-| where TimeGenerated &gt; ago(24h)
-| where EventName in (&quot;DeleteBucket&quot;,&quot;DeleteObject&quot;)
+| where ActionType == &quot;DeleteBucket&quot;
+| extend Raw = parse_json(RawEventData)
+| extend BucketName = tostring(Raw.requestParameters.bucketName),
+         CallerArn  = tostring(Raw.userIdentity.arn),
+         AwsRegion  = tostring(Raw.awsRegion),
+         ErrorCode  = tostring(Raw.errorCode)
 | where isempty(ErrorCode)
-| extend bucketName = tostring(parse_json(tostring(RequestParameters)).bucketName)
-| where bucketName has_any (LogBuckets)
-| summarize Actions = make_set(EventName), ObjectDeletes = countif(EventName==&quot;DeleteObject&quot;), BucketDelete = countif(EventName==&quot;DeleteBucket&quot;) by bin(TimeGenerated,15m), UserIdentityArn, SourceIpAddress, bucketName
-| where BucketDelete &gt; 0 or ObjectDeletes &gt; 100
+| where BucketName in (TrailBuckets) or BucketName has_any (&quot;cloudtrail&quot;,&quot;audit&quot;,&quot;logs&quot;,&quot;-trail&quot;)
+| project Timestamp, AccountDisplayName, IPAddress, CountryCode, UserAgent, BucketName, CallerArn, AwsRegion
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-125-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let TrailBuckets = AWSCloudTrail
+    | where TimeGenerated &gt; ago(30d)
+    | where EventName in~ (&quot;CreateTrail&quot;,&quot;UpdateTrail&quot;)
+    | extend B = tostring(parse_json(RequestParameters).s3BucketName)
+    | where isnotempty(B)
+    | summarize by B;
+AWSCloudTrail
+| where TimeGenerated &gt; ago(7d)
+| where EventSource =~ &quot;s3.amazonaws.com&quot;
+| where EventName =~ &quot;DeleteBucket&quot;
+| where isempty(ErrorCode)
+| extend BucketName = tostring(parse_json(RequestParameters).bucketName)
+| where BucketName in (TrailBuckets) or BucketName has_any (&quot;cloudtrail&quot;,&quot;audit&quot;,&quot;logs&quot;,&quot;-trail&quot;)
+| project TimeGenerated, BucketName, UserIdentityArn, UserIdentityType, SourceIpAddress, AwsRegion, UserAgent
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-125-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:DeleteBucket @evt.outcome:success @requestParameters.bucketName:(*cloudtrail* OR *audit* OR *logs*)</code></pre></div>
+    <div class="tab-content" id="art-125-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: AWS S3 DeleteBucket on CloudTrail log destination
+id: 8c0e5d62-b13f-4c77-a138-7d1f4e3bbf33
+description: Detects DeleteBucket against an S3 bucket whose name pattern or prior association indicates it is a CloudTrail log destination.
+references:
+  - https://unit42.paloaltonetworks.com/cloud-logging-defense-evasion/
+author: SOC Detection Engineering
+date: 2026/06/18
+tags:
+  - attack.defense_evasion
+  - attack.impact
+  - attack.t1562.008
+  - attack.t1485
+logsource:
+  product: aws
+  service: cloudtrail
+detection:
+  selection:
+    eventSource: s3.amazonaws.com
+    eventName: DeleteBucket
+  bucket_hint:
+    requestParameters.bucketName|contains:
+      - cloudtrail
+      - audit
+      - logs
+      - -trail
+  filter_failed:
+    errorCode|exists: true
+  condition: selection and bucket_hint and not filter_failed
+level: high</code></pre></div>
+    <div class="tab-content" id="art-125-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:DeleteBucket @evt.outcome:success -@errorCode:* (@requestParameters.bucketName:*cloudtrail* OR @requestParameters.bucketName:*audit* OR @requestParameters.bucketName:*-trail* OR @requestParameters.bucketName:*logs*)</code></pre></div>
     <div class="tab-content" id="art-125-uc2-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
-fields @timestamp, eventName, userIdentity.arn, userIdentity.userName, sourceIPAddress, userAgent, awsRegion, requestParameters.bucketName, errorCode
+fields @timestamp, eventName, eventSource, awsRegion, sourceIPAddress, userAgent, userIdentity.type, userIdentity.arn, userIdentity.userName, requestParameters.bucketName
 | filter eventSource = &quot;s3.amazonaws.com&quot;
-      and eventName in [&quot;DeleteBucket&quot;, &quot;DeleteObject&quot;]
+      and eventName = &quot;DeleteBucket&quot;
       and not isPresent(errorCode)
       and (requestParameters.bucketName like /cloudtrail/i
-           or requestParameters.bucketName like /audit/i
-           or requestParameters.bucketName like /logs/i)
-| stats count() as actions, sum(if(eventName=&quot;DeleteBucket&quot;,1,0)) as bucketDeletes, sum(if(eventName=&quot;DeleteObject&quot;,1,0)) as objectDeletes by bin(15m), userIdentity.arn, sourceIPAddress, requestParameters.bucketName
-| filter bucketDeletes &gt; 0 or objectDeletes &gt; 100
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-125-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-125-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-125-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-125-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_product=&quot;AWS CloudTrail&quot; All_Changes.command=&quot;DeleteBucket&quot; All_Changes.action=success by All_Changes.user All_Changes.user_agent All_Changes.src All_Changes.object | `drop_dm_object_name(All_Changes)` | lookup cloudtrail_log_buckets bucket_name as object OUTPUT is_log_bucket | where is_log_bucket=&quot;true&quot; | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-125-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_product=&quot;AWS CloudTrail&quot; All_Changes.command=&quot;DeleteBucket&quot; All_Changes.action=success by All_Changes.user All_Changes.user_agent All_Changes.src All_Changes.object | `drop_dm_object_name(All_Changes)` | lookup cloudtrail_log_buckets bucket_name as object OUTPUT is_log_bucket | where is_log_bucket=&quot;true&quot; | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+        or requestParameters.bucketName like /audit/i
+        or requestParameters.bucketName like /-trail/i
+        or requestParameters.bucketName like /logs?$/i)
+| sort @timestamp desc
+| limit 200</code></pre></div>
+    <div class="tab-content" id="art-125-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-125-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-125-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-125-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_account=&quot;aws&quot; All_Changes.action=&quot;deleted&quot; All_Changes.object_category=&quot;cloud_storage&quot; All_Changes.command IN (&quot;DeleteBucket&quot;,&quot;s3.amazonaws.com:DeleteBucket&quot;) by All_Changes.user All_Changes.src All_Changes.object All_Changes.user_agent All_Changes.status | `drop_dm_object_name(&quot;All_Changes&quot;)` | where status=&quot;success&quot; | rename object as bucket_name | search bucket_name=*cloudtrail* OR bucket_name=*audit* OR bucket_name=*logs* | eval risk_object=user, risk_score=90 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-125-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_account=&quot;aws&quot; All_Changes.action=&quot;deleted&quot; All_Changes.object_category=&quot;cloud_storage&quot; All_Changes.command IN (&quot;DeleteBucket&quot;,&quot;s3.amazonaws.com:DeleteBucket&quot;) by All_Changes.user All_Changes.src All_Changes.object All_Changes.user_agent All_Changes.status | `drop_dm_object_name(&quot;All_Changes&quot;)` | where status=&quot;success&quot; | rename object as bucket_name | search bucket_name=*cloudtrail* OR bucket_name=*audit* OR bucket_name=*logs* | eval risk_object=user, risk_score=90 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="306c4bf070" data-platforms="cloudwatch,datadog,def,sent,sigma,spl" data-targets="aws">
+<details class="uc" data-uc-slug="ba3ecb90d3" data-platforms="cloudwatch,datadog,def,sent,spl" data-targets="aws">
   <summary>
-    <span class="uc-title">S3 PutBucketLogging disabled or target bucket removed</span>
+    <span class="uc-title">CloudTrail PutEventSelectors reducing scope of recorded events</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="306c4bf070" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="ba3ecb90d3" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Reviewer-suggested complement to Technique 2: instead of deleting the bucket itself, the attacker disables S3 server-access logging on the CloudTrail-destination bucket so subsequent object reads/deletes go unrecorded.
+    <div class="uc-desc">Detects PutEventSelectors / PutInsightSelectors calls that scope down what CloudTrail records (mgmt-only off, read/write narrowed, S3 data events stripped). Stealthier than StopLogging — leaves the trail technically running while creating coverage gaps.
 
-Rationale: Article frames S3 as the logging destination and central evasion target. PutBucketLogging without a LoggingEnabled block disables access logging on that bucket and is uncommon in legitimate use once a baseline is established.
+Rationale: Reviewer-requested coverage of selector-based blinding. The article&#x27;s &#x27;Stop logging&#x27; / log-poisoning theme covers exactly this stealthier sibling — scope reduction via selectors leaves the trail green but blind to the chosen category.
 
 Cross-checked against:
-  • https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutBucketLogging.html</div>
+  • https://attack.mitre.org/techniques/T1562/008/
+  • https://docs.aws.amazon.com/awscloudtrail/latest/APIReference/API_PutEventSelectors.html</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Cost optimization disabling logging on dev buckets</li><li>Migrating from S3 access logs to CloudTrail data events</li><li>Initial bucket-creation IaC where logging is intentionally left off</li><li>Re-pointing access logs to a new destination bucket</li><li>Authorized cleanup of redundant logging configuration</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and userAgent not like /cloudformation\.amazonaws\.com/ and userAgent not like /terraform/</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Verify whether the bucket holds CloudTrail logs, Config snapshots, or other security data; cross-reference IaC for intended logging state. Step 2 (contain): Re-enable PutBucketLogging via baseline IaC, revoke the calling principal&#x27;s s3:PutBucketLogging permission if not justified. Step 3 (hunt): Inspect bucket policy and ACL changes in the prior 1h; check for object-level GetObject/DeleteObject bursts that would now be invisible.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Cost-control team disabling S3 data events on a noisy bucket to cut CloudTrail spend</li><li>Security team intentionally narrowing scope on a per-account trail because mgmt events are captured by an org trail</li><li>Cloud Custodian / Terraform replaying a baseline selector configuration</li><li>Engineer flipping ReadOnly during a forensic data-pull rehearsal</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where CallerArn !has_any (&quot;terraform-deploy&quot;, &quot;cloudformation-stacksets&quot;, &quot;cloud-custodian&quot;, &quot;control-tower&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: diff the new selectors against the prior PutEventSelectors event in the trail&#x27;s history — which event class was removed? Confirm caller identity and change ticket. 2) Contain: if unauthorized, re-apply the baseline selectors (mgmt+read/write+S3 data events) via IaC pipeline, then rotate the caller&#x27;s credentials and apply an SCP denying cloudtrail:PutEventSelectors to non-platform roles. 3) Hunt: within the suppressed event class, pull alternative telemetry (VPC flow, GuardDuty, S3 access logs, AWS Config) for the prior 24h to recover what would have been logged; pivot on the same principal for follow-on IAM or KMS changes.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-125-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-125-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-125-uc3-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-125-uc3-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-125-uc3-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-125-uc3-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-125-uc3-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
-| where Timestamp &gt; ago(24h)
+| where Timestamp &gt; ago(7d)
 | where Application == &quot;Amazon Web Services&quot;
-| where ActionType =~ &quot;PutBucketLogging&quot;
-| extend raw = parse_json(tostring(RawEventData))
-| extend bucketName = tostring(raw.requestParameters.bucketName)
-| extend loggingEnabled = tostring(raw.requestParameters.BucketLoggingStatus.LoggingEnabled)
-| extend errorCode = tostring(raw.errorCode)
-| where isempty(errorCode)
-| where isempty(loggingEnabled) or loggingEnabled =~ &quot;false&quot;
-| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, UserAgent, bucketName, loggingEnabled, RawEventData
+| where ActionType in (&quot;PutEventSelectors&quot;,&quot;PutInsightSelectors&quot;)
+| extend Raw = parse_json(RawEventData)
+| extend TrailName  = tostring(Raw.requestParameters.trailName),
+         Selectors  = tostring(Raw.requestParameters.eventSelectors),
+         AdvSelectors = tostring(Raw.requestParameters.advancedEventSelectors),
+         CallerArn  = tostring(Raw.userIdentity.arn),
+         AwsRegion  = tostring(Raw.awsRegion),
+         ErrorCode  = tostring(Raw.errorCode)
+| where isempty(ErrorCode)
+| extend ScopeReduced =
+    (Selectors has &quot;\&quot;readWriteType\&quot;:\&quot;ReadOnly\&quot;&quot;)
+    or (Selectors has &quot;\&quot;includeManagementEvents\&quot;:false&quot;)
+    or (Selectors has &quot;\&quot;dataResources\&quot;:[]&quot;)
+    or (isnotempty(AdvSelectors) and AdvSelectors has_any (&quot;\&quot;eventCategory\&quot;&quot;,&quot;\&quot;NotEquals\&quot;&quot;))
+| where ScopeReduced
+| project Timestamp, AccountDisplayName, IPAddress, UserAgent, ActionType, TrailName, CallerArn, AwsRegion, Selectors, AdvSelectors
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-125-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>AWSCloudTrail
-| where TimeGenerated &gt; ago(24h)
-| where EventName == &quot;PutBucketLogging&quot;
+| where TimeGenerated &gt; ago(7d)
+| where EventSource =~ &quot;cloudtrail.amazonaws.com&quot;
+| where EventName in~ (&quot;PutEventSelectors&quot;,&quot;PutInsightSelectors&quot;)
 | where isempty(ErrorCode)
-| extend params = parse_json(tostring(RequestParameters))
-| extend bucketName = tostring(params.bucketName)
-| extend loggingEnabled = tostring(params.BucketLoggingStatus.LoggingEnabled)
-| where isempty(loggingEnabled) or loggingEnabled =~ &quot;false&quot;
-| project TimeGenerated, UserIdentityArn, UserIdentityUserName, SourceIpAddress, UserAgent, AWSRegion, bucketName, loggingEnabled
+| extend Raw = parse_json(RequestParameters)
+| extend TrailName = tostring(Raw.trailName),
+         Selectors = tostring(Raw.eventSelectors),
+         AdvSelectors = tostring(Raw.advancedEventSelectors)
+| extend ScopeReduced =
+    (Selectors has &quot;\&quot;readWriteType\&quot;:\&quot;ReadOnly\&quot;&quot;)
+    or (Selectors has &quot;\&quot;includeManagementEvents\&quot;:false&quot;)
+    or (Selectors has &quot;\&quot;dataResources\&quot;:[]&quot;)
+    or (isnotempty(AdvSelectors) and AdvSelectors has_any (&quot;\&quot;eventCategory\&quot;&quot;,&quot;\&quot;NotEquals\&quot;&quot;))
+| where ScopeReduced
+| project TimeGenerated, EventName, TrailName, UserIdentityArn, SourceIpAddress, AwsRegion, UserAgent, Selectors, AdvSelectors
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-125-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: AWS S3 Bucket Access Logging Disabled
-id: 7c1e2d33-9a4b-4f0e-95c2-2a0e9f7c6f10
-description: Detects S3 PutBucketLogging that removes the LoggingEnabled block, disabling server access logs on a bucket.
+    <div class="tab-content" id="art-125-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail (@evt.name:PutEventSelectors OR @evt.name:PutInsightSelectors) @evt.outcome:success -@errorCode:* (@requestParameters.eventSelectors:*&quot;includeManagementEvents&quot;:false* OR @requestParameters.eventSelectors:*&quot;readWriteType&quot;:&quot;ReadOnly&quot;* OR @requestParameters.eventSelectors:*&quot;dataResources&quot;:[]*)</code></pre></div>
+    <div class="tab-content" id="art-125-uc3-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
+fields @timestamp, eventName, eventSource, awsRegion, sourceIPAddress, userAgent, userIdentity.arn, userIdentity.type, requestParameters.trailName, requestParameters.eventSelectors, requestParameters.advancedEventSelectors
+| filter eventSource = &quot;cloudtrail.amazonaws.com&quot;
+      and eventName in [&quot;PutEventSelectors&quot;,&quot;PutInsightSelectors&quot;]
+      and not isPresent(errorCode)
+      and (requestParameters.eventSelectors like /&quot;includeManagementEvents&quot;:\s*false/i
+        or requestParameters.eventSelectors like /&quot;readWriteType&quot;:\s*&quot;ReadOnly&quot;/i
+        or requestParameters.eventSelectors like /&quot;dataResources&quot;:\s*\[\s*\]/i
+        or requestParameters.advancedEventSelectors like /NotEquals/i)
+| sort @timestamp desc
+| limit 200</code></pre></div>
+    <div class="tab-content" id="art-125-uc3-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-125-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-125-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-125-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.command) as cmds from datamodel=Change where All_Changes.vendor_account=&quot;aws&quot; All_Changes.object_category=&quot;cloud_trail&quot; All_Changes.command IN (&quot;PutEventSelectors&quot;,&quot;PutInsightSelectors&quot;,&quot;cloudtrail.amazonaws.com:PutEventSelectors&quot;,&quot;cloudtrail.amazonaws.com:PutInsightSelectors&quot;) by All_Changes.user All_Changes.src All_Changes.object All_Changes.user_agent All_Changes.status | `drop_dm_object_name(&quot;All_Changes&quot;)` | where status=&quot;success&quot; | rename object as trail_name | eval risk_object=user, risk_score=70 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-125-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(All_Changes.command) as cmds from datamodel=Change where All_Changes.vendor_account=&quot;aws&quot; All_Changes.object_category=&quot;cloud_trail&quot; All_Changes.command IN (&quot;PutEventSelectors&quot;,&quot;PutInsightSelectors&quot;,&quot;cloudtrail.amazonaws.com:PutEventSelectors&quot;,&quot;cloudtrail.amazonaws.com:PutInsightSelectors&quot;) by All_Changes.user All_Changes.src All_Changes.object All_Changes.user_agent All_Changes.status | `drop_dm_object_name(&quot;All_Changes&quot;)` | where status=&quot;success&quot; | rename object as trail_name | eval risk_object=user, risk_score=70 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ae549ef4a3" data-platforms="datadog,def,sent,sigma,spl" data-targets="gcp">
+  <summary>
+    <span class="uc-title">Google Cloud Logging sink disabled or destination redirected</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ae549ef4a3" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects logging.sinks.update setting disabled=true OR changing the destination of a critical sink (article Figure 1 — Cloud console message confirming suspended sink). Disabling the sink is the GCP equivalent of CloudTrail StopLogging.
+
+Rationale: Article Technique 1 names logging.sinks.update disabled=true (Figure 1) as the GCP-side stop-logging equivalent. Including destination changes catches the redirect-to-attacker-bucket continuous-visibility pivot from the article&#x27;s Defense Evasion section.
+
+Cross-checked against:
+  • https://attack.mitre.org/techniques/T1562/008/
+  • https://cloud.google.com/logging/docs/audit/configure-data-access</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Platform team consolidating sinks during a logging-redesign project</li><li>Terraform applying a baseline sink configuration after a `terraform apply`</li><li>Audit team rotating sink destinations to a new BigQuery dataset for retention compliance</li><li>Cost optimization disabling a noisy debug sink</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Principal !endswith &quot;@system.gserviceaccount.com&quot; | where not(UserAgent has_any (&quot;google-cloud-sdk&quot;, &quot;Terraform&quot;, &quot;deploymentmanager&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the previous sink config (gcloud logging sinks describe / prior audit event) and diff. Confirm whether the principal is a known service account or a human, and verify a change ticket exists. 2) Contain: if unauthorized, re-enable the sink (disabled=false) or recreate with the original destination, revoke the principal&#x27;s roles/logging.configWriter binding, and rotate any compromised SA keys. 3) Hunt: pivot on the principal for further roles/iam.securityAdmin grants, BigQuery dataset exfil, GCS bucket creations matching attacker-naming, and any compute.instances.create within 24h.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-125-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-125-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-125-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-125-uc4-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-125-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-125-uc4-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where Application == &quot;Google Cloud Platform&quot;
+| where ActionType has_any (&quot;UpdateSink&quot;,&quot;DeleteSink&quot;,&quot;google.logging.v2.ConfigServiceV2.UpdateSink&quot;,&quot;google.logging.v2.ConfigServiceV2.DeleteSink&quot;)
+| extend Raw = parse_json(RawEventData)
+| extend Method = tostring(Raw.protoPayload.methodName),
+         SinkName = tostring(Raw.protoPayload.resourceName),
+         Principal = tostring(Raw.protoPayload.authenticationInfo.principalEmail),
+         CallerIP  = tostring(Raw.protoPayload.requestMetadata.callerIp),
+         RequestBody = tostring(Raw.protoPayload.request),
+         Status = tostring(Raw.protoPayload.status.code)
+| where Status in (&quot;&quot;,&quot;0&quot;)
+| where Method has &quot;DeleteSink&quot;
+    or (Method has &quot;UpdateSink&quot; and (RequestBody has &quot;\&quot;disabled\&quot;:true&quot; or RequestBody has &quot;\&quot;destination\&quot;&quot;))
+| project Timestamp, Method, SinkName, Principal, CallerIP, UserAgent, RequestBody
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-125-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>GCPAuditLogs
+| where TimeGenerated &gt; ago(7d)
+| where ServiceName =~ &quot;logging.googleapis.com&quot;
+| where MethodName has_any (&quot;UpdateSink&quot;,&quot;DeleteSink&quot;)
+| extend Body = tostring(parse_json(Request).requestBody)
+| where Body has &quot;\&quot;disabled\&quot;:true&quot; or MethodName has &quot;DeleteSink&quot; or Body has &quot;\&quot;destination\&quot;&quot;
+| project TimeGenerated, MethodName, ResourceName, PrincipalEmail, CallerIpAddress, UserAgent, Body
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-125-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: GCP Cloud Logging Sink Disabled or Deleted
+id: 9d1f6e73-c24a-4d88-b249-8e2f5f4ccf44
+description: Detects update or deletion of a Cloud Logging sink that disables routing or redirects it.
 references:
   - https://unit42.paloaltonetworks.com/cloud-logging-defense-evasion/
 author: SOC Detection Engineering
-date: 2026/06/17
+date: 2026/06/18
+tags:
+  - attack.defense_evasion
+  - attack.t1562.008
+logsource:
+  product: gcp
+  service: gcp.audit
+detection:
+  selection_method:
+    protoPayload.methodName:
+      - google.logging.v2.ConfigServiceV2.UpdateSink
+      - google.logging.v2.ConfigServiceV2.DeleteSink
+  condition: selection_method
+level: high</code></pre></div>
+    <div class="tab-content" id="art-125-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:gcp.audit (@protoPayload.methodName:google.logging.v2.ConfigServiceV2.UpdateSink OR @protoPayload.methodName:google.logging.v2.ConfigServiceV2.DeleteSink)</code></pre></div>
+    <div class="tab-content" id="art-125-uc4-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-125-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-125-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-125-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_account=&quot;gcp&quot; All_Changes.command IN (&quot;google.logging.v2.ConfigServiceV2.UpdateSink&quot;,&quot;google.logging.v2.ConfigServiceV2.DeleteSink&quot;) by All_Changes.user All_Changes.src All_Changes.object All_Changes.user_agent All_Changes.status | `drop_dm_object_name(&quot;All_Changes&quot;)` | where status=&quot;success&quot; | rename object as sink_name | eval risk_object=user, risk_score=85 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-125-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_account=&quot;gcp&quot; All_Changes.command IN (&quot;google.logging.v2.ConfigServiceV2.UpdateSink&quot;,&quot;google.logging.v2.ConfigServiceV2.DeleteSink&quot;) by All_Changes.user All_Changes.src All_Changes.object All_Changes.user_agent All_Changes.status | `drop_dm_object_name(&quot;All_Changes&quot;)` | where status=&quot;success&quot; | rename object as sink_name | eval risk_object=user, risk_score=85 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="8faea06290" data-platforms="datadog,def,sent,sigma,spl" data-targets="gcp">
+  <summary>
+    <span class="uc-title">Google Cloud Logging bucket deletion request (log archive destruction)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="8faea06290" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects logging.buckets.delete which enters the 7-day DELETE_REQUESTED state and ultimately destroys the log archive. Article Technique 2 explicitly cites this and notes deletion is not immediate, giving defenders a recovery window.
+
+Rationale: Article Technique 2 names logging.buckets.delete with the 7-day DELETE_REQUESTED grace state. Detecting in the request window enables UndeleteBucket recovery — the article&#x27;s stated defender opportunity.
+
+Cross-checked against:
+  • https://cloud.google.com/logging/docs/buckets#log-bucket-delete
+  • https://attack.mitre.org/techniques/T1485/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span> <span class="ind tech" title="Data Destruction">T1485</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Sandbox/test project cleanup of &#x27;_Default&#x27; or short-lived custom buckets</li><li>Migration to a centralized aggregated sink bucket retiring per-project buckets</li><li>Terraform destroy on a decommissioned workload&#x27;s logging stack</li><li>Cost-control deletion of an unused buckets after retention policy change</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where BucketName !contains &quot;/sandbox/&quot; and BucketName !contains &quot;/dev/&quot; | where not(UserAgent has_any (&quot;google-cloud-sdk&quot;, &quot;Terraform&quot;, &quot;deploymentmanager&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the bucket scope (org / folder / project / _Required), the principal, source IP, and whether a UndeleteBucket can still be issued within the 7-day window. 2) Contain: if unauthorized, immediately call logging.buckets.undelete to restore, revoke the principal&#x27;s roles/logging.admin binding, and apply an org-policy constraint preventing further DeleteBucket without dual approval. 3) Hunt: pivot on the principal for parallel sinks.update / sinks.delete / IAM grants and any compute/BigQuery/GCS data exfil within 24h either side.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-125-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-125-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-125-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-125-uc5-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-125-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-125-uc5-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where Application == &quot;Google Cloud Platform&quot;
+| where ActionType has &quot;google.logging.v2.ConfigServiceV2.DeleteBucket&quot;
+   or ActionType has &quot;DeleteBucket&quot;
+| extend Raw = parse_json(RawEventData)
+| extend Method = tostring(Raw.protoPayload.methodName),
+         BucketName = tostring(Raw.protoPayload.resourceName),
+         Principal  = tostring(Raw.protoPayload.authenticationInfo.principalEmail),
+         CallerIP   = tostring(Raw.protoPayload.requestMetadata.callerIp),
+         Status     = tostring(Raw.protoPayload.status.code)
+| where Method has &quot;logging.v2.ConfigServiceV2.DeleteBucket&quot;
+| where Status in (&quot;&quot;,&quot;0&quot;)
+| project Timestamp, Method, BucketName, Principal, CallerIP, UserAgent
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-125-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>GCPAuditLogs
+| where TimeGenerated &gt; ago(7d)
+| where ServiceName =~ &quot;logging.googleapis.com&quot;
+| where MethodName has &quot;DeleteBucket&quot;
+| project TimeGenerated, MethodName, ResourceName, PrincipalEmail, CallerIpAddress, UserAgent
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-125-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: GCP Cloud Logging Bucket Delete
+id: a0e1f784-d35b-4e99-c35a-9f3060500055
+description: Detects deletion of a Cloud Logging log bucket — destroys the archived log store after 7 days.
+references:
+  - https://unit42.paloaltonetworks.com/cloud-logging-defense-evasion/
+author: SOC Detection Engineering
+date: 2026/06/18
+tags:
+  - attack.defense_evasion
+  - attack.impact
+  - attack.t1562.008
+  - attack.t1485
+logsource:
+  product: gcp
+  service: gcp.audit
+detection:
+  selection:
+    protoPayload.methodName: google.logging.v2.ConfigServiceV2.DeleteBucket
+  condition: selection
+level: high</code></pre></div>
+    <div class="tab-content" id="art-125-uc5-datadog"><pre><button class="copy-btn">COPY</button><code>source:gcp.audit @protoPayload.methodName:google.logging.v2.ConfigServiceV2.DeleteBucket</code></pre></div>
+    <div class="tab-content" id="art-125-uc5-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-125-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-125-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-125-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_account=&quot;gcp&quot; All_Changes.command IN (&quot;google.logging.v2.ConfigServiceV2.DeleteBucket&quot;,&quot;google.logging.v2.ConfigServiceV2.UndeleteBucket&quot;) by All_Changes.user All_Changes.src All_Changes.object All_Changes.user_agent All_Changes.status | `drop_dm_object_name(&quot;All_Changes&quot;)` | where status=&quot;success&quot; | rename object as log_bucket | eval risk_object=user, risk_score=85 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-125-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_account=&quot;gcp&quot; All_Changes.command IN (&quot;google.logging.v2.ConfigServiceV2.DeleteBucket&quot;,&quot;google.logging.v2.ConfigServiceV2.UndeleteBucket&quot;) by All_Changes.user All_Changes.src All_Changes.object All_Changes.user_agent All_Changes.status | `drop_dm_object_name(&quot;All_Changes&quot;)` | where status=&quot;success&quot; | rename object as log_bucket | eval risk_object=user, risk_score=85 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="bb3ac46649" data-platforms="cloudwatch,datadog,def,sent,sigma,spl" data-targets="aws">
+  <summary>
+    <span class="uc-title">S3 PutBucketLogging removing or redirecting access logging</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="bb3ac46649" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects PutBucketLogging that clears (empty TargetBucket) or repoints the S3 access-log destination, removing the audit trail on data access. Reviewer-requested coverage of the S3 server access logging pillar named in the article&#x27;s tag list.
+
+Rationale: Reviewer suggestion #4 — article tags include &#x27;S3&#x27; and &#x27;log storage&#x27;. PutBucketLogging with an empty BucketLoggingStatus is the canonical way to silently terminate access logging on a bucket whose contents an attacker is about to read.
+
+Cross-checked against:
+  • https://docs.aws.amazon.com/AmazonS3/latest/API/API_PutBucketLogging.html
+  • https://attack.mitre.org/techniques/T1562/008/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Platform team consolidating access-log targets to a central archive bucket</li><li>Re-enabling logging onto a renamed target bucket during a refactor</li><li>Cost-control disabling access logging on noisy non-sensitive buckets</li><li>Terraform applying a baseline that briefly clears+resets logging</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(Principal has_any (&quot;terraform-deploy&quot;, &quot;cloudformation-stacksets&quot;, &quot;control-tower&quot;, &quot;AWSServiceRoleForS3&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the bucket&#x27;s classification — was access logging required by compliance (CloudTrail bucket, PCI scope, etc.)? Identify whether the change came from an approved IaC pipeline. 2) Contain: re-apply the prior LoggingEnabled config (TargetBucket + TargetPrefix from change history), revoke the caller if unauthorized, attach an SCP requiring PutBucketLogging only via tagged automation roles. 3) Hunt: review GetObject / ListObjects on the affected bucket in the window after logging was removed, and pivot on the principal for further bucket-policy / public-access-block changes.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-125-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-125-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-125-uc6-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-125-uc6-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-125-uc6-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-125-uc6-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-125-uc6-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+| where Timestamp &gt; ago(7d)
+| where Application == &quot;Amazon Web Services&quot;
+| where ActionType == &quot;PutBucketLogging&quot;
+| extend Raw = parse_json(RawEventData)
+| extend BucketName = tostring(Raw.requestParameters.bucketName),
+         BucketLoggingStatus = tostring(Raw.requestParameters.BucketLoggingStatus),
+         Principal = tostring(Raw.userIdentity.arn),
+         ErrorCode = tostring(Raw.errorCode)
+| where isempty(ErrorCode)
+| where isempty(BucketLoggingStatus)
+   or BucketLoggingStatus !has &quot;LoggingEnabled&quot;
+   or BucketLoggingStatus matches regex @&quot;(?i)&lt;BucketLoggingStatus[^&gt;]*/&gt;&quot;
+| project Timestamp, AccountDisplayName, IPAddress, UserAgent, BucketName, BucketLoggingStatus, Principal
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-125-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>AWSCloudTrail
+| where TimeGenerated &gt; ago(7d)
+| where EventSource =~ &quot;s3.amazonaws.com&quot;
+| where EventName =~ &quot;PutBucketLogging&quot;
+| where isempty(ErrorCode)
+| extend BucketName = tostring(parse_json(RequestParameters).bucketName)
+| extend LoggingStatus = tostring(parse_json(RequestParameters).BucketLoggingStatus)
+| where isempty(LoggingStatus) or LoggingStatus !has &quot;LoggingEnabled&quot;
+| project TimeGenerated, BucketName, LoggingStatus, UserIdentityArn, SourceIpAddress, UserAgent
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-125-uc6-sigma"><pre><button class="copy-btn">COPY</button><code>title: AWS S3 PutBucketLogging Removing Access Logging
+id: b1f20895-e46c-4faa-d46b-a0417616116a
+description: Detects PutBucketLogging calls that disable or redirect S3 server access logging.
+references:
+  - https://unit42.paloaltonetworks.com/cloud-logging-defense-evasion/
+author: SOC Detection Engineering
+date: 2026/06/18
 tags:
   - attack.defense_evasion
   - attack.t1562.008
@@ -362,212 +640,39 @@ detection:
     errorCode|exists: true
   condition: selection and not filter_failed
 level: medium</code></pre></div>
-    <div class="tab-content" id="art-125-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:PutBucketLogging @evt.outcome:success</code></pre></div>
-    <div class="tab-content" id="art-125-uc3-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
-fields @timestamp, eventName, userIdentity.arn, userIdentity.userName, sourceIPAddress, userAgent, awsRegion, requestParameters.bucketName, requestParameters.BucketLoggingStatus.LoggingEnabled, errorCode
+    <div class="tab-content" id="art-125-uc6-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:PutBucketLogging @evt.outcome:success -@errorCode:*</code></pre></div>
+    <div class="tab-content" id="art-125-uc6-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
+fields @timestamp, eventName, eventSource, awsRegion, sourceIPAddress, userAgent, userIdentity.arn, requestParameters.bucketName, requestParameters.BucketLoggingStatus
 | filter eventSource = &quot;s3.amazonaws.com&quot;
       and eventName = &quot;PutBucketLogging&quot;
       and not isPresent(errorCode)
-      and not isPresent(requestParameters.BucketLoggingStatus.LoggingEnabled)
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-125-uc3-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-125-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-125-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-125-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_product=&quot;AWS CloudTrail&quot; All_Changes.command=&quot;PutBucketLogging&quot; All_Changes.action=success by All_Changes.user All_Changes.user_agent All_Changes.src All_Changes.object | `drop_dm_object_name(All_Changes)` | join type=left object [| inputlookup cloudtrail_log_buckets | rename bucket_name as object | fields object, is_log_bucket] | where is_log_bucket=&quot;true&quot; | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-125-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_product=&quot;AWS CloudTrail&quot; All_Changes.command=&quot;PutBucketLogging&quot; All_Changes.action=success by All_Changes.user All_Changes.user_agent All_Changes.src All_Changes.object | `drop_dm_object_name(All_Changes)` | join type=left object [| inputlookup cloudtrail_log_buckets | rename bucket_name as object | fields object, is_log_bucket] | where is_log_bucket=&quot;true&quot; | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+      and (not isPresent(requestParameters.BucketLoggingStatus)
+        or requestParameters.BucketLoggingStatus not like /LoggingEnabled/)
+| sort @timestamp desc
+| limit 200</code></pre></div>
+    <div class="tab-content" id="art-125-uc6-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-125-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-125-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-125-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_account=&quot;aws&quot; All_Changes.command IN (&quot;PutBucketLogging&quot;,&quot;s3.amazonaws.com:PutBucketLogging&quot;) by All_Changes.user All_Changes.src All_Changes.object All_Changes.user_agent All_Changes.status | `drop_dm_object_name(&quot;All_Changes&quot;)` | where status=&quot;success&quot; | rename object as bucket_name | eval risk_object=user, risk_score=70 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-125-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_account=&quot;aws&quot; All_Changes.command IN (&quot;PutBucketLogging&quot;,&quot;s3.amazonaws.com:PutBucketLogging&quot;) by All_Changes.user All_Changes.src All_Changes.object All_Changes.user_agent All_Changes.status | `drop_dm_object_name(&quot;All_Changes&quot;)` | where status=&quot;success&quot; | rename object as bucket_name | eval risk_object=user, risk_score=70 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="9a066ae976" data-platforms="datadog,sent,sigma,spl" data-targets="gcp">
+<details class="uc" data-uc-slug="b1f8190c50" data-platforms="cloudwatch,datadog,def,sent,spl" data-targets="aws">
   <summary>
-    <span class="uc-title">GCP Logging Sink disabled, deleted, or updated</span>
+    <span class="uc-title">S3 DeleteObjects burst against a CloudTrail log destination prefix</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="9a066ae976" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="b1f8190c50" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Targets the article&#x27;s Google Cloud equivalents of Technique 1 + Technique 3: an attacker with logging.sinks.update or logging.sinks.delete sets the sink&#x27;s disabled field to true or removes the sink that routes audit logs to long-term storage / BigQuery / Pub/Sub.
+    <div class="uc-desc">Detects bulk DeleteObject / DeleteObjects calls targeting a CloudTrail log bucket prefix (AWSLogs/&lt;acct&gt;/CloudTrail/) — the article&#x27;s logical sequel to bucket deletion (s3:DeleteObject is required by the article to empty before DeleteBucket, but is also a standalone log-tampering signal).
 
-Rationale: Article names logging.sinks.update / logging.sinks.delete and the disabled=true mechanism (confirmed by GCP audit-log API doc). Method names are canonical in GCP audit logs so matching is exact and low-FP.
-
-Cross-checked against:
-  • https://cloud.google.com/logging/docs/audit/configure-data-access
-  • https://cloud.google.com/logging/docs/api/v2/audit-logging</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Re-pointing a sink from one BigQuery dataset to another</li><li>Terraform / Deployment Manager rolling out new export destinations</li><li>Org policy migration consolidating per-project sinks into a folder-level sink</li><li>Decommissioning a noisy debugging sink</li><li>Security team migrating from Pub/Sub to BigQuery aggregation</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Identify the principalEmail and check IAM roles assigned (Logging Admin / Owner). Verify if a change-management ticket exists. Step 2 (contain): Recreate or re-enable the sink immediately; revoke the principal&#x27;s logging.configWriter or owner role if unauthorized. Step 3 (hunt): Search the 1h window for IAM bindings created on the project, SetIamPolicy on Cloud Storage / BigQuery export buckets, and any compute / SA-key creation that would now lack centralized visibility.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-125-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-125-uc4-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-125-uc4-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-125-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-125-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>GCPAuditLogs
-| where TimeGenerated &gt; ago(24h)
-| where MethodName in (&quot;google.logging.v2.ConfigServiceV2.UpdateSink&quot;,&quot;google.logging.v2.ConfigServiceV2.DeleteSink&quot;)
-| extend disabledField = tostring(parse_json(tostring(Request)).sink.disabled)
-| extend sinkName = tostring(parse_json(tostring(Request)).sink_name)
-| extend principal = tostring(parse_json(tostring(AuthenticationInfo)).principalEmail)
-| where MethodName endswith &quot;DeleteSink&quot; or disabledField =~ &quot;true&quot;
-| project TimeGenerated, MethodName, principal, CallerIp, ResourceName, sinkName, disabledField, Request
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-125-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: GCP Logging Sink Deleted or Disabled
-id: 92d4f1b8-c6ae-4d9a-8e1d-1b62f8a3c5e0
-description: Detects DeleteSink or UpdateSink calls that delete or set &#x27;disabled=true&#x27; on a Google Cloud Logging sink, blinding log routing.
-references:
-  - https://unit42.paloaltonetworks.com/cloud-logging-defense-evasion/
-author: SOC Detection Engineering
-date: 2026/06/17
-tags:
-  - attack.defense_evasion
-  - attack.t1562.008
-logsource:
-  product: gcp
-  service: gcp.audit
-detection:
-  selection:
-    methodName:
-      - google.logging.v2.ConfigServiceV2.DeleteSink
-      - google.logging.v2.ConfigServiceV2.UpdateSink
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-125-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:gcp.audit @protoPayload.methodName:(google.logging.v2.ConfigServiceV2.DeleteSink OR google.logging.v2.ConfigServiceV2.UpdateSink)</code></pre></div>
-    <div class="tab-content" id="art-125-uc4-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-125-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-125-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-125-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_product=&quot;Google Cloud Platform&quot; (All_Changes.command IN (&quot;google.logging.v2.ConfigServiceV2.UpdateSink&quot;,&quot;google.logging.v2.ConfigServiceV2.DeleteSink&quot;)) All_Changes.action=success by All_Changes.user All_Changes.src All_Changes.object All_Changes.command | `drop_dm_object_name(All_Changes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-125-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_product=&quot;Google Cloud Platform&quot; (All_Changes.command IN (&quot;google.logging.v2.ConfigServiceV2.UpdateSink&quot;,&quot;google.logging.v2.ConfigServiceV2.DeleteSink&quot;)) All_Changes.action=success by All_Changes.user All_Changes.src All_Changes.object All_Changes.command | `drop_dm_object_name(All_Changes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="b837125f30" data-platforms="datadog,sent,sigma,spl" data-targets="gcp">
-  <summary>
-    <span class="uc-title">GCP log bucket deletion (DELETE_REQUESTED state)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="b837125f30" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Targets the article&#x27;s Technique 2 GCP variant: an attacker with logging.buckets.delete invokes the log-bucket delete API, putting the bucket into DELETE_REQUESTED for seven days before destruction of archived audit logs.
-
-Rationale: Article describes the exact API mechanic — a delete on a log bucket enters DELETE_REQUESTED for seven days. The method name is canonical and rarely invoked by legitimate operations.
+Rationale: Reviewer suggestion #5 plus Article Technique 2 wording &#x27;requires s3:DeleteObject permission to empty the bucket&#x27;. The &#x27;AWSLogs/&lt;acct&gt;/CloudTrail/&#x27; key pattern is the standard CloudTrail object prefix — a high-fidelity signal that the deletes target audit artifacts specifically.
 
 Cross-checked against:
-  • https://cloud.google.com/logging/docs/buckets</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data Destruction">T1485</span> <span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span></div>
+  • https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-log-file-examples.html
+  • https://attack.mitre.org/techniques/T1561/002/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span> <span class="ind tech" title="Disk Wipe: Disk Structure Wipe">T1561.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Decommissioning unused _Default or custom log buckets</li><li>Reducing retention by migrating to a new bucket</li><li>Cleanup of test buckets from a prior project</li><li>Terraform destroy in a sandbox project</li><li>Consolidating per-region log buckets into a single regional one</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Within the 7-day DELETE_REQUESTED grace period, call UndeleteBucket to restore. Identify principal, IP, and prior session activity. Step 2 (contain): Revoke logging.admin / owner role from the principal; require IaC review before any further bucket lifecycle changes. Step 3 (hunt): Inspect the 24h window for IAM key creations, service-account impersonation (generateAccessToken), and Compute / IAM admin operations that the deleted bucket would have captured.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-125-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-125-uc5-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-125-uc5-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-125-uc5-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-125-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>GCPAuditLogs
-| where TimeGenerated &gt; ago(24h)
-| where MethodName == &quot;google.logging.v2.ConfigServiceV2.DeleteBucket&quot;
-| extend principal = tostring(parse_json(tostring(AuthenticationInfo)).principalEmail)
-| extend bucketName = tostring(parse_json(tostring(Request)).name)
-| project TimeGenerated, MethodName, principal, CallerIp, ResourceName, bucketName, Request
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-125-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: GCP Logging Bucket Deletion Requested
-id: a3e1f8d2-7c5b-4a91-b0e7-d4f1a92b6c33
-description: Detects google.logging.v2.ConfigServiceV2.DeleteBucket on a Cloud Logging bucket, which schedules destruction of archived audit data.
-references:
-  - https://unit42.paloaltonetworks.com/cloud-logging-defense-evasion/
-author: SOC Detection Engineering
-date: 2026/06/17
-tags:
-  - attack.defense_evasion
-  - attack.impact
-  - attack.t1485
-  - attack.t1562.008
-logsource:
-  product: gcp
-  service: gcp.audit
-detection:
-  selection:
-    methodName: google.logging.v2.ConfigServiceV2.DeleteBucket
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-125-uc5-datadog"><pre><button class="copy-btn">COPY</button><code>source:gcp.audit @protoPayload.methodName:google.logging.v2.ConfigServiceV2.DeleteBucket</code></pre></div>
-    <div class="tab-content" id="art-125-uc5-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-125-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-125-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-125-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_product=&quot;Google Cloud Platform&quot; All_Changes.command=&quot;google.logging.v2.ConfigServiceV2.DeleteBucket&quot; All_Changes.action=success by All_Changes.user All_Changes.src All_Changes.object | `drop_dm_object_name(All_Changes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-125-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_product=&quot;Google Cloud Platform&quot; All_Changes.command=&quot;google.logging.v2.ConfigServiceV2.DeleteBucket&quot; All_Changes.action=success by All_Changes.user All_Changes.src All_Changes.object | `drop_dm_object_name(All_Changes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="b11f5bc4a9" data-platforms="cloudwatch,datadog,def,sent,spl" data-targets="aws">
-  <summary>
-    <span class="uc-title">CloudWatch log group deleted or retention reduced</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="b11f5bc4a9" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Reviewer-suggested coverage: an attacker deletes a CloudWatch Logs log group that holds VPC Flow / GuardDuty / Config / application audit data, or shortens its retention policy below the security baseline so events expire before SIEM ingestion catches up.
-
-Rationale: Article frames the broader theme as &#x27;abuse cloud logging services for evasion&#x27; — CloudWatch Logs is the primary AWS logging-aggregation point downstream of trails and Flow Logs. DeleteLogGroup is an explicit T1070.007 vector and retention-shortening below 30 days is unusual in security-critical log groups.
-
-Cross-checked against:
-  • https://attack.mitre.org/techniques/T1070/007/
-  • https://docs.aws.amazon.com/AmazonCloudWatchLogs/latest/APIReference/API_DeleteLogGroup.html</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Indicator Removal: Clear Network Connection History">T1070.007</span> <span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Cost optimization reducing retention on debug log groups</li><li>Lambda function cleanup deleting auto-created /aws/lambda log groups</li><li>Migration consolidating log groups into a single aggregator</li><li>Authorized retention-policy alignment with new compliance posture</li><li>IaC drift correction recreating a log group with shorter retention</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and requestParameters.logGroupName not like /^\/aws\/lambda\// and userAgent not like /cloudformation\.amazonaws\.com/</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Determine the log group&#x27;s content (Flow Logs, GuardDuty, app audit, /aws/lambda) and whether a CMK or subscription filter pointed at it. Step 2 (contain): If deletion is unauthorized, restore via IaC; for retention shortening, reset to baseline (e.g., 365d). Revoke logs:DeleteLogGroup and logs:PutRetentionPolicy from non-baseline principals. Step 3 (hunt): Search activity from the same principal/IP for IAM modifications, EC2 RunInstances in unusual regions, or KMS DisableKey events in the same window.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-125-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-125-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-125-uc6-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-125-uc6-cloudwatch">CloudWatch Logs Insights</button>
-      <button class="tab-btn" data-target="art-125-uc6-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-125-uc6-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
-| where Timestamp &gt; ago(24h)
-| where Application == &quot;Amazon Web Services&quot;
-| where ActionType in~ (&quot;DeleteLogGroup&quot;,&quot;PutRetentionPolicy&quot;)
-| extend raw = parse_json(tostring(RawEventData))
-| extend errorCode = tostring(raw.errorCode)
-| extend logGroupName = tostring(raw.requestParameters.logGroupName)
-| extend retentionDays = toint(raw.requestParameters.retentionInDays)
-| where isempty(errorCode)
-| where ActionType =~ &quot;DeleteLogGroup&quot; or (ActionType =~ &quot;PutRetentionPolicy&quot; and retentionDays &lt; 30)
-| project Timestamp, AccountDisplayName, IPAddress, UserAgent, ActionType, logGroupName, retentionDays, RawEventData
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-125-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>AWSCloudTrail
-| where TimeGenerated &gt; ago(24h)
-| where EventName in (&quot;DeleteLogGroup&quot;,&quot;PutRetentionPolicy&quot;)
-| where isempty(ErrorCode)
-| extend params = parse_json(tostring(RequestParameters))
-| extend logGroupName = tostring(params.logGroupName)
-| extend retentionDays = toint(params.retentionInDays)
-| where EventName == &quot;DeleteLogGroup&quot; or (EventName == &quot;PutRetentionPolicy&quot; and retentionDays &lt; 30)
-| project TimeGenerated, EventName, UserIdentityArn, SourceIpAddress, UserAgent, AWSRegion, logGroupName, retentionDays
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-125-uc6-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:(DeleteLogGroup OR PutRetentionPolicy) @evt.outcome:success</code></pre></div>
-    <div class="tab-content" id="art-125-uc6-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
-fields @timestamp, eventName, userIdentity.arn, userIdentity.userName, sourceIPAddress, userAgent, awsRegion, requestParameters.logGroupName, requestParameters.retentionInDays, errorCode
-| filter eventSource = &quot;logs.amazonaws.com&quot;
-      and eventName in [&quot;DeleteLogGroup&quot;, &quot;PutRetentionPolicy&quot;]
-      and not isPresent(errorCode)
-      and (eventName = &quot;DeleteLogGroup&quot; or requestParameters.retentionInDays &lt; 30)
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-125-uc6-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-125-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-125-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-125-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_product=&quot;AWS CloudTrail&quot; (All_Changes.command IN (&quot;DeleteLogGroup&quot;,&quot;PutRetentionPolicy&quot;)) All_Changes.action=success by All_Changes.user All_Changes.src All_Changes.object All_Changes.command | `drop_dm_object_name(All_Changes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-125-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_product=&quot;AWS CloudTrail&quot; (All_Changes.command IN (&quot;DeleteLogGroup&quot;,&quot;PutRetentionPolicy&quot;)) All_Changes.action=success by All_Changes.user All_Changes.src All_Changes.object All_Changes.command | `drop_dm_object_name(All_Changes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="6b6ee80d9e" data-platforms="cloudwatch,datadog,def,sent,spl" data-targets="aws">
-  <summary>
-    <span class="uc-title">IAM policy denies CloudTrail or logging read/write for other principals</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="6b6ee80d9e" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Reviewer-suggested defense-evasion variant: instead of stopping logs, an attacker attaches or creates an IAM policy with explicit Deny statements covering cloudtrail:*, logs:*, or s3:GetObject on log buckets — preventing other analysts and tooling from reading the existing audit trail.
-
-Rationale: Article explicitly highlights abuse of cloud logging services for visibility denial. Adding Deny statements against cloudtrail:*/logs:*/s3:GetObject on log buckets is a documented evasion that doesn&#x27;t trip the Stop/Delete detections. Pattern is uncommon outside intentional break-glass scoping.
-
-Cross-checked against:
-  • https://attack.mitre.org/techniques/T1098/003/
-  • https://attack.mitre.org/techniques/T1562/008/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Cloud Logs">T1562.008</span> <span class="ind tech" title="Account Manipulation: Additional Cloud Roles">T1098.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorized least-privilege exercise scoping read-only roles away from log buckets</li><li>Data-classification project denying production log access to dev IAM roles</li><li>Compliance-required separation of duties between cloud-ops and SecOps</li><li>Service Control Policy rollout that explicitly Denies cloudtrail:StopLogging (a positive!)</li><li>Migrating from inline to managed policies, briefly creating overlapping Deny statements</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>and userIdentity.arn not like /role\/IdentityCenter/ and userAgent not like /cloudformation\.amazonaws\.com/</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Decode the policyDocument, identify the targeted principal/group, and check IaC for legitimate origin. Step 2 (contain): Detach or roll back the policy version via IAM SetDefaultPolicyVersion / DeletePolicyVersion; suspend the calling principal pending review. Step 3 (hunt): Search the prior 24h for IAM recon (ListPolicies, GetUser), AssumeRole chains into privileged roles, and any unusual write activity on the now-shielded resources.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Bucket lifecycle policy expirations (but those report &#x27;AWS Internal&#x27; as caller, not a user/role)</li><li>Manual retention cleanup by audit/finance team after long-term Lake migration</li><li>Account closure runbook executed by cloud platform team</li><li>Forensic export+purge by IR after a closed incident</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where CallerType != &quot;AWSService&quot; | where UserAgent !has_any (&quot;aws-internal&quot;, &quot;s3-lifecycle&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm caller identity, check whether bucket versioning + MFA delete are enabled (CloudTrail buckets often have a versioning trick — old versions survive). Pull the parent management events (PutBucketVersioning, DeleteBucketLifecycle) for the same principal in the prior 24h. 2) Contain: if unauthorized, restore objects from previous versions / replica / AWS Backup, freeze the caller&#x27;s session, attach a deny-DeleteObject policy on the bucket. 3) Hunt: pull all data-plane S3 actions (GetObject, PutObject) for the principal across all log-class buckets, look for prior PutObject overwrites (log poisoning), and validate the org&#x27;s other audit trails / log Lake stores for similar deletes.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-125-uc7-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-125-uc7-sentinel">Sentinel KQL</button>
@@ -576,35 +681,53 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-125-uc7-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-125-uc7-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
-| where Timestamp &gt; ago(24h)
+| where Timestamp &gt; ago(7d)
 | where Application == &quot;Amazon Web Services&quot;
-| where ActionType in~ (&quot;PutUserPolicy&quot;,&quot;PutRolePolicy&quot;,&quot;PutGroupPolicy&quot;,&quot;CreatePolicyVersion&quot;)
-| extend raw = parse_json(tostring(RawEventData))
-| extend doc = tostring(raw.requestParameters.policyDocument)
-| where isempty(tostring(raw.errorCode))
-| where doc has_cs &quot;\&quot;Effect\&quot;:\&quot;Deny\&quot;&quot;
-  and (doc has_any (&quot;cloudtrail:&quot;,&quot;logs:&quot;,&quot;s3:GetObject&quot;,&quot;guardduty:&quot;,&quot;config:&quot;,&quot;securityhub:&quot;))
-| project Timestamp, AccountDisplayName, IPAddress, UserAgent, ActionType, doc, RawEventData
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-125-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>AWSCloudTrail
-| where TimeGenerated &gt; ago(24h)
-| where EventName in (&quot;PutUserPolicy&quot;,&quot;PutRolePolicy&quot;,&quot;PutGroupPolicy&quot;,&quot;CreatePolicyVersion&quot;)
+| where ActionType in (&quot;DeleteObject&quot;,&quot;DeleteObjects&quot;)
+| extend Raw = parse_json(RawEventData)
+| extend BucketName = tostring(Raw.requestParameters.bucketName),
+         ObjectKey  = tostring(Raw.requestParameters.key),
+         Principal  = tostring(Raw.userIdentity.arn),
+         CallerType = tostring(Raw.userIdentity.type),
+         ErrorCode  = tostring(Raw.errorCode)
 | where isempty(ErrorCode)
-| extend doc = tostring(parse_json(tostring(RequestParameters)).policyDocument)
-| where doc has_cs &quot;\&quot;Effect\&quot;:\&quot;Deny\&quot;&quot;
-  and (doc has_any (&quot;cloudtrail:&quot;,&quot;logs:&quot;,&quot;s3:GetObject&quot;,&quot;guardduty:&quot;,&quot;config:&quot;,&quot;securityhub:&quot;))
-| project TimeGenerated, EventName, UserIdentityArn, SourceIpAddress, UserAgent, AWSRegion, doc
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-125-uc7-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:(PutUserPolicy OR PutRolePolicy OR PutGroupPolicy OR CreatePolicyVersion) @evt.outcome:success @requestParameters.policyDocument:(*\&quot;Effect\&quot;:\&quot;Deny\&quot;* AND (*cloudtrail:* OR *logs:* OR *s3:GetObject* OR *guardduty:*))</code></pre></div>
-    <div class="tab-content" id="art-125-uc7-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
-fields @timestamp, eventName, userIdentity.arn, userIdentity.userName, sourceIPAddress, userAgent, awsRegion, requestParameters.userName, requestParameters.roleName, requestParameters.policyDocument, errorCode
-| filter eventSource = &quot;iam.amazonaws.com&quot;
-      and eventName in [&quot;PutUserPolicy&quot;, &quot;PutRolePolicy&quot;, &quot;PutGroupPolicy&quot;, &quot;CreatePolicyVersion&quot;]
+| where ObjectKey has &quot;AWSLogs/&quot; and ObjectKey has &quot;/CloudTrail/&quot;
+| summarize Deletes = count(),
+            Sample = make_set(ObjectKey, 5),
+            Buckets = make_set(BucketName, 5),
+            FirstSeen = min(Timestamp),
+            LastSeen  = max(Timestamp)
+            by bin(Timestamp, 10m), Principal, IPAddress, UserAgent
+| where Deletes &gt;= 25  // 10-minute burst threshold for log-key deletion
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-125-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>AWSCloudTrail
+| where TimeGenerated &gt; ago(7d)
+| where EventSource =~ &quot;s3.amazonaws.com&quot;
+| where EventName in~ (&quot;DeleteObject&quot;,&quot;DeleteObjects&quot;)
+| where isempty(ErrorCode)
+| extend Raw = parse_json(RequestParameters)
+| extend BucketName = tostring(Raw.bucketName), ObjectKey = tostring(Raw.key)
+| where ObjectKey has &quot;AWSLogs/&quot; and ObjectKey has &quot;/CloudTrail/&quot;
+| summarize Deletes = count(),
+            Sample = make_set(ObjectKey, 5),
+            Buckets = make_set(BucketName, 5),
+            FirstSeen = min(TimeGenerated),
+            LastSeen  = max(TimeGenerated)
+            by bin(TimeGenerated, 10m), UserIdentityArn, SourceIpAddress, UserAgent
+| where Deletes &gt;= 25
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-125-uc7-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail (@evt.name:DeleteObject OR @evt.name:DeleteObjects) @evt.outcome:success -@errorCode:* @requestParameters.key:*AWSLogs/*CloudTrail/*</code></pre></div>
+    <div class="tab-content" id="art-125-uc7-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail/dataevents
+fields @timestamp, eventName, sourceIPAddress, userAgent, userIdentity.arn, userIdentity.type, requestParameters.bucketName, requestParameters.key
+| filter eventSource = &quot;s3.amazonaws.com&quot;
+      and eventName in [&quot;DeleteObject&quot;,&quot;DeleteObjects&quot;]
       and not isPresent(errorCode)
-      and requestParameters.policyDocument like /&quot;Effect&quot;:\s*&quot;Deny&quot;/
-      and requestParameters.policyDocument like /(cloudtrail:|logs:|s3:GetObject|guardduty:|config:|securityhub:)/
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-125-uc7-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-125-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-125-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-125-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_product=&quot;AWS CloudTrail&quot; (All_Changes.command IN (&quot;PutUserPolicy&quot;,&quot;PutRolePolicy&quot;,&quot;PutGroupPolicy&quot;,&quot;CreatePolicyVersion&quot;,&quot;AttachUserPolicy&quot;,&quot;AttachRolePolicy&quot;)) All_Changes.action=success by All_Changes.user All_Changes.src All_Changes.object All_Changes.command _raw | `drop_dm_object_name(All_Changes)` | search _raw=&quot;*\&quot;Effect\&quot;:\&quot;Deny\&quot;*&quot; (_raw=&quot;*cloudtrail:*&quot; OR _raw=&quot;*logs:*&quot; OR _raw=&quot;*s3:GetObject*&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-125-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Change where All_Changes.vendor_product=&quot;AWS CloudTrail&quot; (All_Changes.command IN (&quot;PutUserPolicy&quot;,&quot;PutRolePolicy&quot;,&quot;PutGroupPolicy&quot;,&quot;CreatePolicyVersion&quot;,&quot;AttachUserPolicy&quot;,&quot;AttachRolePolicy&quot;)) All_Changes.action=success by All_Changes.user All_Changes.src All_Changes.object All_Changes.command _raw | `drop_dm_object_name(All_Changes)` | search _raw=&quot;*\&quot;Effect\&quot;:\&quot;Deny\&quot;*&quot; (_raw=&quot;*cloudtrail:*&quot; OR _raw=&quot;*logs:*&quot; OR _raw=&quot;*s3:GetObject*&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
+      and requestParameters.key like /AWSLogs\/.*\/CloudTrail\//i
+| stats count(*) as deletes by bin(10m), userIdentity.arn, sourceIPAddress, userAgent
+| filter deletes &gt;= 25
+| sort @timestamp desc
+| limit 200</code></pre></div>
+    <div class="tab-content" id="art-125-uc7-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-125-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-125-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-125-uc7-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as objects from datamodel=Change where All_Changes.vendor_account=&quot;aws&quot; All_Changes.command IN (&quot;DeleteObject&quot;,&quot;DeleteObjects&quot;,&quot;s3.amazonaws.com:DeleteObject&quot;,&quot;s3.amazonaws.com:DeleteObjects&quot;) All_Changes.object=&quot;*AWSLogs*CloudTrail*&quot; by All_Changes.user All_Changes.src All_Changes.user_agent All_Changes.status _time | `drop_dm_object_name(&quot;All_Changes&quot;)` | where status=&quot;success&quot; | bin _time span=10m | stats sum(count) as deletes values(objects) as sample_keys by user src user_agent _time | where deletes&gt;=25 | eval risk_object=user, risk_score=85 | `security_content_ctime(_time)`</code></pre><pre class="spl-mode-body" id="art-125-uc7-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as objects from datamodel=Change where All_Changes.vendor_account=&quot;aws&quot; All_Changes.command IN (&quot;DeleteObject&quot;,&quot;DeleteObjects&quot;,&quot;s3.amazonaws.com:DeleteObject&quot;,&quot;s3.amazonaws.com:DeleteObjects&quot;) All_Changes.object=&quot;*AWSLogs*CloudTrail*&quot; by All_Changes.user All_Changes.src All_Changes.user_agent All_Changes.status _time | `drop_dm_object_name(&quot;All_Changes&quot;)` | where status=&quot;success&quot; | bin _time span=10m | stats sum(count) as deletes values(objects) as sample_keys by user src user_agent _time | where deletes&gt;=25 | eval risk_object=user, risk_score=85 | `security_content_ctime(_time)`</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="53a9c31d59" data-platforms="def,sent,spl" data-targets="azure,m365,windows">

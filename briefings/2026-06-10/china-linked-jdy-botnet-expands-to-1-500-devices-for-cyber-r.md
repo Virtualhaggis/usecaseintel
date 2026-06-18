@@ -27,17 +27,17 @@ Cybersecurity researchers have warned of a "resurgence and expansion" of JDY , a
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1046** — Network Service Discovery
+- **T1595.001** — Scanning IP Blocks
 - **T1595.002** — Vulnerability Scanning
-- **T1059.004** — Unix Shell
+- **T1590** — Gather Victim Network Information
+- **T1046** — Network Service Discovery
+- **T1571** — Non-Standard Port
 - **T1105** — Ingress Tool Transfer
+- **T1059.004** — Unix Shell
 - **T1070.004** — File Deletion
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1008** — Fallback Channels
-- **T1087** — Account Discovery
-- **T1018** — Remote System Discovery
-- **T1016** — System Network Configuration Discovery
-- **T1082** — System Information Discovery
+- **T1027.002** — Software Packing
+- **T1590.005** — Gather Victim Network Information: IP Addresses
+- **T1583.005** — Acquire Infrastructure: Botnet
 
 ## Kill chain phases observed
 
@@ -45,90 +45,91 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### High-fanout TCP SYN scanning sourced from internal SOHO/IoT subnet
+### JDY botnet inbound multi-protocol reconnaissance fingerprint
 
-`UC_115_6` · phase: **recon** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` dc(All_Traffic.dest_ip) as DistinctDestIPs dc(All_Traffic.dest_port) as DistinctDestPorts count from datamodel=Network_Traffic where All_Traffic.action="blocked" OR All_Traffic.tcp_flag="SYN" by All_Traffic.src_ip _time span=10m | `drop_dm_object_name("All_Traffic")` | where DistinctDestIPs > 200 AND DistinctDestPorts > 10 | sort - DistinctDestIPs
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(1h)
-| where ActionType in ("ConnectionAttempt","ConnectionFailed")
-| where RemoteIPType == "Public"
-| where Protocol =~ "Tcp"
-| summarize DistinctDestIPs = dcount(RemoteIP), DistinctDestPorts = dcount(RemotePort), AttemptCount = count(), TopPorts = make_set(RemotePort, 20) by DeviceId, DeviceName, bin(Timestamp, 10m)
-| where DistinctDestIPs > 200 and DistinctDestPorts > 10
-| order by DistinctDestIPs desc
-```
-
-### JDY MIPS architecture payload download via shell script dropper
-
-`UC_115_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_115_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN ("sh","bash","ash","busybox") AND (Processes.process="*uname*" OR Processes.process="*/proc/cpuinfo*") AND (Processes.process="*mips*" OR Processes.process="*mipsel*" OR Processes.process="*mips64*") by Processes.dest Processes.user | `drop_dm_object_name("Processes")` | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("sh","bash","ash","dash","busybox")
-| where ProcessCommandLine has_any ("mipsel64","mipsel","mips64"," mips ")
-   and ProcessCommandLine has_any ("wget","curl","tftp","ftpget","busybox wget")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessCommandLine, InitiatingProcessFileName, FolderPath
-| order by Timestamp desc
-```
-
-### Coordinated periodic beaconing fanout across many internal devices
-
-`UC_115_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count dc(All_Traffic.src_ip) as DistinctSources values(All_Traffic.src_ip) as src_ips from datamodel=Network_Traffic where All_Traffic.dest_category="public" by All_Traffic.dest_ip All_Traffic.dest_port _time span=1h | `drop_dm_object_name("All_Traffic")` | where DistinctSources >= 20 AND count < 5000 | stats sum(count) as TotalConns sum(DistinctSources) as TotalSourceFanout values(src_ips) as Sources by dest_ip dest_port | where TotalSourceFanout >= 50 | sort - TotalSourceFanout
+| tstats `summariesonly` count, dc(All_Traffic.dest_port) as distinct_dst_ports, dc(All_Traffic.transport) as distinct_protocols, dc(All_Traffic.dest) as internal_targets, values(All_Traffic.transport) as protocols_seen, values(All_Traffic.dest_port) as ports_seen from datamodel=Network_Traffic.All_Traffic where All_Traffic.src_category!="internal" AND All_Traffic.dest_category="internal" by All_Traffic.src, _time span=10m | `drop_dm_object_name(All_Traffic)` | where distinct_protocols>=2 AND distinct_dst_ports>=10 AND internal_targets>=3 | rename src as scanner_ip | sort -count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(24h)
-| where ActionType == "ConnectionSuccess"
-| where RemoteIPType == "Public"
-| where RemotePort in (80, 443, 8080, 8443, 53)
-| summarize DistinctSources = dcount(DeviceId), TotalConns = count(), Sources = make_set(DeviceName, 50), MeanIntervalSec = avg(datetime_diff('second', Timestamp, prev(Timestamp))) by RemoteIP, RemotePort, bin(Timestamp, 1h)
-| where DistinctSources >= 20
-| summarize PeakFanout = max(DistinctSources), TotalSourceFanout = sum(DistinctSources), TotalConns = sum(TotalConns), Sources = make_set(Sources, 100) by RemoteIP, RemotePort
-| where TotalSourceFanout >= 50
-| order by TotalSourceFanout desc
+| where ActionType in ("InboundConnectionAccepted","ConnectionAttempt","ConnectionSuccess")
+| where RemoteIPType == "Public" and LocalIPType != "Public"
+| summarize ProtocolsSeen=make_set(Protocol), PortsSeen=make_set(LocalPort), DistinctProtocols=dcount(Protocol), DistinctPorts=dcount(LocalPort), InternalTargets=dcount(DeviceId), HitCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by RemoteIP, bin(Timestamp, 10m)
+| where DistinctProtocols >= 2 and DistinctPorts >= 10 and InternalTargets >= 2
+| where ProtocolsSeen has_any ("Icmp","Udp") and ProtocolsSeen has "Tcp"
+| order by HitCount desc
 ```
 
-### Mass internal-recon command bursts across multiple hosts
+### Internal SOHO/IoT device emitting outbound SYN scan storm (JDY-infected node)
+
+`UC_115_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, dc(All_Traffic.dest) as distinct_dst_ips, dc(All_Traffic.dest_port) as distinct_dst_ports, values(All_Traffic.dest_port) as ports_targeted from datamodel=Network_Traffic.All_Traffic where All_Traffic.src_category="internal" AND All_Traffic.dest_category!="internal" AND All_Traffic.transport="tcp" AND All_Traffic.action!="allowed" by All_Traffic.src, _time span=5m | `drop_dm_object_name(All_Traffic)` | where distinct_dst_ips>=100 AND distinct_dst_ports>=5 | rename src as bot_host_ip | sort -distinct_dst_ips
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(4h)
+| where ActionType in ("ConnectionAttempt","ConnectionFailed")
+| where Protocol == "Tcp" and RemoteIPType == "Public"
+| summarize DistinctRemoteIPs=dcount(RemoteIP), DistinctPorts=dcount(RemotePort), Probes=count(), PortsTargeted=make_set(RemotePort,50), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Initiators=make_set(InitiatingProcessFileName,20) by DeviceId, DeviceName, bin(Timestamp, 5m)
+| where DistinctRemoteIPs >= 100
+| where Probes >= 200
+| extend RatePerMin = todouble(Probes) / 5.0
+| order by DistinctRemoteIPs desc
+```
+
+### Architecture-aware shell-script dropper with self-deletion (MIPS/MIPSEL payload)
+
+`UC_115_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, values(Processes.process) as cmdlines, values(Processes.parent_process_name) as parents, min(_time) as first_seen, max(_time) as last_seen from datamodel=Endpoint.Processes where Processes.process_name IN ("wget","curl","sh","bash","busybox","ash") AND (Processes.process="*mips*" OR Processes.process="*mipsel*" OR Processes.process="*mips64*" OR Processes.process="*mipsel64*" OR Processes.process="*armv*" OR Processes.process="*arm5*" OR Processes.process="*arm7*") AND (Processes.process="*chmod*" OR Processes.process="*+x*" OR Processes.process="*/tmp/*" OR Processes.process="*/var/run/*") by Processes.dest, Processes.user, Processes.process_name | `drop_dm_object_name(Processes)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where DeviceName !endswith "$"
+| where InitiatingProcessFileName in~ ("sh","bash","busybox","ash","dash") or FileName in~ ("wget","curl","tftp")
+| where ProcessCommandLine matches regex @"(?i)(mips(el|64)?|mipsel64|armv[4-7]l?|arm5|arm7|sh4|powerpc|x86_64|i[3-6]86)"
+| where ProcessCommandLine has_any ("/tmp/","/var/run/","/dev/shm/","/var/tmp/")
+| where ProcessCommandLine has_any ("chmod"," +x","wget ","curl ","tftp ")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### Distributed SOHO-class scanning against same internal asset (JDY botnet fan-in)
 
 `UC_115_9` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count values(Processes.process) as cmdlines from datamodel=Endpoint.Processes where Processes.process_name IN ("net.exe","net1.exe","ipconfig.exe","arp.exe","systeminfo.exe","nbtstat.exe","nltest.exe","dsquery.exe") AND Processes.user!="*$" by Processes.dest Processes.user _time span=1h | `drop_dm_object_name("Processes")` | stats dc(dest) as DistinctHosts values(dest) as Hosts sum(count) as TotalCmds by user _time | where DistinctHosts >= 10 | sort - DistinctHosts
+| tstats `summariesonly` count, dc(All_Traffic.src) as distinct_scanner_ips, values(All_Traffic.src) as scanner_ips, dc(All_Traffic.dest_port) as ports_probed from datamodel=Network_Traffic.All_Traffic where All_Traffic.src_category!="internal" AND All_Traffic.dest_category="internal" by All_Traffic.dest, All_Traffic.dest_port, _time span=1h | `drop_dm_object_name(All_Traffic)` | where distinct_scanner_ips>=5 | iplocation scanner_ips | stats sum(count) as total_probes, dc(scanner_ips) as scanner_count, values(Country) as scanner_countries by dest, dest_port | where scanner_count>=5
 ```
 
 **Defender KQL:**
 ```kql
-let RecceBinaries = dynamic(["net.exe","net1.exe","ipconfig.exe","arp.exe","systeminfo.exe","nbtstat.exe","nltest.exe","dsquery.exe","whoami.exe"]);
-DeviceProcessEvents
-| where Timestamp > ago(1h)
-| where FileName in~ (RecceBinaries)
-| where AccountName !endswith "$"
-| where AccountName !in~ ("system","local service","network service")
-| summarize Hosts = dcount(DeviceId), HostNames = make_set(DeviceName, 30), Cmds = make_set(ProcessCommandLine, 50), TotalExecs = count() by AccountName, bin(Timestamp, 1h)
-| where Hosts >= 10
-| order by Hosts desc
+DeviceNetworkEvents
+| where Timestamp > ago(24h)
+| where ActionType in ("InboundConnectionAccepted","ConnectionAttempt","ConnectionSuccess")
+| where RemoteIPType == "Public" and LocalIPType != "Public"
+| summarize DistinctScannerIPs=dcount(RemoteIP), ScannerSample=make_set(RemoteIP,20), ProbeCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceId, DeviceName, LocalPort, Protocol, bin(Timestamp, 1h)
+| where DistinctScannerIPs >= 5
+| where ProbeCount >= 15
+| where LocalPort in (22, 23, 80, 443, 161, 502, 1883, 5000, 8000, 8080, 8443, 8291, 7547, 37777, 554, 9000, 9999)
+| order by DistinctScannerIPs desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations

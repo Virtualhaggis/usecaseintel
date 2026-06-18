@@ -1,12 +1,12 @@
 <article class="card" id="art-01" data-art-slug="2026-06-17-beyond-the-benchmark-advancing-security-at-ai-speed"
-  data-phases="c2,delivery,exploit,install,recon" data-sev="crit"
+  data-phases="c2,delivery,exploit,install,recon,weapon" data-sev="crit"
   data-techs="T1190"
   data-sources="Microsoft Security Blog"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,network"
+  data-splunk-cats="application,endpoint"
   data-targets="windows"
-  data-uc-count="7" data-llm-uc-count="5"
-  data-search="Beyond the benchmark: Advancing security at AI speed Read how Microsoft Security has advanced its agentic vulnerability detection system, codename MDASH, integrating into real-world workflows across Windows, Azure, and identity systems. The post Beyond the benchmark: Advancing security at AI speed appeared first on Microsoft Security Blog . CVE-2026-45607 CVE-2026-45641 CVE-2026-47652 CVE-2026-41108 CVE-2026-45608 CVE-2026-45634 CVE-2026-45648 CVE-2026-47289 CVE-2026-45657 CVE-2026-47291 T1190 [LLM] MDASH Patch-Tuesday cohort — unpatched Windows hosts (CVE-2026-45607/45641/47652/41108/45608/45634/45648/47289/45657/47291) [LLM] w3wp.exe / HTTP.sys post-exploitation child process (CVE-2026-47291 follow-up) [LLM] Hyper-V vmwp.exe / vmms.exe spawning unexpected children — guest-to-host escape (CVE-2026-45607/45641/47652) [LLM] Domain Controller lsass.exe / ntdsa.dll crash — CVE-2026-45648 AD DS stack overflow exploitation [LLM] Remote Desktop Client (mstsc.exe) crash following outbound RDP to untrusted host — CVE-2026-47289 Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — Beyond the benchmark: Advancing security at AI speed">
+  data-uc-count="6" data-llm-uc-count="4"
+  data-search="Beyond the benchmark: Advancing security at AI speed Read how Microsoft Security has advanced its agentic vulnerability detection system, codename MDASH, integrating into real-world workflows across Windows, Azure, and identity systems. The post Beyond the benchmark: Advancing security at AI speed appeared first on Microsoft Security Blog . CVE-2026-45607 CVE-2026-45641 CVE-2026-47652 CVE-2026-41108 CVE-2026-45608 CVE-2026-45634 CVE-2026-45648 CVE-2026-47289 CVE-2026-45657 CVE-2026-47291 T1190 [LLM] Hosts missing MDASH-discovered Patch Tuesday CVE-2026 fixes (Hyper-V, Kernel, AD DS, HTTP.sys, DNS/DHCP Client, RDP Client) [LLM] HTTP.sys integer-overflow RCE — unexpected child processes from w3wp.exe / svchost(http) on internet-facing hosts (CVE-2026-47291) [LLM] Hyper-V guest escape — unexpected processes spawned by vmwp.exe or vmms.exe (CVE-2026-45607 / 45641 / 47652) [LLM] AD DS stack-overflow RCE — lsass.exe spawning unexpected children on domain controllers (CVE-2026-45648) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — Beyond the benchmark: Advancing security at AI speed">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-17-beyond-the-benchmark-advancing-security-at-ai-speed" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -15,9 +15,9 @@
   <div class="source-badges"><span class="source-badge ms">Microsoft Security Blog</span></div>
   <div class="pubmeta">
     <span>2026-06-17</span>
-    <span>7 use cases</span>
+    <span>6 use cases</span>
     <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
+    <span>4 kill-chain phases detected</span>
   </div>
   <p class="summary">Read how Microsoft Security has advanced its agentic vulnerability detection system, codename MDASH, integrating into real-world workflows across Windows, Azure, and identity systems. The post Beyond the benchmark: Advancing security at AI speed appeared first on Microsoft Security Blog .</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-45607</span> <span class="ind cve">CVE-2026-45641</span> <span class="ind cve">CVE-2026-47652</span> <span class="ind cve">CVE-2026-41108</span> <span class="ind cve">CVE-2026-45608</span> <span class="ind cve">CVE-2026-45634</span> <span class="ind cve">CVE-2026-45648</span> <span class="ind cve">CVE-2026-47289</span> <span class="ind cve">CVE-2026-45657</span> <span class="ind cve">CVE-2026-47291</span></div>
@@ -33,10 +33,10 @@
   <div class="name">Reconnaissance</div>
   <div class="marker">Detected</div>
 </div>
-<div class="kc-cell ">
+<div class="kc-cell hit">
   <div class="num">Phase 2</div>
   <div class="name">Weaponization</div>
-  <div class="marker">—</div>
+  <div class="marker">Detected</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 3</div>
@@ -63,74 +63,89 @@
   <div class="name">Actions on Objectives</div>
   <div class="marker">—</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] MDASH Patch-Tuesday cohort — unpatched Windows hosts (CVE-2026-45607/45641/47652/41108/45608/45634/45648/47289/45657/47291) · Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] Hosts missing MDASH-discovered Patch Tuesday CVE-2026 fixes (Hyper-V, Kernel, AD DS, HTTP.sys, DNS/DHCP Client, RDP Client)</em></div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] w3wp.exe / HTTP.sys post-exploitation child process (CVE-2026-47291 follow-up) · [LLM] Hyper-V vmwp.exe / vmms.exe spawning unexpected children — guest-to-host escape (CVE-2026-45607/45641/47652) · [LLM] Domain Controller lsass.exe / ntdsa.dll crash — CVE-2026-45648 AD DS stack overflow exploitation · [LLM] Remote Desktop Client (mstsc.exe) crash following outbound RDP to untrusted host — CVE-2026-47289 · Article-specific behavioural hunt — Beyond the benchmark: Advancing security at AI speed</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] HTTP.sys integer-overflow RCE — unexpected child processes from w3wp.exe / svchost(http) on internet-facing hosts (CVE-2026-47291) · [LLM] Hyper-V guest escape — unexpected processes spawned by vmwp.exe or vmms.exe (CVE-2026-45607 / 45641 / 47652) · [LLM] AD DS stack-overflow RCE — lsass.exe spawning unexpected children on domain controllers (CVE-2026-45648) · Article-specific behavioural hunt — Beyond the benchmark: Advancing security at AI speed</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
 <div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="58eae11e71" data-platforms="def,sent,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="eda6d2b683" data-platforms="def,sent,spl" data-targets="" open>
   <summary>
-    <span class="uc-title">MDASH Patch-Tuesday cohort — unpatched Windows hosts (CVE-2026-45607/45641/47652/41108/45608/45634/45648/47289/45657/47291)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-title">Hosts missing MDASH-discovered Patch Tuesday CVE-2026 fixes (Hyper-V, Kernel, AD DS, HTTP.sys, DNS/DHCP Client, RDP Client)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="58eae11e71" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="eda6d2b683" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Inventory hunt that surfaces any Windows host still missing patches for the ten CVEs disclosed by Microsoft&#x27;s MDASH agentic scanner in this Patch Tuesday cohort. Use to prioritize remediation on internet-facing HTTP.sys, RDP Clients, Hyper-V hosts, and Domain Controllers before exploitation begins.
+    <div class="uc-desc">Inventory hunt enumerating endpoints/servers that have not received the specific Patch Tuesday updates remediating the 10 MDASH-discovered CVEs. Prioritizes domain controllers, Hyper-V hosts, and internet-facing IIS/HTTP.sys nodes where exploitation impact is largest.
 
-Rationale: Article-specific: the exact list of 10 CVE IDs from the MDASH June 2026 Patch Tuesday cohort. No exploitation in the wild was reported, so the primary action is patch-state inventory rather than behavioral hunting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Vulnerability Scanning">T1595.002</span></div>
+Rationale: Uses the 10 exact CVE IDs from the article&#x27;s Table 1 as a fixed allowlist join against vulnerability inventory. Highest-impact CVEs (kernel UAF 9.8, HTTP.sys 9.8, AD DS RCE 8.8) get P1 weighting because article calls them out as RCE in &#x27;core infrastructure layers&#x27; with &#x27;outsized consequences&#x27;. No external sources cross-checked — CVE-2026-* IDs in the article are not yet indexed by third parties at time of writing.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Exploitation of Remote Services">T1210</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Hosts mid-reboot during scan (will clear on next inventory cycle)</li><li>Devices that already received the patch but TVM scan lag has not refreshed</li><li>Embedded/IoT Windows IoT Core devices where the update channel is held by ODM</li><li>Lab/snapshot hosts intentionally pinned to an old build for repro work</li><li>Air-gapped/OT hosts where WSUS pulls on a slower cadence</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SoftwareVersion != RecommendedSecurityUpdate</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: rank hits by IsInternetFacing then by max CVSS (CVE-2026-45657 kernel UAF and CVE-2026-47291 HTTP.sys are 9.8). Confirm the SoftwareVersion vs the RecommendedSecurityUpdate for each row. Step 2 — Contain: for internet-facing HTTP.sys / RDP Client / DC hosts, request emergency-patch window today; for Hyper-V hosts, evac tenant workloads to a patched host before reboot. Step 3 — Hunt: pivot to the UCs below for any indicators that an attacker beat us to the patch on the unpatched estate.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Gold/golden-image VHDX snapshots stored on shares are scanned and report vulnerable but are not actively running</li><li>Decommissioned domain controllers that still report into MDE for a grace period before tenant cleanup</li><li>Air-gapped lab VMs intentionally kept on N-1 build for compatibility testing</li><li>Hyper-V hosts that have received the LCU but still report a vulnerable Hyper-V Integration Components version on the guest</li><li>Devices in onboarding/imaging window that have not yet pulled the WSUS catalog</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where OSPlatform !in (&quot;WindowsServer2008&quot;, &quot;WindowsServer2008R2&quot;) | where isnotempty(OSVersion) | where RecommendedSecurityUpdateId !in (dynamic([])) // append KBs your superseded-update logic excludes</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pivot on Priority=P1 rows first — Hyper-V hosts, AD DS DCs, and any IsInternetFacing=true endpoints exposing HTTP.sys (IIS/HTTP API/WinRM/WebDAV). Confirm RecommendedSecurityUpdate KB is genuinely missing vs. superseded by a later cumulative update by checking Update table or vendor patch chain. 2) Contain: emergency-patch P1 hosts via the SCCM/Intune ring or open a CAB ticket; for DCs apply the AD DS LCU and verify ntdsa.dll version bump; for internet-facing HTTP.sys nodes, gate inbound at WAF until patched. 3) Hunt: pivot devices that remain unpatched into UC2/3/4 (HTTP.sys/Hyper-V/lsass anomaly detections) and tag them as elevated-monitoring; check IDS for the Hyper-V/HTTP.sys/AD DS exploit signatures Microsoft ships with the MAPP feed.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-01-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-01-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-01-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-01-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let MdashCVEs = dynamic([&quot;CVE-2026-45607&quot;,&quot;CVE-2026-45641&quot;,&quot;CVE-2026-47652&quot;,&quot;CVE-2026-41108&quot;,&quot;CVE-2026-45608&quot;,&quot;CVE-2026-45634&quot;,&quot;CVE-2026-45648&quot;,&quot;CVE-2026-47289&quot;,&quot;CVE-2026-45657&quot;,&quot;CVE-2026-47291&quot;]);
+    <div class="tab-content active" id="art-01-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let MDASH_CVEs = dynamic([&quot;CVE-2026-45607&quot;,&quot;CVE-2026-45641&quot;,&quot;CVE-2026-47652&quot;,&quot;CVE-2026-41108&quot;,&quot;CVE-2026-45608&quot;,&quot;CVE-2026-45634&quot;,&quot;CVE-2026-45648&quot;,&quot;CVE-2026-47289&quot;,&quot;CVE-2026-45657&quot;,&quot;CVE-2026-47291&quot;]);
 DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(2d)
-| where CveId in (MdashCVEs)
-| join kind=leftouter (DeviceInfo | where Timestamp &gt; ago(2d) | summarize arg_max(Timestamp, OSPlatform, OSVersion, IsInternetFacing) by DeviceId) on DeviceId
-| project DeviceName, OSPlatform, OSVersion, IsInternetFacing, CveId, VulnerabilitySeverityLevel, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate
-| order by IsInternetFacing desc, VulnerabilitySeverityLevel asc</code></pre></div>
-    <div class="tab-content" id="art-01-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let MdashCVEs = dynamic([&quot;CVE-2026-45607&quot;,&quot;CVE-2026-45641&quot;,&quot;CVE-2026-47652&quot;,&quot;CVE-2026-41108&quot;,&quot;CVE-2026-45608&quot;,&quot;CVE-2026-45634&quot;,&quot;CVE-2026-45648&quot;,&quot;CVE-2026-47289&quot;,&quot;CVE-2026-45657&quot;,&quot;CVE-2026-47291&quot;]);
+| where CveId in (MDASH_CVEs)
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, OSPlatform, OSVersion, IsInternetFacing, DeviceType) by DeviceId) on DeviceId
+| extend Priority = case(
+    CveId == &quot;CVE-2026-45657&quot;, &quot;P1-KernelUAF-9.8&quot;,
+    CveId == &quot;CVE-2026-47291&quot;, &quot;P1-HTTPsys-9.8&quot;,
+    CveId == &quot;CVE-2026-45648&quot;, &quot;P1-ADDS-DC-8.8&quot;,
+    CveId == &quot;CVE-2026-47289&quot;, &quot;P2-RDPClient-8.8&quot;,
+    CveId in (&quot;CVE-2026-45607&quot;,&quot;CVE-2026-45641&quot;,&quot;CVE-2026-47652&quot;), &quot;P2-HyperV-8.x&quot;,
+    &quot;P3-DNS-DHCP&quot;)
+| project Timestamp, Priority, DeviceName, DeviceId, OSPlatform, OSVersion, IsInternetFacing, CveId, VulnerabilitySeverityLevel, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate, RecommendedSecurityUpdateId
+| sort by Priority asc, DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-01-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let MDASH_CVEs = dynamic([&quot;CVE-2026-45607&quot;,&quot;CVE-2026-45641&quot;,&quot;CVE-2026-47652&quot;,&quot;CVE-2026-41108&quot;,&quot;CVE-2026-45608&quot;,&quot;CVE-2026-45634&quot;,&quot;CVE-2026-45648&quot;,&quot;CVE-2026-47289&quot;,&quot;CVE-2026-45657&quot;,&quot;CVE-2026-47291&quot;]);
 DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(2d)
-| where CveId in (MdashCVEs)
-| join kind=leftouter (DeviceInfo | where TimeGenerated &gt; ago(2d) | summarize arg_max(TimeGenerated, OSPlatform, OSVersion, IsInternetFacing) by DeviceId) on DeviceId
-| project DeviceName, OSPlatform, OSVersion, IsInternetFacing, CveId, VulnerabilitySeverityLevel, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate
-| order by IsInternetFacing desc, VulnerabilitySeverityLevel asc</code></pre></div>
-    <div class="tab-content" id="art-01-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2026-45607&quot;,&quot;CVE-2026-45641&quot;,&quot;CVE-2026-47652&quot;,&quot;CVE-2026-41108&quot;,&quot;CVE-2026-45608&quot;,&quot;CVE-2026-45634&quot;,&quot;CVE-2026-45648&quot;,&quot;CVE-2026-47289&quot;,&quot;CVE-2026-45657&quot;,&quot;CVE-2026-47291&quot;) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature
+| where TimeGenerated &gt; ago(7d)
+| where CveId in (MDASH_CVEs)
+| join kind=leftouter (DeviceInfo | summarize arg_max(TimeGenerated, OSPlatform, OSVersion, IsInternetFacing) by DeviceId) on DeviceId
+| extend Priority = case(
+    CveId == &quot;CVE-2026-45657&quot;, &quot;P1-KernelUAF&quot;,
+    CveId == &quot;CVE-2026-47291&quot;, &quot;P1-HTTPsys&quot;,
+    CveId == &quot;CVE-2026-45648&quot;, &quot;P1-ADDS-DC&quot;,
+    CveId == &quot;CVE-2026-47289&quot;, &quot;P2-RDPClient&quot;,
+    CveId in (&quot;CVE-2026-45607&quot;,&quot;CVE-2026-45641&quot;,&quot;CVE-2026-47652&quot;), &quot;P2-HyperV&quot;,
+    &quot;P3-DNS-DHCP&quot;)
+| project TimeGenerated, Priority, DeviceName, OSPlatform, OSVersion, IsInternetFacing, CveId, VulnerabilitySeverityLevel, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate
+| sort by Priority asc</code></pre></div>
+    <div class="tab-content" id="art-01-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2026-45607&quot;,&quot;CVE-2026-45641&quot;,&quot;CVE-2026-47652&quot;,&quot;CVE-2026-41108&quot;,&quot;CVE-2026-45608&quot;,&quot;CVE-2026-45634&quot;,&quot;CVE-2026-45648&quot;,&quot;CVE-2026-47289&quot;,&quot;CVE-2026-45657&quot;,&quot;CVE-2026-47291&quot;) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature
 | `drop_dm_object_name(Vulnerabilities)`
-| convert ctime(firstSeen) ctime(lastSeen)
-| sort - severity dest</code></pre><pre class="spl-mode-body" id="art-01-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2026-45607&quot;,&quot;CVE-2026-45641&quot;,&quot;CVE-2026-47652&quot;,&quot;CVE-2026-41108&quot;,&quot;CVE-2026-45608&quot;,&quot;CVE-2026-45634&quot;,&quot;CVE-2026-45648&quot;,&quot;CVE-2026-47289&quot;,&quot;CVE-2026-45657&quot;,&quot;CVE-2026-47291&quot;) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature
+| eval priority=case(cve==&quot;CVE-2026-45657&quot;,&quot;P1-KernelUAF&quot;,cve==&quot;CVE-2026-47291&quot;,&quot;P1-HTTPsys&quot;,cve==&quot;CVE-2026-45648&quot;,&quot;P1-ADDS&quot;,cve==&quot;CVE-2026-47289&quot;,&quot;P2-RDPClient&quot;,cve IN (&quot;CVE-2026-45607&quot;,&quot;CVE-2026-45641&quot;,&quot;CVE-2026-47652&quot;),&quot;P2-HyperV&quot;,1=1,&quot;P3&quot;)
+| sort priority dest
+| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-01-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2026-45607&quot;,&quot;CVE-2026-45641&quot;,&quot;CVE-2026-47652&quot;,&quot;CVE-2026-41108&quot;,&quot;CVE-2026-45608&quot;,&quot;CVE-2026-45634&quot;,&quot;CVE-2026-45648&quot;,&quot;CVE-2026-47289&quot;,&quot;CVE-2026-45657&quot;,&quot;CVE-2026-47291&quot;) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature
 | `drop_dm_object_name(Vulnerabilities)`
-| convert ctime(firstSeen) ctime(lastSeen)
-| sort - severity dest</code></pre></div></div>
+| eval priority=case(cve==&quot;CVE-2026-45657&quot;,&quot;P1-KernelUAF&quot;,cve==&quot;CVE-2026-47291&quot;,&quot;P1-HTTPsys&quot;,cve==&quot;CVE-2026-45648&quot;,&quot;P1-ADDS&quot;,cve==&quot;CVE-2026-47289&quot;,&quot;P2-RDPClient&quot;,cve IN (&quot;CVE-2026-45607&quot;,&quot;CVE-2026-45641&quot;,&quot;CVE-2026-47652&quot;),&quot;P2-HyperV&quot;,1=1,&quot;P3&quot;)
+| sort priority dest
+| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="b8a56b3323" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="2bd475b711" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">w3wp.exe / HTTP.sys post-exploitation child process (CVE-2026-47291 follow-up)</span>
+    <span class="uc-title">HTTP.sys integer-overflow RCE — unexpected child processes from w3wp.exe / svchost(http) on internet-facing hosts (CVE-2026-47291)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="b8a56b3323" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="2bd475b711" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects the IIS worker process (w3wp.exe) spawning command shells or LOLBins — the canonical post-exploitation pattern that would follow a successful CVE-2026-47291 HTTP.sys integer-overflow RCE against an internet-facing IIS endpoint. Article-specific because it pairs an HTTP.sys-fronted process tree with the precise CVE in the MDASH cohort.
+    <div class="uc-desc">Hunts for execution that strongly suggests successful exploitation of the HTTP.sys integer overflow: shells or LOLBins spawning under w3wp.exe (IIS worker) or the http-hosting svchost.exe on a host that fronts HTTP.sys.
 
-Rationale: Pairs CVE-2026-47291 (HTTP.sys integer overflow RCE, CVSS 9.8) with the post-exploit signature exploit code would emit: IIS worker process w3wp.exe spawning a shell or LOLBin. Kill-chain phase 2 detection hint cites &quot;unexpected child processes spawned from svchost, lsass, http.sys worker processes&quot;.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Windows Command Shell">T1059.003</span> <span class="ind tech" title="PowerShell">T1059.001</span></div>
+Rationale: Article specifies CVE-2026-47291 is an HTTP.sys integer overflow with CVSS 9.8 categorized as RCE. While HTTP.sys is kernel-mode, post-exploit code-execution typically appears as anomalous children of the IIS worker (w3wp.exe) or the http-hosting svchost.exe. The LOLBin child list is the canonical post-RCE webshell/recon set. No exploit PoC publicly available to cross-check at time of writing.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Exploitation for Client Execution">T1203</span> <span class="ind tech" title="PowerShell">T1059.001</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>IIS application that legitimately shells out (some CMS plugins, custom ASP.NET handlers calling cmd.exe for diagnostics)</li><li>SCOM/monitoring probes that run whoami/hostname via the IIS app pool identity</li><li>Web-deployment tooling (Web Deploy / MSDeploy) triggering certutil for cert install</li><li>Admin SSRS / SSAS configurators running net.exe under the app pool account</li><li>DevOps CI build agents impersonating IIS app pool while invoking PowerShell</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;-AppPoolHealthCheck&quot; and ProcessCommandLine !has &quot;msdeploy&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: pull the parent w3wp.exe AppPool identity (look at AccountName / app pool name in InitiatingProcessCommandLine), the originating HTTP request from W3C IIS logs at that Timestamp, and any subsequent outbound network from the child PID. Step 2 — Contain: isolate the IIS host via Defender LiveResponse; stop the affected AppPool (Stop-WebAppPool); block the source IP at the WAF/edge. Step 3 — Hunt: pivot on the source IP across W3CIISLog for other targets, check for webshells written under %SystemDrive%\inetpub\wwwroot\, and rerun UC #1 to confirm CVE-2026-47291 patch state across all IIS estate.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>IIS-hosted apps that legitimately spawn cmd.exe/powershell.exe via classic ASP, ASP.NET Process.Start, or Web Deploy hooks (deployment servers)</li><li>Build/CI runners hosted on IIS that invoke certutil/curl for cert provisioning</li><li>Monitoring agents (SolarWinds, ManageEngine) that exec WMI/PowerShell under w3wp.exe</li><li>TLS cert auto-renewal scripts invoking certutil under the IIS app pool identity</li><li>Legitimate Web PI / WebMatrix tooling shelling out for installer steps</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;msdeploy&quot; | where AccountName !endswith &quot;$&quot; | where not (FolderPath has @&quot;C:\Program Files\Microsoft\Web Deploy\&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: isolate IsInternetFacing matches first; check whether the child process tree contains follow-on activity (encoded PowerShell, network egress, file drops in C:\Windows\Temp or inetpub\wwwroot). Capture memory of w3wp.exe and any spawned child for offline analysis. 2) Contain: take the IIS app pool offline (Stop-WebAppPool), block inbound 80/443 at WAF, snapshot the host. If HTTP.sys (kernel) crashes are present in Application/System log (EID 1001 BugCheck referencing http.sys), reboot with kernel-dump collection. 3) Hunt: pivot to outbound DeviceNetworkEvents from the same host for the 1h window around the child spawn; search for newly-written .aspx/.ashx/.asmx in inetpub paths; check whether any of UC1&#x27;s P1 hosts overlap.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-01-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-01-uc1-sentinel">Sentinel KQL</button>
@@ -141,80 +156,96 @@ Rationale: Pairs CVE-2026-47291 (HTTP.sys integer overflow RCE, CVSS 9.8) with t
     </div>
     <div class="tab-content active" id="art-01-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName =~ &quot;w3wp.exe&quot;
-| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;net.exe&quot;,&quot;whoami.exe&quot;,&quot;hostname.exe&quot;,&quot;ipconfig.exe&quot;)
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| where (InitiatingProcessFileName =~ &quot;w3wp.exe&quot;)
+    or (InitiatingProcessFileName =~ &quot;svchost.exe&quot; and InitiatingProcessCommandLine has_any (&quot;-k iissvcs&quot;,&quot;-k apppool&quot;,&quot;HTTP&quot;))
+| where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;whoami.exe&quot;,&quot;nltest.exe&quot;,&quot;systeminfo.exe&quot;,&quot;ipconfig.exe&quot;,&quot;arp.exe&quot;,&quot;hostname.exe&quot;)
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, IsInternetFacing) by DeviceId) on DeviceId
+| project Timestamp, DeviceName, IsInternetFacing, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine,
+          SHA256
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-01-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
-| where ParentProcessName endswith &quot;\\w3wp.exe&quot;
+| where (ParentProcessName endswith &quot;\\w3wp.exe&quot;)
+    or (ParentProcessName endswith &quot;\\svchost.exe&quot; and CommandLine has_any (&quot;iissvcs&quot;,&quot;HTTP&quot;))
 | extend ChildName = tostring(split(NewProcessName, &quot;\\&quot;)[-1])
-| where tolower(ChildName) in (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;net.exe&quot;,&quot;whoami.exe&quot;)
-| where SubjectUserName !endswith &quot;$&quot;
+| where tolower(ChildName) in (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;whoami.exe&quot;,&quot;nltest.exe&quot;,&quot;systeminfo.exe&quot;)
 | project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-01-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: HTTP.sys / IIS Worker Process Spawning LOLBin (CVE-2026-47291 Post-Exploitation)
-id: 7c2f5e1a-4d6b-4f9a-9f1e-3a8c7e91d2a1
-description: w3wp.exe spawning command shells or LOLBins indicates likely post-exploitation activity following CVE-2026-47291 HTTP.sys integer overflow RCE.
+    <div class="tab-content" id="art-01-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: HTTP.sys / IIS Worker Spawning Shell or LOLBin (CVE-2026-47291 post-exploit)
+id: 7b3e8c2a-1a7e-4d6c-9a31-9f1c0d2e6a51
+description: Detects suspicious child processes of w3wp.exe or the IIS-hosting svchost.exe instance, indicative of successful exploitation of the HTTP.sys integer overflow (CVE-2026-47291) discovered by Microsoft MDASH.
 references:
-  - https://www.microsoft.com/en-us/security/blog/2026/06/17/beyond-the-benchmark-advancing-security-at-ai-speed/
-author: SOC Detection Engineering
-date: 2026/06/17
+    - https://www.microsoft.com/en-us/security/blog/2026/06/17/beyond-the-benchmark-advancing-security-at-ai-speed/
+author: detection-engineering
+date: 2026/06/18
 tags:
-  - attack.t1190
-  - attack.t1059.003
-  - attack.t1059.001
+    - attack.t1190
+    - attack.t1203
+    - attack.t1059
 logsource:
-  category: process_creation
-  product: windows
+    category: process_creation
+    product: windows
 detection:
-  selection:
-    ParentImage|endswith: &#x27;\\w3wp.exe&#x27;
-    Image|endswith:
-      - &#x27;\\cmd.exe&#x27;
-      - &#x27;\\powershell.exe&#x27;
-      - &#x27;\\pwsh.exe&#x27;
-      - &#x27;\\mshta.exe&#x27;
-      - &#x27;\\wscript.exe&#x27;
-      - &#x27;\\cscript.exe&#x27;
-      - &#x27;\\rundll32.exe&#x27;
-      - &#x27;\\regsvr32.exe&#x27;
-      - &#x27;\\bitsadmin.exe&#x27;
-      - &#x27;\\certutil.exe&#x27;
-      - &#x27;\\curl.exe&#x27;
-      - &#x27;\\wget.exe&#x27;
-  condition: selection
+    selection_parent_iis:
+        ParentImage|endswith: &#x27;\w3wp.exe&#x27;
+    selection_parent_svchost:
+        ParentImage|endswith: &#x27;\svchost.exe&#x27;
+        ParentCommandLine|contains:
+            - &#x27;iissvcs&#x27;
+            - &#x27;HTTP&#x27;
+    selection_child:
+        Image|endswith:
+            - &#x27;\cmd.exe&#x27;
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+            - &#x27;\wscript.exe&#x27;
+            - &#x27;\cscript.exe&#x27;
+            - &#x27;\mshta.exe&#x27;
+            - &#x27;\rundll32.exe&#x27;
+            - &#x27;\regsvr32.exe&#x27;
+            - &#x27;\bitsadmin.exe&#x27;
+            - &#x27;\certutil.exe&#x27;
+            - &#x27;\curl.exe&#x27;
+            - &#x27;\wget.exe&#x27;
+            - &#x27;\net.exe&#x27;
+            - &#x27;\nltest.exe&#x27;
+            - &#x27;\whoami.exe&#x27;
+    condition: (selection_parent_iis or selection_parent_svchost) and selection_child
 level: high</code></pre></div>
-    <div class="tab-content" id="art-01-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\w3wp.exe OR *\\W3WP.EXE) @Image:(*\\cmd.exe OR *\\CMD.EXE OR *\\powershell.exe OR *\\PowerShell.exe OR *\\POWERSHELL.EXE OR *\\pwsh.exe OR *\\mshta.exe OR *\\MSHTA.EXE OR *\\wscript.exe OR *\\cscript.exe OR *\\rundll32.exe OR *\\regsvr32.exe OR *\\certutil.exe OR *\\bitsadmin.exe)</code></pre></div>
-    <div class="tab-content" id="art-01-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/w3wp\.exe$/i ImageFileName=/(cmd|powershell|pwsh|mshta|wscript|cscript|rundll32|regsvr32|bitsadmin|certutil|curl|wget|net|whoami)\.exe$/i
+    <div class="tab-content" id="art-01-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 (@ParentImage:(*\\w3wp.exe OR *\\W3WP.EXE) OR (@ParentImage:(*\\svchost.exe OR *\\SVCHOST.EXE) AND @ParentCommandLine:(*iissvcs* OR *HTTP*))) @Image:(*\\cmd.exe OR *\\CMD.EXE OR *\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\mshta.exe OR *\\MSHTA.EXE OR *\\rundll32.exe OR *\\RunDLL32.exe OR *\\regsvr32.exe OR *\\RegSvr32.exe OR *\\certutil.exe OR *\\CertUtil.exe OR *\\bitsadmin.exe OR *\\nltest.exe OR *\\whoami.exe)</code></pre></div>
+    <div class="tab-content" id="art-01-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/^(w3wp\.exe|svchost\.exe)$/i
+| regex(&quot;(?i)(iissvcs|HTTP)|w3wp&quot;, field=ParentBaseFileName) OR regex(&quot;(?i)(iissvcs|HTTP)&quot;, field=ParentCommandLine)
+| ImageFileName=/(\\cmd\.exe|\\powershell\.exe|\\pwsh\.exe|\\mshta\.exe|\\rundll32\.exe|\\regsvr32\.exe|\\certutil\.exe|\\bitsadmin\.exe|\\curl\.exe|\\wget\.exe|\\nltest\.exe|\\whoami\.exe)$/i
 | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-01-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;w3wp.exe&quot; Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;net.exe&quot;,&quot;whoami.exe&quot;) by Processes.dest Processes.parent_process_name Processes.process_name
+    <div class="tab-content" id="art-01-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;w3wp.exe&quot; OR (Processes.parent_process_name=&quot;svchost.exe&quot; AND Processes.parent_process IN (&quot;*-k iissvcs*&quot;,&quot;*-k apppool*&quot;,&quot;*HTTP*&quot;))) AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;whoami.exe&quot;,&quot;nltest.exe&quot;,&quot;systeminfo.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
 | `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-01-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;w3wp.exe&quot; Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;net.exe&quot;,&quot;whoami.exe&quot;) by Processes.dest Processes.parent_process_name Processes.process_name
+| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-01-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;w3wp.exe&quot; OR (Processes.parent_process_name=&quot;svchost.exe&quot; AND Processes.parent_process IN (&quot;*-k iissvcs*&quot;,&quot;*-k apppool*&quot;,&quot;*HTTP*&quot;))) AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;whoami.exe&quot;,&quot;nltest.exe&quot;,&quot;systeminfo.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
 | `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
+| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="5db085dcdf" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="4c98d7e9cf" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Hyper-V vmwp.exe / vmms.exe spawning unexpected children — guest-to-host escape (CVE-2026-45607/45641/47652)</span>
+    <span class="uc-title">Hyper-V guest escape — unexpected processes spawned by vmwp.exe or vmms.exe (CVE-2026-45607 / 45641 / 47652)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="5db085dcdf" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="4c98d7e9cf" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts for the Hyper-V worker (vmwp.exe) or VM management service (vmms.exe) on a host partition spawning processes outside its tiny legitimate child set — the smoking-gun pattern for a guest-to-host VM escape via the three MDASH-disclosed Hyper-V RCEs (OOB read, type confusion, heap overflow).
+    <div class="uc-desc">Hunts for indicators that a malicious guest VM achieved code execution on the Hyper-V host: the Virtual Machine Worker Process (vmwp.exe) or VM Management Service (vmms.exe) spawning child processes outside their tiny legitimate set. The article lists three Hyper-V RCEs (OOB read, type confusion, heap overflow) all classed as guest-to-host RCE.
 
-Rationale: vmwp.exe is the per-VM worker on the Hyper-V host partition; under normal operation it only spawns conhost/WerFault/vmcompute. Any other child on the host side after exploitation of CVE-2026-45607/45641/47652 is the textbook VM escape primitive. Cited directly in Phase 4 detection hint: &quot;vmwp.exe or vmms.exe crashes/restarts correlated with guest VM activity, and unexpected processes spawning on the Hyper-V host immediately after a VM event&quot;.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Escape to Host">T1611</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
+Rationale: Article lists three Hyper-V CVEs (CVE-2026-45607 OOB read, CVE-2026-45641 type confusion, CVE-2026-47652 heap overflow) all classed as RCE — by definition guest-to-host. vmwp.exe runs one-per-guest and its legitimate child set is tiny (vmcompute, conhost, WerFault on crash). Anything else spawned by vmwp.exe on the host partition is a near-certain escape indicator. High confidence because the legitimate baseline is so narrow.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Escape to Host">T1611</span> <span class="ind tech" title="Exploitation for Client Execution">T1203</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>System Center VMM / Windows Admin Center management plug-ins that inject helper processes into vmms.exe context</li><li>Backup agents (Veeam, Commvault Hyper-V plug-in) that run snapshot helpers as children of vmms</li><li>Microsoft-signed Hyper-V hotfix installers writing under vmms during update</li><li>Custom PowerShell DSC / Hyper-V scripts using vmms COM interfaces to spawn helpers</li><li>WSL2 / Linux Containers on Windows nesting that legitimately invokes helpers under vmwp</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;-BackupSnapshot&quot; and FolderPath !startswith &quot;C:\\Program Files\\Veeam\\&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: identify which guest VM was running under that vmwp.exe PID (correlate the Hyper-V-Worker channel guest-VM-ID with the PID), pull the child process&#x27;s hash and command line. Step 2 — Contain: live-migrate other guest VMs off this host, then network-isolate the Hyper-V host via Defender LiveResponse; do NOT power-cycle the suspect guest as that destroys memory evidence. Step 3 — Hunt: cross-check the suspect guest tenant for prior anomaly (kernel exploit attempts, unusual MSR access). Pivot on the child SHA256 across the rest of the Hyper-V estate. Confirm patch coverage for all three CVEs via UC #1.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>WerFault.exe / WerFaultSecure.exe spawned after a benign guest crash — already in filter list</li><li>Live migration choreography where vmms.exe invokes vmcompute.exe — already in filter</li><li>Hyper-V management tooling (Failover Cluster) shelling out powershell.exe under vmms during cluster validation — rare</li><li>Third-party guest-introspection products that hook vmwp.exe (rare in production)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessIntegrityLevel != &quot;System&quot; or not (FolderPath has @&quot;C:\Windows\System32\WindowsPowerShell\v1.0\&quot; and InitiatingProcessCommandLine has &quot;Cluster&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify which guest VM was active on vmwp.exe at the spawn time (correlate WindowsEventLog-Hyper-V-Worker for VmId at that timestamp). Pull the guest&#x27;s owner/tenant. Capture memory of the host + spawned child. 2) Contain: live-migrate or hard-stop the suspect guest, isolate the Hyper-V host from the management network (keep storage path for forensics), and freeze the VHDX for offline analysis. 3) Hunt: across the Hyper-V cluster, search all hosts for the same parent→child pattern in the past 30d; check whether the same guest tenant has hit other hosts; cross-check UC1 for unpatched Hyper-V hosts that need emergency LCU.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-01-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-01-uc2-sentinel">Sentinel KQL</button>
@@ -226,75 +257,77 @@ Rationale: vmwp.exe is the per-VM worker on the Hyper-V host partition; under no
     <div class="tab-content active" id="art-01-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where InitiatingProcessFileName in~ (&quot;vmwp.exe&quot;,&quot;vmms.exe&quot;)
-| where FileName !in~ (&quot;conhost.exe&quot;,&quot;WerFault.exe&quot;,&quot;vmcompute.exe&quot;,&quot;vmwp.exe&quot;,&quot;vmconnect.exe&quot;,&quot;WerFaultSecure.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
+| where FileName !in~ (&quot;vmcompute.exe&quot;,&quot;conhost.exe&quot;,&quot;WerFault.exe&quot;,&quot;WerFaultSecure.exe&quot;,&quot;vmwp.exe&quot;,&quot;vmms.exe&quot;,&quot;vmconnect.exe&quot;)
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine,
+          SHA256, InitiatingProcessIntegrityLevel
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-01-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
-| extend ParentName = tostring(split(ParentProcessName, &quot;\\&quot;)[-1])
-| extend ChildName = tostring(split(NewProcessName, &quot;\\&quot;)[-1])
-| where tolower(ParentName) in (&quot;vmwp.exe&quot;,&quot;vmms.exe&quot;)
-| where tolower(ChildName) !in (&quot;conhost.exe&quot;,&quot;werfault.exe&quot;,&quot;vmcompute.exe&quot;,&quot;vmwp.exe&quot;,&quot;vmconnect.exe&quot;,&quot;werfaultsecure.exe&quot;)
-| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine
+| where ParentProcessName endswith &quot;\\vmwp.exe&quot; or ParentProcessName endswith &quot;\\vmms.exe&quot;
+| extend ChildName = tolower(tostring(split(NewProcessName, &quot;\\&quot;)[-1]))
+| where ChildName !in (&quot;vmcompute.exe&quot;,&quot;conhost.exe&quot;,&quot;werfault.exe&quot;,&quot;werfaultsecure.exe&quot;,&quot;vmwp.exe&quot;,&quot;vmms.exe&quot;,&quot;vmconnect.exe&quot;)
+| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine, TokenElevationType
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-01-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Hyper-V Worker / Management Process Spawns Unexpected Child (CVE-2026-45607/45641/47652)
-id: 9a3b1c45-7d2e-4b6f-a1c2-8f4e2d9b1c34
-description: vmwp.exe or vmms.exe spawning anything outside its legitimate child set on a Hyper-V host indicates likely guest-to-host VM escape via CVE-2026-45607 (OOB read), CVE-2026-45641 (type confusion), or CVE-2026-47652 (heap overflow).
+    <div class="tab-content" id="art-01-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Hyper-V Worker (vmwp/vmms) Spawning Unexpected Child (CVE-2026-45607/45641/47652)
+id: 4e2b1c7f-6a2d-4f81-8b04-5d72c1e2a73c
+description: Detects vmwp.exe or vmms.exe spawning processes outside the expected vmcompute/conhost/WerFault set — strong indicator of guest-to-host escape via the Hyper-V OOB read / type confusion / heap overflow CVEs surfaced by MDASH.
 references:
-  - https://www.microsoft.com/en-us/security/blog/2026/06/17/beyond-the-benchmark-advancing-security-at-ai-speed/
-author: SOC Detection Engineering
-date: 2026/06/17
+    - https://www.microsoft.com/en-us/security/blog/2026/06/17/beyond-the-benchmark-advancing-security-at-ai-speed/
+author: detection-engineering
+date: 2026/06/18
 tags:
-  - attack.t1611
-  - attack.t1068
+    - attack.t1611
+    - attack.t1203
 logsource:
-  category: process_creation
-  product: windows
+    category: process_creation
+    product: windows
 detection:
-  selection_parent:
-    ParentImage|endswith:
-      - &#x27;\\vmwp.exe&#x27;
-      - &#x27;\\vmms.exe&#x27;
-  filter_legit:
-    Image|endswith:
-      - &#x27;\\conhost.exe&#x27;
-      - &#x27;\\WerFault.exe&#x27;
-      - &#x27;\\vmcompute.exe&#x27;
-      - &#x27;\\vmwp.exe&#x27;
-      - &#x27;\\vmconnect.exe&#x27;
-      - &#x27;\\WerFaultSecure.exe&#x27;
-  condition: selection_parent and not filter_legit
-level: critical</code></pre></div>
-    <div class="tab-content" id="art-01-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\vmwp.exe OR *\\VMWP.EXE OR *\\vmms.exe OR *\\VMMS.EXE) -@Image:(*\\conhost.exe OR *\\CONHOST.EXE OR *\\WerFault.exe OR *\\WERFAULT.EXE OR *\\vmcompute.exe OR *\\VMCOMPUTE.EXE OR *\\vmwp.exe OR *\\VMWP.EXE OR *\\vmconnect.exe)</code></pre></div>
-    <div class="tab-content" id="art-01-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ParentBaseFileName=/(vmwp|vmms)\.exe$/i
-| NOT ImageFileName=/(conhost|werfault|werfaultsecure|vmcompute|vmwp|vmconnect)\.exe$/i
+    selection_parent:
+        ParentImage|endswith:
+            - &#x27;\vmwp.exe&#x27;
+            - &#x27;\vmms.exe&#x27;
+    filter_legit:
+        Image|endswith:
+            - &#x27;\vmcompute.exe&#x27;
+            - &#x27;\conhost.exe&#x27;
+            - &#x27;\WerFault.exe&#x27;
+            - &#x27;\WerFaultSecure.exe&#x27;
+            - &#x27;\vmconnect.exe&#x27;
+    condition: selection_parent and not filter_legit
+level: high</code></pre></div>
+    <div class="tab-content" id="art-01-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\vmwp.exe OR *\\VMWP.EXE OR *\\vmms.exe OR *\\VMMS.EXE) -@Image:(*\\vmcompute.exe OR *\\VMCompute.exe OR *\\conhost.exe OR *\\WerFault.exe OR *\\WerFaultSecure.exe OR *\\vmconnect.exe OR *\\VMConnect.exe)</code></pre></div>
+    <div class="tab-content" id="art-01-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/^(vmwp\.exe|vmms\.exe)$/i
+| NOT (ImageFileName=/(\\vmcompute\.exe|\\conhost\.exe|\\werfault\.exe|\\werfaultsecure\.exe|\\vmconnect\.exe)$/i)
 | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-01-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as path from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;vmwp.exe&quot; OR Processes.parent_process_name=&quot;vmms.exe&quot;) Processes.process_name!=&quot;conhost.exe&quot; Processes.process_name!=&quot;WerFault.exe&quot; Processes.process_name!=&quot;vmcompute.exe&quot; Processes.process_name!=&quot;vmwp.exe&quot; Processes.process_name!=&quot;vmconnect.exe&quot; by Processes.dest Processes.parent_process_name Processes.process_name Processes.user
+    <div class="tab-content" id="art-01-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;vmwp.exe&quot;,&quot;vmms.exe&quot;) AND NOT Processes.process_name IN (&quot;vmcompute.exe&quot;,&quot;conhost.exe&quot;,&quot;WerFault.exe&quot;,&quot;WerFaultSecure.exe&quot;,&quot;vmwp.exe&quot;,&quot;vmms.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name
 | `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-01-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.process_path) as path from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;vmwp.exe&quot; OR Processes.parent_process_name=&quot;vmms.exe&quot;) Processes.process_name!=&quot;conhost.exe&quot; Processes.process_name!=&quot;WerFault.exe&quot; Processes.process_name!=&quot;vmcompute.exe&quot; Processes.process_name!=&quot;vmwp.exe&quot; Processes.process_name!=&quot;vmconnect.exe&quot; by Processes.dest Processes.parent_process_name Processes.process_name Processes.user
+| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-01-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines from datamodel=Endpoint.Processes where Processes.parent_process_name IN (&quot;vmwp.exe&quot;,&quot;vmms.exe&quot;) AND NOT Processes.process_name IN (&quot;vmcompute.exe&quot;,&quot;conhost.exe&quot;,&quot;WerFault.exe&quot;,&quot;WerFaultSecure.exe&quot;,&quot;vmwp.exe&quot;,&quot;vmms.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name
 | `drop_dm_object_name(Processes)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort - lastTime</code></pre></div></div>
+| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="e4233502a7" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="988845435b" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Domain Controller lsass.exe / ntdsa.dll crash — CVE-2026-45648 AD DS stack overflow exploitation</span>
+    <span class="uc-title">AD DS stack-overflow RCE — lsass.exe spawning unexpected children on domain controllers (CVE-2026-45648)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e4233502a7" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="988845435b" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects lsass.exe Application-Error crashes on a Domain Controller, especially with ntdsa.dll as the faulting module — the expected signature of CVE-2026-45648, the stack-based buffer overflow in AD DS allowing remote code execution. A crash spike from non-administrative source IPs is the leading indicator of an exploit attempt in flight, successful or not.
+    <div class="uc-desc">Hunts for indicators of successful exploitation of the AD DS stack-based buffer overflow against a domain controller: lsass.exe spawning child processes (it normally spawns none on a healthy DC). Scoped to DCs by joining DeviceInfo / role markers; high signal because the legitimate baseline is essentially empty.
 
-Rationale: CVE-2026-45648 is a stack-based buffer overflow in AD DS — the natural failure mode of a missed exploit primitive is an lsass.exe crash with ntdsa.dll (the AD DS engine) or ntdsai.dll on the stack. Phase 6 detection hint: &quot;lsass.exe or ntdsa.dll crashes on DCs ... following inbound exploit traffic&quot;.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation of Remote Services">T1210</span> <span class="ind tech" title="Application or System Exploitation">T1499.004</span></div>
+Rationale: Article calls CVE-2026-45648 an AD DS stack-based buffer overflow RCE (CVSS 8.8) — exploitation gives code execution inside lsass.exe (the AD DS hosting process on a DC). lsass on a healthy DC spawns essentially nothing; any child outside the WER/conhost set is anomalous. DC scoping cuts FPs on member servers where lsass behaves differently. No public PoC to cross-check.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation of Remote Services">T1210</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Domain Controllers being patched / restarted via Cluster-Aware Updating</li><li>Schema extension activity by Exchange / SCCM installers temporarily destabilising NTDS</li><li>Third-party LDAP proxy / sync agent (Azure AD Connect, Okta AD agent) malformed query bug</li><li>Known Microsoft-acknowledged bug in a prior cumulative update causing lsass crashes (check MSRC KB superseded list)</li><li>Memory pressure on a small DC under heavy NTLM auth fan-out causing process kill</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RenderedDescription !has &quot;KB50&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: pull the crash dump (lsass.exe MEMORY.DMP from %SystemRoot%\Minidump or %LOCALAPPDATA%\CrashDumps) and inspect for non-standard return addresses; pull inbound LDAP/RPC traffic to the DC in the 60s prior from firewall / VPC flow. Step 2 — Contain: demote the affected DC from FSMO roles, fail over to a confirmed-patched DC, then network-isolate; do NOT reboot before dump capture. Step 3 — Hunt: search for source IPs that connected to DC ports 389/636/88/445 inbound in the prior 5 minutes; pivot those source hosts via UC #2/#3 and check all DCs against UC #1 for CVE-2026-45648 patch state.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>WerFault.exe on benign lsass crashes from unrelated bugs — already in filter list</li><li>AV/EDR tools that briefly inject under lsass and create a helper process (rare and vendor-specific — should be allow-listed by SHA256 if seen)</li><li>Microsoft Defender for Identity sensor doing process introspection — usually does not create child processes but check tenant</li><li>krbtgt key rotation tooling on the DC (very rare event, will appear as powershell.exe child)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SHA256 !in (dynamic([])) // populate with approved EDR/AV helper hashes per tenant | where InitiatingProcessIntegrityLevel == &quot;System&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: this is a near-certain DC compromise — open a P1 incident. Verify the child process SHA256 against AV/EDR vendor allow-list; capture lsass memory immediately (procdump from MDE Live Response) before the attacker dumps krbtgt. Pull recent inbound traffic to ports 389/445/135/49152-65535 on the DC. 2) Contain: isolate the DC at the network layer (FW deny), but do not power off (preserve volatile state). Rotate krbtgt twice with 10h gap, force-reset domain admin passwords, revoke all Kerberos tickets. Assume DCsync occurred. 3) Hunt: pivot to all DCs in the forest for the same pattern; replay IdentityLogonEvents / 4624 LogonType=3 to find inbound auth from compromised host; check for ntdsutil/diskshadow/vssadmin invocations on this and peer DCs; cross-check UC1 for any DC still unpatched for CVE-2026-45648.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-01-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-01-uc3-sentinel">Sentinel KQL</button>
@@ -303,124 +336,69 @@ Rationale: CVE-2026-45648 is a stack-based buffer overflow in AD DS — the natu
       <button class="tab-btn" data-target="art-01-uc3-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-01-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-01-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceEvents
+    <div class="tab-content active" id="art-01-uc3-kql"><pre><button class="copy-btn">COPY</button><code>let DCs = DeviceInfo
+    | where Timestamp &gt; ago(7d)
+    | where DeviceType =~ &quot;Server&quot; and (RegistryDeviceTag has &quot;DomainController&quot; or DeviceName matches regex @&quot;(?i)(^|-)dc[0-9]*$&quot;)
+    | summarize by DeviceId;
+DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;ProcessTerminated&quot;,&quot;AntivirusReport&quot;,&quot;ExploitGuardNonMicrosoftSignedBlocked&quot;) or AdditionalFields has &quot;lsass&quot;
-| where InitiatingProcessFileName =~ &quot;lsass.exe&quot; or FileName =~ &quot;lsass.exe&quot; or AdditionalFields has_any (&quot;ntdsa.dll&quot;,&quot;ntdsai.dll&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(2d) | summarize arg_max(Timestamp, OSPlatform, MachineGroup, AdditionalFields) by DeviceId | where AdditionalFields has &quot;DomainController&quot; or MachineGroup has &quot;DC&quot; or AdditionalFields has &quot;NTDS&quot;) on DeviceId
-| project Timestamp, DeviceName, ActionType, FileName, InitiatingProcessFileName, AdditionalFields
+| where DeviceId in (DCs)
+| where InitiatingProcessFileName =~ &quot;lsass.exe&quot;
+| where FileName !in~ (&quot;WerFault.exe&quot;,&quot;WerFaultSecure.exe&quot;,&quot;conhost.exe&quot;)
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ChildImage = FolderPath,
+          ChildCmd = ProcessCommandLine,
+          SHA256, InitiatingProcessIntegrityLevel
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-01-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let DCs = Heartbeat | where TimeGenerated &gt; ago(7d) | where Computer matches regex &quot;(?i)dc[0-9]+|^DC-&quot; | distinct Computer;
-Event
+    <div class="tab-content" id="art-01-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let DCs = SecurityEvent
+    | where TimeGenerated &gt; ago(7d)
+    | where EventID == 4742 or Computer matches regex @&quot;(?i)(^|-)dc[0-9]*\.&quot;
+    | summarize by Computer;
+SecurityEvent
 | where TimeGenerated &gt; ago(7d)
-| where Source == &quot;Application Error&quot; and EventID == 1000
-| where Computer in (DCs)
-| where RenderedDescription has_any (&quot;lsass.exe&quot;,&quot;ntdsa.dll&quot;,&quot;ntdsai.dll&quot;)
-| project TimeGenerated, Computer, EventID, RenderedDescription
+| where EventID == 4688
+| where Computer in (DCs) or Computer matches regex @&quot;(?i)(^|-)dc[0-9]*\.&quot;
+| where ParentProcessName endswith &quot;\\lsass.exe&quot;
+| extend ChildName = tolower(tostring(split(NewProcessName, &quot;\\&quot;)[-1]))
+| where ChildName !in (&quot;werfault.exe&quot;,&quot;werfaultsecure.exe&quot;,&quot;conhost.exe&quot;)
+| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine, TokenElevationType
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-01-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: LSASS Crash on Domain Controller — CVE-2026-45648 Exploit Indicator
-id: 3e7d9a2b-1c4f-4e8a-b5d6-9a2c7f4e1b89
-description: lsass.exe crash on a Windows Domain Controller, particularly with ntdsa.dll/ntdsai.dll as faulting module, indicates likely exploitation attempt of CVE-2026-45648 (AD DS stack-based buffer overflow RCE).
+    <div class="tab-content" id="art-01-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: LSASS Spawning Unexpected Child on Domain Controller (CVE-2026-45648 AD DS RCE)
+id: 3c1f7a92-8b0d-4e5a-9c0e-8d2a4b1f5e62
+description: Detects lsass.exe spawning a child process — near-zero on a healthy DC. Strong indicator of successful exploitation of the AD DS stack-based buffer overflow (CVE-2026-45648) discovered by MDASH.
 references:
-  - https://www.microsoft.com/en-us/security/blog/2026/06/17/beyond-the-benchmark-advancing-security-at-ai-speed/
-author: SOC Detection Engineering
-date: 2026/06/17
+    - https://www.microsoft.com/en-us/security/blog/2026/06/17/beyond-the-benchmark-advancing-security-at-ai-speed/
+author: detection-engineering
+date: 2026/06/18
 tags:
-  - attack.t1210
-  - attack.t1499.004
+    - attack.t1210
+    - attack.t1068
 logsource:
-  product: windows
-  service: application
+    category: process_creation
+    product: windows
 detection:
-  selection:
-    EventID: 1000
-    Source: &#x27;Application Error&#x27;
-    Data|contains:
-      - &#x27;lsass.exe&#x27;
-      - &#x27;ntdsa.dll&#x27;
-      - &#x27;ntdsai.dll&#x27;
-  condition: selection
+    selection:
+        ParentImage|endswith: &#x27;\lsass.exe&#x27;
+    filter_benign:
+        Image|endswith:
+            - &#x27;\WerFault.exe&#x27;
+            - &#x27;\WerFaultSecure.exe&#x27;
+            - &#x27;\conhost.exe&#x27;
+    condition: selection and not filter_benign
 level: critical</code></pre></div>
-    <div class="tab-content" id="art-01-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows @EventID:1000 (@RenderedDescription:*lsass.exe* OR @RenderedDescription:*LSASS.EXE*) (@RenderedDescription:*ntdsa.dll* OR @RenderedDescription:*NTDSA.DLL* OR @RenderedDescription:*ntdsai.dll*)</code></pre></div>
-    <div class="tab-content" id="art-01-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/lsass\.exe$/i
-| join({#event_simpleName=ProcessRollup2 ParentBaseFileName=/lsass\.exe$/i ImageFileName=/WerFault\.exe$/i}, field=aid, key=aid)
-| groupBy([aid, ComputerName], function=count())
-| count &gt; 1</code></pre></div>
-    <div class="tab-content" id="art-01-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><pre><button class="copy-btn">COPY</button><code>`wineventlog_application` EventCode=1000 (Faulting_application_name=&quot;lsass.exe&quot; OR Faulting_module_name=&quot;ntdsa.dll&quot; OR Faulting_module_name=&quot;ntdsai.dll&quot;) 
-| eval is_dc=if(match(host,&quot;(?i)dc[0-9]+|domain.*controller|adds&quot;),&quot;yes&quot;,&quot;unknown&quot;) 
-| stats min(_time) as firstCrash max(_time) as lastCrash count by host Faulting_application_name Faulting_module_name Exception_code 
-| where count &gt;= 1 
-| convert ctime(firstCrash) ctime(lastCrash)</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="7374b544d5" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Remote Desktop Client (mstsc.exe) crash following outbound RDP to untrusted host — CVE-2026-47289</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="7374b544d5" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects mstsc.exe (Remote Desktop Client) crashing within seconds of an outbound RDP connection to a non-corporate destination — the expected signature of CVE-2026-47289, the heap-based buffer overflow RCE in the RDP Client. A malicious RDP server (e.g. attacker-controlled host the user was lured to) can send a crafted response that triggers client-side RCE.
-
-Rationale: CVE-2026-47289 is heap-based buffer overflow RCE in the RDP Client. A crafted server response would crash mstsc.exe before/at the moment of exploit success. Phase 1 detection hint: &quot;outbound RDP connections from user workstations to untrusted hosts followed by client-process crashes&quot;.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="External Remote Services">T1133</span> <span class="ind tech" title="Exploitation for Client Execution">T1203</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Flaky home/coffee-shop WiFi causing legitimate mstsc.exe disconnect / crash after RDP to corp jump host</li><li>mstsc.exe crash from a known driver-incompatibility issue on certain GPU vendors (printer redirect, AMD/NVIDIA video codec)</li><li>Crashes after RDP to an outdated Linux xrdp / FreeRDP server with protocol mismatch</li><li>User cancelling RDP cert prompt by killing the process</li><li>Corporate RDP gateway with self-signed cert chain causing client-side abort</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where RemoteIP !startswith &quot;10.&quot; and RemoteIP !startswith &quot;192.168.&quot; and RemoteIP !startswith &quot;172.16.&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: enumerate the RemoteIP/RemoteUrl the user was RDPing to — is it on the corporate jump-host allowlist? Is it WHOIS-attributable to known-bad infra? Pull the mstsc crash dump from %LOCALAPPDATA%\CrashDumps. Step 2 — Contain: isolate the originating workstation via Defender LiveResponse; reset the user&#x27;s AD credentials and revoke all active session tokens (mstsc creds may be staged in memory). Block the RemoteIP at the proxy/firewall. Step 3 — Hunt: search DeviceNetworkEvents for any other host that also RDPed to the same RemoteIP in the past 30 days; check those hosts for follow-on activity. Confirm CVE-2026-47289 patch state across the user-workstation fleet via UC #1.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-01-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-01-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-01-uc4-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-01-uc4-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-01-uc4-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-01-uc4-kql"><pre><button class="copy-btn">COPY</button><code>let RdpConns = DeviceNetworkEvents
-    | where Timestamp &gt; ago(7d)
-    | where InitiatingProcessFileName =~ &quot;mstsc.exe&quot;
-    | where RemotePort == 3389
-    | where RemoteIPType == &quot;Public&quot;
-    | project ConnTime=Timestamp, DeviceId, DeviceName, AccountName=InitiatingProcessAccountName, RemoteIP, RemoteUrl;
-let Crashes = DeviceEvents
-    | where Timestamp &gt; ago(7d)
-    | where ActionType == &quot;ProcessTerminated&quot; and InitiatingProcessFileName =~ &quot;mstsc.exe&quot;
-    | project CrashTime=Timestamp, DeviceId, AdditionalFields;
-RdpConns
-| join kind=inner Crashes on DeviceId
-| where CrashTime between (ConnTime .. ConnTime + 2m)
-| project ConnTime, CrashTime, DelaySec=datetime_diff(&#x27;second&#x27;, CrashTime, ConnTime), DeviceName, AccountName, RemoteIP, RemoteUrl, AdditionalFields
-| order by CrashTime desc</code></pre></div>
-    <div class="tab-content" id="art-01-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let CrashHosts = Event
-    | where TimeGenerated &gt; ago(7d)
-    | where Source == &quot;Application Error&quot; and EventID == 1000
-    | where RenderedDescription has &quot;mstsc.exe&quot;
-    | project CrashTime=TimeGenerated, Computer;
-CrashHosts
-| join kind=inner (
-    CommonSecurityLog
-    | where TimeGenerated &gt; ago(7d)
-    | where DestinationPort == 3389 and ProcessName has &quot;mstsc&quot;
-    | project ConnTime=TimeGenerated, Computer=SourceHostName, DestinationIP, SourceUserName
-) on Computer
-| where CrashTime between (ConnTime .. ConnTime + 2m)
-| project ConnTime, CrashTime, DelaySec=datetime_diff(&#x27;second&#x27;, CrashTime, ConnTime), Computer, SourceUserName, DestinationIP
-| order by CrashTime desc</code></pre></div>
-    <div class="tab-content" id="art-01-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows @EventID:1000 (@RenderedDescription:*mstsc.exe* OR @RenderedDescription:*MSTSC.EXE*)</code></pre></div>
-    <div class="tab-content" id="art-01-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemotePort=3389 ContextImageFileName=/mstsc\.exe$/i
-| join({#event_simpleName=ProcessRollup2 ParentBaseFileName=/mstsc\.exe$/i ImageFileName=/WerFault\.exe$/i}, field=aid, key=aid, mode=inner)
-| groupBy([aid, ComputerName, RemoteAddressIP4, UserName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-01-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` min(_time) as conn_time values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest) as dest from datamodel=Network_Traffic.All_Traffic where All_Traffic.app=&quot;mstsc.exe&quot; All_Traffic.dest_port=3389 by All_Traffic.src All_Traffic.user _time span=1m
-| `drop_dm_object_name(All_Traffic)`
-| join type=inner src [ search `wineventlog_application` EventCode=1000 Faulting_application_name=&quot;mstsc.exe&quot; | rename host as src | eval crash_time=_time | table src crash_time Faulting_module_name Exception_code ]
-| eval delta=crash_time-conn_time
-| where delta&gt;=0 AND delta&lt;=120
-| table src user dest_ip dest delta Faulting_module_name Exception_code</code></pre><pre class="spl-mode-body" id="art-01-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false min(_time) as conn_time values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.dest) as dest from datamodel=Network_Traffic.All_Traffic where All_Traffic.app=&quot;mstsc.exe&quot; All_Traffic.dest_port=3389 by All_Traffic.src All_Traffic.user _time span=1m
-| `drop_dm_object_name(All_Traffic)`
-| join type=inner src [ search `wineventlog_application` EventCode=1000 Faulting_application_name=&quot;mstsc.exe&quot; | rename host as src | eval crash_time=_time | table src crash_time Faulting_module_name Exception_code ]
-| eval delta=crash_time-conn_time
-| where delta&gt;=0 AND delta&lt;=120
-| table src user dest_ip dest delta Faulting_module_name Exception_code</code></pre></div></div>
+    <div class="tab-content" id="art-01-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\lsass.exe OR *\\LSASS.EXE) -@Image:(*\\WerFault.exe OR *\\WerFaultSecure.exe OR *\\conhost.exe)</code></pre></div>
+    <div class="tab-content" id="art-01-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/^lsass\.exe$/i
+| NOT (ImageFileName=/(\\werfault\.exe|\\werfaultsecure\.exe|\\conhost\.exe)$/i)
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine, SHA256HashData], function=count())</code></pre></div>
+    <div class="tab-content" id="art-01-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;lsass.exe&quot; AND NOT Processes.process_name IN (&quot;WerFault.exe&quot;,&quot;WerFaultSecure.exe&quot;,&quot;conhost.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| search dest IN (&quot;*DC*&quot;,&quot;*dc*&quot;)
+| convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-01-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=&quot;lsass.exe&quot; AND NOT Processes.process_name IN (&quot;WerFault.exe&quot;,&quot;WerFaultSecure.exe&quot;,&quot;conhost.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
+| `drop_dm_object_name(Processes)`
+| search dest IN (&quot;*DC*&quot;,&quot;*dc*&quot;)
+| convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -438,11 +416,11 @@ CrashHosts
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-01-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-01-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-01-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-01-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-01-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-01-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-01-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-01-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -451,7 +429,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-01-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-01-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -463,12 +441,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-01-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-01-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-45607&quot;, &quot;CVE-2026-45641&quot;, &quot;CVE-2026-47652&quot;, &quot;CVE-2026-41108&quot;, &quot;CVE-2026-45608&quot;, &quot;CVE-2026-45634&quot;, &quot;CVE-2026-45648&quot;, &quot;CVE-2026-47289&quot;, &quot;CVE-2026-45657&quot;, &quot;CVE-2026-47291&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-01-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-01-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-45607&quot;, &quot;CVE-2026-45641&quot;, &quot;CVE-2026-47652&quot;, &quot;CVE-2026-41108&quot;, &quot;CVE-2026-45608&quot;, &quot;CVE-2026-45634&quot;, &quot;CVE-2026-45648&quot;, &quot;CVE-2026-47289&quot;, &quot;CVE-2026-45657&quot;, &quot;CVE-2026-47291&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -491,11 +469,11 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-01-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-01-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-01-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-01-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-01-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-01-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-01-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Beyond the benchmark: Advancing security at AI speed
+    <div class="tab-content active" id="art-01-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Beyond the benchmark: Advancing security at AI speed
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -515,7 +493,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-01-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-01-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — Beyond the benchmark: Advancing security at AI speed
@@ -538,7 +516,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-01-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Beyond the benchmark: Advancing security at AI speed ```
+    <div class="tab-content" id="art-01-uc5-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-01-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-01-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-01-uc5-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Beyond the benchmark: Advancing security at AI speed ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;http.sys&quot;))
@@ -554,7 +532,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-01-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Beyond the benchmark: Advancing security at AI speed ```
+]</code></pre><pre class="spl-mode-body" id="art-01-uc5-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Beyond the benchmark: Advancing security at AI speed ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;http.sys&quot;))
@@ -967,14 +945,14 @@ DeviceFileEvents
 </details></div>
 </article>
 <article class="card" id="art-04" data-art-slug="2026-06-17-ghsa-critical-cve-2026-55450-langflow-unauthenticated-file-u"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="GitHub Security Advisories"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,cloud,endpoint"
-  data-targets="vcs,windows"
-  data-uc-count="4" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-55450: Langflow: Unauthenticated file upload leads to DoS (space exhaustion) and information leak Langflow: Unauthenticated file upload leads to DoS (space exhaustion) and information leak CVE-2026-55450 T1190 [LLM] Langflow CVE-2026-55450 unauthenticated upload endpoint hit [LLM] Langflow cache directory rapid file growth (CVE-2026-55450 DoS) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55450: Langflow: Unauthenticated file upload leads to">
+  data-splunk-cats="application,endpoint,web"
+  data-targets="linux,vcs,windows"
+  data-uc-count="8" data-llm-uc-count="6"
+  data-search="[GHSA / CRITICAL] CVE-2026-55450: Langflow: Unauthenticated file upload leads to DoS (space exhaustion) and information leak Langflow: Unauthenticated file upload leads to DoS (space exhaustion) and information leak CVE-2026-55450 T1190 [LLM] Unauthenticated POST to Langflow /api/v1/upload/{flow_id} endpoint (CVE-2026-55450) [LLM] Langflow upload volume spike — disk-exhaustion DoS pattern (CVE-2026-55450) [LLM] Rapid file growth in Langflow cache directory (CVE-2026-55450 disk exhaustion) [LLM] Langflow upload response leaks absolute cache path (CVE-2026-55450 info disclosure) [LLM] Correlated Langflow upload burst with cache-directory write spike [LLM] Successful Langflow /api/* request with missing Authorization header (unauth API access) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55450: Langflow: Unauthenticated file upload leads to">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-17-ghsa-critical-cve-2026-55450-langflow-unauthenticated-file-u" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -983,9 +961,9 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-06-17</span>
-    <span>4 use cases</span>
+    <span>8 use cases</span>
     <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
+    <span>4 kill-chain phases detected</span>
   </div>
   <p class="summary">Langflow: Unauthenticated file upload leads to DoS (space exhaustion) and information leak</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-55450</span></div>
@@ -1006,10 +984,10 @@ DeviceFileEvents
   <div class="name">Weaponization</div>
   <div class="marker">—</div>
 </div>
-<div class="kc-cell ">
+<div class="kc-cell hit">
   <div class="num">Phase 3</div>
   <div class="name">Delivery</div>
-  <div class="marker">—</div>
+  <div class="marker">Detected</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 4</div>
@@ -1031,116 +1009,110 @@ DeviceFileEvents
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Langflow upload response leaks absolute cache path (CVE-2026-55450 info disclosure) · [LLM] Successful Langflow /api/* request with missing Authorization header (unauth API access) · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Langflow CVE-2026-55450 unauthenticated upload endpoint hit · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55450: Langflow: Unauthenticated file upload leads to</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Unauthenticated POST to Langflow /api/v1/upload/{flow_id} endpoint (CVE-2026-55450)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55450: Langflow: Unauthenticated file upload leads to</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Langflow cache directory rapid file growth (CVE-2026-55450 DoS)</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Langflow upload volume spike — disk-exhaustion DoS pattern (CVE-2026-55450) · [LLM] Rapid file growth in Langflow cache directory (CVE-2026-55450 disk exhaustion) · [LLM] Correlated Langflow upload burst with cache-directory write spike</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="8cc6ce4a96" data-platforms="datadog,def,sent,sigma,spl" data-targets="vcs,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="38a1af058a" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
   <summary>
-    <span class="uc-title">Langflow CVE-2026-55450 unauthenticated upload endpoint hit</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-title">Unauthenticated POST to Langflow /api/v1/upload/{flow_id} endpoint (CVE-2026-55450)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="8cc6ce4a96" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="38a1af058a" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts HTTP POST requests to the deprecated Langflow `/api/v1/upload/{flow_id}` endpoint without prior authentication, which on vulnerable builds (&lt;1.9.1) accepts arbitrary-size files from anyone with network reach and returns the absolute cache path. Pivots on the exact URI pattern and HTTP 201 response that confirms a successful unauthenticated write.
+    <div class="uc-desc">Detects HTTP POST traffic to the deprecated, unauthenticated Langflow upload endpoint exploited by CVE-2026-55450. Hunts the exact URI pattern reachable on the default Langflow port 7860 where any UUID is accepted and no Authorization header is required.
 
-Rationale: Targets the exact vulnerable URI path `/api/v1/upload/{flow_id}` named in the GHSA advisory body, gated on HTTP 201 (the success code the PoC returns) and absent/empty authenticated-user field — that combination is uniquely the unauthenticated-write primitive. Cross-checked against the Langflow PR #12831 fix description which confirms 1.9.1 wires `get_flow` auth and 413 size enforcement, so post-patch this query goes silent on healthy installs.
+Rationale: Article explicitly names POST /api/v1/upload/{flow_id} as the unauthenticated endpoint and shows the curl PoC against port 7860. Cross-checked GHSA-x223-p2gf-v735 advisory and PR #12831 confirming the endpoint path and Langflow default port.
 
 Cross-checked against:
   • https://github.com/advisories/GHSA-x223-p2gf-v735
-  • https://github.com/langflow-ai/langflow/pull/12831
-  • https://nvd.nist.gov/vuln/detail/CVE-2026-55450</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Endpoint Denial of Service: OS Exhaustion Flood">T1499.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authenticated Langflow admin testing the deprecated endpoint after upgrade (User field will be populated post-1.9.1)</li><li>Internal CI/integration test harness that calls /api/v1/upload/&lt;test-uuid&gt; with a service account whose username is logged</li><li>Penetration-test scanners (Burp/Nuclei/Tenable) probing this CVE on a sanctioned engagement window</li><li>Reverse proxy stripping the auth header for path rewrites, making legitimate calls appear unauthenticated</li><li>Health-check probes from monitoring systems that POST to the upload path with empty bodies</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where UA !has &quot;HealthCheck&quot; and UA !has &quot;Burp&quot; and UA !has &quot;Nuclei&quot; and SrcIP !in (&quot;10.0.0.0/8&quot;, &quot;172.16.0.0/12&quot;, &quot;192.168.0.0/16&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: confirm the Langflow build (`pip show langflow` or container tag) on the responding host; if &lt;1.9.1, the request is exploit-grade. Pull the cIP and inspect Hits/TotalBytes — bursts &gt;100MB or &gt;100 requests/min indicate active DoS attempt; single hits indicate recon/path leak. Step 2 — Contain: block the source IP at the WAF/edge, take a disk-usage snapshot of `~/Library/Caches/langflow/` or `$LANGFLOW_CACHE_DIR`, and force-upgrade to Langflow 1.9.1. If disk pressure is real, purge orphan flow-id directories that don&#x27;t map to authenticated flows. Step 3 — Hunt: enumerate every distinct flow_id UUID in the URI to spot scanning; pivot on cIP across other internet-facing services for the same actor; check egress from the Langflow host for follow-on activity now that the absolute cache path has been leaked (LFI/path-traversal chain attempts referencing the leaked `/Users/...` or `/root/.cache/langflow/` path).</div></details>
+  • https://github.com/langflow-ai/langflow/pull/12831</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Langflow users on internal network triggering uploads via the deprecated endpoint pre-1.9.1</li><li>Internal QA/CI pipelines testing Langflow upload functionality</li><li>Vulnerability scanners (Nessus, Qualys, Burp) probing the endpoint</li><li>Authorized red-team / pentest engagements</li><li>Self-hosted internal Langflow instances reached by power users via curl</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (&lt;internal_qa_subnet&gt;, &lt;vuln_scanner_ips&gt;) and RequestClientApplication !has_any (&quot;Nessus&quot;,&quot;Qualys&quot;,&quot;Burp&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm the target host is running Langflow &lt;1.9.1; check /api/v1/version. Validate source IP — internal/known user vs external/unknown. Pull the response body to see if file_path was disclosed.
+Step 2 (contain): Block external traffic to TCP/7860 at the perimeter; if Langflow is exposed publicly, push WAF rule blocking POST /api/v1/upload/. Patch to Langflow 1.9.1+.
+Step 3 (hunt): Pivot on source IP for follow-on activity (other Langflow endpoints, scanning behaviour, exfil). Check Langflow cache directory size; look for atypical file extensions written to /var/cache/langflow/ or ~/.cache/langflow/.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-04-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-04-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-04-uc0-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-04-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-04-uc0-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-04-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-04-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Langflow is typically not on Defender-monitored endpoints; web logs preferred. If Langflow runs on a Defender-enrolled Linux/Windows host, fall back to network egress to the listening port.
-DeviceNetworkEvents
-| where Timestamp &gt; ago(7d)
-| where LocalPort == 7860
-| where ActionType == &quot;InboundConnectionAccepted&quot;
-| summarize Hits=count(), Bytes=sum(toint(coalesce(tostring(parse_json(AdditionalFields).bytes_in), &quot;0&quot;))) by DeviceName, RemoteIP, bin(Timestamp, 5m)
-| where Hits &gt; 20 or Bytes &gt; 1048576
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let UploadHits = union isfuzzy=true
-    (W3CIISLog
-        | where TimeGenerated &gt; ago(7d)
-        | where csMethod == &quot;POST&quot;
-        | where csUriStem matches regex @&quot;(?i)/api/v1/upload/[0-9a-f-]{36}&quot;
-        | where scStatus == 201
-        | extend SrcIP = cIP, BytesIn = toint(csBytes), UA = csUserAgent, User = csUserName, Host = Computer, UriStem = csUriStem),
-    (AppServiceHTTPLogs
-        | where TimeGenerated &gt; ago(7d)
-        | where CsMethod == &quot;POST&quot;
-        | where CsUriStem matches regex @&quot;(?i)/api/v1/upload/[0-9a-f-]{36}&quot;
-        | where ScStatus == 201
-        | extend SrcIP = CIp, BytesIn = toint(CsBytes), UA = UserAgent, User = CsUsername, Host = CsHost, UriStem = CsUriStem);
-UploadHits
-| where isempty(User) or User in (&quot;-&quot;, &quot;&quot;)
-| summarize Hits=count(), TotalBytes=sum(BytesIn), MaxBytes=max(BytesIn), Sample=any(UriStem) by SrcIP, Host, UA, bin(TimeGenerated, 5m)
-| where Hits &gt; 20 or TotalBytes &gt; 1048576
+    <div class="tab-content active" id="art-04-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(1d)
+| where RemotePort == 7860 or LocalPort == 7860
+| where ActionType in (&quot;InboundConnectionAccepted&quot;,&quot;ConnectionSuccess&quot;)
+| summarize ConnCount=count(), Hosts=dcount(RemoteIP), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SampleRemotes=make_set(RemoteIP,25) by DeviceName, LocalPort, InitiatingProcessFileName
+| where ConnCount &gt; 5 or Hosts &gt; 1
+| order by ConnCount desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(1d)
+| where RequestMethod =~ &quot;POST&quot;
+| where RequestURL has &quot;/api/v1/upload/&quot;
+| where isempty(RequestClientApplication) or RequestClientApplication !has &quot;Bearer&quot;
+| extend FlowId = extract(@&quot;/api/v1/upload/([0-9a-fA-F-]{36})&quot;, 1, RequestURL)
+| project TimeGenerated, SourceIP, DestinationHostName, RequestMethod, RequestURL, FlowId, ReceivedBytes, RequestClientApplication, DeviceVendor, DeviceProduct
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Langflow CVE-2026-55450 Unauthenticated Upload Endpoint Hit
-id: 7f3b9a4e-6c25-4a91-8b1d-2c0f9d8e1a55
-description: Detects POST requests to the vulnerable Langflow /api/v1/upload/{flow_id} endpoint that return HTTP 201 with no authenticated user, indicating exploitation of CVE-2026-55450.
+    <div class="tab-content" id="art-04-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Langflow Unauthenticated Upload Endpoint Access (CVE-2026-55450)
+id: 7c2b9e1a-3d4f-4f01-9c4e-2a8b6f5d1c01
+description: Detects POST requests to Langflow deprecated /api/v1/upload/{flow_id} endpoint that allows unauthenticated file upload (CVE-2026-55450).
 references:
-    - https://github.com/advisories/GHSA-x223-p2gf-v735
-    - https://github.com/langflow-ai/langflow/pull/12831
+  - https://github.com/advisories/GHSA-x223-p2gf-v735
 author: SOC Detection Engineering
-date: 2026/06/17
+date: 2026/06/18
 tags:
-    - attack.t1190
-    - attack.t1499.001
+  - attack.t1190
+  - attack.initial_access
 logsource:
-    category: webserver
+  category: webserver
 detection:
-    selection:
-        cs-method: POST
-        cs-uri-stem|re: &#x27;(?i)/api/v1/upload/[0-9a-f-]{36}&#x27;
-        sc-status: 201
-    filter_auth:
-        cs-username:
-            - &#x27;-&#x27;
-            - &#x27;&#x27;
-    condition: selection and filter_auth
+  selection:
+    cs-method: POST
+    cs-uri-stem|contains: &#x27;/api/v1/upload/&#x27;
+    sc-status:
+      - 200
+      - 201
+  condition: selection
 level: high</code></pre></div>
-    <div class="tab-content" id="art-04-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>@http.method:POST @http.url_details.path:/api\/v1\/upload\/* @http.status_code:201 (-@usr.id:* OR @usr.id:- OR @usr.id:&quot;&quot;)</code></pre></div>
-    <div class="tab-content" id="art-04-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.status) as status values(Web.http_user_agent) as ua values(Web.bytes_in) as bytes_in dc(Web.src) as src_count from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/v1/upload/*&quot; Web.status=201 by Web.src Web.dest Web.user | `drop_dm_object_name(Web)` | where isnull(user) OR user=&quot;-&quot; OR user=&quot;&quot; | where bytes_in &gt; 1048576 OR count &gt; 20</code></pre><pre class="spl-mode-body" id="art-04-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.status) as status values(Web.http_user_agent) as ua values(Web.bytes_in) as bytes_in dc(Web.src) as src_count from datamodel=Web.Web where Web.http_method=POST Web.url=&quot;*/api/v1/upload/*&quot; Web.status=201 by Web.src Web.dest Web.user | `drop_dm_object_name(Web)` | where isnull(user) OR user=&quot;-&quot; OR user=&quot;&quot; | where bytes_in &gt; 1048576 OR count &gt; 20</code></pre></div></div>
+    <div class="tab-content" id="art-04-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:iis OR source:envoy) @http.method:POST @http.url_details.path:*/api/v1/upload/* @http.status_code:(200 OR 201)</code></pre></div>
+    <div class="tab-content" id="art-04-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemotePort=7860
+| ConnectionDirection=1
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4], function=count(as=ConnCount))
+| ConnCount &gt; 5</code></pre></div>
+    <div class="tab-content" id="art-04-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agent values(Web.src) as src values(Web.status) as status from datamodel=Web where Web.http_method=POST Web.url=&quot;*/api/v1/upload/*&quot; Web.dest_port IN (7860,80,443) by Web.dest Web.url Web.src | `drop_dm_object_name(Web)` | where status IN (200,201)</code></pre><pre class="spl-mode-body" id="art-04-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agent values(Web.src) as src values(Web.status) as status from datamodel=Web where Web.http_method=POST Web.url=&quot;*/api/v1/upload/*&quot; Web.dest_port IN (7860,80,443) by Web.dest Web.url Web.src | `drop_dm_object_name(Web)` | where status IN (200,201)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="2e73795429" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
+<details class="uc" data-uc-slug="22302fe669" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Langflow cache directory rapid file growth (CVE-2026-55450 DoS)</span>
+    <span class="uc-title">Langflow upload volume spike — disk-exhaustion DoS pattern (CVE-2026-55450)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="2e73795429" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="22302fe669" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts on the file-system side of the exploit: bursts of files created under the Langflow cache directory by the langflow/uvicorn worker process. The advisory shows the saved path pattern `&lt;cache&gt;/langflow/&lt;flow_id&gt;/&lt;sha256&gt;.&lt;ext&gt;` — a high count of distinct flow_id subdirectories or total bytes written in a short window indicates the DoS primitive is being exercised.
+    <div class="uc-desc">Detects abuse of the unauthenticated Langflow upload endpoint at scale — many POSTs to /api/v1/upload/ from one source within a short window, indicating space-exhaustion DoS exploitation. Threshold-based, alerting tier.
 
-Rationale: Anchors on the exact path pattern shown in the advisory&#x27;s PoC response (`/Users/ori/Library/Caches/langflow/&lt;uuid&gt;/&lt;sha256&gt;.txt`) and the parent processes that uvicorn/langflow run under. Distinct-flow-id count is the high-fidelity dimension — a single user normally touches a handful of flows, while exploitation sprays random UUIDs (`11111111-...` style in the PoC). Cross-checked against the langflow source path `langflow/services/cache` confirmed in PR #12831.
+Rationale: Article: &#x27;Unauthenticated users can upload any amount of data to the server without any limitations... can lead to space exhaustion on the server.&#x27; Threshold tuned for repeated POSTs to the named endpoint. 1.9.1 patch enforces max_file_size_upload returning HTTP 413, supporting the volume-based abuse model.
 
 Cross-checked against:
   • https://github.com/advisories/GHSA-x223-p2gf-v735
   • https://github.com/langflow-ai/langflow/pull/12831</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Endpoint Denial of Service: OS Exhaustion Flood">T1499.001</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Bulk legitimate flow import after a Langflow upgrade or restore-from-backup operation</li><li>CI pipeline running Langflow integration tests that seed many fixture flows</li><li>Power user uploading a large dataset (PDFs, embeddings inputs) split across many flows in one session</li><li>Langflow cache warm-up after container restart re-populating files from object storage</li><li>Backup tool reading and re-writing the cache directory if file-watcher misclassifies reads as writes</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;pytest&quot; and InitiatingProcessCommandLine !has &quot;import_flow&quot; and DeviceName !has &quot;langflow-ci&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: confirm Langflow version on the host; on &lt;1.9.1 the writer process is unauthenticated-attacker-controlled, on 1.9.1+ the same pattern indicates an authenticated abuser. Map distinct FlowIdDir UUIDs to the Langflow DB `flow` table — UUIDs that don&#x27;t exist as real flows are exploit artefacts (pre-fix the endpoint accepted any UUID). Step 2 — Contain: stop the Langflow service if disk free-space &lt;10%, purge orphan UUID directories under the cache root, snapshot a sample file for IR, upgrade to 1.9.1. If host is internet-exposed, add WAF rule blocking POST to `/api/v1/upload/*` until patched. Step 3 — Hunt: correlate burst start with the web-log UC&#x27;s source IP, check egress from the Langflow host (attacker may chain the leaked absolute path into further attacks against the same host), and verify no flow-id collision with real user flows (cross-tenant data-mix risk).</div></details>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="OS Exhaustion Flood">T1499.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate bulk-ingest of training documents by power users</li><li>Langflow CI/CD test suite that exercises the upload endpoint repeatedly</li><li>Backup/restore tooling re-uploading flow assets</li><li>Load testing or capacity planning runs</li><li>Misconfigured client retrying after 413 responses post-patch</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (&lt;internal_qa_subnet&gt;, &lt;internal_loadtest_subnet&gt;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm source IP is external/unknown; check df -h or equivalent on Langflow host for cache-volume utilisation jump. Sample 3-5 of the recorded requests to confirm same URI shape.
+Step 2 (contain): Rate-limit or block source IP at WAF/firewall; if disk &gt;85%, clear /var/cache/langflow/ (or ~/.cache/langflow/). Restart Langflow if hung. Patch to 1.9.1+.
+Step 3 (hunt): Pivot on source IP for scans against other Langflow paths or other CVE-2026-55450 targets in the org. Search for the same IP hitting other internal AI/ML tooling.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-04-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-04-uc1-sentinel">Sentinel KQL</button>
@@ -1148,34 +1120,241 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-04-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-04-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-04-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(1d)
+    <div class="tab-content active" id="art-04-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(6h)
+| where LocalPort == 7860
+| where ActionType has &quot;Inbound&quot; or ActionType == &quot;ConnectionSuccess&quot;
+| summarize Conns=count(), TotalBytes=sum(toint(coalesce(tostring(parse_json(AdditionalFields).TotalBytesIn), &quot;0&quot;))) by RemoteIP, DeviceName, bin(Timestamp, 10m)
+| where Conns &gt; 25
+| order by Conns desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(6h)
+| where RequestMethod =~ &quot;POST&quot; and RequestURL has &quot;/api/v1/upload/&quot;
+| summarize UploadCount=count(), TotalBytes=sum(toint(ReceivedBytes)), DistinctFlowIds=dcount(extract(@&quot;/api/v1/upload/([0-9a-fA-F-]{36})&quot;,1,RequestURL)) by SourceIP, DestinationHostName, bin(TimeGenerated, 10m)
+| where UploadCount &gt; 25 or TotalBytes &gt; 524288000
+| order by UploadCount desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:iis) @http.method:POST @http.url_details.path:*/api/v1/upload/*</code></pre></div>
+    <div class="tab-content" id="art-04-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 RemotePort=7860 ConnectionDirection=1
+| groupBy([RemoteAddressIP4, aid, ComputerName], function=count(as=Conns))
+| Conns &gt; 25</code></pre></div>
+    <div class="tab-content" id="art-04-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count as UploadCount sum(Web.bytes_in) as TotalBytes values(Web.url) as urls min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=POST Web.url=&quot;*/api/v1/upload/*&quot; by Web.src Web.dest span=10m | `drop_dm_object_name(Web)` | where UploadCount &gt; 25 OR TotalBytes &gt; 524288000 | eval RatePerMin = round(UploadCount/10,2)</code></pre><pre class="spl-mode-body" id="art-04-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as UploadCount sum(Web.bytes_in) as TotalBytes values(Web.url) as urls min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=POST Web.url=&quot;*/api/v1/upload/*&quot; by Web.src Web.dest span=10m | `drop_dm_object_name(Web)` | where UploadCount &gt; 25 OR TotalBytes &gt; 524288000 | eval RatePerMin = round(UploadCount/10,2)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="4906681dfb" data-platforms="datadog,def,falcon,sent,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">Rapid file growth in Langflow cache directory (CVE-2026-55450 disk exhaustion)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="4906681dfb" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects an unusual rate of file writes under the Langflow cache directory — the artefact of unauthenticated upload abuse. Targets the cache paths named in the advisory (`~/Library/Caches/langflow/`, `~/.cache/langflow/`, `/var/cache/langflow/`).
+
+Rationale: Article PoC shows files written to `/Users/ori/Library/Caches/langflow/&lt;flow_id&gt;/&lt;sha&gt;.&lt;ext&gt;`. The advisory describes attackers uploading without limits — disk exhaustion materialises as a burst of writes inside the Langflow cache dir, which is the host-side observable of the attack.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-x223-p2gf-v735</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="OS Exhaustion Flood">T1499.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Langflow bulk ingest of training data</li><li>Langflow flow import/export operations creating cache assets</li><li>CI test runs against Langflow</li><li>Initial Langflow deployment seeding example flows</li><li>Plugin/extension installs that hydrate the cache directory</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessFileName !in~ (&quot;langflow-import.sh&quot;,&quot;backup-restore.exe&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Inspect file extensions and sizes in the cache directory — many same-size random-named files or oversized files indicates abuse. Check df -h. Correlate with web access logs (UC above) for inbound POSTs.
+Step 2 (contain): Stop or restart the Langflow service; clear oversized/unknown files from cache; block source IP at firewall; patch to 1.9.1+.
+Step 3 (hunt): Pivot to network logs for the same time window to attribute the writes to a remote source. Check whether file_path responses were sent back (potential info-leak chain).</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-04-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-04-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-04-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-04-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-04-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-04-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(6h)
 | where ActionType == &quot;FileCreated&quot;
-| where FolderPath has_any (&quot;/Library/Caches/langflow/&quot;, &quot;/.cache/langflow/&quot;, @&quot;\langflow\Cache\&quot;, @&quot;\AppData\Local\langflow\&quot;)
-| where InitiatingProcessFileName in~ (&quot;python&quot;, &quot;python3&quot;, &quot;python.exe&quot;, &quot;python3.exe&quot;, &quot;uvicorn&quot;, &quot;langflow&quot;, &quot;langflow.exe&quot;, &quot;gunicorn&quot;)
-| extend FlowIdDir = extract(@&quot;langflow[\\/]([0-9a-fA-F-]{36})&quot;, 1, FolderPath)
-| where isnotempty(FlowIdDir)
-| summarize FileCount=count(), TotalBytes=sum(FileSize), DistinctFlowIds=dcount(FlowIdDir), SampleFile=any(FileName) by DeviceName, InitiatingProcessFileName, bin(Timestamp, 5m)
-| where FileCount &gt; 50 or TotalBytes &gt; 524288000 or DistinctFlowIds &gt; 20
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(1d)
-| where EventType == &quot;FileCreated&quot;
-| where TargetFilePath has_any (&quot;/Library/Caches/langflow/&quot;, &quot;/.cache/langflow/&quot;, @&quot;\langflow\Cache\&quot;, @&quot;\AppData\Local\langflow\&quot;)
-| where ActingProcessName has_any (&quot;python&quot;, &quot;uvicorn&quot;, &quot;langflow&quot;, &quot;gunicorn&quot;)
-| extend FlowIdDir = extract(@&quot;langflow[\\/]([0-9a-fA-F-]{36})&quot;, 1, TargetFilePath)
-| where isnotempty(FlowIdDir)
-| summarize FileCount=count(), TotalBytes=sum(toint(TargetFileSize)), DistinctFlowIds=dcount(FlowIdDir), SampleFile=any(TargetFileName) by DvcHostname, ActingProcessName, bin(TimeGenerated, 5m)
-| where FileCount &gt; 50 or TotalBytes &gt; 524288000 or DistinctFlowIds &gt; 20
+| where FolderPath has_any (@&quot;\Library\Caches\langflow\&quot;, @&quot;/.cache/langflow/&quot;, @&quot;/var/cache/langflow/&quot;, @&quot;\AppData\Local\langflow\&quot;)
+| summarize WriteCount=count(), TotalBytes=sum(FileSize), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), SampleFiles=make_set(FileName,10) by DeviceName, InitiatingProcessFileName, bin(Timestamp, 5m)
+| where WriteCount &gt; 20
+| order by WriteCount desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(6h)
+| where EventType =~ &quot;FileCreated&quot;
+| where TargetFilePath has_any (&quot;Caches/langflow/&quot;, &quot;.cache/langflow/&quot;, &quot;/var/cache/langflow/&quot;, &quot;AppData\\Local\\langflow\\&quot;)
+| summarize WriteCount=count(), TotalBytes=sum(tolong(TargetFileSize)), Files=make_set(TargetFileName,10) by DvcHostname, ActingProcessName, bin(TimeGenerated, 5m)
+| where WriteCount &gt; 20
+| order by WriteCount desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(source:linux.auditd OR source:windows.sysmon) (@file.path:*Caches/langflow/* OR @file.path:*.cache/langflow/* OR @file.path:/var/cache/langflow/* OR @TargetFilename:*\\langflow\\*)</code></pre></div>
+    <div class="tab-content" id="art-04-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten regex(&quot;(/Caches/langflow/|/\\.cache/langflow/|/var/cache/langflow/|\\\\langflow\\\\)&quot;, field=TargetFileName)
+| groupBy([aid, ComputerName, ContextImageFileName], function=count(as=Writes))
+| Writes &gt; 20</code></pre></div>
+    <div class="tab-content" id="art-04-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count as WriteCount sum(Filesystem.file_size) as TotalBytes values(Filesystem.file_name) as files min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path IN (&quot;*/Caches/langflow/*&quot;,&quot;*/.cache/langflow/*&quot;,&quot;/var/cache/langflow/*&quot;) by Filesystem.dest Filesystem.process_name span=5m | `drop_dm_object_name(Filesystem)` | where WriteCount &gt; 20</code></pre><pre class="spl-mode-body" id="art-04-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as WriteCount sum(Filesystem.file_size) as TotalBytes values(Filesystem.file_name) as files min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path IN (&quot;*/Caches/langflow/*&quot;,&quot;*/.cache/langflow/*&quot;,&quot;/var/cache/langflow/*&quot;) by Filesystem.dest Filesystem.process_name span=5m | `drop_dm_object_name(Filesystem)` | where WriteCount &gt; 20</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="fd5b226bd0" data-platforms="datadog,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Langflow upload response leaks absolute cache path (CVE-2026-55450 info disclosure)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="fd5b226bd0" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects HTTP responses from /api/v1/upload/ that include an absolute filesystem path in the response body — the exact information-leak primitive the advisory describes. Pivots on the `file_path` JSON field with `/Caches/langflow/`, `/.cache/langflow/`, or `/var/cache/langflow/` substrings.
+
+Rationale: Article: &#x27;in the response, the absolute path of the uploaded file is reported to the attacker, which is an information leak that can assist in chaining other primitives.&#x27; PoC response shows `&quot;file_path&quot;:&quot;/Users/ori/Library/Caches/langflow/.../...txt&quot;`. Detection keys on the literal JSON field name plus the cache-path substring. Requires WAF/proxy with response-body capture.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-x223-p2gf-v735</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Local System">T1005</span> <span class="ind tech" title="Gather Victim Host Information: Client Configurations">T1592.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate authenticated upload responses in pre-1.9.1 deployments</li><li>Internal QA verifying patch behaviour</li><li>Langflow integration tests asserting response shape</li><li>Self-hosted dev users using curl against own instance</li><li>Vulnerability scanners flagging the response pattern</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (&lt;internal_qa_subnet&gt;, &lt;vuln_scanner_ips&gt;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Capture the disclosed path; identify Langflow OS/user account from the path (e.g. `/Users/ori` reveals macOS + user `ori`). Determine whether request was authenticated (post-1.9.1) or unauth (pre-patch).
+Step 2 (contain): If pre-patch and external source, block source IP; expedite upgrade to 1.9.1+. Even post-patch the path still leaks to the owner — consider PR follow-up to return relative paths only.
+Step 3 (hunt): Search for the disclosed username/home-directory pattern in other attack surfaces — same user enumerated via other Langflow endpoints, SSH attempts, etc.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-04-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-04-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-04-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-04-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where RequestMethod =~ &quot;POST&quot; and RequestURL has &quot;/api/v1/upload/&quot;
+| where Message has &quot;file_path&quot; and (Message has &quot;/Caches/langflow/&quot; or Message has &quot;/.cache/langflow/&quot; or Message has &quot;/var/cache/langflow/&quot;)
+| extend LeakedPath = extract(@&quot;\&quot;file_path\&quot;\s*:\s*\&quot;([^\&quot;]+)\&quot;&quot;, 1, Message)
+| project TimeGenerated, SourceIP, DestinationHostName, RequestURL, LeakedPath, DeviceVendor
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>@evt.name:(file_create OR FileCreated) @file.path:(*\/Library\/Caches\/langflow\/* OR *\/.cache\/langflow\/* OR *\\langflow\\Cache\\*) @process.name:(python OR python3 OR uvicorn OR langflow OR gunicorn)</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| (TargetFileName=/\/Library\/Caches\/langflow\//i OR TargetFileName=/\/\.cache\/langflow\//i OR TargetFileName=/\\langflow\\Cache\\/i)
-| ContextImageFileName=/(python|uvicorn|langflow|gunicorn)/i
-| regex(&quot;langflow[\\\\/](?&lt;FlowIdDir&gt;[0-9a-fA-F-]{36})&quot;, field=TargetFileName, strict=false)
-| groupBy([aid, ComputerName, ContextImageFileName], function=[count(as=FileCount), sum(WrittenBytes, as=TotalBytes), count(field=FlowIdDir, distinct=true, as=DistinctFlowIds)])
-| FileCount &gt; 50 OR TotalBytes &gt; 524288000 OR DistinctFlowIds &gt; 20</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count values(Filesystem.file_path) as paths sum(Filesystem.file_size) as total_bytes dc(Filesystem.file_path) as distinct_files from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path=&quot;*/Library/Caches/langflow/*&quot; OR Filesystem.file_path=&quot;*/.cache/langflow/*&quot; OR Filesystem.file_path=&quot;*\\langflow\\Cache\\*&quot;) Filesystem.process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;,&quot;langflow&quot;,&quot;gunicorn&quot;) by Filesystem.dest Filesystem.process_name span=5m | `drop_dm_object_name(Filesystem)` | where distinct_files &gt; 50 OR total_bytes &gt; 524288000</code></pre><pre class="spl-mode-body" id="art-04-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count values(Filesystem.file_path) as paths sum(Filesystem.file_size) as total_bytes dc(Filesystem.file_path) as distinct_files from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path=&quot;*/Library/Caches/langflow/*&quot; OR Filesystem.file_path=&quot;*/.cache/langflow/*&quot; OR Filesystem.file_path=&quot;*\\langflow\\Cache\\*&quot;) Filesystem.process_name IN (&quot;python&quot;,&quot;python3&quot;,&quot;uvicorn&quot;,&quot;langflow&quot;,&quot;gunicorn&quot;) by Filesystem.dest Filesystem.process_name span=5m | `drop_dm_object_name(Filesystem)` | where distinct_files &gt; 50 OR total_bytes &gt; 524288000</code></pre></div></div>
+    <div class="tab-content" id="art-04-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:envoy OR source:iis) @http.url_details.path:*/api/v1/upload/* @http.status_code:(200 OR 201) (@http.response.body:*file_path* AND (@http.response.body:*/Caches/langflow/* OR @http.response.body:*/.cache/langflow/* OR @http.response.body:*/var/cache/langflow/*))</code></pre></div>
+    <div class="tab-content" id="art-04-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count values(Web.response) as resp values(Web.src) as src min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=POST Web.url=&quot;*/api/v1/upload/*&quot; Web.status IN (200,201) by Web.dest Web.url | `drop_dm_object_name(Web)` | search resp=&quot;*\&quot;file_path\&quot;*&quot; AND (resp=&quot;*/Caches/langflow/*&quot; OR resp=&quot;*/.cache/langflow/*&quot; OR resp=&quot;*/var/cache/langflow/*&quot;)</code></pre><pre class="spl-mode-body" id="art-04-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count values(Web.response) as resp values(Web.src) as src min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.http_method=POST Web.url=&quot;*/api/v1/upload/*&quot; Web.status IN (200,201) by Web.dest Web.url | `drop_dm_object_name(Web)` | search resp=&quot;*\&quot;file_path\&quot;*&quot; AND (resp=&quot;*/Caches/langflow/*&quot; OR resp=&quot;*/.cache/langflow/*&quot; OR resp=&quot;*/var/cache/langflow/*&quot;)</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="a20900f094" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Correlated Langflow upload burst with cache-directory write spike</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="a20900f094" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Joins inbound POSTs to /api/v1/upload/{flow_id} with simultaneous file-create bursts under the Langflow cache directory on the same host within a 5-minute window. Confirms the upload→storage chain and rules out unrelated cache churn.
+
+Rationale: Reviewer feedback request: tuple-correlate upload burst with cache write burst on same host within 2-5min. Article gives exact URI and exact cache directory pattern; pairing them eliminates background cache churn FPs. Cross-checked PR #12831 — the fix path (save_uploaded_file → folder_name=flow_id_str) confirms the host-side directory shape.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-x223-p2gf-v735
+  • https://github.com/langflow-ai/langflow/pull/12831</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="OS Exhaustion Flood">T1499.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span> <span class="ind">Endpoint.Filesystem</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorised power-user bulk ingest from a single client</li><li>Langflow CI test runs hitting the API and writing to cache</li><li>Bulk flow-import scripts</li><li>Backup restore that replays uploads</li><li>Penetration test exercising the endpoint legitimately</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Sources !has_any (&quot;&lt;internal_qa_subnet&gt;&quot;,&quot;&lt;internal_loadtest_subnet&gt;&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Pull the SourceIP set from the upload side; confirm not an internal known service. Inspect the new cache files for content (genuine assets vs random/repeated padding).
+Step 2 (contain): Block source IP at WAF; restart Langflow service if hung; clear oversized/unknown cache files; upgrade to 1.9.1+.
+Step 3 (hunt): Pivot the source IP to other Langflow / AI tooling hosts. Search for the same IP across all CommonSecurityLog POSTs in the last 30 days to identify reconnaissance against other endpoints.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-04-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-04-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-04-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-04-uc4-kql"><pre><button class="copy-btn">COPY</button><code>let Uploads = CommonSecurityLog
+    | where TimeGenerated &gt; ago(6h)
+    | where RequestMethod =~ &quot;POST&quot; and RequestURL has &quot;/api/v1/upload/&quot;
+    | summarize UploadCount=count(), Sources=make_set(SourceIP,20), UploadStart=min(TimeGenerated) by DestinationHostName, bin(TimeGenerated, 5m)
+    | where UploadCount &gt; 10;
+let Writes = DeviceFileEvents
+    | where Timestamp &gt; ago(6h)
+    | where ActionType == &quot;FileCreated&quot;
+    | where FolderPath has_any (@&quot;\Library\Caches\langflow\&quot;, @&quot;/.cache/langflow/&quot;, @&quot;/var/cache/langflow/&quot;)
+    | summarize WriteCount=count(), WriteStart=min(Timestamp) by DeviceName, bin(Timestamp, 5m)
+    | where WriteCount &gt; 10;
+Uploads
+| join kind=inner (Writes) on $left.DestinationHostName == $right.DeviceName, $left.TimeGenerated == $right.Timestamp
+| extend DelaySec = datetime_diff(&#x27;second&#x27;, WriteStart, UploadStart)
+| where DelaySec between (-60 .. 300)
+| project UploadStart, WriteStart, DelaySec, DeviceName, Sources, UploadCount, WriteCount</code></pre></div>
+    <div class="tab-content" id="art-04-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let Uploads = CommonSecurityLog
+    | where TimeGenerated &gt; ago(6h)
+    | where RequestMethod =~ &quot;POST&quot; and RequestURL has &quot;/api/v1/upload/&quot;
+    | summarize UploadCount=count(), Sources=make_set(SourceIP,20), UploadStart=min(TimeGenerated) by DestinationHostName, bin(TimeGenerated, 5m)
+    | where UploadCount &gt; 10;
+let Writes = ImFileEvent
+    | where TimeGenerated &gt; ago(6h)
+    | where EventType =~ &quot;FileCreated&quot;
+    | where TargetFilePath has_any (&quot;Caches/langflow/&quot;, &quot;.cache/langflow/&quot;, &quot;/var/cache/langflow/&quot;)
+    | summarize WriteCount=count(), WriteStart=min(TimeGenerated) by DvcHostname, bin(TimeGenerated, 5m)
+    | where WriteCount &gt; 10;
+Uploads
+| join kind=inner (Writes) on $left.DestinationHostName == $right.DvcHostname
+| extend DelaySec = datetime_diff(&#x27;second&#x27;, WriteStart, UploadStart)
+| where DelaySec between (-60 .. 300)
+| project UploadStart, WriteStart, DelaySec, DvcHostname, Sources, UploadCount, WriteCount</code></pre></div>
+    <div class="tab-content" id="art-04-uc4-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count as UploadCount values(Web.src) as src min(_time) as upload_first max(_time) as upload_last from datamodel=Web where Web.http_method=POST Web.url=&quot;*/api/v1/upload/*&quot; by Web.dest span=5m | `drop_dm_object_name(Web)` | where UploadCount &gt; 10 | join type=inner dest [| tstats `summariesonly` count as WriteCount sum(Filesystem.file_size) as TotalBytes min(_time) as write_first from datamodel=Endpoint.Filesystem where Filesystem.file_path IN (&quot;*/Caches/langflow/*&quot;,&quot;*/.cache/langflow/*&quot;,&quot;/var/cache/langflow/*&quot;) by Filesystem.dest span=5m | `drop_dm_object_name(Filesystem)` | rename dest as host | eval dest=host | where WriteCount &gt; 10] | eval DelaySec = write_first - upload_first | where DelaySec &gt;= 0 AND DelaySec &lt; 300</code></pre><pre class="spl-mode-body" id="art-04-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count as UploadCount values(Web.src) as src min(_time) as upload_first max(_time) as upload_last from datamodel=Web where Web.http_method=POST Web.url=&quot;*/api/v1/upload/*&quot; by Web.dest span=5m | `drop_dm_object_name(Web)` | where UploadCount &gt; 10 | join type=inner dest [| tstats summariesonly=false count as WriteCount sum(Filesystem.file_size) as TotalBytes min(_time) as write_first from datamodel=Endpoint.Filesystem where Filesystem.file_path IN (&quot;*/Caches/langflow/*&quot;,&quot;*/.cache/langflow/*&quot;,&quot;/var/cache/langflow/*&quot;) by Filesystem.dest span=5m | `drop_dm_object_name(Filesystem)` | rename dest as host | eval dest=host | where WriteCount &gt; 10] | eval DelaySec = write_first - upload_first | where DelaySec &gt;= 0 AND DelaySec &lt; 300</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="95ae650b48" data-platforms="datadog,sent,sigma,spl" data-targets="vcs">
+  <summary>
+    <span class="uc-title">Successful Langflow /api/* request with missing Authorization header (unauth API access)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="95ae650b48" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects HTTP 200/201/204 responses to /api/* paths on Langflow hosts where the Authorization header is absent or empty — the broader unauthenticated-access pattern implied by the advisory. Excludes known unauth health endpoints.
+
+Rationale: Reviewer feedback + article text: &#x27;Unauthenticated users can upload any amount of data... only network access to Langflow&#x27; implies the auth gap may affect other deprecated endpoints. Detection covers /api/ surface area with explicit health-endpoint exclusions and missing-Authorization check. Cross-checked PR #12831 which adds `get_flow` dependency — confirming the missing-auth shape is the root cause class.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-x223-p2gf-v735
+  • https://github.com/langflow-ai/langflow/pull/12831</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Langflow public docs/static endpoints that legitimately need no auth</li><li>Reverse proxy that strips Authorization header before forwarding</li><li>SSO/OIDC flows using cookies rather than Bearer tokens</li><li>Front-end fetches hitting backend with session cookies</li><li>Internal monitoring probes hitting undocumented unauth endpoints</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (&lt;internal_monitoring_subnet&gt;) and not(Paths has_any (&quot;/api/v1/docs&quot;,&quot;/api/v1/openapi.json&quot;,&quot;/api/v1/auto_login&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm Langflow version (&lt;1.9.1 is vulnerable). Enumerate the specific /api/ paths hit — cross-check against Langflow source for which require auth. Identify source IP attribution.
+Step 2 (contain): If unauth endpoints other than the known exclusions are reachable externally, restrict at WAF/firewall or via reverse-proxy auth gate. Upgrade to 1.9.1+ which adds get_flow auth dependency.
+Step 3 (hunt): Pivot source IP and look for follow-on actions — upload attempts, flow enumeration, credential probing on adjacent services.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-04-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-04-uc5-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-04-uc5-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-04-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-04-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(1d)
+| where RequestURL has &quot;/api/&quot; and not(RequestURL has_any (&quot;/api/v1/health&quot;,&quot;/api/v1/ping&quot;,&quot;/api/v1/version&quot;,&quot;/api/v1/login&quot;,&quot;/api/v1/auto_login&quot;))
+| where toint(coalesce(DeviceCustomString1, &quot;0&quot;)) in (200,201,204) or RequestContext has_any (&quot;200&quot;,&quot;201&quot;,&quot;204&quot;)
+| where isempty(RequestClientApplication) or RequestClientApplication !has &quot;Bearer&quot; and RequestClientApplication !has &quot;Cookie&quot;
+| summarize HitCount=count(), Paths=make_set(RequestURL,25), Hosts=dcount(DestinationHostName) by SourceIP, bin(TimeGenerated, 15m)
+| where HitCount &gt; 3</code></pre></div>
+    <div class="tab-content" id="art-04-uc5-sigma"><pre><button class="copy-btn">COPY</button><code>title: Langflow Unauthenticated /api/ Access (CVE-2026-55450 broader)
+id: 9d4f2a3e-6b7c-4d12-8e0a-3c5b8e7f1d02
+description: Detects successful Langflow /api/ requests lacking an Authorization header, excluding known unauthenticated endpoints. Hunts the broader unauthenticated-access pattern around CVE-2026-55450.
+references:
+  - https://github.com/advisories/GHSA-x223-p2gf-v735
+author: SOC Detection Engineering
+date: 2026/06/18
+tags:
+  - attack.t1190
+  - attack.initial_access
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-uri-stem|contains: &#x27;/api/&#x27;
+    sc-status:
+      - 200
+      - 201
+      - 204
+  filter_health:
+    cs-uri-stem|contains:
+      - &#x27;/api/v1/health&#x27;
+      - &#x27;/api/v1/ping&#x27;
+      - &#x27;/api/v1/version&#x27;
+      - &#x27;/api/v1/login&#x27;
+      - &#x27;/api/v1/auto_login&#x27;
+  filter_auth:
+    cs-Authorization|contains: &#x27;Bearer &#x27;
+  condition: selection and not (filter_health or filter_auth)
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-04-uc5-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:envoy OR source:iis) @http.url_details.path:*/api/* @http.status_code:(200 OR 201 OR 204) -@http.url_details.path:*/api/v1/health* -@http.url_details.path:*/api/v1/ping* -@http.url_details.path:*/api/v1/version* -@http.url_details.path:*/api/v1/login* -@http.url_details.path:*/api/v1/auto_login* -@http.request_headers.authorization:Bearer*</code></pre></div>
+    <div class="tab-content" id="art-04-uc5-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count values(Web.url) as urls values(Web.src) as src min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*/api/*&quot; Web.status IN (200,201,204) by Web.dest Web.url Web.src | `drop_dm_object_name(Web)` | search NOT (urls=&quot;*/api/v1/health*&quot; OR urls=&quot;*/api/v1/ping*&quot; OR urls=&quot;*/api/v1/version*&quot; OR urls=&quot;*/api/v1/login*&quot;) | where count &gt; 3</code></pre><pre class="spl-mode-body" id="art-04-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count values(Web.url) as urls values(Web.src) as src min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.url=&quot;*/api/*&quot; Web.status IN (200,201,204) by Web.dest Web.url Web.src | `drop_dm_object_name(Web)` | search NOT (urls=&quot;*/api/v1/health*&quot; OR urls=&quot;*/api/v1/ping*&quot; OR urls=&quot;*/api/v1/version*&quot; OR urls=&quot;*/api/v1/login*&quot;) | where count &gt; 3</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -1193,11 +1372,11 @@ Cross-checked against:
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-04-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-04-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-04-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-04-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-04-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-04-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-04-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-04-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -1206,7 +1385,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-04-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-04-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -1218,12 +1397,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-04-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-04-uc6-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-55450&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-04-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-04-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-55450&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -1246,11 +1425,11 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-04-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-04-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-04-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-04-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-04-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-04-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-04-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55450: Langflow: Unauthenticated file upload leads to
+    <div class="tab-content active" id="art-04-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55450: Langflow: Unauthenticated file upload leads to
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -1270,7 +1449,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-04-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55450: Langflow: Unauthenticated file upload leads to
@@ -1293,7 +1472,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55450: Langflow: Unauthenticated file upload leads to ```
+    <div class="tab-content" id="art-04-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc7-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55450: Langflow: Unauthenticated file upload leads to ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;endpoints.py&quot;))
@@ -1309,7 +1488,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-04-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55450: Langflow: Unauthenticated file upload leads to ```
+]</code></pre><pre class="spl-mode-body" id="art-04-uc7-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55450: Langflow: Unauthenticated file upload leads to ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;endpoints.py&quot;))
