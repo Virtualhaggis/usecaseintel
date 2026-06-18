@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Crawl4AI Python process outbound to cloud-metadata IP 169.254.169.254 (SSRF exploitation)
 
-`UC_53_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_84_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceNetworkEvents
 
 ### Path traversal in Crawl4AI /screenshot or /pdf output_path parameter
 
-`UC_53_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_84_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceNetworkEvents
 
 ### Crawl4AI Python/uvicorn server spawns shell child (post-/execute_js RCE)
 
-`UC_53_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_84_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceProcessEvents
 
 ### Unauthenticated access to Crawl4AI /monitor destructive endpoints
 
-`UC_53_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_84_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceNetworkEvents
 
 ### Crawl4AI SSRF via IPv6-mapped IPv4 bypass pattern in /crawl, /md, /llm request
 
-`UC_53_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_84_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ DeviceNetworkEvents
 
 ### Crawl4AI writes file outside /tmp/crawl4ai-outputs (output_path traversal landing)
 
-`UC_53_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_84_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -170,7 +170,7 @@ DeviceFileEvents
 
 ### Crawl4AI /crawl/job or /llm/job webhook URL targets RFC1918 / metadata host (webhook SSRF)
 
-`UC_53_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_84_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -189,7 +189,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-365w-hqf6-vxfg: Crawl4AI: Multiple Docker API Vulnerabili
 
-`UC_53_0` · phase: **install** · confidence: **High**
+`UC_84_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

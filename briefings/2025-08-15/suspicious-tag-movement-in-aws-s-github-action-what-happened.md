@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Tag deletion/repointing on critical GitHub Action repositories (configure-aws-credentials v4.3.0 pattern)
 
-`UC_824_3` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_825_3` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Internal workflows pulling aws-actions/configure-aws-credentials@v4.3.0 during the buggy-release window
 
-`UC_824_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_825_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

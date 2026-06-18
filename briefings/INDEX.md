@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1205 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1204 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,24 +10,41 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-18
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-18/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
+- [dragonforce hackers abuse microsoft teams relays to hide bac](./2026-06-18/dragonforce-hackers-abuse-microsoft-teams-relays-to-hide-bac.md)
 - [evilginx aitm attack captures microsoft credentials mfa toke](./2026-06-18/evilginx-aitm-attack-captures-microsoft-credentials-mfa-toke.md)
 - [f5 issues out of band patches for critical nginx vulnerabili](./2026-06-18/f5-issues-out-of-band-patches-for-critical-nginx-vulnerabili.md)
 - [f5 patches nginx vulnerability that enables code execution a](./2026-06-18/f5-patches-nginx-vulnerability-that-enables-code-execution-a.md)
 - [fortibleed leak exposes fortinet vpn credentials for 73 000 ](./2026-06-18/fortibleed-leak-exposes-fortinet-vpn-credentials-for-73-000-.md)
 - [from package to postinstall payload inside the mastra npm su](./2026-06-18/from-package-to-postinstall-payload-inside-the-mastra-npm-su.md)
+- [ghsa critical cve 2026 54003 kirby external initialization o](./2026-06-18/ghsa-critical-cve-2026-54003-kirby-external-initialization-o.md)
+- [ghsa critical ghsa 29w3 p9w9 wc47 praisonai arbitrary file r](./2026-06-18/ghsa-critical-ghsa-29w3-p9w9-wc47-praisonai-arbitrary-file-r.md)
+- [ghsa critical ghsa 4869 x4pr q22x praisonai unauthenticated ](./2026-06-18/ghsa-critical-ghsa-4869-x4pr-q22x-praisonai-unauthenticated-.md)
+- [ghsa critical ghsa 892r p3jq jp24 praisonai agentos remains ](./2026-06-18/ghsa-critical-ghsa-892r-p3jq-jp24-praisonai-agentos-remains-.md)
+- [ghsa critical ghsa 9752 mhqh h34f npm praisonai agentos expo](./2026-06-18/ghsa-critical-ghsa-9752-mhqh-h34f-npm-praisonai-agentos-expo.md)
+- [ghsa critical ghsa f38v 77qj h4jq praisonai platform 0 1 4 s](./2026-06-18/ghsa-critical-ghsa-f38v-77qj-h4jq-praisonai-platform-0-1-4-s.md)
+- [ghsa critical ghsa fq2m 6wqh x44g praisonai jobs api exposes](./2026-06-18/ghsa-critical-ghsa-fq2m-6wqh-x44g-praisonai-jobs-api-exposes.md)
+- [ghsa critical ghsa j4f3 55x4 r6q2 npm praisonai mcpserver ex](./2026-06-18/ghsa-critical-ghsa-j4f3-55x4-r6q2-npm-praisonai-mcpserver-ex.md)
+- [ghsa critical ghsa j4hj 7hfh g2f4 praisonai recipe serve aut](./2026-06-18/ghsa-critical-ghsa-j4hj-7hfh-g2f4-praisonai-recipe-serve-aut.md)
+- [ghsa critical ghsa p69m 4f92 2v84 praisonai remote code exec](./2026-06-18/ghsa-critical-ghsa-p69m-4f92-2v84-praisonai-remote-code-exec.md)
+- [ghsa critical ghsa p75f 6fp4 p57w praisonai missing authenti](./2026-06-18/ghsa-critical-ghsa-p75f-6fp4-p57w-praisonai-missing-authenti.md)
+- [ghsa critical ghsa vmmj pfw7 fjwp npm praisonai codemode san](./2026-06-18/ghsa-critical-ghsa-vmmj-pfw7-fjwp-npm-praisonai-codemode-san.md)
+- [ghsa critical ghsa x227 pf99 vffg praisonai mcp sse transpor](./2026-06-18/ghsa-critical-ghsa-x227-pf99-vffg-praisonai-mcp-sse-transpor.md)
+- [ghsa critical ghsa x8cv xmq7 p8xp praisonai agentteam launch](./2026-06-18/ghsa-critical-ghsa-x8cv-xmq7-p8xp-praisonai-agentteam-launch.md)
+- [hackers abuse claude ai shared chat feature to host the clic](./2026-06-18/hackers-abuse-claude-ai-shared-chat-feature-to-host-the-clic.md)
+- [hackers abuse microsoft fondue exe to side load appwiz cpl a](./2026-06-18/hackers-abuse-microsoft-fondue-exe-to-side-load-appwiz-cpl-a.md)
 - [hackers abuse powershell commands to deliver smartrat throug](./2026-06-18/hackers-abuse-powershell-commands-to-deliver-smartrat-throug.md)
-- [hackers abuse powershell vbscript and bat files to deliver x](./2026-06-18/hackers-abuse-powershell-vbscript-and-bat-files-to-deliver-x.md)
-- [hackers actively exploiting wordpress smtp plugin with 100 0](./2026-06-18/hackers-actively-exploiting-wordpress-smtp-plugin-with-100-0.md)
+- [inc ransomware emerges as major raas threat in 2026 with 830](./2026-06-18/inc-ransomware-emerges-as-major-raas-threat-in-2026-with-830.md)
+- [klue oauth breach linked to icarus salesforce data theft att](./2026-06-18/klue-oauth-breach-linked-to-icarus-salesforce-data-theft-att.md)
 - [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-18/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
 - [miasma and hades are spreading now detect them on developer ](./2026-06-18/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)
+- [microsoft details windows clipper malware campaign using usb](./2026-06-18/microsoft-details-windows-clipper-malware-campaign-using-usb.md)
 - [police cleans nearly 15 000 socgholish infected sites tied t](./2026-06-18/police-cleans-nearly-15-000-socgholish-infected-sites-tied-t.md)
 - [prevent npm and python supply chain attacks on developer mac](./2026-06-18/prevent-npm-and-python-supply-chain-attacks-on-developer-mac.md)
-- [rust clipboard hijacker uses fake github stars and virustota](./2026-06-18/rust-clipboard-hijacker-uses-fake-github-stars-and-virustota.md)
 - [shapedplugin update flow hacked to infect wordpress sites](./2026-06-18/shapedplugin-update-flow-hacked-to-infect-wordpress-sites.md)
-- [splunk ai toolkit vulnerability enables arbitrary os command](./2026-06-18/splunk-ai-toolkit-vulnerability-enables-arbitrary-os-command.md)
+- [the full snyk ai security platform free for open source main](./2026-06-18/the-full-snyk-ai-security-platform-free-for-open-source-main.md)
 
 ## 2026-06-17
-- [144 mastra npm packages compromised via hijacked contributor](./2026-06-17/144-mastra-npm-packages-compromised-via-hijacked-contributor.md)
+- [145 mastra npm packages compromised via hijacked contributor](./2026-06-17/145-mastra-npm-packages-compromised-via-hijacked-contributor.md)
 - [beyond the benchmark advancing security at ai speed](./2026-06-17/beyond-the-benchmark-advancing-security-at-ai-speed.md)
 - [cisa orders feds to patch max severity joomla plugin flaw by](./2026-06-17/cisa-orders-feds-to-patch-max-severity-joomla-plugin-flaw-by.md)
 - [cisa warns of actively exploited joomla jce flaw allowing ph](./2026-06-17/cisa-warns-of-actively-exploited-joomla-jce-flaw-allowing-ph.md)
@@ -35,13 +52,21 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [crypto clipper uses tor and worm like propagation for persis](./2026-06-17/crypto-clipper-uses-tor-and-worm-like-propagation-for-persis.md)
 - [forrester names microsoft a leader in the 2026 extended dete](./2026-06-17/forrester-names-microsoft-a-leader-in-the-2026-extended-dete.md)
 - [from china with tenderness](./2026-06-17/from-china-with-tenderness.md)
+- [ghsa critical cve 2026 32966 apache dolphinscheduler datasou](./2026-06-17/ghsa-critical-cve-2026-32966-apache-dolphinscheduler-datasou.md)
+- [ghsa critical cve 2026 32967 apache dolphinscheduler the v2 ](./2026-06-17/ghsa-critical-cve-2026-32967-apache-dolphinscheduler-the-v2-.md)
+- [ghsa critical cve 2026 50203 apache airflow sftp provider pa](./2026-06-17/ghsa-critical-cve-2026-50203-apache-airflow-sftp-provider-pa.md)
 - [ghsa critical cve 2026 55450 langflow unauthenticated file u](./2026-06-17/ghsa-critical-cve-2026-55450-langflow-unauthenticated-file-u.md)
 - [ghsa critical cve 2026 55471 hapi fhir xxe in xsltutilities ](./2026-06-17/ghsa-critical-cve-2026-55471-hapi-fhir-xxe-in-xsltutilities-.md)
+- [ghsa critical ghsa 4mpj 78p6 rj59 duplicate advisory pickles](./2026-06-17/ghsa-critical-ghsa-4mpj-78p6-rj59-duplicate-advisory-pickles.md)
+- [ghsa critical ghsa 5rph q42j 36j9 duplicate advisory pickles](./2026-06-17/ghsa-critical-ghsa-5rph-q42j-36j9-duplicate-advisory-pickles.md)
+- [ghsa critical ghsa 6v84 v468 3c7f duplicate advisory pickles](./2026-06-17/ghsa-critical-ghsa-6v84-v468-3c7f-duplicate-advisory-pickles.md)
+- [ghsa critical ghsa 7f79 rvx6 vxc4 duplicate advisory pickles](./2026-06-17/ghsa-critical-ghsa-7f79-rvx6-vxc4-duplicate-advisory-pickles.md)
+- [ghsa critical ghsa 82fg 2r99 h7v6 duplicate advisory pickles](./2026-06-17/ghsa-critical-ghsa-82fg-2r99-h7v6-duplicate-advisory-pickles.md)
+- [ghsa critical ghsa j6c9 qvp8 699f duplicate advisory pickles](./2026-06-17/ghsa-critical-ghsa-j6c9-qvp8-699f-duplicate-advisory-pickles.md)
+- [ghsa critical ghsa rmpp 8wf5 xx5q duplicate advisory pickles](./2026-06-17/ghsa-critical-ghsa-rmpp-8wf5-xx5q-duplicate-advisory-pickles.md)
 - [india s telegram ban hit the uae too here s how to get aroun](./2026-06-17/india-s-telegram-ban-hit-the-uae-too-here-s-how-to-get-aroun.md)
 - [junior hacker used tailscale and openssh to keep access afte](./2026-06-17/junior-hacker-used-tailscale-and-openssh-to-keep-access-afte.md)
-- [kodak confirms data breach claimed by shinyhunters extortion](./2026-06-17/kodak-confirms-data-breach-claimed-by-shinyhunters-extortion.md)
 - [malicious jetbrains plugins steal ai api keys as chrome exte](./2026-06-17/malicious-jetbrains-plugins-steal-ai-api-keys-as-chrome-exte.md)
-- [microsoft working on defender patch for rogueplanet zero day](./2026-06-17/microsoft-working-on-defender-patch-for-rogueplanet-zero-day.md)
 - [the top 10 attack surface exposures in 2026](./2026-06-17/the-top-10-attack-surface-exposures-in-2026.md)
 
 ## 2026-06-16
@@ -110,7 +135,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cybersecurity stars awards 2026 winners announced across 95 ](./2026-06-11/cybersecurity-stars-awards-2026-winners-announced-across-95-.md)
 - [ghsa critical cve 2026 48039 meta ads mcp unauthenticated ht](./2026-06-11/ghsa-critical-cve-2026-48039-meta-ads-mcp-unauthenticated-ht.md)
 - [ghsa critical cve 2026 48062 codeigniter4 has a validation b](./2026-06-11/ghsa-critical-cve-2026-48062-codeigniter4-has-a-validation-b.md)
-- [github to disable npm install scripts by default to stop sup](./2026-06-11/github-to-disable-npm-install-scripts-by-default-to-stop-sup.md)
 - [new attacks trick openclaw ai agent into running code and le](./2026-06-11/new-attacks-trick-openclaw-ai-agent-into-running-code-and-le.md)
 - [new greatxml exploit bypasses windows bitlocker via recovery](./2026-06-11/new-greatxml-exploit-bypasses-windows-bitlocker-via-recovery.md)
 - [npm v12 delivers one of the biggest security improvements in](./2026-06-11/npm-v12-delivers-one-of-the-biggest-security-improvements-in.md)
@@ -120,12 +144,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-10
 - [10 year old critical vulnerability in phpbb affecting tens o](./2026-06-10/10-year-old-critical-vulnerability-in-phpbb-affecting-tens-o.md)
-- [china linked jdy botnet expands to 1 500 devices for cyber r](./2026-06-10/china-linked-jdy-botnet-expands-to-1-500-devices-for-cyber-r.md)
 - [code is being written everywhere and the device is the only ](./2026-06-10/code-is-being-written-everywhere-and-the-device-is-the-only-.md)
 - [compromised rust crate onering performs code exfiltration](./2026-06-10/compromised-rust-crate-onering-performs-code-exfiltration.md)
 - [ghsa critical cve 2026 48031 go restful api boilerplate hard](./2026-06-10/ghsa-critical-cve-2026-48031-go-restful-api-boilerplate-hard.md)
 - [ghsa critical cve 2026 48063 baileys has message upsert hist](./2026-06-10/ghsa-critical-cve-2026-48063-baileys-has-message-upsert-hist.md)
-- [ivanti fortinet and sap release patches for multiple critica](./2026-06-10/ivanti-fortinet-and-sap-release-patches-for-multiple-critica.md)
 
 ## 2026-06-09
 - [blinding the watchmen abusing cloud logging services for def](./2026-06-09/blinding-the-watchmen-abusing-cloud-logging-services-for-def.md)
@@ -283,45 +305,23 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [actions cool issues helper github action compromised all tag](./2026-05-19/actions-cool-issues-helper-github-action-compromised-all-tag.md)
 - [active supply chain attack malicious node ipc versions publi](./2026-05-19/active-supply-chain-attack-malicious-node-ipc-versions-publi.md)
 - [from pdb strings to maas tracking a commodity badiis ecosyst](./2026-05-19/from-pdb-strings-to-maas-tracking-a-commodity-badiis-ecosyst.md)
-- [ghsa critical cve 2026 2587 glassfish s gadget handler is vu](./2026-05-19/ghsa-critical-cve-2026-2587-glassfish-s-gadget-handler-is-vu.md)
-- [ghsa critical cve 2026 2611 mlflow improper origin validatio](./2026-05-19/ghsa-critical-cve-2026-2611-mlflow-improper-origin-validatio.md)
-- [ghsa critical cve 2026 45568 rok python proxyshare can be us](./2026-05-19/ghsa-critical-cve-2026-45568-rok-python-proxyshare-can-be-us.md)
-- [ghsa critical cve 2026 45695 kopia rce via ssh proxycommand ](./2026-05-19/ghsa-critical-cve-2026-45695-kopia-rce-via-ssh-proxycommand-.md)
-- [ghsa critical cve 2026 45721 algernon handler lua discovery ](./2026-05-19/ghsa-critical-cve-2026-45721-algernon-handler-lua-discovery-.md)
-- [ghsa critical cve 2026 45758 malicious code in guardrails ai](./2026-05-19/ghsa-critical-cve-2026-45758-malicious-code-in-guardrails-ai.md)
-- [ghsa critical cve 2026 46339 9router unauthenticated remote ](./2026-05-19/ghsa-critical-cve-2026-46339-9router-unauthenticated-remote-.md)
 - [ghsa critical cve 2026 46354 coder pkcs 7 signature bypass i](./2026-05-19/ghsa-critical-cve-2026-46354-coder-pkcs-7-signature-bypass-i.md)
-- [ghsa critical cve 2026 46395 haxcms private key disclosure v](./2026-05-19/ghsa-critical-cve-2026-46395-haxcms-private-key-disclosure-v.md)
-- [ghsa critical cve 2026 47323 camel cxf and camel knative mes](./2026-05-19/ghsa-critical-cve-2026-47323-camel-cxf-and-camel-knative-mes.md)
-- [ghsa critical ghsa 27f5 xjrr q9ff malware in opensearch proj](./2026-05-19/ghsa-critical-ghsa-27f5-xjrr-q9ff-malware-in-opensearch-proj.md)
 - [microsoft s durabletask package on pypi compromised mini sha](./2026-05-19/microsoft-s-durabletask-package-on-pypi-compromised-mini-sha.md)
 - [mini shai hulud strikes again npm worm compromises hundreds ](./2026-05-19/mini-shai-hulud-strikes-again-npm-worm-compromises-hundreds-.md)
 - [the antv supply chain campaign expands microsoft s durableta](./2026-05-19/the-antv-supply-chain-campaign-expands-microsoft-s-durableta.md)
 
 ## 2026-05-18
-- [ghsa critical cve 2026 45625 arcane backend missing admin au](./2026-05-18/ghsa-critical-cve-2026-45625-arcane-backend-missing-admin-au.md)
-- [ghsa critical cve 2026 45697 formie pre authenticated server](./2026-05-18/ghsa-critical-cve-2026-45697-formie-pre-authenticated-server.md)
-- [ghsa critical cve 2026 45829 chromadb python project has a p](./2026-05-18/ghsa-critical-cve-2026-45829-chromadb-python-project-has-a-p.md)
-- [ghsa critical cve 2026 7301 sglang multimodal scheduler dese](./2026-05-18/ghsa-critical-cve-2026-7301-sglang-multimodal-scheduler-dese.md)
-- [ghsa critical cve 2026 7302 sglang s multimodal generation r](./2026-05-18/ghsa-critical-cve-2026-7302-sglang-s-multimodal-generation-r.md)
-- [ghsa critical cve 2026 7304 sglang unauthenticated rce via e](./2026-05-18/ghsa-critical-cve-2026-7304-sglang-unauthenticated-rce-via-e.md)
-- [ghsa critical ghsa wx9m wx4f 4cmg malicious dropper in mistr](./2026-05-18/ghsa-critical-ghsa-wx9m-wx4f-4cmg-malicious-dropper-in-mistr.md)
 - [it threat evolution in q1 2026 mobile statistics](./2026-05-18/it-threat-evolution-in-q1-2026-mobile-statistics.md)
 - [mini shai hulud hits antv 300 malicious npm packages publish](./2026-05-18/mini-shai-hulud-hits-antv-300-malicious-npm-packages-publish.md)
 
 ## 2026-05-15
 - [cisa kev cve 2026 42897 microsoft exchange server cross site](./2026-05-15/cisa-kev-cve-2026-42897-microsoft-exchange-server-cross-site.md)
-- [ghsa critical ghsa 6626 79jh 5ccr duplicate advisory phpmyfa](./2026-05-15/ghsa-critical-ghsa-6626-79jh-5ccr-duplicate-advisory-phpmyfa.md)
 - [gremlin stealer s evolved tactics hiding in plain sight with](./2026-05-15/gremlin-stealer-s-evolved-tactics-hiding-in-plain-sight-with.md)
 - [malicious node ipc versions published to npm in suspected ma](./2026-05-15/malicious-node-ipc-versions-published-to-npm-in-suspected-ma.md)
 
 ## 2026-05-14
 - [cisa kev cve 2026 20182 cisco catalyst sd wan controller aut](./2026-05-14/cisa-kev-cve-2026-20182-cisco-catalyst-sd-wan-controller-aut.md)
 - [frostyneighbor fresh mischief and digital shenanigans](./2026-05-14/frostyneighbor-fresh-mischief-and-digital-shenanigans.md)
-- [ghsa critical cve 2026 45288 marten has an injection vulnera](./2026-05-14/ghsa-critical-cve-2026-45288-marten-has-an-injection-vulnera.md)
-- [ghsa critical cve 2026 45369 utcp cli vulnerable to command ](./2026-05-14/ghsa-critical-cve-2026-45369-utcp-cli-vulnerable-to-command-.md)
-- [ghsa critical cve 2026 45411 vm2 has a sandbox breakout usin](./2026-05-14/ghsa-critical-cve-2026-45411-vm2-has-a-sandbox-breakout-usin.md)
-- [ghsa critical ghsa wf8q wvv8 p8jf samanhappy mcphub sse endp](./2026-05-14/ghsa-critical-ghsa-wf8q-wvv8-p8jf-samanhappy-mcphub-sse-endp.md)
 - [ongoing exploitation of cisco catalyst sd wan vulnerabilitie](./2026-05-14/ongoing-exploitation-of-cisco-catalyst-sd-wan-vulnerabilitie.md)
 - [the time of much patching is coming](./2026-05-14/the-time-of-much-patching-is-coming.md)
 
@@ -2203,4 +2203,3 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [reduce risk to your supply chain with a software bill of mat](./2023-06-07/reduce-risk-to-your-supply-chain-with-a-software-bill-of-mat.md)
 - [snyk learn now aligns with the nist nice workforce framework](./2023-06-07/snyk-learn-now-aligns-with-the-nist-nice-workforce-framework.md)
 - [snyk welcomes enso enabling security leaders to scale their ](./2023-06-07/snyk-welcomes-enso-enabling-security-leaders-to-scale-their-.md)
-- [snyklaunch june 23 insights and deepcode ai enable faster fi](./2023-06-07/snyklaunch-june-23-insights-and-deepcode-ai-enable-faster-fi.md)

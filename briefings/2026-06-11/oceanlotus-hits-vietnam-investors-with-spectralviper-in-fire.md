@@ -67,7 +67,7 @@ _(none detected from narrative keywords)_
 
 ### FireAnt Metakit supply-chain update download from metakit.fireant.vn
 
-`UC_115_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_146_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### DtlCrashCatch.dll side-loaded into signed binary (SPECTRALVIPER side-load DLL)
 
-`UC_115_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_146_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ loaders
 
 ### SPECTRALVIPER injection into OneDrive.Sync.Service.exe
 
-`UC_115_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_146_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +162,7 @@ odNet
 
 ### SPECTRALVIPER C2 infrastructure contact (any process, IOC sweep)
 
-`UC_115_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_146_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +184,7 @@ DeviceNetworkEvents
 
 ### Known SPECTRALVIPER sample hash hit (file write or process execute)
 
-`UC_115_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_146_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -213,7 +213,7 @@ union isfuzzy=true
 
 ### Public-facing MSSQL spawning shell or LOLBin (OceanLotus T-Construction TTPs)
 
-`UC_115_15` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_146_15` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -486,7 +486,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus Hits Vietnam Investors With SPECTRALVIPER in FireAnt Attack
 
-`UC_115_9` · phase: **exploit** · confidence: **High**
+`UC_146_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

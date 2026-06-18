@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Talos weekly prevalent malware hash execution (Coinminer/Injector/Dropper.Miner)
 
-`UC_103_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_134_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### Talos prevalent malware hash dropped to disk (DeviceFileEvents pivot)
 
-`UC_103_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_134_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceFileEvents
 
 ### Talos prevalent malware filename pattern — VID001.exe and d4aa3e70..._N_Exe.exe
 
-`UC_103_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_134_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -227,7 +227,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A tale of two eras
 
-`UC_103_5` · phase: **exploit** · confidence: **High**
+`UC_134_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

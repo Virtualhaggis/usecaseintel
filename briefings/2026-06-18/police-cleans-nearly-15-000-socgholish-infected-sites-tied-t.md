@@ -11,16 +11,37 @@ By Sergiu Gatlan
 June 18, 2026
 09:25 AM
 0 
-
-
 International law enforcement agencies cleaned nearly 15,000 malware-infected WordPress websites and took down more than 100 servers linked to the SocGholish botnet and the Evil Corp Russian cybercrime group.
-
-
-This joint action (supported by Europol and Eurojust) was part of Operation Endgame , a major law enforcement operation now aimed at disrupting a key infection chain …
+This joint action (supported by Europol and Eurojust) was part of Operation Endgame , a major law enforcement operation now aimed at disrupting a key infection chain linked t…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `190.211.254.31`
+- **IPv4 (defanged):** `141.193.213.10`
+- **IPv4 (defanged):** `45.76.250.221`
+- **IPv4 (defanged):** `45.32.199.48`
+- **IPv4 (defanged):** `170.75.160.84`
+- **IPv4 (defanged):** `31.184.254.115`
+- **Domain (defanged):** `editions.seattlemysterylovers.com`
+- **Domain (defanged):** `support.traininghub.world`
+- **Domain (defanged):** `clients.dedicatedservicesusa.com`
+- **Domain (defanged):** `dashnex.plexusmarket.fund`
+- **Domain (defanged):** `static.twalls5280.com`
+- **Domain (defanged):** `circle.innovativecsportal.com`
+- **Domain (defanged):** `change-land.com`
+- **Domain (defanged):** `traininghub.world`
+- **Domain (defanged):** `dedicatedservicesusa.com`
+- **SHA256:** `8f896f3f0b5f33413217e9350dba6d4958cc9bdf568902a08d739b43db6f993b`
+- **SHA256:** `2f9e5ea05aa8cd81c1c1f0914220557c5dc4a8bc42ee822bd327e3cfc3328f45`
+- **SHA256:** `b151cd35a8aa986bd6bd6f2148fd9ca37e2953e823d658c088923b49e87b4035`
+- **SHA256:** `3862b771872c705cb757d851d7714de369cbf8db548d8dcac7edcc46933045e0`
+- **SHA256:** `dfc159e0987ac2ea946fd45fa61f81d828a5302d02d53dd7cf88cefefc79c316`
+- **SHA256:** `77ba87f9af5738061a9e5b8b8ad3119c2896188928283112dfd0d1882a6a347d`
+- **SHA256:** `fce0b35eb3fa3db05e5c6532705758a8669d5bb6fc1825175c0ee67bbbd38862`
+- **SHA256:** `a06b40943b4e4d4057756a456e7016b3eae69eeb2c4b1311ce53f5fd9dd7cefa`
+- **SHA256:** `d0858a2d532c8bb3bdd8f98ff78c2c16da33c171815aa5c89ffeb84ee76b8cf5`
+- **SHA256:** `1140b0fb86f156087d9886e61e8d0c5a3a74ce73648fda609d507e6802b9af5e`
+- **SHA256:** `436a97f14051ed97063c9b2e12a25b0068984a0ebe164001e51615539561e64e`
 
 ## MITRE ATT&CK Techniques
 
@@ -29,6 +50,8 @@ This joint action (supported by Europol and Eurojust) was part of Operation Endg
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1071.001** — Application Layer Protocol: Web Protocols
@@ -47,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### Fake browser update JavaScript spawned from browser download directory (SocGholish)
 
-`UC_0_3` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_29_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +98,7 @@ DeviceProcessEvents
 
 ### Script interpreter outbound HTTPS within 60s of Update.js execution (SocGholish)
 
-`UC_0_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_29_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +133,7 @@ DeviceNetworkEvents
 
 ### WordPress site serving injected SocGholish loader to internal browser
 
-`UC_0_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_29_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +155,7 @@ DeviceNetworkEvents
 
 ### Script interpreter spawning PE loader after browser-delivered JS (SocGholish second stage)
 
-`UC_0_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_29_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +183,7 @@ DeviceProcessEvents
 
 ### Shadow copy deletion within 24h of SocGholish script execution (Evil Corp ransomware prelude)
 
-`UC_0_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_29_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -277,7 +300,17 @@ DeviceProcessEvents
 | order by Timestamp desc
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `190.211.254.31`, `141.193.213.10`, `45.76.250.221`, `45.32.199.48`, `170.75.160.84`, `31.184.254.115`, `editions.seattlemysterylovers.com`, `support.traininghub.world` _(+7 more)_
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `8f896f3f0b5f33413217e9350dba6d4958cc9bdf568902a08d739b43db6f993b`, `2f9e5ea05aa8cd81c1c1f0914220557c5dc4a8bc42ee822bd327e3cfc3328f45`, `b151cd35a8aa986bd6bd6f2148fd9ca37e2953e823d658c088923b49e87b4035`, `3862b771872c705cb757d851d7714de369cbf8db548d8dcac7edcc46933045e0`, `dfc159e0987ac2ea946fd45fa61f81d828a5302d02d53dd7cf88cefefc79c316`, `77ba87f9af5738061a9e5b8b8ad3119c2896188928283112dfd0d1882a6a347d`, `fce0b35eb3fa3db05e5c6532705758a8669d5bb6fc1825175c0ee67bbbd38862`, `a06b40943b4e4d4057756a456e7016b3eae69eeb2c4b1311ce53f5fd9dd7cefa` _(+3 more)_
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

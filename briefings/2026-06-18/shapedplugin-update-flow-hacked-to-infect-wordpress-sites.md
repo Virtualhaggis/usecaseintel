@@ -11,15 +11,9 @@ By Bill Toulas
 June 18, 2026
 08:55 AM
 0 
-
-
 Multiple WordPress plugins from ShapedPlugin were compromised in a supply chain attack that distributed infected releases to paying customers via the vendor's official update system.
-
-
 The malware delivered this way installed a fake plugin that impersonates WooCommerce components, steals credentials, and grants operators remote file-writing capabilities.
-
-
-ShapedPlugin is a WordPress plug…
+ShapedPlugin is a WordPress plugin vendor sp…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -37,10 +31,11 @@ ShapedPlugin is a WordPress plug…
 - **T1555.003** — Credentials from Web Browsers
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
-- **T1505.003** — Web Shell
-- **T1036.005** — Match Legitimate Name or Location
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1041** — Exfiltration Over C2 Channel
+- **T1568** — Dynamic Resolution
+- **T1505.003** — Server Software Component: Web Shell
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1036.005** — Masquerading: Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
@@ -48,90 +43,69 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### ShapedPlugin malicious LicenseLoader.php file write to WP plugin directory
+### ShapedPlugin backdoor C2 beacon to generate.2faplugin.org / 194.76.217.28
 
-`UC_1_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_30_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.dest) as dest values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where (Filesystem.file_name="LicenseLoader.php" OR Filesystem.file_path="*/wp-content/plugins/woocommerce-product-slider/*LicenseLoader.php" OR Filesystem.file_path="*/wp-content/plugins/easy-testimonials/*LicenseLoader.php" OR Filesystem.file_path="*/wp-content/plugins/smart-post-show/*LicenseLoader.php") by Filesystem.dest Filesystem.file_path Filesystem.user Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.src_ip) as src_ip values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="generate.2faplugin.org" OR All_Traffic.dest_ip="194.76.217.28" OR All_Traffic.url="*2faplugin.org*") by All_Traffic.dest All_Traffic.dest_ip All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let C2Domain = "2faplugin.org";
+let C2IP = "194.76.217.28";
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has C2Domain or RemoteIP == C2IP
+| project Timestamp, DeviceName, DeviceId, ActionType, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName
+| order by Timestamp desc
+```
+
+### LicenseLoader.php dropped into WordPress plugins directory
+
+`UC_30_6` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.file_name="LicenseLoader.php" AND Filesystem.file_path="*wp-content/plugins/*" by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
 | where FileName =~ "LicenseLoader.php"
-    or FolderPath has_any (@"\wp-content\plugins\woocommerce-product-slider\", @"\wp-content\plugins\easy-testimonials\", @"\wp-content\plugins\smart-post-show\", @"/wp-content/plugins/woocommerce-product-slider/", @"/wp-content/plugins/easy-testimonials/", @"/wp-content/plugins/smart-post-show/") and FileName endswith ".php"
-| where FileName !in~ ("index.php","readme.txt","changelog.txt")
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where FolderPath has "wp-content" and FolderPath has "plugins"
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### Hidden fake WooCommerce subscription/notification plugin folder creation
+### Fake woocommerce-subscription / woocommerce-notification plugin directory created
 
-`UC_1_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_30_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as file_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/wp-content/plugins/woocommerce-subscription/*" OR Filesystem.file_path="*/wp-content/plugins/woocommerce-notification/*" OR Filesystem.file_path="*\\wp-content\\plugins\\woocommerce-subscription\\*" OR Filesystem.file_path="*\\wp-content\\plugins\\woocommerce-notification\\*") by Filesystem.dest Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*wp-content/plugins/woocommerce-subscription/*" OR Filesystem.file_path="*wp-content/plugins/woocommerce-notification/*") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.action | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FolderPath has_any (@"\wp-content\plugins\woocommerce-subscription\", @"\wp-content\plugins\woocommerce-notification\", @"/wp-content/plugins/woocommerce-subscription/", @"/wp-content/plugins/woocommerce-notification/")
-| where FolderPath !has "woocommerce-subscriptions"  // exclude the legit WooCommerce Subscriptions plugin (note plural)
-| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), FileCount = dcount(FileName), Files = make_set(FileName, 25), Writers = make_set(InitiatingProcessFileName, 5) by DeviceName, FolderPath
-| order by FirstSeen desc
-```
-
-### ShapedPlugin backdoor C2 callout to 2faplugin.org / 194.76.217.28
-
-`UC_1_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_port) as dest_port values(All_Traffic.app) as app values(All_Traffic.process_name) as process_name from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest="194.76.217.28" OR All_Traffic.dest_ip="194.76.217.28") by All_Traffic.src All_Traffic.dest All_Traffic.user | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime) | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src from datamodel=Network_Resolution.DNS where (DNS.query="*2faplugin.org" OR DNS.answer="194.76.217.28") by DNS.query DNS.answer | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)] | append [| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.src) as src from datamodel=Web.Web where (Web.url="*2faplugin.org*" OR Web.dest="194.76.217.28") by Web.url Web.dest Web.http_method | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)]
-```
-
-**Defender KQL:**
-```kql
-union isfuzzy=true
-(DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP == "194.76.217.28" or RemoteUrl has "2faplugin.org"
-| project Timestamp, DeviceName, ActionType, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
-(DeviceEvents
-| where Timestamp > ago(30d)
-| where ActionType == "DnsQueryResponse"
-| where RemoteUrl has "2faplugin.org" or AdditionalFields has "194.76.217.28"
-| project Timestamp, DeviceName, ActionType, RemoteUrl, InitiatingProcessFileName, AdditionalFields)
+| where ActionType in ("FileCreated","FileRenamed","FileModified")
+| where FolderPath has_any ("wp-content/plugins/woocommerce-subscription","wp-content\\plugins\\woocommerce-subscription","wp-content/plugins/woocommerce-notification","wp-content\\plugins\\woocommerce-notification")
+| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
+          InitiatingProcessAccountName
 | order by Timestamp desc
-```
-
-### Vulnerable ShapedPlugin Pro versions installed (CVE-2026-10735)
-
-`UC_1_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count values(Filesystem.file_path) as paths min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/wp-content/plugins/woocommerce-product-slider/woocommerce-product-slider.php" OR Filesystem.file_path="*/wp-content/plugins/easy-testimonials/easy-testimonials.php" OR Filesystem.file_path="*/wp-content/plugins/smart-post-show/smart-post-show.php") by Filesystem.dest Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareInventory
-| where SoftwareVendor =~ "shapedplugin" or SoftwareName has_any ("Product Slider Pro","Real Testimonials Pro","Smart Post Show Pro")
-| extend Affected = case(
-    SoftwareName has "Product Slider Pro" and SoftwareVersion < "3.5.4", "yes",
-    SoftwareName has "Real Testimonials Pro" and SoftwareVersion == "3.2.5", "yes",
-    SoftwareName has "Smart Post Show Pro" and SoftwareVersion < "4.0.2", "yes",
-    "no")
-| where Affected == "yes"
-| project Timestamp, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, OSPlatform
-| order by DeviceName asc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -235,4 +209,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -11,12 +11,8 @@ By Sergiu Gatlan
 June 18, 2026
 07:33 AM
 0 
-
-
 Cybersecurity company F5 has released out-of-band security updates to address multiple NGINX web server vulnerabilities, including two critical-severity flaws that could allow attackers to execute code on vulnerable systems.
-
-
-The two critical vulnerabilities were found in the ngx_http_v3_module ( CVE-2026-42530 ) and the ngx_http_proxy_v2_module and ngx_http_grpc_module ( CVE-2026…
+The two critical vulnerabilities were found in the ngx_http_v3_module ( CVE-2026-42530 ) and the ngx_http_proxy_v2_module and ngx_http_grpc_module ( CVE-2026-42055 )…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -45,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable NGINX versions exposed to CVE-2026-42530 / CVE-2026-42055
 
-`UC_8_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_36_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +60,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### NGINX worker process abnormal restart fan-out (CVE-2026-42530 / 42055 post-exploit crash signal)
 
-`UC_8_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_36_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +82,7 @@ DeviceProcessEvents
 
 ### Oversized HTTP request headers against NGINX (CVE-2026-42055 trigger condition)
 
-`UC_8_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_36_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +91,7 @@ DeviceProcessEvents
 
 ### NGINX Gateway Fabric arbitrary directive injection (CVE-2026-11311 / CVE-2026-50107)
 
-`UC_8_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_36_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
