@@ -66,7 +66,7 @@ _(none detected from narrative keywords)_
 
 ### DNS/network contact with AudiA6 money-mule registration domains
 
-`UC_94_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_95_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceNetworkEvents
 
 ### Inbound or outbound email involving AudiA6 mule-recruitment domains
 
-`UC_94_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_95_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

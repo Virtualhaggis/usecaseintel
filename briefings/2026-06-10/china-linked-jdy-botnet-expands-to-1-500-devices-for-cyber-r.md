@@ -29,15 +29,11 @@ Cybersecurity researchers have warned of a "resurgence and expansion" of JDY , a
 - **T1195.002** — Compromise Software Supply Chain
 - **T1595.001** — Scanning IP Blocks
 - **T1595.002** — Vulnerability Scanning
-- **T1590** — Gather Victim Network Information
-- **T1046** — Network Service Discovery
-- **T1571** — Non-Standard Port
-- **T1105** — Ingress Tool Transfer
 - **T1059.004** — Unix Shell
+- **T1105** — Ingress Tool Transfer
 - **T1070.004** — File Deletion
-- **T1027.002** — Software Packing
-- **T1590.005** — Gather Victim Network Information: IP Addresses
-- **T1583.005** — Acquire Infrastructure: Botnet
+- **T1046** — Network Service Discovery
+- **T1071.001** — Application Layer Protocol
 
 ## Kill chain phases observed
 
@@ -45,91 +41,100 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### JDY botnet inbound multi-protocol reconnaissance fingerprint
+### CVE-2026-35616 exposure on internet-facing edge devices weaponised by JDY botnet
 
-`UC_115_6` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_116_6` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, dc(All_Traffic.dest_port) as distinct_dst_ports, dc(All_Traffic.transport) as distinct_protocols, dc(All_Traffic.dest) as internal_targets, values(All_Traffic.transport) as protocols_seen, values(All_Traffic.dest_port) as ports_seen from datamodel=Network_Traffic.All_Traffic where All_Traffic.src_category!="internal" AND All_Traffic.dest_category="internal" by All_Traffic.src, _time span=10m | `drop_dm_object_name(All_Traffic)` | where distinct_protocols>=2 AND distinct_dst_ports>=10 AND internal_targets>=3 | rename src as scanner_ip | sort -count
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve="CVE-2026-35616" by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.vendor_product | `drop_dm_object_name(Vulnerabilities)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(7d)
+| where CveId == "CVE-2026-35616"
+| join kind=leftouter (DeviceInfo | where Timestamp > ago(7d) | summarize arg_max(Timestamp, *) by DeviceId | project DeviceId, IsInternetFacing, DeviceType, Vendor, Model) on DeviceId
+| project Timestamp, DeviceName, DeviceType, Vendor, Model, IsInternetFacing, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by IsInternetFacing desc, Timestamp desc
+```
+
+### Inbound multi-protocol high-fanout probing consistent with JDY botnet reconnaissance
+
+`UC_116_7` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count dc(All_Traffic.dest_port) as distinct_ports dc(All_Traffic.dest) as distinct_targets dc(All_Traffic.transport) as distinct_protos values(All_Traffic.dest_port) as ports from datamodel=Network_Traffic.All_Traffic where All_Traffic.action IN ("blocked","dropped","denied") All_Traffic.direction="inbound" by All_Traffic.src _time span=10m | `drop_dm_object_name(All_Traffic)` | where distinct_ports>=50 AND count>=100 | sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(24h)
-| where ActionType in ("InboundConnectionAccepted","ConnectionAttempt","ConnectionSuccess")
-| where RemoteIPType == "Public" and LocalIPType != "Public"
-| summarize ProtocolsSeen=make_set(Protocol), PortsSeen=make_set(LocalPort), DistinctProtocols=dcount(Protocol), DistinctPorts=dcount(LocalPort), InternalTargets=dcount(DeviceId), HitCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by RemoteIP, bin(Timestamp, 10m)
-| where DistinctProtocols >= 2 and DistinctPorts >= 10 and InternalTargets >= 2
-| where ProtocolsSeen has_any ("Icmp","Udp") and ProtocolsSeen has "Tcp"
-| order by HitCount desc
+| where Timestamp > ago(1h)
+| where ActionType in ("InboundConnectionAccepted", "ConnectionFailed", "ListeningConnectionCreated")
+| where RemoteIPType == "Public"
+| summarize
+    DistinctDstPorts = dcount(LocalPort),
+    DistinctTargets = dcount(DeviceId),
+    DistinctProtocols = dcount(Protocol),
+    AttemptCount = count(),
+    SamplePorts = make_set(LocalPort, 25)
+  by RemoteIP, bin(Timestamp, 10m)
+| where DistinctDstPorts >= 50 and AttemptCount >= 100
+| order by AttemptCount desc
 ```
 
-### Internal SOHO/IoT device emitting outbound SYN scan storm (JDY-infected node)
+### JDY Linux shell-script dropper: architecture detection plus arch-named payload fetch
 
-`UC_115_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_116_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, dc(All_Traffic.dest) as distinct_dst_ips, dc(All_Traffic.dest_port) as distinct_dst_ports, values(All_Traffic.dest_port) as ports_targeted from datamodel=Network_Traffic.All_Traffic where All_Traffic.src_category="internal" AND All_Traffic.dest_category!="internal" AND All_Traffic.transport="tcp" AND All_Traffic.action!="allowed" by All_Traffic.src, _time span=5m | `drop_dm_object_name(All_Traffic)` | where distinct_dst_ips>=100 AND distinct_dst_ports>=5 | rename src as bot_host_ip | sort -distinct_dst_ips
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(4h)
-| where ActionType in ("ConnectionAttempt","ConnectionFailed")
-| where Protocol == "Tcp" and RemoteIPType == "Public"
-| summarize DistinctRemoteIPs=dcount(RemoteIP), DistinctPorts=dcount(RemotePort), Probes=count(), PortsTargeted=make_set(RemotePort,50), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Initiators=make_set(InitiatingProcessFileName,20) by DeviceId, DeviceName, bin(Timestamp, 5m)
-| where DistinctRemoteIPs >= 100
-| where Probes >= 200
-| extend RatePerMin = todouble(Probes) / 5.0
-| order by DistinctRemoteIPs desc
-```
-
-### Architecture-aware shell-script dropper with self-deletion (MIPS/MIPSEL payload)
-
-`UC_115_8` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, values(Processes.process) as cmdlines, values(Processes.parent_process_name) as parents, min(_time) as first_seen, max(_time) as last_seen from datamodel=Endpoint.Processes where Processes.process_name IN ("wget","curl","sh","bash","busybox","ash") AND (Processes.process="*mips*" OR Processes.process="*mipsel*" OR Processes.process="*mips64*" OR Processes.process="*mipsel64*" OR Processes.process="*armv*" OR Processes.process="*arm5*" OR Processes.process="*arm7*") AND (Processes.process="*chmod*" OR Processes.process="*+x*" OR Processes.process="*/tmp/*" OR Processes.process="*/var/run/*") by Processes.dest, Processes.user, Processes.process_name | `drop_dm_object_name(Processes)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process_cmdlines from datamodel=Endpoint.Processes where Processes.os="Linux" Processes.parent_process_name IN ("sh","bash","dash","ash","busybox") (Processes.process="*wget*" OR Processes.process="*curl*" OR Processes.process="*tftp*" OR Processes.process="*ftpget*") (Processes.process="*.mips*" OR Processes.process="*.mipsel*" OR Processes.process="*.arm*" OR Processes.process="*.sh4*" OR Processes.process="*.ppc*" OR Processes.process="*.m68k*") by Processes.dest Processes.user Processes.parent_process | `drop_dm_object_name(Processes)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where DeviceName !endswith "$"
-| where InitiatingProcessFileName in~ ("sh","bash","busybox","ash","dash") or FileName in~ ("wget","curl","tftp")
-| where ProcessCommandLine matches regex @"(?i)(mips(el|64)?|mipsel64|armv[4-7]l?|arm5|arm7|sh4|powerpc|x86_64|i[3-6]86)"
-| where ProcessCommandLine has_any ("/tmp/","/var/run/","/dev/shm/","/var/tmp/")
-| where ProcessCommandLine has_any ("chmod"," +x","wget ","curl ","tftp ")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| where InitiatingProcessFileName in~ ("sh","bash","dash","ash","busybox")
+   or FileName in~ ("sh","bash","dash","ash","busybox","wget","curl","tftp","ftpget")
+| where ProcessCommandLine has_any ("wget","curl","tftp","ftpget")
+| where ProcessCommandLine matches regex @"(?i)\.(mips|mipsel|mips64|mipsel64|arm|armv7|armv5|sh4|ppc|m68k|x86_64|i686)(\b|$|[^a-z0-9])"
+| where InitiatingProcessFolderPath !startswith "/var/lib/dpkg"
+   and InitiatingProcessFolderPath !startswith "/var/lib/yum"
+   and InitiatingProcessFolderPath !startswith "/snap/"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### Distributed SOHO-class scanning against same internal asset (JDY botnet fan-in)
+### High-rate outbound TCP SYN fan-out matching JDY botnet scanning engine
 
-`UC_115_9` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_116_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, dc(All_Traffic.src) as distinct_scanner_ips, values(All_Traffic.src) as scanner_ips, dc(All_Traffic.dest_port) as ports_probed from datamodel=Network_Traffic.All_Traffic where All_Traffic.src_category!="internal" AND All_Traffic.dest_category="internal" by All_Traffic.dest, All_Traffic.dest_port, _time span=1h | `drop_dm_object_name(All_Traffic)` | where distinct_scanner_ips>=5 | iplocation scanner_ips | stats sum(count) as total_probes, dc(scanner_ips) as scanner_count, values(Country) as scanner_countries by dest, dest_port | where scanner_count>=5
+| tstats `summariesonly` count dc(All_Traffic.dest) as distinct_dsts dc(All_Traffic.dest_port) as distinct_ports values(All_Traffic.dest_port) as ports from datamodel=Network_Traffic.All_Traffic where All_Traffic.transport="tcp" All_Traffic.direction="outbound" by All_Traffic.src All_Traffic.process_name _time span=5m | `drop_dm_object_name(All_Traffic)` | where distinct_dsts>=100 AND count>=500 | sort - distinct_dsts
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(24h)
-| where ActionType in ("InboundConnectionAccepted","ConnectionAttempt","ConnectionSuccess")
-| where RemoteIPType == "Public" and LocalIPType != "Public"
-| summarize DistinctScannerIPs=dcount(RemoteIP), ScannerSample=make_set(RemoteIP,20), ProbeCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceId, DeviceName, LocalPort, Protocol, bin(Timestamp, 1h)
-| where DistinctScannerIPs >= 5
-| where ProbeCount >= 15
-| where LocalPort in (22, 23, 80, 443, 161, 502, 1883, 5000, 8000, 8080, 8443, 8291, 7547, 37777, 554, 9000, 9999)
-| order by DistinctScannerIPs desc
+| where Timestamp > ago(1h)
+| where ActionType in ("ConnectionAttempt", "ConnectionFailed", "ConnectionSuccess")
+| where Protocol == "Tcp"
+| where RemoteIPType == "Public"
+| summarize
+    DistinctDsts = dcount(RemoteIP),
+    DistinctPorts = dcount(RemotePort),
+    AttemptCount = count(),
+    FailureRatio = todouble(countif(ActionType == "ConnectionFailed")) / todouble(count()),
+    SamplePorts = make_set(RemotePort, 25)
+  by DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, bin(Timestamp, 5m)
+| where DistinctDsts >= 100 and AttemptCount >= 500 and FailureRatio > 0.5
+| order by DistinctDsts desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -341,4 +346,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

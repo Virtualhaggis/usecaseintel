@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Hosts missing MDASH-discovered Patch Tuesday CVE-2026 fixes (Hyper-V, Kernel, AD DS, HTTP.sys, DNS/DHCP Client, RDP Client)
 
-`UC_1_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_2_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### HTTP.sys integer-overflow RCE — unexpected child processes from w3wp.exe / svchost(http) on internet-facing hosts (CVE-2026-47291)
 
-`UC_1_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_2_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -103,7 +103,7 @@ DeviceProcessEvents
 
 ### Hyper-V guest escape — unexpected processes spawned by vmwp.exe or vmms.exe (CVE-2026-45607 / 45641 / 47652)
 
-`UC_1_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceProcessEvents
 
 ### AD DS stack-overflow RCE — lsass.exe spawning unexpected children on domain controllers (CVE-2026-45648)
 
-`UC_1_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +160,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Beyond the benchmark: Advancing security at AI speed
 
-`UC_1_1` · phase: **exploit** · confidence: **High**
+`UC_2_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

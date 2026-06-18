@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Malicious JetBrains Marketplace plugin install by ID (Aikido campaign)
 
-`UC_35_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_36_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceFileEvents
 
 ### JetBrains IDE outbound to attacker C2 39.107.60.51 over plaintext HTTP
 
-`UC_35_2` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_36_2` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceNetworkEvents
 
 ### Outbound HTTP request to URI path /api/software/key (plugin exfil endpoint)
 
-`UC_35_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_36_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceNetworkEvents
 
 ### JetBrains IDE plaintext HTTP to bare-IP destination (no domain) — plugin exfil shape
 
-`UC_35_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_36_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### easy-day-js postinstall hook running node setup.cjs --no-warnings
 
-`UC_27_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_28_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceProcessEvents
 
 ### Outbound HTTPS to Mastra supply-chain C2 23.254.164.92:8000 and 23.254.164.123:443
 
-`UC_27_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_28_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceNetworkEvents
 
 ### Node spawning detached script from %TEMP% with 24-hex filename and host:port argv (stage-2)
 
-`UC_27_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_28_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### npm install referencing compromised @mastra packages or easy-day-js dependency
 
-`UC_27_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_28_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceProcessEvents
 
 ### Mastra dropper beacon file .pkg_history/.pkg_logs created by node in temp directory
 
-`UC_27_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_28_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -153,7 +153,7 @@ DeviceFileEvents
 
 ### node.exe reading developer credential files shortly after npm install (Mastra stage-2)
 
-`UC_27_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_28_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -249,7 +249,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 144 Mastra npm Packages Compromised via Hijacked Contributor Account
 
-`UC_27_4` · phase: **exploit** · confidence: **High**
+`UC_28_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

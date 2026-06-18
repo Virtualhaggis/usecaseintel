@@ -14,6 +14,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa orders feds to patch max severity joomla plugin flaw by](./2026-06-17/cisa-orders-feds-to-patch-max-severity-joomla-plugin-flaw-by.md)
 - [cisa warns of actively exploited joomla jce flaw allowing ph](./2026-06-17/cisa-warns-of-actively-exploited-joomla-jce-flaw-allowing-ph.md)
 - [crypto clipper campaign abuses fake reviews ai narrators and](./2026-06-17/crypto-clipper-campaign-abuses-fake-reviews-ai-narrators-and.md)
+- [crypto clipper uses tor and worm like propagation for persis](./2026-06-17/crypto-clipper-uses-tor-and-worm-like-propagation-for-persis.md)
 - [forrester names microsoft a leader in the 2026 extended dete](./2026-06-17/forrester-names-microsoft-a-leader-in-the-2026-extended-dete.md)
 - [fortibleed 70 000 fortinet firewalls compromised in massive ](./2026-06-17/fortibleed-70-000-fortinet-firewalls-compromised-in-massive-.md)
 - [fortibleed leak exposes fortinet vpn credentials for 73 000 ](./2026-06-17/fortibleed-leak-exposes-fortinet-vpn-credentials-for-73-000-.md)
@@ -172,7 +173,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 44180 jupyter enterprise gateway cont](./2026-06-03/ghsa-critical-cve-2026-44180-jupyter-enterprise-gateway-cont.md)
 - [ghsa critical cve 2026 44181 jupyter enterprise gateway jinj](./2026-06-03/ghsa-critical-cve-2026-44181-jupyter-enterprise-gateway-jinj.md)
 - [ghsa critical cve 2026 44182 jupyter enterprise gateway kube](./2026-06-03/ghsa-critical-cve-2026-44182-jupyter-enterprise-gateway-kube.md)
-- [preinstall to persistence inside the red hat npm miasma cred](./2026-06-03/preinstall-to-persistence-inside-the-red-hat-npm-miasma-cred.md)
 - [the new security risks of the agentic development lifecycle](./2026-06-03/the-new-security-risks-of-the-agentic-development-lifecycle.md)
 
 ## 2026-06-02
