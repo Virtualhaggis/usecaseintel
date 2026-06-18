@@ -31,9 +31,6 @@ Every vulnerability has two clocks running. One belongs to the defender racing t
 
 - **T1190** — Exploit Public-Facing Application
 - **T1204.002** — User Execution: Malicious File
-- **T1203** — Exploitation for Client Execution
-- **T1210** — Exploitation of Remote Services
-- **T1068** — Exploitation for Privilege Escalation
 
 ## Kill chain phases observed
 
@@ -41,34 +38,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Patch Tuesday June 2026 (MDASH-discovered) — unpatched asset exposure to 10 disclosed CVEs
-
-`UC_5_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as first_seen max(_time) as last_seen from datamodel=Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-45607","CVE-2026-45641","CVE-2026-47652","CVE-2026-41108","CVE-2026-45608","CVE-2026-45634","CVE-2026-45648","CVE-2026-47289","CVE-2026-45657","CVE-2026-47291") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity, dest
-```
-
-**Defender KQL:**
-```kql
-let MdashCves = dynamic(["CVE-2026-45607","CVE-2026-45641","CVE-2026-47652","CVE-2026-41108","CVE-2026-45608","CVE-2026-45634","CVE-2026-45648","CVE-2026-47289","CVE-2026-45657","CVE-2026-47291"]);
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp > ago(7d)
-| where CveId in (MdashCves)
-| join kind=leftouter (DeviceTvmSoftwareVulnerabilitiesKB | summarize arg_max(LastModifiedTime, CvssScore, IsExploitAvailable) by CveId) on CveId
-| summarize DeviceCount = dcount(DeviceId),
-            Devices = make_set(DeviceName, 25),
-            InternetFacingHosts = dcountif(DeviceId, DeviceId in ((DeviceInfo | where IsInternetFacing == true | distinct DeviceId)))
-            by CveId, SoftwareName, RecommendedSecurityUpdate, VulnerabilitySeverityLevel, CvssScore, IsExploitAvailable
-| order by IsExploitAvailable desc, CvssScore desc, DeviceCount desc
-```
-
 ### Article-specific behavioural hunt — Beyond the benchmark: Advancing security at AI speed
 
-`UC_5_1` · phase: **exploit** · confidence: **High**
+`UC_8_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,4 +97,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

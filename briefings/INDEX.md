@@ -10,7 +10,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-18
 - [from package to postinstall payload inside the mastra npm su](./2026-06-18/from-package-to-postinstall-payload-inside-the-mastra-npm-su.md)
+- [hackers actively exploiting wordpress smtp plugin with 100 0](./2026-06-18/hackers-actively-exploiting-wordpress-smtp-plugin-with-100-0.md)
 - [microsoft confirms defender rogueplanet 0 day exploit and wo](./2026-06-18/microsoft-confirms-defender-rogueplanet-0-day-exploit-and-wo.md)
+- [splunk ai toolkit vulnerability enables arbitrary os command](./2026-06-18/splunk-ai-toolkit-vulnerability-enables-arbitrary-os-command.md)
 
 ## 2026-06-17
 - [144 mastra npm packages compromised via hijacked contributor](./2026-06-17/144-mastra-npm-packages-compromised-via-hijacked-contributor.md)
@@ -26,8 +28,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 55471 hapi fhir xxe in xsltutilities ](./2026-06-17/ghsa-critical-cve-2026-55471-hapi-fhir-xxe-in-xsltutilities-.md)
 - [gitbait phishing campaign abuses github pages to attack fina](./2026-06-17/gitbait-phishing-campaign-abuses-github-pages-to-attack-fina.md)
 - [hackers abuse cloud logging services to evade detection and ](./2026-06-17/hackers-abuse-cloud-logging-services-to-evade-detection-and-.md)
-- [hackers use clickfix prompt to install msi package and launc](./2026-06-17/hackers-use-clickfix-prompt-to-install-msi-package-and-launc.md)
-- [hackers use fake software update prompts to steal passwords ](./2026-06-17/hackers-use-fake-software-update-prompts-to-steal-passwords-.md)
 - [india s telegram ban hit the uae too here s how to get aroun](./2026-06-17/india-s-telegram-ban-hit-the-uae-too-here-s-how-to-get-aroun.md)
 - [junior hacker used tailscale and openssh to keep access afte](./2026-06-17/junior-hacker-used-tailscale-and-openssh-to-keep-access-afte.md)
 - [kodak confirms data breach claimed by shinyhunters extortion](./2026-06-17/kodak-confirms-data-breach-claimed-by-shinyhunters-extortion.md)
