@@ -50,12 +50,14 @@ The campaigns involve a prolonged cyber espionage operation aimed at a Vietnames
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
-- **T1574.001** — Hijack Execution Flow: DLL Search Order Hijacking
-- **T1055.001** — Process Injection: Dynamic-link Library Injection
-- **T1218** — System Binary Proxy Execution
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1568** — Dynamic Resolution
+- **T1071.001** — Web Protocol
+- **T1574.002** — DLL Side-Loading
+- **T1055.001** — DLL Injection
+- **T1055** — Process Injection
+- **T1055.012** — Process Hollowing
+- **T1204.002** — Malicious File
+- **T1190** — Exploit Public-Facing Application
+- **T1059.003** — Windows Command Shell
 
 ## Kill chain phases observed
 
@@ -63,142 +65,171 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### FireAnt Metakit.exe spawning setup.exe — malicious update download chain
+### FireAnt Metakit supply-chain update download from metakit.fireant.vn
 
 `UC_115_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="Metakit.exe" AND (Processes.process_name="setup.exe" OR Processes.process_path IN ("*\\AppData\\Local\\Temp\\*","*\\Users\\Public\\*","*\\ProgramData\\*")) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_path Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="Metakit.exe" (Processes.process_name="setup.exe" OR Processes.process IN ("*metakit.fireant.vn*","*Software/version.xml*")) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+let lookback = 180d;
+let badHashes = dynamic(["865A1739337D3303B3AB02C5E694C22B79C42B7D","B0FEA981D02F6F76DE81EBAEFCB68B7D205D6194","48FEBB91A10D1462461A012FAFC0918BB028E947","511B77459673EC42163F19E300FF1D233B6C39FB","8CD78B8DB76563E4F972ABE817CEEE9CF9B00037"]);
+let downloads = DeviceNetworkEvents
+    | where Timestamp > ago(lookback)
+    | where RemoteUrl has "metakit.fireant.vn" or RemoteUrl has "/Software/version.xml"
+    | project Timestamp, DeviceId, DeviceName, RemoteUrl, NetProcId = InitiatingProcessId, NetParent = InitiatingProcessFileName;
+let drops = DeviceFileEvents
+    | where Timestamp > ago(lookback)
+    | where InitiatingProcessFileName =~ "Metakit.exe"
+    | where FileName =~ "setup.exe" or SHA1 in~ (badHashes)
+    | project Timestamp, DeviceId, DeviceName, FileName, FolderPath, SHA1, SHA256;
 DeviceProcessEvents
-| where Timestamp > ago(30d)
+| where Timestamp > ago(lookback)
 | where InitiatingProcessFileName =~ "Metakit.exe"
-| where FileName =~ "setup.exe"
-   or FolderPath has_any (@"\AppData\Local\Temp\", @"\Users\Public\", @"\ProgramData\")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, SHA1,
-          ProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessSHA256,
-          InitiatingProcessCommandLine
+| where FileName =~ "setup.exe" or SHA1 in~ (badHashes)
+| project Timestamp, DeviceId, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA1, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
+| union downloads, drops
 | order by Timestamp desc
 ```
 
-### SPECTRALVIPER DLL side-load — DtlCrashCatch.dll dropped/loaded from non-system path
+### DtlCrashCatch.dll side-loaded into signed binary (SPECTRALVIPER side-load DLL)
 
 `UC_115_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_name="DtlCrashCatch.dll" AND NOT (Filesystem.file_path IN ("*\\Windows\\System32\\*","*\\Windows\\SysWOW64\\*","*\\Windows\\WinSxS\\*")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="DtlCrashCatch.dll" OR Filesystem.file_path="*\\DtlCrashCatch.dll") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-union
-  (DeviceFileEvents
-   | where Timestamp > ago(30d)
-   | where ActionType in ("FileCreated","FileRenamed")
-   | where FileName =~ "DtlCrashCatch.dll"
-   | where FolderPath !has @"\Windows\System32\" and FolderPath !has @"\Windows\WinSxS\" and FolderPath !has @"\Windows\SysWOW64\"
-   | project Timestamp, Source="FileWrite", DeviceName, FileName, FolderPath, SHA1, SHA256,
-             InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
-             InitiatingProcessAccountName),
-  (DeviceImageLoadEvents
-   | where Timestamp > ago(30d)
-   | where FileName =~ "DtlCrashCatch.dll"
-   | where FolderPath !has @"\Windows\System32\" and FolderPath !has @"\Windows\WinSxS\" and FolderPath !has @"\Windows\SysWOW64\"
-   | project Timestamp, Source="ImageLoad", DeviceName, FileName, FolderPath, SHA1, SHA256,
-             InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
-             InitiatingProcessAccountName=InitiatingProcessAccountName)
+let lookback = 180d;
+let loaders = DeviceImageLoadEvents
+    | where Timestamp > ago(lookback)
+    | where FileName =~ "DtlCrashCatch.dll" or FolderPath has "DtlCrashCatch.dll"
+    | project Timestamp, DeviceId, DeviceName, DllPath = FolderPath, DllSHA256 = SHA256,
+              LoaderProcess = InitiatingProcessFileName, LoaderPath = InitiatingProcessFolderPath,
+              LoaderCmd = InitiatingProcessCommandLine, LoaderSHA256 = InitiatingProcessSHA256,
+              Source = "ImageLoad";
+let drops = DeviceFileEvents
+    | where Timestamp > ago(lookback)
+    | where FileName =~ "DtlCrashCatch.dll"
+    | project Timestamp, DeviceId, DeviceName, DllPath = FolderPath, DllSHA256 = SHA256,
+              LoaderProcess = InitiatingProcessFileName, LoaderPath = InitiatingProcessFolderPath,
+              LoaderCmd = InitiatingProcessCommandLine, LoaderSHA256 = InitiatingProcessSHA256,
+              Source = "FileWrite";
+loaders
+| union drops
 | order by Timestamp desc
 ```
 
 ### SPECTRALVIPER injection into OneDrive.Sync.Service.exe
 
-`UC_115_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_115_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app="OneDrive.Sync.Service.exe" AND (All_Traffic.dest IN ("38.60.245.37","139.99.33.239","139.162.11.152","139.180.128.42","142.91.98.77","166.88.77.186","194.68.26.241","103.119.47.104") OR All_Traffic.dest_host IN ("financemachinelearning.com","gatewayrvcenter.com")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_host All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.app="OneDrive.Sync.Service.exe" AND NOT (All_Traffic.dest_category="microsoft" OR All_Traffic.dest="*.microsoft.com" OR All_Traffic.dest="*.live.com" OR All_Traffic.dest="*.officeapps.live.com" OR All_Traffic.dest="*.onedrive.com" OR All_Traffic.dest="*.sharepoint.com") by All_Traffic.src All_Traffic.user All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName =~ "OneDrive.Sync.Service.exe"
-| where RemoteIPType == "Public"
-| where RemoteUrl has_any ("financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com")
-   or RemoteIP in ("38.60.245.37","139.99.33.239","139.162.11.152","139.180.128.42","142.91.98.77","166.88.77.186","194.68.26.241","103.119.47.104")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath,
-          InitiatingProcessAccountName, InitiatingProcessSHA256, InitiatingProcessParentFileName,
-          RemoteIP, RemoteUrl, RemotePort
+let lookback = 30d;
+let msAllow = dynamic(["microsoft.com","live.com","office.com","officeapps.live.com","onedrive.com","sharepointonline.com","sharepoint.com","office.net","msocdn.com","msftauth.net","cdn.onenote.net"]);
+let c2Domains = dynamic(["financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com"]);
+let c2IPs = dynamic(["38.60.245.37","139.99.33.239","139.162.11.152","139.180.128.42","142.91.98.77","166.88.77.186","194.68.26.241","103.119.47.104"]);
+let odNet = DeviceNetworkEvents
+    | where Timestamp > ago(lookback)
+    | where InitiatingProcessFileName =~ "OneDrive.Sync.Service.exe"
+    | where RemoteIPType == "Public"
+    | extend DomainMatch = iff(isnotempty(RemoteUrl), tolower(RemoteUrl), "")
+    | where (isnotempty(RemoteUrl) and not(DomainMatch has_any (msAllow))) or RemoteUrl has_any (c2Domains) or RemoteIP in (c2IPs)
+    | project Timestamp, DeviceId, DeviceName, AccountName=InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort, Cmd=InitiatingProcessCommandLine, Source="Network";
+let odInject = DeviceEvents
+    | where Timestamp > ago(lookback)
+    | where ActionType in ("CreateRemoteThreadApiCall","ReadProcessMemoryApiCall","OpenProcessApiCall")
+    | where FileName =~ "OneDrive.Sync.Service.exe"
+    | where InitiatingProcessFileName !in~ ("OneDrive.exe","OneDrive.Sync.Service.exe","OneDriveStandaloneUpdater.exe")
+    | project Timestamp, DeviceId, DeviceName, AccountName=InitiatingProcessAccountName, RemoteUrl="", RemoteIP="", RemotePort=int(null), Cmd=InitiatingProcessCommandLine, Source=ActionType;
+odNet
+| union odInject
 | order by Timestamp desc
 ```
 
-### OceanLotus / SPECTRALVIPER C2 infrastructure callouts
+### SPECTRALVIPER C2 infrastructure contact (any process, IOC sweep)
 
 `UC_115_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("financemachinelearning.com","*.financemachinelearning.com","gatewayrvcenter.com","*.gatewayrvcenter.com","coachcybersecurity.com","*.coachcybersecurity.com","mxprodesign.com","*.mxprodesign.com","power-sync-services.com","*.power-sync-services.com","leadingfilipinoteams.com","*.leadingfilipinoteams.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as app values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest IN ("financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com") OR All_Traffic.dest_ip IN ("38.60.245.37","139.99.33.239","139.162.11.152","139.180.128.42","142.91.98.77","166.88.77.186","194.68.26.241","103.119.47.104")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-union
-  (DeviceNetworkEvents
-   | where Timestamp > ago(90d)
-   | where RemoteUrl has_any ("financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com")
-      or RemoteIP in ("38.60.245.37","139.99.33.239","139.162.11.152","139.180.128.42","142.91.98.77","166.88.77.186","194.68.26.241","103.119.47.104")
-   | project Timestamp, Source="Network", DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath,
-             InitiatingProcessAccountName, InitiatingProcessSHA256, RemoteIP, RemoteUrl, RemotePort),
-  (DeviceEvents
-   | where Timestamp > ago(90d)
-   | where ActionType == "DnsQueryResponse"
-   | where AdditionalFields has_any ("financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com")
-   | project Timestamp, Source="DNS", DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath,
-             InitiatingProcessAccountName, InitiatingProcessSHA256, RemoteIP="", RemoteUrl=tostring(AdditionalFields), RemotePort=0)
+let lookback = 180d;
+let c2Domains = dynamic(["financemachinelearning.com","gatewayrvcenter.com","coachcybersecurity.com","mxprodesign.com","power-sync-services.com","leadingfilipinoteams.com"]);
+let c2IPs = dynamic(["38.60.245.37","139.99.33.239","139.162.11.152","139.180.128.42","142.91.98.77","166.88.77.186","194.68.26.241","103.119.47.104"]);
+DeviceNetworkEvents
+| where Timestamp > ago(lookback)
+| where RemoteIP in (c2IPs)
+   or RemoteUrl has_any (c2Domains)
+| project Timestamp, DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### SPECTRALVIPER SHA1 IOC sightings — file write, process exec, image load
+### Known SPECTRALVIPER sample hash hit (file write or process execute)
 
-`UC_115_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_115_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("865A1739337D3303B3AB02C5E694C22B79C42B7D","B0FEA981D02F6F76DE81EBAEFCB68B7D205D6194","48FEBB91A10D1462461A012FAFC0918BB028E947","511B77459673EC42163F19E300FF1D233B6C39FB","8CD78B8DB76563E4F972ABE817CEEE9CF9B00037") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("865A1739337D3303B3AB02C5E694C22B79C42B7D","B0FEA981D02F6F76DE81EBAEFCB68B7D205D6194","48FEBB91A10D1462461A012FAFC0918BB028E947","511B77459673EC42163F19E300FF1D233B6C39FB","8CD78B8DB76563E4F972ABE817CEEE9CF9B00037") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-let SViperHashes = dynamic([
-  "865A1739337D3303B3AB02C5E694C22B79C42B7D",
-  "B0FEA981D02F6F76DE81EBAEFCB68B7D205D6194",
-  "48FEBB91A10D1462461A012FAFC0918BB028E947",
-  "511B77459673EC42163F19E300FF1D233B6C39FB",
-  "8CD78B8DB76563E4F972ABE817CEEE9CF9B00037"]);
-union
+let lookback = 180d;
+let iocs = dynamic(["865A1739337D3303B3AB02C5E694C22B79C42B7D","B0FEA981D02F6F76DE81EBAEFCB68B7D205D6194","48FEBB91A10D1462461A012FAFC0918BB028E947","511B77459673EC42163F19E300FF1D233B6C39FB","8CD78B8DB76563E4F972ABE817CEEE9CF9B00037"]);
+union isfuzzy=true
   (DeviceProcessEvents
-   | where Timestamp > ago(90d)
-   | where SHA1 in (SViperHashes) or InitiatingProcessSHA1 in (SViperHashes)
-   | project Timestamp, Source="Process", DeviceName, AccountName, FileName, FolderPath, SHA1,
-             ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine),
+    | where Timestamp > ago(lookback)
+    | where SHA1 in~ (iocs) or InitiatingProcessSHA1 in~ (iocs)
+    | project Timestamp, DeviceId, DeviceName, AccountName, FileName, FolderPath, SHA1, ProcessCommandLine, ParentFile=InitiatingProcessFileName, Source="ProcessEvents"),
   (DeviceFileEvents
-   | where Timestamp > ago(90d)
-   | where SHA1 in (SViperHashes)
-   | project Timestamp, Source="FileWrite", DeviceName, AccountName=InitiatingProcessAccountName, FileName,
-             FolderPath, SHA1, ProcessCommandLine="", InitiatingProcessFileName, InitiatingProcessCommandLine),
+    | where Timestamp > ago(lookback)
+    | where SHA1 in~ (iocs) or InitiatingProcessSHA1 in~ (iocs)
+    | project Timestamp, DeviceId, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, SHA1, ProcessCommandLine=InitiatingProcessCommandLine, ParentFile=InitiatingProcessFileName, Source="FileEvents"),
   (DeviceImageLoadEvents
-   | where Timestamp > ago(90d)
-   | where SHA1 in (SViperHashes)
-   | project Timestamp, Source="ImageLoad", DeviceName, AccountName=InitiatingProcessAccountName, FileName,
-             FolderPath, SHA1, ProcessCommandLine="", InitiatingProcessFileName, InitiatingProcessCommandLine)
+    | where Timestamp > ago(lookback)
+    | where SHA1 in~ (iocs)
+    | project Timestamp, DeviceId, DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, SHA1, ProcessCommandLine=InitiatingProcessCommandLine, ParentFile=InitiatingProcessFileName, Source="ImageLoad")
+| order by Timestamp desc
+```
+
+### Public-facing MSSQL spawning shell or LOLBin (OceanLotus T-Construction TTPs)
+
+`UC_115_15` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="sqlservr.exe" Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","mshta.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","wmic.exe","net.exe","whoami.exe","hostname.exe","systeminfo.exe","tasklist.exe","curl.exe","ftp.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let lookback = 30d;
+let lolbins = dynamic(["cmd.exe","powershell.exe","pwsh.exe","mshta.exe","rundll32.exe","regsvr32.exe","bitsadmin.exe","certutil.exe","wmic.exe","net.exe","net1.exe","whoami.exe","hostname.exe","systeminfo.exe","tasklist.exe","curl.exe","ftp.exe","sc.exe","reg.exe"]);
+DeviceProcessEvents
+| where Timestamp > ago(lookback)
+| where InitiatingProcessFileName =~ "sqlservr.exe"
+| where FileName in~ (lolbins)
+| where AccountName !endswith "$"
+| project Timestamp, DeviceId, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
@@ -515,4 +546,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 15 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 16 use case(s) fired, 23 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

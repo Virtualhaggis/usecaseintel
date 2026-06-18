@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### KongTuke TDS C2 callout to 144.31.221.82:6060 with /capcha URL path
 
-`UC_167_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_166_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceNetworkEvents
 
 ### PowerShell Invoke-WebRequest dropping script.ps1 to user AppData (KongTuke stage-2)
 
-`UC_167_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_166_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### Same host calling KongTuke C2 from both powershell.exe and curl.exe within short window
 
-`UC_167_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_166_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -187,7 +187,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Hypotheses, telemetry, and human judgment: Inside Cisco Talos Threat Hunting
 
-`UC_167_3` · phase: **exploit** · confidence: **High**
+`UC_166_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -26,15 +26,13 @@ PostHog's engineering team is merging roughly as many pull requests through Slac
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
-- **T1567** — Exfiltration Over Web Service
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1554** — Compromise Host Software Binary
-- **T1195.001** — Compromise Software Dependencies and Development Tools
-- **T1176** — Browser Extensions
-- **T1195.002** — Compromise Software Supply Chain: Compromise Software Supply Chain
-- **T1552.001** — Unsecured Credentials: Credentials In Files
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1041** — Exfiltration Over C2 Channel
+- **T1048.003** — Exfiltration Over Alternative Protocol: Unencrypted Non-C2
+- **T1114.003** — Email Collection: Email Forwarding Rule
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1102.002** — Web Service: Bidirectional Communication
+- **T1568.002** — Dynamic Resolution: Domain Generation Algorithms
+- **T1554** — Compromise Host Software Binary
 
 ## Kill chain phases observed
 
@@ -42,84 +40,139 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### postmark-mcp backdoor C2 egress to giftshop.club / sfrclak.com
+### Malicious postmark-mcp npm package install or egress to giftshop.club C2
 
-`UC_120_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_120_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count, values(DNS.query) as queries, min(_time) as firstTime, max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="giftshop.club" OR DNS.query="*.giftshop.club" OR DNS.query="sfrclak.com" OR DNS.query="*.sfrclak.com") by DNS.src, DNS.dest, DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime), ctime(lastTime) | append [ | tstats summariesonly=t count, values(Web.url) as urls, min(_time) as firstTime from datamodel=Web.Web where (Web.dest="giftshop.club" OR Web.dest="*.giftshop.club" OR Web.dest="sfrclak.com" OR Web.dest="*.sfrclak.com" OR Web.url="*giftshop.club*" OR Web.url="*sfrclak.com*") by Web.src, Web.user, Web.dest, Web.http_user_agent | `drop_dm_object_name(Web)` ]
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_name IN ("npm.exe","npm","yarn.exe","yarn","pnpm.exe","pnpm","npx.exe","npx","node.exe","node")) AND Processes.process="*postmark-mcp*" by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | append [ | tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.query) as query from datamodel=Network_Resolution where DNS.query="*giftshop.club" by DNS.src DNS.query | `drop_dm_object_name(DNS)` ] | sort - firstTime
 ```
 
 **Defender KQL:**
 ```kql
-let BadDomains = dynamic(["giftshop.club","sfrclak.com"]);
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where (RemoteUrl endswith "giftshop.club" or RemoteUrl endswith "sfrclak.com" or RemoteUrl has_any (BadDomains))
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort, Protocol
+// postmark-mcp install signal or giftshop.club egress
+let Window = 14d;
+let Installs = DeviceProcessEvents
+    | where Timestamp > ago(Window)
+    | where InitiatingProcessFileName in~ ("npm.exe","node.exe","yarn.exe","pnpm.exe","npx.exe","cmd.exe","powershell.exe","pwsh.exe","bash.exe","sh")
+        or FileName in~ ("npm.exe","node.exe","yarn.exe","pnpm.exe","npx.exe")
+    | where ProcessCommandLine has "postmark-mcp"
+    | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, Signal="npm_install_postmark_mcp";
+let Egress = DeviceNetworkEvents
+    | where Timestamp > ago(Window)
+    | where RemoteUrl has "giftshop.club" or RemoteUrl endswith ".giftshop.club"
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+              FileName=InitiatingProcessFileName,
+              ProcessCommandLine=InitiatingProcessCommandLine,
+              InitiatingProcessFileName, RemoteUrl, RemoteIP, Signal="giftshop_club_egress";
+let Files = DeviceFileEvents
+    | where Timestamp > ago(Window)
+    | where FolderPath has @"\node_modules\postmark-mcp\" or FolderPath has "/node_modules/postmark-mcp/"
+    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+              FileName=InitiatingProcessFileName,
+              ProcessCommandLine=InitiatingProcessCommandLine,
+              InitiatingProcessFileName, FolderPath, Signal="postmark_mcp_node_modules_write";
+union Installs, Egress, Files
+| where AccountName !endswith "$"
 | order by Timestamp desc
 ```
 
-### GlassWorm VS Code / OpenVSX extension drops os.node / darwin.node native modules
+### Postmark-MCP backdoor BCC exfil — outbound email to *@giftshop.club
 
-`UC_120_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_120_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count, values(Filesystem.file_path) as file_paths, values(Filesystem.process_name) as procs, min(_time) as firstTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="os.node" OR Filesystem.file_name="darwin.node") AND (Filesystem.file_path="*\\.vscode\\extensions\\*" OR Filesystem.file_path="*\\.vscode-server\\extensions\\*" OR Filesystem.file_path="*\\.openvsx\\*" OR Filesystem.file_path="*/.vscode/extensions/*" OR Filesystem.file_path="*/.openvsx/*") AND Filesystem.action="created" by Filesystem.dest, Filesystem.user, Filesystem.file_name, Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Email.src_user) as sender values(All_Email.subject) as subjects values(All_Email.message_id) as message_ids from datamodel=Email where All_Email.recipient="*@giftshop.club" OR All_Email.recipient="phan@giftshop.club" by All_Email.src All_Email.recipient | `drop_dm_object_name(All_Email)` | sort - firstTime
 ```
 
 **Defender KQL:**
 ```kql
-let KnownBadHashes = dynamic(["2553649f2322049666871cea80a5d0d6adc700ca","d6f3f62fd3b9f5432f5782b62d8cfd5247d5ee71","07d889e2dadce6f3910dcbc253317d28ca61c766"]);
+// Postmark-MCP exfil — outgoing mail BCC'd to attacker-controlled giftshop.club
+EmailEvents
+| where Timestamp > ago(30d)
+| where EmailDirection in ("Outbound","Intra-org")
+| where RecipientEmailAddress endswith "@giftshop.club"
+| project Timestamp, NetworkMessageId, InternetMessageId,
+          SenderMailFromAddress, SenderFromAddress, SenderFromDomain,
+          RecipientEmailAddress, Subject, EmailDirection, DeliveryAction,
+          ConnectorsUsed=Connectors
+| order by Timestamp desc
+```
+
+### npm/pnpm/yarn postinstall hook reads developer cloud credentials
+
+`UC_120_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("node.exe","node","npm.exe","npm","yarn.exe","yarn","pnpm.exe","pnpm","npx.exe","npx") AND (Filesystem.file_path="*\\.aws\\credentials*" OR Filesystem.file_path="*/.aws/credentials*" OR Filesystem.file_path="*\\.ssh\\id_*" OR Filesystem.file_path="*/.ssh/id_*" OR Filesystem.file_path="*\\.npmrc*" OR Filesystem.file_path="*/.npmrc*" OR Filesystem.file_path="*\\.kube\\config*" OR Filesystem.file_path="*/.kube/config*" OR Filesystem.file_path="*\\gh\\hosts.yml*" OR Filesystem.file_path="*/gh/hosts.yml*") by Filesystem.dest Filesystem.user Filesystem.process_name | `drop_dm_object_name(Filesystem)` | sort - firstTime
+```
+
+**Defender KQL:**
+```kql
+// Article scenario: dependency postinstall hook touching dev credentials
+let Window = 7d;
+let CredPaths = dynamic([
+    @"\.aws\credentials", "/.aws/credentials",
+    @"\.aws\config", "/.aws/config",
+    @"\.ssh\id_rsa", "/.ssh/id_rsa",
+    @"\.ssh\id_ed25519", "/.ssh/id_ed25519",
+    @"\.npmrc", "/.npmrc",
+    @"\.kube\config", "/.kube/config",
+    @"\AppData\Roaming\gh\hosts.yml", "/.config/gh/hosts.yml",
+    @"\.gitconfig", "/.gitconfig",
+    @"\AppData\Local\Git Credential Manager\"
+]);
 DeviceFileEvents
-| where Timestamp > ago(30d)
+| where Timestamp > ago(Window)
 | where ActionType in ("FileCreated","FileRenamed","FileModified")
-| where FileName in~ ("os.node","darwin.node")
-      or SHA1 in~ (KnownBadHashes)
-| where FolderPath has_any (@"\.vscode\extensions\", @"\.vscode-server\extensions\", @"\.openvsx\", "/.vscode/extensions/", "/.openvsx/")
-      or SHA1 in~ (KnownBadHashes)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, SHA1, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+    or ActionType startswith "FileAccessed"
+| where InitiatingProcessFileName in~ ("node.exe","npm.exe","yarn.exe","pnpm.exe","npx.exe","node","npm","yarn","pnpm","npx")
+| extend PathLower = tolower(FolderPath)
+| where PathLower has_any (CredPaths)
+| where InitiatingProcessAccountName !endswith "$"
+| join kind=leftouter (
+    DeviceProcessEvents
+    | where Timestamp > ago(Window)
+    | where ProcessCommandLine has_any ("postinstall","preinstall","prepare","install","npm-cli.js install","yarn install","pnpm install","npm ci")
+    | project Timestamp, DeviceId, InstallCmd=ProcessCommandLine, InstallParent=InitiatingProcessFileName
+  ) on DeviceId
+| where isnotempty(InstallCmd) or InitiatingProcessParentFileName in~ ("npm.exe","node.exe","yarn.exe","pnpm.exe")
+| project Timestamp, DeviceName,
+          User=InitiatingProcessAccountName,
+          Reader=InitiatingProcessFileName,
+          ReaderCmd=InitiatingProcessCommandLine,
+          GrandParent=InitiatingProcessParentFileName,
+          FolderPath, FileName, InstallCmd
 | order by Timestamp desc
 ```
 
-### npm/yarn/pnpm postinstall hook touches credential files and beacons outbound
+### GlassWorm — VS Code Code.exe spawning child with Solana RPC or Open VSX egress
 
-`UC_120_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_120_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count, values(Processes.process) as cmdlines, values(Processes.parent_process) as parents, min(_time) as procTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="node.exe" OR Processes.parent_process_name="npm.exe" OR Processes.parent_process_name="npm-cli.js" OR Processes.parent_process_name="pnpm.exe" OR Processes.parent_process_name="yarn.exe") AND (Processes.parent_process="*postinstall*" OR Processes.parent_process="*npm install*" OR Processes.parent_process="*pnpm install*" OR Processes.parent_process="*yarn add*") AND (Processes.process="*aws/credentials*" OR Processes.process="*aws_access_key*" OR Processes.process="*.ssh/id_*" OR Processes.process="*.npmrc*" OR Processes.process="*_authToken*" OR Processes.process="*GITHUB_TOKEN*" OR Processes.process="*NPM_TOKEN*" OR Processes.process="*kubectl config*" OR Processes.process="*gcloud auth*" OR Processes.process="*az account get-access-token*") by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(procTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.query) as query values(DNS.src) as src from datamodel=Network_Resolution where DNS.query IN ("api.mainnet-beta.solana.com","*.solana.com","open-vsx.org","*.open-vsx.org") by DNS.src DNS.query | `drop_dm_object_name(DNS)` | join type=inner src [ | tstats `summariesonly` values(Processes.process_name) as processes values(Processes.process) as cmdlines from datamodel=Endpoint.Processes where Processes.process_name IN ("Code.exe","code","Code - Insiders.exe") by Processes.dest | rename Processes.dest as src | `drop_dm_object_name(Processes)` ] | sort - firstTime
 ```
 
 **Defender KQL:**
 ```kql
-let RegistryDomains = dynamic(["registry.npmjs.org","registry.yarnpkg.com","npm.pkg.github.com","pypi.org","files.pythonhosted.org","objects.githubusercontent.com"]);
-let CredKeywords = dynamic([@".aws\credentials",@".aws\config",@".ssh\id_rsa",@".ssh\id_ed25519",@".npmrc","_authToken","GITHUB_TOKEN","NPM_TOKEN","aws_access_key","kubectl config","gcloud auth","az account get-access-token","/.aws/credentials","/.ssh/id_"]);
-let InstallContext = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where InitiatingProcessFileName in~ ("node.exe","npm.exe","npm-cli.js","pnpm.exe","yarn.exe","node")
-         or InitiatingProcessCommandLine has_any ("npm install","npm i ","pnpm install","yarn install","yarn add","postinstall","npm run-script preinstall","npm run-script postinstall")
-    | project InstallTime=Timestamp, DeviceId, DeviceName, AccountName,
-              InstallParentCmd=InitiatingProcessCommandLine, InstallChildPid=ProcessId,
-              InstallChildFile=FileName, InstallChildCmd=ProcessCommandLine;
-let CredTouch = InstallContext
-    | where InstallChildCmd has_any (CredKeywords);
-let NetEgress = InstallContext
-    | join kind=inner (
-        DeviceNetworkEvents
-        | where Timestamp > ago(7d)
-        | where RemoteIPType == "Public"
-        | where not(RemoteUrl has_any (RegistryDomains))
-        | project NetTime=Timestamp, DeviceId, NetProcId=InitiatingProcessId, RemoteUrl, RemoteIP, RemotePort
-      ) on DeviceId
-    | where NetProcId == InstallChildPid
-    | where NetTime between (InstallTime .. InstallTime + 120s);
-union CredTouch, NetEgress
-| project InstallTime, DeviceName, AccountName, InstallParentCmd, InstallChildFile, InstallChildCmd, RemoteUrl, RemoteIP
-| order by InstallTime desc
+// GlassWorm C2 — VS Code or its extension host reaching Solana RPC / Open VSX abuse paths
+let Window = 7d;
+let C2Domains = dynamic(["api.mainnet-beta.solana.com","solana.com","open-vsx.org","openvsxorg.blob.core.windows.net"]);
+DeviceNetworkEvents
+| where Timestamp > ago(Window)
+| where InitiatingProcessFileName in~ ("Code.exe","Code - Insiders.exe","code","node.exe")
+| where (InitiatingProcessParentFileName in~ ("Code.exe","Code - Insiders.exe","code") or InitiatingProcessFileName in~ ("Code.exe","Code - Insiders.exe"))
+| where RemoteUrl has_any (C2Domains) or RemoteUrl endswith ".solana.com"
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName,
+          InitiatingProcessFileName, InitiatingProcessParentFileName,
+          InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
 ```
 
 ### Trusted vendor binary / installer launching unusual children
@@ -159,4 +212,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 6 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

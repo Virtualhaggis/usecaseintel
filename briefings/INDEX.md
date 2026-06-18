@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1207 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1205 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,15 +11,19 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-18
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-18/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
 - [evilginx aitm attack captures microsoft credentials mfa toke](./2026-06-18/evilginx-aitm-attack-captures-microsoft-credentials-mfa-toke.md)
+- [f5 issues out of band patches for critical nginx vulnerabili](./2026-06-18/f5-issues-out-of-band-patches-for-critical-nginx-vulnerabili.md)
+- [f5 patches nginx vulnerability that enables code execution a](./2026-06-18/f5-patches-nginx-vulnerability-that-enables-code-execution-a.md)
+- [fortibleed leak exposes fortinet vpn credentials for 73 000 ](./2026-06-18/fortibleed-leak-exposes-fortinet-vpn-credentials-for-73-000-.md)
 - [from package to postinstall payload inside the mastra npm su](./2026-06-18/from-package-to-postinstall-payload-inside-the-mastra-npm-su.md)
 - [hackers abuse powershell commands to deliver smartrat throug](./2026-06-18/hackers-abuse-powershell-commands-to-deliver-smartrat-throug.md)
 - [hackers abuse powershell vbscript and bat files to deliver x](./2026-06-18/hackers-abuse-powershell-vbscript-and-bat-files-to-deliver-x.md)
 - [hackers actively exploiting wordpress smtp plugin with 100 0](./2026-06-18/hackers-actively-exploiting-wordpress-smtp-plugin-with-100-0.md)
 - [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-18/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
 - [miasma and hades are spreading now detect them on developer ](./2026-06-18/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)
-- [microsoft confirms defender rogueplanet 0 day exploit and wo](./2026-06-18/microsoft-confirms-defender-rogueplanet-0-day-exploit-and-wo.md)
+- [police cleans nearly 15 000 socgholish infected sites tied t](./2026-06-18/police-cleans-nearly-15-000-socgholish-infected-sites-tied-t.md)
 - [prevent npm and python supply chain attacks on developer mac](./2026-06-18/prevent-npm-and-python-supply-chain-attacks-on-developer-mac.md)
 - [rust clipboard hijacker uses fake github stars and virustota](./2026-06-18/rust-clipboard-hijacker-uses-fake-github-stars-and-virustota.md)
+- [shapedplugin update flow hacked to infect wordpress sites](./2026-06-18/shapedplugin-update-flow-hacked-to-infect-wordpress-sites.md)
 - [splunk ai toolkit vulnerability enables arbitrary os command](./2026-06-18/splunk-ai-toolkit-vulnerability-enables-arbitrary-os-command.md)
 
 ## 2026-06-17
@@ -30,7 +34,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [crypto clipper campaign abuses fake reviews ai narrators and](./2026-06-17/crypto-clipper-campaign-abuses-fake-reviews-ai-narrators-and.md)
 - [crypto clipper uses tor and worm like propagation for persis](./2026-06-17/crypto-clipper-uses-tor-and-worm-like-propagation-for-persis.md)
 - [forrester names microsoft a leader in the 2026 extended dete](./2026-06-17/forrester-names-microsoft-a-leader-in-the-2026-extended-dete.md)
-- [fortibleed leak exposes fortinet vpn credentials for 73 000 ](./2026-06-17/fortibleed-leak-exposes-fortinet-vpn-credentials-for-73-000-.md)
 - [from china with tenderness](./2026-06-17/from-china-with-tenderness.md)
 - [ghsa critical cve 2026 55450 langflow unauthenticated file u](./2026-06-17/ghsa-critical-cve-2026-55450-langflow-unauthenticated-file-u.md)
 - [ghsa critical cve 2026 55471 hapi fhir xxe in xsltutilities ](./2026-06-17/ghsa-critical-cve-2026-55471-hapi-fhir-xxe-in-xsltutilities-.md)
@@ -52,7 +55,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [dozens of malicious wallpapers found on steam workshop gamer](./2026-06-16/dozens-of-malicious-wallpapers-found-on-steam-workshop-gamer.md)
 - [fake microsoft alerts used to deploy north korean narwhalrat](./2026-06-16/fake-microsoft-alerts-used-to-deploy-north-korean-narwhalrat.md)
 - [fishmonger s arsenal upgraded sprysocks for windows](./2026-06-16/fishmonger-s-arsenal-upgraded-sprysocks-for-windows.md)
-- [ghosttree attack abused recursive windows junctions to hide ](./2026-06-16/ghosttree-attack-abused-recursive-windows-junctions-to-hide-.md)
 - [ghsa critical cve 2026 48519 langflow unauthenticated rce in](./2026-06-16/ghsa-critical-cve-2026-48519-langflow-unauthenticated-rce-in.md)
 - [ghsa critical cve 2026 48746 vllm openai auth bypass](./2026-06-16/ghsa-critical-cve-2026-48746-vllm-openai-auth-bypass.md)
 - [ghsa critical cve 2026 49468 litellm authentication bypass v](./2026-06-16/ghsa-critical-cve-2026-49468-litellm-authentication-bypass-v.md)
@@ -61,12 +63,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 54157 lobehub unauthenticated ssrf in](./2026-06-16/ghsa-critical-cve-2026-54157-lobehub-unauthenticated-ssrf-in.md)
 - [ghsa critical ghsa 365w hqf6 vxfg crawl4ai multiple docker a](./2026-06-16/ghsa-critical-ghsa-365w-hqf6-vxfg-crawl4ai-multiple-docker-a.md)
 - [google vertex ai sdk flaw let attackers hijack model uploads](./2026-06-16/google-vertex-ai-sdk-flaw-let-attackers-hijack-model-uploads.md)
-- [malicious jetbrains marketplace plugins steal ai api keys fr](./2026-06-16/malicious-jetbrains-marketplace-plugins-steal-ai-api-keys-fr.md)
 - [multiple jetbrains ide plugins caught stealing ai keys](./2026-06-16/multiple-jetbrains-ide-plugins-caught-stealing-ai-keys.md)
 - [new rokarolla android malware steals pins sms codes and cryp](./2026-06-16/new-rokarolla-android-malware-steals-pins-sms-codes-and-cryp.md)
-- [new rokarolla android malware targets 217 banking crypto app](./2026-06-16/new-rokarolla-android-malware-targets-217-banking-crypto-app.md)
 - [pickle in the middle hijacking vertex ai model uploads for c](./2026-06-16/pickle-in-the-middle-hijacking-vertex-ai-model-uploads-for-c.md)
-- [steam workshop abused to spread malware via wallpaper engine](./2026-06-16/steam-workshop-abused-to-spread-malware-via-wallpaper-engine.md)
 
 ## 2026-06-15
 - [152 chrome wallpaper extensions with 105k installs linked to](./2026-06-15/152-chrome-wallpaper-extensions-with-105k-installs-linked-to.md)
@@ -127,7 +126,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 48031 go restful api boilerplate hard](./2026-06-10/ghsa-critical-cve-2026-48031-go-restful-api-boilerplate-hard.md)
 - [ghsa critical cve 2026 48063 baileys has message upsert hist](./2026-06-10/ghsa-critical-cve-2026-48063-baileys-has-message-upsert-hist.md)
 - [ivanti fortinet and sap release patches for multiple critica](./2026-06-10/ivanti-fortinet-and-sap-release-patches-for-multiple-critica.md)
-- [langflow vulnerability cve 2026 5027 exploited for unauthent](./2026-06-10/langflow-vulnerability-cve-2026-5027-exploited-for-unauthent.md)
 
 ## 2026-06-09
 - [blinding the watchmen abusing cloud logging services for def](./2026-06-09/blinding-the-watchmen-abusing-cloud-logging-services-for-def.md)

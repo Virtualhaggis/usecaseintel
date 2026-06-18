@@ -29,7 +29,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable FastAPI / python-multipart exposing CVE-2024-24762 (ReDoS)
 
-`UC_1203_2` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_1202_2` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -48,7 +48,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Article-specific behavioural hunt — A denial of service Regex breaks FastAPI security
 
-`UC_1203_1` · phase: **exploit** · confidence: **High**
+`UC_1202_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

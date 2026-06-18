@@ -33,8 +33,8 @@ The security flaw patched by Fortinet relates to a command injection vulnerabili
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1136** — Create Account
-- **T1078** — Valid Accounts
+- **T1059** — Command and Scripting Interpreter
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1083** — File and Directory Discovery
 
 ## Kill chain phases observed
@@ -43,58 +43,95 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Ivanti Sentry MICS handleMessage unauthenticated command injection (CVE-2026-10520)
+### Ivanti Sentry MICS handleMessage unauthenticated RCE attempt (CVE-2026-10520)
 
 `UC_123_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as methods values(Web.user_agent) as user_agents values(Web.status) as statuses values(Web.src) as src_ips from datamodel=Web where Web.url="*/mics/api/v2/sentry/mics-config/handleMessage*" by Web.dest, Web.url
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.url="*/mics/api/v2/sentry/mics-config/handleMessage*" by Web.src Web.dest Web.url Web.http_method Web.http_user_agent Web.status | `drop_dm_object_name(Web)` | where status<500 | sort - lastTime
 ```
 
-### Asset exposure inventory for the June 2026 Ivanti / Fortinet / SAP critical CVE batch
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where RemoteUrl has "/mics/api/v2/sentry/mics-config/handleMessage"
+   or AdditionalFields has "/mics/api/v2/sentry/mics-config/handleMessage"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, AdditionalFields
+| order by Timestamp desc
+```
 
-`UC_123_7` · phase: **weapon** · confidence: **High** · AI-generated for this article
+### Vulnerable Ivanti Sentry (MobileIron Sentry) version inventory — CVE-2026-10520 / CVE-2026-10523
+
+`UC_123_7` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count values(Vulnerabilities.signature) as signatures values(Vulnerabilities.severity) as severities min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128") by Vulnerabilities.dest, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| convert ctime(firstTime) ctime(lastTime)
-| sort 0 - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-10520","CVE-2026-10523") OR Vulnerabilities.signature="*MobileIron Sentry*" OR Vulnerabilities.signature="*Ivanti Sentry*" by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceTvmSoftwareVulnerabilities
-| where CveId in ("CVE-2026-25089","CVE-2026-10520","CVE-2026-10523","CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128")
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, DeviceName, OSPlatform, IsInternetFacing, PublicIP, MachineGroup) by DeviceId) on DeviceId
-| project Timestamp, DeviceName, OSPlatform, MachineGroup, IsInternetFacing, PublicIP, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, AffectedSoftwareSku
-| order by IsInternetFacing desc, VulnerabilitySeverityLevel desc, Timestamp desc
+| where Timestamp > ago(1d)
+| where CveId in ("CVE-2026-10520","CVE-2026-10523")
+   or (SoftwareVendor =~ "ivanti" and SoftwareName has_any ("sentry","mobileiron sentry"))
+| project Timestamp, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| join kind=leftouter (
+    DeviceInfo
+    | summarize arg_max(Timestamp, *) by DeviceId
+    | project DeviceId, OSPlatform, IsInternetFacing, MachineGroup, PublicIP
+  ) on DeviceId
+| order by IsInternetFacing desc, CveId asc
 ```
 
-### Ivanti Sentry administrator account created via MICS auth-bypass (CVE-2026-10523)
+### Vulnerable FortiSandbox WEB UI inventory — CVE-2026-25089
 
-`UC_123_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_123_8` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count values(Change.user) as users values(Change.src) as src_ips values(Change.object) as new_accounts min(_time) as firstTime max(_time) as lastTime from datamodel=Change where Change.action="created" Change.object_category="user" Change.dest="*sentry*" by Change.dest, Change.object, Change.user
-| `drop_dm_object_name(Change)`
-| convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2026-25089" OR Vulnerabilities.signature="*FortiSandbox*" by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | sort - lastTime
 ```
 
-### SAP NetWeaver Java Web Container directory-traversal probe (CVE-2026-40128)
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
+| where CveId == "CVE-2026-25089"
+   or (SoftwareVendor =~ "fortinet" and SoftwareName has "fortisandbox")
+| project Timestamp, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| join kind=leftouter (
+    DeviceInfo
+    | summarize arg_max(Timestamp, *) by DeviceId
+    | project DeviceId, OSPlatform, IsInternetFacing, MachineGroup, PublicIP
+  ) on DeviceId
+| order by IsInternetFacing desc
+```
 
-`UC_123_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+### Vulnerable SAP NetWeaver / Commerce Cloud / Data Hub version inventory (4x critical CVEs)
+
+`UC_123_9` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as methods values(Web.user_agent) as user_agents values(Web.status) as statuses from datamodel=Web where (Web.url="*/irj/*" OR Web.url="*/webdynpro/*" OR Web.url="*/j2ee/*" OR Web.url="*/sap/*") (Web.url="*../*" OR Web.url="*..%2f*" OR Web.url="*..%5c*" OR Web.url="*%2e%2e%2f*" OR Web.url="*%2e%2e/*") by Web.src, Web.dest, Web.url
-| `drop_dm_object_name(Web)`
-| convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve IN ("CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128") OR Vulnerabilities.signature IN ("*SAP NetWeaver*","*SAP Commerce Cloud*","*SAP Data Hub*") by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature | `drop_dm_object_name(Vulnerabilities)` | sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(1d)
+| where CveId in ("CVE-2026-44748","CVE-2026-27671","CVE-2026-22732","CVE-2026-40128")
+   or (SoftwareVendor =~ "sap" and SoftwareName has_any ("netweaver","commerce cloud","data hub","abap platform"))
+| project Timestamp, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, AffectedSoftwareSku
+| join kind=leftouter (
+    DeviceInfo
+    | summarize arg_max(Timestamp, *) by DeviceId
+    | project DeviceId, OSPlatform, IsInternetFacing, MachineGroup, PublicIP
+  ) on DeviceId
+| order by IsInternetFacing desc, CveId asc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations

@@ -27,14 +27,9 @@ Cybersecurity researchers have warned of a "resurgence and expansion" of JDY , a
 - **T1059.001** — PowerShell
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1105** — Ingress Tool Transfer
-- **T1027.009** — Embedded Payloads
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1572** — Protocol Tunneling
-- **T1090.003** — Multi-hop Proxy
-- **T1046** — Network Service Discovery
-- **T1595.001** — Active Scanning: Scanning IP Blocks
-- **T1595.002** — Active Scanning: Vulnerability Scanning
+- **T1090.003** — Proxy: Multi-hop Proxy
+- **T1133** — External Remote Services
 
 ## Kill chain phases observed
 
@@ -42,85 +37,57 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Inventory: edge devices vulnerable to CVE-2026-35616 (JDY botnet target)
+### JDY botnet C2 proxy communication (159.203.113.25)
 
-`UC_121_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.signature="*CVE-2026-35616*" OR (Vulnerabilities.vendor IN ("cisco","araknis","mimosa","ubiquiti","draytek","hikvision","linksys") AND Vulnerabilities.product IN ("RV320","RV325","router","firewall","camera","access point")) by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.vendor Vulnerabilities.product Vulnerabilities.severity | `drop_dm_object_name("Vulnerabilities")` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp > ago(7d)
-| where CveId =~ "CVE-2026-35616"
-   or (SoftwareVendor in~ ("cisco","araknis","mimosa networks","mimosa","ubiquiti","ubiquiti networks","draytek","hikvision","linksys")
-       and SoftwareName has_any ("rv320","rv325","router","firewall","camera","nvr","access point","ap"))
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, DeviceCategory, DeviceType, IsInternetFacing, PublicIP) by DeviceId) on DeviceId
-| project Timestamp, DeviceName, DeviceCategory, DeviceType, IsInternetFacing, PublicIP, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, Timestamp desc
-```
-
-### JDY shell-script dropper: MIPS/MIPSEL architecture payload download
-
-`UC_121_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_121_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, values(Web.url) as urls, values(Web.http_user_agent) as agents from datamodel=Web.Web where (Web.url="*.mips" OR Web.url="*.mipsel" OR Web.url="*.mips64" OR Web.url="*.mipsel64" OR Web.url="*/mips" OR Web.url="*/mipsel" OR Web.url="*/mips64" OR Web.url="*/mipsel64" OR Web.url="*payload*mips*" OR Web.url="*bot*mips*") by Web.src Web.dest _time | `drop_dm_object_name("Web")` | where count > 0
+| tstats summariesonly=true count min(_time) as first_seen max(_time) as last_seen values(All_Traffic.action) as action values(All_Traffic.dest_port) as dest_port values(All_Traffic.transport) as transport from datamodel=Network_Traffic where (All_Traffic.dest="159.203.113.25" OR All_Traffic.src="159.203.113.25") by All_Traffic.src, All_Traffic.dest | `drop_dm_object_name(All_Traffic)` | eval first_seen=strftime(first_seen,"%Y-%m-%d %H:%M:%S"), last_seen=strftime(last_seen,"%Y-%m-%d %H:%M:%S") | sort - count
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(30d)
+| where RemoteIP == "159.203.113.25"
 | where RemoteIPType == "Public"
-| where isnotempty(RemoteUrl)
-| where RemoteUrl matches regex @"(?i)(/|[._-])(mips|mipsel|mips64|mipsel64)(\.|/|\?|$)"
-| project Timestamp, DeviceName, DeviceId, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessAccountName
+| project Timestamp, DeviceName, DeviceId, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, RemoteIP, RemotePort, Protocol, LocalIP
 | order by Timestamp desc
 ```
 
-### JDY Tor-based C2 beaconing from internal SOHO/edge/IoT device IPs
+### Inbound CVE-2026-35616 Fortinet exploitation from JDY-profile sources
 
-`UC_121_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_121_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count, dc(All_Traffic.dest_ip) as DistinctDest, min(_time) as firstTime, max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (9001,9030,9050,9051,9150) AND All_Traffic.direction=outbound AND All_Traffic.action=allowed by All_Traffic.src_ip All_Traffic.app All_Traffic.dest_port | `drop_dm_object_name("All_Traffic")` | where count > 5 AND DistinctDest > 2 | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as first_seen max(_time) as last_seen values(All_Traffic.dest_port) as dest_port values(All_Traffic.action) as action from datamodel=Network_Traffic where (All_Traffic.signature="*CVE-2026-35616*" OR All_Traffic.signature="*FortiOS*" OR All_Traffic.signature="*Fortinet*RCE*") by All_Traffic.src, All_Traffic.dest, All_Traffic.signature | `drop_dm_object_name(All_Traffic)` | sort - count
+```
+
+### Outbound Tor exit-node connection from network/edge-device management subnet
+
+`UC_121_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as first_seen max(_time) as last_seen values(All_Traffic.dest_port) as dest_ports dc(All_Traffic.dest) as dest_count from datamodel=Network_Traffic where (All_Traffic.dest_port=9001 OR All_Traffic.dest_port=9030 OR All_Traffic.dest_port=9050 OR All_Traffic.dest_port=9051 OR All_Traffic.dest_port=9100 OR All_Traffic.dest_port=9150) (All_Traffic.src_ip="10.20.0.0/24" OR All_Traffic.src_ip="10.30.0.0/24") All_Traffic.action="allowed" by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | where dest_count >= 1 | sort - count
 ```
 
 **Defender KQL:**
 ```kql
-let TorPorts = dynamic([9001, 9030, 9050, 9051, 9150]);
-let LegitTorProcs = dynamic(["tor.exe","tor-browser.exe","firefox.exe","brave.exe","torbrowser.exe"]);
+let MgmtSubnetPrefixes = dynamic(["10.20.", "10.30.", "192.168.99."]);
+let TorORPorts = dynamic([9001, 9030, 9050, 9051, 9100, 9150]);
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
+| where ActionType == "ConnectionSuccess"
 | where RemoteIPType == "Public"
-| where RemotePort in (TorPorts)
-| where ActionType in ("ConnectionSuccess","ConnectionAttempt")
-| where InitiatingProcessFileName !in~ (LegitTorProcs)
-| summarize ConnCount = count(),
-            DistinctRemoteIPs = dcount(RemoteIP),
-            FirstSeen = min(Timestamp),
-            LastSeen = max(Timestamp),
-            SampleProc = any(InitiatingProcessCommandLine),
-            SampleRemote = any(RemoteIP)
-            by DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, RemotePort
-| where ConnCount > 5 and DistinctRemoteIPs > 2
-| extend DurationMinutes = datetime_diff('minute', LastSeen, FirstSeen)
-| order by ConnCount desc
-```
-
-### Inbound SYN/SSL scan burst from JDY-style SOHO source IP
-
-`UC_121_9` · phase: **recon** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, dc(All_Traffic.dest_ip) as DestIPs, dc(All_Traffic.dest_port) as DestPorts, values(All_Traffic.transport) as Transports from datamodel=Network_Traffic.All_Traffic where All_Traffic.action IN ("blocked","denied","dropped") AND All_Traffic.direction=inbound by All_Traffic.src_ip _time span=10m | `drop_dm_object_name("All_Traffic")` | where DestPorts >= 50 AND DestIPs >= 20 AND count >= 100 | sort - count
+| where RemotePort in (TorORPorts)
+| where LocalIP startswith MgmtSubnetPrefixes[0]
+     or LocalIP startswith MgmtSubnetPrefixes[1]
+     or LocalIP startswith MgmtSubnetPrefixes[2]
+| summarize ConnCount = count(), DistinctRemoteIPs = dcount(RemoteIP), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), SampleRemoteIPs = make_set(RemoteIP, 10) by DeviceName, LocalIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by FirstSeen desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -332,4 +299,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
