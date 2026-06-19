@@ -23,11 +23,17 @@ Cybersecurity researchers have flagged two previously undocumented Windows varia
 - **T1555.003** — Credentials from Web Browsers
 - **T1190** — Exploit Public-Facing Application
 - **T1053.005** — Scheduled Task
-- **T1547.012** — Print Processors
-- **T1055.012** — Process Hollowing
-- **T1543.003** — Windows Service
 - **T1014** — Rootkit
-- **T1105** — Ingress Tool Transfer
+- **T1543.003** — Create or Modify System Process: Windows Service
+- **T1547.006** — Boot or Logon Autostart Execution: Kernel Modules and Extensions
+- **T1112** — Modify Registry
+- **T1055.012** — Process Injection: Process Hollowing
+- **T1547.012** — Boot or Logon Autostart Execution: Print Processors
+- **T1574.002** — Hijack Execution Flow: DLL Side-Loading
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1542.003** — Pre-OS Boot: Bootkit
+- **T1553.006** — Subvert Trust Controls: Code Signing Policy Modification
 
 ## Kill chain phases observed
 
@@ -35,69 +41,163 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Print Spooler (spoolsv.exe) spawning svchost.exe child — SprySOCKS WIN_PLUS print-processor loader
+### SprySOCKS WIN_DRV kernel driver file dropped (KW1B/KX1B *.dat)
 
-`UC_100_4` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.process_path) as process_path values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.parent_process_name="spoolsv.exe" Processes.process_name="svchost.exe" NOT Processes.process="*-k *" by Processes.dest Processes.user Processes.process_id Processes.parent_process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName =~ "spoolsv.exe"
-| where FileName =~ "svchost.exe"
-| where ProcessCommandLine !contains "-k "
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256
-| order by Timestamp desc
-```
-
-### Kernel driver service registered with .dat image path (SprySOCKS DriverLoader pattern)
-
-`UC_100_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_102_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Changes.object) as service_name values(All_Changes.command) as image_path values(All_Changes.user) as user from datamodel=Change.All_Changes where All_Changes.object_category="service" All_Changes.action="created" All_Changes.command="*.dat*" by All_Changes.dest | `drop_dm_object_name(All_Changes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceEvents
-| where Timestamp > ago(7d)
-| where ActionType == "ServiceInstalled"
-| extend Extra = parse_json(AdditionalFields)
-| extend ImagePath = tostring(Extra.ServiceFileName)
-| extend SvcType = tostring(Extra.ServiceType)
-| where ImagePath endswith ".dat"
-   or ImagePath matches regex @"K[WX]1B5206BDC1743[A-Z0-9]{2}\.dat"
-| where SvcType has_any ("KernelModeDriver", "FileSystemDriver", "1", "2") or isempty(SvcType)
-| project Timestamp, DeviceName, ImagePath, SvcType, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### SprySOCKS WIN_DRV component .dat filenames written to disk (RawWNPF / DriverLoader)
-
-`UC_100_6` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.action="created" (Filesystem.file_name="KW1B5206BDC1743FP.dat" OR Filesystem.file_name="KX1B5206BDC1743DD.dat") by Filesystem.dest | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created AND (Filesystem.file_name="KW1B5206BDC1743FP.dat" OR Filesystem.file_name="KX1B5206BDC1743DD.dat") by Filesystem.dest Filesystem.user Filesystem.process_id Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.process | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where ActionType in ("FileCreated", "FileRenamed", "FileModified")
-| where FileName in~ ("KW1B5206BDC1743FP.dat", "KX1B5206BDC1743DD.dat")
-   or FileName matches regex @"^K[WX]1B5206BDC1743[A-Z0-9]{2}\.dat$"
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessParentFileName
+| where ActionType == "FileCreated"
+| where FileName matches regex @"(?i)^K[WX]1B5206BDC1743(FP|DD)\.dat$"
+   or FileName in~ ("KW1B5206BDC1743FP.dat", "KX1B5206BDC1743DD.dat")
+| project Timestamp, DeviceName, FolderPath, FileName, SHA256,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName,
+          InitiatingProcessParentFileName
 | order by Timestamp desc
+```
+
+### Kernel driver service registered with SprySOCKS WIN_DRV ImagePath
+
+`UC_102_5` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\System\\CurrentControlSet\\Services\\*" Registry.registry_value_name="ImagePath" AND (Registry.registry_value_data="*KW1B5206BDC1743FP*" OR Registry.registry_value_data="*KX1B5206BDC1743DD*") by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("RegistryValueSet", "RegistryKeyCreated")
+| where RegistryKey has @"\System\CurrentControlSet\Services\"
+| where RegistryValueName =~ "ImagePath"
+| where RegistryValueData has_any ("KW1B5206BDC1743FP", "KX1B5206BDC1743DD")
+   or RegistryValueData matches regex @"(?i)K[WX]1B5206BDC1743(FP|DD)\.dat"
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName,
+          InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### WIN_PLUS Print Spooler abuse: spoolsv.exe spawns svchost.exe
+
+`UC_102_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="spoolsv.exe" Processes.process_name="svchost.exe" by Processes.dest Processes.user Processes.process_name Processes.parent_process_name Processes.process Processes.parent_process Processes.process_id Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName =~ "spoolsv.exe"
+| where FileName =~ "svchost.exe"
+| project Timestamp, DeviceName, AccountName,
+          ParentFolder = InitiatingProcessFolderPath,
+          ParentCmd = InitiatingProcessCommandLine,
+          ParentSHA256 = InitiatingProcessSHA256,
+          ChildFolder = FolderPath,
+          ChildCmd = ProcessCommandLine,
+          ChildSHA256 = SHA256,
+          GrandparentName = InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### Suspicious Print Processor registry persistence (WIN_PLUS T1547.012)
+
+`UC_102_7` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\Control\\Print\\Environments\\*\\Print Processors\\*" Registry.registry_value_name="Driver" Registry.registry_value_data!="winprint.dll" by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name Registry.process | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("RegistryValueSet", "RegistryKeyCreated")
+| where RegistryKey has @"\Control\Print\Environments\"
+| where RegistryKey contains "Print Processors"
+| where RegistryValueName =~ "Driver"
+| where RegistryValueData !endswith "winprint.dll"
+| where isnotempty(RegistryValueData)
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName,
+          InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### WIN_DRV chain: scheduled task creation followed by SprySOCKS driver drop
+
+`UC_102_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Endpoint.Processes where Processes.process_name="schtasks.exe" Processes.process="*create*" (Processes.parent_process_name="cmd.exe" OR Processes.parent_process_name="powershell.exe" OR Processes.parent_process_name="pwsh.exe" OR Processes.parent_process_name="wscript.exe" OR Processes.parent_process_name="cscript.exe") by Processes.dest Processes.user Processes.process Processes.parent_process _time | `drop_dm_object_name(Processes)` | rename _time as task_time | join type=inner dest [ | tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_name="KW1B5206BDC1743FP.dat" OR Filesystem.file_name="KX1B5206BDC1743DD.dat") by Filesystem.dest Filesystem.file_name Filesystem.file_path _time | `drop_dm_object_name(Filesystem)` | rename _time as drop_time dest as dest ] | eval delay_min=round((drop_time-task_time)/60,1) | where delay_min>=0 AND delay_min<=60 | table task_time drop_time delay_min dest user process file_name file_path
+```
+
+**Defender KQL:**
+```kql
+let SchtasksCreate = DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where FileName =~ "schtasks.exe"
+    | where ProcessCommandLine has_any ("/create", "/Create", "-Create")
+    | where InitiatingProcessFileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe")
+    | project TaskTime = Timestamp, DeviceId, DeviceName, AccountName,
+              TaskCmd = ProcessCommandLine, TaskParent = InitiatingProcessFileName,
+              TaskParentCmd = InitiatingProcessCommandLine;
+let DriverDrop = DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where ActionType == "FileCreated"
+    | where FileName matches regex @"(?i)^K[WX]1B5206BDC1743(FP|DD)\.dat$"
+    | project DropTime = Timestamp, DeviceId, DriverFile = FileName, DriverPath = FolderPath,
+              DropProc = InitiatingProcessFileName, DropProcCmd = InitiatingProcessCommandLine;
+SchtasksCreate
+| join kind=inner DriverDrop on DeviceId
+| where DropTime between (TaskTime .. TaskTime + 1h)
+| extend DelayMinutes = datetime_diff('minute', DropTime, TaskTime)
+| project TaskTime, DropTime, DelayMinutes, DeviceName, AccountName,
+          TaskParent, TaskCmd, DropProc, DropProcCmd, DriverFile, DriverPath
+| order by TaskTime desc
+```
+
+### CVE-2023-24932 exposure surface — UEFI bootkit pre-OS attack risk
+
+`UC_102_9` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+`vulnerabilities` cve="CVE-2023-24932" | stats values(severity) as severity values(cvss) as cvss values(asset_priority) as asset_priority dc(dest) as host_count by dest os | sort 0 - host_count
+```
+
+**Defender KQL:**
+```kql
+DeviceTvmSoftwareVulnerabilities
+| where CveId =~ "CVE-2023-24932"
+| summarize arg_max(Timestamp, *) by DeviceId, CveId
+| join kind=inner (
+    DeviceInfo
+    | summarize arg_max(Timestamp, *) by DeviceId
+    | project DeviceId, IsInternetFacing, JoinType, MachineGroup, PublicIP, LoggedOnUsers
+  ) on DeviceId
+| project Timestamp, DeviceName, OSPlatform, OSVersion, SoftwareName, SoftwareVersion,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate, RecommendedSecurityUpdateId,
+          IsInternetFacing, JoinType, MachineGroup, PublicIP, LoggedOnUsers
+| order by IsInternetFacing desc, Timestamp desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -202,4 +302,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

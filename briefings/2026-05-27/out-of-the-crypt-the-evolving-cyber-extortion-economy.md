@@ -74,7 +74,7 @@ _(none detected from narrative keywords)_
 
 ### Shai-Hulud npm postinstall reads cloud credential files (~/.aws, ~/.ssh, ~/.kube, gcloud ADC)
 
-`UC_257_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_258_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceFileEvents
 
 ### Shai-Hulud exfiltration: node.exe POSTs to api.github.com creating public repo
 
-`UC_257_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_258_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceNetworkEvents
 
 ### Bling Libra: Entra device join immediately after vishing-driven MFA registration
 
-`UC_257_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_258_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +150,7 @@ CloudAppEvents
 
 ### Hazy Scorpius (CL0P) Oracle EBS exploitation via CVE-2025-61882 — concurrent processing spawns shell/wget
 
-`UC_257_13` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_258_13` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -11,19 +11,13 @@ By Bill Toulas
 June 18, 2026
 02:31 PM
 0 
-
-
 Nintendo of America has confirmed to BleepingComputer that threat actors stole survey data from the third-party TinyPulse service used internally, but its systems were not compromised.
-
-
 The company’s statement comes after claims from the Shadowbyt3$ “extortion-as-a-service” threat group that they exfiltrated sensitive data related to Nintendo of America employees.
-
-
-“We are aware of …
+“We are aware of an issue inv…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `mega.nz`
+- **Domain (defanged):** `nintendo.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -44,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Anomalous bulk export / cross-geo admin access to TinyPulse (WebMD) SaaS tenant
 
-`UC_0_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_4_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +79,7 @@ SignInAnomaly
 
 ### First-time outbound to mega.nz file-sharing infrastructure (Shadowbyt3$ leak host)
 
-`UC_0_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_4_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +111,7 @@ DeviceNetworkEvents
 
 ### Inbound email referencing Shadowbyt3$ extortion / leak negotiation
 
-`UC_0_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_4_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -150,7 +144,7 @@ EmailEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `mega.nz`
+  - IP / domain IOC(s): `nintendo.com`
 
 
 ## Why this matters

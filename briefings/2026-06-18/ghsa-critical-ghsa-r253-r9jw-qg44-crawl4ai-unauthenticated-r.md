@@ -18,12 +18,11 @@ The Docker API server accepted a request-supplied `browser_config.extra_args`, w
 
 ## MITRE ATT&CK Techniques
 
+- **T1659** — Content Injection
+- **T1190** — Exploit Public-Facing Application
 - **T1203** — Exploitation for Client Execution
 - **T1059** — Command and Scripting Interpreter
-- **T1190** — Exploit Public-Facing Application
-- **T1059.004** — Unix Shell
-- **T1059.006** — Python
-- **T1659** — Content Injection
+- **T1595.002** — Vulnerability Scanning
 
 ## Kill chain phases observed
 
@@ -31,73 +30,88 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Chromium launched with command-execution launcher switches (Crawl4AI GHSA-r253-r9jw-qg44)
+### Crawl4AI /crawl POST body carrying Chromium launcher-switch injection
 
-`UC_3_0` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_0` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("chrome", "chrome.exe", "chromium", "chromium-browser") AND (Processes.process="*--utility-cmd-prefix*" OR Processes.process="*--renderer-cmd-prefix*" OR Processes.process="*--gpu-launcher*" OR Processes.process="*--browser-subprocess-path*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.http_user_agent) as user_agent values(Web.url) as url values(Web.http_method) as method from datamodel=Web where Web.http_method=POST (Web.url="*/crawl" OR Web.url="*/crawl/stream" OR Web.url="*/crawl/job" OR Web.uri_path="*/crawl*") (Web.url="*--no-zygote*" OR Web.url="*--utility-cmd-prefix*" OR Web.url="*--renderer-cmd-prefix*" OR Web.url="*--gpu-launcher*" OR Web.url="*--browser-subprocess-path*" OR Web.url="*extra_args*" OR Web.url="*browser_config*") by Web.src Web.dest Web.url Web.http_method Web.http_user_agent Web.status
+| `drop_dm_object_name(Web)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let LaunchSwitches = dynamic(["--utility-cmd-prefix","--renderer-cmd-prefix","--gpu-launcher","--browser-subprocess-path","--no-zygote"]);
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("InboundConnectionAccepted","ConnectionSuccess")
+| where LocalPort in (11235, 8000, 8080)
+| where InitiatingProcessFileName has_any ("python.exe","python3","uvicorn","gunicorn","crawl4ai")
+   or InitiatingProcessCommandLine has_any ("crawl4ai","uvicorn","crawl4ai.server")
+| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| order by Timestamp desc
+```
+
+### Chromium spawned with --no-zygote and subprocess-launcher flag (Crawl4AI RCE chain)
+
+`UC_7_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmdline values(Processes.parent_process_name) as parent_name from datamodel=Endpoint.Processes where (Processes.process_name="chrome*" OR Processes.process_name="chromium*" OR Processes.process_name="chrome" OR Processes.process_name="chromium" OR Processes.process_name="headless_shell*") Processes.process="*--no-zygote*" (Processes.process="*--utility-cmd-prefix*" OR Processes.process="*--renderer-cmd-prefix*" OR Processes.process="*--gpu-launcher*" OR Processes.process="*--browser-subprocess-path*") by Processes.dest Processes.user Processes.process_name Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("chrome", "chrome.exe", "chromium", "chromium-browser", "chromium.exe")
-| where ProcessCommandLine has_any (
-    "--utility-cmd-prefix",
-    "--renderer-cmd-prefix",
-    "--gpu-launcher",
-    "--browser-subprocess-path"
-  )
-| extend NoZygote = ProcessCommandLine has "--no-zygote"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
-          ProcessCommandLine, NoZygote,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName, SHA256
+| where Timestamp > ago(30d)
+| where FileName matches regex @"(?i)^(chrome|chromium|headless_shell|chrome\.exe|chromium\.exe)$"
+   or InitiatingProcessFileName matches regex @"(?i)^(chrome|chromium|headless_shell|chrome\.exe|chromium\.exe)$"
+| where ProcessCommandLine has "--no-zygote"
+| where ProcessCommandLine has_any ("--utility-cmd-prefix","--renderer-cmd-prefix","--gpu-launcher","--browser-subprocess-path")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### Chromium browser parent of shell or network utility child (Crawl4AI extra_args post-exploit)
+### Crawl4AI /crawl endpoint hit from unexpected container or external scanner
 
-`UC_3_1` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_7_2` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("chrome", "chrome.exe", "chromium", "chromium-browser", "chromium.exe") AND Processes.process_name IN ("sh", "bash", "dash", "zsh", "ash", "busybox", "python", "python3", "perl", "ruby", "curl", "wget", "nc", "ncat", "socat", "nslookup") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_user_agent) as user_agents dc(Web.url) as url_count from datamodel=Web where Web.http_method=POST (Web.url="*/crawl" OR Web.url="*/crawl/stream" OR Web.url="*/crawl/job") by Web.src Web.dest Web.status
+| `drop_dm_object_name(Web)`
+| where NOT (cidrmatch("10.0.0.0/8",src) OR cidrmatch("172.16.0.0/12",src) OR cidrmatch("192.168.0.0/16",src))
+   OR (cidrmatch("10.0.0.0/8",src) AND user_agents IN ("masscan*","nuclei*","zgrab*","python-requests*","curl*"))
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
+let Crawl4AIHosts = DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where ProcessCommandLine has_any ("crawl4ai","uvicorn crawl4ai","crawl4ai.server")
+    | summarize by DeviceId, DeviceName;
+DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("chrome", "chrome.exe", "chromium", "chromium-browser", "chromium.exe")
-| where FileName in~ ("sh", "bash", "dash", "zsh", "ash", "busybox",
-                      "python", "python3", "perl", "ruby",
-                      "curl", "wget", "nc", "ncat", "socat", "nslookup",
-                      "cmd.exe", "powershell.exe")
-| where InitiatingProcessCommandLine !has "chromedriver"
-  and InitiatingProcessCommandLine !has "chrome_crashpad_handler"
-| project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd   = InitiatingProcessCommandLine,
-          ChildImage  = FolderPath,
-          ChildCmd    = ProcessCommandLine,
-          SHA256
-| order by Timestamp desc
-```
-
-### Crawl4AI /crawl* endpoint hit with Chromium launcher-switch payload in request body
-
-`UC_3_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method="POST" AND (Web.url="*/crawl" OR Web.url="*/crawl/stream" OR Web.url="*/crawl/job" OR Web.uri_path IN ("/crawl","/crawl/stream","/crawl/job")) by Web.src Web.dest Web.url Web.http_user_agent Web.status Web.uri_query | `drop_dm_object_name(Web)` | search uri_query="*--utility-cmd-prefix*" OR uri_query="*--renderer-cmd-prefix*" OR uri_query="*--gpu-launcher*" OR uri_query="*--browser-subprocess-path*" OR uri_query="*extra_args*" | convert ctime(firstTime) ctime(lastTime)
+| where ActionType in ("InboundConnectionAccepted","ConnectionSuccess")
+| where LocalPort in (11235, 8000, 8080, 80, 443)
+| join kind=inner Crawl4AIHosts on DeviceId
+| where RemoteIPType == "Public"
+   or (RemoteIPType == "Private" and InitiatingProcessCommandLine has_any ("masscan","nuclei","zgrab","nmap","python-requests"))
+| summarize Hits=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Ports=make_set(LocalPort) by DeviceName, RemoteIP, RemoteIPType, InitiatingProcessFileName
+| where Hits >= 1
+| order by FirstSeen desc
 ```
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 3 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
