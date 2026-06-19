@@ -69,7 +69,7 @@ _(none detected from narrative keywords)_
 
 ### June 2026 Patch Tuesday — exposure inventory for critical RCE CVEs
 
-`UC_168_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_174_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### Remote Desktop Client (mstsc.exe) spawning anomalous child after outbound RDP — malicious-server RCE
 
-`UC_168_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_174_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceProcessEvents
 
 ### Outlook/Word spawning script interpreter or LOLBin — preview-pane type-confusion RCE (CVE-2026-45456/45458/47635)
 
-`UC_168_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_174_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -167,7 +167,7 @@ DeviceProcessEvents
 
 ### IIS w3wp.exe spawning shell or recon LOLBin — potential HTTP.sys integer-overflow (CVE-2026-47291) post-exploit
 
-`UC_168_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_174_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -197,7 +197,7 @@ DeviceProcessEvents
 
 ### Hyper-V worker process (vmwp.exe) anomalous child or unexpected hardware-resource access — guest-to-host escape (CVE-2026-45607/45641/47652)
 
-`UC_168_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_174_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -231,7 +231,7 @@ DeviceProcessEvents
 
 ### Windows Kernel BugCheck following inbound network burst — possible CVE-2026-45657 TCP/IP UAF exploitation
 
-`UC_168_7` · phase: **exploit** · confidence: **Low** · AI-generated for this article
+`UC_174_7` · phase: **exploit** · confidence: **Low** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -267,7 +267,7 @@ Crashes
 
 ### Article-specific behavioural hunt — Microsoft Patch Tuesday for June 2026 — Snort rules and prominent vulnerabilitie
 
-`UC_168_1` · phase: **exploit** · confidence: **High**
+`UC_174_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

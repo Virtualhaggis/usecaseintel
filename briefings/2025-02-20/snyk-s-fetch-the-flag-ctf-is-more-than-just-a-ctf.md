@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### Apache Spark JVM spawning shell — CVE-2022-33891 doAs command injection
 
-`UC_1002_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1003_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### GitPython ext::sh URL command injection — CVE-2022-24439
 
-`UC_1002_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1003_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

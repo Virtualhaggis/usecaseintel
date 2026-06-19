@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### easy-day-js postinstall hook running node setup.cjs --no-warnings
 
-`UC_89_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_96_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceProcessEvents
 
 ### Outbound HTTPS to Mastra supply-chain C2 23.254.164.92:8000 and 23.254.164.123:443
 
-`UC_89_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_96_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceNetworkEvents
 
 ### Node spawning detached script from %TEMP% with 24-hex filename and host:port argv (stage-2)
 
-`UC_89_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_96_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceProcessEvents
 
 ### npm install referencing compromised @mastra packages or easy-day-js dependency
 
-`UC_89_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_96_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceProcessEvents
 
 ### Mastra dropper beacon file .pkg_history/.pkg_logs created by node in temp directory
 
-`UC_89_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_96_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -152,7 +152,7 @@ DeviceFileEvents
 
 ### node.exe reading developer credential files shortly after npm install (Mastra stage-2)
 
-`UC_89_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_96_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

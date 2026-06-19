@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Unauthenticated GET /api/agents or /agents enumeration probe
 
-`UC_45_1` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_51_1` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceNetworkEvents
 
 ### Unauthenticated POST /api/chat triggering remote agent invocation
 
-`UC_45_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_51_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceNetworkEvents
 
 ### PraisonAI AgentOS process bound to 0.0.0.0 on default port 8000
 
-`UC_45_3` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_51_3` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

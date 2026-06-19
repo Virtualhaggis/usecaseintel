@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1195 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1196 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -13,11 +13,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [china linked showboat malware uses linux persistence to targ](./2026-06-19/china-linked-showboat-malware-uses-linux-persistence-to-targ.md)
 - [cisa splunk enterprise flaw actively exploited patch by sund](./2026-06-19/cisa-splunk-enterprise-flaw-actively-exploited-patch-by-sund.md)
 - [cisa urges hardening fortinet devices following fortibleed a](./2026-06-19/cisa-urges-hardening-fortinet-devices-following-fortibleed-a.md)
+- [cisa warns fortinet customers as fortibleed hits 86 644 fort](./2026-06-19/cisa-warns-fortinet-customers-as-fortibleed-hits-86-644-fort.md)
 - [cisa warns fortinet users to secure devices after fortibleed](./2026-06-19/cisa-warns-fortinet-users-to-secure-devices-after-fortibleed.md)
+- [critical wordpress plugin vulnerability exposes 1 million si](./2026-06-19/critical-wordpress-plugin-vulnerability-exposes-1-million-si.md)
+- [ghsa critical cve 2026 48814 network ai cve 2026 46701 fix i](./2026-06-19/ghsa-critical-cve-2026-48814-network-ai-cve-2026-46701-fix-i.md)
+- [ghsa critical cve 2026 54051 network ai improper neutralizat](./2026-06-19/ghsa-critical-cve-2026-54051-network-ai-improper-neutralizat.md)
+- [ghsa critical ghsa c8qj jx8j fg2w dotvvm missing authorizati](./2026-06-19/ghsa-critical-ghsa-c8qj-jx8j-fg2w-dotvvm-missing-authorizati.md)
 - [hackers abuse third party okendo reviews script to spread sm](./2026-06-19/hackers-abuse-third-party-okendo-reviews-script-to-spread-sm.md)
-- [hackers use weaponized windows shortcuts to spread crypto cl](./2026-06-19/hackers-use-weaponized-windows-shortcuts-to-spread-crypto-cl.md)
 - [hazybeacon weaponizes aws lambda function urls for stealth c](./2026-06-19/hazybeacon-weaponizes-aws-lambda-function-urls-for-stealth-c.md)
 - [inc ransomware uses rust based windows and linux esxi encryp](./2026-06-19/inc-ransomware-uses-rust-based-windows-and-linux-esxi-encryp.md)
+- [operation endgame disrupts socgholish servers cleans 14 971 ](./2026-06-19/operation-endgame-disrupts-socgholish-servers-cleans-14-971-.md)
 - [salesforce disables klue app integration after oauth token a](./2026-06-19/salesforce-disables-klue-app-integration-after-oauth-token-a.md)
 
 ## 2026-06-18
@@ -31,6 +36,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [gentlemen ransomware uses multiple edr killers to disable de](./2026-06-18/gentlemen-ransomware-uses-multiple-edr-killers-to-disable-de.md)
 - [ghsa critical cve 2026 0755 gemini mcp tool vulnerable to os](./2026-06-18/ghsa-critical-cve-2026-0755-gemini-mcp-tool-vulnerable-to-os.md)
 - [ghsa critical cve 2026 54003 kirby external initialization o](./2026-06-18/ghsa-critical-cve-2026-54003-kirby-external-initialization-o.md)
+- [ghsa critical cve 2026 55742 cotonti cross site request forg](./2026-06-18/ghsa-critical-cve-2026-55742-cotonti-cross-site-request-forg.md)
 - [ghsa critical ghsa 29w3 p9w9 wc47 praisonai arbitrary file r](./2026-06-18/ghsa-critical-ghsa-29w3-p9w9-wc47-praisonai-arbitrary-file-r.md)
 - [ghsa critical ghsa 2jq4 q6vv 4cp3 crawl4ai arbitrary file wr](./2026-06-18/ghsa-critical-ghsa-2jq4-q6vv-4cp3-crawl4ai-arbitrary-file-wr.md)
 - [ghsa critical ghsa 4869 x4pr q22x praisonai unauthenticated ](./2026-06-18/ghsa-critical-ghsa-4869-x4pr-q22x-praisonai-unauthenticated-.md)
@@ -124,6 +130,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-12
 - [agentjacking attack tricks ai coding agents into running mal](./2026-06-12/agentjacking-attack-tricks-ai-coding-agents-into-running-mal.md)
 - [china linked hackers backdoored linux login software to hide](./2026-06-12/china-linked-hackers-backdoored-linux-login-software-to-hide.md)
+- [cisa kev cve 2026 35273 oracle peoplesoft enterprise peoplet](./2026-06-12/cisa-kev-cve-2026-35273-oracle-peoplesoft-enterprise-peoplet.md)
 - [europol disrupts audia6 crypto laundering service used by ra](./2026-06-12/europol-disrupts-audia6-crypto-laundering-service-used-by-ra.md)
 - [ghsa critical cve 2026 48150 budibase workspace scoped build](./2026-06-12/ghsa-critical-cve-2026-48150-budibase-workspace-scoped-build.md)
 - [google sues chinese smishing network accused of using gemini](./2026-06-12/google-sues-chinese-smishing-network-accused-of-using-gemini.md)
@@ -131,7 +138,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [langgraph flaw chain exposes self hosted ai agents to remote](./2026-06-12/langgraph-flaw-chain-exposes-self-hosted-ai-agents-to-remote.md)
 - [over 400 arch linux aur packages hijacked to deploy infostea](./2026-06-12/over-400-arch-linux-aur-packages-hijacked-to-deploy-infostea.md)
 - [rethinking mdr as attackers and defenders embrace ai](./2026-06-12/rethinking-mdr-as-attackers-and-defenders-embrace-ai.md)
-- [shinyhunters exploits oracle peoplesoft zero day cve 2026 35](./2026-06-12/shinyhunters-exploits-oracle-peoplesoft-zero-day-cve-2026-35.md)
 - [tracing digital intent new macos tahoe 26 artifact discovere](./2026-06-12/tracing-digital-intent-new-macos-tahoe-26-artifact-discovere.md)
 
 ## 2026-06-11
@@ -139,7 +145,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 10520 ivanti sentry os command injection v](./2026-06-11/cisa-kev-cve-2026-10520-ivanti-sentry-os-command-injection-v.md)
 - [ghsa critical cve 2026 48039 meta ads mcp unauthenticated ht](./2026-06-11/ghsa-critical-cve-2026-48039-meta-ads-mcp-unauthenticated-ht.md)
 - [ghsa critical cve 2026 48062 codeigniter4 has a validation b](./2026-06-11/ghsa-critical-cve-2026-48062-codeigniter4-has-a-validation-b.md)
-- [new attacks trick openclaw ai agent into running code and le](./2026-06-11/new-attacks-trick-openclaw-ai-agent-into-running-code-and-le.md)
 - [npm v12 delivers one of the biggest security improvements in](./2026-06-11/npm-v12-delivers-one-of-the-biggest-security-improvements-in.md)
 - [oceanlotus from external espionage to domestic targeting](./2026-06-11/oceanlotus-from-external-espionage-to-domestic-targeting.md)
 
@@ -268,7 +273,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 9082 drupal core sql injection vulnerabili](./2026-05-22/cisa-kev-cve-2026-9082-drupal-core-sql-injection-vulnerabili.md)
 - [cloud atlas activity in the second half of 2025 and early 20](./2026-05-22/cloud-atlas-activity-in-the-second-half-of-2025-and-early-20.md)
 - [foul play fake fifa websites target soccer fans looking for ](./2026-05-22/foul-play-fake-fifa-websites-target-soccer-fans-looking-for-.md)
-- [ghsa critical cve 2026 46670 yeswiki unauthenticated sql inj](./2026-05-22/ghsa-critical-cve-2026-46670-yeswiki-unauthenticated-sql-inj.md)
 - [ghsa critical cve 2026 48777 filebrowser quantum path traver](./2026-05-22/ghsa-critical-cve-2026-48777-filebrowser-quantum-path-traver.md)
 - [megalodon mass github actions secret exfiltration across 5 5](./2026-05-22/megalodon-mass-github-actions-secret-exfiltration-across-5-5.md)
 - [paved with intent roadtools and nation state tactics in the ](./2026-05-22/paved-with-intent-roadtools-and-nation-state-tactics-in-the-.md)
@@ -278,9 +282,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [5 supply chain attacks in 48 hours why securing one layer is](./2026-05-21/5-supply-chain-attacks-in-48-hours-why-securing-one-layer-is.md)
 - [cisa kev cve 2025 34291 langflow origin validation error vul](./2026-05-21/cisa-kev-cve-2025-34291-langflow-origin-validation-error-vul.md)
 - [cisa kev cve 2026 34926 trend micro apex one on premise dire](./2026-05-21/cisa-kev-cve-2026-34926-trend-micro-apex-one-on-premise-dire.md)
-- [ghsa critical cve 2026 46633 twig php code injection via use](./2026-05-21/ghsa-critical-cve-2026-46633-twig-php-code-injection-via-use.md)
-- [ghsa critical cve 2026 46703 boxlite path traversal vulnerab](./2026-05-21/ghsa-critical-cve-2026-46703-boxlite-path-traversal-vulnerab.md)
-- [ghsa critical ghsa q2f7 m237 v562 hulumi policies github oid](./2026-05-21/ghsa-critical-ghsa-q2f7-m237-v562-hulumi-policies-github-oid.md)
 - [securing the ai revolution how snyk and our partners are sca](./2026-05-21/securing-the-ai-revolution-how-snyk-and-our-partners-are-sca.md)
 - [the art of being ungovernable](./2026-05-21/the-art-of-being-ungovernable.md)
 

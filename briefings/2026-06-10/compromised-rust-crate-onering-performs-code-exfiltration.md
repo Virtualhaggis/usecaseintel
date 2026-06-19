@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### Outbound POST to onering crate C2 Sentry ingest endpoint (o4511539639222272.ingest.de.sentry.io)
 
-`UC_162_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_168_4` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceNetworkEvents
 
 ### curl POSTing Sentry envelope payload from cargo/build-script-build context
 
-`UC_162_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_168_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceProcessEvents
 
 ### Rust build script (build-script-build) executing 'git diff HEAD^ HEAD' for source-code harvesting
 
-`UC_162_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_168_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceProcessEvents
 
 ### onering 1.4.1 crate landing in cargo registry cache (compromised-version install)
 
-`UC_162_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_168_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### Compromised npm package @vietmoney/react-big-calendar@0.26.2 installation (Shai-Hulud 3.0)
 
-`UC_650_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_651_2` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ procHits
 
 ### npm/yarn/pnpm/bun lifecycle hook spawning shell or network LOLBin
 
-`UC_650_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_651_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### Shai-Hulud 3.0 'Goldox-T3chs' GitHub exfiltration marker observed
 
-`UC_650_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_651_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

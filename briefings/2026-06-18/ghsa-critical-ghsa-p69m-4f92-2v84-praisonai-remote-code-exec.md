@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### Node.js spawning shell with reconnaissance commands (PraisonAI codeMode sandbox escape)
 
-`UC_40_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_46_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceProcessEvents
 
 ### Vulnerable PraisonAI-TS package (<=1.7.1) installed — GHSA-p69m-4f92-2v84
 
-`UC_40_3` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_46_3` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -116,7 +116,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-p69m-4f92-2v84: PraisonAI: Remote Code Execution via Sand
 
-`UC_40_1` · phase: **exploit** · confidence: **High**
+`UC_46_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

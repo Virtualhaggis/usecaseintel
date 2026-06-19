@@ -46,7 +46,7 @@ _(none detected from narrative keywords)_
 
 ### Bucket Squatting: GCS bucket created matching Vertex AI predictable staging-name pattern
 
-`UC_100_6` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_107_6` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ CloudAppEvents
 
 ### Vulnerable google-cloud-aiplatform SDK install (<1.148.0 - Pickle in the Middle exposure)
 
-`UC_100_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_107_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### Vertex AI model artifact written to *-vertex-staging-* bucket outside caller's project
 
-`UC_100_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_107_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ CloudAppEvents
 
 ### Race-condition pickle swap: rapid object overwrite in Vertex AI staging bucket within 5s
 
-`UC_100_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_107_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

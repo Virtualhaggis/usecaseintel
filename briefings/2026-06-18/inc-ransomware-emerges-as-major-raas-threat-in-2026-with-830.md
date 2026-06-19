@@ -56,7 +56,7 @@ _(none detected from narrative keywords)_
 
 ### INC ransomware BYOVD vulnerable filter-driver load (filwfp.sys / filnk.sys / fildds.sys)
 
-`UC_43_13` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_49_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceEvents
 
 ### INC Rust encryptor invoked with --esxi VM-shutdown flag
 
-`UC_43_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_49_14` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceProcessEvents
 
 ### Rclone exfiltration to cloud-storage remote (INC double-extortion staging)
 
-`UC_43_15` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_49_15` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceProcessEvents
 
 ### Non-Veeam process accessing Veeam Backup config / CryptoKeys (credential dumper)
 
-`UC_43_16` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_49_16` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ DeviceFileEvents
 
 ### Multiple commercial RMM tools deployed on the same host within 24h (INC C2 fan-out)
 
-`UC_43_17` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_49_17` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -536,7 +536,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — INC Ransomware Emerges as Major RaaS Threat in 2026 with 830+ Victims Since 2023
 
-`UC_43_12` · phase: **exploit** · confidence: **High**
+`UC_49_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
