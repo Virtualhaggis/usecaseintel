@@ -8487,14 +8487,14 @@ level: critical
 </details></div>
 </article>
 <article class="card" id="art-54" data-art-slug="2026-06-18-miasma-and-hades-are-spreading-now-detect-them-on-developer-"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="high"
+  data-phases="actions,c2,delivery,exploit,install,recon,weapon" data-sev="high"
   data-techs="T1027,T1195.002"
   data-sources="StepSecurity"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
   data-splunk-cats="endpoint"
-  data-targets="vcs,windows"
+  data-targets="linux,windows"
   data-uc-count="9" data-llm-uc-count="5"
-  data-search="Miasma and Hades Are Spreading Now: Detect Them on Developer Machines with Suspicious Files Miasma and Hades worms are spreading across npm and PyPI, running on import and project open. See how Dev Machine Guard&#x27;s Suspicious Files detects them.  T1027 T1195.002 [LLM] Editor and AI-tool auto-execute config files dropped in repos (Miasma/Hades delivery) [LLM] Suspicious small binding.gyp dropped in repo (Phantom Gyp / Miasma) [LLM] Standalone Bun runtime downloaded or spawned on developer machine (Hades signature) [LLM] IDE auto-execute spawning downloader or interpreter (Miasma/Hades folderOpen trigger) [LLM] Known Miasma/Hades payload hash on disk or in process PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children File hash IOCs — endpoint file/process match Article-specific behavioural hunt — Miasma and Hades Are Spreading Now: Detect Them on Developer Machines with Suspi">
+  data-search="Miasma and Hades Are Spreading Now: Detect Them on Developer Machines with Suspicious Files Miasma and Hades worms are spreading across npm and PyPI, running on import and project open. See how Dev Machine Guard&#x27;s Suspicious Files detects them.  T1027 T1195.002 [LLM] Miasma/Hades &#x27;Suspicious Files&#x27; — IDE &amp; AI-assistant auto-execute hooks dropped [LLM] IDE / AI assistant auto-execute — Code/Cursor/Claude/Gemini spawning shell or runtime via project-open hook [LLM] Worm propagation — `npm publish` or `twine upload` from interactive developer endpoint [LLM] Hades on-import payload — Bun runtime fetched and executed by Python interpreter [LLM] Miasma Phantom Gyp — 100-300 byte binding.gyp written outside a normal native-addon build PowerShell encoded / obfuscated command Trusted vendor binary / installer launching unusual children File hash IOCs — endpoint file/process match Article-specific behavioural hunt — Miasma and Hades Are Spreading Now: Detect Them on Developer Machines with Suspi">
   <div class="sev-ribbon high">High</div>
   <button class="share-btn card-share" data-share-art="2026-06-18-miasma-and-hades-are-spreading-now-detect-them-on-developer-" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -8505,7 +8505,7 @@ level: critical
     <span>2026-06-18</span>
     <span>9 use cases</span>
     <span>2 techniques</span>
-    <span>5 kill-chain phases detected</span>
+    <span>6 kill-chain phases detected</span>
   </div>
   <p class="summary">Miasma and Hades worms are spreading across npm and PyPI, running on import and project open. See how Dev Machine Guard&#x27;s Suspicious Files detects them.</p>
   <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
@@ -8521,10 +8521,10 @@ level: critical
   <div class="name">Reconnaissance</div>
   <div class="marker">Detected</div>
 </div>
-<div class="kc-cell ">
+<div class="kc-cell hit">
   <div class="num">Phase 2</div>
   <div class="name">Weaponization</div>
-  <div class="marker">—</div>
+  <div class="marker">Detected</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 3</div>
@@ -8552,29 +8552,32 @@ level: critical
   <div class="marker">Detected</div>
 </div></div>
   <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Editor and AI-tool auto-execute config files dropped in repos (Miasma/Hades delivery)</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] IDE auto-execute spawning downloader or interpreter (Miasma/Hades folderOpen trigger) · PowerShell encoded / obfuscated command · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Miasma and Hades Are Spreading Now: Detect Them on Developer Machines with Suspi</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Suspicious small binding.gyp dropped in repo (Phantom Gyp / Miasma) · [LLM] Standalone Bun runtime downloaded or spawned on developer machine (Hades signature) · [LLM] Known Miasma/Hades payload hash on disk or in process · File hash IOCs — endpoint file/process match</em></div>
+<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] Miasma Phantom Gyp — 100-300 byte binding.gyp written outside a normal native-addon build</em></div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Hades on-import payload — Bun runtime fetched and executed by Python interpreter</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] IDE / AI assistant auto-execute — Code/Cursor/Claude/Gemini spawning shell or runtime via project-open hook · PowerShell encoded / obfuscated command · Trusted vendor binary / installer launching unusual children · Article-specific behavioural hunt — Miasma and Hades Are Spreading Now: Detect Them on Developer Machines with Suspi</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Miasma/Hades &#x27;Suspicious Files&#x27; — IDE &amp; AI-assistant auto-execute hooks dropped · File hash IOCs — endpoint file/process match</em></div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Worm propagation — `npm publish` or `twine upload` from interactive developer endpoint</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="e4eb3f9676" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="153ea46e24" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows" open>
   <summary>
-    <span class="uc-title">Editor and AI-tool auto-execute config files dropped in repos (Miasma/Hades delivery)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-title">Miasma/Hades &#x27;Suspicious Files&#x27; — IDE &amp; AI-assistant auto-execute hooks dropped</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="e4eb3f9676" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="153ea46e24" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects creation of IDE and AI-assistant configuration files that the Miasma and Hades worms drop into compromised repositories to execute code on project open or session start. These files bypass package manifests, lockfile diffs, and install-time scanners entirely.
+    <div class="uc-desc">Detects creation of the exact filenames the article calls out as Miasma/Hades execution triggers — .vscode/tasks.json, .vscode/setup.mjs, .claude/setup.mjs, .claude/settings.json, .cursor/rules/setup.mdc, .gemini/settings.json, .github/setup.js, and the 157-byte binding.gyp. These artifacts run when a project is opened in an IDE/AI assistant or when npm install hits a native build, bypassing lifecycle-script scanners.
 
-Rationale: Uses the exact 7 file paths listed in the article&#x27;s table (.vscode/tasks.json, .vscode/setup.mjs, .claude/setup.mjs, .claude/settings.json, .cursor/rules/setup.mdc, .gemini/settings.json, .github/setup.js). These are the article&#x27;s primary IoC — the StepSecurity Suspicious Files product literally checks for these.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Dependencies and Development Tools">T1195.001</span> <span class="ind tech" title="Compromise Host Software Binary">T1554</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span></div>
+Rationale: Every filename matched (binding.gyp, .vscode/tasks.json, .vscode/setup.mjs, .claude/setup.mjs, .claude/settings.json, .cursor/rules/setup.mdc, .gemini/settings.json, .github/setup.js) is named explicitly in the article&#x27;s Suspicious Files table. The 512-byte ceiling on binding.gyp brackets the article&#x27;s 157-byte Phantom Gyp value with margin.
+
+Cross-checked against:
+  • https://attack.mitre.org/techniques/T1195/002/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Event Triggered Execution">T1546</span> <span class="ind tech" title="JavaScript">T1059.007</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Developer authoring their own .vscode/tasks.json with legitimate build commands</li><li>Cloning open-source projects that ship a legitimate .vscode/tasks.json or .github/setup.js</li><li>Internal corporate template repos with pre-configured editor settings</li><li>VS Code writing .vscode/settings.json (not tasks.json) when user changes preferences</li><li>Claude Code or Cursor user-authored hooks in personal projects</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessFileName in~ (&quot;code.exe&quot;,&quot;cursor.exe&quot;,&quot;claude.exe&quot;) and ActionType == &quot;FileModified&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Examine the file contents — look for obfuscated one-liners, base64 strings, references to bun.sh, github.com/oven-sh/bun, fetch/curl/Invoke-WebRequest calls, or references to ~/.npmrc, ~/.pypirc. Check git log on the parent repo to see when/who introduced the file. Step 2 (contain): If contents look malicious, isolate the host with Defender Live Response. Immediately revoke any npm tokens (~/.npmrc) and PyPI tokens (~/.pypirc) on the affected user account by rotating from npmjs.com / pypi.org. Block bun.sh and github.com/oven-sh/bun at the egress proxy for the host. Step 3 (hunt): Pivot to DeviceProcessEvents for code.exe / cursor.exe / python.exe spawning bun.exe, curl.exe, or PowerShell with download patterns on this host in the last 14d. Search org-wide for any other repos containing the same path patterns via UC2/UC5 IOC hashes.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate native-addon npm packages do ship binding.gyp — most are larger than 512 bytes but some toy modules sit at ~200 bytes</li><li>Developers hand-authoring a real .vscode/tasks.json for a build task</li><li>Cursor/Claude Code template repos that legitimately seed .cursor/rules/setup.mdc</li><li>Internal scaffolding tools (yeoman, plop) that drop .github/setup.js during repo init</li><li>Dotfile syncers (chezmoi, mackup) copying .claude/settings.json across machines</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessFileName in~ (&quot;code.exe&quot;,&quot;cursor.exe&quot;,&quot;claude.exe&quot;,&quot;devenv.exe&quot;,&quot;msiexec.exe&quot;,&quot;git.exe&quot;,&quot;chezmoi.exe&quot;,&quot;yo.exe&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the file&#x27;s SHA256 and content. binding.gyp under 200 bytes that gyp-binds to a JS file in node-gyp pre-build is the Phantom Gyp pattern; .claude/setup.mjs and .cursor/rules/setup.mdc that contain network/shell calls are the auto-execute payload. Identify what package, GitHub org, or AI assistant session dropped it. 2) Contain: quarantine the file on the endpoint, revoke any npm/PyPI publishing tokens stored on that user&#x27;s profile (.npmrc, ~/.pypirc, OS keyring), and disable the user&#x27;s npm/PyPI accounts pending password+2FA reset. 3) Hunt: query DeviceProcessEvents for child shells spawned from the IDE (code.exe, cursor.exe) on this host since the file was written; query NetworkEvents for bun.sh downloads; pivot SHA256 across the fleet to find other affected devs.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-54-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-54-uc0-sentinel">Sentinel KQL</button>
@@ -8585,263 +8588,196 @@ Rationale: Uses the exact 7 file paths listed in the article&#x27;s table (.vsco
     </div>
     <div class="tab-content active" id="art-54-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(7d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileRenamed&quot;)
-| where FolderPath has_any (@&quot;\.vscode\tasks.json&quot;, @&quot;\.vscode\setup.mjs&quot;, @&quot;\.claude\setup.mjs&quot;, @&quot;\.claude\settings.json&quot;, @&quot;\.cursor\rules\setup.mdc&quot;, @&quot;\.gemini\settings.json&quot;, @&quot;\.github\setup.js&quot;)
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| extend RiskyFile = case(
-    FolderPath endswith @&quot;\.vscode\tasks.json&quot;, &quot;vscode-runOnFolderOpen&quot;,
-    FolderPath endswith @&quot;\.vscode\setup.mjs&quot;, &quot;vscode-setup-mjs&quot;,
-    FolderPath endswith @&quot;\.claude\setup.mjs&quot;, &quot;claude-sessionstart-hook&quot;,
-    FolderPath endswith @&quot;\.claude\settings.json&quot;, &quot;claude-settings-injection&quot;,
-    FolderPath endswith @&quot;\.cursor\rules\setup.mdc&quot;, &quot;cursor-rules-on-open&quot;,
-    FolderPath endswith @&quot;\.gemini\settings.json&quot;, &quot;gemini-settings-injection&quot;,
-    FolderPath endswith @&quot;\.github\setup.js&quot;, &quot;github-actions-injection&quot;, &quot;unknown&quot;)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, RiskyFile, FolderPath, FileName, FileSize, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;,&quot;FileRenamed&quot;)
+| where (FolderPath has @&quot;\.vscode\&quot; and FileName in~ (&quot;tasks.json&quot;,&quot;setup.mjs&quot;))
+   or (FolderPath has @&quot;\.claude\&quot; and FileName in~ (&quot;setup.mjs&quot;,&quot;settings.json&quot;))
+   or (FolderPath has @&quot;\.cursor\rules\&quot; and FileName =~ &quot;setup.mdc&quot;)
+   or (FolderPath has @&quot;\.gemini\&quot; and FileName =~ &quot;settings.json&quot;)
+   or (FolderPath has @&quot;\.github\&quot; and FileName =~ &quot;setup.js&quot;)
+   or (FileName =~ &quot;binding.gyp&quot; and FileSize &lt; 512)
+| where not(InitiatingProcessFileName in~ (&quot;code.exe&quot;,&quot;cursor.exe&quot;,&quot;claude.exe&quot;,&quot;devenv.exe&quot;,&quot;msiexec.exe&quot;,&quot;git.exe&quot;))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, FileSize, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-54-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
 | where TimeGenerated &gt; ago(7d)
-| where EventType == &quot;FileCreated&quot;
-| where TargetFilePath has_any (@&quot;\.vscode\tasks.json&quot;, @&quot;\.vscode\setup.mjs&quot;, @&quot;\.claude\setup.mjs&quot;, @&quot;\.claude\settings.json&quot;, @&quot;\.cursor\rules\setup.mdc&quot;, @&quot;\.gemini\settings.json&quot;, @&quot;\.github\setup.js&quot;)
-| where ActorUsername !endswith &quot;$&quot;
-| extend RiskyFile = case(
-    TargetFilePath endswith @&quot;\.vscode\tasks.json&quot;, &quot;vscode-runOnFolderOpen&quot;,
-    TargetFilePath endswith @&quot;\.claude\setup.mjs&quot;, &quot;claude-sessionstart-hook&quot;,
-    TargetFilePath endswith @&quot;\.cursor\rules\setup.mdc&quot;, &quot;cursor-rules-on-open&quot;,
-    TargetFilePath endswith @&quot;\.gemini\settings.json&quot;, &quot;gemini-settings-injection&quot;,
-    TargetFilePath endswith @&quot;\.github\setup.js&quot;, &quot;github-actions-injection&quot;, &quot;other-auto-exec&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, RiskyFile, TargetFilePath, TargetFileName, TargetFileSHA256, ActingProcessName, ActingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-54-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Miasma/Hades Auto-Exec Editor and AI-Tool Config Files Dropped
-id: 8c4f9e2b-1a3d-4e5f-9b8c-7d2e3f4a5b6c
-status: experimental
-description: Detects creation of editor or AI-assistant configuration files that auto-execute on project open or session start as used by the Miasma (npm) and Hades (PyPI) worm campaigns to bypass install-time security checks and execute on folder open.
+| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (TargetFilePath has @&quot;\.vscode\&quot; and TargetFileName in~ (&quot;tasks.json&quot;,&quot;setup.mjs&quot;))
+   or (TargetFilePath has @&quot;\.claude\&quot; and TargetFileName in~ (&quot;setup.mjs&quot;,&quot;settings.json&quot;))
+   or (TargetFilePath has @&quot;\.cursor\rules\&quot; and TargetFileName =~ &quot;setup.mdc&quot;)
+   or (TargetFilePath has @&quot;\.gemini\&quot; and TargetFileName =~ &quot;settings.json&quot;)
+   or (TargetFilePath has @&quot;\.github\&quot; and TargetFileName =~ &quot;setup.js&quot;)
+   or (TargetFileName =~ &quot;binding.gyp&quot; and TargetFileSize &lt; 512)
+| where not(ActingProcessName in~ (&quot;code.exe&quot;,&quot;cursor.exe&quot;,&quot;claude.exe&quot;,&quot;devenv.exe&quot;,&quot;msiexec.exe&quot;,&quot;git.exe&quot;))
+| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, TargetFileName, TargetFileSize, TargetFileSHA256, ActingProcessName, ActingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-54-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Miasma/Hades supply-chain auto-execute artifact dropped
+id: 2c4d6e8a-1f3b-4a5d-8e7c-9b1a2c3d4e5f
+description: Detects creation of file artifacts the Miasma npm and Hades PyPI worms use to auto-execute on project open, IDE/AI session start, or npm install (Phantom Gyp).
 references:
-  - https://www.stepsecurity.io/blog/miasma-and-hades-are-spreading-now-detect-them-on-developer-machines-with-suspicious-files
-author: Detection Engineering
+    - https://www.stepsecurity.io/blog/miasma-and-hades-are-spreading-now-detect-them-on-developer-machines-with-suspicious-files
+author: StepSecurity research (community port)
 date: 2026/06/19
 tags:
-  - attack.initial_access
-  - attack.t1195.001
-  - attack.t1554
-  - attack.execution
+    - attack.t1195.002
+    - attack.t1546
+    - attack.t1059.007
 logsource:
-  category: file_event
-  product: windows
+    category: file_event
+    product: windows
 detection:
-  selection:
-    TargetFilename|endswith:
-      - &#x27;\.vscode\tasks.json&#x27;
-      - &#x27;\.vscode\setup.mjs&#x27;
-      - &#x27;\.claude\setup.mjs&#x27;
-      - &#x27;\.claude\settings.json&#x27;
-      - &#x27;\.cursor\rules\setup.mdc&#x27;
-      - &#x27;\.gemini\settings.json&#x27;
-      - &#x27;\.github\setup.js&#x27;
-  condition: selection
-falsepositives:
-  - Developers legitimately authoring their own editor config files
-  - Cloning open-source repos that ship legitimate VS Code tasks
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-54-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@TargetFilename:(*\\.vscode\\tasks.json OR *\\.vscode\\setup.mjs OR *\\.claude\\setup.mjs OR *\\.claude\\settings.json OR *\\.cursor\\rules\\setup.mdc OR *\\.gemini\\settings.json OR *\\.github\\setup.js))</code></pre></div>
+    vscode:
+        TargetFilename|contains:
+            - &#x27;\.vscode\tasks.json&#x27;
+            - &#x27;\.vscode\setup.mjs&#x27;
+    claude:
+        TargetFilename|contains:
+            - &#x27;\.claude\setup.mjs&#x27;
+            - &#x27;\.claude\settings.json&#x27;
+    cursor:
+        TargetFilename|contains: &#x27;\.cursor\rules\setup.mdc&#x27;
+    gemini:
+        TargetFilename|contains: &#x27;\.gemini\settings.json&#x27;
+    github:
+        TargetFilename|contains: &#x27;\.github\setup.js&#x27;
+    bindinggyp:
+        TargetFilename|endswith: &#x27;\binding.gyp&#x27;
+    condition: vscode or claude or cursor or gemini or github or bindinggyp
+level: high</code></pre></div>
+    <div class="tab-content" id="art-54-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.auditd) (@TargetFilename:(*\\.vscode\\tasks.json OR *\\.vscode\\setup.mjs OR *\\.claude\\setup.mjs OR *\\.claude\\settings.json OR *\\.cursor\\rules\\setup.mdc OR *\\.gemini\\settings.json OR *\\.github\\setup.js) OR @TargetFilename:(*/binding.gyp))</code></pre></div>
     <div class="tab-content" id="art-54-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| regex(&quot;\\\\\\.vscode\\\\(tasks\\.json|setup\\.mjs)$|\\\\\\.claude\\\\(setup\\.mjs|settings\\.json)$|\\\\\\.cursor\\\\rules\\\\setup\\.mdc$|\\\\\\.gemini\\\\settings\\.json$|\\\\\\.github\\\\setup\\.js$&quot;, field=TargetFileName)
+| regex(&quot;(?i)(\\\\\\.vscode\\\\(tasks\\.json|setup\\.mjs)|\\\\\\.claude\\\\(setup\\.mjs|settings\\.json)|\\\\\\.cursor\\\\rules\\\\setup\\.mdc|\\\\\\.gemini\\\\settings\\.json|\\\\\\.github\\\\setup\\.js|\\\\binding\\.gyp$)&quot;, field=TargetFileName)
+| NOT ContextImageFileName=/(code|cursor|devenv|claude|msiexec|git)\.exe$/i
 | groupBy([aid, ComputerName, TargetFileName, ContextImageFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-54-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-54-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-54-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-54-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path=&quot;*\\.vscode\\tasks.json&quot; OR Filesystem.file_path=&quot;*\\.vscode\\setup.mjs&quot; OR Filesystem.file_path=&quot;*\\.claude\\setup.mjs&quot; OR Filesystem.file_path=&quot;*\\.claude\\settings.json&quot; OR Filesystem.file_path=&quot;*\\.cursor\\rules\\setup.mdc&quot; OR Filesystem.file_path=&quot;*\\.gemini\\settings.json&quot; OR Filesystem.file_path=&quot;*\\.github\\setup.js&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-54-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_path=&quot;*\\.vscode\\tasks.json&quot; OR Filesystem.file_path=&quot;*\\.vscode\\setup.mjs&quot; OR Filesystem.file_path=&quot;*\\.claude\\setup.mjs&quot; OR Filesystem.file_path=&quot;*\\.claude\\settings.json&quot; OR Filesystem.file_path=&quot;*\\.cursor\\rules\\setup.mdc&quot; OR Filesystem.file_path=&quot;*\\.gemini\\settings.json&quot; OR Filesystem.file_path=&quot;*\\.github\\setup.js&quot;) by Filesystem.dest Filesystem.file_path Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre></div></div>
+    <div class="tab-content" id="art-54-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-54-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-54-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-54-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=&quot;created&quot; AND ( (Filesystem.file_path=&quot;*\\.vscode\\*&quot; AND Filesystem.file_name IN (&quot;tasks.json&quot;,&quot;setup.mjs&quot;)) OR (Filesystem.file_path=&quot;*\\.claude\\*&quot; AND Filesystem.file_name IN (&quot;setup.mjs&quot;,&quot;settings.json&quot;)) OR (Filesystem.file_path=&quot;*\\.cursor\\rules\\*&quot; AND Filesystem.file_name=&quot;setup.mdc&quot;) OR (Filesystem.file_path=&quot;*\\.gemini\\*&quot; AND Filesystem.file_name=&quot;settings.json&quot;) OR (Filesystem.file_path=&quot;*\\.github\\*&quot; AND Filesystem.file_name=&quot;setup.js&quot;) OR (Filesystem.file_name=&quot;binding.gyp&quot; AND Filesystem.file_size&lt;512) ) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.file_size Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where NOT match(process_name, &quot;(?i)(code|cursor|devenv|claude|msiexec)\\.exe$&quot;) | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-54-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=&quot;created&quot; AND ( (Filesystem.file_path=&quot;*\\.vscode\\*&quot; AND Filesystem.file_name IN (&quot;tasks.json&quot;,&quot;setup.mjs&quot;)) OR (Filesystem.file_path=&quot;*\\.claude\\*&quot; AND Filesystem.file_name IN (&quot;setup.mjs&quot;,&quot;settings.json&quot;)) OR (Filesystem.file_path=&quot;*\\.cursor\\rules\\*&quot; AND Filesystem.file_name=&quot;setup.mdc&quot;) OR (Filesystem.file_path=&quot;*\\.gemini\\*&quot; AND Filesystem.file_name=&quot;settings.json&quot;) OR (Filesystem.file_path=&quot;*\\.github\\*&quot; AND Filesystem.file_name=&quot;setup.js&quot;) OR (Filesystem.file_name=&quot;binding.gyp&quot; AND Filesystem.file_size&lt;512) ) by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.file_size Filesystem.process_name | `drop_dm_object_name(Filesystem)` | where NOT match(process_name, &quot;(?i)(code|cursor|devenv|claude|msiexec)\\.exe$&quot;) | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="80a80647c7" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="c3c52752f2" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Suspicious small binding.gyp dropped in repo (Phantom Gyp / Miasma)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-title">IDE / AI assistant auto-execute — Code/Cursor/Claude/Gemini spawning shell or runtime via project-open hook</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="80a80647c7" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="c3c52752f2" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects creation of unusually small binding.gyp files (~157 bytes per StepSecurity research) in repository directories. Miasma&#x27;s Phantom Gyp technique uses a tiny binding.gyp to trigger arbitrary code execution during npm install&#x27;s native build phase, bypassing all preinstall/postinstall lifecycle script scanners.
+    <div class="uc-desc">Detects VS Code, Cursor, Claude Code, or Gemini spawning a shell or scripting runtime where the parent or child command line references one of the Miasma/Hades trigger files. This catches the actual execution side of the auto-execute hooks (.vscode/tasks.json runOn:folderOpen, .claude/setup.mjs SessionStart, .cursor/rules/setup.mdc, .gemini/settings.json).
 
-Rationale: Filename binding.gyp + file size threshold (article specifies 157 bytes) targets the exact Phantom Gyp technique. Legitimate binding.gyp files in node-gyp-built packages are typically 1-10KB. Initiator filter excludes node-gyp itself regenerating bindings.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Dependencies and Development Tools">T1195.001</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate small binding.gyp in a minimal native node module (rare but possible for stubs)</li><li>Developer manually creating an empty binding.gyp during native module scaffolding</li><li>Yarn or pnpm copying binding.gyp during install (unusual since they preserve original size)</li><li>Template repo or boilerplate shipping a minimal binding.gyp</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where FileSize &gt; 0 and FileSize &lt; 400</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Cat the binding.gyp contents — Phantom Gyp uses the `actions` field with a `command` that calls node/python with an inline script or fetches a payload. Look for embedded URLs, base64, or eval-style strings. Determine which npm package directory the file landed in and check that package&#x27;s npmjs.com listing for compromise indicators. Step 2 (contain): Isolate host. Kill any node.exe / node-gyp.exe / python.exe child processes spawned in the last hour. Revoke ~/.npmrc tokens immediately — Miasma&#x27;s first action after execution is reading and abusing publish tokens. Step 3 (hunt): Pivot to DeviceProcessEvents for node-gyp.exe or node.exe spawning powershell/cmd/curl/bun in the last 30d on this host. Query DeviceFileEvents across the org for binding.gyp creations &lt;512 bytes in the same window.</div></details>
+Rationale: The article names exact triggers: .vscode/tasks.json (runOn: folderOpen), .claude/setup.mjs (SessionStart hook), .cursor/rules/setup.mdc (loaded on project open), .gemini/settings.json (settings injection). Pairing IDE parent + scripting child + one of those file strings in either cmdline is high-fidelity.
+
+Cross-checked against:
+  • https://attack.mitre.org/techniques/T1546/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Event Triggered Execution">T1546</span> <span class="ind tech" title="JavaScript">T1059.007</span> <span class="ind tech" title="PowerShell">T1059.001</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>VS Code task that legitimately runs npm test referencing a tasks.json the dev wrote</li><li>Cursor running a benign linter via setup.mdc on project open</li><li>Developer using .vscode/tasks.json with runOn:folderOpen for legitimate dev environment setup (docker compose up)</li><li>node.exe spawning from VS Code&#x27;s integrated terminal during normal dev work where the command line happens to contain &#x27;.vscode\\&#x27; as a project path</li><li>Claude Code SessionStart hook configured by the user for a legitimate context-loader script</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(ProcessCommandLine has_any (&quot;docker compose&quot;,&quot;npm test&quot;,&quot;npm run dev&quot;,&quot;jest&quot;,&quot;vitest&quot;,&quot;playwright&quot;) and not(ProcessCommandLine has_any (&quot;fetch(&quot;,&quot;child_process&quot;,&quot;base64&quot;,&quot;atob(&quot;)))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the contents of the referenced setup.mjs/setup.mdc/tasks.json. A few lines of shell is normal; obfuscated JS, base64 blobs, child_process.spawn, or fetch() to non-corp domains is malicious. Check git blame on the file — Miasma/Hades commits will be very recent and from an unfamiliar author or via dependency update. 2) Contain: kill the shell/bun/node child, isolate the dev workstation if the payload made network calls, revoke npm/PyPI publish tokens, force password+2FA reset on the dev&#x27;s npm and PyPI accounts. 3) Hunt: pivot the project path across DeviceFileEvents fleet-wide — any other dev who cloned that repo and opened it in their IDE got the same payload; look for outbound to bun.sh and to the C2 the payload calls.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-54-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-54-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-54-uc1-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-54-uc1-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-54-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-54-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-54-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
-| where Timestamp &gt; ago(14d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileRenamed&quot;)
-| where FileName =~ &quot;binding.gyp&quot;
-| where FileSize &lt; 512  // article: 157-byte Phantom Gyp; legitimate binding.gyp is typically &gt;1KB
-| where InitiatingProcessAccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName !in~ (&quot;node-gyp.exe&quot;,&quot;node.exe&quot;)  // exclude in-place regeneration by node-gyp
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, FileSize, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+    <div class="tab-content active" id="art-54-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;code.exe&quot;,&quot;cursor.exe&quot;,&quot;devenv.exe&quot;,&quot;claude.exe&quot;,&quot;gemini.exe&quot;)
+| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;bun.exe&quot;,&quot;node.exe&quot;,&quot;python.exe&quot;,&quot;sh.exe&quot;,&quot;bash.exe&quot;)
+| where ProcessCommandLine has_any (&quot;setup.mjs&quot;,&quot;setup.mdc&quot;,&quot;tasks.json&quot;,&quot;binding.gyp&quot;,&quot;.claude\\&quot;,&quot;.cursor\\&quot;,&quot;.gemini\\&quot;,&quot;.vscode\\&quot;)
+   or InitiatingProcessCommandLine has_any (&quot;setup.mjs&quot;,&quot;setup.mdc&quot;,&quot;tasks.json&quot;,&quot;binding.gyp&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-54-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
-| where TimeGenerated &gt; ago(14d)
-| where EventType == &quot;FileCreated&quot;
-| where TargetFileName =~ &quot;binding.gyp&quot;
-| where TargetFileSize &lt; 512
-| where ActorUsername !endswith &quot;$&quot;
-| where ActingProcessName !in~ (&quot;node-gyp.exe&quot;,&quot;node.exe&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, TargetFileSize, TargetFileSHA256, ActingProcessName, ActingProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-54-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Miasma Phantom Gyp binding.gyp Drop
-id: 1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d
-status: experimental
-description: Detects creation of an unusually small binding.gyp file (Phantom Gyp technique). Miasma uses a ~157-byte binding.gyp instead of preinstall/postinstall lifecycle scripts to trigger code execution during npm install&#x27;s native build, bypassing install-script security checks.
-references:
-  - https://www.stepsecurity.io/blog/miasma-and-hades-are-spreading-now-detect-them-on-developer-machines-with-suspicious-files
-author: Detection Engineering
-date: 2026/06/19
-tags:
-  - attack.defense_evasion
-  - attack.t1195.001
-  - attack.t1027
-logsource:
-  category: file_event
-  product: windows
-detection:
-  selection:
-    TargetFilename|endswith: &#x27;\binding.gyp&#x27;
-  condition: selection
-falsepositives:
-  - Legitimate native node modules (sqlite3, sharp, canvas) shipping binding.gyp
-  - Developers creating their own native node module scaffolding
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-54-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @TargetFilename:(*\\binding.gyp OR *\\BINDING.GYP)</code></pre></div>
-    <div class="tab-content" id="art-54-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten TargetFileName=/\\\\binding\\.gyp$/i
-| WrittenBytes &lt; 512
-| groupBy([aid, ComputerName, TargetFileName, ContextImageFileName, WrittenBytes], function=count())</code></pre></div>
-    <div class="tab-content" id="art-54-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-54-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-54-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-54-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name=&quot;binding.gyp&quot; Filesystem.file_size&lt;512 by Filesystem.dest Filesystem.user Filesystem.file_path
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-54-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name=&quot;binding.gyp&quot; Filesystem.file_size&lt;512 by Filesystem.dest Filesystem.user Filesystem.file_path
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre></div></div>
+    <div class="tab-content" id="art-54-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where ParentProcessName has_any (&quot;code.exe&quot;,&quot;Code.exe&quot;,&quot;cursor.exe&quot;,&quot;Cursor.exe&quot;,&quot;devenv.exe&quot;,&quot;claude.exe&quot;,&quot;gemini.exe&quot;)
+| where TargetProcessName has_any (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;bun.exe&quot;,&quot;node.exe&quot;,&quot;python.exe&quot;,&quot;sh.exe&quot;,&quot;bash.exe&quot;)
+| where TargetProcessCommandLine has_any (&quot;setup.mjs&quot;,&quot;setup.mdc&quot;,&quot;tasks.json&quot;,&quot;binding.gyp&quot;,&quot;.claude\\&quot;,&quot;.cursor\\&quot;,&quot;.gemini\\&quot;,&quot;.vscode\\&quot;)
+   or ParentProcessCommandLine has_any (&quot;setup.mjs&quot;,&quot;setup.mdc&quot;,&quot;tasks.json&quot;,&quot;binding.gyp&quot;)
+| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, TargetProcessName, TargetProcessCommandLine, SHA256
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-54-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\Code.exe OR *\\code.exe OR *\\Cursor.exe OR *\\cursor.exe OR *\\devenv.exe OR *\\claude.exe OR *\\gemini.exe) @Image:(*\\powershell.exe OR *\\pwsh.exe OR *\\cmd.exe OR *\\wscript.exe OR *\\cscript.exe OR *\\bun.exe OR *\\node.exe OR *\\python.exe) @CommandLine:(*setup.mjs* OR *setup.mdc* OR *tasks.json* OR *binding.gyp* OR *\\.claude\\* OR *\\.cursor\\* OR *\\.gemini\\* OR *\\.vscode\\*)</code></pre></div>
+    <div class="tab-content" id="art-54-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| ParentBaseFileName=/(code|cursor|devenv|claude|gemini)\.exe$/i
+| ImageFileName=/(powershell|pwsh|cmd|wscript|cscript|bun|node|python|sh|bash)\.exe$/i
+| regex(&quot;(?i)(setup\\.mjs|setup\\.mdc|tasks\\.json|binding\\.gyp|\\\\\\.claude\\\\|\\\\\\.cursor\\\\|\\\\\\.gemini\\\\|\\\\\\.vscode\\\\)&quot;, field=CommandLine)
+| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-54-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-54-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-54-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-54-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;Code.exe&quot;,&quot;code.exe&quot;,&quot;cursor.exe&quot;,&quot;Cursor.exe&quot;,&quot;devenv.exe&quot;,&quot;claude.exe&quot;)) AND (Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;bun.exe&quot;,&quot;node.exe&quot;,&quot;python.exe&quot;,&quot;sh.exe&quot;,&quot;bash.exe&quot;)) AND (Processes.process=&quot;*setup.mjs*&quot; OR Processes.process=&quot;*setup.mdc*&quot; OR Processes.process=&quot;*tasks.json*&quot; OR Processes.process=&quot;*binding.gyp*&quot; OR Processes.process=&quot;*\\.claude\\*&quot; OR Processes.process=&quot;*\\.cursor\\*&quot; OR Processes.process=&quot;*\\.gemini\\*&quot; OR Processes.process=&quot;*\\.vscode\\*&quot; OR Processes.parent_process=&quot;*setup.mjs*&quot; OR Processes.parent_process=&quot;*tasks.json*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime)</code></pre><pre class="spl-mode-body" id="art-54-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;Code.exe&quot;,&quot;code.exe&quot;,&quot;cursor.exe&quot;,&quot;Cursor.exe&quot;,&quot;devenv.exe&quot;,&quot;claude.exe&quot;)) AND (Processes.process_name IN (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;bun.exe&quot;,&quot;node.exe&quot;,&quot;python.exe&quot;,&quot;sh.exe&quot;,&quot;bash.exe&quot;)) AND (Processes.process=&quot;*setup.mjs*&quot; OR Processes.process=&quot;*setup.mdc*&quot; OR Processes.process=&quot;*tasks.json*&quot; OR Processes.process=&quot;*binding.gyp*&quot; OR Processes.process=&quot;*\\.claude\\*&quot; OR Processes.process=&quot;*\\.cursor\\*&quot; OR Processes.process=&quot;*\\.gemini\\*&quot; OR Processes.process=&quot;*\\.vscode\\*&quot; OR Processes.parent_process=&quot;*setup.mjs*&quot; OR Processes.parent_process=&quot;*tasks.json*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="3539db0ba7" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
+<details class="uc" data-uc-slug="00548ceac6" data-platforms="datadog,def,falcon,sent,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Standalone Bun runtime downloaded or spawned on developer machine (Hades signature)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-title">Worm propagation — `npm publish` or `twine upload` from interactive developer endpoint</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="3539db0ba7" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="00548ceac6" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects Hades&#x27;s signature technique: an obfuscated __init__.py import hook downloads a standalone Bun JavaScript runtime, then runs a JS payload through it to bypass EDR signatures on Node/Python. Detects both the Bun binary appearing on disk and Bun being spawned by Python or IDE processes.
+    <div class="uc-desc">Miasma and Hades self-replicate by stealing the developer&#x27;s publishing token and immediately republishing infected versions of every package that token can publish. Detects npm publish or twine upload originating from a developer endpoint that is NOT a known CI runner. Threshold-style: &gt;=3 distinct package names published from one host within a 10-minute window is the worm fan-out signature.
 
-Rationale: The Hades campaign&#x27;s distinguishing signature is the standalone Bun runtime download from bun.sh (article explicitly: &#x27;downloads a standalone Bun runtime and runs a JavaScript payload&#x27;). Bun spawned by python.exe is extremely rare in benign workflows. Parent process list covers the Hades trigger (python import) and the IDE folder-open trigger.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span> <span class="ind tech" title="System Binary Proxy Execution">T1218</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Polyglot developer intentionally invoking Bun from a Python data pipeline</li><li>VS Code Runner / Code Runner extension launching Bun on selected JS</li><li>Developer running &#x27;pip install&#x27; that pulls a package which legitimately uses Bun as a build dep</li><li>CI/CD container that uses Bun and invokes via Python wrapper script</li><li>Developer testing a known-good package that ships with Bun (rare)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessCommandLine has &quot;code-runner&quot; or InitiatingProcessCommandLine has &quot;vscode.code-runner&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Capture the Bun command line and the parent process command line. Was the parent python.exe importing a recently installed package? Check ~/AppData/Roaming/Python or site-packages for any ensmallen-named, bioinformatics, or ML-related packages installed in the last 14 days. Check the package&#x27;s __init__.py for a one-line obfuscated hook (Hades signature). Step 2 (contain): Isolate host. Kill bun.exe and all child processes. Revoke ~/.pypirc PyPI tokens AND ~/.npmrc npm tokens (Hades reads both). Block bun.sh and github.com/oven-sh/bun at egress for affected user. Step 3 (hunt): Pivot to DeviceNetworkEvents for bun.exe outbound to registry.npmjs.org, pypi.org, or unfamiliar exfil endpoints. Query DeviceImageLoadEvents for python.exe loading suspicious __init__.py files in site-packages. Search org for other python.exe → bun.exe sequences over 30d.</div></details>
+Rationale: Article: &#x27;Once Miasma or Hades lands on a developer machine, it searches for npm and PyPI publishing tokens, then republishes infected versions of every package that token can publish.&#x27; Fan-out of &gt;=3 publishes from a non-CI host inside 10 minutes is the exact worm signature — legitimate human publishing of multiple packages in 10 minutes is rare.
+
+Cross-checked against:
+  • https://attack.mitre.org/techniques/T1195/002/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Exfiltration Over Web Service">T1567</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Engineer doing a coordinated monorepo release with lerna/changesets/nx that legitimately publishes 5-20 packages in one shot</li><li>Maintainer republishing a fixed version across a family of related packages after a hotfix</li><li>Self-hosted CI runner the parent-process filter doesn&#x27;t know about (e.g. local act runner)</li><li>Developer testing publish flow against a private registry (verdaccio) — same npm publish command line</li><li>First-time npm publish for a new project with a couple of related packages (workspace publish)</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessCommandLine has_any (&quot;lerna&quot;,&quot;changesets&quot;,&quot;nx release&quot;,&quot;rush publish&quot;,&quot;workspace&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the actual package names published in the 10-min window and the registry URL each went to (--registry flag, or default npmjs.org/pypi.org). Cross-check against the dev&#x27;s known package portfolio — if package names match every package they own, this is the worm. Check for an `.npmrc` token used non-interactively (no terminal). 2) Contain: revoke the dev&#x27;s npm/PyPI publish tokens immediately (npm token revoke / pypi web UI), unpublish or deprecate the just-pushed versions if they hit the public registry, force token rotation, quarantine the workstation. 3) Hunt: pivot the SHA256 of any package payload across registry-pull telemetry — any internal team that npm-installed the bad version now needs the same Suspicious Files sweep. Look at every package the token can publish; assume all are compromised until proven clean.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-54-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-54-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-54-uc2-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-54-uc2-datadog">Datadog</button>
       <button class="tab-btn" data-target="art-54-uc2-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-54-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-54-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// Hades signature: standalone Bun runtime spawned by Python / IDE, or downloaded fresh
-let BunSpawn = DeviceProcessEvents
-    | where Timestamp &gt; ago(14d)
-    | where FileName =~ &quot;bun.exe&quot; or FileName =~ &quot;bun&quot;
-    | where InitiatingProcessFileName in~ (&quot;python.exe&quot;,&quot;pythonw.exe&quot;,&quot;py.exe&quot;,&quot;code.exe&quot;,&quot;cursor.exe&quot;,&quot;claude.exe&quot;,&quot;node.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-    | project Timestamp, DeviceName, AccountName, Vector=&quot;BunSpawn&quot;, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine;
-let BunDownload = DeviceNetworkEvents
-    | where Timestamp &gt; ago(14d)
-    | where RemoteUrl has_any (&quot;bun.sh&quot;,&quot;github.com/oven-sh/bun&quot;,&quot;oven-sh.github.io&quot;)
-    | where InitiatingProcessFileName in~ (&quot;python.exe&quot;,&quot;pythonw.exe&quot;,&quot;py.exe&quot;,&quot;node.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;)
-    | project Timestamp, DeviceName, Vector=&quot;BunDownload&quot;, FileName=&quot;&quot;, FolderPath=&quot;&quot;, SHA256=&quot;&quot;, ProcessCommandLine=&quot;&quot;, InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName=InitiatingProcessAccountName;
-union BunSpawn, BunDownload
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-54-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let BunSpawn = ImProcessCreate
-    | where TimeGenerated &gt; ago(14d)
-    | where TargetProcessName endswith &quot;bun.exe&quot; or TargetProcessName =~ &quot;bun&quot;
-    | where ParentProcessName has_any (&quot;python.exe&quot;,&quot;pythonw.exe&quot;,&quot;py.exe&quot;,&quot;code.exe&quot;,&quot;cursor.exe&quot;,&quot;claude.exe&quot;,&quot;node.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;)
-    | project TimeGenerated, DvcHostname, ActorUsername, Vector=&quot;BunSpawn&quot;, TargetProcessName, TargetProcessCommandLine, ParentProcessName, ParentProcessCommandLine;
-let BunDownload = ImWebSession
-    | where TimeGenerated &gt; ago(14d)
-    | where Url has_any (&quot;bun.sh&quot;,&quot;github.com/oven-sh/bun&quot;)
-    | project TimeGenerated, DvcHostname, ActorUsername=SrcUsername, Vector=&quot;BunDownload&quot;, TargetProcessName=&quot;&quot;, TargetProcessCommandLine=Url, ParentProcessName=&quot;&quot;, ParentProcessCommandLine=&quot;&quot;;
-union BunSpawn, BunDownload
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-54-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Hades Standalone Bun Runtime Spawned by Python or IDE
-id: 2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e
-status: experimental
-description: Detects the Hades PyPI worm signature - obfuscated __init__.py hook downloads a standalone Bun JavaScript runtime and executes a JS payload through it to bypass EDR signatures targeting Node and Python.
-references:
-  - https://www.stepsecurity.io/blog/miasma-and-hades-are-spreading-now-detect-them-on-developer-machines-with-suspicious-files
-author: Detection Engineering
-date: 2026/06/19
-tags:
-  - attack.execution
-  - attack.t1105
-  - attack.t1059.007
-  - attack.t1218
-logsource:
-  category: process_creation
-  product: windows
-detection:
-  selection_child:
-    Image|endswith:
-      - &#x27;\bun.exe&#x27;
-  selection_parent:
-    ParentImage|endswith:
-      - &#x27;\python.exe&#x27;
-      - &#x27;\pythonw.exe&#x27;
-      - &#x27;\py.exe&#x27;
-      - &#x27;\code.exe&#x27;
-      - &#x27;\cursor.exe&#x27;
-      - &#x27;\claude.exe&#x27;
-      - &#x27;\node.exe&#x27;
-  condition: selection_child and selection_parent
-falsepositives:
-  - Polyglot developers running Bun from inside a Python script intentionally
-  - Code Runner extension launching Bun from VS Code
-level: high</code></pre></div>
-    <div class="tab-content" id="art-54-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @Image:(*\\bun.exe OR *\\Bun.exe OR *\\BUN.EXE) @ParentImage:(*\\python.exe OR *\\Python.exe OR *\\pythonw.exe OR *\\code.exe OR *\\Code.exe OR *\\cursor.exe OR *\\claude.exe OR *\\node.exe OR *\\Node.exe)</code></pre></div>
-    <div class="tab-content" id="art-54-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/\\\\bun\\.exe$/i
-| ParentBaseFileName=/^(python\\.exe|pythonw\\.exe|py\\.exe|code\\.exe|cursor\\.exe|claude\\.exe|node\\.exe|powershell\\.exe|pwsh\\.exe)$/i
-| groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-54-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-54-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-54-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-54-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process from datamodel=Endpoint.Processes where Processes.process_name=&quot;bun.exe&quot; (Processes.parent_process_name=&quot;python.exe&quot; OR Processes.parent_process_name=&quot;pythonw.exe&quot; OR Processes.parent_process_name=&quot;py.exe&quot; OR Processes.parent_process_name=&quot;code.exe&quot; OR Processes.parent_process_name=&quot;cursor.exe&quot; OR Processes.parent_process_name=&quot;claude.exe&quot; OR Processes.parent_process_name=&quot;node.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-54-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process from datamodel=Endpoint.Processes where Processes.process_name=&quot;bun.exe&quot; (Processes.parent_process_name=&quot;python.exe&quot; OR Processes.parent_process_name=&quot;pythonw.exe&quot; OR Processes.parent_process_name=&quot;py.exe&quot; OR Processes.parent_process_name=&quot;code.exe&quot; OR Processes.parent_process_name=&quot;cursor.exe&quot; OR Processes.parent_process_name=&quot;claude.exe&quot; OR Processes.parent_process_name=&quot;node.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre></div></div>
+    <div class="tab-content active" id="art-54-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where (FileName in~ (&quot;npm.cmd&quot;,&quot;npm.exe&quot;,&quot;npm&quot;,&quot;pnpm.cmd&quot;,&quot;pnpm.exe&quot;,&quot;yarn.cmd&quot;,&quot;yarn.exe&quot;) and ProcessCommandLine has &quot;publish&quot;)
+   or (FileName in~ (&quot;twine.exe&quot;,&quot;twine&quot;) and ProcessCommandLine has &quot;upload&quot;)
+   or ProcessCommandLine matches regex @&quot;(?i)\b(npm|pnpm|yarn)\s+publish\b&quot;
+   or ProcessCommandLine matches regex @&quot;(?i)\btwine\s+upload\b&quot;
+| where not(InitiatingProcessFileName in~ (&quot;runner.exe&quot;,&quot;github.runner.worker.exe&quot;,&quot;gitlab-runner.exe&quot;,&quot;jenkins.exe&quot;,&quot;agent.listener.exe&quot;,&quot;buildkite-agent.exe&quot;))
+| where not(InitiatingProcessParentFileName in~ (&quot;runner.exe&quot;,&quot;github.runner.worker.exe&quot;,&quot;gitlab-runner.exe&quot;,&quot;jenkins.exe&quot;,&quot;agent.listener.exe&quot;))
+| summarize PublishCount=count(), Cmds=make_set(ProcessCommandLine, 25), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, AccountName, bin(Timestamp, 10m)
+| where PublishCount &gt;= 3
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-54-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
+| where TimeGenerated &gt; ago(7d)
+| where (TargetProcessName has_any (&quot;npm.cmd&quot;,&quot;npm.exe&quot;,&quot;pnpm.cmd&quot;,&quot;pnpm.exe&quot;,&quot;yarn.cmd&quot;,&quot;yarn.exe&quot;) and TargetProcessCommandLine has &quot;publish&quot;)
+   or (TargetProcessName has_any (&quot;twine.exe&quot;,&quot;twine&quot;) and TargetProcessCommandLine has &quot;upload&quot;)
+   or TargetProcessCommandLine matches regex @&quot;(?i)\b(npm|pnpm|yarn)\s+publish\b&quot;
+   or TargetProcessCommandLine matches regex @&quot;(?i)\btwine\s+upload\b&quot;
+| where not(ParentProcessName has_any (&quot;runner.exe&quot;,&quot;Runner.Worker.exe&quot;,&quot;gitlab-runner.exe&quot;,&quot;jenkins.exe&quot;,&quot;agent.listener.exe&quot;,&quot;buildkite-agent.exe&quot;))
+| summarize PublishCount=count(), Cmds=make_set(TargetProcessCommandLine, 25), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated) by DvcHostname, ActorUsername, bin(TimeGenerated, 10m)
+| where PublishCount &gt;= 3
+| order by LastSeen desc</code></pre></div>
+    <div class="tab-content" id="art-54-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.auditd) (@CommandLine:(*&quot;npm publish&quot;* OR *&quot;pnpm publish&quot;* OR *&quot;yarn publish&quot;* OR *&quot;twine upload&quot;*) OR @process.command_line:(*&quot;npm publish&quot;* OR *&quot;twine upload&quot;*)) -@ParentImage:(*\\runner.exe OR *\\Runner.Worker.exe OR *\\jenkins.exe OR *\\gitlab-runner.exe) -@process.executable.path:(/opt/actions-runner/* OR /opt/gitlab-runner/*)</code></pre></div>
+    <div class="tab-content" id="art-54-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| regex(&quot;(?i)\\b(npm|pnpm|yarn)\\s+publish\\b|\\btwine\\s+upload\\b&quot;, field=CommandLine)
+| NOT ParentBaseFileName=/(runner|Runner\\.Worker|gitlab-runner|jenkins|agent\\.listener|buildkite-agent)\.exe$/i
+| groupBy([aid, ComputerName, UserName, bin(_time, 10m)], function=count(as=publishCount))
+| publishCount &gt;= 3</code></pre></div>
+    <div class="tab-content" id="art-54-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-54-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-54-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-54-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count values(Processes.process) as cmdlines values(Processes.dest) as dest from datamodel=Endpoint.Processes where (Processes.process=&quot;*npm* publish*&quot; OR Processes.process=&quot;*twine* upload*&quot; OR Processes.process=&quot;*pnpm* publish*&quot; OR Processes.process=&quot;*yarn* publish*&quot;) by Processes.dest Processes.user _time span=10m | `drop_dm_object_name(Processes)` | rex field=cmdlines max_match=0 &quot;publish\s+(?&lt;pkg&gt;[A-Za-z0-9@/_.\\-]+)&quot; | eval pkg_count=mvcount(mvdedup(pkg)) | where pkg_count&gt;=3 OR (count&gt;=5)</code></pre><pre class="spl-mode-body" id="art-54-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count values(Processes.process) as cmdlines values(Processes.dest) as dest from datamodel=Endpoint.Processes where (Processes.process=&quot;*npm* publish*&quot; OR Processes.process=&quot;*twine* upload*&quot; OR Processes.process=&quot;*pnpm* publish*&quot; OR Processes.process=&quot;*yarn* publish*&quot;) by Processes.dest Processes.user _time span=10m | `drop_dm_object_name(Processes)` | rex field=cmdlines max_match=0 &quot;publish\s+(?&lt;pkg&gt;[A-Za-z0-9@/_.\\-]+)&quot; | eval pkg_count=mvcount(mvdedup(pkg)) | where pkg_count&gt;=3 OR (count&gt;=5)</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="d99b586484" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="f14896676b" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">IDE auto-execute spawning downloader or interpreter (Miasma/Hades folderOpen trigger)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="d99b586484" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Hades on-import payload — Bun runtime fetched and executed by Python interpreter</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="f14896676b" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects VS Code, Cursor, or Claude Code spawning network-capable LOLBins or script interpreters with download/execute patterns — the signature of malicious .vscode/tasks.json (runOn: folderOpen), .claude/setup.mjs (SessionStart hook), or .cursor/rules/setup.mdc executing when a developer opens a compromised project folder.
+    <div class="uc-desc">Detects the Hades PyPI execution chain: a Python interpreter fetches the standalone Bun runtime from the internet and immediately executes it. The article calls this out explicitly — &#x27;the moment a developer imports the package, the hook downloads a standalone Bun runtime and runs a JavaScript payload.&#x27; Bun spawned by Python is an extremely strong signal because there is virtually no legitimate Python codebase that drives Bun.
 
-Rationale: Article: &#x27;.vscode/tasks.json runOn: folderOpen auto-execute&#x27; and &#x27;.claude/setup.mjs SessionStart hook: runs on every new session&#x27;. Direct IDE-to-LOLBin parent/child with download patterns is the runtime signature when the dropped config files fire. The cmd-line clauses (DownloadString, bun.sh) tighten the FP rate from generic IDE child-process noise.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Command and Scripting Interpreter: PowerShell">T1059.001</span> <span class="ind tech" title="Command and Scripting Interpreter: JavaScript">T1059.007</span> <span class="ind tech" title="User Execution: Malicious File">T1204.002</span> <span class="ind tech" title="Ingress Tool Transfer">T1105</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Code Runner / Quokka extensions running selected code that includes HTTP calls</li><li>Live Share or Remote-SSH extensions invoking PowerShell to set up tunnels</li><li>Python extension auto-installing pip packages on first project open</li><li>Devcontainer / Dev Container extension running setup scripts</li><li>Developer running git in an integrated terminal where git invokes credential helpers</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessCommandLine has_any (&quot;vscode.code-runner&quot;,&quot;ms-python.python&quot;,&quot;GitHub.codespaces&quot;,&quot;ms-vscode-remote&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Inspect the child command line for the destination URL or base64 payload. Decode any -EncodedCommand strings. Determine if a .vscode/tasks.json, .claude/setup.mjs, .cursor/rules/setup.mdc, or .gemini/settings.json exists in the project root that was opened in the IDE just before this event (correlate via DeviceProcessEvents on code.exe folder-open args). Step 2 (contain): Kill the child and any descendant processes. Isolate host with Defender Live Response. Rotate ~/.npmrc and ~/.pypirc tokens immediately. Block the C2 / download URL at egress proxy. Step 3 (hunt): Pivot to UC1 to find the dropped config file on this host. Search across the org for the same parent → child chain in the last 14d. Check DeviceFileEvents for binding.gyp (UC2) and bun.exe writes (UC3) on the same host.</div></details>
+Rationale: Article explicitly: &#x27;the hook downloads a standalone Bun runtime and runs a JavaScript payload&#x27;. Bun-from-Python is virtually unknown in legitimate workflows — Python projects don&#x27;t drive Bun. The bun.sh / oven-sh/bun / &#x27;bun-v&#x27; URL token pinpoints the runtime download.
+
+Cross-checked against:
+  • https://bun.sh
+  • https://attack.mitre.org/techniques/T1105/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Ingress Tool Transfer">T1105</span> <span class="ind tech" title="JavaScript">T1059.007</span> <span class="ind tech" title="System Binary Proxy Execution">T1218</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Polyglot project where a Python build script legitimately drives a Bun-based frontend build (rare)</li><li>Developer manually installing Bun via curl|bash piped through a Python wrapper</li><li>Test/CI environment for cross-runtime tooling where Python invokes Bun deliberately</li><li>Anaconda/conda-forge package that ships Bun as an optional accelerator (none known today but possible)</li><li>Security researcher reproducing the Hades chain in a sandbox</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessCommandLine has_any (&quot;build&quot;,&quot;bundle&quot;,&quot;vite&quot;,&quot;esbuild&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify which PyPI package&#x27;s __init__.py kicked off the chain (look at the python invocation cwd, sys.path, or the package directory the parent python was importing). Compare the JS payload Bun ran against the Hades samples publicly reported by StepSecurity. 2) Contain: kill bun.exe, remove the malicious package from site-packages, isolate the workstation if any outbound C2 calls were made, revoke PyPI publishing tokens stored on the host (~/.pypirc, OS keyring), force token+2FA rotation. 3) Hunt: pull every other host in the fleet that imported that same package version (DeviceFileEvents for site-packages/&lt;pkg&gt;/__init__.py with the same SHA256); look for bun.sh DNS/Web requests fleetwide; search for downstream npm/twine publishes from any infected host.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-54-uc3-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-54-uc3-sentinel">Sentinel KQL</button>
@@ -8850,104 +8786,86 @@ Rationale: Article: &#x27;.vscode/tasks.json runOn: folderOpen auto-execute&#x27
       <button class="tab-btn" data-target="art-54-uc3-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-54-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-54-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName in~ (&quot;code.exe&quot;,&quot;cursor.exe&quot;,&quot;claude.exe&quot;,&quot;code-insiders.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;curl.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;bun.exe&quot;,&quot;node.exe&quot;)
-| where ProcessCommandLine has_any (&quot;Invoke-WebRequest&quot;,&quot;DownloadString&quot;,&quot;-EncodedCommand&quot;,&quot; -enc &quot;,&quot; IEX &quot;,&quot;Invoke-Expression&quot;,&quot;FromBase64String&quot;,&quot;bun.sh&quot;,&quot;oven-sh/bun&quot;,&quot;-Command&quot;,&quot;curl -&quot;,&quot;wget &quot;,&quot;http://&quot;,&quot;https://&quot;)
-| where InitiatingProcessParentFileName !in~ (&quot;explorer.exe&quot;)  // keep noisy terminal-spawned removed — this is process-tree from IDE
-| where AccountName !endswith &quot;$&quot;
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-54-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>ImProcessCreate
-| where TimeGenerated &gt; ago(7d)
-| where ParentProcessName has_any (&quot;code.exe&quot;,&quot;cursor.exe&quot;,&quot;claude.exe&quot;,&quot;code-insiders.exe&quot;)
-| where TargetProcessName has_any (&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;cmd.exe&quot;,&quot;curl.exe&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;bun.exe&quot;,&quot;node.exe&quot;)
-| where TargetProcessCommandLine has_any (&quot;Invoke-WebRequest&quot;,&quot;DownloadString&quot;,&quot;-EncodedCommand&quot;,&quot; -enc &quot;,&quot; IEX &quot;,&quot;Invoke-Expression&quot;,&quot;FromBase64String&quot;,&quot;bun.sh&quot;,&quot;oven-sh/bun&quot;,&quot;http://&quot;,&quot;https://&quot;)
-| where ActorUsername !endswith &quot;$&quot;
-| project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, TargetProcessName, TargetProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-54-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: IDE Auto-Execute Spawning Downloader (Miasma/Hades folderOpen)
-id: 3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f
-status: experimental
-description: Detects VS Code, Cursor, or Claude Code spawning a script interpreter or LOLBin with download/execute strings - the runtime signature of malicious .vscode/tasks.json (runOn folderOpen), .claude/setup.mjs (SessionStart), or .cursor/rules/setup.mdc executing on project open.
+    <div class="tab-content active" id="art-54-uc3-kql"><pre><button class="copy-btn">COPY</button><code>let BunFetch = DeviceNetworkEvents
+    | where Timestamp &gt; ago(7d)
+    | where RemoteUrl has_any (&quot;bun.sh&quot;,&quot;oven-sh/bun&quot;,&quot;bun-v&quot;)
+    | where InitiatingProcessFileName in~ (&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;pythonw.exe&quot;,&quot;node.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;)
+    | project DownloadTime=Timestamp, DeviceId, DeviceName, RemoteUrl, RemoteIP, InitiatingProcessFileName, InitiatingProcessCommandLine;
+let BunSpawn = DeviceProcessEvents
+    | where Timestamp &gt; ago(7d)
+    | where FileName =~ &quot;bun.exe&quot; or FileName =~ &quot;bun&quot;
+    | where InitiatingProcessFileName in~ (&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;pythonw.exe&quot;,&quot;node.exe&quot;)
+       or InitiatingProcessCommandLine has_any (&quot;__init__.py&quot;,&quot;setup.mjs&quot;)
+    | project SpawnTime=Timestamp, DeviceId, DeviceName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256;
+union BunFetch, BunSpawn
+| order by DeviceName asc, coalesce(DownloadTime, SpawnTime) desc</code></pre></div>
+    <div class="tab-content" id="art-54-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let BunFetch = ImWebSession
+    | where TimeGenerated &gt; ago(7d)
+    | where Url has_any (&quot;bun.sh&quot;,&quot;oven-sh/bun&quot;,&quot;bun-v&quot;)
+    | where SrcUsername != &quot;&quot;
+    | project DownloadTime=TimeGenerated, DvcHostname, SrcUsername, Url;
+let BunSpawn = ImProcessCreate
+    | where TimeGenerated &gt; ago(7d)
+    | where TargetProcessName has &quot;bun&quot;
+    | where ParentProcessName has_any (&quot;python.exe&quot;,&quot;python3&quot;,&quot;pythonw.exe&quot;,&quot;node.exe&quot;)
+       or ParentProcessCommandLine has_any (&quot;__init__.py&quot;,&quot;setup.mjs&quot;)
+    | project SpawnTime=TimeGenerated, DvcHostname, ActorUsername, TargetProcessName, TargetProcessCommandLine, ParentProcessName, ParentProcessCommandLine;
+union BunFetch, BunSpawn
+| order by DvcHostname asc, coalesce(DownloadTime, SpawnTime) desc</code></pre></div>
+    <div class="tab-content" id="art-54-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Python interpreter spawning Bun runtime (Hades PyPI chain)
+id: 7a8b9c1d-2e3f-4051-8a6b-7c9d0e1f2a3b
+description: Detects the Hades PyPI worm execution chain where __init__.py downloads and runs a standalone Bun runtime.
 references:
-  - https://www.stepsecurity.io/blog/miasma-and-hades-are-spreading-now-detect-them-on-developer-machines-with-suspicious-files
-author: Detection Engineering
+    - https://www.stepsecurity.io/blog/miasma-and-hades-are-spreading-now-detect-them-on-developer-machines-with-suspicious-files
+author: StepSecurity research (community port)
 date: 2026/06/19
 tags:
-  - attack.execution
-  - attack.t1059.001
-  - attack.t1204.002
-  - attack.t1105
+    - attack.t1105
+    - attack.t1059.007
+    - attack.t1195.002
 logsource:
-  category: process_creation
-  product: windows
+    category: process_creation
+    product: windows
 detection:
-  parent:
-    ParentImage|endswith:
-      - &#x27;\code.exe&#x27;
-      - &#x27;\cursor.exe&#x27;
-      - &#x27;\claude.exe&#x27;
-      - &#x27;\code-insiders.exe&#x27;
-  child_image:
-    Image|endswith:
-      - &#x27;\powershell.exe&#x27;
-      - &#x27;\pwsh.exe&#x27;
-      - &#x27;\cmd.exe&#x27;
-      - &#x27;\curl.exe&#x27;
-      - &#x27;\certutil.exe&#x27;
-      - &#x27;\bitsadmin.exe&#x27;
-      - &#x27;\mshta.exe&#x27;
-      - &#x27;\wscript.exe&#x27;
-      - &#x27;\cscript.exe&#x27;
-      - &#x27;\bun.exe&#x27;
-  suspicious_cmd:
-    CommandLine|contains:
-      - &#x27;Invoke-WebRequest&#x27;
-      - &#x27;DownloadString&#x27;
-      - &#x27;-EncodedCommand&#x27;
-      - &#x27; -enc &#x27;
-      - &#x27;Invoke-Expression&#x27;
-      - &#x27;FromBase64String&#x27;
-      - &#x27;bun.sh&#x27;
-      - &#x27;oven-sh/bun&#x27;
-  condition: parent and child_image and suspicious_cmd
-falsepositives:
-  - Code Runner extension running selected code with HTTP requests
-  - Language server or extension auto-installing dependencies on first launch
+    parent_py:
+        ParentImage|endswith:
+            - &#x27;\python.exe&#x27;
+            - &#x27;\python3.exe&#x27;
+            - &#x27;\pythonw.exe&#x27;
+    child_bun:
+        Image|endswith:
+            - &#x27;\bun.exe&#x27;
+            - &#x27;\bun&#x27;
+    condition: parent_py and child_bun
 level: high</code></pre></div>
-    <div class="tab-content" id="art-54-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\code.exe OR *\\Code.exe OR *\\cursor.exe OR *\\claude.exe OR *\\code-insiders.exe) @Image:(*\\powershell.exe OR *\\PowerShell.exe OR *\\pwsh.exe OR *\\cmd.exe OR *\\curl.exe OR *\\certutil.exe OR *\\bitsadmin.exe OR *\\mshta.exe OR *\\wscript.exe OR *\\cscript.exe OR *\\bun.exe) @CommandLine:(*Invoke-WebRequest* OR *DownloadString* OR *EncodedCommand* OR *Invoke-Expression* OR *FromBase64String* OR *bun.sh* OR *oven-sh/bun*)</code></pre></div>
+    <div class="tab-content" id="art-54-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:1 @ParentImage:(*\\python.exe OR *\\python3.exe OR *\\pythonw.exe OR *\\Python.exe) @Image:(*\\bun.exe OR *\\Bun.exe)</code></pre></div>
     <div class="tab-content" id="art-54-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
-| ParentBaseFileName=/^(code\\.exe|cursor\\.exe|claude\\.exe|code-insiders\\.exe)$/i
-| ImageFileName=/\\\\(powershell\\.exe|pwsh\\.exe|cmd\\.exe|curl\\.exe|certutil\\.exe|bitsadmin\\.exe|mshta\\.exe|wscript\\.exe|cscript\\.exe|bun\\.exe)$/i
-| regex(&quot;(Invoke-WebRequest|DownloadString|EncodedCommand|Invoke-Expression|FromBase64String|bun\\.sh|oven-sh/bun|https?://)&quot;, field=CommandLine)
-| groupBy([aid, ComputerName, UserName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-54-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-54-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-54-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-54-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;code.exe&quot; OR Processes.parent_process_name=&quot;cursor.exe&quot; OR Processes.parent_process_name=&quot;claude.exe&quot; OR Processes.parent_process_name=&quot;code-insiders.exe&quot;) (Processes.process_name=&quot;powershell.exe&quot; OR Processes.process_name=&quot;pwsh.exe&quot; OR Processes.process_name=&quot;cmd.exe&quot; OR Processes.process_name=&quot;curl.exe&quot; OR Processes.process_name=&quot;certutil.exe&quot; OR Processes.process_name=&quot;bitsadmin.exe&quot; OR Processes.process_name=&quot;mshta.exe&quot; OR Processes.process_name=&quot;wscript.exe&quot; OR Processes.process_name=&quot;cscript.exe&quot; OR Processes.process_name=&quot;bun.exe&quot;) (Processes.process=&quot;*Invoke-WebRequest*&quot; OR Processes.process=&quot;*DownloadString*&quot; OR Processes.process=&quot;*-EncodedCommand*&quot; OR Processes.process=&quot;*IEX*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot; OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*bun.sh*&quot; OR Processes.process=&quot;*oven-sh/bun*&quot; OR Processes.process=&quot;*http://*&quot; OR Processes.process=&quot;*https://*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-54-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;code.exe&quot; OR Processes.parent_process_name=&quot;cursor.exe&quot; OR Processes.parent_process_name=&quot;claude.exe&quot; OR Processes.parent_process_name=&quot;code-insiders.exe&quot;) (Processes.process_name=&quot;powershell.exe&quot; OR Processes.process_name=&quot;pwsh.exe&quot; OR Processes.process_name=&quot;cmd.exe&quot; OR Processes.process_name=&quot;curl.exe&quot; OR Processes.process_name=&quot;certutil.exe&quot; OR Processes.process_name=&quot;bitsadmin.exe&quot; OR Processes.process_name=&quot;mshta.exe&quot; OR Processes.process_name=&quot;wscript.exe&quot; OR Processes.process_name=&quot;cscript.exe&quot; OR Processes.process_name=&quot;bun.exe&quot;) (Processes.process=&quot;*Invoke-WebRequest*&quot; OR Processes.process=&quot;*DownloadString*&quot; OR Processes.process=&quot;*-EncodedCommand*&quot; OR Processes.process=&quot;*IEX*&quot; OR Processes.process=&quot;*Invoke-Expression*&quot; OR Processes.process=&quot;*FromBase64*&quot; OR Processes.process=&quot;*bun.sh*&quot; OR Processes.process=&quot;*oven-sh/bun*&quot; OR Processes.process=&quot;*http://*&quot; OR Processes.process=&quot;*https://*&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre></div></div>
+| ParentBaseFileName=/python(3|w)?\.exe$/i
+| ImageFileName=/\\bun(\.exe)?$/i
+| groupBy([aid, ComputerName, UserName, ImageFileName, CommandLine], function=count())</code></pre></div>
+    <div class="tab-content" id="art-54-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-54-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-54-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-54-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;pythonw.exe&quot;,&quot;python3&quot;,&quot;python&quot;)) AND (Processes.process_name IN (&quot;bun.exe&quot;,&quot;bun&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;) OR Processes.process=&quot;*bun.sh*&quot; OR Processes.process=&quot;*oven-sh/bun*&quot; OR Processes.process=&quot;*bun-v*&quot;) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-54-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;pythonw.exe&quot;,&quot;python3&quot;,&quot;python&quot;)) AND (Processes.process_name IN (&quot;bun.exe&quot;,&quot;bun&quot;,&quot;curl.exe&quot;,&quot;wget.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;) OR Processes.process=&quot;*bun.sh*&quot; OR Processes.process=&quot;*oven-sh/bun*&quot; OR Processes.process=&quot;*bun-v*&quot;) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="0b1b296100" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
+<details class="uc" data-uc-slug="f181d54c0a" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
   <summary>
-    <span class="uc-title">Known Miasma/Hades payload hash on disk or in process</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-title">Miasma Phantom Gyp — 100-300 byte binding.gyp written outside a normal native-addon build</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="0b1b296100" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="f181d54c0a" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Alerts on the StepSecurity-published SHA256 hashes for known Miasma (npm) and Hades (PyPI) payload artifacts observed on disk or executed as a process. Highest-confidence IOC match for the active campaign.
+    <div class="uc-desc">Phantom Gyp ships a 157-byte binding.gyp that triggers code execution during npm install&#x27;s native build step, evading install-script scanners. Detects binding.gyp file writes in the 100-300 byte range outside of legitimate package extraction (tar / git / msiexec parents), then enriches with the immediately-following node-gyp / node.exe child process to confirm code execution.
 
-Rationale: Direct SHA256 IOC match against the 5 hashes pre-extracted from the article. Lowest FP rate possible (no collisions at SHA256). Union of file write + process exec + image load covers static drops, runtime execution, and DLL-style loads.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Dependencies and Development Tools">T1195.001</span> <span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+Rationale: Article explicitly: &#x27;Miasma&#x27;s npm variant uses a technique we call Phantom Gyp: instead of a lifecycle script, it ships a 157-byte binding.gyp file...&#x27; The 80-300 byte band brackets that value; legitimate native-addon binding.gyp files are typically 1-5 KB.
+
+Cross-checked against:
+  • https://nodejs.org/api/addons.html
+  • https://attack.mitre.org/techniques/T1195/002/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="JavaScript">T1059.007</span> <span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Negligible — SHA256 collisions do not occur in practice</li><li>Sandbox or malware analysis VM intentionally executing samples (suppress by host tag)</li><li>Threat-intel platform downloading samples for analysis</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1 (triage): Confirm host is not a sanctioned malware-analysis sandbox. Capture the full file path, parent process, and account. Step 2 (contain): Immediately isolate the host with Defender Live Response. Force-revoke ~/.npmrc and ~/.pypirc tokens on the account from npmjs.com and pypi.org admin consoles. Disable the user&#x27;s npm/PyPI publish capability via maintainer admin. Step 3 (hunt): Pull all packages the affected user maintains on npmjs.com / pypi.org and check for unauthorized version publishes in the last 7d. Pivot to UC1/UC2/UC3 on this host to identify all worm artifacts. Check DeviceNetworkEvents for outbound to registry.npmjs.org/publish or pypi.org/upload from non-package-manager processes.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Lightweight legitimate native-addon packages whose binding.gyp is genuinely small (some toy or minimal C++ addons)</li><li>Templating tools (yeoman, plop) seeding a placeholder binding.gyp during scaffolding</li><li>Developer hand-editing a binding.gyp down to a minimal stub while debugging node-gyp build issues</li><li>Repos vendoring a tiny stub binding.gyp as a marker file with no real native code</li><li>Test fixtures in node-gyp&#x27;s own test suite that intentionally ship tiny gyp files</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(InitiatingProcessCommandLine has_any (&quot;yo &quot;,&quot;plop&quot;,&quot;scaffold&quot;,&quot;create-&quot;)) and not(FolderPath has &quot;\\node-gyp\\test\\&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: read the binding.gyp content. Legitimate ones reference a &#x27;targets&#x27; array with C/C++ source files and gyp variables; Phantom Gyp uses gyp&#x27;s action/condition primitives to shell out to node/curl/sh during the configure or build phase. The file&#x27;s SHA256 will match across infected packages — pivot it. 2) Contain: block the SHA256 fleetwide, quarantine the workstation, identify the npm package the binding.gyp belongs to (its parent folder under node_modules) and stop any in-flight npm install; revoke npm publish tokens on the host. 3) Hunt: in DeviceProcessEvents look for node.exe / node-gyp / python.exe spawning from npm install within 60s of the binding.gyp write — that&#x27;s the actual code execution; pivot the package name and SHA256 to every host that npm-installed the same dependency.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-54-uc4-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-54-uc4-sentinel">Sentinel KQL</button>
@@ -8956,75 +8874,48 @@ Rationale: Direct SHA256 IOC match against the 5 hashes pre-extracted from the a
       <button class="tab-btn" data-target="art-54-uc4-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-54-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-54-uc4-kql"><pre><button class="copy-btn">COPY</button><code>let MiasmaHashes = dynamic([
-    &quot;dc48b09b2a5954f7ff79ab8a2fd80202bd3b59c08c7cdbc6025aa923cb4c0efe&quot;,
-    &quot;e1342a80d4b5e83d2c7c22e1e0aaa95f2d88e3dbf0d853a4994b180c93a4b17d&quot;,
-    &quot;c539766062555d47716f8432e73adbe3a0c0c954a0b6c4005017a668975e275c&quot;,
-    &quot;7069e28a5806db4ab0273639667d203f5e31b401d403af7e36d9f360c1f6d655&quot;,
-    &quot;b86c5ae9e95bd841a595440faa3eb6317441e746f241ae8fd641ab59ed1d1966&quot;
-]);
-union
-  (DeviceFileEvents
-    | where Timestamp &gt; ago(30d)
-    | where SHA256 in (MiasmaHashes)
-    | project Timestamp, DeviceName, Source=&quot;FileEvent&quot;, FileName, FolderPath, SHA256, Account=InitiatingProcessAccountName, ProcessName=InitiatingProcessFileName, ProcessCmd=InitiatingProcessCommandLine),
-  (DeviceProcessEvents
-    | where Timestamp &gt; ago(30d)
-    | where SHA256 in (MiasmaHashes)
-    | project Timestamp, DeviceName, Source=&quot;ProcessEvent&quot;, FileName, FolderPath, SHA256, Account=AccountName, ProcessName=FileName, ProcessCmd=ProcessCommandLine),
-  (DeviceImageLoadEvents
-    | where Timestamp &gt; ago(30d)
-    | where SHA256 in (MiasmaHashes)
-    | project Timestamp, DeviceName, Source=&quot;ImageLoad&quot;, FileName, FolderPath, SHA256, Account=InitiatingProcessAccountName, ProcessName=InitiatingProcessFileName, ProcessCmd=InitiatingProcessCommandLine)
+    <div class="tab-content active" id="art-54-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+| where Timestamp &gt; ago(7d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where FileName =~ &quot;binding.gyp&quot;
+| where FileSize between (80 .. 300)
+| where not(InitiatingProcessFileName in~ (&quot;tar.exe&quot;,&quot;git.exe&quot;,&quot;7z.exe&quot;,&quot;7zg.exe&quot;,&quot;winrar.exe&quot;,&quot;msiexec.exe&quot;,&quot;code.exe&quot;,&quot;devenv.exe&quot;))
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, FileSize, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-54-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let MiasmaHashes = dynamic([
-    &quot;dc48b09b2a5954f7ff79ab8a2fd80202bd3b59c08c7cdbc6025aa923cb4c0efe&quot;,
-    &quot;e1342a80d4b5e83d2c7c22e1e0aaa95f2d88e3dbf0d853a4994b180c93a4b17d&quot;,
-    &quot;c539766062555d47716f8432e73adbe3a0c0c954a0b6c4005017a668975e275c&quot;,
-    &quot;7069e28a5806db4ab0273639667d203f5e31b401d403af7e36d9f360c1f6d655&quot;,
-    &quot;b86c5ae9e95bd841a595440faa3eb6317441e746f241ae8fd641ab59ed1d1966&quot;
-]);
-union
-  (ImFileEvent | where TimeGenerated &gt; ago(30d) | where TargetFileSHA256 in (MiasmaHashes) | project TimeGenerated, DvcHostname, Source=&quot;FileEvent&quot;, TargetFileName, TargetFilePath, TargetFileSHA256, ActorUsername, ActingProcessName, ActingProcessCommandLine),
-  (ImProcessCreate | where TimeGenerated &gt; ago(30d) | where SHA256 in (MiasmaHashes) | project TimeGenerated, DvcHostname, Source=&quot;ProcessEvent&quot;, TargetFileName=TargetProcessName, TargetFilePath=TargetProcessName, TargetFileSHA256=SHA256, ActorUsername, ActingProcessName=ParentProcessName, ActingProcessCommandLine=TargetProcessCommandLine)
+    <div class="tab-content" id="art-54-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where TargetFileName =~ &quot;binding.gyp&quot;
+| where TargetFileSize between (80 .. 300)
+| where not(ActingProcessName in~ (&quot;tar.exe&quot;,&quot;git.exe&quot;,&quot;7z.exe&quot;,&quot;7zg.exe&quot;,&quot;winrar.exe&quot;,&quot;msiexec.exe&quot;,&quot;code.exe&quot;,&quot;devenv.exe&quot;))
+| project TimeGenerated, DvcHostname, ActorUsername, TargetFilePath, TargetFileName, TargetFileSize, TargetFileSHA256, ActingProcessName, ActingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-54-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Known Miasma/Hades Worm Payload Hash Observed
-id: 4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f9a
-status: experimental
-description: Matches StepSecurity-published SHA256 hashes of known Miasma (npm) and Hades (PyPI) worm payload artifacts on file write or process execution. Highest-confidence IOC match for the active campaign.
+    <div class="tab-content" id="art-54-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: Miasma Phantom Gyp — micro binding.gyp dropped
+id: 9d8e7f6c-5b4a-3210-9f8e-7d6c5b4a3210
+description: Detects creation of a very small binding.gyp file consistent with the Miasma Phantom Gyp 157-byte payload that triggers code execution during npm install&#x27;s native build step.
 references:
-  - https://www.stepsecurity.io/blog/miasma-and-hades-are-spreading-now-detect-them-on-developer-machines-with-suspicious-files
-author: Detection Engineering
+    - https://www.stepsecurity.io/blog/miasma-and-hades-are-spreading-now-detect-them-on-developer-machines-with-suspicious-files
+author: StepSecurity research (community port)
 date: 2026/06/19
 tags:
-  - attack.initial_access
-  - attack.t1195.001
+    - attack.t1195.002
+    - attack.t1059.007
 logsource:
-  category: process_creation
-  product: windows
+    category: file_event
+    product: windows
 detection:
-  selection:
-    Hashes|contains:
-      - &#x27;dc48b09b2a5954f7ff79ab8a2fd80202bd3b59c08c7cdbc6025aa923cb4c0efe&#x27;
-      - &#x27;e1342a80d4b5e83d2c7c22e1e0aaa95f2d88e3dbf0d853a4994b180c93a4b17d&#x27;
-      - &#x27;c539766062555d47716f8432e73adbe3a0c0c954a0b6c4005017a668975e275c&#x27;
-      - &#x27;7069e28a5806db4ab0273639667d203f5e31b401d403af7e36d9f360c1f6d655&#x27;
-      - &#x27;b86c5ae9e95bd841a595440faa3eb6317441e746f241ae8fd641ab59ed1d1966&#x27;
-  condition: selection
-falsepositives:
-  - Hash collisions are negligible at SHA256
-level: critical</code></pre></div>
-    <div class="tab-content" id="art-54-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>@Hashes:(*dc48b09b2a5954f7ff79ab8a2fd80202bd3b59c08c7cdbc6025aa923cb4c0efe* OR *e1342a80d4b5e83d2c7c22e1e0aaa95f2d88e3dbf0d853a4994b180c93a4b17d* OR *c539766062555d47716f8432e73adbe3a0c0c954a0b6c4005017a668975e275c* OR *7069e28a5806db4ab0273639667d203f5e31b401d403af7e36d9f360c1f6d655* OR *b86c5ae9e95bd841a595440faa3eb6317441e746f241ae8fd641ab59ed1d1966*)</code></pre></div>
-    <div class="tab-content" id="art-54-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>(#event_simpleName=ProcessRollup2 OR #event_simpleName=FileWritten OR #event_simpleName=SyntheticProcessRollup2)
-| in(field=SHA256HashData, values=[&quot;dc48b09b2a5954f7ff79ab8a2fd80202bd3b59c08c7cdbc6025aa923cb4c0efe&quot;, &quot;e1342a80d4b5e83d2c7c22e1e0aaa95f2d88e3dbf0d853a4994b180c93a4b17d&quot;, &quot;c539766062555d47716f8432e73adbe3a0c0c954a0b6c4005017a668975e275c&quot;, &quot;7069e28a5806db4ab0273639667d203f5e31b401d403af7e36d9f360c1f6d655&quot;, &quot;b86c5ae9e95bd841a595440faa3eb6317441e746f241ae8fd641ab59ed1d1966&quot;])
-| groupBy([aid, ComputerName, UserName, event_simpleName, SHA256HashData], function=count())</code></pre></div>
-    <div class="tab-content" id="art-54-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-54-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-54-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-54-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_hash=&quot;dc48b09b2a5954f7ff79ab8a2fd80202bd3b59c08c7cdbc6025aa923cb4c0efe&quot; OR Filesystem.file_hash=&quot;e1342a80d4b5e83d2c7c22e1e0aaa95f2d88e3dbf0d853a4994b180c93a4b17d&quot; OR Filesystem.file_hash=&quot;c539766062555d47716f8432e73adbe3a0c0c954a0b6c4005017a668975e275c&quot; OR Filesystem.file_hash=&quot;7069e28a5806db4ab0273639667d203f5e31b401d403af7e36d9f360c1f6d655&quot; OR Filesystem.file_hash=&quot;b86c5ae9e95bd841a595440faa3eb6317441e746f241ae8fd641ab59ed1d1966&quot;) by Filesystem.dest Filesystem.file_name Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-54-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_hash=&quot;dc48b09b2a5954f7ff79ab8a2fd80202bd3b59c08c7cdbc6025aa923cb4c0efe&quot; OR Filesystem.file_hash=&quot;e1342a80d4b5e83d2c7c22e1e0aaa95f2d88e3dbf0d853a4994b180c93a4b17d&quot; OR Filesystem.file_hash=&quot;c539766062555d47716f8432e73adbe3a0c0c954a0b6c4005017a668975e275c&quot; OR Filesystem.file_hash=&quot;7069e28a5806db4ab0273639667d203f5e31b401d403af7e36d9f360c1f6d655&quot; OR Filesystem.file_hash=&quot;b86c5ae9e95bd841a595440faa3eb6317441e746f241ae8fd641ab59ed1d1966&quot;) by Filesystem.dest Filesystem.file_name Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`</code></pre></div></div>
+    selection:
+        TargetFilename|endswith: &#x27;\binding.gyp&#x27;
+    condition: selection
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-54-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:(windows.sysmon OR linux.auditd) @TargetFilename:(*\\binding.gyp OR */binding.gyp)</code></pre></div>
+    <div class="tab-content" id="art-54-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+| TargetFileName=/(\\\\|/)binding\.gyp$/i
+| WrittenBytes &lt; 300
+| WrittenBytes &gt;= 80
+| NOT ContextImageFileName=/(tar|git|7z|7zg|winrar|msiexec|code|devenv)\.exe$/i
+| groupBy([aid, ComputerName, TargetFileName, WrittenBytes, ContextImageFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-54-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-54-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-54-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-54-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;binding.gyp&quot; Filesystem.file_size&lt;300 Filesystem.file_size&gt;=80 by Filesystem.dest Filesystem.file_path Filesystem.file_size Filesystem.process_name Filesystem.user _time | `drop_dm_object_name(Filesystem)` | where NOT match(process_name, &quot;(?i)(tar|git|msiexec|7z|7zip|winrar)\\.exe$&quot;)</code></pre><pre class="spl-mode-body" id="art-54-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Endpoint.Filesystem where Filesystem.file_name=&quot;binding.gyp&quot; Filesystem.file_size&lt;300 Filesystem.file_size&gt;=80 by Filesystem.dest Filesystem.file_path Filesystem.file_size Filesystem.process_name Filesystem.user _time | `drop_dm_object_name(Filesystem)` | where NOT match(process_name, &quot;(?i)(tar|git|msiexec|7z|7zip|winrar)\\.exe$&quot;)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="27f9f5bb66" data-platforms="def,sent,sigma,spl" data-targets="windows">
