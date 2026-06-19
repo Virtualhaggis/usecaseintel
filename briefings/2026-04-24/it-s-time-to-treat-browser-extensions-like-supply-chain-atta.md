@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Cyberhaven compromised Chrome extension C2 callback (cyberhavenext.pro)
 
-`UC_372_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_373_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceNetworkEvents
 
 ### Context.ai compromised Chrome extension installed on host (ID omddlmnhcofjbnbflmjginpjjblphbgk)
 
-`UC_372_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_373_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ union
 
 ### First-time OAuth consent granting Drive/Mail read scope to non-sanctioned third-party app
 
-`UC_372_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_373_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ CloudAppEvents
 
 ### Roblox cheat/exploit download on enterprise endpoint (Lumma Stealer entry vector)
 
-`UC_372_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_373_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

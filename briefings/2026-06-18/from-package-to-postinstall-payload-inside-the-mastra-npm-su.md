@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### Mastra npm supply chain: easy-day-js postinstall dropper (node setup.cjs --no-warnings)
 
-`UC_58_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_60_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceProcessEvents
 
 ### Mastra C2 beacon: node.exe to Hostwinds 23.254.164.92:8000 / .123:443
 
-`UC_58_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_60_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ union
 
 ### Mastra implant Windows persistence: NvmProtocal Run key + NodePackages drop
 
-`UC_58_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_60_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -134,7 +134,7 @@ union
 
 ### Mastra implant credential access: node.exe reading crypto wallet extensions / browser History
 
-`UC_58_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_60_12` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +160,7 @@ DeviceFileEvents
 
 ### Mastra implant discovery: PowerShell child of node.exe running Get-StartApps / Get-AppxPackage
 
-`UC_58_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_60_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -352,7 +352,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — From package to postinstall payload: Inside the Mastra npm supply chain compromi
 
-`UC_58_8` · phase: **exploit** · confidence: **High**
+`UC_60_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

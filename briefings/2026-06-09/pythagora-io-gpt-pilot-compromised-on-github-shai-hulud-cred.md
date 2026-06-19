@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Python import-hook downloads Bun runtime from oven-sh GitHub release (Hades Campaign)
 
-`UC_170_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_171_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceNetworkEvents
 
 ### Bun standalone runtime executes _index.js bootstrapper spawned from Python (Hades)
 
-`UC_170_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_171_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -85,7 +85,7 @@ DeviceProcessEvents
 
 ### Hades Campaign once-per-boot marker file /tmp/.bun_ran created by Python
 
-`UC_170_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_171_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceFileEvents
 
 ### Linux /proc/{pid}/mem read targeting GitHub Actions Runner.Worker (Hades memory scraper)
 
-`UC_170_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_171_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceFileEvents
 
 ### Hades Campaign compromised PyPI package install (ensmallen, embiggen, gpsea, et al.)
 
-`UC_170_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_171_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -400,7 +400,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blo
 
-`UC_170_7` · phase: **exploit** · confidence: **High**
+`UC_171_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

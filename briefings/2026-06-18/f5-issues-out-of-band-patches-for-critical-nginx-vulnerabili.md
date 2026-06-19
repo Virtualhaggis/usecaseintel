@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable NGINX versions exposed to CVE-2026-42530 / CVE-2026-42055
 
-`UC_49_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_51_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceTvmSoftwareVulnerabilities
 
 ### NGINX worker process abnormal restart fan-out (CVE-2026-42530 / 42055 post-exploit crash signal)
 
-`UC_49_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_51_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -82,7 +82,7 @@ DeviceProcessEvents
 
 ### Oversized HTTP request headers against NGINX (CVE-2026-42055 trigger condition)
 
-`UC_49_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_51_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### NGINX Gateway Fabric arbitrary directive injection (CVE-2026-11311 / CVE-2026-50107)
 
-`UC_49_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_51_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

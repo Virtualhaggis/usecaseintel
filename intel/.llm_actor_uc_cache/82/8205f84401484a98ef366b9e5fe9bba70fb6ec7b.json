@@ -1,0 +1,78 @@
+{
+  "name": "APT32",
+  "ucs": [
+    {
+      "title": "[LLM] APT32 (OceanLotus / Cobalt Kitty) DLL side-loading via vendor-signed host binaries dropped to user-writable paths",
+      "description": "Hunts OceanLotus's signature 'Cobalt Kitty' initial-foothold pattern: a legitimately-signed third-party binary (Symantec wsc_proxy.exe, Symantec rastlsc.exe, McAfee mcoemcpy.exe, Kaspersky avpui.exe, Adobe AcroTranscoder.exe) dropped to %APPDATA% / %PROGRAMDATA% / %USERPROFILE% so that an adjacent malicious DLL (wsc.dll, McUtil.dll, goopdate.dll, dwmapi.dll) gets side-loaded via search-order hijack. CrowdStrike, ESET (SOUNDBITE/Salgorea) and Cybereason (Op Cobalt Kitty) all attribute this combination to APT32.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "install",
+      "conf": "high",
+      "techs": [
+        "T1574.002",
+        "T1036.005",
+        "T1027",
+        "T1218"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (\"wsc_proxy.exe\",\"rastlsc.exe\",\"rastls.exe\",\"mcoemcpy.exe\",\"mcvsmap.exe\",\"avpui.exe\",\"AcroTranscoder.exe\",\"tcpvcfg.exe\",\"outlook.exe\",\"winword.exe\") AND (Processes.process_path=\"*\\\\Users\\\\*\" OR Processes.process_path=\"*\\\\ProgramData\\\\*\" OR Processes.process_path=\"*\\\\AppData\\\\*\" OR Processes.process_path=\"*\\\\Temp\\\\*\" OR Processes.process_path=\"*\\\\Public\\\\*\") AND NOT (Processes.process_path=\"C:\\\\Program Files\\\\*\" OR Processes.process_path=\"C:\\\\Program Files (x86)\\\\*\" OR Processes.process_path=\"C:\\\\Windows\\\\*\") by host Processes.user Processes.process_name Processes.process_path Processes.parent_process_name Processes.parent_process_path Processes.process | `drop_dm_object_name(Processes)` | join type=left host process_path [| tstats summariesonly=t values(Filesystem.file_name) as sideloaded_dlls from datamodel=Endpoint.Filesystem where Filesystem.file_name IN (\"wsc.dll\",\"wwlib.dll\",\"McUtil.dll\",\"goopdate.dll\",\"goopdateres.dll\",\"dwmapi.dll\",\"version.dll\",\"rastls.dll\",\"mcvsmap.dll\") by host Filesystem.file_path | rename Filesystem.file_path as process_path] | where isnotnull(sideloaded_dlls) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let LookbackDays = 14d;\nlet SideloadHosts = dynamic([\"wsc_proxy.exe\",\"rastlsc.exe\",\"rastls.exe\",\"mcoemcpy.exe\",\"mcvsmap.exe\",\"avpui.exe\",\"acrotranscoder.exe\",\"tcpvcfg.exe\",\"outlook.exe\",\"winword.exe\"]);\nlet SideloadDlls = dynamic([\"wsc.dll\",\"wwlib.dll\",\"mcutil.dll\",\"goopdate.dll\",\"goopdateres.dll\",\"dwmapi.dll\",\"version.dll\",\"rastls.dll\",\"mcvsmap.dll\"]);\nlet HostExec = DeviceProcessEvents\n    | where Timestamp > ago(LookbackDays)\n    | where FileName in~ SideloadHosts\n    | where FolderPath has_any (@\"\\Users\\\", @\"\\ProgramData\\\", @\"\\AppData\\\", @\"\\Temp\\\", @\"\\Public\\\")\n    | where FolderPath !startswith @\"C:\\Program Files\"\n    | where FolderPath !startswith @\"C:\\Program Files (x86)\"\n    | where FolderPath !startswith @\"C:\\Windows\"\n    | where AccountName !endswith \"$\"     // strip machine accounts\n    | project Timestamp, DeviceId, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256;\nlet AdjacentDll = DeviceImageLoadEvents\n    | where Timestamp > ago(LookbackDays)\n    | where FileName in~ SideloadDlls\n    | where InitiatingProcessFolderPath has_any (@\"\\Users\\\", @\"\\ProgramData\\\", @\"\\AppData\\\", @\"\\Temp\\\", @\"\\Public\\\")\n    | where InitiatingProcessFileName in~ SideloadHosts\n    | project Timestamp, DeviceId, DllName=FileName, DllFolder=FolderPath, LoaderImage=InitiatingProcessFileName, LoaderFolder=InitiatingProcessFolderPath, LoaderSHA256=InitiatingProcessSHA256;\nHostExec\n| join kind=inner (AdjacentDll) on DeviceId\n| where FolderPath == DllFolder           // DLL sat next to the EXE \u2014 Windows search-order hijack\n| project Timestamp, DeviceName, AccountName, FileName, FolderPath, DllName, ProcessCommandLine, SHA256, LoaderSHA256\n| order by Timestamp desc",
+      "sentinel_kql": "let LookbackDays = 14d;\nlet SideloadHosts = dynamic([@\"\\wsc_proxy.exe\",@\"\\rastlsc.exe\",@\"\\rastls.exe\",@\"\\mcoemcpy.exe\",@\"\\mcvsmap.exe\",@\"\\avpui.exe\",@\"\\AcroTranscoder.exe\",@\"\\tcpvcfg.exe\",@\"\\OUTLOOK.EXE\",@\"\\WINWORD.EXE\"]);\nSecurityEvent\n| where TimeGenerated > ago(LookbackDays)\n| where EventID == 4688\n| where NewProcessName has_any (SideloadHosts)\n| where NewProcessName has_any (@\"\\Users\\\", @\"\\ProgramData\\\", @\"\\AppData\\\", @\"\\Temp\\\", @\"\\Public\\\")\n| where NewProcessName !contains @\"\\Program Files\"\n| where NewProcessName !contains @\"\\Windows\\\"\n| where SubjectUserName !endswith \"$\"\n| project TimeGenerated, Computer, SubjectUserName, NewProcessName, CommandLine, ParentProcessName, TokenElevationType\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT32 OceanLotus Side-Loader Host Binary Executed From User-Writable Path\nid: 9b34c7a1-1d7e-4b6c-8e2f-0a3f1d5b9c11\nstatus: experimental\ndescription: Detects vendor-signed binaries known to be abused by APT32 (Cobalt Kitty) for DLL side-loading when they execute from %USERPROFILE%, %APPDATA% or %PROGRAMDATA% instead of their legitimate install path.\nreferences:\n  - https://attack.mitre.org/groups/G0050/\n  - https://www.cybereason.com/blog/operation-cobalt-kitty-apt\nauthor: SOC Detection Engineering\ndate: 2026/06/19\ntags:\n  - attack.defense_evasion\n  - attack.persistence\n  - attack.t1574.002\n  - attack.t1036.005\n  - attack.g0050\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_binary:\n    Image|endswith:\n      - '\\wsc_proxy.exe'\n      - '\\rastlsc.exe'\n      - '\\rastls.exe'\n      - '\\mcoemcpy.exe'\n      - '\\mcvsmap.exe'\n      - '\\avpui.exe'\n      - '\\AcroTranscoder.exe'\n      - '\\tcpvcfg.exe'\n  selection_path:\n    Image|contains:\n      - '\\Users\\'\n      - '\\ProgramData\\'\n      - '\\AppData\\'\n      - '\\Temp\\'\n      - '\\Public\\'\n  filter_legit:\n    Image|contains:\n      - '\\Program Files\\'\n      - '\\Program Files (x86)\\'\n      - '\\Windows\\'\n  condition: selection_binary and selection_path and not filter_legit\nfalsepositives:\n  - Vendor installer caching the binary in a user temp path during upgrade (verify by signer + install correlation)\nlevel: high",
+      "datadog_query": "source:windows.sysmon @EventID:1 @Image:(*\\\\wsc_proxy.exe OR *\\\\WSC_Proxy.exe OR *\\\\rastlsc.exe OR *\\\\RasTlsC.exe OR *\\\\rastls.exe OR *\\\\RasTls.exe OR *\\\\mcoemcpy.exe OR *\\\\McoeMcPy.exe OR *\\\\mcvsmap.exe OR *\\\\McVsMap.exe OR *\\\\AcroTranscoder.exe OR *\\\\acrotranscoder.exe OR *\\\\avpui.exe OR *\\\\AVPUI.exe OR *\\\\tcpvcfg.exe OR *\\\\TcpVcfg.exe) @Image:(*\\\\Users\\\\* OR *\\\\ProgramData\\\\* OR *\\\\AppData\\\\* OR *\\\\Temp\\\\* OR *\\\\Public\\\\*) -@Image:(*\\\\Program?Files\\\\* OR *\\\\Program?Files?\\(x86\\)\\\\* OR *\\\\Windows\\\\*)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ImageFileName=/\\\\(wsc_proxy|rastlsc|rastls|mcoemcpy|mcvsmap|avpui|acrotranscoder|tcpvcfg)\\.exe$/i\n| regex(\"\\\\\\\\(Users|ProgramData|AppData|Temp|Public)\\\\\\\\\", field=ImageFileName)\n| NOT regex(\"\\\\\\\\Program Files\", field=ImageFileName)\n| NOT regex(\"C:\\\\\\\\Windows\\\\\\\\\", field=ImageFileName)\n| join({#event_simpleName=ClassifiedModuleLoad OR #event_simpleName=ImageHash TargetFileName=/\\\\(wsc|wwlib|McUtil|goopdate|goopdateres|dwmapi|version|rastls|mcvsmap)\\.dll$/i}, field=[aid, TargetProcessId], include=[TargetFileName])\n| groupBy([aid, ComputerName, ImageFileName, CommandLine, ParentBaseFileName, TargetFileName], function=count())",
+      "cloudwatch_query": "",
+      "rationale": "Other APTs side-load DLLs, but this exact roster of host binaries \u2014 Symantec wsc_proxy.exe, Symantec rastlsc.exe, McAfee mcoemcpy.exe, Kaspersky avpui.exe, Adobe AcroTranscoder.exe \u2014 is the Cobalt Kitty / OceanLotus calling card. The DLL companions (wsc.dll, McUtil.dll, goopdate.dll, wwlib.dll) are reverse-engineered OceanLotus loaders (Salgorea / KerrDown / SOUNDBITE staging). Co-locating them in"
+    },
+    {
+      "title": "[LLM] APT32 Office-spawned Squiblydoo / mshta proxy execution with remote SCT or HTA payload",
+      "description": "Hunts the OceanLotus phishing-document execution chain: WINWORD/EXCEL/OUTLOOK macro launches regsvr32.exe /s /n /u /i:<URL> scrobj.dll (the classic 'Squiblydoo' SCT loader staging KerrDown / Cobalt Strike) or mshta.exe pulling a remote HTA. Documented in Volexity, ESET and FireEye APT32 reporting as the post-T1204.002 lure-execution step that drops the side-load kit detected by UC1.",
+      "is_llm": true,
+      "source_kind": "actor-bespoke",
+      "phase": "exploit",
+      "conf": "high",
+      "techs": [
+        "T1218.010",
+        "T1218.005",
+        "T1204.002",
+        "T1059.001",
+        "T1059.005"
+      ],
+      "art_id": "",
+      "art_title": "",
+      "is_mitre_match": false,
+      "splunk": "| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (\"WINWORD.EXE\",\"EXCEL.EXE\",\"POWERPNT.EXE\",\"OUTLOOK.EXE\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\") AND Processes.process_name IN (\"regsvr32.exe\",\"mshta.exe\") AND (Processes.process=\"*scrobj*\" OR Processes.process=\"*/i:http*\" OR Processes.process=\"*/i:\\\\\\\\*\" OR Processes.process=\"*javascript:*\" OR Processes.process=\"*vbscript:*\" OR Processes.process=\"*.sct*\" OR Processes.process=\"*.hta*\") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`",
+      "kql": "let LookbackDays = 7d;\nDeviceProcessEvents\n| where Timestamp > ago(LookbackDays)\n| where InitiatingProcessFileName in~ (\"winword.exe\",\"excel.exe\",\"powerpnt.exe\",\"outlook.exe\",\"wscript.exe\",\"cscript.exe\",\"mshta.exe\")\n| where FileName in~ (\"regsvr32.exe\",\"mshta.exe\")\n| where ProcessCommandLine matches regex @\"(?i)(scrobj|/i:\\s*https?://|/i:\\s*\\\\\\\\[^\\\\]+|javascript:|vbscript:|\\.sct\\b|\\.hta\\b)\"\n| where AccountName !endswith \"$\"\n| extend RemoteResource = extract(@\"(?i)(https?://[^\\s\\\"\\']+|\\\\\\\\[^\\s\\\"\\']+)\", 1, ProcessCommandLine)\n| project Timestamp, DeviceName, AccountName,\n          ParentImage = InitiatingProcessFolderPath,\n          ParentCmd   = InitiatingProcessCommandLine,\n          ChildImage  = FolderPath,\n          ChildCmd    = ProcessCommandLine,\n          RemoteResource, SHA256\n| order by Timestamp desc",
+      "sentinel_kql": "let LookbackDays = 7d;\nSecurityEvent\n| where TimeGenerated > ago(LookbackDays)\n| where EventID == 4688\n| where ParentProcessName has_any (@\"\\WINWORD.EXE\", @\"\\EXCEL.EXE\", @\"\\POWERPNT.EXE\", @\"\\OUTLOOK.EXE\", @\"\\wscript.exe\", @\"\\cscript.exe\", @\"\\mshta.exe\")\n| where NewProcessName has_any (@\"\\regsvr32.exe\", @\"\\mshta.exe\")\n| where CommandLine matches regex @\"(?i)(scrobj|/i:\\s*https?://|/i:\\s*\\\\\\\\[^\\\\]+|javascript:|vbscript:|\\.sct\\b|\\.hta\\b)\"\n| where SubjectUserName !endswith \"$\"\n| extend RemoteResource = extract(@\"(?i)(https?://[^\\s\\\"\\']+|\\\\\\\\[^\\s\\\"\\']+)\", 1, CommandLine)\n| project TimeGenerated, Computer, SubjectUserName, ParentProcessName, NewProcessName, CommandLine, RemoteResource\n| order by TimeGenerated desc",
+      "sigma_yaml": "title: APT32 OceanLotus Office-Spawned Regsvr32 Squiblydoo / Mshta Remote Scriptlet\nid: 6e2d1b4c-2c5a-44d2-8d9b-a3e2c4f5d0a8\nstatus: experimental\ndescription: Detects APT32/OceanLotus initial execution where a Microsoft Office host (or a script-host child of one) launches regsvr32.exe or mshta.exe with a remote SCT/HTA URL, UNC path, or scrobj.dll proxy load.\nreferences:\n  - https://attack.mitre.org/groups/G0050/\n  - https://attack.mitre.org/techniques/T1218/010/\nauthor: SOC Detection Engineering\ndate: 2026/06/19\ntags:\n  - attack.defense_evasion\n  - attack.execution\n  - attack.t1218.010\n  - attack.t1218.005\n  - attack.t1204.002\n  - attack.g0050\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection_parent:\n    ParentImage|endswith:\n      - '\\WINWORD.EXE'\n      - '\\EXCEL.EXE'\n      - '\\POWERPNT.EXE'\n      - '\\OUTLOOK.EXE'\n      - '\\wscript.exe'\n      - '\\cscript.exe'\n      - '\\mshta.exe'\n  selection_child:\n    Image|endswith:\n      - '\\regsvr32.exe'\n      - '\\mshta.exe'\n  selection_cmd:\n    CommandLine|contains:\n      - 'scrobj'\n      - '/i:http'\n      - '/i:\\\\\\\\'\n      - 'javascript:'\n      - 'vbscript:'\n      - '.sct'\n      - '.hta'\n  condition: selection_parent and selection_child and selection_cmd\nfalsepositives:\n  - Internal admin scriptlet kits using regsvr32 /i with trusted UNC paths (allowlist by signed source)\nlevel: high",
+      "datadog_query": "source:windows.sysmon @EventID:1 @ParentImage:(*\\\\WINWORD.EXE OR *\\\\winword.exe OR *\\\\EXCEL.EXE OR *\\\\excel.exe OR *\\\\POWERPNT.EXE OR *\\\\powerpnt.exe OR *\\\\OUTLOOK.EXE OR *\\\\outlook.exe OR *\\\\wscript.exe OR *\\\\WScript.exe OR *\\\\cscript.exe OR *\\\\CScript.exe OR *\\\\mshta.exe OR *\\\\MSHTA.EXE) @Image:(*\\\\regsvr32.exe OR *\\\\RegSvr32.exe OR *\\\\REGSVR32.EXE OR *\\\\mshta.exe OR *\\\\MSHTA.EXE OR *\\\\Mshta.exe) @CommandLine:(*scrobj* OR *Scrobj* OR *SCROBJ* OR *\"/i:http\"* OR *\"/i:https\"* OR *\"/i:\\\\\\\\\"* OR *javascript:* OR *vbscript:* OR *.sct* OR *.SCT* OR *.hta* OR *.HTA*)",
+      "falcon_logscale_query": "#event_simpleName=ProcessRollup2 ParentBaseFileName=/(winword|excel|powerpnt|outlook|wscript|cscript|mshta)\\.exe$/i ImageFileName=/(regsvr32|mshta)\\.exe$/i\n| regex(\"(scrobj|\\\\/i:\\\\s*https?:\\\\/\\\\/|\\\\/i:\\\\s*\\\\\\\\\\\\\\\\|javascript:|vbscript:|\\\\.sct\\\\b|\\\\.hta\\\\b)\", field=CommandLine, flags=\"i\")\n| RemoteResource := regex(\"(?<RemoteResource>https?:\\\\/\\\\/[^\\\\s\\\"']+|\\\\\\\\\\\\\\\\[^\\\\s\\\"']+)\", field=CommandLine, flags=\"i\", strict=false)\n| groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine, RemoteResource], function=count())",
+      "cloudwatch_query": "",
+      "rationale": "Office \u2192 regsvr32/mshta with a remote scriptlet is rare in benign environments; APT32 uniquely chained it with their KerrDown PowerShell loader and KAS shellcode injector \u2014 both well-documented by Volexity, ESET, FireEye and Group-IB as OceanLotus exclusives. Pairing the Office parent with the scrobj/SCT/HTA token-aligned tells filters out admin-tool noise (which uses regsvr32 with local DLLs, not",
+      "_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "RemoteResource",
+          "tables_in_scope": [
+            "DeviceProcessEvents"
+          ],
+          "suggestion": null,
+          "message": "`RemoteResource` is not a canonical column of DeviceProcessEvents."
+        }
+      ],
+      "_sentinel_field_issues": [
+        {
+          "kind": "unknown_field",
+          "field": "RemoteResource",
+          "tables_in_scope": [
+            "SecurityEvent"
+          ],
+          "suggestion": "_ResourceId",
+          "message": "`RemoteResource` is not a canonical column of SecurityEvent. Did you mean `_ResourceId`?"
+        }
+      ]
+    }
+  ]
+}

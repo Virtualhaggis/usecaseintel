@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### SprySOCKS WIN_DRV kernel driver file dropped (KW1B/KX1B *.dat)
 
-`UC_104_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_105_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -66,7 +66,7 @@ DeviceFileEvents
 
 ### Kernel driver service registered with SprySOCKS WIN_DRV ImagePath
 
-`UC_104_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_105_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceRegistryEvents
 
 ### WIN_PLUS Print Spooler abuse: spoolsv.exe spawns svchost.exe
 
-`UC_104_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_105_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceProcessEvents
 
 ### Suspicious Print Processor registry persistence (WIN_PLUS T1547.012)
 
-`UC_104_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_105_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ DeviceRegistryEvents
 
 ### WIN_DRV chain: scheduled task creation followed by SprySOCKS driver drop
 
-`UC_104_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_105_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -177,7 +177,7 @@ SchtasksCreate
 
 ### CVE-2023-24932 exposure surface — UEFI bootkit pre-OS attack risk
 
-`UC_104_9` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_105_9` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

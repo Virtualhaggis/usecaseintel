@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1192 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1193 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-19
 - [autojack how a single page can rce the host running your ai ](./2026-06-19/autojack-how-a-single-page-can-rce-the-host-running-your-ai-.md)
+- [cisa warns fortinet users to secure devices after fortibleed](./2026-06-19/cisa-warns-fortinet-users-to-secure-devices-after-fortibleed.md)
 
 ## 2026-06-18
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-18/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)

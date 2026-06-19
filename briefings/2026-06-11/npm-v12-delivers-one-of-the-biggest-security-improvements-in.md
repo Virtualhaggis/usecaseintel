@@ -41,16 +41,16 @@ We’re relieved to hear it. Turning off install scripts is the most useful chan
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
 - **T1027** — Obfuscated Files or Information
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1105** — Ingress Tool Transfer
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1552.004** — Unsecured Credentials: Private Keys
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1041** — Exfiltration Over C2 Channel
-- **T1562.001** — Impair Defenses: Disable or Modify Tools
 - **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1552.004** — Private Keys
+- **T1567.001** — Exfiltration to Code Repository
+- **T1567** — Exfiltration Over Web Service
+- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102** — Web Service
+- **T1105** — Ingress Tool Transfer
+- **T1059** — Command and Scripting Interpreter
+- **T1027.004** — Compile After Delivery
 
 ## Kill chain phases observed
 
@@ -58,147 +58,185 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### npm/node spawning shell or downloader during package install (postinstall hook abuse)
+### Nx s1ngularity 'telemetry.js' postinstall payload execution
 
-`UC_149_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_150_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node.exe","npm.exe","yarn.exe","pnpm.exe","npx.exe","npm-cli.js") AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe","bash.exe","sh.exe","curl.exe","wget.exe","bun.exe","bitsadmin.exe","certutil.exe","trufflehog.exe") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","npm.exe","npm.cmd","npx.cmd","yarn.exe","yarn.cmd","pnpm.exe","pnpm.cmd","bun.exe")) AND (Processes.process="*telemetry.js*" OR Processes.process="*s1ngularity*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("npm.exe","node.exe","yarn.exe","pnpm.exe","npm-cli.js","npx.exe")
-| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe","bash.exe","sh.exe","curl.exe","wget.exe","bun.exe","bitsadmin.exe","certutil.exe","trufflehog.exe")
+| where Timestamp > ago(30d)
+| where InitiatingProcessFileName in~ ("node.exe","npm.cmd","npm.exe","npx.cmd","yarn.cmd","yarn.exe","pnpm.cmd","pnpm.exe","bun.exe")
+    or InitiatingProcessParentFileName in~ ("node.exe","npm.cmd","npm.exe")
+| where ProcessCommandLine has "telemetry.js" or ProcessCommandLine has_any ("s1ngularity","@nrwl/nx","nx-cloud")
 | where AccountName !endswith "$"
 | project Timestamp, DeviceName, AccountName,
           ParentImage = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
+          ParentCmd   = InitiatingProcessCommandLine,
+          ChildImage  = FolderPath,
+          ChildCmd    = ProcessCommandLine,
           SHA256
 | order by Timestamp desc
 ```
 
-### Bun runtime dropped or executed by node/npm child process (Shai-Hulud signature)
+### TruffleHog secret scanner spawned by Node/npm (Shai-Hulud worm pattern)
 
-`UC_149_10` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="bun.exe" OR Filesystem.file_name="bun") AND Filesystem.process_name IN ("node.exe","npm.exe","yarn.exe","pnpm.exe","npx.exe","powershell.exe","pwsh.exe","cmd.exe","curl.exe","wget.exe","bash.exe","sh.exe") by host Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name Filesystem.action
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileRenamed","FileModified")
-| where FileName in~ ("bun.exe","bun")
-| where InitiatingProcessFileName in~ ("node.exe","npm.exe","yarn.exe","pnpm.exe","npx.exe","powershell.exe","pwsh.exe","cmd.exe","curl.exe","wget.exe","bash.exe","sh.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### TruffleHog credential scanner executed from node/npm context
-
-`UC_149_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_150_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="trufflehog.exe" OR Processes.process_name="trufflehog" OR Processes.process LIKE "%trufflehog%") AND Processes.parent_process_name IN ("node.exe","npm.exe","yarn.exe","pnpm.exe","npx.exe","bun.exe","powershell.exe","pwsh.exe","cmd.exe","bash.exe","sh.exe") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","npm.exe","npm.cmd","npx.cmd","yarn.exe","yarn.cmd","pnpm.exe","pnpm.cmd","bun.exe","node","npm","npx","yarn","pnpm","bun")) AND (Processes.process_name IN ("trufflehog","trufflehog.exe") OR Processes.process="*trufflehog*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("trufflehog.exe","trufflehog") or ProcessCommandLine has "trufflehog"
-| where InitiatingProcessFileName in~ ("node.exe","npm.exe","yarn.exe","pnpm.exe","npx.exe","bun.exe","powershell.exe","pwsh.exe","cmd.exe","bash.exe","sh.exe")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| where Timestamp > ago(30d)
+| where FileName has "trufflehog" or ProcessCommandLine has "trufflehog"
+| where InitiatingProcessFileName in~ ("node.exe","npm.cmd","npm.exe","npx.cmd","yarn.cmd","yarn.exe","pnpm.cmd","pnpm.exe","bun.exe","sh.exe","bash.exe")
+    or InitiatingProcessParentFileName in~ ("node.exe","npm.cmd","npm.exe","yarn.cmd","pnpm.cmd","bun.exe")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          FileName, FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName, SHA256
 | order by Timestamp desc
 ```
 
-### Network connection to npm supply-chain attack IOCs (sfrclak.com / 142.11.206.73 / webhook.site)
+### Nx s1ngularity exfil: GitHub repo 's1ngularity-repository' / 'results.b64'
 
-`UC_149_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_150_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="142.11.206.73" OR All_Traffic.dest_host="sfrclak.com" OR All_Traffic.dest_host="*.sfrclak.com" OR All_Traffic.dest_host="webhook.site" OR All_Traffic.dest_host="*.webhook.site") by host All_Traffic.user All_Traffic.app All_Traffic.dest_ip All_Traffic.dest_host All_Traffic.dest_port
-| `drop_dm_object_name(All_Traffic)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("gh.exe","git.exe","curl.exe","wget.exe","gh","git")) AND (Processes.process="*s1ngularity-repository*" OR Processes.process="*results.b64*" OR (Processes.process="*repo create*" AND Processes.process="*--public*" AND Processes.process="*s1ngularity*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+union
+(
+    DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where FileName in~ ("gh.exe","git.exe","curl.exe","wget.exe","powershell.exe","pwsh.exe")
+    | where ProcessCommandLine has_any ("s1ngularity-repository","results.b64")
+        or (ProcessCommandLine has "repo create" and ProcessCommandLine has "--public" and ProcessCommandLine has "s1ngularity")
+    | project Timestamp, DeviceName, AccountName,
+              ActionType = "ProcessCreated",
+              Evidence = strcat(FileName, " :: ", ProcessCommandLine),
+              InitiatingProcessFileName, InitiatingProcessCommandLine
+),
+(
+    DeviceFileEvents
+    | where Timestamp > ago(30d)
+    | where FileName =~ "results.b64" or FolderPath has "s1ngularity-repository"
+    | project Timestamp, DeviceName,
+              AccountName = InitiatingProcessAccountName,
+              ActionType,
+              Evidence = strcat(FolderPath, "\\", FileName),
+              InitiatingProcessFileName, InitiatingProcessCommandLine
+)
+| order by Timestamp desc
+```
+
+### Shai-Hulud Webhook.site C2 beacon from Node/npm/Bun process
+
+`UC_150_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*webhook.site*" AND (Processes.parent_process_name IN ("node.exe","npm.exe","npm.cmd","yarn.exe","pnpm.exe","bun.exe","node","npm","yarn","pnpm","bun") OR Processes.process_name IN ("node.exe","npm.exe","yarn.exe","pnpm.exe","bun.exe","curl.exe","wget.exe"))) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | eval shai_hulud = if(match(process, "bb8ca5f6-4175-45d2-b042-fc9ebb8170b7"), "TRUE", "FALSE") | sort 0 - shai_hulud firstTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP == "142.11.206.73"
-   or RemoteUrl has_any ("sfrclak.com","webhook.site")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort
-| order by Timestamp desc
+| where RemoteUrl has "webhook.site"
+| where InitiatingProcessFileName in~ ("node.exe","npm.cmd","npm.exe","npx.cmd","yarn.cmd","yarn.exe","pnpm.cmd","pnpm.exe","bun.exe","curl.exe","wget.exe","powershell.exe","pwsh.exe")
+    or InitiatingProcessParentFileName in~ ("node.exe","npm.cmd","npm.exe","yarn.cmd","pnpm.cmd","bun.exe")
+| extend ShaiHuludMarker = iff(RemoteUrl has "bb8ca5f6-4175-45d2-b042-fc9ebb8170b7", "TRUE", "FALSE")
+| project Timestamp, DeviceName,
+          AccountName = InitiatingProcessAccountName,
+          RemoteUrl, ShaiHuludMarker, RemoteIP, RemotePort,
+          InitiatingProcessFileName, InitiatingProcessCommandLine,
+          InitiatingProcessParentFileName
+| order by ShaiHuludMarker desc, Timestamp desc
 ```
 
-### npm install with --ignore-scripts override bypassing v12 postinstall protection
+### Bun runtime fetched mid-npm-install (Shai-Hulud / Mini Shai-Hulud staging)
 
-`UC_149_13` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_150_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("npm.exe","npx.exe","yarn.exe","pnpm.exe","node.exe") AND (Processes.process LIKE "%--ignore-scripts=false%" OR Processes.process LIKE "%npm_config_ignore_scripts=false%" OR Processes.process LIKE "%npm_config_ignore_scripts=0%" OR Processes.process LIKE "%--allow-git%" OR Processes.process LIKE "%--allow-remote%") by host Processes.user Processes.process_name Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","npm.exe","npm.cmd","npx.cmd","yarn.exe","yarn.cmd","pnpm.exe","pnpm.cmd","node","npm","yarn","pnpm")) AND (Processes.process="*bun.sh/install*" OR Processes.process="*oven-sh/bun*" OR (Processes.process="*curl*" AND Processes.process="*install.sh*" AND Processes.process="*bun*") OR Processes.process_name IN ("bun.exe","bun")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+let JsPkgMgr = dynamic(["node.exe","npm.cmd","npm.exe","npx.cmd","yarn.cmd","yarn.exe","pnpm.cmd","pnpm.exe"]);
+let BunSignals = dynamic(["bun.sh/install","oven-sh/bun","install.sh"]);
+union
+(
+    DeviceProcessEvents
+    | where Timestamp > ago(30d)
+    | where InitiatingProcessFileName in~ (JsPkgMgr)
+        or InitiatingProcessParentFileName in~ (JsPkgMgr)
+    | where ProcessCommandLine has_any (BunSignals) or FileName in~ ("bun.exe","bun")
+    | where AccountName !endswith "$"
+    | project Timestamp, DeviceName, AccountName,
+              Source = "Process",
+              Evidence = strcat(FileName, " :: ", ProcessCommandLine),
+              InitiatingProcessFileName, InitiatingProcessCommandLine
+),
+(
+    DeviceNetworkEvents
+    | where Timestamp > ago(30d)
+    | where RemoteUrl has_any ("bun.sh/install","oven-sh/bun")
+    | where InitiatingProcessFileName in~ (JsPkgMgr) or InitiatingProcessFileName in~ ("curl.exe","wget.exe","powershell.exe","pwsh.exe")
+        or InitiatingProcessParentFileName in~ (JsPkgMgr)
+    | project Timestamp, DeviceName,
+              AccountName = InitiatingProcessAccountName,
+              Source = "Network",
+              Evidence = RemoteUrl,
+              InitiatingProcessFileName, InitiatingProcessCommandLine
+)
+| order by Timestamp desc
+```
+
+### Implicit node-gyp rebuild from binding.gyp during npm install
+
+`UC_150_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as sample_cmd from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("node.exe","npm.exe","npm.cmd","npx.cmd","yarn.exe","yarn.cmd","pnpm.exe","pnpm.cmd","bun.exe")) AND (Processes.process="*node-gyp*rebuild*" OR Processes.process="*binding.gyp*" OR Processes.process_name IN ("node-gyp.cmd","node-gyp.exe")) by Processes.dest Processes.user Processes.parent_process_name | `drop_dm_object_name(Processes)` | rex field=sample_cmd "node_modules[\\\\/]+(?<native_module>[^\\\\/]+)" | stats min(firstTime) as firstTime max(lastTime) as lastTime values(native_module) as native_modules by dest user parent_process_name | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("npm.exe","npx.exe","yarn.exe","pnpm.exe","node.exe")
-   or InitiatingProcessFileName in~ ("npm.exe","npx.exe","yarn.exe","pnpm.exe","node.exe")
-| where ProcessCommandLine has_any ("--ignore-scripts=false","npm_config_ignore_scripts=false","npm_config_ignore_scripts=0","--allow-git","--allow-remote")
-   or InitiatingProcessCommandLine has_any ("--ignore-scripts=false","npm_config_ignore_scripts=false","--allow-git","--allow-remote")
+| where Timestamp > ago(30d)
+| where (ProcessCommandLine has "node-gyp" and ProcessCommandLine has "rebuild")
+    or ProcessCommandLine has "binding.gyp"
+    or FileName in~ ("node-gyp.cmd","node-gyp.exe")
+| where InitiatingProcessFileName in~ ("node.exe","npm.cmd","npm.exe","npx.cmd","yarn.cmd","yarn.exe","pnpm.cmd","pnpm.exe","bun.exe")
+    or InitiatingProcessParentFileName in~ ("node.exe","npm.cmd","npm.exe")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Known npm supply-chain malware hash observed on disk or in execution
-
-`UC_149_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_hash IN ("46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09","b74caeaa75e077c99f7d44f46daaf9796a3be43ecf24f2a1fd381844669da777","dc67467a39b70d1cd4c1f7f7a459b35058163592f4a9e8fb4dffcbba98ef210c","4b2399646573bb737c4969563303d8ee2e9ddbd1b271f1ca9e35ea78062538db","62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0","f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068","cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd","a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a","2553649f2322049666871cea80a5d0d6adc700ca","d6f3f62fd3b9f5432f5782b62d8cfd5247d5ee71","07d889e2dadce6f3910dcbc253317d28ca61c766") by host Processes.user Processes.process_name Processes.process_path Processes.process_hash
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let MaliciousSHA256 = dynamic(["46faab8ab153fae6e80e7cca38eab363075bb524edd79e42269217a083628f09","b74caeaa75e077c99f7d44f46daaf9796a3be43ecf24f2a1fd381844669da777","dc67467a39b70d1cd4c1f7f7a459b35058163592f4a9e8fb4dffcbba98ef210c","4b2399646573bb737c4969563303d8ee2e9ddbd1b271f1ca9e35ea78062538db","62ee164b9b306250c1172583f138c9614139264f889fa99614903c12755468d0","f099c5d9ec417d4445a0328ac0ada9cde79fc37410914103ae9c609cbc0ee068","cbb9bc5a8496243e02f3cc080efbe3e4a1430ba0671f2e43a202bf45b05479cd","a3894003ad1d293ba96d77881ccd2071446dc3f65f434669b49b3da92421901a"]);
-let MaliciousSHA1 = dynamic(["2553649f2322049666871cea80a5d0d6adc700ca","d6f3f62fd3b9f5432f5782b62d8cfd5247d5ee71","07d889e2dadce6f3910dcbc253317d28ca61c766"]);
-union
-  (DeviceProcessEvents | where Timestamp > ago(30d) | where SHA256 in (MaliciousSHA256) or SHA1 in (MaliciousSHA1) | project Timestamp, Source="Process", DeviceName, AccountName, FileName, FolderPath, SHA256, SHA1, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine),
-  (DeviceFileEvents | where Timestamp > ago(30d) | where SHA256 in (MaliciousSHA256) or SHA1 in (MaliciousSHA1) | extend ProcessCommandLine="", InitiatingProcessCommandLine = InitiatingProcessCommandLine | project Timestamp, Source="File", DeviceName, AccountName=InitiatingProcessAccountName, FileName, FolderPath, SHA256, SHA1, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine),
-  (DeviceImageLoadEvents | where Timestamp > ago(30d) | where SHA256 in (MaliciousSHA256) or SHA1 in (MaliciousSHA1) | extend ProcessCommandLine="", AccountName=InitiatingProcessAccountName | project Timestamp, Source="ImageLoad", DeviceName, AccountName, FileName, FolderPath, SHA256, SHA1, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine=InitiatingProcessCommandLine)
-| order by Timestamp desc
+| extend NativeModule = extract(@"node_modules[\\/]+([^\\/]+)", 1, ProcessCommandLine)
+| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
+            Hits = count(),
+            DistinctModules = dcount(NativeModule),
+            SampleModules = make_set(NativeModule, 25),
+            SampleCmd = any(ProcessCommandLine)
+            by DeviceName, AccountName
+| order by FirstSeen desc
 ```
 
 ### Crypto-wallet file/keystore access by non-wallet process
@@ -434,7 +472,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — npm v12 delivers one of the biggest security improvements in years
 
-`UC_149_8` · phase: **exploit** · confidence: **High**
+`UC_150_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

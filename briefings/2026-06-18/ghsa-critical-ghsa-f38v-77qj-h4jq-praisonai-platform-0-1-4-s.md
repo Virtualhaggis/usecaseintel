@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable praisonai-platform server launch (GHSA-f38v-77qj-h4jq / CVE-2026-47410)
 
-`UC_26_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_29_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -54,7 +54,7 @@ DeviceProcessEvents
 
 ### praisonai-platform workspace-member enumeration fan-out (forged-JWT recon)
 
-`UC_26_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_29_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ DeviceProcessEvents
 
 ### praisonai-platform workspace / member destructive DELETE (forged-JWT impact)
 
-`UC_26_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_29_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-f38v-77qj-h4jq: praisonai-platform 0.1.4 still boots on t
 
-`UC_26_1` · phase: **exploit** · confidence: **High**
+`UC_29_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

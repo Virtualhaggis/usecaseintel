@@ -6,17 +6,24 @@
 
 ## Threat Profile
 
-A newly uncovered attack campaign has brought a rarely scrutinized Windows executable into the spotlight. Threat actors are actively abusing Fondue.exe, a legitimate Microsoft utility built into the Windows operating system, to side-load a malicious control panel file named APPWIZ.cpl and silently deploy dangerous malware on victim machines. The technique is deceptively clever because it relies entirely on [&#8230;] The post Hackers Abuse Microsoft Fondue.exe to Side-Load APPWIZ.cpl and Execute …
+A newly uncovered attack campaign has brought a rarely scrutinized Windows executable into the spotlight. Threat actors are actively abusing&#160;Fondue.exe, a legitimate Microsoft utility built into the Windows operating system, to side-load a malicious control panel file named&#160;APPWIZ.cpl&#160;and silently deploy dangerous malware on victim machines. The technique is deceptively clever because it relies entirely on [&#8230;] The post Hackers Abuse Microsoft Fondue.exe to Side-Load APPWIZ.c…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `chinagreenenergy.org`
-- **Domain (defanged):** `gcl-power.org`
-- **SHA256:** `a8ecbd9c049044ca4990a0e5960d19ce782a3b42d7763e9693d7c91ead24a0b7`
-- **SHA256:** `914da75a4ad6d70db856a2bc318d8828f28894622f017ee78d470b4794faafa6`
-- **SHA256:** `a5e448af73b0ff6b6fcfe6ef7808120e1fd7e5c4c9b4edd68e1c980e5ea3406b`
-- **SHA256:** `7099c33933716c00c1f4bdb0281c230b981c76b23d7d1c83abc6f58968267d54`
-- **SHA256:** `56d656d684077e7b3231393f5464447cdc8eea81b6415c5f010bc52f0c8cb317`
+- **Domain (defanged):** `curtainbeatdisturbance.com`
+- **Domain (defanged):** `stardebug.app`
+- **Domain (defanged):** `alphafly-drones.com`
+- **Domain (defanged):** `newfolder.click`
+- **SHA256:** `df1d20e392f7b7c5c408bdda317e0733e5ec27a973e3bf75034c6566343aa67f`
+- **SHA256:** `677c5ad47c8feaf6a5c0b084060347bcf48f0ccadcdf951b3d48553f4520feaa`
+- **SHA256:** `82254b86590762b2946c6584db35d3872a5d6b85d30e8c07adb95de2126a4f97`
+- **SHA256:** `a20870bee771efe1ea01761d7978cc7b68b0a3c32c617675464f9c4dbe0a5d66`
+- **SHA256:** `88ebed34ab9ff0e16dc32b789fc25295ea570f86244e89cb68803c517597cfdd`
+- **SHA256:** `3d280f5bb4e1eba8c1a65c7d17411286f7b3dbe7db48130f7d5a3be421ffc2ae`
+- **SHA256:** `34db59b663c15cd03cdd92bf24bdff25b756dd51f0540fecaac2a0cab47480ae`
+- **SHA256:** `996df9ce30ace63c0c516cbacfa4e308b555a2d2c44c9d6550b543b9fccc845d`
+- **SHA256:** `09c83fc5f1656cc4be749c64bfc53d2ef612c9b79dc3937b8bb137754c82216a`
+- **SHA256:** `688a1dc207ead232cb8ae6f67fcca1cf7892d83a01af024c404e636cb6ba4cb2`
 
 ## MITRE ATT&CK Techniques
 
@@ -32,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Hackers Abuse Microsoft Fondue.exe to Side-Load APPWIZ.cpl and Execute Malware
 
-`UC_20_2` · phase: **exploit** · confidence: **High**
+`UC_23_2` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,10 +91,10 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `chinagreenenergy.org`, `gcl-power.org`
+  - IP / domain IOC(s): `curtainbeatdisturbance.com`, `stardebug.app`, `alphafly-drones.com`, `newfolder.click`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `a8ecbd9c049044ca4990a0e5960d19ce782a3b42d7763e9693d7c91ead24a0b7`, `914da75a4ad6d70db856a2bc318d8828f28894622f017ee78d470b4794faafa6`, `a5e448af73b0ff6b6fcfe6ef7808120e1fd7e5c4c9b4edd68e1c980e5ea3406b`, `7099c33933716c00c1f4bdb0281c230b981c76b23d7d1c83abc6f58968267d54`, `56d656d684077e7b3231393f5464447cdc8eea81b6415c5f010bc52f0c8cb317`
+  - file hash IOC(s): `df1d20e392f7b7c5c408bdda317e0733e5ec27a973e3bf75034c6566343aa67f`, `677c5ad47c8feaf6a5c0b084060347bcf48f0ccadcdf951b3d48553f4520feaa`, `82254b86590762b2946c6584db35d3872a5d6b85d30e8c07adb95de2126a4f97`, `a20870bee771efe1ea01761d7978cc7b68b0a3c32c617675464f9c4dbe0a5d66`, `88ebed34ab9ff0e16dc32b789fc25295ea570f86244e89cb68803c517597cfdd`, `3d280f5bb4e1eba8c1a65c7d17411286f7b3dbe7db48130f7d5a3be421ffc2ae`, `34db59b663c15cd03cdd92bf24bdff25b756dd51f0540fecaac2a0cab47480ae`, `996df9ce30ace63c0c516cbacfa4e308b555a2d2c44c9d6550b543b9fccc845d` _(+2 more)_
 
 
 ## Why this matters
