@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### PraisonAI unauthenticated Jobs API request (POST /api/v1/runs)
 
-`UC_42_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_45_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceNetworkEvents
 
 ### PraisonAI workflow runtime spawning shell/curl/wget child (RCE manifestation)
 
-`UC_42_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_45_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceProcessEvents
 
 ### Unexpected egress from PraisonAI host to non-LLM destination
 
-`UC_42_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_45_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-4869-x4pr-q22x: PraisonAI: Unauthenticated RCE via Jobs A
 
-`UC_42_0` · phase: **exploit** · confidence: **High**
+`UC_45_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### CryptoBandits scheduled task creation via XML import to Public\Documents 5-char staging folder
 
-`UC_63_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_66_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceProcessEvents
 
 ### Curl over Tor SOCKS5 proxy at localhost:9050 to .onion C2
 
-`UC_63_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_66_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### WScript or CScript executing JavaScript payload from Public\Documents 5-char staging folder
 
-`UC_63_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_66_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceProcessEvents
 
 ### Renamed Tor client running as ugate.exe (CryptoBandits bundled proxy)
 
-`UC_63_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_66_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -141,7 +141,7 @@ DeviceProcessEvents
 
 ### Defender exclusion path added for Public\Documents staging folder (worm self-protection)
 
-`UC_63_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_66_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -171,7 +171,7 @@ union ExclusionByPS, ExclusionByRegistry
 
 ### CryptoBandits cfile payload artifact created under Public\Documents
 
-`UC_63_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_66_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -193,7 +193,7 @@ DeviceFileEvents
 
 ### WScript or CScript with Public\Documents JS spawning curl, schtasks, cmd, or PowerShell child
 
-`UC_63_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_66_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -308,7 +308,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Crypto Clipper uses Tor and worm-like propagation for persistence and control
 
-`UC_63_4` · phase: **exploit** · confidence: **High**
+`UC_66_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### AutoJack: AutoGen Studio backend spawns unexpected shell via StdioServerParams abuse
 
-`UC_3_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_9_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### AutoJack: malicious WebSocket request to AutoGen Studio /api/mcp/ws/ with server_params query
 
-`UC_3_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_9_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -189,7 +189,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — AutoJack: How a single page can RCE the host running your AI agent
 
-`UC_3_4` · phase: **exploit** · confidence: **High**
+`UC_9_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

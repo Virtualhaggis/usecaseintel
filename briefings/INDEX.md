@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1193 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1195 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,7 +10,11 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-19
 - [autojack how a single page can rce the host running your ai ](./2026-06-19/autojack-how-a-single-page-can-rce-the-host-running-your-ai-.md)
+- [china linked showboat malware uses linux persistence to targ](./2026-06-19/china-linked-showboat-malware-uses-linux-persistence-to-targ.md)
 - [cisa warns fortinet users to secure devices after fortibleed](./2026-06-19/cisa-warns-fortinet-users-to-secure-devices-after-fortibleed.md)
+- [cisa warns of splunk enterprise critical function vulnerabil](./2026-06-19/cisa-warns-of-splunk-enterprise-critical-function-vulnerabil.md)
+- [hackers use weaponized windows shortcuts to spread crypto cl](./2026-06-19/hackers-use-weaponized-windows-shortcuts-to-spread-crypto-cl.md)
+- [salesforce disables klue app integration after oauth token a](./2026-06-19/salesforce-disables-klue-app-integration-after-oauth-token-a.md)
 
 ## 2026-06-18
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-18/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
@@ -41,7 +45,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa vmmj pfw7 fjwp npm praisonai codemode san](./2026-06-18/ghsa-critical-ghsa-vmmj-pfw7-fjwp-npm-praisonai-codemode-san.md)
 - [ghsa critical ghsa x227 pf99 vffg praisonai mcp sse transpor](./2026-06-18/ghsa-critical-ghsa-x227-pf99-vffg-praisonai-mcp-sse-transpor.md)
 - [ghsa critical ghsa x8cv xmq7 p8xp praisonai agentteam launch](./2026-06-18/ghsa-critical-ghsa-x8cv-xmq7-p8xp-praisonai-agentteam-launch.md)
-- [hackers abuse microsoft fondue exe to side load appwiz cpl a](./2026-06-18/hackers-abuse-microsoft-fondue-exe-to-side-load-appwiz-cpl-a.md)
 - [hackers breached klue integration to steal salesforce crm da](./2026-06-18/hackers-breached-klue-integration-to-steal-salesforce-crm-da.md)
 - [inc ransomware emerges as major raas threat in 2026 with 830](./2026-06-18/inc-ransomware-emerges-as-major-raas-threat-in-2026-with-830.md)
 - [killing me gently inside gentlemen s edr killer framework](./2026-06-18/killing-me-gently-inside-gentlemen-s-edr-killer-framework.md)
@@ -132,7 +135,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-11
 - [a tale of two eras](./2026-06-11/a-tale-of-two-eras.md)
 - [cisa kev cve 2026 10520 ivanti sentry os command injection v](./2026-06-11/cisa-kev-cve-2026-10520-ivanti-sentry-os-command-injection-v.md)
-- [cybersecurity stars awards 2026 winners announced across 95 ](./2026-06-11/cybersecurity-stars-awards-2026-winners-announced-across-95-.md)
 - [ghsa critical cve 2026 48039 meta ads mcp unauthenticated ht](./2026-06-11/ghsa-critical-cve-2026-48039-meta-ads-mcp-unauthenticated-ht.md)
 - [ghsa critical cve 2026 48062 codeigniter4 has a validation b](./2026-06-11/ghsa-critical-cve-2026-48062-codeigniter4-has-a-validation-b.md)
 - [new attacks trick openclaw ai agent into running code and le](./2026-06-11/new-attacks-trick-openclaw-ai-agent-into-running-code-and-le.md)

@@ -20,11 +20,9 @@ praisonai-platform 0.1.4 still boots on the hardcoded JWT secret dev-secret-chan
 
 - **T1190** — Exploit Public-Facing Application
 - **T1204.002** — User Execution: Malicious File
-- **T1078** — Valid Accounts
-- **T1087.004** — Account Discovery: Cloud Account
-- **T1213** — Data from Information Repositories
 - **T1485** — Data Destruction
 - **T1531** — Account Access Removal
+- **T1087** — Account Discovery
 
 ## Kill chain phases observed
 
@@ -32,47 +30,27 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Vulnerable praisonai-platform server launch (GHSA-f38v-77qj-h4jq / CVE-2026-47410)
+### praisonai-platform admin DELETE on /workspaces or /{workspace}/members endpoints
 
-`UC_29_2` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process="*praisonai_platform.api.app:app*" OR Processes.process="*-m praisonai_platform*" OR Processes.process="*praisonai_platform --host*") by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("python.exe","python3","python3.exe","python","uvicorn","uvicorn.exe","gunicorn") or FileName in~ ("python.exe","python3","python3.exe","python","uvicorn","uvicorn.exe","gunicorn")
-| where ProcessCommandLine has_any ("praisonai_platform.api.app:app", "-m praisonai_platform", "praisonai_platform --host")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath
-| order by Timestamp desc
-```
-
-### praisonai-platform workspace-member enumeration fan-out (forged-JWT recon)
-
-`UC_29_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_32_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` dc(Web.url) as workspaces_enumerated, min(_time) as firstTime, max(_time) as lastTime, values(Web.user_agent) as user_agents, values(Web.url) as sample_urls from datamodel=Web.Web where Web.http_method="GET" Web.url="*/members" Web.url="*-*-*-*-*/members" by Web.src Web.user | `drop_dm_object_name(Web)` | where workspaces_enumerated >= 5 | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as method values(Web.status) as status values(Web.user) as user from datamodel=Web where Web.http_method="DELETE" (Web.url="*/workspaces/*" OR Web.url="*/members/*") Web.status>=200 Web.status<300 by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | rex field=url "/workspaces/(?<workspace_id>[0-9a-fA-F-]{36})$|/(?<workspace_id2>[0-9a-fA-F-]{36})/members/(?<member_id>[0-9a-fA-F-]{36})$" | where isnotnull(workspace_id) OR isnotnull(workspace_id2) | eval target_workspace=coalesce(workspace_id, workspace_id2) | sort - lastTime
 ```
 
-### praisonai-platform workspace / member destructive DELETE (forged-JWT impact)
+### praisonai-platform attack chain: member enumeration GET followed by workspace-delete
 
-`UC_29_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_32_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.user_agent) as agents values(Web.status) as statuses from datamodel=Web.Web where Web.http_method="DELETE" (Web.url="*/workspaces/*" OR Web.url="*/members/*") by Web.src Web.user Web.dest | `drop_dm_object_name(Web)` | where match(urls, "/workspaces/[0-9a-f-]{36}") OR match(urls, "/[0-9a-f-]{36}/members/[0-9a-f-]{36}") | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count from datamodel=Web where Web.http_method IN ("GET","DELETE") (Web.url="*/members*" OR Web.url="*/workspaces/*") by _time Web.src Web.url Web.http_method Web.status Web.user span=1s | `drop_dm_object_name(Web)` | rex field=url "(?<workspace_id>[0-9a-fA-F-]{36})" | where isnotnull(workspace_id) | eval action=case(http_method="GET" AND like(url,"%/members"),"enum", http_method="DELETE" AND match(url,"/workspaces/[0-9a-fA-F-]{36}/?$"),"delete_ws", http_method="DELETE" AND match(url,"/[0-9a-fA-F-]{36}/members/[0-9a-fA-F-]{36}/?$"),"delete_member") | where isnotnull(action) | stats earliest(eval(if(action="enum",_time,null))) as enum_time latest(eval(if(action IN ("delete_ws","delete_member"),_time,null))) as destruct_time values(action) as actions values(url) as urls values(src) as srcs values(user) as users by workspace_id | where isnotnull(enum_time) AND isnotnull(destruct_time) AND destruct_time-enum_time<=1800 AND destruct_time>=enum_time | eval delay_sec=destruct_time-enum_time | sort - destruct_time
 ```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-f38v-77qj-h4jq: praisonai-platform 0.1.4 still boots on t
 
-`UC_29_1` · phase: **exploit** · confidence: **High**
+`UC_32_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,4 +107,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

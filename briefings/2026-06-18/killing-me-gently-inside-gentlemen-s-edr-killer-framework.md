@@ -36,7 +36,7 @@ _(none detected from narrative keywords)_
 
 ### Gentlemen BYOVD driver file dropped to disk (eb.sys, nseckrnl.sys, ThrottleBlood.sys, havoc.sys, etc.)
 
-`UC_58_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_61_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -60,7 +60,7 @@ DeviceFileEvents
 
 ### GentleKiller dropper executable in staging directory or AV-impersonating filename
 
-`UC_58_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_61_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### Kernel-mode service registration for Gentlemen BYOVD drivers (Havoc service / %TEMP%\*.sys ImagePath)
 
-`UC_58_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_61_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceRegistryEvents
 
 ### Mass termination of EDR/AV processes by single non-system process (GentleKiller behavioral)
 
-`UC_58_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_61_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -161,7 +161,7 @@ DeviceProcessEvents
 
 ### OxideHarvest credential stealer command-line pattern (-i hosts -u user -p pass -o output)
 
-`UC_58_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_61_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

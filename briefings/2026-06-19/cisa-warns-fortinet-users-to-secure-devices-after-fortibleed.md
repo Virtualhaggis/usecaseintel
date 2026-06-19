@@ -11,23 +11,20 @@ By Sergiu Gatlan
 June 19, 2026
 02:47 AM
 0 
-
-
 The U.S. Cybersecurity and Infrastructure Security Agency (CISA) urged Fortinet customers to secure their devices after nearly 74,000 firewall and VPN credentials were exposed in a data leak dubbed "FortiBleed."
-
-
-This warning comes after threat actors used compromised credentials to target internet-accessible Fortinet devices across government and private-sector organizations wor…
+This warning comes after threat actors used compromised credentials to target internet-accessible Fortinet devices across government and private-sector organizations worldwide.
+…
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **Domain (defanged):** `motionposse.com`
-- **Domain (defanged):** `stategun.cc`
-- **Domain (defanged):** `toyotaio.cc`
+- **Domain (defanged):** `maltingooc.com`
+- **Domain (defanged):** `staging.co.uk`
+- **Domain (defanged):** `toyota.co.id`
 - **Domain (defanged):** `foxconn.com`
 - **Domain (defanged):** `chevron.com`
 - **Domain (defanged):** `mercedes-benz.com`
+- **Domain (defanged):** `att.net`
 - **Domain (defanged):** `comcast.com`
-- **Domain (defanged):** `at&t.net`
 
 ## MITRE ATT&CK Techniques
 
@@ -45,18 +42,9 @@ This warning comes after threat actors used compromised credentials to target�
 - **T1003** — OS Credential Dumping
 - **T1219** — Remote Access Software
 - **T1071** — Application Layer Protocol
-- **T1110.001** — Password Guessing
-- **T1110.003** — Password Spraying
-- **T1557** — Adversary-in-the-Middle
-- **T1078** — Valid Accounts
+- **T1110.004** — Credential Stuffing
 - **T1133** — External Remote Services
-- **T1602.002** — Network Device Configuration Dump
-- **T1005** — Data from Local System
-- **T1567** — Exfiltration Over Web Service
-- **T1021.001** — Remote Desktop Protocol
-- **T1021.006** — Windows Remote Management
-- **T1136.001** — Create Account: Local Account
-- **T1098** — Account Manipulation
+- **T1078** — Valid Accounts
 
 ## Kill chain phases observed
 
@@ -64,104 +52,31 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### FortiGate SSL VPN brute-force / credential stuffing surge against /remote/login
+### FortiGate SSL VPN credential-stuffing burst from single source IP (FortiBleed abuse)
 
-`UC_0_8` · phase: **recon** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, dc(Authentication.user) as distinct_users, values(Authentication.user) as users, values(Authentication.dest) as dest from datamodel=Authentication where Authentication.app="fortigate-sslvpn" Authentication.action="failure" by Authentication.src, _time span=5m | `drop_dm_object_name(Authentication)` | where count>50 OR distinct_users>25 | sort - count
-```
-
-**Defender KQL:**
-```kql
-// Defender XDR does not natively ingest FortiGate VPN logs; this query targets Defender for Identity/IdentityLogonEvents when FortiGate auth is forwarded via SAML to AAD
-IdentityLogonEvents
-| where Timestamp > ago(1h)
-| where Application has_any ("FortiGate","Fortinet","SSLVPN")
-| where ActionType == "LogonFailed"
-| summarize FailedCount = count(), DistinctUsers = dcount(AccountUpn), Users = make_set(AccountUpn, 25) by IPAddress, bin(Timestamp, 5m)
-| where FailedCount > 50 or DistinctUsers > 25
-| order by FailedCount desc
-```
-
-### First-seen successful FortiGate SSL VPN logon for user from new source IP (FortiBleed reuse)
-
-`UC_0_9` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_6_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` min(_time) as firstSeen, count from datamodel=Authentication where Authentication.app="fortigate-sslvpn" Authentication.action="success" by Authentication.user, Authentication.src | `drop_dm_object_name(Authentication)` | eventstats min(firstSeen) as userFirstSeen by user | where firstSeen=userFirstSeen AND firstSeen > relative_time(now(),"-1h") | join type=left user [| tstats `summariesonly` count as historicalLogins from datamodel=Authentication where Authentication.app="fortigate-sslvpn" Authentication.action="success" earliest=-30d@d latest=-1h by Authentication.user | `drop_dm_object_name(Authentication)`] | where historicalLogins > 5
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.user) as user values(Authentication.dest) as dest from datamodel=Authentication where Authentication.app="fortigate" Authentication.action="failure" (Authentication.signature="ssl-login-fail" OR Authentication.signature_id="0101039426" OR Authentication.signature="sslvpn_login_fail") by Authentication.src _time span=5m | `drop_dm_object_name(Authentication)` | where count > 30 | sort - count
 ```
 
-**Defender KQL:**
-```kql
-let Window = 1h;
-let Baseline = IdentityLogonEvents
-    | where Timestamp between (ago(30d) .. ago(Window))
-    | where Application has_any ("FortiGate","Fortinet","SSLVPN")
-    | where ActionType == "LogonSuccess"
-    | summarize by AccountUpn, IPAddress;
-IdentityLogonEvents
-| where Timestamp > ago(Window)
-| where Application has_any ("FortiGate","Fortinet","SSLVPN")
-| where ActionType == "LogonSuccess"
-| join kind=leftanti Baseline on AccountUpn, IPAddress
-| project Timestamp, AccountUpn, IPAddress, Location, DeviceName, Application
-| order by Timestamp desc
-```
+### FortiGate admin / management interface login from public internet
 
-### FortiGate configuration backup / export to non-routine destination
-
-`UC_0_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_6_9` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-`fortigate_admin_logs` (subtype=system OR logid=0100032002 OR logid=0100044546) (msg="Configuration backed up" OR action="backup" OR "execute backup config") | stats min(_time) as firstSeen, count, values(srcip) as src, values(user) as admin, values(dstip) as dst by devname | join type=left admin [| tstats `summariesonly` count as priorBackups from datamodel=Change where Change.action="backup" Change.object_category="firewall" earliest=-30d@d latest=-1h by Change.user | `drop_dm_object_name(Change)`] | where priorBackups < 3 OR isnull(priorBackups)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.user) as user values(Authentication.src) as src from datamodel=Authentication where Authentication.app="fortigate" (Authentication.signature_id="0100032001" OR Authentication.signature="admin_login" OR Authentication.signature="Administrator * logged in") by Authentication.dest Authentication.src_category | `drop_dm_object_name(Authentication)` | search NOT (src_category="internal" OR src="10.0.0.0/8" OR src="172.16.0.0/12" OR src="192.168.0.0/16") | sort - count
 ```
 
-**Defender KQL:**
-```kql
-// Defender does not ingest FortiGate admin events; this targets the case where the config artefact is dropped onto a Windows jump host
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType == "FileCreated"
-| where FileName matches regex @"(?i)^(fgt|fortigate|firewall|backup|sys)[A-Za-z0-9_\-\.]*\.(conf|cfg|backup|bak)$"
-   or FileName endswith ".conf.gz"
-| where InitiatingProcessFileName !in~ ("backupexec.exe","veeam.backup.shell.exe")
-| project Timestamp, DeviceName, FileName, FolderPath, FileSize, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
+### FortiGate SSL VPN successful login after credential-stuffing burst (FortiBleed confirmed compromise)
 
-### VPN-pool IP fan-out — single SSL VPN user touching multiple internal hosts post-auth
-
-`UC_0_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_6_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` dc(All_Traffic.dest) as distinctDests, values(All_Traffic.dest) as dests, count from datamodel=Network_Traffic where All_Traffic.dest_port IN (445,3389,5985,5986,22) (All_Traffic.src IN (`fortigate_sslvpn_pool`)) by All_Traffic.src, All_Traffic.user, _time span=10m | `drop_dm_object_name(All_Traffic)` | where distinctDests > 8
-```
-
-**Defender KQL:**
-```kql
-let SSLVPNPools = dynamic(["10.212.134.0/24","10.212.135.0/24"]); // adjust to your FortiGate SSL VPN address-objects
-DeviceNetworkEvents
-| where Timestamp > ago(1h)
-| where ActionType == "ConnectionSuccess"
-| where RemotePort in (445, 3389, 5985, 5986, 22)
-| where ipv4_is_in_any_range(LocalIP, SSLVPNPools) or ipv4_is_in_any_range(RemoteIP, SSLVPNPools)
-| summarize DistinctDests = dcount(RemoteIP), Dests = make_set(RemoteIP, 20), Ports = make_set(RemotePort) by DeviceId, DeviceName, InitiatingProcessAccountName, bin(Timestamp, 10m)
-| where DistinctDests > 8
-| order by DistinctDests desc
-```
-
-### FortiGate admin account creation or privilege escalation following anomalous logon
-
-`UC_0_12` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count, values(Authentication.src) as adminSrc, min(_time) as authTime from datamodel=Authentication where Authentication.app="fortigate-admin" Authentication.action="success" by Authentication.user, Authentication.dest | `drop_dm_object_name(Authentication)` | rename user as admin, dest as firewall | join type=inner admin firewall [| tstats `summariesonly` min(_time) as adminAddTime, values(All_Changes.object) as newAdmins from datamodel=Change where Change.action IN ("created","modified") Change.object_category="firewall_admin" by Change.user, Change.dest | `drop_dm_object_name(Change)` | rename user as admin, dest as firewall] | where adminAddTime > authTime AND adminAddTime < authTime + 600
+| tstats `summariesonly` count from datamodel=Authentication where Authentication.app="fortigate" Authentication.action="failure" (Authentication.signature_id="0101039426" OR Authentication.signature="ssl-login-fail") by Authentication.src Authentication.dest _time span=10m | `drop_dm_object_name(Authentication)` | where count >= 10 | rename count as FailCount | join type=inner src dest [ | tstats `summariesonly` min(_time) as SuccessTime values(Authentication.user) as SuccessUser from datamodel=Authentication where Authentication.app="fortigate" Authentication.action="success" (Authentication.signature_id="0101039425" OR Authentication.signature="ssl-login-success") by Authentication.src Authentication.dest | `drop_dm_object_name(Authentication)` ] | where SuccessTime >= _time AND SuccessTime <= _time + 3600 | table _time, src, dest, FailCount, SuccessTime, SuccessUser
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -428,9 +343,9 @@ DeviceProcessEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `motionposse.com`, `stategun.cc`, `toyotaio.cc`, `foxconn.com`, `chevron.com`, `mercedes-benz.com`, `comcast.com`, `at&t.net`
+  - IP / domain IOC(s): `maltingooc.com`, `staging.co.uk`, `toyota.co.id`, `foxconn.com`, `chevron.com`, `mercedes-benz.com`, `att.net`, `comcast.com`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 13 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

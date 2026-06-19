@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### PraisonAI MCP SSE server launched with vulnerable defaults (GHSA-x227-pf99-vffg)
 
-`UC_43_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_46_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceProcessEvents
 
 ### PraisonAI MCP host spawns shell/LOLBin — likely unauthenticated tools/call RCE (GHSA-x227-pf99-vffg)
 
-`UC_43_2` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_46_2` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-x227-pf99-vffg: PraisonAI: MCP SSE transport binds 0.0.0.
 
-`UC_43_0` · phase: **exploit** · confidence: **High**
+`UC_46_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
