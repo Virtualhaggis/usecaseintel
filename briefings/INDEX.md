@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1195 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1196 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -11,8 +11,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-06-19
 - [autojack how a single page can rce the host running your ai ](./2026-06-19/autojack-how-a-single-page-can-rce-the-host-running-your-ai-.md)
 - [china linked showboat malware uses linux persistence to targ](./2026-06-19/china-linked-showboat-malware-uses-linux-persistence-to-targ.md)
+- [cisa splunk enterprise flaw actively exploited patch by sund](./2026-06-19/cisa-splunk-enterprise-flaw-actively-exploited-patch-by-sund.md)
+- [cisa urges hardening fortinet devices following fortibleed a](./2026-06-19/cisa-urges-hardening-fortinet-devices-following-fortibleed-a.md)
 - [cisa warns fortinet users to secure devices after fortibleed](./2026-06-19/cisa-warns-fortinet-users-to-secure-devices-after-fortibleed.md)
-- [cisa warns of splunk enterprise critical function vulnerabil](./2026-06-19/cisa-warns-of-splunk-enterprise-critical-function-vulnerabil.md)
 - [hackers use weaponized windows shortcuts to spread crypto cl](./2026-06-19/hackers-use-weaponized-windows-shortcuts-to-spread-crypto-cl.md)
 - [salesforce disables klue app integration after oauth token a](./2026-06-19/salesforce-disables-klue-app-integration-after-oauth-token-a.md)
 

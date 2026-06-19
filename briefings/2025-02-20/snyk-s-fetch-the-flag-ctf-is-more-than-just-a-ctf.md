@@ -23,12 +23,70 @@ Register here But Capture the Flag sometimes gets a bad rap… with the occasion
 
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### Apache Spark JVM spawning shell — CVE-2022-33891 doAs command injection
+
+`UC_1003_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("java","java.exe") AND (Processes.parent_process="*org.apache.spark*" OR Processes.parent_process="*SparkSubmit*" OR Processes.parent_process="*spark.deploy.master*" OR Processes.parent_process="*spark.deploy.worker*" OR Processes.parent_process="*HistoryServer*") AND Processes.process_name IN ("sh","bash","dash","ksh","zsh","cmd.exe","powershell.exe","pwsh.exe","busybox") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("java","java.exe")
+| where InitiatingProcessCommandLine has_any ("org.apache.spark","SparkSubmit","spark.deploy.master","spark.deploy.worker","HistoryServer")
+| where FileName in~ ("sh","bash","dash","ksh","zsh","cmd.exe","powershell.exe","pwsh","pwsh.exe","busybox")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd   = InitiatingProcessCommandLine,
+          ChildImage  = FolderPath,
+          ChildCmd    = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc
+```
+
+### GitPython ext::sh URL command injection — CVE-2022-24439
+
+`UC_1003_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python","python.exe","python3","python3.exe","pip","pip.exe","pip3","pip3.exe") OR Processes.parent_process IN ("*GitPython*","*git.Repo*","*clone_from*")) AND (Processes.process="*ext::sh*" OR Processes.process="*ext::*-c*" OR Processes.process="*protocol.ext.allow=always*") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("python.exe","python","python3","python3.exe","pip","pip.exe","pip3","pip3.exe")
+   or InitiatingProcessCommandLine has_any ("GitPython","git.Repo","clone_from","Repo.clone")
+| where ProcessCommandLine has "ext::"
+   or ProcessCommandLine has "protocol.ext.allow=always"
+   or ProcessCommandLine matches regex @"(?i)ext::\s*sh\s+-c"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          ParentImage = InitiatingProcessFolderPath,
+          ParentCmd   = InitiatingProcessCommandLine,
+          ChildImage  = FolderPath,
+          ChildCmd    = ProcessCommandLine,
+          SHA256
+| order by Timestamp desc
+```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -64,4 +122,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

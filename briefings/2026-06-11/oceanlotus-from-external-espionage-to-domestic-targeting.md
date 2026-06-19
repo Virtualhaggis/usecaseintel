@@ -85,7 +85,7 @@ _(none detected from narrative keywords)_
 
 ### OceanLotus SPECTRALVIPER C2 network communication (known domains/IPs)
 
-`UC_157_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_156_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -105,7 +105,7 @@ DeviceNetworkEvents
 
 ### FireAnt Metakit updater spawning unexpected interpreter/LOLBin children (supply-chain payload exec)
 
-`UC_157_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_156_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -126,7 +126,7 @@ DeviceProcessEvents
 
 ### Known SPECTRALVIPER / OceanLotus SHA1 hash execution or write
 
-`UC_157_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_156_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ union isfuzzy=true
 
 ### OceanLotus Denis/SOUNDBITE DNS tunneling — high-entropy long subdomain bursts
 
-`UC_157_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_156_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -171,7 +171,7 @@ DeviceEvents
 
 ### OceanLotus PHOREAL ICMP C&C beaconing from workstations
 
-`UC_157_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_156_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -198,7 +198,7 @@ DeviceNetworkEvents
 
 ### OceanLotus WINDSHIELD proxy bypass — direct outbound HTTP(S) from non-browser process
 
-`UC_157_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_156_14` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -402,7 +402,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus: From external espionage to domestic targeting
 
-`UC_157_8` · phase: **exploit** · confidence: **High**
+`UC_156_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### Imperva OpenClaw PoC payload server callout (imperva_artifactory.com)
 
-`UC_148_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_147_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -73,7 +73,7 @@ DeviceNetworkEvents
 
 ### OpenClaw channel-extension display-name allowlist bypass (Slack/Teams/Discord/Matrix/Zalo)
 
-`UC_148_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_147_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ CloudAppEvents
 
 ### OpenClaw agent runtime spawning shell or LOLBin child processes
 
-`UC_148_12` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_147_12` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceProcessEvents
 
 ### OpenClaw agent process reading credential stores or .env / .ssh / .aws paths
 
-`UC_148_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_147_13` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ DeviceFileEvents
 
 ### OpenClaw mail connector sending credentials to first-time external recipient
 
-`UC_148_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_147_14` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

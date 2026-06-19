@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Talos top-prevalence malware hash sweep — VID001.exe coinminer + f_000cd7.html (week of 2026-06-18)
 
-`UC_15_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_16_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ union ProcessHits, FileHits
 
 ### Article-specific behavioural hunt — Close Encounters of the Human Kind
 
-`UC_15_1` · phase: **exploit** · confidence: **High**
+`UC_16_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
