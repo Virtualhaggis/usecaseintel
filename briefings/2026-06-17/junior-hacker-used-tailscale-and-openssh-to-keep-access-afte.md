@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### OpenSSH Server install on Windows workstation (Poisson persistence pivot)
 
-`UC_79_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_80_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceProcessEvents
 
 ### Tailscale client install or tailnet connection (100.100.100.0/8 / login.tailscale.com)
 
-`UC_79_11` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_80_11` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ union isfuzzy=true TS_Proc, TS_Net
 
 ### SSH reverse tunnel (ssh -R) outbound from Windows endpoint
 
-`UC_79_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_80_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -132,7 +132,7 @@ DeviceProcessEvents
 
 ### wscript/cscript executing .vbs from user staging folder (Poisson VBScript stager)
 
-`UC_79_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_80_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -153,7 +153,7 @@ DeviceProcessEvents
 
 ### powercfg disabling standby/hibernate to keep host harvest-ready
 
-`UC_79_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_80_14` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -174,7 +174,7 @@ DeviceProcessEvents
 
 ### Logon-trigger scheduled task at HIGHEST privileges launching script interpreter
 
-`UC_79_15` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_80_15` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -197,7 +197,7 @@ DeviceProcessEvents
 
 ### authorized_keys file write on Windows host (SSH key persistence)
 
-`UC_79_16` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_80_16` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -219,7 +219,7 @@ DeviceFileEvents
 
 ### certutil smart-card / certificate store enumeration
 
-`UC_79_17` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_80_17` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -472,7 +472,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Junior Hacker Used Tailscale and OpenSSH to Keep Access After His C2 Went Offlin
 
-`UC_79_9` · phase: **exploit** · confidence: **High**
+`UC_80_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

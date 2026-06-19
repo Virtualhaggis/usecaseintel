@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Talos weekly top-prevalent malware hash execution (Coinminer/Injector/Miner Dropper)
 
-`UC_143_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_144_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ union ProcHits, FileHits
 
 ### Dropper filename pattern: MD5-prefixed Exe.exe and VID001.exe lure
 
-`UC_143_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_144_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -213,7 +213,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A tale of two eras
 
-`UC_143_5` · phase: **exploit** · confidence: **High**
+`UC_144_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -43,6 +43,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [hackers abuse microsoft fondue exe to side load appwiz cpl a](./2026-06-18/hackers-abuse-microsoft-fondue-exe-to-side-load-appwiz-cpl-a.md)
 - [hackers breached klue integration to steal salesforce crm da](./2026-06-18/hackers-breached-klue-integration-to-steal-salesforce-crm-da.md)
 - [inc ransomware emerges as major raas threat in 2026 with 830](./2026-06-18/inc-ransomware-emerges-as-major-raas-threat-in-2026-with-830.md)
+- [killing me gently inside gentlemen s edr killer framework](./2026-06-18/killing-me-gently-inside-gentlemen-s-edr-killer-framework.md)
 - [klue oauth breach linked to icarus salesforce data theft att](./2026-06-18/klue-oauth-breach-linked-to-icarus-salesforce-data-theft-att.md)
 - [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-18/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
 - [miasma and hades are spreading now detect them on developer ](./2026-06-18/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)
@@ -869,9 +870,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2025-10-24
 - [cisa kev cve 2025 54236 adobe commerce and magento improper ](./2025-10-24/cisa-kev-cve-2025-54236-adobe-commerce-and-magento-improper-.md)
 - [cisa kev cve 2025 59287 microsoft windows server update serv](./2025-10-24/cisa-kev-cve-2025-59287-microsoft-windows-server-update-serv.md)
-
-## 2025-10-23
-- [gotta fly lazarus targets the uav sector](./2025-10-23/gotta-fly-lazarus-targets-the-uav-sector.md)
 
 ## 2025-10-22
 - [cisa kev cve 2025 61932 motex lanscope endpoint manager impr](./2025-10-22/cisa-kev-cve-2025-61932-motex-lanscope-endpoint-manager-impr.md)

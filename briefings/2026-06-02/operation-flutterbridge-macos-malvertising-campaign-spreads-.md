@@ -73,7 +73,7 @@ _(none detected from narrative keywords)_
 
 ### FlutterShell macOS C2 contact (atsheisdomestic / etoftheappyrince / healightejustb)
 
-`UC_218_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_219_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceNetworkEvents
 
 ### FlutterShell macOS payload SHA256 IOC match
 
-`UC_218_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_219_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceFileEvents
 
 ### Non-Chrome process modifies macOS Chrome Preferences (FlutterShell browser hijack)
 
-`UC_218_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_219_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -151,7 +151,7 @@ DeviceFileEvents
 
 ### FlutterShell adware redirector contact (ads-parkpro / sinterfumesco / softwe.art)
 
-`UC_218_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_219_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

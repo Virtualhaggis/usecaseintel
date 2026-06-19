@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### UNC6508 Google Workspace Domain Content Compliance Rule with External BCC
 
-`UC_113_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_114_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ CloudAppEvents
 
 ### UNC6508 Content Compliance Rule with Espionage Keywords (Patroit / chikungunya)
 
-`UC_113_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_114_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ CloudAppEvents
 
 ### Outbound Connection to UNC6508 C2 Infrastructure (23.169.65.49)
 
-`UC_113_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_114_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -119,7 +119,7 @@ DeviceNetworkEvents
 
 ### INFINITERED Trojanized REDCap System File on Disk (SHA256)
 
-`UC_113_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_114_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ union isfuzzy=true
 
 ### Gmail User-Level Forwarding/Filter Rule to External Address
 
-`UC_113_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_114_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -166,7 +166,7 @@ CloudAppEvents
 
 ### Gmail Mailbox Delegation Granted to External Principal
 
-`UC_113_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_114_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -189,7 +189,7 @@ CloudAppEvents
 
 ### Admin/Service Account Mailbox Fan-Out (Mass Mailbox Access in Short Window)
 
-`UC_113_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_114_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

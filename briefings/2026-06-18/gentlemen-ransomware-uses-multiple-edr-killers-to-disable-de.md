@@ -56,15 +56,10 @@ The gang employs a collection of EDR-killing tools, most notably a utility that 
 - **T1569.002** — Service Execution
 - **T1027** — Obfuscated Files or Information
 - **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1489** — Service Stop
 - **T1068** — Exploitation for Privilege Escalation
-- **T1014** — Rootkit
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1027.002** — Obfuscated Files or Information: Software Packing
-- **T1553.002** — Subvert Trust Controls: Code Signing
 - **T1543.003** — Create or Modify System Process: Windows Service
-- **T1090.002** — Proxy: External Proxy
-- **T1571** — Non-Standard Port
+- **T1036.005** — Masquerading: Match Legitimate Resource Name or Location
+- **T1027.002** — Obfuscated Files or Information: Software Packing
 
 ## Kill chain phases observed
 
@@ -72,94 +67,36 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Gentlemen EDR killer — mass termination of security vendor processes
+### GentleKiller / HexKiller / ThrottleBlood / HavocKiller binary hash hit
 
 `UC_2_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines values(Processes.process_name) as victims dc(Processes.process_name) as victim_count from datamodel=Endpoint.Processes where Processes.parent_process_name!="services.exe" Processes.process_name IN ("MsMpEng.exe","SenseIR.exe","MsSense.exe","NisSrv.exe","CSFalconService.exe","CSFalconController.exe","SentinelAgent.exe","SentinelServiceHost.exe","SentinelStaticEngine.exe","cyserver.exe","cytray.exe","CylanceSvc.exe","sophosFS.exe","SophosHealth.exe","SAVService.exe","ekrn.exe","egui.exe","bdservicehost.exe","vsserv.exe","avp.exe","kavfs.exe","tmccsf.exe","tmlisten.exe","mfemms.exe","mfetp.exe","masvc.exe","cortex.exe","Traps.exe","PanGPS.exe") (Processes.process="*taskkill*" OR Processes.process="*TerminateProcess*" OR Processes.process="*Stop-Process*" OR Processes.process="*sc * stop*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | where victim_count >= 5 AND lastTime-firstTime < 300 | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_hash IN ("8AE6BD18B129061F63642531F1B684CF0383C75D","BA914FE77B177B45799403B16DD14765C510A074","D605994FC72A2BB59B5CFB1624A1B9170ECA73A2","B0B912A3FD1C05D72080848EC4C92880004021A1","5AA3124E5C4921E5EDFC60133B5D71DA21B07DA3","7556AE58C215B8245A43F764F0676C7A8F0FDD1A","331879F5EEC8892BBD896F90BDBB1BAD0BF63BD6","F11AEBCCB9A86A7E2E653F90BAEC697F233C255F","EF9CD06683159397F099CAA244E94E6EAAD96EBA","711EF221526997039E804A18DB9647C91680BBE2","68FEC379F2AE76C3D2CE913F7BE650CEA1D06990","A11EE9CDC59E5CAA59AEFD27B30D104F3AD68E62","96F0DBF52AED0AFD43E44500116B04B674F7358E","2F86898528C6CAB3540C486A9BFAA0C029B73950","9AD51AD97C01E97AB59214116740785E0F6320A8","A19117175DBC9BA4D23B5DCE8415E299A2E32192","12500F6C87CE62712A0ED6652C57468D15C14223","D29670E684E40DDC89B47010C37CBC96737035B6","56BEE9DF5833A637F5C54D5911DF98B0812FE643","CF4D74DF17A91B4A36A2911B22AFEC5D8FA93A01") by Processes.dest Processes.user Processes.process_name Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let WindowMin = 5m;
-let AvProcs = dynamic(["msmpeng.exe","sensir.exe","mssense.exe","nissrv.exe","csfalconservice.exe","csfalconcontroller.exe","sentinelagent.exe","sentinelservicehost.exe","sentinelstaticengine.exe","cyserver.exe","cytray.exe","cylancesvc.exe","sophosfs.exe","sophoshealth.exe","savservice.exe","ekrn.exe","egui.exe","bdservicehost.exe","vsserv.exe","avp.exe","kavfs.exe","tmccsf.exe","tmlisten.exe","mfemms.exe","mfetp.exe","masvc.exe","cortex.exe","traps.exe","pangps.exe"]);
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where (FileName =~ "taskkill.exe" and ProcessCommandLine has_any (AvProcs))
-   or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has "Stop-Process" and ProcessCommandLine has_any (AvProcs))
-   or (FileName =~ "sc.exe" and ProcessCommandLine has "stop")
-| summarize FirstKill = min(Timestamp), LastKill = max(Timestamp), Victims = make_set(ProcessCommandLine, 50), VictimCount = dcount(ProcessCommandLine) by DeviceName, DeviceId, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessSHA256, bin(Timestamp, WindowMin)
-| where VictimCount >= 5
-| order by LastKill desc
+let GentlemenSHA1 = dynamic(["8AE6BD18B129061F63642531F1B684CF0383C75D","BA914FE77B177B45799403B16DD14765C510A074","D605994FC72A2BB59B5CFB1624A1B9170ECA73A2","B0B912A3FD1C05D72080848EC4C92880004021A1","5AA3124E5C4921E5EDFC60133B5D71DA21B07DA3","7556AE58C215B8245A43F764F0676C7A8F0FDD1A","331879F5EEC8892BBD896F90BDBB1BAD0BF63BD6","F11AEBCCB9A86A7E2E653F90BAEC697F233C255F","EF9CD06683159397F099CAA244E94E6EAAD96EBA","711EF221526997039E804A18DB9647C91680BBE2","68FEC379F2AE76C3D2CE913F7BE650CEA1D06990","A11EE9CDC59E5CAA59AEFD27B30D104F3AD68E62","96F0DBF52AED0AFD43E44500116B04B674F7358E","2F86898528C6CAB3540C486A9BFAA0C029B73950","9AD51AD97C01E97AB59214116740785E0F6320A8","A19117175DBC9BA4D23B5DCE8415E299A2E32192","12500F6C87CE62712A0ED6652C57468D15C14223","D29670E684E40DDC89B47010C37CBC96737035B6","56BEE9DF5833A637F5C54D5911DF98B0812FE643","CF4D74DF17A91B4A36A2911B22AFEC5D8FA93A01"]);
+let ProcHits = DeviceProcessEvents
+  | where Timestamp > ago(30d)
+  | where SHA1 in~ (GentlemenSHA1) or InitiatingProcessSHA1 in~ (GentlemenSHA1)
+  | project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA1, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine;
+let FileHits = DeviceFileEvents
+  | where Timestamp > ago(30d)
+  | where SHA1 in~ (GentlemenSHA1) or InitiatingProcessSHA1 in~ (GentlemenSHA1)
+  | project Timestamp, DeviceName, FileName=FileName, FolderPath, SHA1, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, AccountName=InitiatingProcessAccountName, InitiatingProcessCommandLine;
+ProcHits | union FileHits | order by Timestamp desc
 ```
 
-### BYOVD — vulnerable kernel driver loaded from user-writable path
+### BYOVD vulnerable-driver service install impersonating Kaspersky/Valorant/Javelin/WatchDog
 
-`UC_2_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as initiators from datamodel=Endpoint.Filesystem where Filesystem.action="created" Filesystem.file_name="*.sys" (Filesystem.file_path="*\\Temp\\*" OR Filesystem.file_path="*\\AppData\\*" OR Filesystem.file_path="*\\ProgramData\\*" OR Filesystem.file_path="*\\Users\\Public\\*" OR Filesystem.file_path="*\\Downloads\\*") by Filesystem.dest Filesystem.file_name Filesystem.file_hash | `drop_dm_object_name(Filesystem)` | eval is_known_byovd=if(match(file_name,"(?i)(throttleblood|procexp152|dbutil|rtcore64|gdrv|aswarpot|truesight|viragt|hsbdrv)\.sys"),1,0) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-let KnownByovd = dynamic(["throttleblood.sys","procexp152.sys","dbutil_2_3.sys","rtcore64.sys","gdrv.sys","aswarpot.sys","truesight.sys","viragt64.sys","hsbdrv.sys"]);
-let WritableRoots = dynamic([@"\Temp\", @"\AppData\", @"\ProgramData\", @"\Users\Public\", @"\Downloads\"]);
-let DrvDrops = DeviceFileEvents
-  | where Timestamp > ago(7d)
-  | where ActionType == "FileCreated"
-  | where FileName endswith ".sys"
-  | where FolderPath has_any (WritableRoots) or tolower(FileName) in (KnownByovd)
-  | project DropTime = Timestamp, DeviceId, DeviceName, DroppedDriver = FileName, DroppedPath = FolderPath, DroppedSHA256 = SHA256, DropperProc = InitiatingProcessFileName, DropperCmd = InitiatingProcessCommandLine, DropperSHA256 = InitiatingProcessSHA256;
-let DrvLoads = DeviceImageLoadEvents
-  | where Timestamp > ago(7d)
-  | where FileName endswith ".sys"
-  | where FolderPath has_any (WritableRoots) or tolower(FileName) in (KnownByovd)
-  | project LoadTime = Timestamp, DeviceId, DeviceName, LoadedDriver = FileName, LoadedPath = FolderPath, LoadedSHA256 = SHA256, LoaderProc = InitiatingProcessFileName;
-DrvDrops
-| join kind=inner DrvLoads on DeviceId
-| where LoadTime between (DropTime .. DropTime + 1h)
-| project DropTime, LoadTime, DeviceName, DroppedDriver, DroppedPath, DroppedSHA256, DropperProc, DropperCmd, LoaderProc, LoadedDriver, LoadedPath
-| order by LoadTime desc
-```
-
-### GentleKiller impersonation binary — Kaspersky/Valorant/Javelin/WatchDog from non-vendor path
-
-`UC_2_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.process_hash) as sha256 from datamodel=Endpoint.Processes where (Processes.process_name IN ("Kaspersky.exe","avp.exe","avpui.exe","VALORANT.exe","vgc.exe","vgtray.exe","Javelin.exe","WatchDog.exe","WatchDogAgent.exe") OR Processes.process_company IN ("Kaspersky Lab","Riot Games","Javelin Networks","WatchDog")) AND NOT (Processes.process_path="*\\Program Files*\\Kaspersky Lab\\*" OR Processes.process_path="*\\Riot Games\\VALORANT\\*" OR Processes.process_path="*\\Program Files*\\Javelin*" OR Processes.process_path="*\\Program Files*\\WatchDog*") by Processes.dest Processes.user Processes.process_name Processes.process_path Processes.parent_process_name | `drop_dm_object_name(Processes)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-let Masqueraders = dynamic(["kaspersky.exe","avp.exe","avpui.exe","valorant.exe","vgc.exe","vgtray.exe","javelin.exe","watchdog.exe","watchdogagent.exe"]);
-let LegitVendors = dynamic(["Kaspersky Lab","AO Kaspersky Lab","Riot Games","Riot Games, Inc.","Javelin Networks","WatchDog"]);
-let LegitRoots = dynamic([@"\Program Files\Kaspersky", @"\Program Files (x86)\Kaspersky", @"\Riot Games\", @"\Program Files\Riot Vanguard\", @"\Program Files\Javelin", @"\Program Files\WatchDog"]);
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where AccountName !endswith "$"
-| where tolower(FileName) in (Masqueraders) or ProcessVersionInfoCompanyName in~ (LegitVendors)
-| where not (FolderPath has_any (LegitRoots))
-| where FolderPath has_any (@"\Temp\", @"\AppData\", @"\ProgramData\", @"\Users\Public\", @"\Downloads\", @"\Windows\Tasks\")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256,
-          ClaimedVendor = ProcessVersionInfoCompanyName, ClaimedProduct = ProcessVersionInfoProductName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Vulnerable driver service installation via registry
-
-`UC_2_8` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as image_path values(Registry.process_name) as creator from datamodel=Endpoint.Registry where Registry.registry_path="*\\SYSTEM\\CurrentControlSet\\Services\\*\\ImagePath" Registry.registry_value_data="*.sys*" NOT (Registry.registry_value_data="*\\System32\\drivers\\*" OR Registry.registry_value_data="*\\SysWOW64\\drivers\\*" OR Registry.registry_value_data="\\??\\C:\\Windows\\*") by Registry.dest Registry.registry_key_name Registry.user | `drop_dm_object_name(Registry)` | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Registry.registry_value_data) as ImagePath values(Registry.process_name) as parent from datamodel=Endpoint.Registry where Registry.registry_path="*\\System\\CurrentControlSet\\Services\\*\\ImagePath" (Registry.registry_value_data="*kaspersky*" OR Registry.registry_value_data="*valorant*" OR Registry.registry_value_data="*vgk*" OR Registry.registry_value_data="*javelin*" OR Registry.registry_value_data="*watchdog*" OR Registry.registry_path="*\\Services\\kaspersky*" OR Registry.registry_path="*\\Services\\valorant*" OR Registry.registry_path="*\\Services\\vgk*" OR Registry.registry_path="*\\Services\\javelin*" OR Registry.registry_path="*\\Services\\watchdog*") by Registry.dest Registry.user Registry.registry_path Registry.registry_value_data | `drop_dm_object_name(Registry)` | where NOT match(ImagePath, "(?i)\\\\Program Files\\\\(Kaspersky Lab|Riot Vanguard|Valorant)\\\\") | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -167,40 +104,62 @@ DeviceProcessEvents
 DeviceRegistryEvents
 | where Timestamp > ago(7d)
 | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
-| where RegistryKey has @"\SYSTEM\CurrentControlSet\Services\"
-| where RegistryValueName =~ "ImagePath"
-| where RegistryValueData has ".sys"
-| where not (RegistryValueData has_any (@"\System32\drivers\", @"\SysWOW64\drivers\", @"\Windows\INF\"))
-| extend ServiceName = tostring(split(RegistryKey, "\\")[-1])
+| where RegistryKey has @"\System\CurrentControlSet\Services\"
+| where (RegistryValueName =~ "ImagePath" and RegistryValueData has_any ("kaspersky","valorant","vgk.sys","javelin","watchdog","wdog","wsdk"))
+     or (RegistryKey has_any (@"\Services\kaspersky",@"\Services\valorant",@"\Services\vgk",@"\Services\javelin",@"\Services\watchdog",@"\Services\wdog") and RegistryValueName =~ "ImagePath")
+| where not (RegistryValueData has_any (@"\Program Files\Kaspersky Lab\", @"\Program Files\Riot Vanguard\", @"\Program Files\Valorant\"))
 | where InitiatingProcessAccountName !endswith "$"
-   or InitiatingProcessFileName !in~ ("services.exe","msiexec.exe","trustedinstaller.exe")
-| project Timestamp, DeviceName, ServiceName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessFolderPath
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessSHA1
 | order by Timestamp desc
 ```
 
-### SystemBC SOCKS5 proxy beacon — persistent low-volume egress on non-standard high port
+### Themida/Enigma packed binary with security-vendor masquerade name from user-writable path
 
-`UC_2_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime sum(All_Traffic.bytes) as bytes_total dc(All_Traffic.dest_ip) as dst_ip_count from datamodel=Network_Traffic.All_Traffic where All_Traffic.transport="tcp" All_Traffic.dest_port>1024 All_Traffic.dest_port!=443 All_Traffic.dest_port!=80 All_Traffic.dest_port!=8080 (NOT All_Traffic.dest_ip IN (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16)) All_Traffic.app!="chrome.exe" All_Traffic.app!="msedge.exe" All_Traffic.app!="firefox.exe" by All_Traffic.src All_Traffic.app All_Traffic.dest_ip All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | eval duration_min=(lastTime-firstTime)/60 | where duration_min > 30 AND dst_ip_count = 1 AND bytes_total < 5000000 | sort - duration_min
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent values(Processes.process_hash) as hash from datamodel=Endpoint.Processes where (Processes.process_name="kaspersky*" OR Processes.process_name="avp*" OR Processes.process_name="valorant*" OR Processes.process_name="vgc*" OR Processes.process_name="vgk*" OR Processes.process_name="javelin*" OR Processes.process_name="watchdog*" OR Processes.process_name="wdog*") (Processes.process_path="*\\Users\\*\\AppData\\Local\\Temp\\*" OR Processes.process_path="*\\ProgramData\\*" OR Processes.process_path="*\\Users\\Public\\*" OR Processes.process_path="*\\Users\\*\\Downloads\\*" OR Processes.process_path="*\\Windows\\Temp\\*" OR Processes.process_path="*\\Perflogs\\*") NOT (Processes.process_path="*\\Program Files\\Kaspersky Lab\\*" OR Processes.process_path="*\\Program Files\\Riot Vanguard\\*" OR Processes.process_path="*\\Program Files\\Valorant\\*") by Processes.dest Processes.user Processes.process_name Processes.process_path | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
+let MasqNames = dynamic(["kaspersky","avp","avpui","valorant","vgc","vgk","javelin","watchdog","wdog"]);
+let SuspectPaths = dynamic([@"\Users\Public\", @"\ProgramData\", @"\Windows\Temp\", @"\PerfLogs\", @"\AppData\Local\Temp\", @"\Downloads\"]);
+let LegitPaths = dynamic([@"\Program Files\Kaspersky Lab\", @"\Program Files\Riot Vanguard\", @"\Program Files\Valorant\", @"\Program Files (x86)\Kaspersky Lab\"]);
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where AccountName !endswith "$"
+| extend FNameLow = tolower(FileName)
+| where FNameLow has_any (MasqNames)
+| where FolderPath has_any (SuspectPaths)
+| where not (FolderPath has_any (LegitPaths))
+| extend SignerSuspect = (ProcessVersionInfoCompanyName !has_any ("Kaspersky","Riot Games","Microsoft")) or isempty(ProcessVersionInfoCompanyName)
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, SHA1,
+          ProcessCommandLine, ProcessVersionInfoCompanyName, ProcessVersionInfoProductName, ProcessVersionInfoOriginalFileName,
+          InitiatingProcessFileName, InitiatingProcessCommandLine, SignerSuspect
+| order by Timestamp desc
+```
+
+### Mass termination of 48-vendor EDR/AV process set within short window
+
+`UC_2_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count values(Processes.process_name) as killed_processes dc(Processes.process_name) as VendorProcCount min(_time) as firstKill max(_time) as lastKill from datamodel=Endpoint.Processes where Processes.action="terminated" (Processes.process_name IN ("MsMpEng.exe","NisSrv.exe","SenseIR.exe","SenseCncProxy.exe","MsSense.exe","CSFalconService.exe","CSFalconContainer.exe","SentinelAgent.exe","SentinelServiceHost.exe","SentinelStaticEngine.exe","cyserver.exe","cyveraservice.exe","CortexXDR.exe","SophosAgent.exe","SophosFS.exe","SophosHealth.exe","SophosClean.exe","tmlisten.exe","PccNTMon.exe","TmCCSF.exe","ekrn.exe","egui.exe","eelam.exe","bdagent.exe","vsserv.exe","epsecurityservice.exe","masvc.exe","mcshield.exe","mfemms.exe","FrameworkService.exe","avp.exe","avpui.exe","kavfs.exe","klnagent.exe")) by Processes.dest Processes.user _time span=5m | where VendorProcCount >= 10 | convert ctime(firstKill) ctime(lastKill)
+```
+
+**Defender KQL:**
+```kql
+let VendorProcs = dynamic(["MsMpEng.exe","NisSrv.exe","SenseIR.exe","SenseCncProxy.exe","MsSense.exe","CSFalconService.exe","CSFalconContainer.exe","SentinelAgent.exe","SentinelServiceHost.exe","SentinelStaticEngine.exe","cyserver.exe","cyveraservice.exe","CortexXDR.exe","SophosAgent.exe","SophosFS.exe","SophosHealth.exe","SophosClean.exe","tmlisten.exe","PccNTMon.exe","TmCCSF.exe","ekrn.exe","egui.exe","eelam.exe","bdagent.exe","vsserv.exe","epsecurityservice.exe","masvc.exe","mcshield.exe","mfemms.exe","FrameworkService.exe","avp.exe","avpui.exe","kavfs.exe","klnagent.exe"]);
+DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where ActionType == "ConnectionSuccess"
-| where RemoteIPType == "Public"
-| where Protocol == "Tcp"
-| where RemotePort > 1024 and RemotePort !in (443, 80, 8080, 8443, 22, 3389, 5900)
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","iexplore.exe","svchost.exe","OneDrive.exe","Teams.exe","slack.exe","zoom.exe","outlook.exe")
-| where InitiatingProcessAccountName !endswith "$"
-| summarize ConnCount = count(), DistinctIPs = dcount(RemoteIP), FirstSeen = min(Timestamp), LastSeen = max(Timestamp), SampleIP = any(RemoteIP) by DeviceName, DeviceId, InitiatingProcessFileName, InitiatingProcessSHA256, InitiatingProcessFolderPath, RemotePort
-| extend DurationMin = datetime_diff('minute', LastSeen, FirstSeen)
-| where DurationMin > 30 and DistinctIPs <= 2 and ConnCount >= 6
-| order by DurationMin desc
+| where ActionType == "ProcessTerminated" or ActionType == "ProcessCreated"
+| where FileName in~ (VendorProcs)
+| summarize TerminatedProcs = make_set(FileName), VendorProcCount = dcount(FileName), FirstKill = min(Timestamp), LastKill = max(Timestamp) by DeviceName, bin(Timestamp, 5m)
+| where VendorProcCount >= 10
+| order by FirstKill desc
 ```
 
 ### Ransomware-style mass file rename / extension change
@@ -300,4 +259,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 9 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

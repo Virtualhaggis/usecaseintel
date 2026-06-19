@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### OpenClaw agent process connecting to Imperva PoC domain imperva_artifactory.com
 
-`UC_144_10` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_145_10` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -75,7 +75,7 @@ DeviceNetworkEvents
 
 ### OpenClaw agent runtime spawning shell / script interpreter (code execution from agent context)
 
-`UC_144_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_145_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -104,7 +104,7 @@ DeviceProcessEvents
 
 ### OpenClaw / Pinchy agent forwarding credential-shaped strings to external mailbox
 
-`UC_144_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_145_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ EmailEvents
 
 ### Outdated OpenClaw AI agent (<2026.4.23) — vulnerable to vCard/contact prompt inj
 
-`UC_144_13` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_145_13` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

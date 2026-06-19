@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### npm/node spawning shell or downloader during package install (postinstall hook abuse)
 
-`UC_148_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_149_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ DeviceProcessEvents
 
 ### Bun runtime dropped or executed by node/npm child process (Shai-Hulud signature)
 
-`UC_148_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_149_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceFileEvents
 
 ### TruffleHog credential scanner executed from node/npm context
 
-`UC_148_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_149_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +133,7 @@ DeviceProcessEvents
 
 ### Network connection to npm supply-chain attack IOCs (sfrclak.com / 142.11.206.73 / webhook.site)
 
-`UC_148_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_149_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,7 +155,7 @@ DeviceNetworkEvents
 
 ### npm install with --ignore-scripts override bypassing v12 postinstall protection
 
-`UC_148_13` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_149_13` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -180,7 +180,7 @@ DeviceProcessEvents
 
 ### Known npm supply-chain malware hash observed on disk or in execution
 
-`UC_148_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_149_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -434,7 +434,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — npm v12 delivers one of the biggest security improvements in years
 
-`UC_148_8` · phase: **exploit** · confidence: **High**
+`UC_149_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

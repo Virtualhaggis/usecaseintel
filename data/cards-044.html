@@ -1409,181 +1409,7 @@ DeviceFileEvents
   </div>
 </details></div>
 </article>
-<article class="card" id="art-1304" data-art-slug="2024-01-02-kroger-s-approach-to-supply-chain-security"
-  data-phases="c2,delivery,exploit,install,recon" data-sev="high"
-  data-techs="T1190,T1195.002"
-  data-sources="Snyk"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="endpoint"
-  data-targets="windows"
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="Kroger’s approach to supply chain security Recently, Snyk hosted a wine tasting &amp; customer discussion featuring David Imhoff, Product Security Leader at Kroger. The discussion focused on tackling the challenges of securing digital supply chains.  T1190 T1195.002 Trusted vendor binary / installer launching unusual children">
-  <div class="sev-ribbon high">High</div>
-  <button class="share-btn card-share" data-share-art="2024-01-02-kroger-s-approach-to-supply-chain-security" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/krogers-approach-supply-chain-security/" target="_blank" rel="noopener">Kroger’s approach to supply chain security</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2024-01-02</span>
-    <span>1 use case</span>
-    <span>2 techniques</span>
-    <span>3 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Recently, Snyk hosted a wine tasting &amp; customer discussion featuring David Imhoff, Product Security Leader at Kroger. The discussion focused on tackling the challenges of securing digital supply chains.</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-1304-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-1304"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-1304-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-1304-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1304-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1304-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-1304-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-1304-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-1304-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-1304-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-1304-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1304-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1304-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1304-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-1304-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-1305" data-art-slug="2024-01-02-krampus-delivers-an-end-of-year-struts-vulnerability"
+<article class="card" id="art-1304" data-art-slug="2024-01-02-krampus-delivers-an-end-of-year-struts-vulnerability"
   data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="Snyk"
@@ -1608,11 +1434,11 @@ level: medium
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2023-50164</span></div>
 <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
   <div class="action-row">
-    <button class="btn btn-kc" data-target="art-1305-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-1305"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <button class="btn btn-kc" data-target="art-1304-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-1304"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
     <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
   </div>
-  <div class="killchain" id="art-1305-kc">
+  <div class="killchain" id="art-1304-kc">
   <div class="kc3d"><div class="kc-cell hit">
   <div class="num">Phase 1</div>
   <div class="name">Reconnaissance</div>
@@ -1680,20 +1506,20 @@ Cross-checked against:
     <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal red-team or pentester running the public PoC against a staging Struts host</li><li>Vulnerability scanners (Nuclei, Nessus, Tenable, Qualys) firing CVE-2023-50164 plugin checks</li><li>Bug-bounty researchers fingerprinting the org&#x27;s perimeter for Struts</li><li>Misconfigured legacy app that genuinely passes `../` in a filename parameter (extremely rare — investigate)</li><li>WAF in detect-only mode replaying captured requests during tuning</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// In Sentinel, suppress known scanners + internal red-team source ranges
 | where cIP !in (&quot;&lt;known-scanner-IPs&gt;&quot;) and csUserAgent !has_any (&quot;Nuclei&quot;,&quot;Nessus&quot;,&quot;Qualys&quot;,&quot;Nikto&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1: Triage — Pull full request body and headers for the matching event; confirm the .action endpoint is a real Struts app (banner-grab / response signature) and capture the source IP, user-agent, and any related requests in the prior 5 minutes from the same src. Step 2: Contain — Block the source IP at the WAF/edge if Struts is in scope; if the upload succeeded (look for the second-stage GET to the dropped file path), isolate the host running Struts and revoke any service credentials it carries. Step 3: Hunt — Pivot to UC 2 (webshell file-drop) and UC 3 (post-exploit shell spawn) on the same host within the next 60 minutes; check whether Struts is on a vulnerable version (≤ 2.5.32 or 6.0.0–6.3.0.1) and queue patching to 2.5.33 / 6.3.0.2.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-1305-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1305-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1305-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-1305-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-1305-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-1304-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1304-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1304-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1304-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-1304-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-1305-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Defender lacks raw web-server logs; this is a best-effort surface via outbound URL telemetry when a reverse-proxy fronts Struts.
+    <div class="tab-content active" id="art-1304-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Defender lacks raw web-server logs; this is a best-effort surface via outbound URL telemetry when a reverse-proxy fronts Struts.
 DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
 | where RemoteUrl has_any (&quot;.action&quot;)
 | where RemoteUrl has_any (&quot;uploadFileName=..&quot;, &quot;fileFileName=..&quot;, &quot;uploadFileName%3D..&quot;, &quot;fileFileName%3D..&quot;)
 | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, LocalPort, RemotePort
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-1305-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// IIS / App Service / WAF tier — Struts is typically fronted by IIS or an Azure App Service / WAF.
+    <div class="tab-content" id="art-1304-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// IIS / App Service / WAF tier — Struts is typically fronted by IIS or an Azure App Service / WAF.
 let TraversalRegex = @&quot;(?i)(upload|file)FileName=(\.{2}(\/|%2f|\\|%5c))&quot;;
 (union isfuzzy=true
     (W3CIISLog
@@ -1713,7 +1539,7 @@ let TraversalRegex = @&quot;(?i)(upload|file)FileName=(\.{2}(\/|%2f|\\|%5c))&quo
         | where RequestURL matches regex TraversalRegex or Message matches regex TraversalRegex
         | project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, DestinationIP, RequestURL, RequestMethod, RequestClientApplication, _ResourceId))
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-1305-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Apache Struts CVE-2023-50164 Path Traversal Upload Attempt
+    <div class="tab-content" id="art-1304-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Apache Struts CVE-2023-50164 Path Traversal Upload Attempt
 id: 8d3a9e74-2bda-4f6e-9c2c-7c1a4b1d50ab
 status: experimental
 description: Detects HTTP requests to Struts .action endpoints containing a path-traversal sequence in the uploadFileName or fileFileName parameter, matching the PoC for CVE-2023-50164.
@@ -1741,8 +1567,8 @@ falsepositives:
   - Internal penetration tests against Struts applications
   - Vulnerability scanners (Nuclei, Nessus, Tenable) running CVE-2023-50164 checks
 level: high</code></pre></div>
-    <div class="tab-content" id="art-1305-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:azure.app_service_http OR source:nginx OR source:apache OR source:iis OR source:cloudflare) @http.url_details.path:*.action (@http.url_details.queryString:*uploadFileName=..* OR @http.url_details.queryString:*fileFileName=..* OR @http.url_details.queryString:*uploadFileName%3D..* OR @http.url_details.queryString:*fileFileName%3D..*)</code></pre></div>
-    <div class="tab-content" id="art-1305-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1305-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1305-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1305-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src values(Web.http_user_agent) as ua values(Web.status) as status from datamodel=Web.Web where Web.url=&quot;*.action*&quot; (Web.url=&quot;*uploadFileName=*..*&quot; OR Web.url=&quot;*fileFileName=*..*&quot; OR Web.http_content=&quot;*uploadFileName=*..*&quot; OR Web.http_content=&quot;*fileFileName=*..*&quot; OR Web.form_data=&quot;*uploadFileName=*..*&quot; OR Web.form_data=&quot;*fileFileName=*..*&quot;) by Web.dest Web.src Web.url Web.http_method | `drop_dm_object_name(Web)` | rename firstTime as firstTime lastTime as lastTime | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-1305-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src values(Web.http_user_agent) as ua values(Web.status) as status from datamodel=Web.Web where Web.url=&quot;*.action*&quot; (Web.url=&quot;*uploadFileName=*..*&quot; OR Web.url=&quot;*fileFileName=*..*&quot; OR Web.http_content=&quot;*uploadFileName=*..*&quot; OR Web.http_content=&quot;*fileFileName=*..*&quot; OR Web.form_data=&quot;*uploadFileName=*..*&quot; OR Web.form_data=&quot;*fileFileName=*..*&quot;) by Web.dest Web.src Web.url Web.http_method | `drop_dm_object_name(Web)` | rename firstTime as firstTime lastTime as lastTime | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-1304-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:azure.app_service_http OR source:nginx OR source:apache OR source:iis OR source:cloudflare) @http.url_details.path:*.action (@http.url_details.queryString:*uploadFileName=..* OR @http.url_details.queryString:*fileFileName=..* OR @http.url_details.queryString:*uploadFileName%3D..* OR @http.url_details.queryString:*fileFileName%3D..*)</code></pre></div>
+    <div class="tab-content" id="art-1304-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1304-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1304-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1304-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src values(Web.http_user_agent) as ua values(Web.status) as status from datamodel=Web.Web where Web.url=&quot;*.action*&quot; (Web.url=&quot;*uploadFileName=*..*&quot; OR Web.url=&quot;*fileFileName=*..*&quot; OR Web.http_content=&quot;*uploadFileName=*..*&quot; OR Web.http_content=&quot;*fileFileName=*..*&quot; OR Web.form_data=&quot;*uploadFileName=*..*&quot; OR Web.form_data=&quot;*fileFileName=*..*&quot;) by Web.dest Web.src Web.url Web.http_method | `drop_dm_object_name(Web)` | rename firstTime as firstTime lastTime as lastTime | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-1304-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src values(Web.http_user_agent) as ua values(Web.status) as status from datamodel=Web.Web where Web.url=&quot;*.action*&quot; (Web.url=&quot;*uploadFileName=*..*&quot; OR Web.url=&quot;*fileFileName=*..*&quot; OR Web.http_content=&quot;*uploadFileName=*..*&quot; OR Web.http_content=&quot;*fileFileName=*..*&quot; OR Web.form_data=&quot;*uploadFileName=*..*&quot; OR Web.form_data=&quot;*fileFileName=*..*&quot;) by Web.dest Web.src Web.url Web.http_method | `drop_dm_object_name(Web)` | rename firstTime as firstTime lastTime as lastTime | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="1db6b274a0" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="windows">
@@ -1769,14 +1595,14 @@ Cross-checked against:
     <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate Tomcat WAR deployment via Manager App (`/manager/text/deploy`) — correlate with a change ticket</li><li>CI/CD agent unpacking a release WAR into webapps directory</li><li>Application self-update mechanism that ships new JSPs at runtime (rare in production)</li><li>Developer copying a JSP into a dev/staging Tomcat (filter dev hosts)</li><li>Tomcat upgrade or hot-deploy of an additional context that legitimately wrote JSP source files</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Suppress known deploy windows / CI agents
 | where InitiatingProcessAccountName !in~ (&quot;svc-tomcat-deploy&quot;, &quot;svc-jenkins&quot;, &quot;svc-cicd&quot;) and DeviceName !in~ (&quot;DEPLOY-AGENT-01&quot;,&quot;DEPLOY-AGENT-02&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1: Triage — Read the dropped JSP (look for shell-execution primitives like `Runtime.getRuntime().exec`, `ProcessBuilder`, `&lt;%@page import=&#x27;java.io&#x27;%&gt;`); pull the file SHA256 and check VT / threat intel; correlate to the UC 1 HTTP exploit attempt within the last hour from any external IP. Step 2: Contain — Quarantine the dropped file (rename or delete from webapp), block external access to the Struts app at the perimeter, isolate the host if the JSP appears to be a working shell. Step 3: Hunt — Run UC 3 (Java spawning shell) on this host for the next 24 hours; sweep all Java/Tomcat hosts for `.jsp` files outside the expected app structure using `Get-ChildItem -Recurse -Include *.jsp` filtered against the legitimate manifest; review WAF logs for matching `..` upload requests from the same source IP across the estate.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-1305-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1305-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1305-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-1305-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-1305-uc1-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-1305-uc1-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-1304-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1304-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1304-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1304-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-1304-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-1304-uc1-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-1305-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
+    <div class="tab-content active" id="art-1304-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
 | where Timestamp &gt; ago(7d)
 | where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;tomcat.exe&quot;,&quot;tomcat9.exe&quot;,&quot;tomcat10.exe&quot;,&quot;prunsrv.exe&quot;)
 | where FileName endswith &quot;.jsp&quot; or FileName endswith &quot;.jspx&quot; or FileName endswith &quot;.war&quot;
@@ -1784,7 +1610,7 @@ Cross-checked against:
 | where not(FolderPath has_any (@&quot;\work\Catalina\&quot;, &quot;/work/Catalina/&quot;, @&quot;\jasper\&quot;, &quot;/jasper/&quot;))
 | project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessParentFileName, SHA256
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-1305-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
+    <div class="tab-content" id="art-1304-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>ImFileEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventType =~ &quot;FileCreated&quot;
 | where ActingProcessName has_any (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;tomcat.exe&quot;,&quot;tomcat9.exe&quot;,&quot;tomcat10.exe&quot;,&quot;prunsrv.exe&quot;,&quot;/bin/java&quot;,&quot;java&quot;)
@@ -1793,7 +1619,7 @@ Cross-checked against:
 | where not(TargetFilePath has_any (@&quot;\work\Catalina\&quot;, &quot;/work/Catalina/&quot;, @&quot;\jasper\&quot;, &quot;/jasper/&quot;))
 | project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFilePath, TargetFileName, TargetFileSHA256, _ResourceId
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-1305-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Tomcat/Java Process Writes JSP Webshell to Webapp Directory (CVE-2023-50164 Post-Exploitation)
+    <div class="tab-content" id="art-1304-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Tomcat/Java Process Writes JSP Webshell to Webapp Directory (CVE-2023-50164 Post-Exploitation)
 id: c4a91bf2-78d6-4a83-9f1e-2b8d4c5e6f17
 status: experimental
 description: Detects a Java/Tomcat server process writing a .jsp/.jspx/.war file into a webapp-served directory (webapps, WEB-INF, ROOT, src/main/webapp), consistent with webshell drop after CVE-2023-50164 path-traversal exploitation. Excludes the legitimate Jasper JSP compilation cache (work\Catalina\) to control false positives.
@@ -1841,14 +1667,14 @@ falsepositives:
   - Legitimate WAR deployments via Tomcat manager (compare against change-management window)
   - Application-build / CI agents that exploded a WAR into webapps for a real release
 level: high</code></pre></div>
-    <div class="tab-content" id="art-1305-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@Image:(*\java.exe OR *\Java.exe OR *\JAVA.EXE OR *\javaw.exe OR *\tomcat.exe OR *\tomcat9.exe OR *\tomcat10.exe OR *\prunsrv.exe)) (@TargetFilename:(*.jsp OR *.JSP OR *.jspx OR *.JSPX OR *.war OR *.WAR)) (@TargetFilename:(*\webapps\* OR *\WEB-INF\* OR *\ROOT\* OR *src\main\webapp*)) -@TargetFilename:(*\work\Catalina\* OR *\jasper\*)</code></pre></div>
-    <div class="tab-content" id="art-1305-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
+    <div class="tab-content" id="art-1304-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 (@Image:(*\java.exe OR *\Java.exe OR *\JAVA.EXE OR *\javaw.exe OR *\tomcat.exe OR *\tomcat9.exe OR *\tomcat10.exe OR *\prunsrv.exe)) (@TargetFilename:(*.jsp OR *.JSP OR *.jspx OR *.JSPX OR *.war OR *.WAR)) (@TargetFilename:(*\webapps\* OR *\WEB-INF\* OR *\ROOT\* OR *src\main\webapp*)) -@TargetFilename:(*\work\Catalina\* OR *\jasper\*)</code></pre></div>
+    <div class="tab-content" id="art-1304-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
 | ContextImageFileName=/(java|javaw|tomcat\d*|prunsrv)\.exe$/i
 | TargetFileName=/\.(jsp|jspx|war)$/i
 | regex(&quot;(\\\\webapps\\\\|\\\\WEB-INF\\\\|\\\\ROOT\\\\|src\\\\main\\\\webapp|/webapps/|/WEB-INF/|/ROOT/|src/main/webapp)&quot;, field=TargetFileName)
 | NOT regex(&quot;(\\\\work\\\\Catalina\\\\|/work/Catalina/|\\\\jasper\\\\|/jasper/)&quot;, field=TargetFileName)
 | groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-1305-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1305-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1305-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1305-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as proc values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.process_name=&quot;java.exe&quot; OR Filesystem.process_name=&quot;tomcat*.exe&quot; OR Filesystem.process_name=&quot;javaw.exe&quot; OR Filesystem.process_name=&quot;java&quot;) (Filesystem.file_name=&quot;*.jsp&quot; OR Filesystem.file_name=&quot;*.jspx&quot; OR Filesystem.file_name=&quot;*.war&quot;) (Filesystem.file_path=&quot;*\\webapps\\*&quot; OR Filesystem.file_path=&quot;*\\WEB-INF\\*&quot; OR Filesystem.file_path=&quot;*\\ROOT\\*&quot; OR Filesystem.file_path=&quot;*/webapps/*&quot; OR Filesystem.file_path=&quot;*/WEB-INF/*&quot; OR Filesystem.file_path=&quot;*src/main/webapp/*&quot;) NOT Filesystem.file_path=&quot;*\\work\\Catalina\\*&quot; NOT Filesystem.file_path=&quot;*/work/Catalina/*&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-1305-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as proc values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.process_name=&quot;java.exe&quot; OR Filesystem.process_name=&quot;tomcat*.exe&quot; OR Filesystem.process_name=&quot;javaw.exe&quot; OR Filesystem.process_name=&quot;java&quot;) (Filesystem.file_name=&quot;*.jsp&quot; OR Filesystem.file_name=&quot;*.jspx&quot; OR Filesystem.file_name=&quot;*.war&quot;) (Filesystem.file_path=&quot;*\\webapps\\*&quot; OR Filesystem.file_path=&quot;*\\WEB-INF\\*&quot; OR Filesystem.file_path=&quot;*\\ROOT\\*&quot; OR Filesystem.file_path=&quot;*/webapps/*&quot; OR Filesystem.file_path=&quot;*/WEB-INF/*&quot; OR Filesystem.file_path=&quot;*src/main/webapp/*&quot;) NOT Filesystem.file_path=&quot;*\\work\\Catalina\\*&quot; NOT Filesystem.file_path=&quot;*/work/Catalina/*&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-1304-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1304-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1304-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1304-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as proc values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.process_name=&quot;java.exe&quot; OR Filesystem.process_name=&quot;tomcat*.exe&quot; OR Filesystem.process_name=&quot;javaw.exe&quot; OR Filesystem.process_name=&quot;java&quot;) (Filesystem.file_name=&quot;*.jsp&quot; OR Filesystem.file_name=&quot;*.jspx&quot; OR Filesystem.file_name=&quot;*.war&quot;) (Filesystem.file_path=&quot;*\\webapps\\*&quot; OR Filesystem.file_path=&quot;*\\WEB-INF\\*&quot; OR Filesystem.file_path=&quot;*\\ROOT\\*&quot; OR Filesystem.file_path=&quot;*/webapps/*&quot; OR Filesystem.file_path=&quot;*/WEB-INF/*&quot; OR Filesystem.file_path=&quot;*src/main/webapp/*&quot;) NOT Filesystem.file_path=&quot;*\\work\\Catalina\\*&quot; NOT Filesystem.file_path=&quot;*/work/Catalina/*&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-1304-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_path values(Filesystem.process_name) as proc values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.process_name=&quot;java.exe&quot; OR Filesystem.process_name=&quot;tomcat*.exe&quot; OR Filesystem.process_name=&quot;javaw.exe&quot; OR Filesystem.process_name=&quot;java&quot;) (Filesystem.file_name=&quot;*.jsp&quot; OR Filesystem.file_name=&quot;*.jspx&quot; OR Filesystem.file_name=&quot;*.war&quot;) (Filesystem.file_path=&quot;*\\webapps\\*&quot; OR Filesystem.file_path=&quot;*\\WEB-INF\\*&quot; OR Filesystem.file_path=&quot;*\\ROOT\\*&quot; OR Filesystem.file_path=&quot;*/webapps/*&quot; OR Filesystem.file_path=&quot;*/WEB-INF/*&quot; OR Filesystem.file_path=&quot;*src/main/webapp/*&quot;) NOT Filesystem.file_path=&quot;*\\work\\Catalina\\*&quot; NOT Filesystem.file_path=&quot;*/work/Catalina/*&quot; by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="0374466904" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
@@ -1876,21 +1702,21 @@ Cross-checked against:
 | where not (FileName =~ &quot;cmd.exe&quot; and ProcessCommandLine has &quot;healthcheck&quot;)
 | where InitiatingProcessCommandLine !has &quot;jmx&quot; and InitiatingProcessCommandLine !has &quot;jconsole&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">Step 1: Triage — Capture the child process command-line (`whoami`, `id`, `cat /etc/passwd`, `net user`, encoded PowerShell are all high-confidence malicious); collect the parent JVM&#x27;s loaded modules and recent file writes (chain to UC 2 within ±5min). Step 2: Contain — Isolate the host immediately, kill the Tomcat service to stop further shell spawns, capture memory image for IR; rotate any service account / DB credential the Tomcat config holds. Step 3: Hunt — Sweep all Java/Tomcat hosts in the estate for this parent→child pattern over the last 30 days (Struts exploitation began Dec 12 2023 per AttackerKB); for confirmed compromises, pull DNS/network egress from the host to identify C2 and lateral pivots; verify Struts version and confirm patching to 2.5.33 / 6.3.0.2.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-1305-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1305-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1305-uc2-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-1305-uc2-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-1305-uc2-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-1305-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-1304-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1304-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1304-uc2-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1304-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-1304-uc2-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-1304-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-1305-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-1304-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where InitiatingProcessFileName in~ (&quot;java.exe&quot;,&quot;javaw.exe&quot;,&quot;tomcat.exe&quot;,&quot;tomcat9.exe&quot;,&quot;tomcat10.exe&quot;,&quot;prunsrv.exe&quot;,&quot;java&quot;)
 | where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;curl.exe&quot;,&quot;curl&quot;,&quot;wget.exe&quot;,&quot;wget&quot;,&quot;certutil.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;whoami.exe&quot;,&quot;whoami&quot;,&quot;net.exe&quot;,&quot;net1.exe&quot;,&quot;hostname.exe&quot;,&quot;ipconfig.exe&quot;,&quot;ifconfig&quot;,&quot;id&quot;)
 | where AccountName !endswith &quot;$&quot;
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath, ProcessCommandLine, SHA256
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-1305-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Covers both Windows (SecurityEvent 4688) and Linux (Syslog/auditd) Tomcat hosts.
+    <div class="tab-content" id="art-1304-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Covers both Windows (SecurityEvent 4688) and Linux (Syslog/auditd) Tomcat hosts.
 (union isfuzzy=true
     (SecurityEvent
         | where TimeGenerated &gt; ago(7d)
@@ -1907,7 +1733,7 @@ Cross-checked against:
         | where ChildLeaf in~ (&quot;sh&quot;,&quot;bash&quot;,&quot;dash&quot;,&quot;zsh&quot;,&quot;nc&quot;,&quot;ncat&quot;,&quot;curl&quot;,&quot;wget&quot;,&quot;whoami&quot;,&quot;id&quot;,&quot;ifconfig&quot;,&quot;ip&quot;,&quot;hostname&quot;,&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh&quot;)
         | project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ActingProcessName, ActingProcessCommandLine, _ResourceId))
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-1305-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Tomcat/Java Process Spawns OS Shell or Download Utility (Post-Webshell RCE)
+    <div class="tab-content" id="art-1304-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: Tomcat/Java Process Spawns OS Shell or Download Utility (Post-Webshell RCE)
 id: 5f7c2e88-9a4b-4c01-bd2e-e3a16b8c7d92
 status: experimental
 description: Detects a Java/Tomcat server process spawning cmd.exe, powershell.exe, /bin/sh, /bin/bash, nc, curl, wget, or recon LOLBins — indicating post-exploitation command execution via webshell after CVE-2023-50164 or any other Struts/Tomcat RCE.
@@ -1957,12 +1783,12 @@ falsepositives:
   - Application functionality that legitimately invokes a shell (rare — should be inventoried)
   - Tomcat startup scripts on Windows that wrap launches in cmd.exe (filter by NewProcessId chain depth or specific cmd-line)
 level: high</code></pre></div>
-    <div class="tab-content" id="art-1305-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon OR source:windows.security OR source:linux.auditd) (@ParentImage:(*\java.exe OR *\javaw.exe OR *\tomcat.exe OR *\tomcat9.exe OR *\tomcat10.exe OR *\prunsrv.exe) OR @process.parent.name:(java OR javaw OR tomcat OR prunsrv)) (@Image:(*\cmd.exe OR *\powershell.exe OR *\pwsh.exe OR *\nc.exe OR *\ncat.exe OR *\curl.exe OR *\wget.exe OR *\certutil.exe OR *\bitsadmin.exe OR *\whoami.exe OR *\net.exe OR *\net1.exe) OR @process.executable.name:(sh OR bash OR dash OR zsh OR nc OR ncat OR curl OR wget OR whoami OR id OR hostname OR ifconfig))</code></pre></div>
-    <div class="tab-content" id="art-1305-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+    <div class="tab-content" id="art-1304-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>(source:windows.sysmon OR source:windows.security OR source:linux.auditd) (@ParentImage:(*\java.exe OR *\javaw.exe OR *\tomcat.exe OR *\tomcat9.exe OR *\tomcat10.exe OR *\prunsrv.exe) OR @process.parent.name:(java OR javaw OR tomcat OR prunsrv)) (@Image:(*\cmd.exe OR *\powershell.exe OR *\pwsh.exe OR *\nc.exe OR *\ncat.exe OR *\curl.exe OR *\wget.exe OR *\certutil.exe OR *\bitsadmin.exe OR *\whoami.exe OR *\net.exe OR *\net1.exe) OR @process.executable.name:(sh OR bash OR dash OR zsh OR nc OR ncat OR curl OR wget OR whoami OR id OR hostname OR ifconfig))</code></pre></div>
+    <div class="tab-content" id="art-1304-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
 | ParentBaseFileName=/(java|javaw|tomcat\d*|prunsrv)\.exe$/i OR ParentBaseFileName=/^(java|javaw|tomcat|prunsrv)$/i
 | ImageFileName=/\\(cmd|powershell|pwsh|nc|ncat|curl|wget|certutil|bitsadmin|whoami|net|net1|hostname|ipconfig)\.exe$/i OR ImageFileName=/\/(sh|bash|dash|zsh|nc|ncat|curl|wget|whoami|id|hostname|ifconfig|ip)$/i
 | groupBy([aid, ComputerName, ParentBaseFileName, ImageFileName, CommandLine], function=count())</code></pre></div>
-    <div class="tab-content" id="art-1305-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1305-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1305-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1305-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.process_name) as child values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;java.exe&quot; OR Processes.parent_process_name=&quot;javaw.exe&quot; OR Processes.parent_process_name=&quot;tomcat*.exe&quot; OR Processes.parent_process_name=&quot;prunsrv.exe&quot; OR Processes.parent_process_name=&quot;java&quot;) (Processes.process_name=&quot;cmd.exe&quot; OR Processes.process_name=&quot;powershell.exe&quot; OR Processes.process_name=&quot;pwsh.exe&quot; OR Processes.process_name=&quot;sh&quot; OR Processes.process_name=&quot;bash&quot; OR Processes.process_name=&quot;dash&quot; OR Processes.process_name=&quot;nc&quot; OR Processes.process_name=&quot;ncat&quot; OR Processes.process_name=&quot;curl&quot; OR Processes.process_name=&quot;wget&quot; OR Processes.process_name=&quot;certutil.exe&quot; OR Processes.process_name=&quot;bitsadmin.exe&quot; OR Processes.process_name=&quot;whoami.exe&quot; OR Processes.process_name=&quot;whoami&quot; OR Processes.process_name=&quot;net.exe&quot; OR Processes.process_name=&quot;net1.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-1305-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.process_name) as child values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;java.exe&quot; OR Processes.parent_process_name=&quot;javaw.exe&quot; OR Processes.parent_process_name=&quot;tomcat*.exe&quot; OR Processes.parent_process_name=&quot;prunsrv.exe&quot; OR Processes.parent_process_name=&quot;java&quot;) (Processes.process_name=&quot;cmd.exe&quot; OR Processes.process_name=&quot;powershell.exe&quot; OR Processes.process_name=&quot;pwsh.exe&quot; OR Processes.process_name=&quot;sh&quot; OR Processes.process_name=&quot;bash&quot; OR Processes.process_name=&quot;dash&quot; OR Processes.process_name=&quot;nc&quot; OR Processes.process_name=&quot;ncat&quot; OR Processes.process_name=&quot;curl&quot; OR Processes.process_name=&quot;wget&quot; OR Processes.process_name=&quot;certutil.exe&quot; OR Processes.process_name=&quot;bitsadmin.exe&quot; OR Processes.process_name=&quot;whoami.exe&quot; OR Processes.process_name=&quot;whoami&quot; OR Processes.process_name=&quot;net.exe&quot; OR Processes.process_name=&quot;net1.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
+    <div class="tab-content" id="art-1304-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1304-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1304-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1304-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.process_name) as child values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;java.exe&quot; OR Processes.parent_process_name=&quot;javaw.exe&quot; OR Processes.parent_process_name=&quot;tomcat*.exe&quot; OR Processes.parent_process_name=&quot;prunsrv.exe&quot; OR Processes.parent_process_name=&quot;java&quot;) (Processes.process_name=&quot;cmd.exe&quot; OR Processes.process_name=&quot;powershell.exe&quot; OR Processes.process_name=&quot;pwsh.exe&quot; OR Processes.process_name=&quot;sh&quot; OR Processes.process_name=&quot;bash&quot; OR Processes.process_name=&quot;dash&quot; OR Processes.process_name=&quot;nc&quot; OR Processes.process_name=&quot;ncat&quot; OR Processes.process_name=&quot;curl&quot; OR Processes.process_name=&quot;wget&quot; OR Processes.process_name=&quot;certutil.exe&quot; OR Processes.process_name=&quot;bitsadmin.exe&quot; OR Processes.process_name=&quot;whoami.exe&quot; OR Processes.process_name=&quot;whoami&quot; OR Processes.process_name=&quot;net.exe&quot; OR Processes.process_name=&quot;net1.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-1304-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.process_name) as child values(Processes.parent_process_name) as parent values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name=&quot;java.exe&quot; OR Processes.parent_process_name=&quot;javaw.exe&quot; OR Processes.parent_process_name=&quot;tomcat*.exe&quot; OR Processes.parent_process_name=&quot;prunsrv.exe&quot; OR Processes.parent_process_name=&quot;java&quot;) (Processes.process_name=&quot;cmd.exe&quot; OR Processes.process_name=&quot;powershell.exe&quot; OR Processes.process_name=&quot;pwsh.exe&quot; OR Processes.process_name=&quot;sh&quot; OR Processes.process_name=&quot;bash&quot; OR Processes.process_name=&quot;dash&quot; OR Processes.process_name=&quot;nc&quot; OR Processes.process_name=&quot;ncat&quot; OR Processes.process_name=&quot;curl&quot; OR Processes.process_name=&quot;wget&quot; OR Processes.process_name=&quot;certutil.exe&quot; OR Processes.process_name=&quot;bitsadmin.exe&quot; OR Processes.process_name=&quot;whoami.exe&quot; OR Processes.process_name=&quot;whoami&quot; OR Processes.process_name=&quot;net.exe&quot; OR Processes.process_name=&quot;net1.exe&quot;) by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.parent_process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -1980,11 +1806,11 @@ level: high</code></pre></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-1305-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1305-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1305-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-1304-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1304-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1304-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-1305-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-1304-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -1993,7 +1819,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-1305-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-1304-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -2005,17 +1831,191 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-1305-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1305-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1305-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1305-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-1304-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1304-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1304-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1304-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2023-50164&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-1305-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-1304-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2023-50164&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
 | sort - severity</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-1305" data-art-slug="2024-01-02-kroger-s-approach-to-supply-chain-security"
+  data-phases="c2,delivery,exploit,install,recon" data-sev="high"
+  data-techs="T1190,T1195.002"
+  data-sources="Snyk"
+  data-platforms="def,sent,sigma,spl"
+  data-splunk-cats="endpoint"
+  data-targets="windows"
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="Kroger’s approach to supply chain security Recently, Snyk hosted a wine tasting &amp; customer discussion featuring David Imhoff, Product Security Leader at Kroger. The discussion focused on tackling the challenges of securing digital supply chains.  T1190 T1195.002 Trusted vendor binary / installer launching unusual children">
+  <div class="sev-ribbon high">High</div>
+  <button class="share-btn card-share" data-share-art="2024-01-02-kroger-s-approach-to-supply-chain-security" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/krogers-approach-supply-chain-security/" target="_blank" rel="noopener">Kroger’s approach to supply chain security</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2024-01-02</span>
+    <span>1 use case</span>
+    <span>2 techniques</span>
+    <span>3 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Recently, Snyk hosted a wine tasting &amp; customer discussion featuring David Imhoff, Product Security Leader at Kroger. The discussion focused on tackling the challenges of securing digital supply chains.</p>
+  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-1305-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-1305"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-1305-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows" open>
+  <summary>
+    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1305-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1305-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1305-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1305-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1305-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-1305-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+// article (matching shape with the Defender query).
+SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where NewProcessName endswith &quot;\powershell.exe&quot;
+   or NewProcessName endswith &quot;\cmd.exe&quot;
+   or NewProcessName endswith &quot;\rundll32.exe&quot;
+   or NewProcessName endswith &quot;\regsvr32.exe&quot;
+   or NewProcessName endswith &quot;\mshta.exe&quot;
+   or NewProcessName endswith &quot;\wscript.exe&quot;
+   or NewProcessName endswith &quot;\cscript.exe&quot;
+   or NewProcessName endswith &quot;\wmic.exe&quot;
+   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
+| project TimeGenerated, Computer, Account, ParentProcessName,
+          NewProcessName, CommandLine
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-1305-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
+status: experimental
+description: |
+    A signed vendor binary (in the article&#x27;s named-vendors list)
+    spawning script-host or LOLBin children. Strongest signal when
+    paired with a recent CVE / supply-chain advisory naming the same
+    vendor.
+references:
+    - https://attack.mitre.org/techniques/T1195/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1195
+    - attack.initial-access
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_child:
+        Image|endswith:
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+            - &#x27;\cmd.exe&#x27;
+            - &#x27;\rundll32.exe&#x27;
+            - &#x27;\regsvr32.exe&#x27;
+            - &#x27;\mshta.exe&#x27;
+            - &#x27;\wscript.exe&#x27;
+            - &#x27;\cscript.exe&#x27;
+            - &#x27;\wmic.exe&#x27;
+            - &#x27;\bitsadmin.exe&#x27;
+    selection_parent_vendor:
+        ParentImage|contains:
+            - &#x27;\Program Files\&#x27;
+            - &#x27;\Program Files (x86)\&#x27;
+    condition: selection_child and selection_parent_vendor
+falsepositives:
+    - Many — installers and updaters legitimately spawn children. Pin
+      the parent path to specific vendor binaries observed in the
+      article before alerting.
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-1305-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1305-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1305-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1305-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-1305-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
   </div>
 </details></div>
 </article>
@@ -2364,231 +2364,7 @@ DeviceFileEvents
 </div>
   <div class="usecases"></div>
 </article>
-<article class="card" id="art-1310" data-art-slug="2023-12-19-vulnerability-disclosure-which-comes-first-the-security-bug-"
-  data-phases="c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="Snyk"
-  data-platforms="def,sent,spl"
-  data-splunk-cats="application,endpoint"
-  data-targets="windows"
-  data-uc-count="2" data-llm-uc-count="0"
-  data-search="Vulnerability disclosure: Which comes first, the security bug in PHP or the CVE? In this post, we cover the CVE reporting process using the Use After Free vulnerability type as an example. CVE-2021-21708 CVE-2022-28368 T1190 Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — Vulnerability disclosure: Which comes first, the security bug in PHP or the CVE?">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2023-12-19-vulnerability-disclosure-which-comes-first-the-security-bug-" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/vulnerability-disclosure-php-use-after-free/" target="_blank" rel="noopener">Vulnerability disclosure: Which comes first, the security bug in PHP or the CVE?</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2023-12-19</span>
-    <span>2 use cases</span>
-    <span>1 technique</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">In this post, we cover the CVE reporting process using the Use After Free vulnerability type as an example.</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-21708</span> <span class="ind cve">CVE-2022-28368</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-1310-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-1310"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-1310-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — Vulnerability disclosure: Which comes first, the security bug in PHP or the CVE?</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-1310-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1310-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1310-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-1310-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-21708&quot;, &quot;CVE-2022-28368&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-1310-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2021-21708&quot;, &quot;CVE-2022-28368&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-1310-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1310-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1310-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1310-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-21708&quot;, &quot;CVE-2022-28368&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-1310-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2021-21708&quot;, &quot;CVE-2022-28368&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="5ccccde2af" data-platforms="def,sent,spl" data-targets="windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — Vulnerability disclosure: Which comes first, the security bug in PHP or the CVE?</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="5ccccde2af" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-1310-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1310-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1310-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-1310-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Vulnerability disclosure: Which comes first, the security bug in PHP or the CVE?
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where Timestamp &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-1310-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — Vulnerability disclosure: Which comes first, the security bug in PHP or the CVE?
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-DeviceProcessEvents
-| where TimeGenerated &gt; ago(30d)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FileName,
-          FolderPath, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by TimeGenerated desc
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FileName in~ (&quot;node.js&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-1310-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1310-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1310-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1310-uc1-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Vulnerability disclosure: Which comes first, the security bug in PHP or the CVE? ```
-| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-1310-uc1-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Vulnerability disclosure: Which comes first, the security bug in PHP or the CVE? ```
-| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
-    from datamodel=Endpoint.Processes
-    where (Processes.process_name IN (&quot;node.js&quot;))
-    by Processes.dest, Processes.user, Processes.process_name,
-       Processes.process, Processes.parent_process_name, Processes.process_path
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| append [
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_name IN (&quot;node.js&quot;))
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`
-]</code></pre></div></div>
-  </div>
-</details></div>
-</article>
-<article class="card" id="art-1311" data-art-slug="2023-12-19-common-saml-vulnerabilities-and-how-to-remediate-them"
+<article class="card" id="art-1310" data-art-slug="2023-12-19-common-saml-vulnerabilities-and-how-to-remediate-them"
   data-phases="actions,c2,exploit,install" data-sev="med"
   data-techs="T1190,T1528"
   data-sources="Snyk"
@@ -2612,11 +2388,11 @@ DeviceFileEvents
   <p class="summary">This blog aims to give a short overview of popular SAML vulnerabilities and how they can be remediated with some examples.</p>
   <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Steal Application Access Token">T1528</span></div>
   <div class="action-row">
-    <button class="btn btn-kc" data-target="art-1311-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-1311"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <button class="btn btn-kc" data-target="art-1310-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-1310"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
     <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
   </div>
-  <div class="killchain" id="art-1311-kc">
+  <div class="killchain" id="art-1310-kc">
   <div class="kc3d"><div class="kc-cell ">
   <div class="num">Phase 1</div>
   <div class="name">Reconnaissance</div>
@@ -2675,17 +2451,17 @@ DeviceFileEvents
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Authentication.Authentication</span> <span class="ind">CloudAppEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-1311-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1311-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1311-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-1311-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-1310-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1310-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1310-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1310-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-1311-uc0-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
+    <div class="tab-content active" id="art-1310-uc0-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
 | where Timestamp &gt; ago(7d)
 | where ActionType in (&quot;Consent to application.&quot;,&quot;Add OAuth2PermissionGrant.&quot;,&quot;Add delegated permission grant.&quot;)
 | project Timestamp, AccountObjectId, AccountDisplayName, ActivityType,
           ActivityObjects, IPAddress, UserAgent</code></pre></div>
-    <div class="tab-content" id="art-1311-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
+    <div class="tab-content" id="art-1310-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Entra ID directory audit — user / admin consent to a third-party app.
 AuditLogs
 | where TimeGenerated &gt; ago(7d)
 | where OperationName has &quot;Consent to application&quot;
@@ -2696,7 +2472,7 @@ AuditLogs
 | project TimeGenerated, OperationName, User, AppName, AppId, Result
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-1311-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
+    <div class="tab-content" id="art-1310-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Entra ID Consent to Third-Party OAuth Application
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d05
 status: experimental
 description: |
@@ -2722,7 +2498,7 @@ falsepositives:
     - Legitimate first-time SaaS app onboarding
 level: medium
 </code></pre></div>
-    <div class="tab-content" id="art-1311-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1311-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1311-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1311-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-1310-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1310-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1310-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1310-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -2731,7 +2507,7 @@ level: medium
         &quot;Add OAuth2PermissionGrant&quot;,
         &quot;Add delegated permission grant&quot;)
     by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
-| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-1311-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `drop_dm_object_name(Authentication)`</code></pre><pre class="spl-mode-body" id="art-1310-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Authentication.Authentication
     where Authentication.action=&quot;success&quot;
       AND Authentication.signature IN (
@@ -2741,6 +2517,230 @@ level: medium
         &quot;Add delegated permission grant&quot;)
     by Authentication.user, Authentication.app, Authentication.src, Authentication.signature
 | `drop_dm_object_name(Authentication)`</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-1311" data-art-slug="2023-12-19-vulnerability-disclosure-which-comes-first-the-security-bug-"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs="T1190"
+  data-sources="Snyk"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="windows"
+  data-uc-count="2" data-llm-uc-count="0"
+  data-search="Vulnerability disclosure: Which comes first, the security bug in PHP or the CVE? In this post, we cover the CVE reporting process using the Use After Free vulnerability type as an example. CVE-2021-21708 CVE-2022-28368 T1190 Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — Vulnerability disclosure: Which comes first, the security bug in PHP or the CVE?">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2023-12-19-vulnerability-disclosure-which-comes-first-the-security-bug-" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/vulnerability-disclosure-php-use-after-free/" target="_blank" rel="noopener">Vulnerability disclosure: Which comes first, the security bug in PHP or the CVE?</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2023-12-19</span>
+    <span>2 use cases</span>
+    <span>1 technique</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">In this post, we cover the CVE reporting process using the Use After Free vulnerability type as an example.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2021-21708</span> <span class="ind cve">CVE-2022-28368</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-1311-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-1311"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-1311-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Article-specific behavioural hunt — Vulnerability disclosure: Which comes first, the security bug in PHP or the CVE?</em></div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1311-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1311-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1311-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1311-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2021-21708&quot;, &quot;CVE-2022-28368&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-1311-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2021-21708&quot;, &quot;CVE-2022-28368&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-1311-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1311-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1311-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1311-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2021-21708&quot;, &quot;CVE-2022-28368&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-1311-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2021-21708&quot;, &quot;CVE-2022-28368&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="5ccccde2af" data-platforms="def,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Article-specific behavioural hunt — Vulnerability disclosure: Which comes first, the security bug in PHP or the CVE?</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="5ccccde2af" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1311-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1311-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1311-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1311-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — Vulnerability disclosure: Which comes first, the security bug in PHP or the CVE?
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where Timestamp &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where Timestamp &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project Timestamp, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-1311-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+// Requires the Microsoft 365 Defender data connector (streams the
+// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
+// Article-specific bespoke detection — Vulnerability disclosure: Which comes first, the security bug in PHP or the CVE?
+// Hunts the actual binaries / paths / commandline fragments named
+// in the article instead of a generic technique-class template.
+DeviceProcessEvents
+| where TimeGenerated &gt; ago(30d)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FileName,
+          FolderPath, ProcessCommandLine,
+          InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by TimeGenerated desc
+
+// File-creation events for the named binaries / paths
+DeviceFileEvents
+| where TimeGenerated &gt; ago(30d)
+| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
+| where (FileName in~ (&quot;node.js&quot;))
+| project TimeGenerated, DeviceName, AccountName, FolderPath,
+          FileName, ActionType, InitiatingProcessFileName,
+          InitiatingProcessCommandLine
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-1311-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1311-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1311-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1311-uc1-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Vulnerability disclosure: Which comes first, the security bug in PHP or the CVE? ```
+| tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats `summariesonly` count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre><pre class="spl-mode-body" id="art-1311-uc1-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — Vulnerability disclosure: Which comes first, the security bug in PHP or the CVE? ```
+| tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
+    from datamodel=Endpoint.Processes
+    where (Processes.process_name IN (&quot;node.js&quot;))
+    by Processes.dest, Processes.user, Processes.process_name,
+       Processes.process, Processes.parent_process_name, Processes.process_path
+| `drop_dm_object_name(Processes)`
+| `security_content_ctime(firstTime)`
+| append [
+| tstats summariesonly=false count
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
+      AND (Filesystem.file_name IN (&quot;node.js&quot;))
+    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
+       Filesystem.file_path, Filesystem.file_name
+| `drop_dm_object_name(Filesystem)`
+]</code></pre></div></div>
   </div>
 </details></div>
 </article>
