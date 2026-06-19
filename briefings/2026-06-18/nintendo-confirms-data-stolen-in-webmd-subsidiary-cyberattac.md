@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### Anomalous bulk export / cross-geo admin access to TinyPulse (WebMD) SaaS tenant
 
-`UC_15_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_22_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ SignInAnomaly
 
 ### First-time outbound to mega.nz file-sharing infrastructure (Shadowbyt3$ leak host)
 
-`UC_15_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_22_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceNetworkEvents
 
 ### Inbound email referencing Shadowbyt3$ extortion / leak negotiation
 
-`UC_15_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_22_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

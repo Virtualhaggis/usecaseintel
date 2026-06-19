@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1196 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1195 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -14,7 +14,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa splunk enterprise flaw actively exploited patch by sund](./2026-06-19/cisa-splunk-enterprise-flaw-actively-exploited-patch-by-sund.md)
 - [cisa urges hardening fortinet devices following fortibleed a](./2026-06-19/cisa-urges-hardening-fortinet-devices-following-fortibleed-a.md)
 - [cisa warns fortinet users to secure devices after fortibleed](./2026-06-19/cisa-warns-fortinet-users-to-secure-devices-after-fortibleed.md)
+- [hackers abuse third party okendo reviews script to spread sm](./2026-06-19/hackers-abuse-third-party-okendo-reviews-script-to-spread-sm.md)
 - [hackers use weaponized windows shortcuts to spread crypto cl](./2026-06-19/hackers-use-weaponized-windows-shortcuts-to-spread-crypto-cl.md)
+- [hazybeacon weaponizes aws lambda function urls for stealth c](./2026-06-19/hazybeacon-weaponizes-aws-lambda-function-urls-for-stealth-c.md)
+- [inc ransomware uses rust based windows and linux esxi encryp](./2026-06-19/inc-ransomware-uses-rust-based-windows-and-linux-esxi-encryp.md)
 - [salesforce disables klue app integration after oauth token a](./2026-06-19/salesforce-disables-klue-app-integration-after-oauth-token-a.md)
 
 ## 2026-06-18
@@ -22,7 +25,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 20253 splunk enterprise missing authentica](./2026-06-18/cisa-kev-cve-2026-20253-splunk-enterprise-missing-authentica.md)
 - [close encounters of the human kind](./2026-06-18/close-encounters-of-the-human-kind.md)
 - [dragonforce hackers abuse microsoft teams relays to hide bac](./2026-06-18/dragonforce-hackers-abuse-microsoft-teams-relays-to-hide-bac.md)
-- [f5 issues out of band patches for critical nginx vulnerabili](./2026-06-18/f5-issues-out-of-band-patches-for-critical-nginx-vulnerabili.md)
 - [f5 patches two critical nginx open source flaws enabling rem](./2026-06-18/f5-patches-two-critical-nginx-open-source-flaws-enabling-rem.md)
 - [fortibleed leak exposes fortinet vpn credentials for 73 000 ](./2026-06-18/fortibleed-leak-exposes-fortinet-vpn-credentials-for-73-000-.md)
 - [from package to postinstall payload inside the mastra npm su](./2026-06-18/from-package-to-postinstall-payload-inside-the-mastra-npm-su.md)
@@ -46,7 +48,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa vmmj pfw7 fjwp npm praisonai codemode san](./2026-06-18/ghsa-critical-ghsa-vmmj-pfw7-fjwp-npm-praisonai-codemode-san.md)
 - [ghsa critical ghsa x227 pf99 vffg praisonai mcp sse transpor](./2026-06-18/ghsa-critical-ghsa-x227-pf99-vffg-praisonai-mcp-sse-transpor.md)
 - [ghsa critical ghsa x8cv xmq7 p8xp praisonai agentteam launch](./2026-06-18/ghsa-critical-ghsa-x8cv-xmq7-p8xp-praisonai-agentteam-launch.md)
-- [hackers breached klue integration to steal salesforce crm da](./2026-06-18/hackers-breached-klue-integration-to-steal-salesforce-crm-da.md)
 - [inc ransomware emerges as major raas threat in 2026 with 830](./2026-06-18/inc-ransomware-emerges-as-major-raas-threat-in-2026-with-830.md)
 - [killing me gently inside gentlemen s edr killer framework](./2026-06-18/killing-me-gently-inside-gentlemen-s-edr-killer-framework.md)
 - [klue oauth breach linked to icarus salesforce data theft att](./2026-06-18/klue-oauth-breach-linked-to-icarus-salesforce-data-theft-att.md)
@@ -139,10 +140,8 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 48039 meta ads mcp unauthenticated ht](./2026-06-11/ghsa-critical-cve-2026-48039-meta-ads-mcp-unauthenticated-ht.md)
 - [ghsa critical cve 2026 48062 codeigniter4 has a validation b](./2026-06-11/ghsa-critical-cve-2026-48062-codeigniter4-has-a-validation-b.md)
 - [new attacks trick openclaw ai agent into running code and le](./2026-06-11/new-attacks-trick-openclaw-ai-agent-into-running-code-and-le.md)
-- [new greatxml exploit bypasses windows bitlocker via recovery](./2026-06-11/new-greatxml-exploit-bypasses-windows-bitlocker-via-recovery.md)
 - [npm v12 delivers one of the biggest security improvements in](./2026-06-11/npm-v12-delivers-one-of-the-biggest-security-improvements-in.md)
 - [oceanlotus from external espionage to domestic targeting](./2026-06-11/oceanlotus-from-external-espionage-to-domestic-targeting.md)
-- [the gentlemen ransomware claims 478 victims can spread like ](./2026-06-11/the-gentlemen-ransomware-claims-478-victims-can-spread-like-.md)
 
 ## 2026-06-10
 - [10 year old critical vulnerability in phpbb affecting tens o](./2026-06-10/10-year-old-critical-vulnerability-in-phpbb-affecting-tens-o.md)

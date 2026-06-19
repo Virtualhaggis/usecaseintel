@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### PraisonAI UI / aiui server listening on 0.0.0.0 (vulnerable exposure)
 
-`UC_40_1` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_44_1` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -48,7 +48,7 @@ DeviceProcessEvents | where Timestamp > ago(7d) | where ProcessCommandLine has_a
 
 ### Unauthenticated POST /api/mcp/connect — exploit attempt at web tier
 
-`UC_40_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_44_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceProcessEvents | where Timestamp > ago(7d) | where ProcessCommandLine has_a
 
 ### Child process spawned by PraisonAI UI / aiui (post-exploitation RCE)
 
-`UC_40_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_44_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -71,7 +71,7 @@ DeviceProcessEvents | where Timestamp > ago(7d) | where InitiatingProcessCommand
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-p75f-6fp4-p57w: PraisonAI: Missing Authentication for Cri
 
-`UC_40_0` · phase: **exploit** · confidence: **High**
+`UC_44_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

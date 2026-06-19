@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Crawl4AI Python process writes to Linux persistence path (GHSA-2jq4-q6vv-4cp3 exploitation)
 
-`UC_19_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_26_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -57,7 +57,7 @@ DeviceFileEvents
 
 ### Vulnerable Crawl4AI package inventory (<= 0.8.9, pre-patch for GHSA-2jq4-q6vv-4cp3)
 
-`UC_19_2` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_26_2` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -79,7 +79,7 @@ DeviceTvmSoftwareInventory
 
 ### Python crawl4ai process spawns shell or persistence helper (post-exploitation child)
 
-`UC_19_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_26_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-2jq4-q6vv-4cp3: Crawl4AI: Arbitrary file write (path trav
 
-`UC_19_0` · phase: **install** · confidence: **High**
+`UC_26_0` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

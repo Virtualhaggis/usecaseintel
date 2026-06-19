@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Phantom Gyp: tiny binding.gyp written into installed npm package
 
-`UC_59_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_60_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceFileEvents
 
 ### VS Code .vscode/tasks.json folderOpen auto-execute task dropped into project tree
 
-`UC_59_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_60_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -84,7 +84,7 @@ DeviceFileEvents
 
 ### AI coding assistant config file dropped in project (.claude/setup.mjs, .cursor/rules/setup.mdc, .gemini/settings.json)
 
-`UC_59_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_60_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceFileEvents
 
 ### Hades on-import: Bun runtime download/execution chained from Python interpreter
 
-`UC_59_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_60_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ BunExec
 
 ### PyPI package __init__.py modified with one-line obfuscated import-time hook (Hades pattern)
 
-`UC_59_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_60_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -178,7 +178,7 @@ DeviceFileEvents
 
 ### node-gyp spawning a shell, interpreter, or LOLBin during npm install
 
-`UC_59_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_60_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -203,7 +203,7 @@ DeviceProcessEvents
 
 ### File on disk matches known Miasma/Hades campaign SHA256 IOC
 
-`UC_59_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_60_10` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -290,7 +290,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Miasma and Hades Are Spreading Now: Detect Them on Developer Machines with Suspi
 
-`UC_59_3` · phase: **exploit** · confidence: **High**
+`UC_60_3` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

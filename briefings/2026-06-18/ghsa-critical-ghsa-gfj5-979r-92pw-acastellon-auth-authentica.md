@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### HTTP request with spoofed 'auth-user: service-brother' header (@acastellon/auth GHSA-gfj5-979r-92pw)
 
-`UC_20_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_27_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceNetworkEvents
 
 ### Vulnerable @acastellon/auth (<2.3.0) package on disk + internet-facing Node.js listener
 
-`UC_20_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_27_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -95,7 +95,7 @@ DeviceFileEvents
 
 ### Spoofable privilege-claim headers (is-admin / is-*) downstream of @acastellon/auth bypass
 
-`UC_20_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_27_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceFileEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-gfj5-979r-92pw: @acastellon/auth: Authentication bypass v
 
-`UC_20_0` · phase: **exploit** · confidence: **High**
+`UC_27_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
