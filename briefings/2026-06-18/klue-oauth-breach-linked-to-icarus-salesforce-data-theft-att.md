@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### Outbound/SaaS connections to Icarus extortion group IPs (Klue/Salesforce campaign)
 
-`UC_48_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_52_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ union isfuzzy=true
 
 ### Klue Battlecards connected app Salesforce activity from Icarus IPs
 
-`UC_48_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_52_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ CloudAppEvents
 
 ### Salesforce REST API mass /sobjects enumeration via OAuth connected app
 
-`UC_48_7` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_52_7` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,7 +137,7 @@ CloudAppEvents
 
 ### Salesforce /query API burst exfiltration via single OAuth principal
 
-`UC_48_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_52_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

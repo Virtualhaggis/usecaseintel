@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### NetLicensing /token endpoint accessed from MCP server / Python process
 
-`UC_34_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_37_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceNetworkEvents
 
 ### Path traversal characters in netlicensing_get_product MCP tool invocation
 
-`UC_34_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_37_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceProcessEvents
 
 ### URL-encoded path traversal targeting NetLicensing /product/ REST API
 
-`UC_34_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_37_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -113,7 +113,7 @@ DeviceNetworkEvents
 
 ### Behavioral: NetLicensing /product/ traversal followed by /token endpoint hit within 5 minutes
 
-`UC_34_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_37_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ Traversal
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-hxpf-9xvq-wph8: netlicensing-mcp: REST Path Traversal Byp
 
-`UC_34_0` · phase: **exploit** · confidence: **High**
+`UC_37_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

@@ -25,8 +25,9 @@ Register here But Capture the Flag sometimes gets a bad rap… with the occasion
 - **T1195.002** — Compromise Software Supply Chain
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1059.006** — Command and Scripting Interpreter: Python
 - **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies and Development Tools
+- **T1105** — Ingress Tool Transfer
+- **T1078.001** — Valid Accounts: Default Accounts
 
 ## Kill chain phases observed
 
@@ -34,58 +35,88 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Apache Spark JVM spawning shell — CVE-2022-33891 doAs command injection
+### Apache Spark UI doAs= shell command injection (CVE-2022-33891)
 
-`UC_1003_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1002_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("java","java.exe") AND (Processes.parent_process="*org.apache.spark*" OR Processes.parent_process="*SparkSubmit*" OR Processes.parent_process="*spark.deploy.master*" OR Processes.parent_process="*spark.deploy.worker*" OR Processes.parent_process="*HistoryServer*") AND Processes.process_name IN ("sh","bash","dash","ksh","zsh","cmd.exe","powershell.exe","pwsh.exe","busybox") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.dest_port IN (4040,7077,6066,8080,18080) OR Web.url="*spark*") by Web.src, Web.dest, Web.dest_port, Web.http_method, Web.url, Web.uri_query, Web.user_agent
+| `drop_dm_object_name(Web)`
+| where match(uri_query, "(?i)doAs=.*([`$;|&].*|%60|%24%28|%3B|%7C)") OR match(url, "(?i)doAs=.*([`$;|&]|%60|%24%28|%3B|%7C)")
+| stats min(firstTime) as firstTime max(lastTime) as lastTime values(uri_query) as uri_query values(user_agent) as user_agent values(http_method) as http_method sum(count) as hits by src, dest, dest_port
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+// Defender lacks raw HTTP query telemetry; pivot to the Spark JVM shell-child evidence instead.
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName has_any ("java.exe","java","spark-class","spark-submit","spark-shell")
+   or InitiatingProcessCommandLine has_any ("org.apache.spark","SparkSubmit","HistoryServer","Master")
+| where FileName in~ ("bash","sh","dash","zsh","cmd.exe","powershell.exe","pwsh.exe","id","whoami","uname","curl","wget","nc","ncat")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName,
+          Parent=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine,
+          Child=FileName, ChildCmd=ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### GitPython ext:: protocol RCE via crafted clone URL (CVE-2022-24439)
+
+`UC_1002_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("git","git.exe") AND Processes.parent_process_name IN ("python","python3","python.exe","python3.exe","pytest","pytest.exe") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| where match(process, "(?i)ext::\s*(sh|bash|cmd|powershell|/bin/|c:\\\\)") OR match(parent_process, "(?i)ext::\s*(sh|bash|cmd|powershell|/bin/|c:\\\\)")
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("java","java.exe")
-| where InitiatingProcessCommandLine has_any ("org.apache.spark","SparkSubmit","spark.deploy.master","spark.deploy.worker","HistoryServer")
-| where FileName in~ ("sh","bash","dash","ksh","zsh","cmd.exe","powershell.exe","pwsh","pwsh.exe","busybox")
-| where AccountName !endswith "$"
+| where Timestamp > ago(14d)
+| where FileName in~ ("git","git.exe")
+| where InitiatingProcessFileName in~ ("python.exe","python3.exe","python","python3","pytest","pytest.exe")
+     or InitiatingProcessCommandLine has_any ("gitpython","git.Repo","clone_from","GitPython")
+| where ProcessCommandLine matches regex @"(?i)ext::\s*(sh|bash|cmd|powershell|/bin/|c:\\)"
+     or ProcessCommandLine has "ext::sh"
+     or ProcessCommandLine matches regex @"(?i)--upload-pack[= ].*[;|&`$].*"
 | project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd   = InitiatingProcessCommandLine,
-          ChildImage  = FolderPath,
-          ChildCmd    = ProcessCommandLine,
-          SHA256
+          Parent=InitiatingProcessFileName, ParentCmd=InitiatingProcessCommandLine,
+          Child=FileName, ChildCmd=ProcessCommandLine,
+          GrandparentFile=InitiatingProcessParentFileName
 | order by Timestamp desc
 ```
 
-### GitPython ext::sh URL command injection — CVE-2022-24439
+### Spark service user spawning post-exploit recon / download tools
 
-`UC_1003_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_1002_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python","python.exe","python3","python3.exe","pip","pip.exe","pip3","pip3.exe") OR Processes.parent_process IN ("*GitPython*","*git.Repo*","*clone_from*")) AND (Processes.process="*ext::sh*" OR Processes.process="*ext::*-c*" OR Processes.process="*protocol.ext.allow=always*") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.parent_process, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.user IN ("spark","sparkuser","hadoop","yarn") AND Processes.process_name IN ("curl","wget","nc","ncat","socat","perl","python","python3","bash","sh","dash","chmod","base64","id","whoami","uname","hostname","ifconfig","ip") by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`
+| where parent_process_name IN ("java","spark-class","spark-submit","spark-shell","bash","sh")
+| stats min(firstTime) as firstTime max(lastTime) as lastTime values(process) as cmds dc(process_name) as distinctTools count by dest, user, parent_process_name
+| where distinctTools >= 2 OR count >= 3
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
+let SparkUsers = dynamic(["spark","sparkuser","hadoop","yarn"]);
+let ReconTools = dynamic(["curl","wget","nc","ncat","socat","perl","python","python3","bash","sh","dash","chmod","base64","id","whoami","uname","hostname","ifconfig","ip"]);
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("python.exe","python","python3","python3.exe","pip","pip.exe","pip3","pip3.exe")
-   or InitiatingProcessCommandLine has_any ("GitPython","git.Repo","clone_from","Repo.clone")
-| where ProcessCommandLine has "ext::"
-   or ProcessCommandLine has "protocol.ext.allow=always"
-   or ProcessCommandLine matches regex @"(?i)ext::\s*sh\s+-c"
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd   = InitiatingProcessCommandLine,
-          ChildImage  = FolderPath,
-          ChildCmd    = ProcessCommandLine,
-          SHA256
-| order by Timestamp desc
+| where AccountName in~ (SparkUsers)
+| where FileName in~ (ReconTools)
+| where InitiatingProcessFileName has_any ("java","spark-class","spark-submit","spark-shell","bash","sh","dash")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), DistinctTools=dcount(FileName), Cmds=make_set(ProcessCommandLine, 25), Tools=make_set(FileName) by DeviceName, AccountName, InitiatingProcessFileName
+| where DistinctTools >= 2
 ```
 
 ### Trusted vendor binary / installer launching unusual children
@@ -122,4 +153,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

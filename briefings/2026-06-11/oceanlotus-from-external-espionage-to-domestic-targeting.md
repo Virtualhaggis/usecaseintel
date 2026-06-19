@@ -88,7 +88,7 @@ _(none detected from narrative keywords)_
 
 ### OceanLotus SPECTRALVIPER C&C infrastructure callback (dated IOC set)
 
-`UC_161_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_163_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -111,7 +111,7 @@ DeviceNetworkEvents
 
 ### SPECTRALVIPER sample hash sighting (file/process/module load)
 
-`UC_161_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_163_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ union
 
 ### FireAnt Metakit update process spawning script/LOLBin child (supply-chain payload exec)
 
-`UC_161_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_163_11` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -169,7 +169,7 @@ DeviceProcessEvents
 
 ### OceanLotus Denis/SOUNDBITE DNS tunneling — high-entropy subdomains + TXT abuse
 
-`UC_161_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_163_12` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -202,7 +202,7 @@ DeviceNetworkEvents
 
 ### OceanLotus PHOREAL ICMP covert C&C — sustained outbound ICMP with non-standard payloads
 
-`UC_161_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_163_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -232,7 +232,7 @@ DeviceNetworkEvents
 
 ### SPECTRALVIPER selective second-stage payload drop post-FireAnt update
 
-`UC_161_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_163_14` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -442,7 +442,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — OceanLotus: From external espionage to domestic targeting
 
-`UC_161_8` · phase: **exploit** · confidence: **High**
+`UC_163_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

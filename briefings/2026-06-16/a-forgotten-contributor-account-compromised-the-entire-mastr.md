@@ -55,7 +55,7 @@ _(none detected from narrative keywords)_
 
 ### Mastra npm supply chain — outbound connection to attacker IPs 23.254.164.92 / .123
 
-`UC_102_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_105_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -77,7 +77,7 @@ DeviceNetworkEvents
 
 ### easy-day-js postinstall marker files (.pkg_history / .pkg_logs) created in user profile
 
-`UC_102_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_105_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -100,7 +100,7 @@ DeviceFileEvents
 
 ### Windows persistence drop under C:\ProgramData\NodePackages by node/PowerShell
 
-`UC_102_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_105_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceFileEvents
 
 ### Node.js process reading Chromium browser wallet/profile data (Mastra stealer)
 
-`UC_102_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_105_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -320,7 +320,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A Forgotten Contributor Account Compromised the Entire Mastra npm Package Scope
 
-`UC_102_8` · phase: **exploit** · confidence: **High**
+`UC_105_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

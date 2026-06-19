@@ -9,8 +9,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-19
+- [autojack attack lets one web page hijack ai agent for host c](./2026-06-19/autojack-attack-lets-one-web-page-hijack-ai-agent-for-host-c.md)
 - [autojack how a single page can rce the host running your ai ](./2026-06-19/autojack-how-a-single-page-can-rce-the-host-running-your-ai-.md)
-- [china linked showboat malware uses linux persistence to targ](./2026-06-19/china-linked-showboat-malware-uses-linux-persistence-to-targ.md)
+- [cisa adds litespeed cpanel plugin vulnerability to kev list ](./2026-06-19/cisa-adds-litespeed-cpanel-plugin-vulnerability-to-kev-list-.md)
 - [cisa splunk enterprise flaw actively exploited patch by sund](./2026-06-19/cisa-splunk-enterprise-flaw-actively-exploited-patch-by-sund.md)
 - [cisa urges hardening fortinet devices following fortibleed a](./2026-06-19/cisa-urges-hardening-fortinet-devices-following-fortibleed-a.md)
 - [cisa warns fortinet customers as fortibleed hits 86 644 fort](./2026-06-19/cisa-warns-fortinet-customers-as-fortibleed-hits-86-644-fort.md)
@@ -24,6 +25,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [inc ransomware uses rust based windows and linux esxi encryp](./2026-06-19/inc-ransomware-uses-rust-based-windows-and-linux-esxi-encryp.md)
 - [operation endgame disrupts socgholish servers cleans 14 971 ](./2026-06-19/operation-endgame-disrupts-socgholish-servers-cleans-14-971-.md)
 - [salesforce disables klue app integration after oauth token a](./2026-06-19/salesforce-disables-klue-app-integration-after-oauth-token-a.md)
+- [texas govt data breach exposes over 3 million driver s licen](./2026-06-19/texas-govt-data-breach-exposes-over-3-million-driver-s-licen.md)
 
 ## 2026-06-18
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-18/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
@@ -35,6 +37,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [from package to postinstall payload inside the mastra npm su](./2026-06-18/from-package-to-postinstall-payload-inside-the-mastra-npm-su.md)
 - [gentlemen ransomware uses multiple edr killers to disable de](./2026-06-18/gentlemen-ransomware-uses-multiple-edr-killers-to-disable-de.md)
 - [ghsa critical cve 2026 0755 gemini mcp tool vulnerable to os](./2026-06-18/ghsa-critical-cve-2026-0755-gemini-mcp-tool-vulnerable-to-os.md)
+- [ghsa critical cve 2026 11718 googleapis mcp toolbox authenti](./2026-06-18/ghsa-critical-cve-2026-11718-googleapis-mcp-toolbox-authenti.md)
 - [ghsa critical cve 2026 54003 kirby external initialization o](./2026-06-18/ghsa-critical-cve-2026-54003-kirby-external-initialization-o.md)
 - [ghsa critical cve 2026 55742 cotonti cross site request forg](./2026-06-18/ghsa-critical-cve-2026-55742-cotonti-cross-site-request-forg.md)
 - [ghsa critical ghsa 29w3 p9w9 wc47 praisonai arbitrary file r](./2026-06-18/ghsa-critical-ghsa-29w3-p9w9-wc47-praisonai-arbitrary-file-r.md)
@@ -131,7 +134,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [agentjacking attack tricks ai coding agents into running mal](./2026-06-12/agentjacking-attack-tricks-ai-coding-agents-into-running-mal.md)
 - [china linked hackers backdoored linux login software to hide](./2026-06-12/china-linked-hackers-backdoored-linux-login-software-to-hide.md)
 - [cisa kev cve 2026 35273 oracle peoplesoft enterprise peoplet](./2026-06-12/cisa-kev-cve-2026-35273-oracle-peoplesoft-enterprise-peoplet.md)
-- [europol disrupts audia6 crypto laundering service used by ra](./2026-06-12/europol-disrupts-audia6-crypto-laundering-service-used-by-ra.md)
 - [ghsa critical cve 2026 48150 budibase workspace scoped build](./2026-06-12/ghsa-critical-cve-2026-48150-budibase-workspace-scoped-build.md)
 - [google sues chinese smishing network accused of using gemini](./2026-06-12/google-sues-chinese-smishing-network-accused-of-using-gemini.md)
 - [interpol operation takes down sniper dz phishing platform ar](./2026-06-12/interpol-operation-takes-down-sniper-dz-phishing-platform-ar.md)
@@ -265,7 +267,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [why developer machines are now the number one target for sup](./2026-05-26/why-developer-machines-are-now-the-number-one-target-for-sup.md)
 
 ## 2026-05-23
-- [ghsa critical cve 2026 46716 nezha monitoring rolemember can](./2026-05-23/ghsa-critical-cve-2026-46716-nezha-monitoring-rolemember-can.md)
 - [laravel lang supply chain advisory](./2026-05-23/laravel-lang-supply-chain-advisory.md)
 - [supply chain attack targets laravel lang packages with crede](./2026-05-23/supply-chain-attack-targets-laravel-lang-packages-with-crede.md)
 
@@ -273,7 +274,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 9082 drupal core sql injection vulnerabili](./2026-05-22/cisa-kev-cve-2026-9082-drupal-core-sql-injection-vulnerabili.md)
 - [cloud atlas activity in the second half of 2025 and early 20](./2026-05-22/cloud-atlas-activity-in-the-second-half-of-2025-and-early-20.md)
 - [foul play fake fifa websites target soccer fans looking for ](./2026-05-22/foul-play-fake-fifa-websites-target-soccer-fans-looking-for-.md)
-- [ghsa critical cve 2026 48777 filebrowser quantum path traver](./2026-05-22/ghsa-critical-cve-2026-48777-filebrowser-quantum-path-traver.md)
 - [megalodon mass github actions secret exfiltration across 5 5](./2026-05-22/megalodon-mass-github-actions-secret-exfiltration-across-5-5.md)
 - [paved with intent roadtools and nation state tactics in the ](./2026-05-22/paved-with-intent-roadtools-and-nation-state-tactics-in-the-.md)
 - [tracking iranian apt screening serpens 2026 espionage campai](./2026-05-22/tracking-iranian-apt-screening-serpens-2026-espionage-campai.md)

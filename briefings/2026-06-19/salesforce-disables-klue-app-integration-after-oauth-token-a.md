@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Icarus IOC IPs reaching Salesforce tenant via connected app
 
-`UC_18_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_23_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ CloudAppEvents
 
 ### python-urllib User-Agent against Salesforce connected app
 
-`UC_18_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_23_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -88,7 +88,7 @@ CloudAppEvents
 
 ### Salesforce sObjects catalog enumeration via REST from connected app
 
-`UC_18_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_23_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -109,7 +109,7 @@ CloudAppEvents
 
 ### Sustained Salesforce /query + QueryMore loop from single connected app
 
-`UC_18_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_23_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ CloudAppEvents
 
 ### Endpoint egress to Icarus Klue-campaign C2/exfil infrastructure
 
-`UC_18_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_23_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -160,7 +160,7 @@ DeviceNetworkEvents
 
 ### Icarus extortion email: 'top secret email' subject + 48-hour deadline body
 
-`UC_18_8` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_23_8` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### PraisonAI Jobs API server bound to 0.0.0.0 (GHSA-fq2m-6wqh-x44g exposure)
 
-`UC_53_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_57_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -64,7 +64,7 @@ DeviceProcessEvents
 
 ### Unauthenticated POST to PraisonAI /api/v1/runs (GHSA-fq2m-6wqh-x44g exploitation)
 
-`UC_53_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_57_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceNetworkEvents
 
 ### PraisonAI executor child-process spawn (post-RCE via agent tool invocation)
 
-`UC_53_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_57_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-fq2m-6wqh-x44g: PraisonAI: Jobs API exposes agent-executi
 
-`UC_53_0` · phase: **exploit** · confidence: **High**
+`UC_57_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

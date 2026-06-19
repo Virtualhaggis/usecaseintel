@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### SocGholish fake-update JS dropped to Downloads by a web browser
 
-`UC_2_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_7_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceFileEvents
 
 ### SocGholish JS stager: wscript.exe executing .js from Downloads with browser/explorer parent
 
-`UC_2_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_7_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ DeviceProcessEvents
 
 ### SocGholish PowerShell second stage: wscript spawning PowerShell with Invoke-WebRequest to .svg payload
 
-`UC_2_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -117,7 +117,7 @@ DeviceProcessEvents
 
 ### NetSupport RAT client32.exe executing from AppData Roaming subfolder (SocGholish follow-on)
 
-`UC_2_7` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_7_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -145,7 +145,7 @@ DeviceProcessEvents
 
 ### NetSupport RAT Run-key persistence pointing to client32.exe in AppData
 
-`UC_2_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

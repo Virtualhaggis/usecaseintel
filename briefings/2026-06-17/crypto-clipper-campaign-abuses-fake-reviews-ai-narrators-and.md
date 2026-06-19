@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### Crypto 'sniper bot' / Aviator Predictor lure download-and-execute from SourceForge or GitHub
 
-`UC_89_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_92_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
