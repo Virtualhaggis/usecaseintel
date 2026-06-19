@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### PraisonAI AgentTeam.launch / Agents.launch bound to 0.0.0.0 (GHSA-x8cv-xmq7-p8xp)
 
-`UC_35_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_36_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +56,7 @@ DeviceProcessEvents
 
 ### Unauthenticated GET /{path}/list and POST hits to PraisonAI agent route
 
-`UC_35_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_36_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceNetworkEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-x8cv-xmq7-p8xp: PraisonAI AgentTeam.launch exposes unauth
 
-`UC_35_0` · phase: **exploit** · confidence: **High**
+`UC_36_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

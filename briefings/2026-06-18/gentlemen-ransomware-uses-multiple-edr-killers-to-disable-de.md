@@ -11,12 +11,8 @@ By Bill Toulas
 June 18, 2026
 06:31 PM
 0 
-
-
 The Gentlemen ransomware-as-a-service (RaaS) is actively developing and maintaining a suite of endpoint detection and response (EDR) killers to help affiliates evade detection in attacks.
-
-
-The gang employs a collection of EDR-killing tools, most notably a utility that researchers dubbed GentleKiller. The tool has at least eight variants and impersonates various legitimate security…
+The gang employs a collection of EDR-killing tools, most notably a utility that researchers dubbed GentleKiller. The tool has at least eight variants and impersonates various legitimate security product…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -78,7 +74,7 @@ _(none detected from narrative keywords)_
 
 ### Gentlemen EDR killer — mass termination of security vendor processes
 
-`UC_1_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -102,7 +98,7 @@ DeviceProcessEvents
 
 ### BYOVD — vulnerable kernel driver loaded from user-writable path
 
-`UC_1_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_2_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +129,7 @@ DrvDrops
 
 ### GentleKiller impersonation binary — Kaspersky/Valorant/Javelin/WatchDog from non-vendor path
 
-`UC_1_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_2_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -159,7 +155,7 @@ DeviceProcessEvents
 
 ### Vulnerable driver service installation via registry
 
-`UC_1_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -184,7 +180,7 @@ DeviceRegistryEvents
 
 ### SystemBC SOCKS5 proxy beacon — persistent low-volume egress on non-standard high port
 
-`UC_1_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_2_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

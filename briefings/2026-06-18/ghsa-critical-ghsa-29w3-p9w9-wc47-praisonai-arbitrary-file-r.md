@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### PraisonAI multiedit tool reading sensitive credentials (GHSA-29w3-p9w9-wc47)
 
-`UC_26_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_27_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceFileEvents
 
 ### PraisonAI multiedit writing to persistence locations (authorized_keys / shell rc / cron)
 
-`UC_26_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_27_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -87,7 +87,7 @@ DeviceFileEvents
 
 ### Vulnerable PraisonAI package exposure (< 4.6.61, GHSA-29w3-p9w9-wc47)
 
-`UC_26_3` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_27_3` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
@@ -110,7 +110,7 @@ DeviceTvmSoftwareInventory
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-29w3-p9w9-wc47: PraisonAI: Arbitrary File Read/Write via
 
-`UC_26_0` · phase: **exploit** · confidence: **High**
+`UC_27_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

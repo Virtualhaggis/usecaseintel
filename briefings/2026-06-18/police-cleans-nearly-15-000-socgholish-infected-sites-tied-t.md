@@ -70,7 +70,7 @@ _(none detected from narrative keywords)_
 
 ### Fake browser update JavaScript spawned from browser download directory (SocGholish)
 
-`UC_42_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_43_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### Script interpreter outbound HTTPS within 60s of Update.js execution (SocGholish)
 
-`UC_42_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_43_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,7 +133,7 @@ DeviceNetworkEvents
 
 ### WordPress site serving injected SocGholish loader to internal browser
 
-`UC_42_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_43_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -155,7 +155,7 @@ DeviceNetworkEvents
 
 ### Script interpreter spawning PE loader after browser-delivered JS (SocGholish second stage)
 
-`UC_42_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_43_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -183,7 +183,7 @@ DeviceProcessEvents
 
 ### Shadow copy deletion within 24h of SocGholish script execution (Evil Corp ransomware prelude)
 
-`UC_42_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_43_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

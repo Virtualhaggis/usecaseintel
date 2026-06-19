@@ -68,7 +68,7 @@ _(none detected from narrative keywords)_
 
 ### Wallpaper Engine spawning Synaptics.exe or ._cache_GAME1.exe (Steam Workshop wallpaper malware)
 
-`UC_103_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_104_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ DeviceProcessEvents
 
 ### Trojanized AggregatorHost.dll dropped outside System32 (Steam credential-stealer DLL)
 
-`UC_103_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_104_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceFileEvents
 
 ### C2 callback to Steam Workshop wallpaper campaign infrastructure
 
-`UC_103_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_104_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -138,7 +138,7 @@ DeviceNetworkEvents
 
 ### IOC hash match — Steam Workshop wallpaper malware MD5 bundle
 
-`UC_103_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_104_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -166,7 +166,7 @@ union
 
 ### Wallpaper Engine spawning script interpreters or LOLBins from workshop content
 
-`UC_103_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_104_12` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -192,7 +192,7 @@ DeviceProcessEvents
 
 ### Persistence via Run key referencing Wallpaper Engine / Synaptics / NTRaholic paths
 
-`UC_103_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_104_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -363,7 +363,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Dozens of malicious wallpapers found on Steam Workshop: gamers’ accounts at risk
 
-`UC_103_7` · phase: **exploit** · confidence: **High**
+`UC_104_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

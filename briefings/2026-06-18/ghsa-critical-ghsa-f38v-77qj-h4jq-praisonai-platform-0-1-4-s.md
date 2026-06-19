@@ -14,14 +14,12 @@ praisonai-platform 0.1.4 still boots on the hardcoded JWT secret dev-secret-chan
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **SHA256:** `cc29d43c5412da2c73c818859b8d8b146587842999b777336017ab9d9e509258`
-- **SHA1:** `8acf77c531e624c46d3d61dcae37e9942e90972c`
+- **CVE:** `CVE-2026-47410`
 
 ## MITRE ATT&CK Techniques
 
-- **T1027** — Obfuscated Files or Information
-- **T1204.002** — User Execution: Malicious File
 - **T1190** — Exploit Public-Facing Application
+- **T1204.002** — User Execution: Malicious File
 - **T1078** — Valid Accounts
 - **T1087.004** — Account Discovery: Cloud Account
 - **T1213** — Data from Information Repositories
@@ -36,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable praisonai-platform server launch (GHSA-f38v-77qj-h4jq / CVE-2026-47410)
 
-`UC_25_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_26_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -56,7 +54,7 @@ DeviceProcessEvents
 
 ### praisonai-platform workspace-member enumeration fan-out (forged-JWT recon)
 
-`UC_25_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_26_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +63,7 @@ DeviceProcessEvents
 
 ### praisonai-platform workspace / member destructive DELETE (forged-JWT impact)
 
-`UC_25_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_26_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +72,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-f38v-77qj-h4jq: praisonai-platform 0.1.4 still boots on t
 
-`UC_25_1` · phase: **exploit** · confidence: **High**
+`UC_26_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,10 +123,10 @@ DeviceFileEvents
 
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `cc29d43c5412da2c73c818859b8d8b146587842999b777336017ab9d9e509258`, `8acf77c531e624c46d3d61dcae37e9942e90972c`
+- **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
+  - CVE(s): `CVE-2026-47410`
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
