@@ -29,14 +29,18 @@ Palo Alto Networks Unit 42, which found and reported the bug through Google's bu
 - **T1218** — System Binary Proxy Execution
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
-- **T1583.006** — Acquire Infrastructure: Web Services
-- **T1195.002** — Compromise Software Supply Chain
-- **T1195.001** — Compromise Software Dependencies and Development Tools
-- **T1059.006** — Command and Scripting Interpreter: Python
+- **T1583.001** — Acquire Infrastructure: Domains
+- **T1583.004** — Acquire Infrastructure: Server
+- **T1195.003** — Supply Chain Compromise: Compromise Software Supply Chain
 - **T1537** — Transfer Data to Cloud Account
+- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies
+- **T1552.005** — Unsecured Credentials: Cloud Instance Metadata API
+- **T1041** — Exfiltration Over C2 Channel
+- **T1546** — Event Triggered Execution
+- **T1525** — Implant Internal Image
+- **T1565.001** — Data Manipulation: Stored Data Manipulation
 - **T1550.001** — Use Alternate Authentication Material: Application Access Token
-- **T1565.001** — Stored Data Manipulation
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1530** — Data from Cloud Storage
 
 ## Kill chain phases observed
 
@@ -44,120 +48,148 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Bucket Squatting: GCS bucket created matching Vertex AI predictable staging-name pattern
+### GCP Storage bucket creation matching Vertex AI predictable staging name pattern
 
-`UC_110_6` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_108_6` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.object_category="bucket" All_Changes.action="created" (All_Changes.command="storage.buckets.create" OR All_Changes.command="google.storage.v1.Storage.CreateBucket") by All_Changes.user, All_Changes.object, All_Changes.dest, All_Changes.src, All_Changes.vendor_account, All_Changes.vendor_product | `drop_dm_object_name("All_Changes")` | rename object as bucket_name | where match(lower(bucket_name), "vertex-staging-(us|europe|asia|northamerica|southamerica|me-|africa-)") OR match(lower(bucket_name), "-vertex-staging-") | rex field=bucket_name "(?<embedded_project>[^-]+(?:-[^-]+)*)-vertex-staging-(?<region>.+)$" | rex field=user "service-(?<caller_project_num>\d+)@gcp-sa-aiplatform" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime, lastTime, user, embedded_project, region, bucket_name, vendor_account, src
+`gcp_pubsub_message` sourcetype=google:gcp:pubsub:message data.protoPayload.serviceName="storage.googleapis.com" data.protoPayload.methodName="storage.buckets.create" 
+| rename data.protoPayload.resourceName as resourceName data.protoPayload.authenticationInfo.principalEmail as principal data.resource.labels.project_id as creatorProject data.protoPayload.requestMetadata.callerIp as callerIp
+| rex field=resourceName "projects/_/buckets/(?<bucketName>[^/]+)"
+| where match(bucketName, "(?i)-vertex-staging-(us|eu|asia|northamerica|southamerica|australia)-") OR match(bucketName, "(?i)^cloud-ai-platform-[a-f0-9-]{8,}$")
+| eval embedded_project=mvindex(split(bucketName,"-vertex-staging-"),0)
+| where embedded_project!=creatorProject
+| table _time creatorProject embedded_project bucketName principal callerIp
+```
+
+### Vertex AI Model.upload sourcing artifact from cross-project / unverified staging bucket
+
+`UC_108_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+`gcp_pubsub_message` sourcetype=google:gcp:pubsub:message data.protoPayload.serviceName="aiplatform.googleapis.com" (data.protoPayload.methodName="google.cloud.aiplatform.v1.ModelService.UploadModel" OR data.protoPayload.methodName="google.cloud.aiplatform.v1.JobService.CreateCustomJob" OR data.protoPayload.methodName="google.cloud.aiplatform.v1.PipelineService.CreateTrainingPipeline")
+| rename data.resource.labels.project_id as callerProject data.protoPayload.authenticationInfo.principalEmail as principal
+| spath input=data.protoPayload.request output=artifactUri path=model.artifactUri
+| spath input=data.protoPayload.request output=containerUri path=model.containerSpec.imageUri
+| spath input=data.protoPayload.request output=pkgUris path=trainingPipeline.trainingTaskInputs.pythonPackageSpec.packageUris
+| eval bucketUri=coalesce(artifactUri,pkgUris)
+| rex field=bucketUri "gs://(?<bucketName>[^/]+)/"
+| eval embedded_project=mvindex(split(bucketName,"-vertex-staging-"),0)
+| where (isnotnull(embedded_project) AND embedded_project!=callerProject) OR match(bucketName, "(?i)^cloud-ai-platform-")=false AND bucketName!=callerProject."-vertex-staging-*"
+| table _time callerProject principal bucketName artifactUri pkgUris
+```
+
+### google-cloud-aiplatform SDK version < 1.148.0 in use on workstation or CI
+
+`UC_108_8` · phase: **recon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name in ("pip.exe","pip","pip3","pip3.exe","poetry.exe","poetry","uv.exe","uv") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| where match(process, "(?i)(install|add|sync).*google-cloud-aiplatform")
+| rex field=process "google-cloud-aiplatform(?:==|<=|<)(?<version>[0-9]+\.[0-9]+\.[0-9]+)"
+| eval major=mvindex(split(version,"."),0), minor=mvindex(split(version,"."),1), patch=mvindex(split(version,"."),2)
+| where isnotnull(version) AND (major<"1" OR (major="1" AND minor<"148"))
+| convert ctime(firstTime), ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-// Requires Defender for Cloud Apps GCP connector
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where Application has_any ("Google Cloud Platform","Google Cloud Storage","GCP")
-| where ActionType has_any ("storage.buckets.create","BucketCreated","Insert bucket","google.storage.v1.Storage.CreateBucket")
-| extend BucketName = tolower(coalesce(ObjectName, tostring(parse_json(tostring(RawEventData)).resourceName)))
-| where BucketName matches regex @"vertex-staging-(us|europe|asia|northamerica|southamerica|me-|africa-)"
-   or BucketName has "-vertex-staging-"
-| extend EmbeddedProject = extract(@"^(.*?)-vertex-staging-", 1, BucketName)
-| extend Region = extract(@"-vertex-staging-(.+)$", 1, BucketName)
-| project Timestamp, AccountDisplayName, AccountObjectId, AccountType, IPAddress, CountryCode, ISP, Application, ActionType, BucketName, EmbeddedProject, Region, RawEventData
-| order by Timestamp desc
-```
-
-### Vulnerable google-cloud-aiplatform SDK install (<1.148.0 - Pickle in the Middle exposure)
-
-`UC_110_7` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("pip.exe","pip3.exe","pip","pip3","python.exe","python","python3.exe","python3","uv.exe","uv","poetry.exe","poetry") Processes.process="*google-cloud-aiplatform*" by Processes.dest, Processes.user, Processes.process, Processes.process_name, Processes.parent_process_name | `drop_dm_object_name("Processes")` | rex field=process "google-cloud-aiplatform(?:[=<>~]=|@)?\s*(?<sdk_version>\d+\.\d+\.\d+)" | where isnotnull(sdk_version) | eval major=tonumber(mvindex(split(sdk_version,"."),0)), minor=tonumber(mvindex(split(sdk_version,"."),1)) | where major=1 AND minor<148 | eval patch_state=case(minor<144,"unpatched (vuln to bucket squat)",minor>=144 AND minor<148,"partial fix only (uuid4 - missing ownership check)",1=1,"unknown") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime, lastTime, dest, user, sdk_version, patch_state, process
-```
-
-**Defender KQL:**
-```kql
+let LookbackDays = 14d;
 DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("pip.exe","pip3.exe","python.exe","python3.exe","uv.exe","poetry.exe")
-   or InitiatingProcessFileName in~ ("pip.exe","pip3.exe","python.exe","python3.exe","uv.exe","poetry.exe")
-| extend FullCmd = strcat(tostring(ProcessCommandLine), " ", tostring(InitiatingProcessCommandLine))
-| where FullCmd has "google-cloud-aiplatform" or FullCmd has "google-vertex-ai"
-| extend SdkVersion = extract(@"google-cloud-aiplatform(?:[=<>~]=|@)?\s*(\d+\.\d+\.\d+)", 1, FullCmd)
-| where isnotempty(SdkVersion)
-| extend Parts = split(SdkVersion, ".")
-| extend Major = toint(Parts[0]), Minor = toint(Parts[1])
-| where Major == 1 and Minor < 148
-| extend PatchState = case(Minor < 144, "unpatched", Minor >= 144 and Minor < 148, "partial-fix-only", "unknown")
-| project Timestamp, DeviceName, AccountName, FileName, SdkVersion, PatchState, ProcessCommandLine, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| where Timestamp > ago(LookbackDays)
+| where FileName in~ ("pip.exe","pip3.exe","poetry.exe","uv.exe","python.exe","python3.exe")
+| where ProcessCommandLine has "google-cloud-aiplatform"
+| extend Version = extract(@"(?i)google-cloud-aiplatform(?:==|<=|<)(\d+\.\d+\.\d+)", 1, ProcessCommandLine)
+| extend Major = toint(split(Version,".")[0]), Minor = toint(split(Version,".")[1])
+| where isnotempty(Version) and (Major < 1 or (Major == 1 and Minor < 148))
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, Version, InitiatingProcessFileName
 | order by Timestamp desc
 ```
 
-### Vertex AI model artifact written to *-vertex-staging-* bucket outside caller's project
+### Vertex AI serving container metadata token request followed by outbound POST to non-Google host
 
-`UC_110_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_108_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Change.All_Changes where All_Changes.command IN ("storage.objects.create","storage.objects.update") by All_Changes.user, All_Changes.object, All_Changes.dest, All_Changes.src, All_Changes.vendor_account, All_Changes.vendor_region | `drop_dm_object_name("All_Changes")` | rex field=object "projects/_/buckets/(?<bucket>[^/]+)/objects/(?<obj_path>.+)$" | where match(lower(bucket), "-vertex-staging-") | where match(lower(obj_path), "\.(pkl|pickle|joblib|pb|h5|onnx|safetensors)$") OR match(lower(obj_path), "saved_model") | rex field=user "service-(?<caller_project_num>\d+)@gcp-sa-aiplatform\.iam\.gserviceaccount\.com" | rex field=bucket "^(?<embedded_project>[^-]+(?:-[^-]+)*)-vertex-staging-" | eval is_vertex_agent=if(isnotnull(caller_project_num),"yes","no") | eval cross_project=if(is_vertex_agent="yes" AND vendor_account!=embedded_project,"yes","no") | where cross_project="yes" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | table firstTime, lastTime, user, vendor_account, bucket, embedded_project, obj_path
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*metadata.google.internal*" OR Web.dest="169.254.169.254") AND Web.url="*/computeMetadata/v1/instance/service-accounts*token*" by Web.src Web.user Web.url _time
+| `drop_dm_object_name(Web)`
+| eval metaTime=_time
+| join type=inner src [
+    | tstats `summariesonly` count from datamodel=Web.Web where Web.http_method="POST" Web.url!="*googleapis.com*" Web.url!="*google.com*" Web.url!="*gstatic.com*" Web.dest!="169.254.169.254" by Web.src Web.dest Web.url _time
+    | `drop_dm_object_name(Web)`
+    | rename _time as postTime, url as postUrl, dest as postDest
+  ]
+| where postTime >= metaTime AND postTime <= metaTime + 60
+| table metaTime postTime src user url postUrl postDest
 ```
 
 **Defender KQL:**
 ```kql
-// Requires Defender for Cloud Apps GCP connector with object-level audit
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where Application has_any ("Google Cloud Platform","Google Cloud Storage")
-| where ActionType has_any ("storage.objects.create","storage.objects.update","Upload object")
-| extend Raw = parse_json(tostring(RawEventData))
-| extend ResourceName = tolower(tostring(Raw.protoPayload.resourceName))
-| extend Bucket = extract(@"buckets/([^/]+)/objects/", 1, ResourceName)
-| extend ObjPath = extract(@"objects/(.+)$", 1, ResourceName)
-| extend Principal = tostring(Raw.protoPayload.authenticationInfo.principalEmail)
-| extend CallerProject = tostring(Raw.resource.labels.project_id)
-| where Bucket has "-vertex-staging-"
-| where ObjPath matches regex @"(?i)\.(pkl|pickle|joblib|pb|h5|onnx|safetensors)$" or ObjPath has "saved_model"
-| extend EmbeddedProject = extract(@"^(.*?)-vertex-staging-", 1, Bucket)
-| where Principal matches regex @"service-\d+@gcp-sa-aiplatform\.iam\.gserviceaccount\.com"
-| where EmbeddedProject != CallerProject
-| project Timestamp, Principal, CallerProject, EmbeddedProject, Bucket, ObjPath, IPAddress, CountryCode, RawEventData
-| order by Timestamp desc
+let WindowSec = 60;
+let MetadataHits = DeviceNetworkEvents
+    | where Timestamp > ago(1d)
+    | where RemoteUrl has "metadata.google.internal" or RemoteIP == "169.254.169.254"
+    | where RemoteUrl has_any ("/computeMetadata/v1/instance/service-accounts","/token")
+    | project MetaTime = Timestamp, DeviceId, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl;
+DeviceNetworkEvents
+| where Timestamp > ago(1d)
+| where RemoteIPType == "Public" and not(RemoteUrl has_any ("googleapis.com","google.com","gstatic.com","appspot.com"))
+| join kind=inner MetadataHits on DeviceId
+| where Timestamp between (MetaTime .. MetaTime + WindowSec * 1s)
+| project MetaTime, ExfilTime = Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, MetadataUrl = RemoteUrl1, ExfilRemoteIP = RemoteIP, ExfilRemoteUrl = RemoteUrl
+| order by MetaTime desc
 ```
 
-### Race-condition pickle swap: rapid object overwrite in Vertex AI staging bucket within 5s
+### Cloud Function created with GCS finalize trigger on Vertex AI staging bucket pattern
 
-`UC_110_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_108_10` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Change.All_Changes where All_Changes.command IN ("storage.objects.create","storage.objects.update") by _time, All_Changes.user, All_Changes.object, All_Changes.src | `drop_dm_object_name("All_Changes")` | rex field=object "buckets/(?<bucket>[^/]+)/objects/(?<obj_path>.+)$" | where match(lower(bucket), "-vertex-staging-") | where match(lower(obj_path), "\.(pkl|pickle|joblib|pb|h5|onnx|safetensors)$") OR match(lower(obj_path), "saved_model") | sort 0 bucket obj_path _time | streamstats current=f window=1 last(_time) as prev_time last(user) as prev_user last(src) as prev_src by bucket, obj_path | eval delta_sec=_time-prev_time | where isnotnull(prev_time) AND delta_sec<=5 AND user!=prev_user | eval first_writer=prev_user, second_writer=user, first_src=prev_src, second_src=src | table _time, bucket, obj_path, delta_sec, first_writer, second_writer, first_src, second_src
+`gcp_pubsub_message` sourcetype=google:gcp:pubsub:message (data.protoPayload.serviceName="cloudfunctions.googleapis.com" OR data.protoPayload.serviceName="eventarc.googleapis.com") (data.protoPayload.methodName="google.cloud.functions.v2.FunctionService.CreateFunction" OR data.protoPayload.methodName="google.cloud.functions.v1.CloudFunctionsService.CreateFunction" OR data.protoPayload.methodName="google.cloud.eventarc.v1.Eventarc.CreateTrigger")
+| rename data.protoPayload.authenticationInfo.principalEmail as principal data.resource.labels.project_id as project
+| spath input=data.protoPayload.request output=triggerBucket path=function.eventTrigger.eventFilters{}.value
+| spath input=data.protoPayload.request output=eventType path=function.eventTrigger.eventType
+| where match(eventType, "google\.cloud\.storage\.object\.v1\.finalized") OR match(eventType, "google\.storage\.object\.finalize")
+| where match(triggerBucket, "(?i)-vertex-staging-") OR match(triggerBucket, "(?i)^cloud-ai-platform-")
+| table _time project principal triggerBucket eventType
 ```
 
-**Defender KQL:**
-```kql
-// Requires Defender for Cloud Apps GCP connector with GCS data-access logs
-CloudAppEvents
-| where Timestamp > ago(7d)
-| where Application has_any ("Google Cloud Platform","Google Cloud Storage")
-| where ActionType has_any ("storage.objects.create","storage.objects.update","Upload object")
-| extend Raw = parse_json(tostring(RawEventData))
-| extend ResourceName = tolower(tostring(Raw.protoPayload.resourceName))
-| extend Bucket = extract(@"buckets/([^/]+)/objects/", 1, ResourceName)
-| extend ObjPath = extract(@"objects/(.+)$", 1, ResourceName)
-| extend Principal = tostring(Raw.protoPayload.authenticationInfo.principalEmail)
-| where Bucket has "-vertex-staging-"
-| where ObjPath matches regex @"(?i)\.(pkl|pickle|joblib|pb|h5|onnx|safetensors)$" or ObjPath has "saved_model"
-| sort by Bucket asc, ObjPath asc, Timestamp asc
-| serialize
-| extend PrevTime = prev(Timestamp,1), PrevPrincipal = prev(Principal,1), PrevBucket = prev(Bucket,1), PrevObj = prev(ObjPath,1)
-| where Bucket == PrevBucket and ObjPath == PrevObj
-| extend DeltaSec = datetime_diff('second', Timestamp, PrevTime)
-| where DeltaSec between (0 .. 5) and Principal != PrevPrincipal
-| project Timestamp, Bucket, ObjPath, DeltaSec, FirstWriter=PrevPrincipal, SecondWriter=Principal, IPAddress, CountryCode
-| order by Timestamp desc
+### GCS object overwrite within 5s of upload on Vertex AI staging bucket
+
+`UC_108_11` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+`gcp_pubsub_message` sourcetype=google:gcp:pubsub:message data.protoPayload.serviceName="storage.googleapis.com" data.protoPayload.methodName="storage.objects.create"
+| rename data.protoPayload.resourceName as objectName data.protoPayload.authenticationInfo.principalEmail as principal data.protoPayload.requestMetadata.callerIp as callerIp
+| where match(objectName, "(?i)/-vertex-staging-|/cloud-ai-platform-")
+| sort 0 _time
+| streamstats current=t window=2 values(principal) as principals, values(callerIp) as ips, count as overwriteCount by objectName
+| where overwriteCount>=2 AND mvcount(principals)>=2
+| eval delta=_time-mvindex(_time,1)
+| where delta<=5
+| table _time objectName principals ips delta
+```
+
+### Vertex AI service-agent OAuth token used to access artifacts in a different tenant
+
+`UC_108_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+`gcp_pubsub_message` sourcetype=google:gcp:pubsub:message data.protoPayload.authenticationInfo.principalEmail="service-*@gcp-sa-aiplatform.iam.gserviceaccount.com" OR data.protoPayload.authenticationInfo.principalEmail="*-compute@developer.gserviceaccount.com"
+| rename data.protoPayload.authenticationInfo.principalEmail as principal data.resource.labels.project_id as accessedProject data.protoPayload.serviceName as svc data.protoPayload.methodName as method data.protoPayload.resourceName as resource data.protoPayload.requestMetadata.callerIp as callerIp
+| rex field=principal "service-(?<tokenProject>[0-9]+)@gcp-sa-aiplatform"
+| rex field=principal "(?<tokenProjectCompute>[0-9]+)-compute@developer"
+| eval expectedProject=coalesce(tokenProject,tokenProjectCompute)
+| stats values(svc) values(method) values(resource) values(callerIp) by principal accessedProject expectedProject _time
+| where expectedProject!=accessedProject
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -374,4 +406,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 13 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

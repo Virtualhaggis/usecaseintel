@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — Beyond the benchmark: Advancing security at AI speed
 
-`UC_77_1` · phase: **exploit** · confidence: **High**
+`UC_75_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

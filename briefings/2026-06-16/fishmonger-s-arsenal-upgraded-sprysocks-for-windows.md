@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### SprySOCKS Windows C2 egress to FishMonger infrastructure 207.148.78.36 / 207.148.75.122
 
-`UC_119_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_117_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceNetworkEvents
 
 ### WIN_DRV kernel driver service installed from non-system path
 
-`UC_119_4` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_117_4` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -89,7 +89,7 @@ DeviceEvents
 
 ### SprySOCKS WIN_DRV / WIN_PLUS binary hash hit on Windows endpoint
 
-`UC_119_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_117_5` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -124,7 +124,7 @@ union isfuzzy=true
 
 ### Boot Manager / BCD tampering indicative of CVE-2023-24932 BlackLotus-style UEFI bootkit
 
-`UC_119_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_117_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

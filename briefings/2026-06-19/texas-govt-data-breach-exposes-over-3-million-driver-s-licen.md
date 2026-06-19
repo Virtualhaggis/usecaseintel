@@ -11,12 +11,8 @@ By Bill Toulas
 June 19, 2026
 12:12 PM
 0 
-
-
 The Texas Parks and Wildlife Department (TPWD) disclosed a data breach at its license system vendor that exposed personal information for more than three million individuals.
-
-
-The Texas Cyber Command discovered the intrusion and launched an investigation to determine the extent and impact of the unauthorized access. The state authority found that Social Security Numbers (SSNs), dates…
+The Texas Cyber Command discovered the intrusion and launched an investigation to determine the extent and impact of the unauthorized access. The state authority found that Social Security Numbers (SSNs), dates of birt…
 
 ## Indicators of Compromise (high-fidelity only)
 

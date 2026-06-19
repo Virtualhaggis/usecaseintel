@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### TeamPCP Trivy/KICS C2 callback to scan.aquasecurtiy.org / 45.148.10.212
 
-`UC_419_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_410_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ union isfuzzy=true
 
 ### Read of /proc/<pid>/mem targeting GitHub Runner.Worker (TeamPCP credential dump)
 
-`UC_419_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_410_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -114,7 +114,7 @@ DeviceFileEvents
 
 ### TeamPCP sysmon.py systemd-user persistence on developer host
 
-`UC_419_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_410_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

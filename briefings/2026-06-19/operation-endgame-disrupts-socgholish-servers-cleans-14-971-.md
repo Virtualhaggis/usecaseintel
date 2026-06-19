@@ -24,15 +24,20 @@ Dutch law enforcement authorities, along with counterparts from Canada , Germany
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1204.002** — Malicious File
+- **T1059.007** — JavaScript
 - **T1189** — Drive-by Compromise
-- **T1204.002** — User Execution: Malicious File
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1059.001** — PowerShell
 - **T1105** — Ingress Tool Transfer
-- **T1027** — Obfuscated Files or Information
-- **T1219** — Remote Access Software
-- **T1036.005** — Masquerading: Match Legitimate Name or Location
-- **T1547.001** — Registry Run Keys / Startup Folder
+- **T1071.001** — Web Protocols
+- **T1505.003** — Web Shell
+- **T1190** — Exploit Public-Facing Application
+- **T1546** — Event Triggered Execution
+- **T1583.001** — Domains
+- **T1071.004** — DNS
+- **T1568** — Dynamic Resolution
+- **T1136.001** — Local Account
+- **T1098** — Account Manipulation
 
 ## Kill chain phases observed
 
@@ -40,130 +45,148 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### SocGholish fake-update JS dropped to Downloads by a web browser
+### SocGholish fake-update JS executed by wscript.exe from browser download path
 
-`UC_7_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_12_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe") Filesystem.file_path="*\\Downloads\\*" Filesystem.file_name="*.js" (Filesystem.file_name="*update*" OR Filesystem.file_name="*chrome*" OR Filesystem.file_name="*firefox*" OR Filesystem.file_name="*opera*" OR Filesystem.file_name="*browser*") by host Filesystem.user Filesystem.process_name Filesystem.file_name Filesystem.file_path | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","iexplore.exe") AND Processes.process_name IN ("wscript.exe","cscript.exe") AND (Processes.process="*.js*" OR Processes.process="*.jse*" OR Processes.process="*.wsf*") AND (Processes.process="*Downloads*" OR Processes.process="*Temp*" OR Processes.process="*AppData*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","iexplore.exe")
+| where FileName in~ ("wscript.exe","cscript.exe")
+| where ProcessCommandLine has_any (".js",".jse",".wsf")
+| where ProcessCommandLine has_any ("Downloads","Temp","AppData")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| order by Timestamp desc
+```
+
+### wscript.exe spawning PowerShell with curl/IRM to .top TLD — SocGholish→MintsLoad
+
+`UC_12_5` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("wscript.exe","cscript.exe") AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe") AND (Processes.process="*Invoke-WebRequest*" OR Processes.process="*Invoke-RestMethod*" OR Processes.process="*DownloadString*" OR Processes.process="*BitsTransfer*" OR Processes.process="*curl*" OR Processes.process="*iwr *" OR Processes.process="*irm *") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | rex field=process "(?i)\.(?<tld>top|xyz|cyou|click|life|world|shop|fun|space|monster|icu|cfd)\b" | where isnotnull(tld) | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe")
+| where ProcessCommandLine has_any ("Invoke-WebRequest","Invoke-RestMethod","DownloadString","DownloadFile","BitsTransfer","curl ","iwr ","irm ","WebClient")
+| where ProcessCommandLine matches regex @"(?i)\.(top|xyz|cyou|click|life|world|shop|fun|space|monster|icu|cfd)\b"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### PowerShell spawned by IIS w3wp.exe or php-cgi.exe on a WordPress host
+
+`UC_12_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("w3wp.exe","php-cgi.exe","php.exe","httpd.exe","nginx.exe") AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessFileName in~ ("w3wp.exe","php-cgi.exe","php.exe","httpd.exe","nginx.exe")
+| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp desc
+```
+
+### Unauthorized write to WordPress wp-content/plugins or wp-admin by web server process
+
+`UC_12_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*wp-content/plugins/*" OR Filesystem.file_path="*wp-content/mu-plugins/*" OR Filesystem.file_path="*wp-admin/*") AND (Filesystem.file_name="*.php" OR Filesystem.file_name="*.js") AND Filesystem.process_name IN ("w3wp.exe","php-cgi.exe","php.exe","httpd.exe","nginx.exe") by Filesystem.dest Filesystem.process_name Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where ActionType == "FileCreated"
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","arc.exe")
-| where FolderPath has @"\Downloads\"
-| where FileName endswith ".js"
-| where FileName has_any ("update","chrome","firefox","opera","browser")
-| where FileName !endswith ".js.map"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, FolderPath, FileOriginUrl, FileOriginReferrerUrl, SHA256
+| where ActionType in ("FileCreated","FileModified")
+| where InitiatingProcessFileName in~ ("w3wp.exe","php-cgi.exe","php.exe","httpd.exe","nginx.exe")
+| where FolderPath has_any ("wp-content/plugins","wp-content/mu-plugins","wp-admin","wp-includes")
+| where FileName endswith ".php" or FileName endswith ".js"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256, FileSize
 | order by Timestamp desc
 ```
 
-### SocGholish JS stager: wscript.exe executing .js from Downloads with browser/explorer parent
+### First-seen subdomain on an established apex domain (SocGholish domain shadowing)
 
-`UC_7_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_12_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="wscript.exe" Processes.parent_process_name IN ("explorer.exe","chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe") (Processes.process="*\\Downloads\\*.js*" OR Processes.process="*\\Users\\*\\AppData\\Local\\Temp\\*.js*") by host Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=t count from datamodel=Network_Resolution.DNS where DNS.message_type="QUERY" by DNS.query | `drop_dm_object_name(DNS)` | rex field=query "(?<host>[^\.]+)\.(?<apex>[^\.]+\.[^\.]+)$" | eventstats dc(host) as host_count by apex | where host_count > 10 | join apex [| tstats summariesonly=t count from datamodel=Network_Resolution.DNS where DNS.message_type="QUERY" earliest=-1h by DNS.query | `drop_dm_object_name(DNS)` | rex field=query "(?<host>[^\.]+)\.(?<apex>[^\.]+\.[^\.]+)$"] | where count==1
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
+let Baseline = DeviceNetworkEvents
+    | where Timestamp between (ago(30d) .. ago(1h))
+    | where isnotempty(RemoteUrl)
+    | extend Host = tostring(split(RemoteUrl, "/")[0])
+    | extend Apex = strcat(tostring(split(Host, ".")[-2]), ".", tostring(split(Host, ".")[-1]))
+    | summarize BaselineSubs = dcount(Host), BaselineHits = count() by Apex
+    | where BaselineHits > 100 and BaselineSubs >= 1;
+let Recent = DeviceNetworkEvents
+    | where Timestamp > ago(1h)
+    | where isnotempty(RemoteUrl)
+    | extend Host = tostring(split(RemoteUrl, "/")[0])
+    | extend Apex = strcat(tostring(split(Host, ".")[-2]), ".", tostring(split(Host, ".")[-1]))
+    | summarize FirstSeen = min(Timestamp), HitsRecent = count(), Devices = dcount(DeviceName) by Apex, Host;
+Recent
+| join kind=inner Baseline on Apex
+| join kind=leftanti (
+    DeviceNetworkEvents
+    | where Timestamp between (ago(30d) .. ago(1h))
+    | extend Host = tostring(split(RemoteUrl, "/")[0])
+    | summarize by Host
+) on Host
+| order by FirstSeen desc
+```
+
+### Suspicious admin user creation in WordPress wp_users by web server context
+
+`UC_12_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=mysql sourcetype=mysql:audit OR sourcetype=mysql:query ("wp_users" OR "wp_usermeta") ("INSERT" OR "UPDATE") ("administrator" OR "wp_capabilities") | rex field=_raw "(?i)user_login\s*=\s*'(?<new_user>[^']+)'" | stats min(_time) as firstTime values(host) as hosts values(new_user) as new_users by user | where isnotnull(new_user)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
 | where Timestamp > ago(7d)
-| where FileName =~ "wscript.exe"
-| where InitiatingProcessFileName in~ ("explorer.exe","chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe")
-| where ProcessCommandLine has ".js"
-| where ProcessCommandLine has_any (@"\Downloads\", @"\AppData\Local\Temp\")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName,
-          Parent = InitiatingProcessFileName,
-          ParentCmd = InitiatingProcessCommandLine,
-          Child = FileName,
-          ChildCmd = ProcessCommandLine,
-          SHA256
-| order by Timestamp desc
-```
-
-### SocGholish PowerShell second stage: wscript spawning PowerShell with Invoke-WebRequest to .svg payload
-
-`UC_7_6` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("powershell.exe","pwsh.exe") Processes.parent_process_name IN ("wscript.exe","cscript.exe") (Processes.process="*Invoke-WebRequest*" OR Processes.process="*IWR *" OR Processes.process="*iex*" OR Processes.process="*Invoke-Expression*") Processes.process="*.svg*" by host Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("powershell.exe","pwsh.exe")
-| where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe")
-| where ProcessCommandLine has_any ("Invoke-WebRequest","iwr ","IEX","Invoke-Expression")
-| where ProcessCommandLine has ".svg"
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildCmd = ProcessCommandLine,
-          Grandparent = InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### NetSupport RAT client32.exe executing from AppData Roaming subfolder (SocGholish follow-on)
-
-`UC_7_7` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="client32.exe" (Processes.process_path="*\\AppData\\Roaming\\*" OR Processes.process_path="*\\AppData\\Local\\*" OR Processes.process_path="*\\ProgramData\\*") Processes.process_path!="*\\Program Files*" by host Processes.user Processes.parent_process_name Processes.process_name Processes.process_path Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "client32.exe"
-| where FolderPath has_any (@"\AppData\Roaming\", @"\AppData\Local\", @"\ProgramData\", @"\Users\Public\")
-| where FolderPath !has @"\Program Files"
-| where InitiatingProcessVersionInfoCompanyName !has "NetSupport"
-   or isempty(ProcessVersionInfoCompanyName)
-| project Timestamp, DeviceName, AccountName,
-          Parent = InitiatingProcessFileName,
-          ParentCmd = InitiatingProcessCommandLine,
-          Path = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          ProcessVersionInfoCompanyName,
-          SHA256
-| order by Timestamp desc
-```
-
-### NetSupport RAT Run-key persistence pointing to client32.exe in AppData
-
-`UC_7_8` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.action=modified Registry.registry_path="*\\Software\\Microsoft\\Windows\\CurrentVersion\\Run*" (Registry.registry_value_data="*\\AppData\\Roaming\\*client32.exe*" OR Registry.registry_value_data="*\\AppData\\Local\\*client32.exe*") by host Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceRegistryEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("RegistryValueSet","RegistryValueCreated")
-| where RegistryKey has @"\Software\Microsoft\Windows\CurrentVersion\Run"
-| where RegistryValueData has "client32.exe"
-| where RegistryValueData has_any (@"\AppData\Roaming\", @"\AppData\Local\", @"\ProgramData\")
-| where RegistryValueData !has @"\Program Files"
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          RegistryKey, RegistryValueName, RegistryValueData
+| where ActionType in ("FileCreated","FileModified")
+| where InitiatingProcessFileName in~ ("w3wp.exe","php-cgi.exe","php.exe")
+| where FolderPath has_any ("wp-content/uploads","wp-content/themes")
+| where FileName endswith ".php"
+| join kind=inner (
+    DeviceProcessEvents
+    | where Timestamp > ago(7d)
+    | where ProcessCommandLine has_any ("wp_insert_user","administrator","wp_capabilities")
+) on DeviceId
+| project Timestamp, DeviceName, InitiatingProcessFileName, FolderPath, FileName, ProcessCommandLine
 | order by Timestamp desc
 ```
 
@@ -283,4 +306,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 9 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 10 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

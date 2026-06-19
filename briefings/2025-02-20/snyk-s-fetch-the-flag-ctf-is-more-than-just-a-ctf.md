@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Apache Spark UI doAs= shell command injection (CVE-2022-33891)
 
-`UC_1002_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_992_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ DeviceProcessEvents
 
 ### GitPython ext:: protocol RCE via crafted clone URL (CVE-2022-24439)
 
-`UC_1002_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_992_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -94,7 +94,7 @@ DeviceProcessEvents
 
 ### Spark service user spawning post-exploit recon / download tools
 
-`UC_1002_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_992_4` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

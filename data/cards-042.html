@@ -1,177 +1,3 @@
-<article class="card" id="art-1231" data-art-slug="2024-06-05-securing-next-gen-development-lessons-from-trust-bank-and-ta"
-  data-phases="c2,delivery,exploit,install" data-sev="med"
-  data-techs="T1190,T1195.002"
-  data-sources="Snyk"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="endpoint"
-  data-targets="windows"
-  data-uc-count="1" data-llm-uc-count="0"
-  data-search="Securing next-gen development: Lessons from Trust Bank and TASConnect Read the top highlights from the Black Hat Asia session hosted by Snyk, “Securing the Next-Gen Software Development: Challenges &amp; Solutions.”  T1190 T1195.002 Trusted vendor binary / installer launching unusual children">
-  <div class="sev-ribbon med">Medium</div>
-  <button class="share-btn card-share" data-share-art="2024-06-05-securing-next-gen-development-lessons-from-trust-bank-and-ta" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://snyk.io/blog/lessons-from-trust-bank-and-tasconnect/" target="_blank" rel="noopener">Securing next-gen development: Lessons from Trust Bank and TASConnect</a></h2>
-  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
-  <div class="pubmeta">
-    <span>2024-06-05</span>
-    <span>1 use case</span>
-    <span>2 techniques</span>
-    <span>2 kill-chain phases detected</span>
-  </div>
-  <p class="summary">Read the top highlights from the Black Hat Asia session hosted by Snyk, “Securing the Next-Gen Software Development: Challenges &amp; Solutions.”</p>
-  <div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-1231-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-1231"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-1231-kc">
-  <div class="kc3d"><div class="kc-cell ">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
-<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows" open>
-  <summary>
-    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
-    <span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-1231-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-1231-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-1231-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-1231-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-1231-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
-| where Timestamp &gt; ago(7d)
-| where AccountName !endswith &quot;$&quot;
-| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-1231-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
-// article (matching shape with the Defender query).
-SecurityEvent
-| where TimeGenerated &gt; ago(7d)
-| where EventID == 4688
-| where Account !endswith &quot;$&quot;
-| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-| where NewProcessName endswith &quot;\powershell.exe&quot;
-   or NewProcessName endswith &quot;\cmd.exe&quot;
-   or NewProcessName endswith &quot;\rundll32.exe&quot;
-   or NewProcessName endswith &quot;\regsvr32.exe&quot;
-   or NewProcessName endswith &quot;\mshta.exe&quot;
-   or NewProcessName endswith &quot;\wscript.exe&quot;
-   or NewProcessName endswith &quot;\cscript.exe&quot;
-   or NewProcessName endswith &quot;\wmic.exe&quot;
-   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
-| project TimeGenerated, Computer, Account, ParentProcessName,
-          NewProcessName, CommandLine
-| order by TimeGenerated desc
-</code></pre></div>
-    <div class="tab-content" id="art-1231-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
-id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
-status: experimental
-description: |
-    A signed vendor binary (in the article&#x27;s named-vendors list)
-    spawning script-host or LOLBin children. Strongest signal when
-    paired with a recent CVE / supply-chain advisory naming the same
-    vendor.
-references:
-    - https://attack.mitre.org/techniques/T1195/
-author: Clankerusecase
-date: 2026/05/02
-tags:
-    - attack.t1195
-    - attack.initial-access
-logsource:
-    category: process_creation
-    product: windows
-detection:
-    selection_child:
-        Image|endswith:
-            - &#x27;\powershell.exe&#x27;
-            - &#x27;\pwsh.exe&#x27;
-            - &#x27;\cmd.exe&#x27;
-            - &#x27;\rundll32.exe&#x27;
-            - &#x27;\regsvr32.exe&#x27;
-            - &#x27;\mshta.exe&#x27;
-            - &#x27;\wscript.exe&#x27;
-            - &#x27;\cscript.exe&#x27;
-            - &#x27;\wmic.exe&#x27;
-            - &#x27;\bitsadmin.exe&#x27;
-    selection_parent_vendor:
-        ParentImage|contains:
-            - &#x27;\Program Files\&#x27;
-            - &#x27;\Program Files (x86)\&#x27;
-    condition: selection_child and selection_parent_vendor
-falsepositives:
-    - Many — installers and updaters legitimately spawn children. Pin
-      the parent path to specific vendor binaries observed in the
-      article before alerting.
-level: medium
-</code></pre></div>
-    <div class="tab-content" id="art-1231-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1231-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1231-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1231-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-1231-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Endpoint.Processes
-    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
-      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
-    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-| `drop_dm_object_name(Processes)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-1232" data-art-slug="2024-06-04-secure-ai-tool-adoption-perceptions-and-realities"
   data-phases="c2,exploit,install" data-sev="med"
   data-techs="T1190"
@@ -3963,6 +3789,505 @@ DeviceFileEvents
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
 ]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-1260" data-art-slug="2024-03-31-the-xz-backdoor-cve-2024-3094"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-techs="T1190,T1195.002"
+  data-sources="Snyk"
+  data-platforms="datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,endpoint"
+  data-targets="linux,windows"
+  data-uc-count="5" data-llm-uc-count="2"
+  data-search="The XZ backdoor CVE-2024-3094 On the 29th of March 2024, the high-stakes investment and prolonged campaign to plant a backdoor in the Linux software library liblzma to gain access to multiple operating systems via Linux distributions was carried out by a malicious actor. CVE-2024-3094 T1190 T1195.002 [LLM] Vulnerable xz / liblzma 5.6.0 or 5.6.1 in software inventory (CVE-2024-3094) [LLM] sshd loads compromised liblzma.so.5.6.0 / 5.6.1 (CVE-2024-3094 runtime trigger) Asset exposure — vulnerability matches article CVE(s) Trusted vendor binary / installer launching unusual children File hash IOCs — endpoint file/process match">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2024-03-31-the-xz-backdoor-cve-2024-3094" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://snyk.io/blog/the-xz-backdoor-cve-2024-3094/" target="_blank" rel="noopener">The XZ backdoor CVE-2024-3094</a></h2>
+  <div class="source-badges"><span class="source-badge ">Snyk</span></div>
+  <div class="pubmeta">
+    <span>2024-03-31</span>
+    <span>5 use cases</span>
+    <span>2 techniques</span>
+    <span>5 kill-chain phases detected</span>
+  </div>
+  <p class="summary">On the 29th of March 2024, the high-stakes investment and prolonged campaign to plant a backdoor in the Linux software library liblzma to gain access to multiple operating systems via Linux distributions was carried out by a malicious actor.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2024-3094</span></div>
+<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+<div class="ind-group"><span class="ind-label">SHA256</span><span class="ind ">319feb5a9cddd819…</span> <span class="ind ">605861f833fc181c…</span> <span class="ind ">8fa641c454c3e0f7…</span> <span class="ind ">b418bfd34aa246b2…</span> <span class="ind ">cbeef92e67bf41ca…</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-1260-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-1260"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-1260-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">Likely</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Vulnerable xz / liblzma 5.6.0 or 5.6.1 in software inventory (CVE-2024-3094)</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Trusted vendor binary / installer launching unusual children</em></div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] sshd loads compromised liblzma.so.5.6.0 / 5.6.1 (CVE-2024-3094 runtime trigger) · File hash IOCs — endpoint file/process match</em></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="98e8e70920" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Vulnerable xz / liblzma 5.6.0 or 5.6.1 in software inventory (CVE-2024-3094)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="98e8e70920" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Surfaces Linux hosts carrying the backdoored xz-utils / liblzma release (5.6.0 or 5.6.1) that ships the CVE-2024-3094 sshd backdoor. Article explicitly names these two versions as the only compromised range, with downgrade to 5.4.6 as the mitigation, and lists Debian unstable/13, Fedora Rawhide/40, Kali Linux and OpenSUSE Tumbleweed as the affected distributions.
+
+Rationale: Anchored on the article&#x27;s authoritative version table (xz / liblzma 5.6.0-5.6.1 == compromised, 5.4.6 == safe) and the CVE-2024-3094 identifier. CVE lookup + version-string match are both included so the detection survives TVM-feed lag on rolling-release distros (Fedora Rawhide, Debian unstable, Arch). Cross-checked vs Sysdig, Qualys, Microsoft Defender FAQ and the OpenSSF advisory — all three publish the identical 5.6.0/5.6.1 affected range.
+
+Cross-checked against:
+  • https://www.sysdig.com/blog/cve-2024-3094-detecting-the-sshd-backdoor-in-xz-utils
+  • https://blog.qualys.com/vulnerabilities-threat-research/2024/03/29/xz-utils-sshd-backdoor
+  • https://techcommunity.microsoft.com/blog/vulnerability-management/microsoft-faq-and-guidance-for-xz-utils-backdoor/4101961
+  • https://openssf.org/blog/2024/03/30/xz-backdoor-cve-2024-3094/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Compromise Host Software Binary">T1554</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Build / CI runner intentionally pinned to xz 5.6.0 for reproducing the vulnerability or testing detections</li><li>Air-gapped lab box already known to be backdoored and used by red team / IR practice</li><li>TVM feed reports the package present but distribution has already shipped a backported fix (e.g. Fedora 40 erratum) without bumping the upstream version string</li><li>Container image scan flagging a base-image layer that&#x27;s been rebuilt with a patched binary but retains the old version label</li><li>Asset inventory lag (DeviceTvmSoftwareInventory updates ~24h) after the host was downgraded</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Optional: exclude designated security-research hosts via a watchlist join
+// | join kind=leftanti (SecurityResearchHosts_CL | project DeviceName=Host_s) on DeviceName</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage — pull DeviceInfo for each hit: confirm Linux distro is in the affected set (Debian unstable/13, Fedora 40/Rawhide, Kali, OpenSUSE Tumbleweed, Arch), verify exact installed version with `xz --version` and `rpm -q xz-libs` / `dpkg -l liblzma5`, and check IsInternetFacing + whether sshd is bound externally. 2) Contain — for any internet-exposed host, immediately restrict inbound SSH at the firewall and downgrade xz/liblzma to 5.4.6 per CISA / distro vendor guidance; preserve the original liblzma.so.5.6.* file as evidence before replacement. 3) Hunt — pivot to UC2 (sshd image-load of compromised liblzma) on the same DeviceId and review SSH auth logs for unexplained `Accepted publickey` events in the window the backdoor was on disk, and DeviceProcessEvents for unusual child processes of sshd.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1260-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1260-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1260-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1260-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Article: only xz/liblzma 5.6.0 and 5.6.1 are compromised; 5.4.6 is the safe downgrade target.
+let VulnByCve = DeviceTvmSoftwareVulnerabilities
+    | where CveId == &quot;CVE-2024-3094&quot;
+    | project DeviceId, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate;
+let VulnByVersion = DeviceTvmSoftwareInventory
+    | where OSPlatform !startswith &quot;Windows&quot;
+    | where SoftwareName has_any (&quot;xz&quot;, &quot;xz-utils&quot;, &quot;xz-libs&quot;, &quot;liblzma&quot;, &quot;liblzma5&quot;)
+    | where SoftwareVersion startswith &quot;5.6.0&quot; or SoftwareVersion startswith &quot;5.6.1&quot;
+    | project DeviceId, DeviceName, OSPlatform, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion;
+union VulnByCve, VulnByVersion
+| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, OSDistribution, PublicIP, LoggedOnUsers) by DeviceId) on DeviceId
+| project DeviceName, OSPlatform, OSDistribution, OSVersion, SoftwareVendor, SoftwareName, SoftwareVersion, CveId=&quot;CVE-2024-3094&quot;, PublicIP, LoggedOnUsers
+| order by DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-1260-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Article: only xz/liblzma 5.6.0 and 5.6.1 are compromised; downgrade target is 5.4.6.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(7d)
+| where CveId == &quot;CVE-2024-3094&quot;
+   or (SoftwareName has_any (&quot;xz&quot;, &quot;xz-utils&quot;, &quot;xz-libs&quot;, &quot;liblzma&quot;, &quot;liblzma5&quot;)
+       and (SoftwareVersion startswith &quot;5.6.0&quot; or SoftwareVersion startswith &quot;5.6.1&quot;))
+| join kind=leftouter (
+    DeviceInfo
+    | where TimeGenerated &gt; ago(7d)
+    | summarize arg_max(TimeGenerated, OSDistribution, PublicIP, LoggedOnUsers, IsInternetFacing) by DeviceId
+  ) on DeviceId
+| project TimeGenerated, DeviceName, OSPlatform, OSDistribution, OSVersion, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate, IsInternetFacing, PublicIP, LoggedOnUsers
+| order by IsInternetFacing desc, DeviceName asc</code></pre></div>
+    <div class="tab-content" id="art-1260-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1260-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1260-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1260-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count, min(_time) as firstTime, max(_time) as lastTime, values(Vulnerabilities.signature) as signature, values(Vulnerabilities.severity) as severity from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2024-3094&quot; OR (Vulnerabilities.signature IN (&quot;xz&quot;,&quot;xz-utils&quot;,&quot;xz-libs&quot;,&quot;liblzma&quot;,&quot;liblzma5&quot;) AND (Vulnerabilities.signature=&quot;*5.6.0*&quot; OR Vulnerabilities.signature=&quot;*5.6.1*&quot;)) by Vulnerabilities.dest, Vulnerabilities.cve, Vulnerabilities.category | `drop_dm_object_name(Vulnerabilities)` | eval action=&quot;downgrade_to_5.4.6&quot; | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-1260-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, min(_time) as firstTime, max(_time) as lastTime, values(Vulnerabilities.signature) as signature, values(Vulnerabilities.severity) as severity from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2024-3094&quot; OR (Vulnerabilities.signature IN (&quot;xz&quot;,&quot;xz-utils&quot;,&quot;xz-libs&quot;,&quot;liblzma&quot;,&quot;liblzma5&quot;) AND (Vulnerabilities.signature=&quot;*5.6.0*&quot; OR Vulnerabilities.signature=&quot;*5.6.1*&quot;)) by Vulnerabilities.dest, Vulnerabilities.cve, Vulnerabilities.category | `drop_dm_object_name(Vulnerabilities)` | eval action=&quot;downgrade_to_5.4.6&quot; | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="0c3c2f98b6" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,windows">
+  <summary>
+    <span class="uc-title">sshd loads compromised liblzma.so.5.6.0 / 5.6.1 (CVE-2024-3094 runtime trigger)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="0c3c2f98b6" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects the article&#x27;s specific runtime activation path: sshd chain-loading libsystemd, which then loads liblzma.so.5.6.0 or 5.6.1 — the moment the IFUNC crc64_resolve audit hook hijacks RSA_public_decrypt in OpenSSH. Catches exposure on patched-but-not-rebooted hosts and on systems where the TVM feed has not yet propagated CVE-2024-3094 data.
+
+Rationale: Anchored directly on the article&#x27;s named binaries and load chain: &#x27;sshd ... libsystemd ... loads the affected liblzma&#x27; (Snyk article body) plus the version table (5.6.0/5.6.1 only). The image-load pair (sshd|systemd → liblzma.so.5.6.0|5.6.1) is uniquely diagnostic — non-backdoored hosts will only load liblzma.so.5 or a different minor version. Cross-referenced with Sysdig&#x27;s Falco rule (&#x27;proc.name=sshd and fd.name endswith liblzma.so.5.6.0/5.6.1&#x27;) and Microsoft&#x27;s Defender guidance, both of which converge on the same image-load signal.
+
+Cross-checked against:
+  • https://www.sysdig.com/blog/cve-2024-3094-detecting-the-sshd-backdoor-in-xz-utils
+  • https://www.openwall.com/lists/oss-security/2024/03/29/4
+  • https://techcommunity.microsoft.com/blog/vulnerability-management/microsoft-faq-and-guidance-for-xz-utils-backdoor/4101961
+  • https://www.helpnetsecurity.com/2024/04/08/detect-xz-backdoor/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Dynamic Linker Hijacking">T1574.006</span> <span class="ind tech" title="Compromise Host Software Binary">T1554</span> <span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Forensic analyst mounting a captured filesystem image of a compromised host on a triage box and grep&#x27;ing the library — file_open event will fire on the triage workstation</li><li>Security research VM intentionally running the backdoored library to validate detections</li><li>Bitdefender / Binarly / Sandfly local-scan tool reading the library bytes on a clean host for hash comparison (initiating process != sshd in that case — already excluded)</li><li>Package manager (apt / dnf / rpm) verifying the file during an in-flight downgrade to 5.4.6 — InitiatingProcess will be dpkg/rpm, not sshd, so the parent-process predicate filters this</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Exclude package-manager mediated reads (dpkg/rpm/dnf/apt reading the file during downgrade)
+| where InitiatingProcessFileName !in~ (&quot;dpkg&quot;,&quot;rpm&quot;,&quot;dnf&quot;,&quot;apt&quot;,&quot;apt-get&quot;,&quot;yum&quot;,&quot;zypper&quot;,&quot;pacman&quot;,&quot;file&quot;,&quot;sha256sum&quot;,&quot;md5sum&quot;,&quot;ldd&quot;,&quot;objdump&quot;,&quot;readelf&quot;,&quot;strings&quot;)
+// Exclude known forensic / IR triage hosts via a watchlist (replace with your CL name)
+// | join kind=leftanti (ForensicHosts_CL | project DeviceName=Host_s) on DeviceName</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage — confirm the host&#x27;s distro is in the affected set and run `xz --version` plus `ldd $(which sshd) | grep liblzma` over a live response shell; capture sha256 of the liblzma.so.5.6.* file before any change. 2) Contain — treat host as fully compromised: block inbound SSH at the perimeter, rotate all SSH host keys + any authorized_keys / IAM creds reachable from this host, downgrade xz/liblzma to 5.4.6 and reboot to unload the malicious mapping; snapshot for forensics. 3) Hunt — query SSH auth logs (Syslog `sshd[*]: Accepted publickey for *` and `Connection from`) for the entire window the backdoor was on disk, look for sshd spawning non-shell children (DeviceProcessEvents `InitiatingProcessFileName == &#x27;sshd&#x27; and FileName !in (&#x27;bash&#x27;,&#x27;sh&#x27;,&#x27;sftp-server&#x27;)`), and pivot UC1 across the org for any other 5.6.0/5.6.1 hosts.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1260-uc1-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1260-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1260-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1260-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-1260-uc1-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-1260-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1260-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Article: backdoor activates when sshd (via libsystemd) loads the malicious liblzma.so.5.6.0 / 5.6.1.
+DeviceImageLoadEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;sshd&quot;
+    or InitiatingProcessFileName =~ &quot;sshd&quot;
+    or InitiatingProcessFileName =~ &quot;systemd&quot;
+| where FileName endswith &quot;liblzma.so.5.6.0&quot;
+    or FileName endswith &quot;liblzma.so.5.6.1&quot;
+    or FolderPath has_any (&quot;liblzma.so.5.6.0&quot;, &quot;liblzma.so.5.6.1&quot;)
+| join kind=leftouter (
+    DeviceInfo
+    | summarize arg_max(Timestamp, OSDistribution, PublicIP, IsInternetFacing) by DeviceId
+  ) on DeviceId
+| project Timestamp, DeviceName, OSPlatform, OSDistribution, IsInternetFacing, PublicIP, InitiatingProcessFileName, InitiatingProcessId, InitiatingProcessCommandLine, FileName, FolderPath, SHA256
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-1260-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// Article: backdoor activates when sshd chain-loads liblzma.so.5.6.0 / 5.6.1 via libsystemd.
+// Path A: Defender XDR Linux EDR image-load telemetry forwarded to Sentinel.
+// Path B: auditd PATH records via Syslog connector when DeviceImageLoadEvents is unavailable.
+let edr = ImFileEvent
+    | where TimeGenerated &gt; ago(7d)
+    | where ActingProcessName has &quot;sshd&quot; or ActingProcessName has &quot;systemd&quot;
+    | where TargetFileName has_any (&quot;liblzma.so.5.6.0&quot;, &quot;liblzma.so.5.6.1&quot;)
+    | project TimeGenerated, Source=&quot;ImFileEvent&quot;, Host=DvcHostname, Process=ActingProcessName, Cmd=ActingProcessCommandLine, File=TargetFilePath;
+let aud = Syslog
+    | where TimeGenerated &gt; ago(7d)
+    | where Facility in (&quot;auth&quot;,&quot;authpriv&quot;,&quot;daemon&quot;,&quot;user&quot;)
+    | where ProcessName in~ (&quot;audisp-syslog&quot;,&quot;audispd&quot;,&quot;sshd&quot;,&quot;systemd&quot;,&quot;auditd&quot;)
+    | where SyslogMessage has_any (&quot;liblzma.so.5.6.0&quot;, &quot;liblzma.so.5.6.1&quot;)
+    | where SyslogMessage has_any (&quot;sshd&quot;, &quot;systemd&quot;)
+    | project TimeGenerated, Source=&quot;Syslog&quot;, Host=HostName, Process=ProcessName, Cmd=&quot;&quot;, File=SyslogMessage;
+union edr, aud
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-1260-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: sshd Loads Backdoored liblzma 5.6.0 / 5.6.1 (CVE-2024-3094)
+id: 8b3c1a4e-7d2f-4f9a-9a2c-2b1f5d3c1a4e
+status: experimental
+description: Detects the OpenSSH daemon loading the malicious liblzma.so.5.6.0 or liblzma.so.5.6.1 introduced by the xz-utils supply chain backdoor (CVE-2024-3094). The backdoor activates when sshd, via libsystemd notification patches, chain-loads the compromised liblzma — at which point the IFUNC crc64_resolve audit hook hijacks RSA_public_decrypt and enables authentication bypass for a holder of the attacker&#x27;s RSA key.
+references:
+  - https://snyk.io/blog/the-xz-backdoor-cve-2024-3094/
+  - https://www.openwall.com/lists/oss-security/2024/03/29/4
+  - https://www.sysdig.com/blog/cve-2024-3094-detecting-the-sshd-backdoor-in-xz-utils
+  - https://nvd.nist.gov/vuln/detail/CVE-2024-3094
+author: SOC Detection Engineering
+date: 2024/04/01
+tags:
+  - attack.t1574.006
+  - attack.t1554
+  - attack.t1195.002
+logsource:
+  product: linux
+  category: file_event
+detection:
+  selection_proc:
+    Image|endswith:
+      - &#x27;/sshd&#x27;
+      - &#x27;/systemd&#x27;
+  selection_lib:
+    TargetFilename|endswith:
+      - &#x27;/liblzma.so.5.6.0&#x27;
+      - &#x27;/liblzma.so.5.6.1&#x27;
+  condition: selection_proc and selection_lib
+falsepositives:
+  - Security research / IR lab hosts intentionally running the backdoored library
+  - Snapshot of an older filesystem mounted for forensic review
+level: critical</code></pre></div>
+    <div class="tab-content" id="art-1260-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:(linux.auditd OR linux.syslog) (@process.name:sshd OR @process.executable.path:*/sshd OR @process.name:systemd) (&quot;liblzma.so.5.6.0&quot; OR &quot;liblzma.so.5.6.1&quot;)</code></pre></div>
+    <div class="tab-content" id="art-1260-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileOpenInfo
+| ContextImageFileName=/(\\/|^)(sshd|systemd)$/i
+| TargetFileName=/liblzma\.so\.5\.6\.[01]$/i
+| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
+    <div class="tab-content" id="art-1260-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1260-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1260-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1260-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count, min(_time) as firstTime, max(_time) as lastTime, values(Filesystem.file_path) as file_path, values(Filesystem.action) as action from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;liblzma.so.5.6.0&quot; OR Filesystem.file_name=&quot;liblzma.so.5.6.1&quot;) AND (Filesystem.process_name=&quot;sshd&quot; OR Filesystem.process_name=&quot;systemd&quot; OR Filesystem.process_name=&quot;systemd-cryptsetup&quot;) by Filesystem.dest, Filesystem.process_name, Filesystem.file_name, Filesystem.process_id, Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre><pre class="spl-mode-body" id="art-1260-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, min(_time) as firstTime, max(_time) as lastTime, values(Filesystem.file_path) as file_path, values(Filesystem.action) as action from datamodel=Endpoint.Filesystem where (Filesystem.file_name=&quot;liblzma.so.5.6.0&quot; OR Filesystem.file_name=&quot;liblzma.so.5.6.1&quot;) AND (Filesystem.process_name=&quot;sshd&quot; OR Filesystem.process_name=&quot;systemd&quot; OR Filesystem.process_name=&quot;systemd-cryptsetup&quot;) by Filesystem.dest, Filesystem.process_name, Filesystem.file_name, Filesystem.process_id, Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1260-uc2-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1260-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1260-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1260-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2024-3094&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-1260-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2024-3094&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-1260-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1260-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1260-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1260-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2024-3094&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-1260-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2024-3094&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="178f88b42d" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">Trusted vendor binary / installer launching unusual children</span>
+    <span class="uc-phase">Exploitation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="178f88b42d" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Supply-chain trojan signal: legitimate signed binary spawning script interpreters or exotic LOLBins.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1260-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1260-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1260-uc3-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1260-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1260-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where AccountName !endswith &quot;$&quot;
+| where InitiatingProcessFileName in~ (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where FileName in~ (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
+    <div class="tab-content" id="art-1260-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Replace `&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;` with the vendor binaries observed in the
+// article (matching shape with the Defender query).
+SecurityEvent
+| where TimeGenerated &gt; ago(7d)
+| where EventID == 4688
+| where Account !endswith &quot;$&quot;
+| where ParentProcessName has_any (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+| where NewProcessName endswith &quot;\powershell.exe&quot;
+   or NewProcessName endswith &quot;\cmd.exe&quot;
+   or NewProcessName endswith &quot;\rundll32.exe&quot;
+   or NewProcessName endswith &quot;\regsvr32.exe&quot;
+   or NewProcessName endswith &quot;\mshta.exe&quot;
+   or NewProcessName endswith &quot;\wscript.exe&quot;
+   or NewProcessName endswith &quot;\cscript.exe&quot;
+   or NewProcessName endswith &quot;\wmic.exe&quot;
+   or NewProcessName endswith &quot;\bitsadmin.exe&quot;
+| project TimeGenerated, Computer, Account, ParentProcessName,
+          NewProcessName, CommandLine
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-1260-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Trusted Vendor Binary Launching Unusual Children
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d09
+status: experimental
+description: |
+    A signed vendor binary (in the article&#x27;s named-vendors list)
+    spawning script-host or LOLBin children. Strongest signal when
+    paired with a recent CVE / supply-chain advisory naming the same
+    vendor.
+references:
+    - https://attack.mitre.org/techniques/T1195/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1195
+    - attack.initial-access
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection_child:
+        Image|endswith:
+            - &#x27;\powershell.exe&#x27;
+            - &#x27;\pwsh.exe&#x27;
+            - &#x27;\cmd.exe&#x27;
+            - &#x27;\rundll32.exe&#x27;
+            - &#x27;\regsvr32.exe&#x27;
+            - &#x27;\mshta.exe&#x27;
+            - &#x27;\wscript.exe&#x27;
+            - &#x27;\cscript.exe&#x27;
+            - &#x27;\wmic.exe&#x27;
+            - &#x27;\bitsadmin.exe&#x27;
+    selection_parent_vendor:
+        ParentImage|contains:
+            - &#x27;\Program Files\&#x27;
+            - &#x27;\Program Files (x86)\&#x27;
+    condition: selection_child and selection_parent_vendor
+falsepositives:
+    - Many — installers and updaters legitimately spawn children. Pin
+      the parent path to specific vendor binaries observed in the
+      article before alerting.
+level: medium
+</code></pre></div>
+    <div class="tab-content" id="art-1260-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1260-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1260-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1260-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre><pre class="spl-mode-body" id="art-1260-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Processes
+    where Processes.parent_process_name IN (&quot;setup.exe&quot;,&quot;installer.exe&quot;,&quot;update.exe&quot;)
+      AND Processes.process_name IN (&quot;powershell.exe&quot;,&quot;cmd.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;mshta.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;)
+    by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
+| `drop_dm_object_name(Processes)`</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="ad8828a1b5" data-platforms="def,sent,sigma,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">File hash IOCs — endpoint file/process match</span>
+    <span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="ad8828a1b5" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match SHA256/SHA1/MD5 named in the article against EDR file/process telemetry.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Obfuscated Files or Information">T1027</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Processes</span> <span class="ind">DeviceFileEvents</span> <span class="ind">DeviceProcessEvents</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-1260-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-1260-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-1260-uc4-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-1260-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-1260-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Pre-filter each table BEFORE the union — the engine cannot push
+// predicates across `union`, and DeviceFileEvents lacks ProcessCommandLine
+// (Initiating only) so column-projection has to differ per side.
+union
+    ( DeviceFileEvents
+        | where Timestamp &gt; ago(7d)
+        | where InitiatingProcessAccountName !endswith &quot;$&quot;
+        | where SHA256 in~ (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;) or SHA1 in~ (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;) or MD5 in~ (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;)
+        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+                  Cmd = InitiatingProcessCommandLine, Source = &quot;DeviceFileEvents&quot; ),
+    ( DeviceProcessEvents
+        | where Timestamp &gt; ago(7d)
+        | where AccountName !endswith &quot;$&quot;
+        | where SHA256 in~ (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;) or SHA1 in~ (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;) or MD5 in~ (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;)
+        | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+                  Cmd = ProcessCommandLine, Source = &quot;DeviceProcessEvents&quot; )
+| order by Timestamp desc
+</code></pre></div>
+    <div class="tab-content" id="art-1260-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Pre-filter both ASIM tables before the union — same pattern as the
+// Defender version so the engine can push hash predicates per-side.
+let BadHashes = dynamic([&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;]);
+union
+    ( ImFileEvent
+        | where TimeGenerated &gt; ago(7d)
+        | where ActorUsername !endswith &quot;$&quot;
+        | where TargetFileSHA256 in~ (BadHashes)
+           or TargetFileSHA1 in~ (BadHashes)
+           or TargetFileMD5 in~ (BadHashes)
+        | project TimeGenerated, DvcHostname, EventType,
+                  TargetFileName, TargetFilePath, TargetFileSHA256,
+                  Cmd = ActingProcessName, Source = &quot;ImFileEvent&quot; ),
+    ( ImProcessCreate
+        | where TimeGenerated &gt; ago(7d)
+        | where ActorUsername !endswith &quot;$&quot;
+        | where SHA256 in~ (BadHashes) or SHA1 in~ (BadHashes) or MD5 in~ (BadHashes)
+        | project TimeGenerated, DvcHostname, EventType = TargetProcessName,
+                  TargetFileName = TargetProcessName, TargetFilePath = TargetProcessName,
+                  TargetFileSHA256 = SHA256,
+                  Cmd = TargetProcessCommandLine, Source = &quot;ImProcessCreate&quot; )
+| order by TimeGenerated desc
+</code></pre></div>
+    <div class="tab-content" id="art-1260-uc4-sigma"><pre><button class="copy-btn">COPY</button><code>title: File or Process Matching Article Hash IOCs
+id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d0b
+status: experimental
+description: |
+    Replace `__HASH_LIST__` placeholder with article-specific SHA256
+    values. Use a watchlist or external indicator file for management
+    at scale.
+references:
+    - https://attack.mitre.org/techniques/T1027/
+author: Clankerusecase
+date: 2026/05/02
+tags:
+    - attack.t1027
+    - attack.defense-evasion
+logsource:
+    category: process_creation
+    product: windows
+detection:
+    selection:
+        Hashes|contains:
+            - &#x27;SHA256=__HASH_PLACEHOLDER_REPLACE_ME__&#x27;
+    condition: selection
+falsepositives:
+    - None on a true-positive hash match
+level: critical
+</code></pre></div>
+    <div class="tab-content" id="art-1260-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-1260-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-1260-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-1260-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| append
+    [| tstats `summariesonly` count from datamodel=Endpoint.Processes
+        where Processes.process_hash IN (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;)
+        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
+     | `drop_dm_object_name(Processes)`]</code></pre><pre class="spl-mode-body" id="art-1260-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Endpoint.Filesystem
+    where Filesystem.file_hash IN (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;)
+    by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.file_hash
+| `drop_dm_object_name(Filesystem)`
+| append
+    [| tstats summariesonly=false count from datamodel=Endpoint.Processes
+        where Processes.process_hash IN (&quot;319feb5a9cddd81955d915b5632b4a5f8f9080281fb46e2f6d69d53f693c23ae&quot;, &quot;605861f833fc181c7cdcabd5577ddb8989bea332648a8f498b4eef89b8f85ad4&quot;, &quot;8fa641c454c3e0f76de73b7cc3446096b9c8b9d33d406d38b8ac76090b0344fd&quot;, &quot;b418bfd34aa246b2e7b5cb5d263a640e5d080810f767370c4d2c24662a274963&quot;, &quot;cbeef92e67bf41ca9c015557d81f39adaba67ca9fb3574139754999030b83537&quot;, &quot;5448850cdc3a7ae41ff53b433c2adbd0ff492515012412ee63a40d2685db3049&quot;)
+        by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
+     | `drop_dm_object_name(Processes)`]</code></pre></div></div>
   </div>
 </details></div>
 </article>

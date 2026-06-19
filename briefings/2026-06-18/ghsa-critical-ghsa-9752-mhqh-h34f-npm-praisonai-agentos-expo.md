@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable PraisonAI npm AgentOS server process running (GHSA-9752-mhqh-h34f, 1.6.0-1.7.1)
 
-`UC_49_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_48_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -59,7 +59,7 @@ DeviceProcessEvents
 
 ### Unauthenticated request to PraisonAI AgentOS /api/agents or /api/chat from non-loopback source
 
-`UC_49_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_48_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

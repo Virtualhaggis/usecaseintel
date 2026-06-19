@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_1196 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_1188 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,23 +9,24 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-19
+- [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-06-19/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
 - [autojack attack lets one web page hijack ai agent for host c](./2026-06-19/autojack-attack-lets-one-web-page-hijack-ai-agent-for-host-c.md)
 - [autojack how a single page can rce the host running your ai ](./2026-06-19/autojack-how-a-single-page-can-rce-the-host-running-your-ai-.md)
-- [cisa adds litespeed cpanel plugin vulnerability to kev list ](./2026-06-19/cisa-adds-litespeed-cpanel-plugin-vulnerability-to-kev-list-.md)
 - [cisa splunk enterprise flaw actively exploited patch by sund](./2026-06-19/cisa-splunk-enterprise-flaw-actively-exploited-patch-by-sund.md)
-- [cisa urges hardening fortinet devices following fortibleed a](./2026-06-19/cisa-urges-hardening-fortinet-devices-following-fortibleed-a.md)
 - [cisa warns fortinet customers as fortibleed hits 86 644 fort](./2026-06-19/cisa-warns-fortinet-customers-as-fortibleed-hits-86-644-fort.md)
 - [cisa warns fortinet users to secure devices after fortibleed](./2026-06-19/cisa-warns-fortinet-users-to-secure-devices-after-fortibleed.md)
-- [critical wordpress plugin vulnerability exposes 1 million si](./2026-06-19/critical-wordpress-plugin-vulnerability-exposes-1-million-si.md)
 - [ghsa critical cve 2026 48814 network ai cve 2026 46701 fix i](./2026-06-19/ghsa-critical-cve-2026-48814-network-ai-cve-2026-46701-fix-i.md)
 - [ghsa critical cve 2026 54051 network ai improper neutralizat](./2026-06-19/ghsa-critical-cve-2026-54051-network-ai-improper-neutralizat.md)
+- [ghsa critical cve 2026 55255 langflow idor vulnerability in ](./2026-06-19/ghsa-critical-cve-2026-55255-langflow-idor-vulnerability-in-.md)
+- [ghsa critical cve 2026 55447 langflow basefilecomponent base](./2026-06-19/ghsa-critical-cve-2026-55447-langflow-basefilecomponent-base.md)
+- [ghsa critical cve 2026 55791 craft cms blind ssrf and arbitr](./2026-06-19/ghsa-critical-cve-2026-55791-craft-cms-blind-ssrf-and-arbitr.md)
 - [ghsa critical ghsa c8qj jx8j fg2w dotvvm missing authorizati](./2026-06-19/ghsa-critical-ghsa-c8qj-jx8j-fg2w-dotvvm-missing-authorizati.md)
-- [hackers abuse third party okendo reviews script to spread sm](./2026-06-19/hackers-abuse-third-party-okendo-reviews-script-to-spread-sm.md)
-- [hazybeacon weaponizes aws lambda function urls for stealth c](./2026-06-19/hazybeacon-weaponizes-aws-lambda-function-urls-for-stealth-c.md)
-- [inc ransomware uses rust based windows and linux esxi encryp](./2026-06-19/inc-ransomware-uses-rust-based-windows-and-linux-esxi-encryp.md)
+- [ghsa critical ghsa wfqx gjrf g28r crossplane signature verif](./2026-06-19/ghsa-critical-ghsa-wfqx-gjrf-g28r-crossplane-signature-verif.md)
+- [hackers exploit info disclosure bug in gravity smtp wordpres](./2026-06-19/hackers-exploit-info-disclosure-bug-in-gravity-smtp-wordpres.md)
 - [operation endgame disrupts socgholish servers cleans 14 971 ](./2026-06-19/operation-endgame-disrupts-socgholish-servers-cleans-14-971-.md)
 - [salesforce disables klue app integration after oauth token a](./2026-06-19/salesforce-disables-klue-app-integration-after-oauth-token-a.md)
 - [texas govt data breach exposes over 3 million driver s licen](./2026-06-19/texas-govt-data-breach-exposes-over-3-million-driver-s-licen.md)
+- [the gentlemen raas uses gentlekiller edr framework targeting](./2026-06-19/the-gentlemen-raas-uses-gentlekiller-edr-framework-targeting.md)
 
 ## 2026-06-18
 - [400 aur packages hijacked what the atomic arch campaign mean](./2026-06-18/400-aur-packages-hijacked-what-the-atomic-arch-campaign-mean.md)
@@ -33,7 +34,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [close encounters of the human kind](./2026-06-18/close-encounters-of-the-human-kind.md)
 - [dragonforce hackers abuse microsoft teams relays to hide bac](./2026-06-18/dragonforce-hackers-abuse-microsoft-teams-relays-to-hide-bac.md)
 - [f5 patches two critical nginx open source flaws enabling rem](./2026-06-18/f5-patches-two-critical-nginx-open-source-flaws-enabling-rem.md)
-- [fortibleed leak exposes fortinet vpn credentials for 73 000 ](./2026-06-18/fortibleed-leak-exposes-fortinet-vpn-credentials-for-73-000-.md)
 - [from package to postinstall payload inside the mastra npm su](./2026-06-18/from-package-to-postinstall-payload-inside-the-mastra-npm-su.md)
 - [gentlemen ransomware uses multiple edr killers to disable de](./2026-06-18/gentlemen-ransomware-uses-multiple-edr-killers-to-disable-de.md)
 - [ghsa critical cve 2026 0755 gemini mcp tool vulnerable to os](./2026-06-18/ghsa-critical-cve-2026-0755-gemini-mcp-tool-vulnerable-to-os.md)
@@ -136,8 +136,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 35273 oracle peoplesoft enterprise peoplet](./2026-06-12/cisa-kev-cve-2026-35273-oracle-peoplesoft-enterprise-peoplet.md)
 - [ghsa critical cve 2026 48150 budibase workspace scoped build](./2026-06-12/ghsa-critical-cve-2026-48150-budibase-workspace-scoped-build.md)
 - [google sues chinese smishing network accused of using gemini](./2026-06-12/google-sues-chinese-smishing-network-accused-of-using-gemini.md)
-- [interpol operation takes down sniper dz phishing platform ar](./2026-06-12/interpol-operation-takes-down-sniper-dz-phishing-platform-ar.md)
-- [langgraph flaw chain exposes self hosted ai agents to remote](./2026-06-12/langgraph-flaw-chain-exposes-self-hosted-ai-agents-to-remote.md)
 - [over 400 arch linux aur packages hijacked to deploy infostea](./2026-06-12/over-400-arch-linux-aur-packages-hijacked-to-deploy-infostea.md)
 - [rethinking mdr as attackers and defenders embrace ai](./2026-06-12/rethinking-mdr-as-attackers-and-defenders-embrace-ai.md)
 - [tracing digital intent new macos tahoe 26 artifact discovere](./2026-06-12/tracing-digital-intent-new-macos-tahoe-26-artifact-discovere.md)
@@ -253,17 +251,12 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2026 48027 nx console embedded malicious code v](./2026-05-27/cisa-kev-cve-2026-48027-nx-console-embedded-malicious-code-v.md)
 - [cisa kev cve 2026 8398 daemon tools lite embedded malicious ](./2026-05-27/cisa-kev-cve-2026-8398-daemon-tools-lite-embedded-malicious-.md)
 - [continuous offensive security the line we ve been walking](./2026-05-27/continuous-offensive-security-the-line-we-ve-been-walking.md)
-- [ghsa critical cve 2026 44632 yamcs vulnerable to server side](./2026-05-27/ghsa-critical-cve-2026-44632-yamcs-vulnerable-to-server-side.md)
-- [ghsa critical cve 2026 45618 liquidjs is vulnerable to remot](./2026-05-27/ghsa-critical-cve-2026-45618-liquidjs-is-vulnerable-to-remot.md)
-- [ghsa critical cve 2026 46562 yamcs vulnerable to remote code](./2026-05-27/ghsa-critical-cve-2026-46562-yamcs-vulnerable-to-remote-code.md)
-- [ghsa critical cve 2026 46621 yamcs vulnerable to authenticat](./2026-05-27/ghsa-critical-cve-2026-46621-yamcs-vulnerable-to-authenticat.md)
 - [legitimate looking codex remote ui secretly steals your ai t](./2026-05-27/legitimate-looking-codex-remote-ui-secretly-steals-your-ai-t.md)
 - [out of the crypt the evolving cyber extortion economy](./2026-05-27/out-of-the-crypt-the-evolving-cyber-extortion-economy.md)
 
 ## 2026-05-26
 - [btmob a stealthy rat burrowing deep into android devices](./2026-05-26/btmob-a-stealthy-rat-burrowing-deep-into-android-devices.md)
 - [cisa kev cve 2026 48172 litespeed cpanel plugin privilege es](./2026-05-26/cisa-kev-cve-2026-48172-litespeed-cpanel-plugin-privilege-es.md)
-- [ghsa critical cve 2026 33137 xwiki platform has an unauthent](./2026-05-26/ghsa-critical-cve-2026-33137-xwiki-platform-has-an-unauthent.md)
 - [why developer machines are now the number one target for sup](./2026-05-26/why-developer-machines-are-now-the-number-one-target-for-sup.md)
 
 ## 2026-05-23
@@ -1002,7 +995,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2025-08-15
 - [suspicious tag movement in aws s github action what happened](./2025-08-15/suspicious-tag-movement-in-aws-s-github-action-what-happened.md)
-- [when changed files changed everything our black hat 2025 pre](./2025-08-15/when-changed-files-changed-everything-our-black-hat-2025-pre.md)
 
 ## 2025-08-14
 - [ai agents in cybersecurity revolutionizing appsec](./2025-08-14/ai-agents-in-cybersecurity-revolutionizing-appsec.md)
