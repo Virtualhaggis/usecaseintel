@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### AutoGen Studio Python process spawns shell or calc.exe (AutoJack MCP RCE outcome)
 
-`UC_10_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_12_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -74,7 +74,7 @@ DeviceProcessEvents
 
 ### Vulnerable AutoGen Studio pre-release installed via pip (autogenstudio 0.4.3.dev1/dev2)
 
-`UC_10_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_12_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -101,7 +101,7 @@ PipInstalls
 
 ### Persistence written by AutoGen Studio Python process (Run keys / scheduled tasks)
 
-`UC_10_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_12_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

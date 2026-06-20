@@ -49,7 +49,7 @@ _(none detected from narrative keywords)_
 
 ### Execution of Talos top-prevalent malware (Coinminer VID001.exe / W32.Injector / Dropper.Miner) by hash
 
-`UC_154_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_155_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -70,7 +70,7 @@ DeviceProcessEvents
 
 ### File write of Talos top-prevalent malware hash to disk (drop site)
 
-`UC_154_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_155_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -204,7 +204,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A tale of two eras
 
-`UC_154_5` · phase: **exploit** · confidence: **High**
+`UC_155_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

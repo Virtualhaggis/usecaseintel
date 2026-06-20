@@ -21,8 +21,10 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical cve 2026 55447 langflow basefilecomponent base](./2026-06-19/ghsa-critical-cve-2026-55447-langflow-basefilecomponent-base.md)
 - [ghsa critical cve 2026 55791 craft cms blind ssrf and arbitr](./2026-06-19/ghsa-critical-cve-2026-55791-craft-cms-blind-ssrf-and-arbitr.md)
 - [ghsa critical ghsa c8qj jx8j fg2w dotvvm missing authorizati](./2026-06-19/ghsa-critical-ghsa-c8qj-jx8j-fg2w-dotvvm-missing-authorizati.md)
+- [ghsa critical ghsa h3m5 97jq qjrf openremote manager removea](./2026-06-19/ghsa-critical-ghsa-h3m5-97jq-qjrf-openremote-manager-removea.md)
 - [ghsa critical ghsa wfqx gjrf g28r crossplane signature verif](./2026-06-19/ghsa-critical-ghsa-wfqx-gjrf-g28r-crossplane-signature-verif.md)
 - [hackers exploit info disclosure bug in gravity smtp wordpres](./2026-06-19/hackers-exploit-info-disclosure-bug-in-gravity-smtp-wordpres.md)
+- [klue oauth breach victim list grows as icarus hackers claim ](./2026-06-19/klue-oauth-breach-victim-list-grows-as-icarus-hackers-claim-.md)
 - [operation endgame disrupts socgholish servers cleans 14 971 ](./2026-06-19/operation-endgame-disrupts-socgholish-servers-cleans-14-971-.md)
 - [salesforce disables klue app integration after oauth token a](./2026-06-19/salesforce-disables-klue-app-integration-after-oauth-token-a.md)
 - [texas govt data breach exposes over 3 million driver s licen](./2026-06-19/texas-govt-data-breach-exposes-over-3-million-driver-s-licen.md)
@@ -66,7 +68,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [nintendo confirms data stolen in webmd subsidiary cyberattac](./2026-06-18/nintendo-confirms-data-stolen-in-webmd-subsidiary-cyberattac.md)
 - [police cleans nearly 15 000 socgholish infected sites tied t](./2026-06-18/police-cleans-nearly-15-000-socgholish-infected-sites-tied-t.md)
 - [prevent npm and python supply chain attacks on developer mac](./2026-06-18/prevent-npm-and-python-supply-chain-attacks-on-developer-mac.md)
-- [shapedplugin update flow hacked to infect wordpress sites](./2026-06-18/shapedplugin-update-flow-hacked-to-infect-wordpress-sites.md)
 - [the full snyk ai security platform free for open source main](./2026-06-18/the-full-snyk-ai-security-platform-free-for-open-source-main.md)
 - [usb worm spreads crypto stealing malware via windows shortcu](./2026-06-18/usb-worm-spreads-crypto-stealing-malware-via-windows-shortcu.md)
 
@@ -225,7 +226,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2026-05-29
 - [cisa kev cve 2026 0257 palo alto networks pan os authenticat](./2026-05-29/cisa-kev-cve-2026-0257-palo-alto-networks-pan-os-authenticat.md)
 - [fix sca issues at scale in your terminal with snyk remediati](./2026-05-29/fix-sca-issues-at-scale-in-your-terminal-with-snyk-remediati.md)
-- [ghsa critical cve 2026 47131 vm2 has a sandbox escape issue](./2026-05-29/ghsa-critical-cve-2026-47131-vm2-has-a-sandbox-escape-issue.md)
 - [ghsa critical cve 2026 47137 vm2 has a cve 2023 37903 patch ](./2026-05-29/ghsa-critical-cve-2026-47137-vm2-has-a-cve-2023-37903-patch-.md)
 - [ghsa critical cve 2026 47140 nodevm builtin denylist bypass ](./2026-05-29/ghsa-critical-cve-2026-47140-nodevm-builtin-denylist-bypass-.md)
 - [ghsa critical cve 2026 47208 vm2 is vulnerable to sandbox br](./2026-05-29/ghsa-critical-cve-2026-47208-vm2-is-vulnerable-to-sandbox-br.md)

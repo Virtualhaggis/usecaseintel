@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### praisonai-platform admin DELETE on /workspaces or /{workspace}/members endpoints
 
-`UC_45_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_47_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -41,7 +41,7 @@ _(none detected from narrative keywords)_
 
 ### praisonai-platform attack chain: member enumeration GET followed by workspace-delete
 
-`UC_45_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_47_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-f38v-77qj-h4jq: praisonai-platform 0.1.4 still boots on t
 
-`UC_45_1` · phase: **exploit** · confidence: **High**
+`UC_47_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

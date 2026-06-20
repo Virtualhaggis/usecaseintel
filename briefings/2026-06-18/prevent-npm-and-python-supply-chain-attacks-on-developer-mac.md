@@ -31,7 +31,7 @@ _(none detected from narrative keywords)_
 
 ### Install of TeamPCP Miasma/Hades-compromised npm or PyPI package versions
 
-`UC_66_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_67_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -54,7 +54,7 @@ DeviceFileEvents
 
 ### Package-manager install descendant reads .npmrc / pip.conf credentials
 
-`UC_66_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_67_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -76,7 +76,7 @@ DeviceFileEvents
 
 ### Post-install node or python child process beaconing to non-registry public destination
 
-`UC_66_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_67_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

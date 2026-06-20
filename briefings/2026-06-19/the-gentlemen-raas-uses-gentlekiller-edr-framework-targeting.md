@@ -74,7 +74,7 @@ _(none detected from narrative keywords)_
 
 ### Gentlemen RaaS / GentleKiller BYOVD driver file drop (.sys IOC set)
 
-`UC_8_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_10_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceFileEvents
 
 ### BYOVD kernel-driver service registration via Services\ImagePath
 
-`UC_8_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_10_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -125,7 +125,7 @@ DeviceRegistryEvents
 
 ### Mass EDR/security-process tampering (GentleKiller 400-process kill list)
 
-`UC_8_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_10_9` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -154,7 +154,7 @@ DeviceEvents
 
 ### OxideHarvest credential stealer - single process scraping multiple browser stores
 
-`UC_8_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_10_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -188,7 +188,7 @@ DeviceFileEvents
 
 ### Security-vendor-impersonating binary (Enigma/Themida packed) executing from non-vendor path
 
-`UC_8_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_10_11` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -330,7 +330,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The Gentlemen RaaS Uses GentleKiller EDR Framework Targeting 400 Security Proces
 
-`UC_8_6` · phase: **exploit** · confidence: **High**
+`UC_10_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

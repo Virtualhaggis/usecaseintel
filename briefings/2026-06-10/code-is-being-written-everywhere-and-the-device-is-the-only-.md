@@ -42,7 +42,7 @@ _(none detected from narrative keywords)_
 
 ### Dev tooling beaconing to postmark-mcp / GlassWorm campaign infrastructure (giftshop.club, sfrclak.com)
 
-`UC_164_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_165_3` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ DeviceNetworkEvents
 
 ### VS Code / Cursor / node reaching Solana blockchain RPC endpoints (GlassWorm C2 channel)
 
-`UC_164_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_165_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceNetworkEvents
 
 ### Execution or file write of known GlassWorm / postmark-mcp sample SHA1 hashes
 
-`UC_164_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_165_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,7 +107,7 @@ union isfuzzy=true
 
 ### npm / node postinstall hook spawning network-capable LOLBin (supply-chain post-install execution)
 
-`UC_164_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_165_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -25,7 +25,10 @@ Share on X Share on X Share on LinkedIn Share on Facebook…
 - **T1204.002** — User Execution: Malicious File
 - **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1041** — Exfiltration Over C2 Channel
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1505.003** — Server Software Component: IDE Plugin (analogue)
+- **T1573** — Encrypted Channel (negation pattern)
+- **T1562.001** — Impair Defenses: Disable or Modify Tools
 
 ## Kill chain phases observed
 
@@ -33,62 +36,104 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### JetBrains IDE Java process spawning curl/wget to Alibaba Cloud Beijing range
+### JetBrains IDE outbound connection to malicious plugin C2 (39.107.60.51)
 
-`UC_5_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_7_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="39.107.60.51" by All_Traffic.src, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.app, All_Traffic.user | `drop_dm_object_name(All_Traffic)` | where app IN ("idea64.exe","idea.exe","pycharm64.exe","pycharm.exe","webstorm64.exe","webstorm.exe","goland64.exe","goland.exe","phpstorm64.exe","phpstorm.exe","rubymine64.exe","rubymine.exe","clion64.exe","clion.exe","rider64.exe","rider.exe","datagrip64.exe","datagrip.exe","studio64.exe","java.exe","javaw.exe") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="39.107.60.51" by All_Traffic.src All_Traffic.src_user All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name All_Traffic.bytes_out
+| `drop_dm_object_name("All_Traffic")`
+| eval is_jb_ide=if(match(lower(coalesce(process_name,app,"")),"(idea(64)?|pycharm(64)?|webstorm(64)?|phpstorm(64)?|rubymine(64)?|clion(64)?|goland(64)?|rider(64)?|datagrip(64)?|fleet|studio(64)?|aqua(64)?|rustrover(64)?)\.exe$"),1,0)
+| sort - is_jb_ide firstTime
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp > ago(30d)
+| where Timestamp > ago(240d)
 | where RemoteIP == "39.107.60.51"
-| where InitiatingProcessFileName has_any ("idea64.exe","idea.exe","pycharm64.exe","pycharm.exe","webstorm64.exe","webstorm.exe","goland64.exe","goland.exe","phpstorm64.exe","phpstorm.exe","rubymine64.exe","rubymine.exe","clion64.exe","clion.exe","rider64.exe","rider.exe","datagrip64.exe","datagrip.exe","studio64.exe","java.exe","javaw.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, Protocol
-| order by Timestamp desc
+| extend IsJetBrainsIDE = InitiatingProcessFileName has_any ("idea64.exe","idea.exe","pycharm64.exe","pycharm.exe","webstorm64.exe","phpstorm64.exe","rubymine64.exe","clion64.exe","goland64.exe","rider64.exe","datagrip64.exe","fleet.exe","studio64.exe","aqua64.exe","rustrover64.exe","dataspell64.exe","mps64.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP, IsJetBrainsIDE
+| order by IsJetBrainsIDE desc, Timestamp desc
 ```
 
-### JetBrains plugin directory contains malicious plugin IDs from credential-stealing campaign
+### HTTP exfil signature: POST to /api/software/ on 39.107.60.51
 
-`UC_5_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_7_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\JetBrains\\*\\plugins\\*" by Filesystem.dest, Filesystem.user, Filesystem.file_name, Filesystem.file_path | `drop_dm_object_name(Filesystem)` | where match(file_path, "(?i)(org\.sm\.yms\.toolkit|com\.json\.simple\.kit|org\.bug\.find\.tools|org\.translate\.ai\.simple|com\.yy\.test\.ai\.simple|com\.dev\.ai\.toolkit|com\.json\.view\.simple|com\.my\.git\.ai\.kit|org\.check\.ai\.ds|com\.review\.tool\.code|org\.code\.assist\.dev\.tool|com\.coder\.ai\.dpt|com\.my\.code\.tools|ord\.cp\.code\.ai\.kit)") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.user_agent) as user_agents values(Web.http_method) as methods from datamodel=Web.Web where (Web.dest="39.107.60.51" OR Web.url="*39.107.60.51*") AND (Web.url="*/api/software/*" OR Web.http_method="POST") by Web.src Web.user Web.url Web.dest
+| `drop_dm_object_name("Web")`
+| sort - firstTime
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let malicious_plugin_ids = dynamic(["org.sm.yms.toolkit","com.json.simple.kit","org.bug.find.tools","org.translate.ai.simple","com.yy.test.ai.simple","com.dev.ai.toolkit","com.json.view.simple","com.my.git.ai.kit","org.check.ai.ds","com.review.tool.code","org.code.assist.dev.tool","com.coder.ai.dpt","com.my.code.tools","ord.cp.code.ai.kit"]);
+DeviceNetworkEvents
+| where Timestamp > ago(240d)
+| where (RemoteIP == "39.107.60.51" or RemoteUrl has "39.107.60.51")
+| where RemotePort == 80 or RemoteUrl has "/api/software/"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP, LocalPort
+| order by Timestamp desc
+```
+
+### Malicious JetBrains plugin folder or JAR present in plugins directory
+
+`UC_7_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_hash) as sha256 from datamodel=Endpoint.Filesystem where Filesystem.file_path="*\\JetBrains\\*\\plugins\\*" OR Filesystem.file_path="*/JetBrains/*/plugins/*" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name
+| `drop_dm_object_name("Filesystem")`
+| eval bad_plugin = case(
+    match(file_path, "(?i)(DeepSeek Junit Test|DeepSeek Git Commit|DeepSeek FindBugs|DeepSeek AI Chat|DeepSeek Dev AI|DeepSeek AI Coding|AI FindBugs|AI Git Commitor|AI Coder Review|DeepSeek Coder AI|AI Coder Assistant|DeepSeek Code Review|CodeGPT AI Assistant|DeepSeek AI Assist)"), "display-name",
+    match(file_path, "(?i)(org\.sm\.yms\.toolkit|com\.json\.simple\.kit|org\.bug\.find\.tools|org\.translate\.ai\.simple|com\.yy\.test\.ai\.simple|com\.dev\.ai\.toolkit|com\.json\.view\.simple|com\.my\.git\.ai\.kit|org\.check\.ai\.ds|com\.review\.tool\.code|org\.code\.assist\.dev\.tool|com\.coder\.ai\.dpt|com\.my\.code\.tools|ord\.cp\.code\.ai\.kit)"), "plugin-id",
+    1==1, null)
+| where isnotnull(bad_plugin)
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let bad_display_names = dynamic(["DeepSeek Junit Test","DeepSeek Git Commit","DeepSeek FindBugs","DeepSeek AI Chat","DeepSeek Dev AI","DeepSeek AI Coding","AI FindBugs","AI Git Commitor","AI Coder Review","DeepSeek Coder AI","AI Coder Assistant","DeepSeek Code Review","CodeGPT AI Assistant","DeepSeek AI Assist"]);
+let bad_plugin_ids = dynamic(["org.sm.yms.toolkit","com.json.simple.kit","org.bug.find.tools","org.translate.ai.simple","com.yy.test.ai.simple","com.dev.ai.toolkit","com.json.view.simple","com.my.git.ai.kit","org.check.ai.ds","com.review.tool.code","org.code.assist.dev.tool","com.coder.ai.dpt","com.my.code.tools","ord.cp.code.ai.kit"]);
 DeviceFileEvents
 | where Timestamp > ago(240d)
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
 | where FolderPath has @"\JetBrains\" and FolderPath has @"\plugins\"
-| where FolderPath has_any (malicious_plugin_ids) or FileName has_any (malicious_plugin_ids)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where FolderPath has_any (bad_display_names) or FileName has_any (bad_display_names) or FolderPath has_any (bad_plugin_ids) or FileName has_any (bad_plugin_ids)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, FolderPath, SHA256, FileSize
 | order by Timestamp desc
 ```
 
-### Outbound HTTP POST with hardcoded X-Api-Key header F48D2AA7CF341F782C1D
+### JetBrains IDE plaintext HTTP (port 80) egress to external host
 
-`UC_5_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_7_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method="POST" by Web.src, Web.dest, Web.url, Web.http_user_agent, Web.uri_path | `drop_dm_object_name(Web)` | where match(url, "(?i)/api/software/") OR match(uri_path, "(?i)/api/software/") OR dest="39.107.60.51" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as destinations dc(All_Traffic.dest) as dest_count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port=80 AND All_Traffic.dest_category!="internal" by All_Traffic.src All_Traffic.app All_Traffic.process_name All_Traffic.dest
+| `drop_dm_object_name("All_Traffic")`
+| eval is_jb_ide=if(match(lower(coalesce(process_name,app,"")),"(idea(64)?|pycharm(64)?|webstorm(64)?|phpstorm(64)?|rubymine(64)?|clion(64)?|goland(64)?|rider(64)?|datagrip(64)?|fleet|studio(64)?|aqua(64)?|rustrover(64)?)\.exe$"),1,0)
+| where is_jb_ide=1
+| convert ctime(firstTime) ctime(lastTime)
+| sort - firstTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP == "39.107.60.51" or RemoteUrl has "/api/software/"
-| where RemotePort in (80, 8080)
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, Protocol
-| order by Timestamp desc
+| where InitiatingProcessFileName has_any ("idea64.exe","idea.exe","pycharm64.exe","pycharm.exe","webstorm64.exe","phpstorm64.exe","rubymine64.exe","clion64.exe","goland64.exe","rider64.exe","datagrip64.exe","fleet.exe","studio64.exe","aqua64.exe","rustrover64.exe","dataspell64.exe")
+| where RemotePort == 80
+| where RemoteIPType == "Public"
+| where not (RemoteUrl has_any ("jetbrains.com","intellij.net","plugins.jetbrains.com"))
+| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp), ConnCount = count(), SampleUrls = make_set(RemoteUrl, 5) by DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteIP
+| order by FirstSeen desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -206,7 +251,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 15 Malicious JetBrains Plugins Stole AI API Keys from 70,000 Developers
 
-`UC_5_5` · phase: **install** · confidence: **High**
+`UC_7_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -247,4 +292,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 9 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

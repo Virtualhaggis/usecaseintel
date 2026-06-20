@@ -50,7 +50,7 @@ _(none detected from narrative keywords)_
 
 ### GCP Storage bucket creation matching Vertex AI predictable staging name pattern
 
-`UC_108_6` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_109_6` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -65,7 +65,7 @@ _(none detected from narrative keywords)_
 
 ### Vertex AI Model.upload sourcing artifact from cross-project / unverified staging bucket
 
-`UC_108_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_109_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ _(none detected from narrative keywords)_
 
 ### google-cloud-aiplatform SDK version < 1.148.0 in use on workstation or CI
 
-`UC_108_8` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_109_8` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceProcessEvents
 
 ### Vertex AI serving container metadata token request followed by outbound POST to non-Google host
 
-`UC_108_9` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_109_9` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -147,7 +147,7 @@ DeviceNetworkEvents
 
 ### Cloud Function created with GCS finalize trigger on Vertex AI staging bucket pattern
 
-`UC_108_10` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_109_10` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +162,7 @@ DeviceNetworkEvents
 
 ### GCS object overwrite within 5s of upload on Vertex AI staging bucket
 
-`UC_108_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_109_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -179,7 +179,7 @@ DeviceNetworkEvents
 
 ### Vertex AI service-agent OAuth token used to access artifacts in a different tenant
 
-`UC_108_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_109_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

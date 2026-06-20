@@ -43,7 +43,7 @@ _(none detected from narrative keywords)_
 
 ### FortiGate VPN/admin credential-stuffing burst from single source IP
 
-`UC_13_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_15_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -52,7 +52,7 @@ _(none detected from narrative keywords)_
 
 ### FortiGate successful login using default/built-in admin account from external IP
 
-`UC_13_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_15_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ _(none detected from narrative keywords)_
 
 ### FortiGate config change within 10 minutes of admin login from a new external IP
 
-`UC_13_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_15_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

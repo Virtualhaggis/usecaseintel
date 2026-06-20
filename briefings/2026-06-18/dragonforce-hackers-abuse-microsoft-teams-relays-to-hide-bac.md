@@ -86,7 +86,7 @@ _(none detected from narrative keywords)_
 
 ### PowerShell drops 'tech support hotfix' ZIP archive (DragonForce Backdoor.Turn delivery)
 
-`UC_61_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_63_12` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -108,7 +108,7 @@ DeviceProcessEvents
 
 ### Bring-Your-Own-Vulnerable-Driver load (HWAuidoOs2Ec.sys + DragonForce BYOVD set)
 
-`UC_61_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_63_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -139,7 +139,7 @@ union
 
 ### Backdoor.Turn injection - CreateRemoteThread / process access targeting DbgView64.exe
 
-`UC_61_14` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_63_14` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -162,7 +162,7 @@ DeviceEvents
 
 ### Backdoor.Turn - DbgView64.exe initiating outbound network connection
 
-`UC_61_15` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_63_15` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -181,7 +181,7 @@ DeviceNetworkEvents
 
 ### DragonForce Backdoor.Turn - Known C2 IOC contact (IP/domain/SHA256)
 
-`UC_61_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_63_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -441,7 +441,7 @@ DeviceEvents
 
 ### Article-specific behavioural hunt — DragonForce Hackers Abuse Microsoft Teams Relays to Hide Backdoor.Turn C2 Traffi
 
-`UC_61_11` · phase: **exploit** · confidence: **High**
+`UC_63_11` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

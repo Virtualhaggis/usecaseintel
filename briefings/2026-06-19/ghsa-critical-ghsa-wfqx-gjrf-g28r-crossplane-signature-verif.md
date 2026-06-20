@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Crossplane Package CRD installed with mutable tag reference (GHSA-wfqx-gjrf-g28r precondition)
 
-`UC_3_0` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_5_0` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -45,7 +45,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable Crossplane control-plane version running in cluster (GHSA-wfqx-gjrf-g28r)
 
-`UC_3_1` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_5_1` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
