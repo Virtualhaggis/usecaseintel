@@ -10524,6 +10524,7 @@ __HOME__
         <button data-pl="spl" title="Splunk SPL">SPL</button>
         <button data-pl="datadog" title="Datadog Cloud SIEM logs query">Datadog</button>
         <button data-pl="falcon" title="CrowdStrike Falcon LogScale query">Falcon</button>
+        <button data-pl="cloudwatch" title="AWS CloudWatch Logs Insights">CloudWatch</button>
       </div>
       <div class="matrix-stats" id="matrixStats"></div>
     </div>
@@ -11646,7 +11647,15 @@ function _buildIndex() {
 
   // Actors — preferred source: window.__ACTORS__ (loaded by the actors tab),
   // fallback to scraping data-actor-name from the DOM if present.
-  const actorList = (window.__ACTORS__ && Array.isArray(window.__ACTORS__)) ? window.__ACTORS__ : [];
+  // Prefer the full actor objects (loaded by the Actors tab). Fall back to the
+  // slim search index (window.__SEARCH), which is eager-loaded on shell boot
+  // and carries every actor's name + match blob — so actor search works on the
+  // home page before the heavy data/actors.json chunk arrives.
+  let actorList = (window.__ACTORS__ && Array.isArray(window.__ACTORS__) && window.__ACTORS__.length)
+    ? window.__ACTORS__
+    : (Array.isArray(window.__SEARCH)
+        ? window.__SEARCH.filter(r => r && r.k === 'act' && r.n).map(r => ({ name: r.n, _blob: r.b }))
+        : []);
   actorList.forEach(a => {
     const name = a.name || a.canonical || '';
     if (!name) return;
@@ -11656,8 +11665,8 @@ function _buildIndex() {
       kind: 'actor',
       title: name,
       slug: (a.slug || name).toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-      meta: [country, aliases ? 'aka ' + aliases : '', (a.articles?.length || 0) + ' articles'].filter(Boolean).join(' · '),
-      blob: (name + ' ' + aliases + ' ' + country).toLowerCase(),
+      meta: a._blob ? 'Threat actor' : [country, aliases ? 'aka ' + aliases : '', (a.articles?.length || 0) + ' articles'].filter(Boolean).join(' · '),
+      blob: a._blob || (name + ' ' + aliases + ' ' + country).toLowerCase(),
     });
   });
 
@@ -12590,15 +12599,17 @@ function _libRenderCards() {
   const topLib = document.getElementById('topStatsLibrary');
   if (topLib) {
     let critical = 0;
-    const plats  = {def:0, sent:0, sigma:0, spl:0, datadog:0};
+    const plats  = {def:0, sent:0, sigma:0, spl:0, datadog:0, falcon:0, cloudwatch:0};
     for (const p of prepared) {
       if (p.sevTag === 'crit') critical++;
       if (p.plats) {
-        if (p.plats.def)     plats.def++;
-        if (p.plats.sent)    plats.sent++;
-        if (p.plats.sigma)   plats.sigma++;
-        if (p.plats.spl)     plats.spl++;
-        if (p.plats.datadog) plats.datadog++;
+        if (p.plats.def)        plats.def++;
+        if (p.plats.sent)       plats.sent++;
+        if (p.plats.sigma)      plats.sigma++;
+        if (p.plats.spl)        plats.spl++;
+        if (p.plats.datadog)    plats.datadog++;
+        if (p.plats.falcon)     plats.falcon++;
+        if (p.plats.cloudwatch) plats.cloudwatch++;
       }
     }
     const platformsCovered = Object.values(plats).filter(n => n > 0).length;
@@ -22351,7 +22362,10 @@ def render_home_credibility(generated_human: str, article_count: int,
     sources = [
         "The Hacker News", "BleepingComputer", "Microsoft Security Blog",
         "CISA KEV", "Cisco Talos", "Securelist (Kaspersky)", "SentinelLabs",
-        "Unit 42", "ESET WeLiveSecurity", "Lab52", "Cyber Security News",
+        "Unit 42", "ESET WeLiveSecurity", "Lab52",
+        # NB: "Cyber Security News" intentionally omitted — that feed is dead
+        # (HTTP 202 / 0 articles every run), so we don't advertise it as a
+        # contributing source.
     ]
     source_chips = "".join(
         f'<span class="home-cred-source">{html.escape(s)}</span>' for s in sources
@@ -22368,7 +22382,7 @@ def render_home_credibility(generated_human: str, article_count: int,
         f'<h3><span class="pulse" aria-hidden="true"></span>Continuously updated</h3>'
         f'<p><span data-generated-utc="{html.escape(gen_iso)}">{html.escape(fresh)}</span> — the detection pipeline runs every two hours, '
         f'pulls fresh threat intelligence from 11+ feeds, and regenerates the library end-to-end.</p>'
-        f'<p>This run analysed <strong>{article_count:,}</strong> articles, mapped each to MITRE ATT&amp;CK, and produced queries across six platforms.</p>'
+        f'<p>This run analysed <strong>{article_count:,}</strong> articles, mapped each to MITRE ATT&amp;CK, and produced queries across seven platforms.</p>'
         f'</article>\n'
         '      <article class="home-cred-card">'
         '<h3>Threat-intelligence-driven</h3>'
@@ -23268,7 +23282,12 @@ def main():
                 " ".join(ac.get("aliases") or []) + " " +
                 (ac.get("country") or "") + " " +
                 (ac.get("mitre_id") or "")).lower()
-        search_rows.append({"k": "act", "b": blob})
+        # Carry the display name so the global search can render + navigate to
+        # an actor result even before the heavy data/actors.json chunk has been
+        # lazy-loaded (it only loads on the Actors tab). Without this the search
+        # found nothing for actors like "DragonForce"/"Lazarus" on the home page
+        # despite advertising actor search.
+        search_rows.append({"k": "act", "b": blob, "n": ac.get("name") or ""})
     for io in (iocs or []):
         blob = ((io.get("value") or "") + " " +
                 (io.get("type") or "")).lower()
