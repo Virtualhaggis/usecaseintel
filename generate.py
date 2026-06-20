@@ -4570,6 +4570,28 @@ class UseCase:
         for _qk in ("datadog_query", "falcon_logscale_query", "cloudwatch_query"):
             if _query_structurally_broken(getattr(self, _qk, "") or ""):
                 setattr(self, _qk, "")
+        # Sigma spec requires `id:` to be a valid UUID. The LLM sometimes emits
+        # a UUID-shaped-but-invalid string (e.g. `...-2026shaihulud`), which
+        # hard-fails pysigma and every downstream Sigma/Elastic tool. Repair a
+        # present-but-invalid id with a deterministic uuid5 (stable per UC so
+        # re-runs don't churn git); valid ids are left untouched.
+        if (self.sigma_yaml or "").strip():
+            self.sigma_yaml = _normalize_sigma_uuid(self.sigma_yaml, self.title)
+
+
+def _normalize_sigma_uuid(sigma_yaml: str, seed: str) -> str:
+    m = re.search(r'(?m)^(\s*id:\s*)(\S+)\s*$', sigma_yaml)
+    if not m:
+        return sigma_yaml
+    cur = m.group(2).strip().strip('"\'')
+    import uuid as _u
+    try:
+        _u.UUID(cur)
+        return sigma_yaml  # already a valid UUID
+    except (ValueError, AttributeError, TypeError):
+        pass
+    new_id = str(_u.uuid5(_u.NAMESPACE_URL, f"clankerusecase.com/{seed}"))
+    return sigma_yaml[:m.start(2)] + new_id + sigma_yaml[m.end(2):]
 
 
 def _query_structurally_broken(text: str) -> bool:
