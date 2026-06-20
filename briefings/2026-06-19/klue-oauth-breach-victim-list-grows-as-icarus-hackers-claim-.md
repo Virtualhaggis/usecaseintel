@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### Auth from Icarus Klue-breach operator IPs (138.226.246.94 / 212.86.125.24 / 213.111.148.90 / 94.154.32.160)
 
-`UC_0_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_1_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ AADSignInEventsBeta
 
 ### Klue Battlecards Salesforce connected-app activity from non-Klue source IPs
 
-`UC_0_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_1_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -93,7 +93,7 @@ CloudAppEvents
 
 ### Python automation user-agent (python-requests / simple-salesforce) hitting Salesforce API at scale
 
-`UC_0_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_1_7` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -122,7 +122,7 @@ CloudAppEvents
 
 ### Endpoint or network egress to Icarus operator IPs (Klue Salesforce breach C2)
 
-`UC_0_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_1_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -142,7 +142,7 @@ DeviceNetworkEvents
 
 ### Inbound Icarus extortion email referencing Klue breach + Session messenger contact
 
-`UC_0_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_1_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

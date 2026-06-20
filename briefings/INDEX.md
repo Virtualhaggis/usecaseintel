@@ -8,6 +8,9 @@ _1188 per-article briefings — auto-generated from every article we've pulled. 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
 
+## 2026-06-20
+- [threat brief mitigating large scale credential attacks](./2026-06-20/threat-brief-mitigating-large-scale-credential-attacks.md)
+
 ## 2026-06-19
 - [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-06-19/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
 - [autojack attack lets one web page hijack ai agent for host c](./2026-06-19/autojack-attack-lets-one-web-page-hijack-ai-agent-for-host-c.md)
@@ -306,7 +309,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-05-15
 - [cisa kev cve 2026 42897 microsoft exchange server cross site](./2026-05-15/cisa-kev-cve-2026-42897-microsoft-exchange-server-cross-site.md)
-- [gremlin stealer s evolved tactics hiding in plain sight with](./2026-05-15/gremlin-stealer-s-evolved-tactics-hiding-in-plain-sight-with.md)
 - [malicious node ipc versions published to npm in suspected ma](./2026-05-15/malicious-node-ipc-versions-published-to-npm-in-suspected-ma.md)
 
 ## 2026-05-14

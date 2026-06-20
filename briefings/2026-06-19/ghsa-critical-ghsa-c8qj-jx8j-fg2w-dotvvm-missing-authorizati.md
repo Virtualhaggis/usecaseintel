@@ -37,7 +37,7 @@ _(none detected from narrative keywords)_
 
 ### Vulnerable DotVVM NuGet package deployed (GHSA-c8qj-jx8j-fg2w)
 
-`UC_13_0` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_14_0` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceTvmSoftwareInventory
 
 ### DotVVM framework assembly load on production host (exposure surface)
 
-`UC_13_1` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
+`UC_14_1` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql

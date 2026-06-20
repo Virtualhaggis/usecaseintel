@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Unauthenticated JSON-RPC tools/call hitting an internal MCP HTTP listener
 
-`UC_49_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_50_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -68,7 +68,7 @@ DeviceNetworkEvents
 
 ### Vulnerable praisonai npm package (<=1.7.1) installed on host
 
-`UC_49_3` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_50_3` · phase: **weapon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -90,7 +90,7 @@ DeviceFileEvents
 
 ### Node.js praisonai MCP server spawning shell or scripting interpreter (tool-call abuse)
 
-`UC_49_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_50_4` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-j4f3-55x4-r6q2: npm PraisonAI MCPServer exposes unauthent
 
-`UC_49_1` · phase: **exploit** · confidence: **High**
+`UC_50_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

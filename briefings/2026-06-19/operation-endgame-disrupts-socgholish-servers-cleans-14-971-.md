@@ -47,7 +47,7 @@ _(none detected from narrative keywords)_
 
 ### SocGholish fake-update JS executed by wscript.exe from browser download path
 
-`UC_14_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_15_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -69,7 +69,7 @@ DeviceProcessEvents
 
 ### wscript.exe spawning PowerShell with curl/IRM to .top TLD — SocGholish→MintsLoad
 
-`UC_14_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_15_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -91,7 +91,7 @@ DeviceProcessEvents
 
 ### PowerShell spawned by IIS w3wp.exe or php-cgi.exe on a WordPress host
 
-`UC_14_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_15_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceProcessEvents
 
 ### Unauthorized write to WordPress wp-content/plugins or wp-admin by web server process
 
-`UC_14_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_15_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceFileEvents
 
 ### First-seen subdomain on an established apex domain (SocGholish domain shadowing)
 
-`UC_14_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_15_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -166,7 +166,7 @@ Recent
 
 ### Suspicious admin user creation in WordPress wp_users by web server context
 
-`UC_14_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_15_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

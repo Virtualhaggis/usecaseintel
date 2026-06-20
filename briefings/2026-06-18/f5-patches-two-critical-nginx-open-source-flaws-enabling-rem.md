@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### NGINX worker process spawning shell, scripting interpreter, or download utility
 
-`UC_34_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_35_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceProcessEvents
 
 ### Inventory of hosts running NGINX versions vulnerable to CVE-2026-42530 / CVE-2026-42055
 
-`UC_34_3` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_35_3` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -32,7 +32,7 @@ _(none detected from narrative keywords)_
 
 ### Crawl4AI /crawl endpoint POST with Chromium launcher-switch payload in body (GHSA-r253-r9jw-qg44)
 
-`UC_35_0` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_36_0` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceNetworkEvents
 
 ### Chromium process invoked with --no-zygote AND subprocess-launcher override flag co-occurrence (Crawl4AI RCE)
 
-`UC_35_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_36_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -81,7 +81,7 @@ DeviceProcessEvents
 
 ### Chromium subprocess override spawns non-Chromium child (Crawl4AI RCE post-exploitation)
 
-`UC_35_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_36_2` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

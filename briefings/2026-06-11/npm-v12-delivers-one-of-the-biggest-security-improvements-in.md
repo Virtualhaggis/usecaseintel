@@ -60,7 +60,7 @@ _(none detected from narrative keywords)_
 
 ### Nx s1ngularity 'telemetry.js' postinstall payload execution
 
-`UC_157_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_158_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -86,7 +86,7 @@ DeviceProcessEvents
 
 ### TruffleHog secret scanner spawned by Node/npm (Shai-Hulud worm pattern)
 
-`UC_157_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_158_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -110,7 +110,7 @@ DeviceProcessEvents
 
 ### Nx s1ngularity exfil: GitHub repo 's1ngularity-repository' / 'results.b64'
 
-`UC_157_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_158_11` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ union
 
 ### Shai-Hulud Webhook.site C2 beacon from Node/npm/Bun process
 
-`UC_157_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_158_12` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -171,7 +171,7 @@ DeviceNetworkEvents
 
 ### Bun runtime fetched mid-npm-install (Shai-Hulud / Mini Shai-Hulud staging)
 
-`UC_157_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_158_13` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -212,7 +212,7 @@ union
 
 ### Implicit node-gyp rebuild from binding.gyp during npm install
 
-`UC_157_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_158_14` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -472,7 +472,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — npm v12 delivers one of the biggest security improvements in years
 
-`UC_157_8` · phase: **exploit** · confidence: **High**
+`UC_158_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

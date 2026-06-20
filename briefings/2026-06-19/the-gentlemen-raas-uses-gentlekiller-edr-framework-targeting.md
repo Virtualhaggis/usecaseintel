@@ -68,7 +68,7 @@ _(none detected from narrative keywords)_
 
 ### GentleKiller BYOVD vulnerable-driver file drop (Kaspersky/FACEIT/Valorant/Javelin/etc.)
 
-`UC_10_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_11_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceFileEvents
 
 ### GentleKiller / EDR-killer driver service registration in CurrentControlSet\Services
 
-`UC_10_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_11_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -123,7 +123,7 @@ DeviceRegistryEvents
 
 ### Third-party EDR-killer driver image load (HexKiller / ThrottleBlood / HavocKiller / hrwfpdrv)
 
-`UC_10_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_11_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -146,7 +146,7 @@ DeviceImageLoadEvents
 
 ### OxideHarvest stealer reading credential stores across niche browser portfolio (Torch/Comodo/Epic/BlackHawk/IceCat)
 
-`UC_10_10` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_11_10` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -179,7 +179,7 @@ DeviceFileEvents
 
 ### Mass termination of EDR/AV processes consistent with GentleKiller's 400-process target list
 
-`UC_10_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_11_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -338,7 +338,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — The Gentlemen RaaS Uses GentleKiller EDR Framework Targeting 400 Security Proces
 
-`UC_10_6` · phase: **exploit** · confidence: **High**
+`UC_11_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

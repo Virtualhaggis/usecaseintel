@@ -23,9 +23,8 @@ the targeted al…
 
 ## MITRE ATT&CK Techniques
 
-- **T1485** — Data Destruction
 - **T1190** — Exploit Public-Facing Application
-- **T1580** — Cloud Infrastructure Discovery
+- **T1485** — Data Destruction
 - **T1087** — Account Discovery
 
 ## Kill chain phases observed
@@ -34,37 +33,43 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### OpenRemote Manager bulk DELETE /api/{realm}/alarm — GHSA-h3m5-97jq-qjrf cross-tenant IDOR exploitation
+### OpenRemote Manager bulk alarm DELETE endpoint hit (GHSA-h3m5-97jq-qjrf)
 
-`UC_1_0` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count from datamodel=Web where Web.http_method=DELETE Web.url="*/api/*/alarm*" by _time span=5m, Web.src, Web.user, Web.dest, Web.url, Web.status
-| `drop_dm_object_name(Web)`
-| stats sum(count) as deletes, dc(url) as endpoints, values(status) as response_codes by src, user, dest
-| where deletes >= 3
-| sort - deletes
+| tstats summariesonly=true count from datamodel=Web where Web.http_method="DELETE" Web.url="*/api/*/alarm" Web.status IN (200,204) by _time, Web.src, Web.user, Web.dest, Web.url, Web.status span=1m | rename Web.* as * | rex field=url "/api/(?<realm>[^/]+)/alarm$" | where isnotnull(realm) | stats count by _time, src, user, dest, realm, status
 ```
 
-### OpenRemote alarm-ID enumeration via DELETE /api/{realm}/alarm 404/200 oracle (GHSA-h3m5-97jq-qjrf)
+### Bulk alarm DELETE volume anomaly — non-admin OpenRemote user
 
-`UC_1_1` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_2_1` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count from datamodel=Web where Web.http_method=DELETE Web.url="*/api/*/alarm*" by _time span=5m, Web.src, Web.user, Web.dest, Web.status
-| `drop_dm_object_name(Web)`
-| stats sum(count) as total,
-        sum(eval(if(like(status,"4%"),count,0))) as fourxx,
-        sum(eval(if(status="200",count,0))) as ok
-      by src, user, dest
-| eval err_ratio = round(fourxx / total, 2)
-| where total >= 10 AND err_ratio >= 0.5
-| sort - total
+| tstats summariesonly=true count from datamodel=Web where Web.http_method="DELETE" Web.url="*/api/*/alarm" Web.status IN (200,204) by _time, Web.src, Web.user, Web.dest span=10m | rename Web.* as * | where count >= 20 | sort - count
+```
+
+### OpenRemote alarm DELETE 401/403 probe burst followed by 200/204 success
+
+`UC_2_2` · phase: **recon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Web where Web.http_method="DELETE" Web.url="*/api/*/alarm" by _time, Web.src, Web.user, Web.status span=1m | rename Web.* as * | eval bucket=floor(_time/300)*300 | eval is_fail=if(status IN ("401","403"),count,0), is_ok=if(status IN ("200","204"),count,0) | stats sum(is_fail) as Failures, sum(is_ok) as Successes, earliest(_time) as FirstSeen, latest(_time) as LastSeen by bucket, src, user | where Failures >= 2 AND Successes >= 3
+```
+
+### OpenRemote alarm endpoint enumeration with realm-switching
+
+`UC_2_3` · phase: **recon** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Web where Web.http_method="DELETE" Web.url="*/api/*/alarm" by _time, Web.src, Web.user, Web.url span=1m | rename Web.* as * | rex field=url "/api/(?<realm>[^/]+)/alarm$" | where isnotnull(realm) | bin _time span=10m | stats dc(realm) as DistinctRealms, values(realm) as Realms, sum(count) as TotalDeletes by _time, src, user | where DistinctRealms >= 2 AND TotalDeletes >= 10
 ```
 
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 2 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 4 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
