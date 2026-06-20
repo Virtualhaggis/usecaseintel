@@ -1359,6 +1359,31 @@ def _autofix_kql_case_batch(ucs: list[dict]) -> int:
     return fixed
 
 
+# `!has_any` / `!has_all` are NOT real KQL operators — the LLM invents them by
+# analogy with `!has` / `!in`. The valid negation is `not(Col has_any (...))`.
+_KQL_BAD_NEGOP_RE = re.compile(r'([\w.\[\]]+)\s+!(has_any|has_all)\s*\(([^()]*)\)')
+
+
+def _autofix_kql_operator_batch(ucs: list[dict]) -> int:
+    """Rewrite the invalid `Col !has_any (...)` / `!has_all (...)` to the valid
+    `not(Col has_any (...))`, preserving the negation. Regex-safe (logic-
+    preserving), so no parser round-trip is needed."""
+    fixed = 0
+    for uc in ucs:
+        if not isinstance(uc, dict):
+            continue
+        for kql_key in ("defender_kql", "sentinel_kql"):
+            kql = uc.get(kql_key) or ""
+            if "!has_any" not in kql and "!has_all" not in kql:
+                continue
+            new = _KQL_BAD_NEGOP_RE.sub(r"not(\1 \2 (\3))", kql)
+            if new != kql:
+                uc[kql_key] = new
+                uc.setdefault("_operator_autofix", []).append(kql_key)
+                fixed += 1
+    return fixed
+
+
 def _attach_syntax_issues_batch(ucs: list[dict]) -> int:
     """Run the Kusto.Language parser across every UC's defender_kql and
     sentinel_kql in one subprocess call. Attaches issues per-platform to
@@ -1374,6 +1399,7 @@ def _attach_syntax_issues_batch(ucs: list[dict]) -> int:
     # in both the per-article and biweekly paths.
     _autofix_kql_verbatim_batch(ucs)   # \" inside @"..."  ->  ""
     _autofix_kql_case_batch(ucs)       # == "x.exe"  ->  =~ "x.exe"
+    _autofix_kql_operator_batch(ucs)   # !has_any (...)  ->  not(... has_any (...))
     # Build a flat batch of (id, kql) tuples; id encodes which uc and which
     # platform so we can dispatch results back to the right uc/key.
     batch: list[tuple[str, str]] = []
