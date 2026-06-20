@@ -39,13 +39,13 @@ LOOKBACK_DAYS = 36500     # ~100 years — effectively no rolling window.
                           # ranking issue, switch to lazy-loading older
                           # articles into a separate "Archive" view rather
                           # than dropping them.
-# Per-source per-run fetch cap. Raised from 500 so deep-history feeds (Snyk
-# serves ~1600 items) aren't silently truncated — every fetched article gets
-# stored in the cumulative archive. Still bounded so a malformed feed that
-# returns tens of thousands of entries can't flood a run. Override via env.
-# NB: the first run after raising this is slower (cold body-fetch of the
-# newly-admitted articles, ~1.2s each); subsequent runs are cache-warm.
-MAX_PER_SOURCE = int(os.environ.get("USECASEINTEL_MAX_PER_SOURCE", "3000"))
+# Per-source per-run fetch cap. 0 (the default) = NO cap — every article a
+# feed serves is fetched and stored in the cumulative archive, so nothing is
+# ever dropped. Set USECASEINTEL_MAX_PER_SOURCE to a positive integer ONLY as
+# a safety valve if a malformed feed ever floods a run. NB: the first run that
+# sees a newly-deep feed is slower (cold body-fetch, ~1.2s each); later runs
+# are cache-warm.
+MAX_PER_SOURCE = int(os.environ.get("USECASEINTEL_MAX_PER_SOURCE", "0"))
 
 SOURCES = [
     # News-style sources — broad coverage, light on IOC tables.
@@ -19364,17 +19364,19 @@ def _fetch_rss(source, since):
     if not feed.entries:
         print(f"    [!] feed returned ZERO entries ({source['name']}, "
               f"status={_status}) — dead feed or schema drift?")
-    if len(feed.entries) > MAX_PER_SOURCE:
-        # Silent truncation hid coverage loss (e.g. Snyk serves ~1600 items,
-        # capped to 500). Surface it so a feed that outgrows the cap — and
-        # the articles never processed/archived as a result — is visible.
+    if MAX_PER_SOURCE > 0 and len(feed.entries) > MAX_PER_SOURCE:
+        # Only reachable if an operator has re-imposed a cap via env. Surface
+        # the truncation so the dropped articles aren't an invisible coverage
+        # loss. With the default (0 = no cap) nothing is dropped.
         print(f"    [!] {source['name']} returned {len(feed.entries)} entries; "
               f"capping to MAX_PER_SOURCE={MAX_PER_SOURCE} "
               f"({len(feed.entries) - MAX_PER_SOURCE} dropped)")
     out = []
     fetched = 0
     undated = 0
-    for e in feed.entries[:MAX_PER_SOURCE]:
+    # MAX_PER_SOURCE <= 0 means no cap — process every entry the feed serves.
+    _entries = feed.entries if MAX_PER_SOURCE <= 0 else feed.entries[:MAX_PER_SOURCE]
+    for e in _entries:
         pub = _parse_published(e)
         if pub is None and (e.get("published") or e.get("updated")):
             # Date present but unparseable: the lookback filter below is
