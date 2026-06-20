@@ -5,11 +5,21 @@ high-fidelity multi-platform detection UCs into use_cases/weekly/<YYYY-WW>/.
 Each UC carries:
   • A rich `description` explaining what it detects, *why* it matters
     this fortnight, and which articles drove it
-  • All five platform queries (Defender KQL / Sentinel KQL / Sigma /
-    Splunk SPL / Datadog) when expressible
+  • All seven platform queries (Defender KQL / Sentinel KQL / Sigma /
+    Splunk SPL / Datadog / Falcon LogScale / CloudWatch Logs Insights)
+    when expressible
+  • Phase 1C analyst fields: expected FP scenarios, a triage→contain→hunt
+    response runbook, and an optional FP-suppressing filter clause
   • Tier=alerting (synthesised from multiple corroborating sources, so
     higher confidence than per-article UCs)
   • A `[WEEKLY] ` title prefix so the Detection Library can filter them
+
+Every emitted UC passes the same validation stack as the per-article
+path (KQL schema + syntax, SPL structure + CIM dataset/field check,
+Sigma, Datadog/Falcon/CloudWatch shape, side-effect quarantine), with
+one corrective re-prompt when the first attempt has issues. SPL that
+still fails CIM validation after the retry is dropped rather than
+committed — it would turn the validate.py CI gate red.
 
 Run weekly (Sunday evening fits well):
     python biweekly_review.py
@@ -214,8 +224,14 @@ def cluster_articles(articles: list[dict], min_cluster_size: int = 2) -> list[di
         "aws", "gcp", "github", "gitlab", "okta", "datadog", "sentinel",
         # Years / numbers
         "2024", "2025", "2026", "2027",
-        # Filing / advisory bodies
-        "cisa", "kev", "nvd", "mitre", "fbi", "nsa", "csa",
+        # Filing / advisory bodies + feed-name tokens (GHSA titles all start
+        # with "GHSA:" so the token clusters 30+ unrelated advisories)
+        "cisa", "kev", "nvd", "mitre", "fbi", "nsa", "csa", "ghsa",
+        # Polysemous attack-class tokens — "chain" mixes supply-chain /
+        # exploit-chain / infection-chain; "injection" mixes SQLi / prompt /
+        # process injection. Real clusters form on the specific tokens
+        # (npm, typosquat, langgraph, …) instead.
+        "chain", "injection",
         # Generic action verbs
         "release", "released", "patch", "patched", "patches", "update",
         "updates", "fix", "fixed", "fixes", "actively",
@@ -284,7 +300,7 @@ Below are <<N>> articles published in the last 14 days that all describe the SAM
 What "good" looks like:
   - Detects the TTP, not the IOC. IOCs rotate weekly; the technique persists. Reference IOCs only as substitution slots (`<sha256_list>`, `<c2_domain_list>`) so the UC stays useful as new IOCs land.
   - Multi-stage temporal correlation when the campaign has stages (e.g. "outbound to staging-domain within 5 minutes of script-host process start"). Use KQL `summarize`, SPL `tstats` + `streamstats`, or Datadog rule-level grouping for cross-event windows.
-  - Cross-platform parity: the same logic expressed in Defender KQL, Sentinel KQL, Sigma (where the single-event-shape fits), Splunk SPL with CIM datamodels, and Datadog logs query — all schema-correct.
+  - Cross-platform parity: the same logic expressed in Defender KQL, Sentinel KQL, Sigma (where the single-event-shape fits), Splunk SPL with CIM datamodels, Datadog logs query, CrowdStrike Falcon LogScale, and AWS CloudWatch Logs Insights — all schema-correct. Leave a platform's field as an empty string when the detection genuinely isn't expressible on its telemetry; never emit a guessed query.
   - Alert-grade by default. These come from multi-source corroboration so the bar is higher than a per-article hunch.
 
 A WEEKLY UC is NOT:
@@ -311,14 +327,37 @@ Reply with JSON only. No commentary. This exact shape:
   "sentinel_kql": "<full Microsoft Sentinel KQL — uses TimeGenerated. Empty string if not expressible on Sentinel telemetry>",
   "sigma_yaml": "<OPTIONAL platform-neutral Sigma rule. Emit ONLY when the joint pattern fits Sigma's single-event detection: schema. Multi-stage correlations don't fit Sigma — leave empty in those cases.>",
   "datadog_query": "<Datadog Cloud SIEM logs query — case-sensitive, source: + @field.path:value. Empty string if not expressible on Datadog telemetry.>",
+  "falcon_logscale_query": "<CrowdStrike Falcon LogScale (NG-SIEM) query targeting FDR event_simpleName schemas (ProcessRollup2 / DnsRequest / NetworkConnectIP4 / FileWritten / AsepValueUpdate …). Empty string if not expressible on Falcon FDR telemetry.>",
+  "cloudwatch_query": "<AWS CloudWatch Logs Insights query (fields | filter | stats | sort) against CloudTrail / VPC Flow / IAM log groups, with a leading `# log group:` comment. Empty string if not expressible on CloudWatch telemetry.>",
   "confidence": "High | Medium | Low",
   "tier": "alerting | hunting",
   "fp_rate_estimate": "low | medium | high",
   "required_telemetry": ["Sysmon EID 1", "Defender DeviceProcessEvents", "Sentinel SecurityEvent", ...],
+  "kill_chain_phase": "initial_access | execution | persistence | privilege_escalation | defense_evasion | credential_access | discovery | lateral_movement | collection | command_and_control | exfiltration | impact",
+  "expected_fp_scenarios": ["3-5 concrete false-positive scenarios an analyst would see in production", ...],
+  "response_runbook": "3-step SOC playbook (1) Triage: … 2) Contain: … 3) Hunt: …) — under 200 words",
+  "false_positive_filters": "<OPTIONAL KQL/SPL where-clause that suppresses the expected FPs without losing true positives. Empty string if no clean refinement exists.>",
   "rationale": "1-2 sentences on WHY this catches the joint pattern across these articles specifically",
   "_articles": ["briefings/<date>/<slug>.md", ...]
 }
 ```
+
+SPL CIM RULES — every fortnightly batch so far has violated at least one of
+these and failed the validate.py CI gate. They are HARD requirements:
+  1. datamodel paths are EXACT: Endpoint.Processes / Endpoint.Filesystem /
+     Endpoint.Registry / Network_Traffic.All_Traffic / Network_Resolution.DNS /
+     Authentication.Authentication / Change.All_Changes / Web /
+     Email.All_Email / Vulnerabilities. NEVER bare `datamodel=Network_Traffic`
+     and NEVER `Web.Web`.
+  2. Network_Traffic.All_Traffic has NO url / dest_host / dest_hostname /
+     process / process_guid fields. It carries the network 4-tuple plus app,
+     user, bytes, action. Domain matching uses All_Traffic.dest; URL-path or
+     user-agent matching needs the Web datamodel (Web.url,
+     Web.http_user_agent) — or drop that clause entirely.
+  3. The Endpoint.Processes command-line field is Processes.process — there
+     is NO Processes.process_command_line.
+  4. Change.All_Changes: stick to action / command / dest / dvc /
+     object_category / object_id / result / status / user.
 
 CONTEXT — ARTICLES IN SCOPE
 ================================================================
@@ -333,6 +372,14 @@ KQL HOUSE STYLE (Defender + Sentinel)
 DATADOG CLOUD SIEM SCHEMA + QUERY SYNTAX
 ================================================================
 <<DATADOG_SCHEMA>>
+================================================================
+FALCON LOGSCALE (CROWDSTRIKE NG-SIEM) REFERENCE
+================================================================
+<<FALCON_SCHEMA>>
+================================================================
+AWS CLOUDWATCH LOGS INSIGHTS REFERENCE
+================================================================
+<<CLOUDWATCH_SCHEMA>>
 ================================================================
 
 Output the JSON now."""
@@ -387,17 +434,35 @@ def build_prompt(cluster: dict, max_body_chars: int = 4000,
                   max_articles: int = 12) -> str:
     arts = _sample_cluster(cluster["articles"], max_articles=max_articles)
     block = _format_article_block(arts, max_body_chars)
+    # Article-aware knowledge selection (generate._kql_knowledge_for): the
+    # slim base plus only the example queries / table recipes matching the
+    # cluster's TTP shape. Falls back to the static block on older
+    # generate.py builds.
+    cluster_text = "\n".join(
+        (a.get("title") or "") + "\n" + (a.get("body") or "")[:1500]
+        for a in arts)
+    if hasattr(g, "_kql_knowledge_for"):
+        kql_knowledge = g._kql_knowledge_for(cluster_text)
+    else:
+        kql_knowledge = _KQL_KNOWLEDGE_BLOCK
+    falcon_block = getattr(g, "_FALCON_KNOWLEDGE_BLOCK", "") or "(reference unavailable)"
+    cloudwatch_block = getattr(g, "_CLOUDWATCH_KNOWLEDGE_BLOCK", "") or "(reference unavailable)"
     return (_WEEKLY_PROMPT
             .replace("<<N>>", str(len(arts)))
             .replace("<<ARTICLE_BLOCK>>", block)
-            .replace("<<KQL_KNOWLEDGE>>", _KQL_KNOWLEDGE_BLOCK)
-            .replace("<<DATADOG_SCHEMA>>", _DATADOG_KNOWLEDGE_BLOCK))
+            .replace("<<KQL_KNOWLEDGE>>", kql_knowledge)
+            .replace("<<DATADOG_SCHEMA>>", _DATADOG_KNOWLEDGE_BLOCK)
+            .replace("<<FALCON_SCHEMA>>", falcon_block)
+            .replace("<<CLOUDWATCH_SCHEMA>>", cloudwatch_block))
 
 
 def call_llm(prompt: str, best_fidelity: bool = False) -> str | None:
     """Try OAuth first (no extra cost on the user's plan); fall back to
     API key if that fails. Mirrors generate.py's policy."""
-    use_oauth = bool(int(g.os.environ.get("USECASEINTEL_USE_CLAUDE_OAUTH", "1")))
+    # Same truthy convention as generate.py — int() alone would crash the
+    # whole run on USECASEINTEL_USE_CLAUDE_OAUTH=true/yes.
+    use_oauth = g.os.environ.get(
+        "USECASEINTEL_USE_CLAUDE_OAUTH", "1").lower() in ("1", "true", "yes")
     if use_oauth:
         try:
             r = g._llm_call_via_oauth(prompt, enable_search=best_fidelity)
@@ -460,10 +525,16 @@ def emit_yaml(uc: dict, articles: list[dict]) -> str:
     if rationale and rationale not in desc:
         desc = desc + "\n\nRationale: " + rationale
 
-    impls = ["defender", "sentinel"]
+    # Implementations reflect what's actually present — "sentinel" used to
+    # be claimed unconditionally even when sentinel_kql came back empty.
+    impls = []
+    if uc.get("defender_kql"): impls.append("defender")
+    if uc.get("sentinel_kql"): impls.append("sentinel")
     if uc.get("splunk_spl"):  impls.append("splunk")
     if uc.get("sigma_yaml"):  impls.append("sigma")
     if uc.get("datadog_query"): impls.append("datadog")
+    if uc.get("falcon_logscale_query"): impls.append("falcon")
+    if uc.get("cloudwatch_query"): impls.append("cloudwatch")
 
     body = []
     body.append(f"id: {uc['_id']}")
@@ -494,6 +565,36 @@ def emit_yaml(uc: dict, articles: list[dict]) -> str:
         body.append(f"splunk_spl: {_yaml_block(uc['splunk_spl'])}")
     if uc.get("datadog_query"):
         body.append(f"datadog_query: {_yaml_block(uc['datadog_query'])}")
+    if uc.get("falcon_logscale_query"):
+        body.append(f"falcon_logscale_query: {_yaml_block(uc['falcon_logscale_query'])}")
+    if uc.get("cloudwatch_query"):
+        body.append(f"cloudwatch_query: {_yaml_block(uc['cloudwatch_query'])}")
+    req = [str(t).strip() for t in (uc.get("required_telemetry") or []) if t][:8]
+    if req:
+        body.append("required_telemetry:")
+        for t in req:
+            body.append(f"- {_yaml_scalar(t[:120])}")
+    # Phase 1C analyst fields — read back by generate._load_uc_from_yaml.
+    kcp = str(uc.get("kill_chain_phase") or "").strip().lower()
+    if kcp in ("initial_access", "execution", "persistence",
+               "privilege_escalation", "defense_evasion", "credential_access",
+               "discovery", "lateral_movement", "collection",
+               "command_and_control", "exfiltration", "impact"):
+        body.append(f"kill_chain_phase: {kcp}")
+    fps = uc.get("expected_fp_scenarios") or []
+    if isinstance(fps, str):
+        fps = [fps]
+    fps = [str(s).strip().replace("\n", " ")[:300] for s in fps if s][:6]
+    if fps:
+        body.append("expected_fp_scenarios:")
+        for s in fps:
+            body.append(f"- {_yaml_scalar(s)}")
+    runbook = str(uc.get("response_runbook") or "").strip()[:1000]
+    if runbook:
+        body.append(f"response_runbook: {_yaml_block(runbook)}")
+    fpf = str(uc.get("false_positive_filters") or "").strip()[:1000]
+    if fpf:
+        body.append(f"false_positive_filters: {_yaml_block(fpf)}")
     return "\n".join(body) + "\n"
 
 
@@ -526,6 +627,8 @@ def write_weekly_briefing(week_tag: str, emitted: list[dict]):
         if uc.get("sigma_yaml"):   plats.append("Sigma")
         if uc.get("splunk_spl"):   plats.append("Splunk SPL")
         if uc.get("datadog_query"): plats.append("Datadog")
+        if uc.get("falcon_logscale_query"): plats.append("Falcon LogScale")
+        if uc.get("cloudwatch_query"): plats.append("CloudWatch")
         lines.append(f"- **Platforms:** {', '.join(plats)}")
         lines.append("")
         lines.append((uc.get("description") or "").strip())
@@ -571,6 +674,143 @@ def _parse_llm_response(raw: str) -> dict | None:
         return json.loads(m.group(0))
     except Exception:
         return None
+
+
+# =============================================================================
+# Pre-emit validation — the same stack the per-article path runs, plus the
+# SPL-CIM dataset/field check that validate.py (the CI gate) enforces.
+# Weekly UCs used to skip ALL of this and shipped 28 CIM errors straight
+# into the catalogue between W19 and W23.
+# =============================================================================
+
+_SPL_DM_RE = re.compile(r"from\s+datamodel\s*=\s*([\w.]+)", re.IGNORECASE)
+_SPL_NODENAME_RE = re.compile(r'nodename\s*=\s*"?([\w.]+)"?', re.IGNORECASE)
+_SPL_FIELD_RE = re.compile(r"\b([A-Z][A-Za-z_]+)\.([a-z][\w]+)\b")
+_SPL_RESERVED = {"as", "by", "where", "values", "count", "earliest", "latest",
+                 "first_seen", "last_seen", "min", "max", "stats", "rename",
+                 "eval", "fields", "table", "lookup", "set", "to"}
+
+_CIM_VALID: dict | None = None
+_ATTACK_IDS: set | None = None
+
+
+def _valid_attack_ids() -> set:
+    """Set of current MITRE ATT&CK technique IDs from registry.json — the
+    same catalogue validate.py checks against. Empty set on a fresh clone
+    (no registry) so the caller degrades to a no-op rather than dropping
+    every technique."""
+    global _ATTACK_IDS
+    if _ATTACK_IDS is not None:
+        return _ATTACK_IDS
+    ids: set = set()
+    try:
+        reg = json.loads((ROOT / "data_sources" / "registry.json")
+                         .read_text(encoding="utf-8"))
+        ids = set((reg.get("attack_techniques") or {}).keys())
+    except Exception:
+        pass
+    _ATTACK_IDS = ids
+    return ids
+
+
+def _cim_valid_fields() -> dict:
+    """{dataset_path: set(valid_fields)} from registry.json (ESCU usage)
+    union cim_spec_fields.json (hand-curated spec allowlist) — the same
+    union validate.py checks against. Empty dict when the registry is
+    missing (fresh clone) so the check degrades to a no-op."""
+    global _CIM_VALID
+    if _CIM_VALID is not None:
+        return _CIM_VALID
+    valid: dict[str, set] = {}
+    try:
+        reg = json.loads((ROOT / "data_sources" / "registry.json")
+                         .read_text(encoding="utf-8"))
+        for k, v in (reg.get("cim_datasets") or {}).items():
+            valid.setdefault(k, set()).update(v or [])
+    except Exception:
+        pass
+    try:
+        spec = json.loads((ROOT / "data_sources" / "cim_spec_fields.json")
+                          .read_text(encoding="utf-8"))
+        for k, v in spec.items():
+            if isinstance(v, list):
+                valid.setdefault(k, set()).update(v)
+    except Exception:
+        pass
+    _CIM_VALID = valid
+    return valid
+
+
+def _attach_spl_cim_issues(uc: dict) -> int:
+    """Validate splunk_spl datamodel paths + field refs against the CIM
+    registry. Appends human-readable issue strings to uc['_spl_issues']
+    (so the shared retry formatter picks them up) and records the count
+    in uc['_spl_cim_error_count'] for the post-retry drop decision."""
+    uc["_spl_cim_error_count"] = 0
+    spl = uc.get("splunk_spl") or ""
+    valid = _cim_valid_fields()
+    if not spl.strip() or not valid:
+        return 0
+    issues: list[str] = []
+    dm_paths = set(_SPL_DM_RE.findall(spl)) | set(_SPL_NODENAME_RE.findall(spl))
+    for full in dm_paths:
+        if full not in valid:
+            close = ", ".join(sorted(valid.keys())[:6])
+            issues.append(
+                f"datamodel `{full}` is not a valid CIM dataset path — use one of: {close}, …")
+            continue
+        short = full.split(".")[-1]
+        for s, fld in _SPL_FIELD_RE.findall(spl):
+            if s != short or fld in _SPL_RESERVED:
+                continue
+            if fld not in valid[full]:
+                issues.append(
+                    f"`{short}.{fld}` is not a CIM field on {full} — "
+                    f"pick from the {full} field set")
+    if issues:
+        uc.setdefault("_spl_issues", []).extend(issues)
+        uc["_spl_cim_error_count"] = len(issues)
+    return len(issues)
+
+
+_UC_ISSUE_KEYS = (
+    "_field_issues", "_field_issues_autofix",
+    "_sentinel_field_issues", "_sentinel_field_issues_autofix",
+    "_syntax_issues", "_sentinel_syntax_issues", "_sigma_issues",
+    "_cwli_issues", "_spl_issues", "_datadog_issues",
+    "_falcon_issues", "_dangerous_issues", "_spl_cim_error_count",
+)
+
+
+def _autofix_kqls(uc: dict) -> None:
+    for kql_key in ("defender_kql", "sentinel_kql"):
+        if g._auto_fix_kql_fields and uc.get(kql_key):
+            fixed, changes = g._auto_fix_kql_fields(uc[kql_key])
+            if changes:
+                uc[kql_key] = fixed
+                print(f"    auto-fixed {kql_key}: {', '.join(changes)}")
+
+
+def _validate_uc_dict(uc: dict) -> int:
+    """Run the full validation stack on one LLM-emitted UC dict. Returns
+    the error count that should trigger a retry (Sigma issues are
+    informational — the field is optional by design)."""
+    for k in _UC_ISSUE_KEYS:
+        uc.pop(k, None)
+    n = 0
+    n += g._attach_field_issues(uc, "defender_kql")
+    n += g._attach_field_issues(uc, "sentinel_kql",
+                                issues_key="_sentinel_field_issues")
+    g._attach_sigma_issues(uc, "sigma_yaml")
+    n += g._attach_cwli_issues(uc, "cloudwatch_query")
+    n += g._attach_spl_issues(uc, "splunk_spl")
+    n += g._attach_generic_query_issues(uc, "datadog_query", "Datadog", "_datadog_issues")
+    n += g._attach_generic_query_issues(uc, "falcon_logscale_query",
+                                        "Falcon LogScale", "_falcon_issues")
+    n += g._attach_dangerous_issues(uc)
+    n += g._attach_syntax_issues_batch([uc])
+    n += _attach_spl_cim_issues(uc)
+    return n
 
 
 def main() -> int:
@@ -634,13 +874,62 @@ def main() -> int:
             print(f"    [!] Duplicate of existing UC (key match) — skipping")
             continue
         existing_keys.add(key)
-        # Auto-fix queries
-        for kql_key in ("defender_kql", "sentinel_kql"):
-            if g._auto_fix_kql_fields and uc.get(kql_key):
-                fixed, changes = g._auto_fix_kql_fields(uc[kql_key])
-                if changes:
-                    uc[kql_key] = fixed
-                    print(f"    auto-fixed {kql_key}: {', '.join(changes)}")
+        # ---- Pre-emit validation, one corrective re-prompt ----
+        # Same policy as the per-article path: validate every platform
+        # query, feed the issue list back to the LLM once, keep whichever
+        # attempt validates cleaner.
+        _autofix_kqls(uc)
+        errs = _validate_uc_dict(uc)
+        if errs:
+            error_text = g._format_validation_errors_for_retry([uc])
+            if error_text:
+                print(f"    [VALIDATE] {errs} issue(s) — re-prompting once with the error list")
+                raw2 = call_llm(prompt + "\n\n" + error_text,
+                                best_fidelity=args.best_fidelity)
+                uc2 = _parse_llm_response(raw2) if raw2 else None
+                if uc2:
+                    _autofix_kqls(uc2)
+                    errs2 = _validate_uc_dict(uc2)
+                    # <= : on a tie the retry wins — it incorporated the
+                    # corrections, so equal counts usually mean a deeper
+                    # issue surfaced once a shallow one was fixed.
+                    if errs2 <= errs:
+                        print(f"    [VALIDATE] retry kept: {errs} -> {errs2} issue(s)")
+                        uc, errs = uc2, errs2
+                    else:
+                        print(f"    [VALIDATE] retry was worse ({errs2} issue(s)) — keeping first attempt")
+        # Safety quarantine — a side-effectful query never ships.
+        if uc.get("_dangerous_issues"):
+            print("    [!] QUARANTINED — unsafe query survived the retry:")
+            for iss in uc.get("_dangerous_issues") or []:
+                print(f"        - {iss}")
+            continue
+        # SPL that still fails the CIM check would turn the validate.py CI
+        # gate red the moment it's committed — ship the UC without SPL
+        # rather than ship broken SPL.
+        if uc.get("_spl_cim_error_count"):
+            print("    [!] splunk_spl still fails CIM validation — dropping the "
+                  "SPL field (other platforms ship)")
+            uc.pop("splunk_spl", None)
+        if errs:
+            print(f"    [!] {errs} residual validation issue(s) — shipping with warnings")
+        # Drop any hallucinated MITRE technique IDs not in the current ATT&CK
+        # catalogue. validate.py flags unknown technique IDs as ERRORS, so a
+        # bogus id would turn the CI gate red the moment biweekly.bat commits.
+        # Keep the UC (the detection logic is still useful) but only with real
+        # techniques — same "ship without the broken part" policy as bad SPL.
+        _valid_ids = _valid_attack_ids()
+        if _valid_ids:
+            _techs = uc.get("techniques") or []
+            _dropped = [t.get("id") for t in _techs if (t.get("id") or "") not in _valid_ids]
+            if _dropped:
+                print(f"    [!] dropping {len(_dropped)} unknown ATT&CK id(s) "
+                      f"(not in MITRE catalogue): {_dropped}")
+                uc["techniques"] = [t for t in _techs
+                                    if (t.get("id") or "") in _valid_ids]
+        # Strip internal issue keys so they never leak into the YAML path.
+        for k in _UC_ISSUE_KEYS:
+            uc.pop(k, None)
         # Stable ID
         uid = "UC_WEEKLY_" + _slug(uc.get("title", "")).upper().replace("-", "_")
         digest = hashlib.sha1(("|".join(a["path"] for a in cluster["articles"])).encode()).hexdigest()[:6]
