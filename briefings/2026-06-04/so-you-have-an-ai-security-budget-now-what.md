@@ -20,59 +20,12 @@ Organizations should budget for two connected fronts: securing agentic developme
 
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
-- **T1203** — Exploitation for Client Execution
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### mcp-remote OAuth authorization_endpoint RCE (CVE-2025-6514) — node spawning shell
-
-`UC_210_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name="node.exe" AND Processes.parent_process="*mcp-remote*" AND (Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe" OR Processes.process_name="cmd.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName =~ "node.exe"
-| where InitiatingProcessCommandLine has "mcp-remote"
-| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName,
-          ParentCmd  = InitiatingProcessCommandLine,
-          ChildImage = FolderPath,
-          ChildCmd   = ProcessCommandLine,
-          SHA256, InitiatingProcessSHA256
-| order by Timestamp desc
-```
-
-### Vulnerable mcp-remote (CVE-2025-6514) version present on hosts
-
-`UC_210_3` · phase: **recon** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstSeen max(_time) as lastSeen from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2025-6514" OR (Vulnerabilities.signature="mcp-remote" AND Vulnerabilities.severity IN ("critical","high")) by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstSeen) ctime(lastSeen) | sort - severity
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId =~ "CVE-2025-6514"
-| join kind=leftouter (DeviceInfo | summarize arg_max(Timestamp, OSPlatform, PublicIP, LoggedOnUsers) by DeviceId) on DeviceId
-| project DeviceId, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate, LoggedOnUsers, PublicIP
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-```
 
 ### Trusted vendor binary / installer launching unusual children
 
@@ -108,4 +61,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

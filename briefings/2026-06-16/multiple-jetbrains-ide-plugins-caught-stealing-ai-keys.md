@@ -22,11 +22,9 @@ Blog Vulnerabilities & Threats Multiple JetBrains IDE plugins caught stealing AI
 - **T1555.003** — Credentials from Web Browsers
 - **T1195.002** — Compromise Software Supply Chain
 - **T1041** — Exfiltration Over C2 Channel
-- **T1567.002** — Exfiltration to Cloud Storage
-- **T1567** — Exfiltration Over Web Service
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1195.001** — Compromise Software Dependencies and Development Tools
-- **T1505.005** — Server Software Component: IDE Extensions
+- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1528** — Steal Application Access Token
 
 ## Kill chain phases observed
 
@@ -34,13 +32,16 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### JetBrains IDE process connects to malicious plugin C2 39.107.60.51
+### JetBrains IDE plugin AI-key exfil: endpoint egress to C2 39.107.60.51
 
-`UC_110_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_111_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest="39.107.60.51" by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app, All_Traffic.transport | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="39.107.60.51" by All_Traffic.src_ip, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.app, All_Traffic.user, All_Traffic.transport
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
@@ -48,46 +49,61 @@ _(none detected from narrative keywords)_
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
 | where RemoteIP == "39.107.60.51"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessAccountUpn, RemoteIP, RemotePort, RemoteUrl, Protocol
+| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, Protocol,
+          InitiatingProcessFileName, InitiatingProcessFolderPath,
+          InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### Inspected HTTP POST to /api/software/ with attacker's static X-Api-Key header
+### JetBrains AI-key stealer HTTP exfil: cleartext POST to /api/software/ path
 
-`UC_110_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_111_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.dest="39.107.60.51" OR Web.url="*/api/software/*") Web.http_method="POST" by Web.src, Web.user, Web.dest, Web.url, Web.http_method, Web.http_user_agent | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*/api/software/*" OR Web.dest="39.107.60.51") AND Web.http_method="POST" by Web.src, Web.dest, Web.url, Web.http_method, Web.http_user_agent, Web.user
+| `drop_dm_object_name(Web)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteIP == "39.107.60.51" or RemoteUrl has "/api/software/"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountUpn, RemoteIP, RemotePort, RemoteUrl
+| where ActionType == "HttpConnectionInspected"
+| where RemoteUrl has "/api/software/" or RemoteUrl has "39.107.60.51"
+| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl,
+          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### Malicious JetBrains Marketplace plugin ID present in IDE plugins folder
+### Malicious JetBrains Marketplace plugin install (15 DeepSeek/CodeGPT clone IDs)
 
-`UC_110_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_111_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*JetBrains*plugins*" Filesystem.file_name IN ("*org.sm.yms.toolkit*","*com.json.simple.kit*","*org.bug.find.tools*","*org.translate.ai.simple*","*com.yy.test.ai.simple*","*com.dev.ai.toolkit*","*com.json.view.simple*","*com.my.git.ai.kit*","*org.check.ai.ds*","*com.review.tool.code*","*org.code.assist.dev.tool*","*com.coder.ai.dpt*","*com.my.code.tools*","*ord.cp.code.ai.kit*","*com.dp.git.ai.tool*") by Filesystem.dest, Filesystem.user, Filesystem.file_path, Filesystem.file_name, Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Endpoint.Filesystem.file_path="*\\JetBrains\\*\\plugins\\*" AND (Endpoint.Filesystem.file_path="*DeepSeek Junit Test*" OR Endpoint.Filesystem.file_path="*DeepSeek Git Commit*" OR Endpoint.Filesystem.file_path="*DeepSeek FindBugs*" OR Endpoint.Filesystem.file_path="*DeepSeek AI Chat*" OR Endpoint.Filesystem.file_path="*DeepSeek Dev AI*" OR Endpoint.Filesystem.file_path="*DeepSeek AI Coding*" OR Endpoint.Filesystem.file_path="*AI FindBugs*" OR Endpoint.Filesystem.file_path="*AI Git Commitor*" OR Endpoint.Filesystem.file_path="*AI Coder Review*" OR Endpoint.Filesystem.file_path="*DeepSeek Coder AI*" OR Endpoint.Filesystem.file_path="*AI Coder Assistant*" OR Endpoint.Filesystem.file_path="*DeepSeek Code Review*" OR Endpoint.Filesystem.file_path="*CodeGPT AI Assistant*" OR Endpoint.Filesystem.file_path="*DeepSeek AI Assist*" OR Endpoint.Filesystem.file_path="*Coding Simple Tool*") by Endpoint.Filesystem.dest, Endpoint.Filesystem.file_path, Endpoint.Filesystem.file_name, Endpoint.Filesystem.user
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let MaliciousPluginIds = dynamic(["org.sm.yms.toolkit","com.json.simple.kit","org.bug.find.tools","org.translate.ai.simple","com.yy.test.ai.simple","com.dev.ai.toolkit","com.json.view.simple","com.my.git.ai.kit","org.check.ai.ds","com.review.tool.code","org.code.assist.dev.tool","com.coder.ai.dpt","com.my.code.tools","ord.cp.code.ai.kit","com.dp.git.ai.tool"]);
 DeviceFileEvents
-| where Timestamp > ago(60d)
+| where Timestamp > ago(90d)
 | where FolderPath has "JetBrains" and FolderPath has "plugins"
-| where FileName has_any (MaliciousPluginIds) or FolderPath has_any (MaliciousPluginIds)
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountUpn, SHA256
-| order by Timestamp desc
+| where FolderPath has_any (
+    "DeepSeek Junit Test","DeepSeek Git Commit","DeepSeek FindBugs",
+    "DeepSeek AI Chat","DeepSeek Dev AI","DeepSeek AI Coding",
+    "AI FindBugs","AI Git Commitor","AI Coder Review","DeepSeek Coder AI",
+    "AI Coder Assistant","DeepSeek Code Review","CodeGPT AI Assistant",
+    "DeepSeek AI Assist","Coding Simple Tool")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Files=make_set(FileName, 20)
+          by DeviceName, FolderPath, InitiatingProcessFileName, InitiatingProcessAccountName
+| order by LastSeen desc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -213,4 +229,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

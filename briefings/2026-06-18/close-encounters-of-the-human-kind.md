@@ -1,4 +1,4 @@
-# [HIGH] Close Encounters of the Human Kind
+# [MED] Close Encounters of the Human Kind
 
 **Source:** Cisco Talos
 **Published:** 2026-06-18
@@ -30,7 +30,6 @@ So,  Disclosure Day  then. A group of friends and I visited a …
 
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1496** — Resource Hijacking
 
 ## Kill chain phases observed
 
@@ -38,49 +37,9 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Talos top-prevalence malware hash sweep — VID001.exe coinminer + f_000cd7.html (week of 2026-06-18)
-
-`UC_36_2` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash IN ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507", "c0ad494457dcd9e964378760fb6aca86a23622045bca851d8f3ab49ec33978fe") OR Processes.process_name="VID001.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process_hash Processes.process
-| `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-| append [| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash IN ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507", "c0ad494457dcd9e964378760fb6aca86a23622045bca851d8f3ab49ec33978fe")) by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash
-| `drop_dm_object_name(Filesystem)`
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`]
-| sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-let TalosTopHashes = dynamic(["9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507", "c0ad494457dcd9e964378760fb6aca86a23622045bca851d8f3ab49ec33978fe"]);
-let ProcessHits = DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where SHA256 in~ (TalosTopHashes) or InitiatingProcessSHA256 in~ (TalosTopHashes)
-    | project Timestamp, Source="DeviceProcessEvents", DeviceName, AccountName,
-              FileName, FolderPath, SHA256, ProcessCommandLine,
-              ParentFileName=InitiatingProcessFileName,
-              ParentCmd=InitiatingProcessCommandLine;
-let FileHits = DeviceFileEvents
-    | where Timestamp > ago(7d)
-    | where SHA256 in~ (TalosTopHashes) or InitiatingProcessSHA256 in~ (TalosTopHashes)
-    | project Timestamp, Source="DeviceFileEvents", DeviceName,
-              AccountName=InitiatingProcessAccountName,
-              FileName, FolderPath, SHA256,
-              ProcessCommandLine=InitiatingProcessCommandLine,
-              ParentFileName=InitiatingProcessParentFileName,
-              ParentCmd="";
-union ProcessHits, FileHits
-| order by Timestamp desc
-```
-
 ### Article-specific behavioural hunt — Close Encounters of the Human Kind
 
-`UC_36_1` · phase: **exploit** · confidence: **High**
+`UC_37_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -137,4 +96,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **MED** based on: IOCs present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

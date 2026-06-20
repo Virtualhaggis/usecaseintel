@@ -29,121 +29,12 @@ Summary On June 8, 2026, version 0.8.101 of the popular graph machine learning p
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
 - **T1543.001** — Persistence (article-specific)
-- **T1105** — Ingress Tool Transfer
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1036.005** — Masquerading: Match Legitimate Resource Name or Location
-- **T1003.007** — OS Credential Dumping: Proc Filesystem
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### Python import-hook downloads Bun runtime from oven-sh GitHub release (Hades Campaign)
-
-`UC_178_8` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src from datamodel=Web where Web.url="*github.com/oven-sh/bun/releases/download/bun-v1.3.14/*" by Web.user Web.dest host | `drop_dm_object_name(Web)` | join type=inner host [| tstats `summariesonly` count from datamodel=Endpoint.Processes where Processes.process_name IN ("python","python3","python.exe") by Processes.dest Processes.process_name Processes.process | rename Processes.dest as host | `drop_dm_object_name(Processes)`]
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteUrl has "github.com/oven-sh/bun/releases/download/bun-v1.3.14"
-| where InitiatingProcessFileName has_any ("python","python3","python.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
-```
-
-### Bun standalone runtime executes _index.js bootstrapper spawned from Python (Hades)
-
-`UC_178_9` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where Processes.process_name="bun" Processes.parent_process_name IN ("python","python3","python.exe") Processes.process="*_index.js*" by Processes.dest Processes.user Processes.process_path | `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName =~ "bun"
-| where InitiatingProcessFileName has_any ("python","python3","python.exe")
-| where ProcessCommandLine has "run" and ProcessCommandLine has "_index.js"
-| where FolderPath has_any ("/tmp/b/","/tmp/","\\Temp\\b\\")
-| project Timestamp, DeviceName, AccountName, FolderPath, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
-| order by Timestamp desc
-```
-
-### Hades Campaign once-per-boot marker file /tmp/.bun_ran created by Python
-
-`UC_178_10` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where Filesystem.file_name=".bun_ran" Filesystem.action=created Filesystem.process_name IN ("python","python3","python.exe") by Filesystem.dest Filesystem.user | `drop_dm_object_name(Filesystem)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType == "FileCreated"
-| where FileName == ".bun_ran"
-| where FolderPath has_any ("/tmp/","\\Temp\\","/var/folders/")
-| where InitiatingProcessFileName has_any ("python","python3","python.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### Linux /proc/{pid}/mem read targeting GitHub Actions Runner.Worker (Hades memory scraper)
-
-`UC_178_11` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as path values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where Filesystem.file_path IN ("/proc/*/mem","/proc/*/maps") Filesystem.process_name IN ("python","python3","bun") by Filesystem.dest Filesystem.user Filesystem.process_path | `drop_dm_object_name(Filesystem)`
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where FolderPath matches regex @"^/proc/[0-9]+/(mem|maps)$"
-| where InitiatingProcessFileName has_any ("python","python3","bun")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### Hades Campaign compromised PyPI package install (ensmallen, embiggen, gpsea, et al.)
-
-`UC_178_12` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.process_name IN ("pip","pip3","python","python3") Processes.process="*install*" (Processes.process="*ensmallen*" OR Processes.process="*embiggen*" OR Processes.process="*gpsea*" OR Processes.process="*pyphetools*" OR Processes.process="*nhmpy*" OR Processes.process="*ppkt2synergy*" OR Processes.process="*mflux-streamlit*") by Processes.dest Processes.process_name | `drop_dm_object_name(Processes)`
-```
-
-**Defender KQL:**
-```kql
-let MaliciousPackages = dynamic(["ensmallen==0.8.101","embiggen==0.11.97","gpsea==0.9.14","pyphetools==0.9.120","nhmpy==2.4.7","ppkt2synergy==0.1.1","mflux-streamlit==0.0.3","mflux-streamlit==0.0.4"]);
-let PackageNames = dynamic(["ensmallen","embiggen","gpsea","pyphetools","nhmpy","ppkt2synergy","mflux-streamlit"]);
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where (FileName has_any ("pip","pip3") or (FileName has_any ("python","python3") and ProcessCommandLine has "pip"))
-| where ProcessCommandLine has "install"
-| where ProcessCommandLine has_any (MaliciousPackages) or ProcessCommandLine has_any (PackageNames)
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -400,7 +291,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pythagora-io/gpt-pilot Compromised on GitHub - Shai-Hulud Credential Stealer Blo
 
-`UC_178_7` · phase: **exploit** · confidence: **High**
+`UC_179_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -450,4 +341,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 13 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

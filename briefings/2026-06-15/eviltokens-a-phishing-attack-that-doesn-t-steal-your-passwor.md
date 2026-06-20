@@ -59,10 +59,8 @@ EvilTokens is a phishing-as-a-service (PhaaS) kit built to compromise Microsoft 
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1071** — Application Layer Protocol
-- **T1566.002** — Phishing: Spearphishing Link
 - **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1566** — Phishing
-- **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1566.002** — Phishing: Spearphishing Link
 - **T1564.008** — Hide Artifacts: Email Hiding Rules
 - **T1114.003** — Email Collection: Email Forwarding Rule
 
@@ -72,100 +70,106 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### EvilTokens lure email - inbound message referencing microsoft.com/devicelogin or device code prompts
+### Microsoft 365 OAuth device code authentication flow sign-in (EvilTokens)
 
-`UC_139_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Email where Email.direction=inbound (Email.subject="*verify to view*" OR Email.subject="*signature required*" OR Email.subject="*device code*" OR Email.url="*microsoft.com/devicelogin*" OR Email.url="*authdocspro.com*" OR Email.url="*notificationsmanagersec.com*" OR Email.url="*eventcalender-schedule.com*" OR Email.url="*evobothub.org*" OR Email.url="*framebound.cloud*" OR Email.url="*infinitechai.org*" OR Email.url="*backdoor-hub.com*" OR Email.url="*docusend.networkssolutionmail.com*") by Email.src_user Email.recipient Email.subject Email.url | `drop_dm_object_name(Email)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-EmailEvents
-| where Timestamp > ago(7d)
-| where EmailDirection == "Inbound" and DeliveryAction in ("Delivered","DeliveredAsSpam")
-| where Subject has_any ("verify to view","signature required","device code","devicelogin","shared document","signature requested")
-| join kind=inner (
-    EmailUrlInfo
-    | where Timestamp > ago(7d)
-    | where Url has_any ("microsoft.com/devicelogin","oauth2/deviceauth","authdocspro.com","backdoor-hub.com","docusend.networkssolutionmail.com","eventcalender-schedule.com","evobothub.org","framebound.cloud","infinitechai.org","notificationsmanagersec.com","internalmemorecord.bxwancheng.com","newmobilepolojean.com")
-) on NetworkMessageId
-| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, Subject, Url, UrlDomain, DeliveryAction, AuthenticationDetails
-| order by Timestamp desc
-```
-
-### Successful Entra ID device code OAuth flow sign-in - EvilTokens authorisation handoff
-
-`UC_139_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_140_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Authentication where Authentication.action=success Authentication.signature="deviceCode" by Authentication.user Authentication.src Authentication.app Authentication.user_agent | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime from datamodel=Authentication where Authentication.action=success Authentication.signature="*Device Code*" by Authentication.user, Authentication.src, Authentication.app, Authentication.signature
+| `drop_dm_object_name("Authentication")`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 AADSignInEventsBeta
-| where Timestamp > ago(7d)
-| where ErrorCode == 0
-| extend AuthDetailsStr = tostring(AuthenticationDetails)
-| extend AuthProcessingStr = tostring(AuthenticationProcessingDetails)
-| where AuthDetailsStr has "deviceCode" or AuthProcessingStr has "deviceCode" or AuthenticationRequirement has "deviceCode"
-| project Timestamp, AccountUpn, AccountDisplayName, IPAddress, Country, City, Application, AppDisplayName, ApplicationId, UserAgent, DeviceName, AadDeviceId, IsAnonymousProxy, RiskLevelDuringSignIn, RiskState, ConditionalAccessStatus, AuthDetailsStr
-| order by Timestamp desc
-```
-
-### Host or user contacting EvilTokens C2 / lure infrastructure (IOC sweep)
-
-`UC_139_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where (Network_Traffic.All_Traffic.dest in ("162.220.232.0","162.220.234.0","89.150.45.0","185.81.113.0") OR Network_Traffic.All_Traffic.dest_host IN ("authdocspro.com","backdoor-hub.com","bumpgames.net","carbatterygurgaon.com","careldutoit-el.co.za","dao.com.au","docusend.networkssolutionmail.com","eqfit.co.za","eventcalender-schedule.com","evobothub.org","framebound.cloud","infinitechai.org","internalmemorecord.bxwancheng.com","macmamo.com","mirsanotolastik.com","mirzanyapi.com","newmobilepolojean.com","notificationsmanagersec.com","pelangiservice.com","prcservis.com")) by Network_Traffic.All_Traffic.src Network_Traffic.All_Traffic.dest Network_Traffic.All_Traffic.dest_host Network_Traffic.All_Traffic.user | `drop_dm_object_name("Network_Traffic.All_Traffic")` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let EvilTokensDomains = dynamic(["authdocspro.com","backdoor-hub.com","bumpgames.net","carbatterygurgaon.com","careldutoit-el.co.za","dao.com.au","docusend.networkssolutionmail.com","eqfit.co.za","eventcalender-schedule.com","evobothub.org","framebound.cloud","infinitechai.org","internalmemorecord.bxwancheng.com","macmamo.com","mirsanotolastik.com","mirzanyapi.com","newmobilepolojean.com","notificationsmanagersec.com","pelangiservice.com","prcservis.com"]);
-let EvilTokensIPs = dynamic(["162.220.232.0","162.220.234.0","89.150.45.0","185.81.113.0"]);
-DeviceNetworkEvents
 | where Timestamp > ago(14d)
-| where RemoteIP in (EvilTokensIPs) 
-   or RemoteUrl has_any (EvilTokensDomains)
-| project Timestamp, DeviceName, InitiatingProcessAccountUpn, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, Protocol
+| where ErrorCode == 0
+| where AuthenticationProcessingDetails contains "Device Code"
+| where AccountUpn !endswith "$"
+| project Timestamp, AccountUpn, AccountDisplayName, AppDisplayName, ResourceDisplayName, IPAddress, Country, City, UserAgent, ClientAppUsed, RiskLevelDuringSignIn, RiskState
 | order by Timestamp desc
 ```
 
-### Inbox rule creation immediately following Entra ID device code sign-in
+### EvilTokens device-code token polling from attacker infra (python-requests UA / C2 IPs)
 
-`UC_139_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_140_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` min(_time) as deviceCodeTime from datamodel=Authentication where Authentication.action=success Authentication.signature="deviceCode" by Authentication.user | `drop_dm_object_name(Authentication)` | join type=inner user [ | tstats `summariesonly` min(_time) as ruleTime from datamodel=Change where Change.action=created Change.object_category="InboxRule" by Change.user | `drop_dm_object_name(Change)` | rename Change.user as user ] | eval diff_sec=ruleTime-deviceCodeTime | where diff_sec>=0 AND diff_sec<=3600 | convert ctime(deviceCodeTime) ctime(ruleTime)
+| tstats `summariesonly` count, values(Authentication.app) as app, values(Authentication.user) as user, min(_time) as firstTime, max(_time) as lastTime from datamodel=Authentication where Authentication.action=success (Authentication.src="162.220.232.*" OR Authentication.src="162.220.234.*" OR Authentication.src="89.150.45.*" OR Authentication.src="185.81.113.*") by Authentication.src
+| `drop_dm_object_name("Authentication")`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let DeviceCodeSignIns = AADSignInEventsBeta
-    | where Timestamp > ago(7d)
+AADSignInEventsBeta
+| where Timestamp > ago(14d)
+| where AuthenticationProcessingDetails contains "Device Code"
+| where UserAgent has "python-requests"
+    or ipv4_is_in_any_range(IPAddress, "162.220.232.0/24", "162.220.234.0/24", "89.150.45.0/24", "185.81.113.0/24")
+| project Timestamp, AccountUpn, AccountDisplayName, AppDisplayName, IPAddress, Country, City, UserAgent, ErrorCode, RiskLevelDuringSignIn, RiskState
+| order by Timestamp desc
+```
+
+### EvilTokens device-code lure email (Acrobat/DocuSign decoy, 'Verify to view')
+
+`UC_140_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, values(Email.subject) as subject, min(_time) as firstTime, max(_time) as lastTime from datamodel=Email where Email.message_direction=inbound (Email.subject="*Verify to view*" OR Email.subject="*Signature required*" OR Email.subject="*Signature requested*" OR Email.subject="*Verify to access*") by Email.src_user, Email.recipient, Email.message_id
+| `drop_dm_object_name("Email")`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+EmailEvents
+| where Timestamp > ago(14d)
+| where EmailDirection == "Inbound"
+| join kind=inner (EmailUrlInfo | project NetworkMessageId, Url, UrlDomain) on NetworkMessageId
+| where UrlDomain in~ ("authdocspro.com", "docusend.networkssolutionmail.com", "notificationsmanagersec.com", "eventcalender-schedule.com", "newmobilepolojean.com", "evobothub.org", "framebound.cloud", "infinitechai.org", "backdoor-hub.com")
+    or (Subject has_any ("Verify to view", "Signature required", "Signature requested", "Verify to access") and Url has "devicelogin")
+| project Timestamp, SenderFromAddress, SenderDisplayName, RecipientEmailAddress, Subject, Url, UrlDomain, DeliveryAction, DeliveryLocation
+| order by Timestamp desc
+```
+
+### Post-device-code malicious inbox rule creation (BEC prep)
+
+`UC_140_9` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, values(All_Changes.command) as command, min(_time) as firstTime, max(_time) as lastTime from datamodel=Change where All_Changes.object_category=inbox_rule (All_Changes.action=created OR All_Changes.action=modified) by All_Changes.user, All_Changes.src, All_Changes.object
+| `drop_dm_object_name("All_Changes")`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let DeviceCodeUsers = AADSignInEventsBeta
+    | where Timestamp > ago(14d)
     | where ErrorCode == 0
-    | extend AuthDetailsStr = tostring(AuthenticationDetails)
-    | where AuthDetailsStr has "deviceCode" or AuthenticationRequirement has "deviceCode"
-    | project DeviceCodeTime = Timestamp, AccountUpn, IPAddress, Application;
+    | where AuthenticationProcessingDetails contains "Device Code"
+    | distinct AccountObjectId;
 CloudAppEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("New-InboxRule","Set-InboxRule","UpdateInboxRules")
-| extend RuleDetails = tostring(RawEventData)
-| where RuleDetails has_any ("DeleteMessage","MoveToFolder","ForwardTo","RedirectTo","MarkAsRead")
-   or RuleDetails has_any ("RSS Feeds","Archive","Conversation History",".. ","!")
-| join kind=inner DeviceCodeSignIns on $left.AccountDisplayName == $right.AccountUpn
-| where Timestamp between (DeviceCodeTime .. DeviceCodeTime + 60m)
-| extend DelayMinutes = datetime_diff('minute', Timestamp, DeviceCodeTime)
-| project DeviceCodeTime, RuleCreatedTime = Timestamp, DelayMinutes, AccountDisplayName, IPAddress, Application, ActionType, ObjectName, RuleDetails
-| order by RuleCreatedTime desc
+| where Timestamp > ago(14d)
+| where ActionType in~ ("New-InboxRule", "Set-InboxRule", "UpdateInboxRules")
+| where AccountObjectId in (DeviceCodeUsers)
+| where tostring(RawEventData) has_any ("DeleteMessage", "MoveToFolder", "ForwardTo", "RedirectTo", "Deleted Items", "Junk Email", "RSS Feeds", "Archive", "MarkAsRead")
+| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, ActionType, ObjectName, RawEventData
+| order by Timestamp desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -381,4 +385,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

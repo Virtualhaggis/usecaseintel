@@ -37,147 +37,12 @@ The malware is a Rust binary built to harvest developer secrets. When it lands w
 - **T1195.002** — Compromise Software Supply Chain
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1059.004** — Unix Shell
-- **T1204.002** — Malicious File
-- **T1543.002** — Systemd Service
-- **T1014** — Rootkit
-- **T1564** — Hide Artifacts
-- **T1622** — Debugger Evasion
-- **T1567.002** — Exfiltration to Cloud Storage
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1090.003** — Multi-hop Proxy
-- **T1573** — Encrypted Channel
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### Atomic Arch: makepkg child spawning npm install atomic-lockfile or bun install js-digest
-
-`UC_150_11` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name values(Processes.user) as user from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("makepkg","bash","sh","zsh") AND Processes.process_name IN ("npm","bun","node","yarn") AND (Processes.process="*install atomic-lockfile*" OR Processes.process="*install js-digest*") by Processes.dest Processes.parent_process Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where InitiatingProcessFileName in~ ("makepkg","bash","sh","zsh","fish")
-| where FileName in~ ("npm","bun","node","yarn")
-| where ProcessCommandLine has_any ("install atomic-lockfile","install js-digest","atomic-lockfile@1.4.2")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc
-```
-
-### Atomic Arch: deps ELF execution by SHA256/MD5 or src/hooks/deps path
-
-`UC_150_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.process_hash="6144d433f8a0316869877b5f834c801251bbb936e5f1577c5680878c7443c98b" OR Processes.process_hash="42b59fdbe1b72895b2951412222ebf40" OR Processes.process_path="*/src/hooks/deps*") by Processes.dest Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-union
-( DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 =~ "6144d433f8a0316869877b5f834c801251bbb936e5f1577c5680878c7443c98b"
-         or MD5 =~ "42b59fdbe1b72895b2951412222ebf40"
-         or FolderPath has "src/hooks" and FileName =~ "deps"
-    | project Timestamp, DeviceName, AccountName, Source = "Process", FileName, FolderPath, SHA256, MD5, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine ),
-( DeviceFileEvents
-    | where Timestamp > ago(30d)
-    | where SHA256 =~ "6144d433f8a0316869877b5f834c801251bbb936e5f1577c5680878c7443c98b"
-         or MD5 =~ "42b59fdbe1b72895b2951412222ebf40"
-         or FolderPath has "src/hooks" and FileName =~ "deps"
-    | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, Source = "File", FileName, FolderPath, SHA256, MD5, ProcessCommandLine="", InitiatingProcessFileName, InitiatingProcessCommandLine )
-| order by Timestamp desc
-```
-
-### Atomic Arch: systemd unit with Restart=always dropped by non-package-manager process
-
-`UC_150_13` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/etc/systemd/system/*.service" OR Filesystem.file_path="*/.config/systemd/user/*.service") AND NOT Filesystem.process_name IN ("pacman","makepkg","systemctl","systemd-sysv-install","dpkg","apt","rpm","dnf") by Filesystem.dest Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(14d)
-| where ActionType in ("FileCreated","FileModified")
-| where FileName endswith ".service"
-| where FolderPath has_any ("/etc/systemd/system/","/.config/systemd/user/")
-| where InitiatingProcessFileName !in~ ("pacman","makepkg","systemctl","systemd-sysv-install","dpkg","apt","apt-get","rpm","dnf","yum","snapd","flatpak")
-| project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessAccountName, SHA256
-| order by Timestamp desc
-```
-
-### Atomic Arch: eBPF rootkit pinned maps hidden_pids/hidden_names/hidden_inodes in /sys/fs/bpf/
-
-`UC_150_14` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process_name from datamodel=Endpoint.Filesystem where Filesystem.file_path="/sys/fs/bpf/*" AND Filesystem.file_name IN ("hidden_pids","hidden_names","hidden_inodes") by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FolderPath startswith "/sys/fs/bpf/"
-| where FileName in~ ("hidden_pids","hidden_names","hidden_inodes")
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessAccountName, SHA256
-| order by Timestamp desc
-```
-
-### Atomic Arch: outbound HTTP upload to temp.sh from developer/build host
-
-`UC_150_15` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src from datamodel=Web.Web where Web.dest_host="temp.sh" OR Web.url="*temp.sh*" by Web.dest Web.http_method Web.user | `drop_dm_object_name(Web)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where RemoteUrl has "temp.sh" or RemoteUrl endswith ".temp.sh"
-| project Timestamp, DeviceName, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessSHA256
-| order by Timestamp desc
-```
-
-### Atomic Arch: non-Tor-aware process connecting to local SOCKS proxy on 9050/9150
-
-`UC_150_16` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.process_name) as process_name values(All_Traffic.user) as user from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("127.0.0.1","::1") AND All_Traffic.dest_port IN (9050,9150) AND NOT All_Traffic.process_name IN ("tor","firefox","torbrowser-launcher","brave","obfs4proxy","snowflake-client") by All_Traffic.src All_Traffic.process_name All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(14d)
-| where RemoteIPType == "Loopback" or RemoteIP in ("127.0.0.1","::1")
-| where RemotePort in (9050, 9150)
-| where InitiatingProcessFileName !in~ ("tor","torbrowser-launcher","firefox","firefox-esr","brave","obfs4proxy","snowflake-client")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessAccountName, InitiatingProcessSHA256, RemoteIP, RemotePort
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -462,7 +327,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Over 400 Arch Linux AUR Packages Hijacked to Deploy Infostealer and eBPF Rootkit
 
-`UC_150_10` · phase: **exploit** · confidence: **High**
+`UC_151_10` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -522,4 +387,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 17 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -19,16 +19,18 @@ Back to Blog Threat Intel 400+ AUR Packages Hijacked: What the “Atomic Arch”
 - **T1555.003** — Credentials from Web Browsers
 - **T1195.002** — Compromise Software Supply Chain
 - **T1071** — Application Layer Protocol
-- **T1059.004** — Unix Shell
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1552.004** — Unsecured Credentials: Private Keys
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1567.002** — Exfiltration to Cloud Storage
+- **T1572** — Protocol Tunneling
+- **T1090.003** — Proxy: Multi-hop Proxy
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1105** — Ingress Tool Transfer
-- **T1552.001** — Credentials In Files
-- **T1014** — Rootkit
-- **T1547** — Boot or Logon Autostart Execution
-- **T1564** — Hide Artifacts
+- **T1041** — Exfiltration Over C2 Channel
 - **T1543.002** — Create or Modify System Process: Systemd Service
-- **T1053.006** — Scheduled Task/Job: Systemd Timers
-- **T1202** — Indirect Command Execution
+- **T1014** — Rootkit
+- **T1547.006** — Boot or Logon Autostart Execution: Kernel Modules and Extensions
 
 ## Kill chain phases observed
 
@@ -36,133 +38,117 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Atomic Arch: AUR helper spawning npm/bun install of malicious lockfile packages
+### Atomic Arch malicious npm/bun dependency install via hijacked AUR PKGBUILD
 
-`UC_70_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_71_3` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent_name values(Processes.parent_process) as parent_cmd from datamodel=Endpoint.Processes where (Processes.process="*atomic-lockfile*" OR Processes.process="*js-digest*" OR Processes.process="*lockfile-js*" OR Processes.process="*nextfile-js*" OR Processes.parent_process="*atomic-lockfile*" OR Processes.parent_process="*js-digest*" OR Processes.parent_process="*lockfile-js*" OR Processes.parent_process="*nextfile-js*") by Processes.dest Processes.user Processes.process_name
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*atomic-lockfile*" OR Processes.process="*js-digest*" OR Processes.process="*lockfile-js*") AND (Processes.process="*npm*" OR Processes.process="*bun*" OR Processes.process="*npx*" OR Processes.process="*node*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process
 | `drop_dm_object_name(Processes)`
-| convert timeformat="%Y-%m-%dT%H:%M:%S" ctime(firstTime) ctime(lastTime)
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where ProcessCommandLine has_any ("atomic-lockfile","js-digest","lockfile-js","nextfile-js")
-   or InitiatingProcessCommandLine has_any ("atomic-lockfile","js-digest","lockfile-js","nextfile-js")
-| extend AurContext = iff(InitiatingProcessFileName in~ ("makepkg","pacman","yay","paru","pikaur","trizen","aura","pamac","npm","bun","node","npx","sh","bash"), true, false)
-| project Timestamp, DeviceName, AccountName, AurContext, ParentImage=InitiatingProcessFolderPath, ParentCmd=InitiatingProcessCommandLine, ChildImage=FolderPath, ChildCmd=ProcessCommandLine, SHA256
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has_any ("atomic-lockfile","js-digest","lockfile-js")
+| where ProcessCommandLine has_any ("npm","bun","npx","pnpm","yarn","node")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine,
+          ParentImage = InitiatingProcessFileName, ParentCmd = InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Atomic Arch C2/drop egress to temp.sh or fardewoak/nodejs-argo from package install context
+### Node/bun build process reading SSH keys, Vault tokens & browser credential stores
 
-`UC_70_4` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_71_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.dest) as dest values(Web.user) as user from datamodel=Web.Web where (Web.url="*temp.sh*" OR Web.url="*fardewoak/nodejs-argo*") AND (Web.app IN ("npm","node","bun","npx","makepkg","pacman","yay","paru","pikaur","trizen","curl","wget","git")) by Web.src Web.app
-| `drop_dm_object_name(Web)`
-| convert timeformat="%Y-%m-%dT%H:%M:%S" ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN ("node","bun","npm","npx","pnpm","yarn")) AND (Filesystem.file_path="*/.ssh/*" OR Filesystem.file_path="*/.vault-token*" OR Filesystem.file_path="*known_hosts*" OR Filesystem.file_path="*/google-chrome/*" OR Filesystem.file_path="*/.mozilla/firefox/*" OR Filesystem.file_path="*/Slack/*" OR Filesystem.file_path="*/discord/*" OR Filesystem.file_path="*/.docker/config.json*" OR Filesystem.file_path="*/.aws/credentials*" OR Filesystem.file_path="*/.npmrc*") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path
+| `drop_dm_object_name(Filesystem)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName in~ ("node","bun","npm","npx","pnpm","yarn")
+| where FolderPath has_any ("/.ssh/","/.vault-token","known_hosts","/google-chrome/","/.mozilla/firefox/","/Slack/","/discord/","/.docker/config.json","/.aws/credentials","/.npmrc","/.config/gh/")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ActionType, FolderPath, FileName
+| order by Timestamp desc
+```
+
+### Egress to Atomic Arch C2/exfil infrastructure (temp.sh, fardewoak/nodejs-argo)
+
+`UC_71_5` · phase: **c2** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where (DNS.query="*temp.sh" OR DNS.query="*.temp.sh" OR DNS.query="*fardewoak*") by DNS.src DNS.query DNS.dest
+| `drop_dm_object_name(DNS)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl endswith "temp.sh" or RemoteUrl has "fardewoak"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort, ActionType
+| order by Timestamp desc
+```
+
+### Package-build process making unexpected public network egress during AUR install
+
+`UC_71_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app IN ("makepkg","npm","bun","node","npx","pacman","yay","paru")) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
+| `drop_dm_object_name(All_Traffic)`
+| where NOT (cidrmatch("10.0.0.0/8",dest) OR cidrmatch("172.16.0.0/12",dest) OR cidrmatch("192.168.0.0/16",dest) OR cidrmatch("127.0.0.0/8",dest))
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where (RemoteUrl endswith "temp.sh" or RemoteUrl has "fardewoak/nodejs-argo")
-| where InitiatingProcessFileName in~ ("npm","node","bun","npx","makepkg","pacman","yay","paru","pikaur","trizen","aura","pamac","curl","wget","git","sh","bash")
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteUrl, RemoteIP, RemotePort, Protocol
+| where InitiatingProcessFileName in~ ("makepkg","npm","bun","node","npx","pacman","yay","paru")
+| where RemoteIPType == "Public"
+| where not(RemoteUrl has_any ("registry.npmjs.org","registry.yarnpkg.com","github.com","githubusercontent.com","archlinux.org","mirror","cloudflare","fastly","jsdelivr","unpkg.com","ghcr.io"))
+| summarize ConnCount=count(), Domains=make_set(RemoteUrl,10), DestIPs=make_set(RemoteIP,10), arg_min(Timestamp,*) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### Atomic Arch Linux developer-secret access by node/npm/bun stealer payload
+### Atomic Arch persistence: node/bun writing systemd unit or eBPF/kernel-module load
 
-`UC_70_5` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_71_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN ("node","npm","bun","npx")) AND (Filesystem.file_path="*/.ssh/id_*" OR Filesystem.file_path="*/.ssh/known_hosts" OR Filesystem.file_path="*/.aws/credentials*" OR Filesystem.file_path="*/.npmrc*" OR Filesystem.file_path="*/.docker/config*" OR Filesystem.file_path="*/.config/google-chrome/*Cookies*" OR Filesystem.file_path="*/.mozilla/firefox/*cookies.sqlite*" OR Filesystem.file_path="*/.config/gh/*" OR Filesystem.file_path="*/.config/Slack/*" OR Filesystem.file_path="*/.config/discord/*" OR Filesystem.file_path="*/.config/Microsoft/Microsoft Teams/*" OR Filesystem.file_name IN ("id_rsa","id_ed25519","id_ecdsa","cookies.sqlite","key4.db","logins.json")) by Filesystem.dest Filesystem.user
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN ("node","bun","npm","npx","makepkg","bash","sh","python3")) AND (Filesystem.file_path="*/etc/systemd/system/*" OR Filesystem.file_path="*/usr/lib/systemd/system/*" OR Filesystem.file_path="*/.config/systemd/user/*") AND (Filesystem.file_name="*.service" OR Filesystem.file_name="*.timer") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-| convert timeformat="%Y-%m-%dT%H:%M:%S" ctime(firstTime) ctime(lastTime)
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("node","npm","bun","npx")
-| where FolderPath has_any ("/.ssh/","/.aws/credentials","/.npmrc","/.docker/config","/.config/google-chrome/","/.mozilla/firefox/","/.config/gh/","/.config/Slack/","/.config/discord/","/.config/Microsoft/Microsoft Teams/","/.config/podman/")
-   or FileName in~ ("id_rsa","id_ed25519","id_ecdsa","known_hosts","cookies.sqlite","key3.db","key4.db","logins.json","credentials",".npmrc")
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FolderPath, FileName, ActionType
-| order by Timestamp desc
-```
-
-### Atomic Arch eBPF rootkit BPF map pin (hidden_pids / hidden_names / hidden_inodes)
-
-`UC_70_6` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as proc values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where Filesystem.file_path="/sys/fs/bpf/*" AND (Filesystem.file_name IN ("hidden_pids","hidden_names","hidden_inodes")) by Filesystem.dest Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-| convert timeformat="%Y-%m-%dT%H:%M:%S" ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FolderPath startswith "/sys/fs/bpf/"
-| where FileName in~ ("hidden_pids","hidden_names","hidden_inodes")
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FolderPath, FileName, ActionType
-| order by Timestamp desc
-```
-
-### Atomic Arch persistence: systemd unit/timer written by node/bun/AUR-install descendant
-
-`UC_70_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths values(Filesystem.process_name) as proc from datamodel=Endpoint.Filesystem where (Filesystem.file_path="/etc/systemd/system/*" OR Filesystem.file_path="/usr/lib/systemd/system/*" OR Filesystem.file_path="/etc/systemd/user/*" OR Filesystem.file_path="*/.config/systemd/user/*") AND (Filesystem.file_name="*.service" OR Filesystem.file_name="*.timer") AND (Filesystem.process_name IN ("node","npm","bun","npx","makepkg","pacman","yay","paru","pikaur","trizen","aura","pamac","sh","bash")) by Filesystem.dest Filesystem.user
-| `drop_dm_object_name(Filesystem)`
-| convert timeformat="%Y-%m-%dT%H:%M:%S" ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(14d)
 | where FolderPath has_any ("/etc/systemd/system/","/usr/lib/systemd/system/","/etc/systemd/user/","/.config/systemd/user/")
 | where FileName endswith ".service" or FileName endswith ".timer"
-| where InitiatingProcessFileName in~ ("node","npm","bun","npx")
-   or InitiatingProcessParentFileName in~ ("makepkg","pacman","yay","paru","pikaur","trizen","aura","pamac","npm","bun","node")
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, FolderPath, FileName, ActionType, SHA256
-| order by Timestamp desc
-```
-
-### Atomic Arch via WSL2: Windows wsl.exe invoking Arch package manager with IOC packages
-
-`UC_70_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent_name from datamodel=Endpoint.Processes where (Processes.process_name="wsl.exe" OR Processes.parent_process_name="wsl.exe") AND (Processes.process="*atomic-lockfile*" OR Processes.process="*js-digest*" OR Processes.process="*lockfile-js*" OR Processes.process="*nextfile-js*" OR Processes.process="*makepkg*" OR Processes.process="*pacman -S*" OR Processes.process="*yay -S*" OR Processes.process="*paru -S*" OR Processes.process="*pikaur*") by Processes.dest Processes.user Processes.process_name
-| `drop_dm_object_name(Processes)`
-| convert timeformat="%Y-%m-%dT%H:%M:%S" ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where (FileName =~ "wsl.exe" or InitiatingProcessFileName =~ "wsl.exe")
-| where ProcessCommandLine has_any ("atomic-lockfile","js-digest","lockfile-js","nextfile-js","makepkg","pacman -S","yay -S","paru -S","pikaur","trizen")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath
+| where InitiatingProcessFileName in~ ("node","bun","npm","npx","makepkg","bash","sh","python3")
+   or InitiatingProcessParentFileName in~ ("makepkg","npm","bun","node","pacman","yay","paru")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, FolderPath, FileName, ActionType
 | order by Timestamp desc
 ```
 
@@ -229,4 +215,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 9 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 8 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

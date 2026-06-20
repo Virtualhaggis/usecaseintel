@@ -20,8 +20,10 @@ praisonai-platform 0.1.4 still boots on the hardcoded JWT secret dev-secret-chan
 
 - **T1190** — Exploit Public-Facing Application
 - **T1204.002** — User Execution: Malicious File
+- **T1078** — Valid Accounts
 - **T1485** — Data Destruction
 - **T1531** — Account Access Removal
+- **T1606** — Forge Web Credentials
 - **T1087** — Account Discovery
 
 ## Kill chain phases observed
@@ -30,27 +32,47 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### praisonai-platform admin DELETE on /workspaces or /{workspace}/members endpoints
+### Internet-facing PraisonAI platform booting on default JWT secret (CVE-2026-47410)
 
-`UC_50_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_51_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as method values(Web.status) as status values(Web.user) as user from datamodel=Web where Web.http_method="DELETE" (Web.url="*/workspaces/*" OR Web.url="*/members/*") Web.status>=200 Web.status<300 by Web.src Web.dest Web.url Web.http_user_agent | `drop_dm_object_name(Web)` | rex field=url "/workspaces/(?<workspace_id>[0-9a-fA-F-]{36})$|/(?<workspace_id2>[0-9a-fA-F-]{36})/members/(?<member_id>[0-9a-fA-F-]{36})$" | where isnotnull(workspace_id) OR isnotnull(workspace_id2) | eval target_workspace=coalesce(workspace_id, workspace_id2) | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*praisonai_platform*" AND Processes.process="*0.0.0.0*" by Processes.dest, Processes.user, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
-### praisonai-platform attack chain: member enumeration GET followed by workspace-delete
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where ProcessCommandLine has "praisonai_platform"
+| where ProcessCommandLine has_any ("uvicorn", "-m praisonai_platform", "praisonai_platform.api.app")
+| where ProcessCommandLine has "0.0.0.0"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
 
-`UC_50_3` · phase: **actions** · confidence: **High** · AI-generated for this article
+### PraisonAI workspace/member destruction via owner-gated routes (forged-JWT takeover impact)
+
+`UC_51_3` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count from datamodel=Web where Web.http_method IN ("GET","DELETE") (Web.url="*/members*" OR Web.url="*/workspaces/*") by _time Web.src Web.url Web.http_method Web.status Web.user span=1s | `drop_dm_object_name(Web)` | rex field=url "(?<workspace_id>[0-9a-fA-F-]{36})" | where isnotnull(workspace_id) | eval action=case(http_method="GET" AND like(url,"%/members"),"enum", http_method="DELETE" AND match(url,"/workspaces/[0-9a-fA-F-]{36}/?$"),"delete_ws", http_method="DELETE" AND match(url,"/[0-9a-fA-F-]{36}/members/[0-9a-fA-F-]{36}/?$"),"delete_member") | where isnotnull(action) | stats earliest(eval(if(action="enum",_time,null))) as enum_time latest(eval(if(action IN ("delete_ws","delete_member"),_time,null))) as destruct_time values(action) as actions values(url) as urls values(src) as srcs values(user) as users by workspace_id | where isnotnull(enum_time) AND isnotnull(destruct_time) AND destruct_time-enum_time<=1800 AND destruct_time>=enum_time | eval delay_sec=destruct_time-enum_time | sort - destruct_time
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method="DELETE" (Web.uri_path="/workspaces/*" OR Web.uri_path="*/members/*") Web.status>=200 Web.status<300 by Web.src, Web.user, Web.http_method, Web.uri_path, Web.status, Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)`
+```
+
+### PraisonAI workspace member enumeration harvesting owner user_ids (pre-takeover recon)
+
+`UC_51_4` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` dc(Web.uri_path) as workspaces_enumerated count from datamodel=Web.Web where Web.http_method="GET" Web.uri_path="*/members" Web.status>=200 Web.status<300 by Web.src, Web.user, _time span=10m | `drop_dm_object_name(Web)` | where workspaces_enumerated >= 5
 ```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-f38v-77qj-h4jq: praisonai-platform 0.1.4 still boots on t
 
-`UC_50_1` · phase: **exploit** · confidence: **High**
+`UC_51_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -107,4 +129,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

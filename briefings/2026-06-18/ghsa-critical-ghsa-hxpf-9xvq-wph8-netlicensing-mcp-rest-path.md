@@ -21,10 +21,9 @@ The `netlicensing_get_product` MCP tool in `netlicensing-mcp` interpolates a cal
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
-- **T1212** — Exploitation for Credential Access
 - **T1190** — Exploit Public-Facing Application
-- **T1027** — Obfuscated Files or Information
-- **T1087** — Account Discovery
+- **T1212** — Exploitation for Credential Access
+- **T1552** — Unsecured Credentials
 
 ## Kill chain phases observed
 
@@ -32,122 +31,54 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### NetLicensing /token endpoint accessed from MCP server / Python process
+### netlicensing-mcp get_product called with path-traversal product_number (../token)
 
-`UC_41_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count, min(_time) as firstTime, max(_time) as lastTime, values(Web.user) as user, values(Web.url) as url, values(Web.src) as src from datamodel=Web.Web where (Web.url="*netlicensing.io*" OR Web.url="*netlicensing.labs64.com*" OR Web.dest="*netlicensing*") AND Web.url="*/core/v2/rest/token*" by Web.src Web.dest Web.http_user_agent Web.app | `drop_dm_object_name(Web)` | where like(http_user_agent,"%python%") OR like(http_user_agent,"%httpx%") OR like(app,"%python%") OR like(app,"%mcp%") | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteUrl has "/core/v2/rest/token"
-   or (RemoteUrl has_any ("netlicensing.io","netlicensing.labs64.com","go.netlicensing.io") and RemoteUrl endswith "/token")
-| where InitiatingProcessFileName has_any ("python.exe","python3.exe","pythonw.exe","python","pwsh.exe","node.exe")
-   or InitiatingProcessCommandLine has_any ("netlicensing_mcp","netlicensing-mcp","mcp[cli]","netlicensing_get_product")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName,
-          RemoteUrl, RemoteIP, RemotePort
-| order by Timestamp desc
-```
-
-### Path traversal characters in netlicensing_get_product MCP tool invocation
-
-`UC_41_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_42_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count, min(_time) as firstTime, max(_time) as lastTime, values(Processes.process) as cmdline, values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where Processes.process_name IN ("python.exe","python3.exe","pythonw.exe","python") AND (Processes.process="*netlicensing_get_product*" OR Processes.process="*netlicensing_mcp*" OR Processes.process="*netlicensing-mcp*") AND (Processes.process="*../token*" OR Processes.process="*..\\token*" OR Processes.process="*%2e%2e*" OR Processes.process="*%2ftoken*" OR Processes.process="*%5ctoken*" OR Processes.process="*product_number*../*" OR Processes.process="*product_number*..%2f*") by Processes.host Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+index=* "netlicensing_get_product" ("../" OR "..\\" OR "%2e%2e" OR "%2f" OR "%5c")
+| table _time host source _raw
+| sort - _time
 ```
 
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName has_any ("python.exe","python3.exe","pythonw.exe")
-   or ProcessCommandLine has_any ("netlicensing_mcp","netlicensing-mcp","netlicensing_get_product")
-| where ProcessCommandLine has "netlicensing_get_product"
-   or ProcessCommandLine has "product_number"
-   or ProcessCommandLine has "/product/"
-| where ProcessCommandLine has_any (
-        "../token", "..\\token",
-        "%2e%2e/", "%2e%2e%2f", "%2e%2e%5c",
-        "%2ftoken", "%5ctoken",
-        "..%2f", "..%5c",
-        "/product/../", "\\product\\..\\")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName
-| order by Timestamp desc
-```
+### NetLicensing REST request URL containing both /product/ and traversal-to-token (wire signature)
 
-### URL-encoded path traversal targeting NetLicensing /product/ REST API
-
-`UC_41_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_42_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count, min(_time) as firstTime, max(_time) as lastTime, values(Web.url) as urls, values(Web.user) as user, values(Web.http_user_agent) as ua from datamodel=Web.Web where (Web.dest="*netlicensing*" OR Web.url="*netlicensing.io*" OR Web.url="*netlicensing.labs64.com*") AND Web.url="*/product/*" AND (Web.url="*%2e%2e*" OR Web.url="*%252e%252e*" OR Web.url="*%2ftoken*" OR Web.url="*%5ctoken*" OR Web.url="*..%2f*" OR Web.url="*..%5c*" OR Web.url="*..%252f*") by Web.src Web.dest | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.dest IN ("go.netlicensing.io","netlicensing.labs64.com") AND Web.url="*/product/*" AND (Web.url="*token*" OR Web.url="*%2e%2e*" OR Web.url="*%2f*" OR Web.url="*%5c*" OR Web.url="*/../*") by Web.src Web.dest Web.http_method Web.url
+| `drop_dm_object_name(Web)`
+| sort - lastTime
 ```
 
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteUrl has_any ("netlicensing.io","netlicensing.labs64.com","go.netlicensing.io")
-| where RemoteUrl has "/product/"
-| where RemoteUrl matches regex @"(?i)/product/[^?#]*(%2e%2e|%252e%252e|%2ftoken|%5ctoken|\.\.%2f|\.\.%5c|\.\.%252f)"
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          RemoteUrl, RemoteIP
-| order by Timestamp desc
-```
+### netlicensing-mcp get_product response leaking APIKEY/token fields (redaction bypass)
 
-### Behavioral: NetLicensing /product/ traversal followed by /token endpoint hit within 5 minutes
-
-`UC_41_4` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_42_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true min(_time) as ProductTime, max(_time) as ProductTimeLast, values(Web.url) as ProductUrl from datamodel=Web.Web where Web.dest="*netlicensing*" AND Web.url="*/product/*" AND (Web.url="*..*" OR Web.url="*%2e%2e*" OR Web.url="*%2f*" OR Web.url="*%5c*") by Web.src | `drop_dm_object_name(Web)` | rename src as ProductSrc | join type=inner ProductSrc [| tstats summariesonly=true min(_time) as TokenTime, values(Web.url) as TokenUrl from datamodel=Web.Web where Web.dest="*netlicensing*" AND Web.url="*/core/v2/rest/token*" by Web.src | `drop_dm_object_name(Web)` | rename src as ProductSrc] | where TokenTime >= ProductTime AND TokenTime <= ProductTime + 300 | eval DelaySec = TokenTime - ProductTime | convert ctime(ProductTime) ctime(TokenTime) | table ProductSrc, ProductTime, ProductUrl, TokenTime, TokenUrl, DelaySec
+index=* "netlicensing_get_product" ("ROLE_APIKEY_ADMIN" OR "tokenType" OR "/#/tokens/")
+| table _time host source _raw
+| sort - _time
 ```
 
-**Defender KQL:**
-```kql
-let WindowSec = 300;
-let Traversal = DeviceNetworkEvents
-    | where Timestamp > ago(7d)
-    | where RemoteUrl has_any ("netlicensing.io","netlicensing.labs64.com","go.netlicensing.io")
-    | where RemoteUrl has "/product/"
-    | where RemoteUrl matches regex @"(?i)/product/[^?#]*(\.\.|%2e%2e|%2ftoken|%5ctoken|\.\.%2f|\.\.%5c)"
-    | project ProductTime = Timestamp, DeviceId, DeviceName, ProductUrl = RemoteUrl,
-              InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName;
-let TokenHits = DeviceNetworkEvents
-    | where Timestamp > ago(7d)
-    | where RemoteUrl has_any ("netlicensing.io","netlicensing.labs64.com","go.netlicensing.io")
-    | where RemoteUrl has "/core/v2/rest/token"
-    | project TokenTime = Timestamp, DeviceId, TokenUrl = RemoteUrl;
-Traversal
-| join kind=inner TokenHits on DeviceId
-| where TokenTime between (ProductTime .. ProductTime + WindowSec * 1s)
-| extend DelaySec = datetime_diff('second', TokenTime, ProductTime)
-| project ProductTime, TokenTime, DelaySec, DeviceName,
-          InitiatingProcessAccountName, InitiatingProcessFileName,
-          InitiatingProcessCommandLine, ProductUrl, TokenUrl
-| order by ProductTime desc
+### First-seen access to NetLicensing /token REST endpoint from MCP egress source
+
+`UC_42_4` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count earliest(_time) as firstTime max(_time) as lastTime from datamodel=Web where Web.dest IN ("go.netlicensing.io","netlicensing.labs64.com") AND Web.url="*/core/v2/rest/token*" by Web.src Web.url
+| `drop_dm_object_name(Web)`
+| where firstTime > relative_time(now(), "-1d")
+| sort - firstTime
 ```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-hxpf-9xvq-wph8: netlicensing-mcp: REST Path Traversal Byp
 
-`UC_41_0` · phase: **exploit** · confidence: **High**
+`UC_42_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -197,4 +128,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 5 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 5 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

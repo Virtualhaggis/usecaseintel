@@ -22,9 +22,6 @@ The validateToken middleware contains a service-to-service bypass for auth-user:
 - **T1190** — Exploit Public-Facing Application
 - **T1078** — Valid Accounts
 - **T1556** — Modify Authentication Process
-- **T1195.001** — Supply Chain Compromise: Compromise Software Dependencies
-- **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1548** — Abuse Elevation Control Mechanism
 
 ## Kill chain phases observed
 
@@ -32,83 +29,41 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### HTTP request with spoofed 'auth-user: service-brother' header (@acastellon/auth GHSA-gfj5-979r-92pw)
+### service-brother identity reaching admin/protected or mutating endpoints (post-bypass abuse)
 
-`UC_40_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_41_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count earliest(_time) as first_seen latest(_time) as last_seen from datamodel=Web where (Web.cookie="*service-brother*" OR Web.url="*service-brother*" OR Web.http_user_agent="*service-brother*" OR Web.body="*auth-user*service-brother*") by Web.src Web.dest Web.url Web.http_method Web.http_user_agent Web.user
+| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime, values(Web.status) as status, values(Web.http_user_agent) as user_agent from datamodel=Web where Web.http_method IN ("POST","PUT","DELETE","PATCH") (Web.url="*/admin*" OR Web.url="*/protected*" OR Web.url="*/graphql*" OR Web.url="*/internal*") Web.status>=200 Web.status<300 by Web.src, Web.dest, Web.url, Web.http_method
 | `drop_dm_object_name(Web)`
-| eval signature="auth-user: service-brother (GHSA-gfj5-979r-92pw)", external_src=if(cidrmatch("10.0.0.0/8",src) OR cidrmatch("172.16.0.0/12",src) OR cidrmatch("192.168.0.0/16",src),"no","yes")
-| where count > 0
-| sort 0 - last_seen
+| sort - lastTime
 ```
 
-**Defender KQL:**
-```kql
-// @acastellon/auth ships as a Node.js dependency — HTTP request headers are NOT in Defender XDR endpoint tables. This query surfaces internet-facing Node.js listeners on hosts likely to be running the vulnerable middleware; the actual header inspection must run on WAF/proxy logs (see sentinel_kql / datadog_query).
-DeviceNetworkEvents
-| where Timestamp > ago(1d)
-| where InitiatingProcessFileName in~ ("node.exe","nodejs.exe","pm2.exe")
-| where LocalPort in (80,443,3000,4000,5000,8080,8443)
-| where RemoteIPType == "Public"
-| where ActionType == "InboundConnectionAccepted" or ActionType == "ConnectionAccepted"
-| summarize InboundConns=count(), DistinctRemoteIPs=dcount(RemoteIP), arg_max(Timestamp, RemoteIP, RemotePort) by DeviceName, InitiatingProcessFileName, LocalPort
-| where InboundConns > 0
-| extend Advisory="GHSA-gfj5-979r-92pw — verify @acastellon/auth dependency on this host"
-| order by InboundConns desc
-```
+### Vulnerable @acastellon/auth (<2.3.0) package present on host
 
-### Vulnerable @acastellon/auth (<2.3.0) package on disk + internet-facing Node.js listener
-
-`UC_40_2` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_41_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count earliest(_time) as first_seen latest(_time) as last_seen from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*node_modules*acastellon*auth*" AND (Filesystem.file_name="package.json" OR Filesystem.file_name="auth.js")) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.user
+| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime, values(Filesystem.file_name) as file_name from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*node_modules/@acastellon/auth*" OR Filesystem.file_path="*node_modules\\@acastellon\\auth*") (Filesystem.file_name="auth.js" OR Filesystem.file_name="package.json") by Filesystem.dest, Filesystem.file_path
 | `drop_dm_object_name(Filesystem)`
-| eval advisory="GHSA-gfj5-979r-92pw — verify version < 2.3.0 in package.json"
-| stats values(file_path) as paths, values(file_name) as files, min(first_seen) as first_seen, max(last_seen) as last_seen by dest, advisory
-| sort 0 - last_seen
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where FolderPath contains "node_modules" and FolderPath contains "acastellon" and FolderPath contains "auth"
-| where FileName in~ ("package.json","auth.js")
-| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), arg_max(Timestamp, FolderPath, InitiatingProcessFileName) by DeviceName, FileName
-| join kind=leftouter (
-    DeviceNetworkEvents
-    | where Timestamp > ago(7d)
-    | where InitiatingProcessFileName in~ ("node.exe","nodejs.exe")
-    | where LocalPort in (80,443,3000,4000,5000,8080,8443)
-    | where RemoteIPType == "Public"
-    | summarize NodeInboundConns=count() by DeviceName
-) on DeviceName
-| extend InternetFacing = iif(isnotempty(NodeInboundConns) and NodeInboundConns > 0, "yes", "unknown"), Advisory="GHSA-gfj5-979r-92pw — @acastellon/auth < 2.3.0"
-| project DeviceName, FileName, FolderPath, FirstSeen, LastSeen, NodeInboundConns, InternetFacing, Advisory
-| order by InternetFacing desc, LastSeen desc
-```
-
-### Spoofable privilege-claim headers (is-admin / is-*) downstream of @acastellon/auth bypass
-
-`UC_40_3` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count earliest(_time) as first_seen latest(_time) as last_seen from datamodel=Web where (Web.cookie="*is-admin*" OR Web.cookie="*is-superuser*" OR Web.cookie="*is-staff*" OR Web.cookie="*is-root*" OR Web.body="*is-admin*true*" OR Web.body="*is-superuser*true*" OR Web.url="*is-admin*") by Web.src Web.dest Web.url Web.http_method Web.http_user_agent
-| `drop_dm_object_name(Web)`
-| eval paired_with_bypass=if(match(_raw,"(?i)service-brother"),"yes","no"), external_src=if(cidrmatch("10.0.0.0/8",src) OR cidrmatch("172.16.0.0/12",src) OR cidrmatch("192.168.0.0/16",src),"no","yes"), signature="is-* privilege-claim header (GHSA-gfj5-979r-92pw downstream primitive)"
-| where count > 0
-| sort 0 - paired_with_bypass - last_seen
+| where FolderPath has @"node_modules\@acastellon\auth" or FolderPath has "node_modules/@acastellon/auth"
+| where FileName in~ ("auth.js","package.json")
+| project Timestamp, DeviceName, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessAccountName
+| sort by Timestamp desc
 ```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-gfj5-979r-92pw: @acastellon/auth: Authentication bypass v
 
-`UC_40_0` · phase: **exploit** · confidence: **High**
+`UC_41_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -158,4 +113,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 4 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -27,14 +27,12 @@ When a site administrator was logged in as the file loaded, the code created an 
 - **T1071** — Application Layer Protocol
 - **T1204.002** — User Execution: Malicious File
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1041** — Exfiltration Over C2 Channel
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
-- **T1189** — Drive-by Compromise
-- **T1136.001** — Create Account: Local Account
-- **T1098** — Account Manipulation
+- **T1567.002** — Exfiltration Over Web Service
 - **T1505.003** — Server Software Component: Web Shell
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
+- **T1136** — Create Account
+- **T1078** — Valid Accounts
+- **T1059** — Command and Scripting Interpreter
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 
 ## Kill chain phases observed
 
@@ -42,122 +40,120 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Outbound traffic to tidio.cc or 84.201.6.54 (Awesome Motive supply-chain C2)
+### Rogue admin & self-hiding plugin C2/exfil to tidio.cc and 84.201.6.54
 
-`UC_138_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_port) as dest_port from datamodel=Network_Traffic where All_Traffic.dest_ip="84.201.6.54" OR All_Traffic.dest="tidio.cc" OR All_Traffic.dest="*.tidio.cc" by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip | `drop_dm_object_name(All_Traffic)` | append [ | tstats summariesonly=true count from datamodel=Network_Resolution where Network_Resolution.DNS.query="tidio.cc" OR Network_Resolution.DNS.query="*.tidio.cc" by Network_Resolution.DNS.src Network_Resolution.DNS.query | `drop_dm_object_name(DNS)` ] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let C2Domains = dynamic(["tidio.cc"]);
-let C2IPs = dynamic(["84.201.6.54"]);
-DeviceNetworkEvents
-| where Timestamp between (datetime(2026-06-12T00:00:00Z) .. datetime(2026-06-21T00:00:00Z))
-| where RemoteIP in (C2IPs)
-   or RemoteUrl has_any (C2Domains)
-   or RemoteUrl matches regex @"(?i)tidio\.cc(/|$)"
-| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### Tampered PushEngage SDK fetched from clientcdn.pushengage.com during exposure window
-
-`UC_138_6` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_139_5` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user) as user from datamodel=Web where (Web.url="*pushengage-web-sdk.js*" OR Web.url="*pushengage-subscription.js*") AND Web.url="*clientcdn.pushengage.com*" AND _time>=1749686400 AND _time<=1749945600 by Web.src Web.dest | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip="84.201.6.54" by _time, All_Traffic.src_ip, All_Traffic.dest_ip, All_Traffic.dest_port, All_Traffic.app | `drop_dm_object_name(All_Traffic)` | append [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS where DNS.query="*tidio.cc*" by _time, DNS.src, DNS.query | `drop_dm_object_name(DNS)`] | sort - _time
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
-| where Timestamp between (datetime(2026-06-12T00:00:00Z) .. datetime(2026-06-14T23:59:59Z))
-| where RemoteUrl has "clientcdn.pushengage.com"
-| where RemoteUrl has_any ("pushengage-web-sdk.js", "pushengage-subscription.js")
-| project Timestamp, DeviceName, RemoteIP, RemoteUrl,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName
+| where Timestamp > ago(30d)
+| where RemoteUrl has "tidio.cc" or RemoteIP == "84.201.6.54"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, RemoteUrl, RemoteIP, RemotePort
 | order by Timestamp desc
 ```
 
-### Rogue WordPress admin account created matching developer_api1 / dev_xxxxxx
+### Hidden WordPress backdoor plugin dropped (content-delivery-helper / database-optimizer)
 
-`UC_138_7` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Changes.src) as src values(All_Changes.action) as action from datamodel=Change where All_Changes.object_category="user" AND (All_Changes.user="developer_api1" OR All_Changes.user="dev_*") by All_Changes.dest All_Changes.user | `drop_dm_object_name(All_Changes)` | append [ | tstats summariesonly=true count from datamodel=Web where (Web.url="*wp-admin/user-new.php*" OR Web.url="*wp-json/wp/v2/users*") AND (Web.url="*developer_api1*" OR Web.url="*dev_*") by Web.src Web.dest Web.url | `drop_dm_object_name(Web)` ] | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-union
-(DeviceFileEvents
-| where Timestamp > ago(30d)
-| where FolderPath has @"\wp-content\" or FolderPath has "/wp-content/"
-| where InitiatingProcessCommandLine has_any ("developer_api1", "dev_")),
-(DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where ProcessCommandLine has_any ("developer_api1", "INSERT INTO wp_users", "wp_insert_user")
-  and ProcessCommandLine matches regex @"(?i)dev_[a-z0-9]{4,8}")
-| project Timestamp, DeviceName, FileName, FolderPath,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### Suspicious WordPress plugin folder created (content-delivery-helper / database-optimizer)
-
-`UC_138_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_139_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.user) as user values(Filesystem.process_name) as process from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/wp-content/plugins/content-delivery-helper/*" OR Filesystem.file_path="*/wp-content/plugins/database-optimizer/*" OR Filesystem.file_path="*\\wp-content\\plugins\\content-delivery-helper\\*" OR Filesystem.file_path="*\\wp-content\\plugins\\database-optimizer\\*") by Filesystem.dest Filesystem.file_path Filesystem.action | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*content-delivery-helper*" OR Filesystem.file_path="*database-optimizer*") by _time, Filesystem.dest, Filesystem.file_path, Filesystem.file_name, Filesystem.action | `drop_dm_object_name(Filesystem)` | sort - _time
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(30d)
-| where ActionType in ("FileCreated", "FileRenamed", "FileModified")
-| where FolderPath matches regex @"(?i)[\\/]wp-content[\\/]plugins[\\/](content-delivery-helper|database-optimizer)[\\/]"
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessFolderPath
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where FolderPath contains "content-delivery-helper" or FolderPath contains "database-optimizer"
+| where FolderPath contains "wp-content"
+| project Timestamp, DeviceName, FolderPath, FileName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | order by Timestamp desc
 ```
 
-### WordPress PHP process spawning shell from wp-content directory
+### Rogue WordPress administrator account (developer_api1 / dev_xxxxxx)
 
-`UC_138_9` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_139_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("php.exe","php-cgi.exe","php-fpm","php")) AND (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","bash","sh","dash","zsh","nc","ncat","curl","wget")) by Processes.dest Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.process="*developer_api1*" OR Processes.process="*dev_*") (Processes.process="*user create*" OR Processes.process="*wp_users*" OR Processes.process="*role=administrator*" OR Processes.process="*INSERT INTO*") by _time, Processes.dest, Processes.user, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | sort - _time
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "developer_api1" or ProcessCommandLine matches regex @"(?i)dev_[a-z0-9]{6}"
+| where ProcessCommandLine has_any ("user create","wp user","wp_users","INSERT INTO","role=administrator","role administrator")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName
+| order by Timestamp desc
+```
+
+### Web server PHP runtime spawning a shell (WordPress web shell execution)
+
+`UC_139_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("php.exe","php-cgi.exe","php-fpm","httpd","apache2","nginx","w3wp.exe")) (Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","sh","bash","dash","wscript.exe","cscript.exe")) by _time, Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | sort - _time
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("php.exe","php-cgi.exe","php-fpm","php")
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","bash","sh","dash","zsh","nc","ncat","curl.exe","wget.exe")
-   or ProcessCommandLine has_any ("base64 -d", "FromBase64String", "eval(", "system(", "passthru(")
-| where InitiatingProcessFolderPath has_any ("wp-content","wp-admin","wp-includes")
-   or InitiatingProcessCommandLine has_any ("wp-content","wp-admin")
-| project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine, SHA256
+| where InitiatingProcessFileName in~ ("php.exe","php-cgi.exe","php-fpm","php-fpm8.1","php-fpm8.2","php-fpm8.3","httpd","apache2","nginx","w3wp.exe")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","sh","bash","dash","zsh","wscript.exe","cscript.exe")
+| project Timestamp, DeviceName, AccountName, ParentProc = InitiatingProcessFileName, ParentPath = InitiatingProcessFolderPath, Child = FileName, ChildCmd = ProcessCommandLine
 | order by Timestamp desc
+```
+
+### WordPress plugin/theme PHP files modified by the web runtime (backdoor / skimmer injection)
+
+`UC_139_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where Filesystem.file_path="*wp-content*" Filesystem.file_name="*.php" by _time, Filesystem.dest, Filesystem.file_path, Filesystem.file_name, Filesystem.action | `drop_dm_object_name(Filesystem)` | stats count, min(_time) as firstSeen, max(_time) as lastSeen, values(file_path) as paths by dest | sort - count
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(7d)
+| where ActionType in ("FileModified","FileCreated","FileRenamed")
+| where FolderPath has_any ("wp-content","wp-includes","wp-admin")
+| where FileName endswith ".php"
+| where InitiatingProcessFileName has_any ("php","php-cgi","php-fpm","httpd","apache2","nginx","w3wp.exe")
+| summarize Writes = count(), Files = make_set(FolderPath, 50), First = min(Timestamp), Last = max(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName
+| order by Last desc
+```
+
+### Admin browser loaded poisoned PushEngage CDN script during exposure window
+
+`UC_139_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Web.Web where Web.url="*clientcdn.pushengage.com*" (Web.url="*pushengage-web-sdk.js*" OR Web.url="*pushengage-subscription.js*") by _time, Web.src, Web.user, Web.url, Web.dest, Web.http_user_agent | `drop_dm_object_name(Web)` | where _time>=strptime("2026-06-12T00:00:00","%Y-%m-%dT%H:%M:%S") AND _time<=strptime("2026-06-14T23:59:59","%Y-%m-%dT%H:%M:%S") | sort _time
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp between (datetime(2026-06-12T00:00:00Z) .. datetime(2026-06-14T23:59:59Z))
+| where InitiatingProcessFileName in~ ("msedge.exe","chrome.exe","firefox.exe","brave.exe","iexplore.exe")
+| where RemoteUrl has "clientcdn.pushengage.com"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP
+| order by Timestamp asc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -215,7 +211,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Popular WordPress Plugin Scripts Tampered to Plant Hidden Backdoors on Sites
 
-`UC_138_4` · phase: **exploit** · confidence: **High**
+`UC_139_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -275,4 +271,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 10 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, IOCs present, 11 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

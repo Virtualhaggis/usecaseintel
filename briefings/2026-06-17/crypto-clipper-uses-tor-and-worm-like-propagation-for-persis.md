@@ -32,19 +32,17 @@ The clipper in this campaign relies on Windows Script Host and ActiveX-driven lo
 - **T1059.001** — PowerShell
 - **T1027** — Obfuscated Files or Information
 - **T1053.005** — Persistence (article-specific)
-- **T1053.005** — Scheduled Task/Job: Scheduled Task
-- **T1547** — Boot or Logon Autostart Execution
 - **T1090.003** — Proxy: Multi-hop Proxy
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1572** — Protocol Tunneling
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1218** — System Binary Proxy Execution
+- **T1571** — Non-Standard Port
 - **T1036.005** — Masquerading: Match Legitimate Name or Location
+- **T1053.005** — Scheduled Task/Job: Scheduled Task
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1562.001** — Impair Defenses: Disable or Modify Tools
-- **T1112** — Modify Registry
-- **T1105** — Ingress Tool Transfer
+- **T1091** — Replication Through Removable Media
+- **T1204.002** — User Execution: Malicious File
 - **T1059.001** — Command and Scripting Interpreter: PowerShell
 - **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
+- **T1113** — Screen Capture
 
 ## Kill chain phases observed
 
@@ -52,38 +50,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### CryptoBandits scheduled task creation via XML import to Public\Documents 5-char staging folder
+### CryptoBandits curl beacon over Tor SOCKS5 proxy to .onion C2
 
-`UC_77_5` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=schtasks.exe Processes.process="*\\Users\\Public\\Documents\\*" Processes.process="*/create*" Processes.process="*/xml*" by host Processes.user Processes.parent_process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| rex field=process "(?i)/tn\s+(?<task_name>[a-z]{4,6})\s+/xml\s+(?<xml_path>C:\\\\Users\\\\Public\\\\Documents\\\\[a-z]{4,6}\\\\[a-z]{4,6}\.xml)"
-| where isnotnull(task_name) AND isnotnull(xml_path)
-| convert ctime(firstTime), ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName =~ "schtasks.exe"
-| where ProcessCommandLine matches regex @"(?i)schtasks\s+/create\s+/tn\s+[a-z]{4,6}\s+/xml\s+C:\\Users\\Public\\Documents\\[a-z]{4,6}\\[a-z]{4,6}\.xml\s+/f"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### Curl over Tor SOCKS5 proxy at localhost:9050 to .onion C2
-
-`UC_77_6` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_78_5` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=curl.exe Processes.process="*--socks5-hostname*" Processes.process="*localhost:9050*" Processes.process="*.onion*" by host Processes.user Processes.parent_process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime), ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="curl.exe" Processes.process="*--socks5-hostname*" Processes.process="*9050*" (Processes.process="*.onion*" OR Processes.process="*/route.php*" OR Processes.process="*/recvf.php*" OR Processes.process="*/stub.php*") by Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -91,22 +64,59 @@ DeviceProcessEvents
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where FileName =~ "curl.exe"
-| where ProcessCommandLine has_all ("--socks5-hostname", "localhost:9050", ".onion")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| where ProcessCommandLine has "--socks5-hostname" and ProcessCommandLine has "9050"
+| where ProcessCommandLine has_any (".onion", "/route.php", "/recvf.php", "/stub.php")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### WScript or CScript executing JavaScript payload from Public\Documents 5-char staging folder
+### Renamed Tor binary ugate.exe / Tor masquerade launched on endpoint
 
-`UC_77_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_78_6` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (wscript.exe, cscript.exe) Processes.process="*\\Users\\Public\\Documents\\*" Processes.process="*.js*" by host Processes.user Processes.parent_process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| rex field=process "(?i)(?<js_path>C:\\\\Users\\\\Public\\\\Documents\\\\[a-z]{4,6}\\\\[a-z]{4,6}\.js)"
-| where isnotnull(js_path)
-| convert ctime(firstTime), ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="ugate.exe" by Processes.dest Processes.user Processes.parent_process_name Processes.process Processes.process_path | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "ugate.exe"
+   or (ProcessVersionInfoOriginalFileName =~ "tor.exe" and FileName !~ "tor.exe")
+   or (ProcessVersionInfoProductName has "Tor" and FileName !~ "tor.exe")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessVersionInfoOriginalFileName, ProcessVersionInfoProductName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### Scheduled task created from JScript payload XML in Public\Documents staging folder
+
+`UC_78_7` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="schtasks.exe" Processes.process="*/create*" Processes.process="*/xml*" Processes.process="*\\Users\\Public\\Documents\\*" by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | regex process="(?i)\\Users\\Public\\Documents\\[a-z]{4,6}\\[a-z]{4,6}\.xml" | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName =~ "schtasks.exe"
+| where ProcessCommandLine has "/create" and ProcessCommandLine has "/xml"
+| where ProcessCommandLine matches regex @"(?i)\\Users\\Public\\Documents\\[a-z]{4,6}\\[a-z]{4,6}\.xml"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### WScript/CScript executing dropped JScript clipper from Public\Documents staging folder
+
+`UC_78_8` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="wscript.exe" OR Processes.process_name="cscript.exe") Processes.process="*\\Users\\Public\\Documents\\*" Processes.process="*.js*" by Processes.dest Processes.user Processes.parent_process_name Processes.process | `drop_dm_object_name(Processes)` | regex process="(?i)\\Users\\Public\\Documents\\[a-z]{4,6}\\[a-z]{4,6}\.js" | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -114,70 +124,38 @@ DeviceProcessEvents
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where FileName in~ ("wscript.exe", "cscript.exe")
-| where ProcessCommandLine matches regex @"(?i)C:\\Users\\Public\\Documents\\[a-z]{4,6}\\[a-z]{4,6}\.js"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| where ProcessCommandLine matches regex @"(?i)\\Users\\Public\\Documents\\[a-z]{4,6}\\[a-z]{4,6}\.js"
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Renamed Tor client running as ugate.exe (CryptoBandits bundled proxy)
+### Microsoft Defender exclusion added for clipper staging folder or script-host binaries
 
-`UC_77_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_78_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process_path) as paths values(Processes.process_hash) as hashes from datamodel=Endpoint.Processes where Processes.process_name=ugate.exe by host Processes.user Processes.parent_process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime), ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where Registry.registry_path="*\\Microsoft\\Windows Defender\\Exclusions*" (Registry.registry_value_name="*\\Users\\Public\\Documents\\*" OR Registry.registry_value_name="*wscript.exe*" OR Registry.registry_value_name="*cscript.exe*" OR Registry.registry_value_name="*ugate.exe*" OR Registry.registry_value_name="*curl.exe*") by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data | `drop_dm_object_name(Registry)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName =~ "ugate.exe"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### Defender exclusion path added for Public\Documents staging folder (worm self-protection)
-
-`UC_77_9` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN (powershell.exe, pwsh.exe) (Processes.process="*Add-MpPreference*" OR Processes.process="*Set-MpPreference*") Processes.process="*ExclusionPath*" Processes.process="*Public\\Documents*" by host Processes.user Processes.parent_process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime), ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let ExclusionByPS = DeviceProcessEvents
+DeviceRegistryEvents
 | where Timestamp > ago(7d)
-| where FileName in~ ("powershell.exe", "pwsh.exe")
-| where ProcessCommandLine has_any ("Add-MpPreference", "Set-MpPreference")
-| where ProcessCommandLine has "ExclusionPath"
-| where ProcessCommandLine has @"Public\Documents"
-| project Timestamp, DeviceName, AccountName, Source = "PowerShell", Detail = ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine;
-let ExclusionByRegistry = DeviceRegistryEvents
-| where Timestamp > ago(7d)
-| where RegistryKey has @"\Microsoft\Windows Defender\Exclusions\Paths"
+| where RegistryKey has @"\Microsoft\Windows Defender\Exclusions"
 | where RegistryValueName has @"\Users\Public\Documents\"
-   or RegistryValueData has @"\Users\Public\Documents\"
-| project Timestamp, DeviceName, AccountName = InitiatingProcessAccountName, Source = "Registry", Detail = strcat(RegistryValueName, " = ", RegistryValueData), InitiatingProcessFileName, InitiatingProcessCommandLine;
-union ExclusionByPS, ExclusionByRegistry
+   or RegistryValueName has_any ("wscript.exe", "cscript.exe", "ugate.exe", "curl.exe")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### CryptoBandits cfile payload artifact created under Public\Documents
+### USB worm propagation: burst of .lnk shortcuts created by non-Explorer process
 
-`UC_77_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_78_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as proc values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where Filesystem.file_name="cfile" Filesystem.file_path="*\\Users\\Public\\Documents\\*" Filesystem.action=created by host Filesystem.file_path
-| `drop_dm_object_name(Filesystem)`
-| convert ctime(firstTime), ctime(lastTime)
+| tstats summariesonly=true count dc(Filesystem.file_path) as lnk_paths min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_name) as files from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name="*.lnk" NOT Filesystem.process_name IN ("explorer.exe","onedrive.exe","msiexec.exe","setup.exe") by Filesystem.dest Filesystem.process_name _time span=5m | `drop_dm_object_name(Filesystem)` | where lnk_paths >= 5 | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -185,21 +163,20 @@ union ExclusionByPS, ExclusionByRegistry
 DeviceFileEvents
 | where Timestamp > ago(7d)
 | where ActionType == "FileCreated"
-| where FileName =~ "cfile"
-| where FolderPath has @"\Users\Public\Documents\"
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, InitiatingProcessAccountName
+| where FileName endswith ".lnk"
+| where InitiatingProcessFileName !in~ ("explorer.exe", "onedrive.exe", "msiexec.exe", "setup.exe", "svchost.exe")
+| summarize LnkFolders = dcount(FolderPath), SampleFolders = make_set(FolderPath, 10), SampleFiles = make_set(FileName, 10), FirstSeen = min(Timestamp), arg_max(Timestamp, *) by DeviceName, InitiatingProcessFileName, InitiatingProcessId, bin(Timestamp, 5m)
+| where LnkFolders >= 5   // worm creates one .lnk per harvested document
 | order by Timestamp desc
 ```
 
-### WScript or CScript with Public\Documents JS spawning curl, schtasks, cmd, or PowerShell child
+### Tor EVAL backdoor: script-host clipper spawning command interpreters
 
-`UC_77_11` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_78_11` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN (wscript.exe, cscript.exe) Processes.parent_process="*\\Users\\Public\\Documents\\*.js*" Processes.process_name IN (curl.exe, schtasks.exe, cmd.exe, powershell.exe, pwsh.exe) by host Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process
-| `drop_dm_object_name(Processes)`
-| convert ctime(firstTime), ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="wscript.exe" OR Processes.parent_process_name="cscript.exe") Processes.parent_process="*\\Users\\Public\\Documents\\*" (Processes.process_name="cmd.exe" OR Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe" OR Processes.process_name="curl.exe" OR Processes.process_name="mshta.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -207,10 +184,31 @@ DeviceFileEvents
 DeviceProcessEvents
 | where Timestamp > ago(7d)
 | where InitiatingProcessFileName in~ ("wscript.exe", "cscript.exe")
-| where InitiatingProcessCommandLine has @"\Users\Public\Documents\"
-| where InitiatingProcessCommandLine has ".js"
-| where FileName in~ ("curl.exe", "schtasks.exe", "cmd.exe", "powershell.exe", "pwsh.exe")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| where InitiatingProcessCommandLine matches regex @"(?i)\\Users\\Public\\Documents\\[a-z]{4,6}\\"
+| where FileName in~ ("cmd.exe", "powershell.exe", "pwsh.exe", "curl.exe", "mshta.exe", "cscript.exe", "wscript.exe")
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by Timestamp desc
+```
+
+### PowerShell screen capture spawned by clipper script host (collection)
+
+`UC_78_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="powershell.exe" OR Processes.process_name="pwsh.exe") Processes.process="*CopyFromScreen*" (Processes.parent_process_name="wscript.exe" OR Processes.parent_process_name="cscript.exe" OR Processes.parent_process="*\\Users\\Public\\Documents\\*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where FileName in~ ("powershell.exe", "pwsh.exe")
+| where ProcessCommandLine has "CopyFromScreen"
+   or (ProcessCommandLine has "System.Drawing" and ProcessCommandLine has "Bitmap" and ProcessCommandLine has_any ("Graphics", "Screen"))
+| where InitiatingProcessFileName in~ ("wscript.exe", "cscript.exe")
+   or InitiatingProcessCommandLine has @"\Users\Public\Documents\"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
@@ -308,7 +306,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Crypto Clipper uses Tor and worm-like propagation for persistence and control
 
-`UC_77_4` · phase: **exploit** · confidence: **High**
+`UC_78_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -365,4 +363,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 12 use case(s) fired, 19 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 13 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

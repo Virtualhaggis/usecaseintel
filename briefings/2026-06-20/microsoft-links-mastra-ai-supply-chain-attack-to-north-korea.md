@@ -11,15 +11,9 @@ By Lawrence Abrams
 June 20, 2026
 10:09 AM
 0 
-
-
 Microsoft has attributed a recent Mastra AI supply chain attack that compromised more than 140 npm packages to the North Korean hacking group Sapphire Sleet, also known as BlueNoroff.
-
-
 This attribution comes after Microsoft first disclosed earlier this week that attackers hijacked an npm maintainer account and used it to publish malicious package updates.
-
-
-"Microsoft ass…
+"Microsoft assesses with h…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -27,10 +21,10 @@ This attribution comes after Microsoft first disclosed earlier this week that at
 - **IPv4 (defanged):** `23.254.164.123`
 - **Domain (defanged):** `teams.onweblive.org`
 - **Domain (defanged):** `maskasd.com`
-- **SHA256:** `B122A9873BEDF145AE2A7FD024B5F309007DBB025149F4DC4AC3F7E4F32A36A4`
-- **SHA256:** `AE70DD4F6BC0D1C8C2848E4E6B51934626C4818DCB5AF99D080DDBD7DC337185`
-- **SHA256:** `4A8860240E4231C3A74C81949BE655A28E096A7D72F38FBE84E5B37636B98417`
-- **SHA256:** `B73DE25C053C3225A077738A1FCBD9CA6966D7B3CD6F5494A30F0AA0EAE55C7E`
+- **SHA256:** `b122a9873bedf145ae2a7fd024b5f309007dbb025149f4dc4ac3f7e4f32a36a4`
+- **SHA256:** `ae70dd4f6bc0d1c8c2848e4e6b51934626c4818dcb5af99d080ddbd7dc337185`
+- **SHA256:** `4a8860240e4231c3a74c81949be655a28e096a7d72f38fbe84e5b37636b98417`
+- **SHA256:** `b73de25c053c3225a077738a1fcbd9ca6966d7b3cd6f5494a30f0aa0eae55c7e`
 - **SHA256:** `221c45a790dec2a296af57969e1165a16f8f49733aeab64c0bbd768d9943badf`
 - **SHA256:** `50eae63d3e24be9ca8803f4b5a0408aef97ee3fab7af018d8c2dde7c359edd65`
 - **SHA256:** `1d1bf5e8c1539d2f05b1429235b8f4990f87036774be95157b315a7803dd5526`
@@ -234,7 +228,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
   - IP / domain IOC(s): `23.254.164.92`, `23.254.164.123`, `teams.onweblive.org`, `maskasd.com`
 
 - **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `B122A9873BEDF145AE2A7FD024B5F309007DBB025149F4DC4AC3F7E4F32A36A4`, `AE70DD4F6BC0D1C8C2848E4E6B51934626C4818DCB5AF99D080DDBD7DC337185`, `4A8860240E4231C3A74C81949BE655A28E096A7D72F38FBE84E5B37636B98417`, `B73DE25C053C3225A077738A1FCBD9CA6966D7B3CD6F5494A30F0AA0EAE55C7E`, `221c45a790dec2a296af57969e1165a16f8f49733aeab64c0bbd768d9943badf`, `50eae63d3e24be9ca8803f4b5a0408aef97ee3fab7af018d8c2dde7c359edd65`, `1d1bf5e8c1539d2f05b1429235b8f4990f87036774be95157b315a7803dd5526`
+  - file hash IOC(s): `b122a9873bedf145ae2a7fd024b5f309007dbb025149f4dc4ac3f7e4f32a36a4`, `ae70dd4f6bc0d1c8c2848e4e6b51934626c4818dcb5af99d080ddbd7dc337185`, `4a8860240e4231c3a74c81949be655a28e096a7d72f38fbe84e5b37636b98417`, `b73de25c053c3225a077738a1fcbd9ca6966d7b3cd6f5494a30f0aa0eae55c7e`, `221c45a790dec2a296af57969e1165a16f8f49733aeab64c0bbd768d9943badf`, `50eae63d3e24be9ca8803f4b5a0408aef97ee3fab7af018d8c2dde7c359edd65`, `1d1bf5e8c1539d2f05b1429235b8f4990f87036774be95157b315a7803dd5526`
 
 
 ## Why this matters

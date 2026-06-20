@@ -42,7 +42,8 @@ This warning comes after threat actors used compromised credentials to target�
 - **T1003** — OS Credential Dumping
 - **T1219** — Remote Access Software
 - **T1071** — Application Layer Protocol
-- **T1110.004** — Credential Stuffing
+- **T1110.004** — Brute Force: Credential Stuffing
+- **T1110.003** — Brute Force: Password Spraying
 - **T1133** — External Remote Services
 - **T1078** — Valid Accounts
 
@@ -52,31 +53,41 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### FortiGate SSL VPN credential-stuffing burst from single source IP (FortiBleed abuse)
+### FortiGate SSL VPN credential-stuffing / brute force (FortiBleed mass ssl-login-fail)
 
-`UC_29_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_30_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.user) as user values(Authentication.dest) as dest from datamodel=Authentication where Authentication.app="fortigate" Authentication.action="failure" (Authentication.signature="ssl-login-fail" OR Authentication.signature_id="0101039426" OR Authentication.signature="sslvpn_login_fail") by Authentication.src _time span=5m | `drop_dm_object_name(Authentication)` | where count > 30 | sort - count
+| tstats summariesonly=true count, dc(Authentication.user) as user_count, values(Authentication.user) as users from datamodel=Authentication where Authentication.action=failure (Authentication.app IN ("ssl-vpn","sslvpn")) by Authentication.src, Authentication.dest, _time span=10m
+| `drop_dm_object_name(Authentication)`
+| where count > 100 OR user_count > 10
+| sort - count
 ```
 
-### FortiGate admin / management interface login from public internet
+### FortiGate SSL VPN brute-force SUCCESS — failed burst then tunnel-up from same external IP
 
-`UC_29_9` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_30_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Authentication.user) as user values(Authentication.src) as src from datamodel=Authentication where Authentication.app="fortigate" (Authentication.signature_id="0100032001" OR Authentication.signature="admin_login" OR Authentication.signature="Administrator * logged in") by Authentication.dest Authentication.src_category | `drop_dm_object_name(Authentication)` | search NOT (src_category="internal" OR src="10.0.0.0/8" OR src="172.16.0.0/12" OR src="192.168.0.0/16") | sort - count
+| tstats summariesonly=true count(eval(Authentication.action="failure")) as fails, count(eval(Authentication.action="success")) as successes, values(Authentication.user) as users from datamodel=Authentication where (Authentication.app IN ("ssl-vpn","sslvpn")) by Authentication.src, Authentication.dest, _time span=10m
+| `drop_dm_object_name(Authentication)`
+| where fails > 20 AND successes > 0
+| sort - fails
 ```
 
-### FortiGate SSL VPN successful login after credential-stuffing burst (FortiBleed confirmed compromise)
+### FortiGate administrative login from public internet IP (exposed management interface)
 
-`UC_29_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_30_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Authentication where Authentication.app="fortigate" Authentication.action="failure" (Authentication.signature_id="0101039426" OR Authentication.signature="ssl-login-fail") by Authentication.src Authentication.dest _time span=10m | `drop_dm_object_name(Authentication)` | where count >= 10 | rename count as FailCount | join type=inner src dest [ | tstats `summariesonly` min(_time) as SuccessTime values(Authentication.user) as SuccessUser from datamodel=Authentication where Authentication.app="fortigate" Authentication.action="success" (Authentication.signature_id="0101039425" OR Authentication.signature="ssl-login-success") by Authentication.src Authentication.dest | `drop_dm_object_name(Authentication)` ] | where SuccessTime >= _time AND SuccessTime <= _time + 3600 | table _time, src, dest, FailCount, SuccessTime, SuccessUser
+| tstats summariesonly=true count, values(Authentication.app) as app, min(_time) as firstTime, max(_time) as lastTime from datamodel=Authentication where Authentication.action=success Authentication.user=admin* by Authentication.src, Authentication.dest, Authentication.user
+| `drop_dm_object_name(Authentication)`
+| where NOT (cidrmatch("10.0.0.0/8",src) OR cidrmatch("172.16.0.0/12",src) OR cidrmatch("192.168.0.0/16",src))
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -348,4 +359,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

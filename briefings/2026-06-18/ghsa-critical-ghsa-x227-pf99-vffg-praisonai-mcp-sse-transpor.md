@@ -22,12 +22,9 @@ and no Origin-header validation. The module mcp/mcp_security.py provides exactly
 - **T1204.002** — User Execution: Malicious File
 - **T1190** — Exploit Public-Facing Application
 - **T1133** — External Remote Services
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1059** — Command and Scripting Interpreter
-- **T1059.001** — PowerShell
-- **T1059.003** — Windows Command Shell
-- **T1059.004** — Unix Shell
-- **T1105** — Ingress Tool Transfer
+- **T1189** — Drive-by Compromise
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
+- **T1059.001** — Command and Scripting Interpreter: PowerShell
 
 ## Kill chain phases observed
 
@@ -35,66 +32,60 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### PraisonAI MCP SSE server launched with vulnerable defaults (GHSA-x227-pf99-vffg)
+### Exposed PraisonAI MCP SSE listener accepting non-loopback connections
 
-`UC_64_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_65_1` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("python.exe","python3.exe","pythonw.exe","python","python3","uvicorn","uvicorn.exe") OR Processes.parent_process_name IN ("python.exe","python3.exe","pythonw.exe","python","python3")) AND (Processes.process="*praisonaiagents.mcp*" OR Processes.process="*launch_tools_mcp_server*" OR Processes.process="*ToolsMCPServer*" OR Processes.parent_process="*praisonaiagents.mcp*") by Processes.dest Processes.user Processes.process Processes.process_name Processes.parent_process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=t count, values(All_Traffic.src) as src, values(All_Traffic.transport) as transport, min(_time) as firstTime, max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.direction="inbound" AND All_Traffic.process="*python*" AND NOT All_Traffic.src IN ("127.0.0.1","::1")) by All_Traffic.dest, All_Traffic.dest_port, All_Traffic.process | `drop_dm_object_name(All_Traffic)` | where dest_port!=0
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(7d)
+| where ActionType == "InboundConnectionAccepted"
+| where InitiatingProcessFileName has_any ("python","python3","python.exe","uvicorn")
+| where InitiatingProcessCommandLine has "praisonai"
+| where not(ipv4_is_match(RemoteIP, "127.0.0.0/8")) and RemoteIP != "::1"
+| summarize Connections=count(), RemoteIPs=make_set(RemoteIP,20), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, LocalPort
+| order by Connections desc
+```
+
+### Unauthenticated MCP SSE JSON-RPC tool invocation (/sse + /messages/ no Authorization)
+
+`UC_65_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count, values(Web.http_method) as http_method, values(Web.status) as status, values(Web.http_user_agent) as user_agent, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web where (Web.url="*/messages/*session_id=*" OR Web.url="*/sse*") by Web.src, Web.dest, Web.dest_port, Web.url | `drop_dm_object_name(Web)`
+```
+
+### PraisonAI MCP Python server spawning a command shell (unauth tools/call RCE)
+
+`UC_65_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count, values(Processes.process) as process, min(_time) as firstTime, max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("python.exe","python3","python","uvicorn") AND Processes.parent_process="*praisonai*" AND Processes.process_name IN ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh")) by Processes.dest, Processes.user, Processes.parent_process, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where (FileName in~ ("python.exe","python3.exe","pythonw.exe","python","python3","uvicorn","uvicorn.exe")
-      or InitiatingProcessFileName in~ ("python.exe","python3.exe","pythonw.exe","python","python3"))
-| where ProcessCommandLine has "praisonaiagents"
-    or InitiatingProcessCommandLine has "praisonaiagents"
-| where ProcessCommandLine has_any ("praisonaiagents.mcp","mcp_server","launch_tools_mcp_server","ToolsMCPServer","run_sse","transport=\"sse\"","transport='sse'")
-    or InitiatingProcessCommandLine has_any ("praisonaiagents.mcp","mcp_server","launch_tools_mcp_server","ToolsMCPServer","run_sse","transport=\"sse\"","transport='sse'")
+| where InitiatingProcessFileName has_any ("python","python3","python.exe","uvicorn")
+| where InitiatingProcessCommandLine has "praisonai"
+| where FileName in~ ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, SHA256
-| order by Timestamp desc
-```
-
-### PraisonAI MCP host spawns shell/LOLBin — likely unauthenticated tools/call RCE (GHSA-x227-pf99-vffg)
-
-`UC_64_2` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("python.exe","python3.exe","pythonw.exe","python","python3","uvicorn","uvicorn.exe") AND Processes.parent_process="*praisonaiagents*" AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","bash","sh","zsh","dash","whoami.exe","whoami","hostname.exe","hostname","ipconfig.exe","ifconfig","ip","net.exe","net1.exe","nltest.exe","systeminfo.exe","tasklist.exe","ps","curl.exe","curl","wget.exe","wget","certutil.exe","bitsadmin.exe","nc","ncat","ncat.exe","schtasks.exe","at.exe","reg.exe","rundll32.exe","regsvr32.exe") by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("python.exe","python3.exe","pythonw.exe","python","python3","uvicorn","uvicorn.exe")
-| where InitiatingProcessCommandLine has "praisonaiagents"
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe",
-                     "bash","sh","zsh","dash",
-                     "whoami.exe","whoami","hostname.exe","hostname",
-                     "ipconfig.exe","ifconfig","ip",
-                     "net.exe","net1.exe","nltest.exe","systeminfo.exe","tasklist.exe","ps",
-                     "curl.exe","curl","wget.exe","wget",
-                     "certutil.exe","bitsadmin.exe",
-                     "nc","ncat","ncat.exe",
-                     "schtasks.exe","at.exe","reg.exe",
-                     "rundll32.exe","regsvr32.exe")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName, SHA256
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-x227-pf99-vffg: PraisonAI: MCP SSE transport binds 0.0.0.
 
-`UC_64_0` · phase: **exploit** · confidence: **High**
+`UC_65_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -144,4 +135,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 3 use case(s) fired, 9 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 4 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

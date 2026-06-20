@@ -19,32 +19,12 @@ July 31, 2024
 
 - **T1190** — Exploit Public-Facing Application
 - **T1204.002** — User Execution: Malicious File
-- **T1499.003** — Endpoint Denial of Service: Application Exhaustion Flood
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### Vulnerable FastAPI / python-multipart exposing CVE-2024-24762 (ReDoS)
-
-`UC_1193_2` · phase: **weapon** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Vulnerabilities.signature) as signature from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve="CVE-2024-24762" by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareVulnerabilities
-| where CveId == "CVE-2024-24762"
-| join kind=leftouter (DeviceTvmSoftwareInventory | where SoftwareName has_any ("fastapi","python-multipart") | project DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion) on DeviceId
-| where SoftwareName has_any ("fastapi","python-multipart")
-| project DeviceName, DeviceId, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by DeviceName asc
-```
 
 ### Article-specific behavioural hunt — A denial of service Regex breaks FastAPI security
 
@@ -105,4 +85,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

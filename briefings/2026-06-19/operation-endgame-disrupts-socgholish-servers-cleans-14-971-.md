@@ -24,20 +24,14 @@ Dutch law enforcement authorities, along with counterparts from Canada , Germany
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
-- **T1204.002** — Malicious File
-- **T1059.007** — JavaScript
 - **T1189** — Drive-by Compromise
-- **T1059.001** — PowerShell
-- **T1105** — Ingress Tool Transfer
-- **T1071.001** — Web Protocols
-- **T1505.003** — Web Shell
-- **T1190** — Exploit Public-Facing Application
-- **T1546** — Event Triggered Execution
-- **T1583.001** — Domains
-- **T1071.004** — DNS
-- **T1568** — Dynamic Resolution
-- **T1136.001** — Local Account
-- **T1098** — Account Manipulation
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
+- **T1036.008** — Masquerading: Masquerade File Type
+- **T1204.002** — User Execution: Malicious File
+- **T1033** — System Owner/User Discovery
+- **T1482** — Domain Trust Discovery
+- **T1087.002** — Account Discovery: Domain Account
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
@@ -45,149 +39,104 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### SocGholish fake-update JS executed by wscript.exe from browser download path
+### SocGholish fake-update JavaScript (.js) downloaded by a browser to Downloads/Temp
 
-`UC_17_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_18_4` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("chrome.exe","msedge.exe","firefox.exe","brave.exe","iexplore.exe") AND Processes.process_name IN ("wscript.exe","cscript.exe") AND (Processes.process="*.js*" OR Processes.process="*.jse*" OR Processes.process="*.wsf*") AND (Processes.process="*Downloads*" OR Processes.process="*Temp*" OR Processes.process="*AppData*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created Filesystem.file_name="*.js" (Filesystem.file_path="*\\Downloads\\*" OR Filesystem.file_path="*\\Temp\\*" OR Filesystem.file_path="*\\AppData\\Local\\Temp\\*") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_guid 
+| `drop_dm_object_name(Filesystem)` 
+| convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceFileEvents
+| where Timestamp > ago(14d)
+| where ActionType == "FileCreated"
+| where FileName endswith ".js"
+| where FolderPath has_any (@"\Downloads\", @"\Temp\", @"\AppData\Local\Temp\")
+| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","vivaldi.exe")
+| where isnotempty(FileOriginUrl)
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, FileName, FolderPath, FileOriginUrl, FileOriginReferrerUrl, SHA256
+| order by Timestamp desc
+```
+
+### wscript.exe/cscript.exe executing a .js from a user download path (SocGholish execution)
+
+`UC_18_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="wscript.exe" OR Processes.process_name="cscript.exe") (Processes.parent_process_name="explorer.exe" OR Processes.parent_process_name="chrome.exe" OR Processes.parent_process_name="msedge.exe" OR Processes.parent_process_name="firefox.exe" OR Processes.parent_process_name="brave.exe" OR Processes.parent_process_name="opera.exe") Processes.process="*.js*" (Processes.process="*\\Downloads\\*" OR Processes.process="*\\Temp\\*" OR Processes.process="*\\AppData\\*") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process Processes.process_hash 
+| `drop_dm_object_name(Processes)` 
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","iexplore.exe")
+| where Timestamp > ago(14d)
 | where FileName in~ ("wscript.exe","cscript.exe")
-| where ProcessCommandLine has_any (".js",".jse",".wsf")
-| where ProcessCommandLine has_any ("Downloads","Temp","AppData")
+| where ProcessCommandLine contains ".js"
+| where ProcessCommandLine has_any (@"\Downloads\", @"\Temp\", @"\AppData\")
+| where InitiatingProcessFileName in~ ("explorer.exe","chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","vivaldi.exe")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
+| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine, FolderPath, SHA256
 | order by Timestamp desc
 ```
 
-### wscript.exe spawning PowerShell with curl/IRM to .top TLD — SocGholish→MintsLoad
+### SocGholish host/AD reconnaissance spawned by Windows Script Host
 
-`UC_17_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_18_6` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("wscript.exe","cscript.exe") AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe") AND (Processes.process="*Invoke-WebRequest*" OR Processes.process="*Invoke-RestMethod*" OR Processes.process="*DownloadString*" OR Processes.process="*BitsTransfer*" OR Processes.process="*curl*" OR Processes.process="*iwr *" OR Processes.process="*irm *") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | rex field=process "(?i)\.(?<tld>top|xyz|cyou|click|life|world|shop|fun|space|monster|icu|cfd)\b" | where isnotnull(tld) | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="wscript.exe" OR Processes.parent_process_name="cscript.exe") (Processes.process_name="whoami.exe" OR Processes.process_name="net.exe" OR Processes.process_name="net1.exe" OR Processes.process_name="nltest.exe" OR Processes.process_name="systeminfo.exe" OR Processes.process_name="ipconfig.exe" OR Processes.process_name="wmic.exe" OR Processes.process_name="tasklist.exe" OR Processes.process_name="reg.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process 
+| `drop_dm_object_name(Processes)` 
+| stats values(process_name) as recon_tools values(process) as recon_cmds dc(process_name) as distinct_tools min(firstTime) as firstTime max(lastTime) as lastTime by dest, user, parent_process_name 
+| where distinct_tools >= 2 
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(14d)
 | where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe")
-| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe")
-| where ProcessCommandLine has_any ("Invoke-WebRequest","Invoke-RestMethod","DownloadString","DownloadFile","BitsTransfer","curl ","iwr ","irm ","WebClient")
-| where ProcessCommandLine matches regex @"(?i)\.(top|xyz|cyou|click|life|world|shop|fun|space|monster|icu|cfd)\b"
+| where FileName in~ ("whoami.exe","net.exe","net1.exe","nltest.exe","systeminfo.exe","ipconfig.exe","wmic.exe","tasklist.exe","reg.exe","cmd.exe")
 | where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
-| order by Timestamp desc
+| summarize ReconTools=make_set(FileName), SampleCmds=make_set(ProcessCommandLine, 8), DistinctTools=dcount(FileName), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where DistinctTools >= 2   // SocGholish chains several recon utilities under one WSH parent
+| order by LastSeen desc
 ```
 
-### PowerShell spawned by IIS w3wp.exe or php-cgi.exe on a WordPress host
+### wscript.exe (spawned by browser) making external network connections — SocGholish C2
 
-`UC_17_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_18_7` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("w3wp.exe","php-cgi.exe","php.exe","httpd.exe","nginx.exe") AND Processes.process_name IN ("powershell.exe","pwsh.exe","cmd.exe") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="wscript.exe" OR Processes.process_name="cscript.exe") (Processes.parent_process_name="chrome.exe" OR Processes.parent_process_name="msedge.exe" OR Processes.parent_process_name="firefox.exe" OR Processes.parent_process_name="brave.exe" OR Processes.parent_process_name="opera.exe" OR Processes.parent_process_name="vivaldi.exe") by Processes.dest Processes.process_guid Processes.process_name Processes.parent_process_name 
+| `drop_dm_object_name(Processes)` 
+| join type=inner process_guid [| tstats summariesonly=true count from datamodel=Network_Traffic.All_Traffic where All_Traffic.direction=outbound NOT (All_Traffic.dest_ip=10.0.0.0/8 OR All_Traffic.dest_ip=172.16.0.0/12 OR All_Traffic.dest_ip=192.168.0.0/16 OR All_Traffic.dest_ip=127.0.0.0/8 OR All_Traffic.dest_ip=169.254.0.0/16) by All_Traffic.dest All_Traffic.process_guid All_Traffic.dest_ip All_Traffic.dest_port 
+| `drop_dm_object_name(All_Traffic)`] 
+| table firstTime, dest, parent_process_name, process_name, dest_ip, dest_port 
+| convert ctime(firstTime)
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("w3wp.exe","php-cgi.exe","php.exe","httpd.exe","nginx.exe")
-| where FileName in~ ("powershell.exe","pwsh.exe","cmd.exe")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### Unauthorized write to WordPress wp-content/plugins or wp-admin by web server process
-
-`UC_17_7` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as paths from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*wp-content/plugins/*" OR Filesystem.file_path="*wp-content/mu-plugins/*" OR Filesystem.file_path="*wp-admin/*") AND (Filesystem.file_name="*.php" OR Filesystem.file_name="*.js") AND Filesystem.process_name IN ("w3wp.exe","php-cgi.exe","php.exe","httpd.exe","nginx.exe") by Filesystem.dest Filesystem.process_name Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileModified")
-| where InitiatingProcessFileName in~ ("w3wp.exe","php-cgi.exe","php.exe","httpd.exe","nginx.exe")
-| where FolderPath has_any ("wp-content/plugins","wp-content/mu-plugins","wp-admin","wp-includes")
-| where FileName endswith ".php" or FileName endswith ".js"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, SHA256, FileSize
-| order by Timestamp desc
-```
-
-### First-seen subdomain on an established apex domain (SocGholish domain shadowing)
-
-`UC_17_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count from datamodel=Network_Resolution.DNS where DNS.message_type="QUERY" by DNS.query | `drop_dm_object_name(DNS)` | rex field=query "(?<host>[^\.]+)\.(?<apex>[^\.]+\.[^\.]+)$" | eventstats dc(host) as host_count by apex | where host_count > 10 | join apex [| tstats summariesonly=t count from datamodel=Network_Resolution.DNS where DNS.message_type="QUERY" earliest=-1h by DNS.query | `drop_dm_object_name(DNS)` | rex field=query "(?<host>[^\.]+)\.(?<apex>[^\.]+\.[^\.]+)$"] | where count==1
-```
-
-**Defender KQL:**
-```kql
-let Baseline = DeviceNetworkEvents
-    | where Timestamp between (ago(30d) .. ago(1h))
-    | where isnotempty(RemoteUrl)
-    | extend Host = tostring(split(RemoteUrl, "/")[0])
-    | extend Apex = strcat(tostring(split(Host, ".")[-2]), ".", tostring(split(Host, ".")[-1]))
-    | summarize BaselineSubs = dcount(Host), BaselineHits = count() by Apex
-    | where BaselineHits > 100 and BaselineSubs >= 1;
-let Recent = DeviceNetworkEvents
-    | where Timestamp > ago(1h)
-    | where isnotempty(RemoteUrl)
-    | extend Host = tostring(split(RemoteUrl, "/")[0])
-    | extend Apex = strcat(tostring(split(Host, ".")[-2]), ".", tostring(split(Host, ".")[-1]))
-    | summarize FirstSeen = min(Timestamp), HitsRecent = count(), Devices = dcount(DeviceName) by Apex, Host;
-Recent
-| join kind=inner Baseline on Apex
-| join kind=leftanti (
-    DeviceNetworkEvents
-    | where Timestamp between (ago(30d) .. ago(1h))
-    | extend Host = tostring(split(RemoteUrl, "/")[0])
-    | summarize by Host
-) on Host
-| order by FirstSeen desc
-```
-
-### Suspicious admin user creation in WordPress wp_users by web server context
-
-`UC_17_9` · phase: **install** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-index=mysql sourcetype=mysql:audit OR sourcetype=mysql:query ("wp_users" OR "wp_usermeta") ("INSERT" OR "UPDATE") ("administrator" OR "wp_capabilities") | rex field=_raw "(?i)user_login\s*=\s*'(?<new_user>[^']+)'" | stats min(_time) as firstTime values(host) as hosts values(new_user) as new_users by user | where isnotnull(new_user)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileModified")
-| where InitiatingProcessFileName in~ ("w3wp.exe","php-cgi.exe","php.exe")
-| where FolderPath has_any ("wp-content/uploads","wp-content/themes")
-| where FileName endswith ".php"
-| join kind=inner (
-    DeviceProcessEvents
-    | where Timestamp > ago(7d)
-    | where ProcessCommandLine has_any ("wp_insert_user","administrator","wp_capabilities")
-) on DeviceId
-| project Timestamp, DeviceName, InitiatingProcessFileName, FolderPath, FileName, ProcessCommandLine
-| order by Timestamp desc
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName in~ ("wscript.exe","cscript.exe")
+| where InitiatingProcessParentFileName in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","opera.exe","vivaldi.exe")
+| where RemoteIPType == "Public"
+| where InitiatingProcessAccountName !endswith "$"
+| summarize Connections=count(), RemoteIPs=make_set(RemoteIP, 20), RemoteUrls=make_set(RemoteUrl, 20), FirstSeen=min(Timestamp), LastSeen=max(Timestamp) by DeviceName, InitiatingProcessAccountName, InitiatingProcessParentFileName, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by LastSeen desc
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -306,4 +255,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 10 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 8 use case(s) fired, 15 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

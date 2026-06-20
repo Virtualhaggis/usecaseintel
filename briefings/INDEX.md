@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2237 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2238 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -9,12 +9,13 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 
 ## 2026-06-20
+- [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-06-20/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
 - [hackers exploit gravity smtp wordpress plugin bug to expose ](./2026-06-20/hackers-exploit-gravity-smtp-wordpress-plugin-bug-to-expose-.md)
 - [microsoft links mastra ai supply chain attack to north korea](./2026-06-20/microsoft-links-mastra-ai-supply-chain-attack-to-north-korea.md)
+- [new prinz eugen ransomware prioritizes recent files for encr](./2026-06-20/new-prinz-eugen-ransomware-prioritizes-recent-files-for-encr.md)
 - [threat brief mitigating large scale credential attacks](./2026-06-20/threat-brief-mitigating-large-scale-credential-attacks.md)
 
 ## 2026-06-19
-- [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-06-19/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
 - [autojack attack lets one web page hijack ai agent for host c](./2026-06-19/autojack-attack-lets-one-web-page-hijack-ai-agent-for-host-c.md)
 - [autojack how a single page can rce the host running your ai ](./2026-06-19/autojack-how-a-single-page-can-rce-the-host-running-your-ai-.md)
 - [cisa splunk enterprise flaw actively exploited patch by sund](./2026-06-19/cisa-splunk-enterprise-flaw-actively-exploited-patch-by-sund.md)

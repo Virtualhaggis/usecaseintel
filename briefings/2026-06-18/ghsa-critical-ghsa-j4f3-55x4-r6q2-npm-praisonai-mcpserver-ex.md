@@ -28,13 +28,7 @@ The HTTP transport has no authentication or authorization path. `MCPServerConfig
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.002** — User Execution: Malicious File
 - **T1190** — Exploit Public-Facing Application
-- **T1133** — External Remote Services
-- **T1195.002** — Compromise Software Supply Chain
-- **T1059.007** — JavaScript
-- **T1059.001** — PowerShell
-- **T1059.003** — Windows Command Shell
-- **T1059.004** — Unix Shell
-- **T1203** — Exploitation for Client Execution
+- **T1059** — Command and Scripting Interpreter
 
 ## Kill chain phases observed
 
@@ -42,13 +36,13 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Unauthenticated JSON-RPC tools/call hitting an internal MCP HTTP listener
+### Node.js MCP server reachable from public clients (unauthenticated MCPServer exposure)
 
-`UC_52_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_53_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Web.http_method) as method values(Web.url) as url values(Web.user_agent) as ua from datamodel=Web.Web where Web.dest_port=3000 AND Web.http_method=POST AND (Web.url="*" OR Web.uri_path="*") by Web.src Web.dest Web.dest_port Web.http_method | `drop_dm_object_name(Web)` | join type=inner src dest [ search index=proxy OR index=waf OR sourcetype=cisco:asa OR sourcetype=stream:http dest_port=3000 ("\"method\":\"tools/call\"" OR "\"method\":\"tools/list\"" OR "\"method\":\"resources/read\"" OR "\"method\":\"prompts/get\"") | rex field=_raw "Authorization:\s*(?<auth>Bearer\s+\S+)?" | eval auth_missing=if(isnull(auth) OR auth="" OR match(auth,"(?i)bearer\s+invalid"),1,0) | where auth_missing=1 | stats values(auth) as auth_header by src dest ] | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.direction=inbound All_Traffic.process_name=node* by All_Traffic.src_ip All_Traffic.dest All_Traffic.dest_port All_Traffic.process_name | `drop_dm_object_name(All_Traffic)` | where NOT (cidrmatch("10.0.0.0/8",src_ip) OR cidrmatch("172.16.0.0/12",src_ip) OR cidrmatch("192.168.0.0/16",src_ip) OR cidrmatch("127.0.0.0/8",src_ip)) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
@@ -56,62 +50,39 @@ _(none detected from narrative keywords)_
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
 | where ActionType == "InboundConnectionAccepted"
-| where LocalPort == 3000
-| where InitiatingProcessFileName =~ "node.exe"
-| where InitiatingProcessCommandLine has_any ("praisonai", "praisonai-ts", "mcp/server", "MCPServer")
-| where RemoteIPType !in ("Loopback", "Private") or RemoteIP !in ("127.0.0.1", "::1")
-| project Timestamp, DeviceName, RemoteIP, RemoteIPType, LocalIP, LocalPort,
-          InitiatingProcessId, InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessFolderPath
-| order by Timestamp desc
+| where InitiatingProcessFileName in~ ("node.exe","node")
+| where RemoteIPType == "Public"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), ConnCount=count(), RemoteIPs=make_set(RemoteIP, 50) by DeviceName, LocalPort, InitiatingProcessId, InitiatingProcessCommandLine
+| order by FirstSeen desc
 ```
 
-### Vulnerable praisonai npm package (<=1.7.1) installed on host
+### PraisonAI MCP server (node) spawns shell/LOLBin child after external connection
 
-`UC_52_3` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_53_3` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as process values(Filesystem.user) as user from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\node_modules\\praisonai\\package.json" OR Filesystem.file_path="*/node_modules/praisonai/package.json" OR Filesystem.file_path="*\\praisonai-ts\\src\\mcp\\server.ts" OR Filesystem.file_path="*/praisonai-ts/src/mcp/server.ts") by Filesystem.dest Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name=node.exe (Processes.process_name=cmd.exe OR Processes.process_name=powershell.exe OR Processes.process_name=pwsh.exe OR Processes.process_name=wscript.exe OR Processes.process_name=cscript.exe OR Processes.process_name=mshta.exe OR Processes.process_name=rundll32.exe OR Processes.process_name=certutil.exe OR Processes.process_name=curl.exe OR Processes.process_name=bitsadmin.exe) by Processes.dest Processes.user Processes.parent_process Processes.process Processes.process_name Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
-| where Timestamp > ago(30d)
-| where ActionType in ("FileCreated", "FileRenamed")
-| where FolderPath has "node_modules\\praisonai" or FolderPath has "node_modules/praisonai" or FolderPath has "praisonai-ts\\src\\mcp" or FolderPath has "praisonai-ts/src/mcp"
-| where FileName in~ ("package.json", "server.ts", "server.js")
-| where InitiatingProcessFileName in~ ("npm.exe", "npm-cli.js", "node.exe", "pnpm.exe", "yarn.exe", "corepack.exe")
-| project Timestamp, DeviceName, FolderPath, FileName, SHA256,
-          InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Node.js praisonai MCP server spawning shell or scripting interpreter (tool-call abuse)
-
-`UC_52_4` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.user) as user from datamodel=Endpoint.Processes where (Processes.parent_process_name=node.exe OR Processes.parent_process_name=node) (Processes.process_name=cmd.exe OR Processes.process_name=powershell.exe OR Processes.process_name=pwsh.exe OR Processes.process_name=bash OR Processes.process_name=sh OR Processes.process_name=wscript.exe OR Processes.process_name=cscript.exe) (Processes.parent_process=*praisonai* OR Processes.parent_process=*MCPServer* OR Processes.parent_process=*mcp/server*) by Processes.dest Processes.parent_process_name Processes.process_name Processes.parent_process Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
+let Window = 5m;
+let InboundReach = DeviceNetworkEvents
+    | where Timestamp > ago(7d)
+    | where ActionType == "InboundConnectionAccepted"
+    | where InitiatingProcessFileName in~ ("node.exe","node")
+    | where RemoteIPType == "Public"
+    | project ConnTime=Timestamp, DeviceId, ServerPid=InitiatingProcessId, RemoteIP, LocalPort;
 DeviceProcessEvents
 | where Timestamp > ago(7d)
-| where InitiatingProcessFileName =~ "node.exe"
-| where InitiatingProcessCommandLine has_any ("praisonai", "praisonai-ts", "MCPServer", "mcp/server", "mcp\\server")
-| where FileName in~ ("cmd.exe", "powershell.exe", "pwsh.exe", "bash.exe", "wsl.exe", "sh.exe", "wscript.exe", "cscript.exe", "mshta.exe", "curl.exe", "certutil.exe", "bitsadmin.exe")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName,
-          ParentImage = InitiatingProcessFolderPath,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildImage = FolderPath,
-          ChildCmd = ProcessCommandLine,
-          SHA256
-| order by Timestamp desc
+| where InitiatingProcessFileName in~ ("node.exe","node")
+| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","wscript.exe","cscript.exe","mshta.exe","rundll32.exe","certutil.exe","curl.exe","bitsadmin.exe","bash.exe","sh.exe")
+| join kind=inner InboundReach on DeviceId
+| where InitiatingProcessId == ServerPid
+| where Timestamp between (ConnTime .. ConnTime + Window)
+| project ConnTime, SpawnTime=Timestamp, DelaySec=datetime_diff('second', Timestamp, ConnTime), DeviceName, AccountName, RemoteIP, LocalPort, InitiatingProcessCommandLine, FileName, ProcessCommandLine, SHA256
+| order by ConnTime desc
 ```
 
 ### OAuth consent / suspicious app grant
@@ -143,7 +114,7 @@ CloudAppEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-j4f3-55x4-r6q2: npm PraisonAI MCPServer exposes unauthent
 
-`UC_52_1` · phase: **exploit** · confidence: **High**
+`UC_53_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -193,4 +164,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 5 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

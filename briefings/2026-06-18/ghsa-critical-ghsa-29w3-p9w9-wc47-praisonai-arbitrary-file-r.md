@@ -19,13 +19,13 @@ The `multiedit` tool in `src/praisonai/praisonai/tools/multiedit.py` allows LLM-
 ## MITRE ATT&CK Techniques
 
 - **T1204.002** — User Execution: Malicious File
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1552.004** — Unsecured Credentials: Private Keys
-- **T1083** — File and Directory Discovery
 - **T1098.004** — Account Manipulation: SSH Authorized Keys
 - **T1546.004** — Event Triggered Execution: Unix Shell Configuration Modification
-- **T1053.003** — Scheduled Task/Job: Cron
+- **T1552.001** — Unsecured Credentials: Credentials In Files
+- **T1552.004** — Unsecured Credentials: Private Keys
+- **T1003.008** — OS Credential Dumping: /etc/passwd and /etc/shadow
 - **T1190** — Exploit Public-Facing Application
+- **T1059.006** — Command and Scripting Interpreter: Python
 
 ## Kill chain phases observed
 
@@ -33,84 +33,62 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### PraisonAI multiedit tool reading sensitive credentials (GHSA-29w3-p9w9-wc47)
+### PraisonAI multiedit arbitrary write to SSH/shell/cloud-cred files by python process
 
-`UC_51_1` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_52_1` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.file_path) as file_paths from datamodel=Endpoint.Filesystem where (Filesystem.process_name="python*" OR Filesystem.process_name="python3*" OR Filesystem.process_name="pythonw.exe") AND (Filesystem.file_path="*/.ssh/id_rsa*" OR Filesystem.file_path="*/.ssh/id_ed25519*" OR Filesystem.file_path="*/.aws/credentials*" OR Filesystem.file_path="*/.aws/config*" OR Filesystem.file_path="*/etc/shadow" OR Filesystem.file_path="*/etc/passwd" OR Filesystem.file_path="*/.netrc" OR Filesystem.file_path="*/.env" OR Filesystem.file_path="*\\.ssh\\*" OR Filesystem.file_path="*\\.aws\\credentials*") by host Filesystem.process_name Filesystem.process_id Filesystem.action Filesystem.file_path Filesystem.user | `drop_dm_object_name(Filesystem)` | join type=inner host process_id [| tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process="*praisonai*" OR Processes.process="*multiedit*") by host Processes.process_id Processes.process Processes.parent_process | `drop_dm_object_name(Processes)`] | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action IN ("created","modified","write")) (Filesystem.file_path="*/.ssh/authorized_keys" OR Filesystem.file_path="*/.bashrc" OR Filesystem.file_path="*/.bash_profile" OR Filesystem.file_path="*/.profile" OR Filesystem.file_path="*/.zshrc" OR Filesystem.file_path="*/.aws/credentials" OR Filesystem.file_path="*/.ssh/id_rsa" OR Filesystem.file_name=".env") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.action | `drop_dm_object_name(Filesystem)` | search process_name=*python* | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
 | where Timestamp > ago(7d)
-| where ActionType in ("FileCreated", "FileModified", "FileRenamed")
-   or ActionType startswith "File"
-| where InitiatingProcessFileName in~ ("python.exe", "python3", "python", "python3.exe", "pythonw.exe", "python3.10", "python3.11", "python3.12")
-| where InitiatingProcessCommandLine has_any ("praisonai", "multiedit")
-| where FolderPath has_any (@"\.ssh\", @"\.aws\", @"\.env", @"\.netrc", "/etc/shadow", "/etc/passwd", "/.ssh/", "/.aws/", "/root/", "id_rsa", "id_ed25519", "credentials")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, InitiatingProcessAccountName,
-          InitiatingProcessParentFileName
+| where ActionType in ("FileCreated","FileModified","FileRenamed")
+| where InitiatingProcessFileName has "python" or InitiatingProcessCommandLine has_any ("praisonai","multiedit")
+| where (FileName =~ "authorized_keys" and FolderPath has "/.ssh/")
+     or FileName in~ (".bashrc",".bash_profile",".profile",".zshrc",".bash_aliases")
+     or (FileName =~ "credentials" and FolderPath has "/.aws/")
+     or FileName =~ ".env"
+     or (FileName in~ ("id_rsa","id_ed25519","authorized_keys") and FolderPath has "/.ssh/")
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, FileName, ActionType, SHA256
 | order by Timestamp desc
 ```
 
-### PraisonAI multiedit writing to persistence locations (authorized_keys / shell rc / cron)
+### PraisonAI multiedit secret-file read (/etc/shadow, id_rsa, .aws/credentials, .env) by python
 
-`UC_51_2` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_52_2` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Filesystem.action) as actions from datamodel=Endpoint.Filesystem where (Filesystem.process_name="python*" OR Filesystem.process_name="python3*" OR Filesystem.process_name="pythonw.exe") AND Filesystem.action IN ("created","modified","written","renamed") AND (Filesystem.file_path="*/.ssh/authorized_keys*" OR Filesystem.file_path="*/.bashrc" OR Filesystem.file_path="*/.bash_profile" OR Filesystem.file_path="*/.profile" OR Filesystem.file_path="*/.zshrc" OR Filesystem.file_path="*/etc/cron.d/*" OR Filesystem.file_path="*/etc/crontab" OR Filesystem.file_path="*/var/spool/cron/*" OR Filesystem.file_path="*/etc/sudoers*" OR Filesystem.file_path="*\\Start Menu\\Programs\\Startup\\*") by host Filesystem.process_name Filesystem.process_id Filesystem.file_path Filesystem.user | `drop_dm_object_name(Filesystem)` | join type=inner host process_id [| tstats summariesonly=true count from datamodel=Endpoint.Processes where (Processes.process="*praisonai*" OR Processes.process="*multiedit*") by host Processes.process_id Processes.process Processes.parent_process | `drop_dm_object_name(Processes)`] | sort - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action IN ("read","accessed","open")) (Filesystem.file_path="/etc/shadow" OR Filesystem.file_path="*/.ssh/id_rsa" OR Filesystem.file_path="*/.ssh/id_ed25519" OR Filesystem.file_path="*/.aws/credentials" OR Filesystem.file_name=".env") by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name Filesystem.action | `drop_dm_object_name(Filesystem)` | search process_name=*python* | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
+```
+
+### Vulnerable PraisonAI install/upgrade activity (verify version >= 4.6.61)
+
+`UC_52_3` · phase: **weapon** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*praisonai*") (Processes.process="*install*" OR Processes.process="*upgrade*" OR Processes.process="* add *") (Processes.process_name IN ("pip","pip3","python","python3","uv","poetry")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileCreated", "FileModified", "FileRenamed")
-| where InitiatingProcessFileName in~ ("python.exe", "python3", "python", "python3.exe", "pythonw.exe", "python3.10", "python3.11", "python3.12")
-| where InitiatingProcessCommandLine has_any ("praisonai", "multiedit")
-| where FolderPath has_any ("/.ssh/authorized_keys", "/.bashrc", "/.bash_profile", "/.profile", "/.zshrc", "/etc/cron.d", "/etc/crontab", "/var/spool/cron", "/etc/sudoers", @"\Start Menu\Programs\Startup\")
-   or FileName in~ ("authorized_keys", ".bashrc", ".bash_profile", ".profile", ".zshrc", "crontab", "sudoers")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessAccountName, InitiatingProcessParentFileName,
-          PreviousFileName, PreviousFolderPath
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("pip","pip3","python","python3","uv","poetry")
+| where ProcessCommandLine has "praisonai"
+| where ProcessCommandLine has_any ("install","upgrade","-U"," add ")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessCommandLine
 | order by Timestamp desc
-```
-
-### Vulnerable PraisonAI package exposure (< 4.6.61, GHSA-29w3-p9w9-wc47)
-
-`UC_51_3` · phase: **recon** · confidence: **High** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-DeviceTvmSoftwareInventory
-| where SoftwareName has "praisonai" or SoftwareName == "praisonai"
-| extend VersionParts = split(SoftwareVersion, ".")
-| extend Major = toint(VersionParts[0]), Minor = toint(VersionParts[1]), Patch = toint(VersionParts[2])
-| where Major < 4
-   or (Major == 4 and Minor < 6)
-   or (Major == 4 and Minor == 6 and Patch < 61)
-| join kind=leftouter (
-    DeviceInfo
-    | summarize arg_max(Timestamp, *) by DeviceId
-    | project DeviceId, IsInternetFacing, MachineGroup, LoggedOnUsers
-  ) on DeviceId
-| project DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion,
-          OSPlatform, IsInternetFacing, MachineGroup, LoggedOnUsers
-| order by tostring(IsInternetFacing) desc, DeviceName asc
 ```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-29w3-p9w9-wc47: PraisonAI: Arbitrary File Read/Write via
 
-`UC_51_0` · phase: **exploit** · confidence: **High**
+`UC_52_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

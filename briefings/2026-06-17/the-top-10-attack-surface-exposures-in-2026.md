@@ -25,12 +25,109 @@ With time-to-exploit now down to a sin…
 - **T1003** — OS Credential Dumping
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
+- **T1110.001** — Brute Force: Password Guessing
+- **T1133** — External Remote Services
+- **T1136** — Create Account
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
+
+### RDP password-guessing burst followed by successful logon on internet-facing host
+
+`UC_99_5` · phase: **exploit** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as failures, values(Authentication.user) as failedUsers, dc(Authentication.user) as failedUserCount, min(_time) as firstFail, max(_time) as lastFail from datamodel=Authentication where Authentication.action=failure AND Authentication.app=win:remote by Authentication.src, Authentication.dest, _time span=1h
+| `drop_dm_object_name(Authentication)`
+| where failures>=20
+| join type=inner src dest [
+    | tstats `summariesonly` count as successes, values(Authentication.user) as successUsers, min(_time) as successTime from datamodel=Authentication where Authentication.action=success AND Authentication.app=win:remote by Authentication.src, Authentication.dest
+    | `drop_dm_object_name(Authentication)` ]
+| where successTime>=firstFail AND successTime<=(lastFail+3600)
+| table successTime, dest, src, failedUsers, failedUserCount, successUsers, failures, successes
+| sort - successTime
+```
+
+**Defender KQL:**
+```kql
+let lookback = 7d;
+let bruteForce = DeviceLogonEvents
+| where Timestamp > ago(lookback)
+| where LogonType == "RemoteInteractive" and ActionType == "LogonFailed" and RemoteIPType == "Public"
+| summarize FailedCount = count(), FailedAccounts = dcount(AccountName), FailStart = min(Timestamp), FailEnd = max(Timestamp)
+    by DeviceId, RemoteIP, Hour = bin(Timestamp, 1h)
+| where FailedCount >= 20;   // 20 = RDP password-guessing burst floor; legit users rarely exceed ~5 fails/hr
+DeviceLogonEvents
+| where Timestamp > ago(lookback)
+| where LogonType == "RemoteInteractive" and ActionType == "LogonSuccess" and RemoteIPType == "Public"
+| where AccountName !endswith "$"
+| join kind=inner bruteForce on DeviceId, RemoteIP
+| where Timestamp between (FailStart .. FailEnd + 1h)
+| project SuccessTime = Timestamp, DeviceName, AccountName, RemoteIP, FailedCount, FailedAccounts, FailStart, FailEnd
+| order by SuccessTime desc
+```
+
+### External access to exposed phpMyAdmin / WordPress admin panel
+
+`UC_99_6` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count as hits, values(Web.uri_path) as paths, values(Web.status) as statuses, values(Web.http_user_agent) as agents, min(_time) as firstSeen, max(_time) as lastSeen from datamodel=Web where (Web.url="*phpmyadmin*" OR Web.url="*wp-login.php*" OR Web.url="*wp-admin*") by Web.src, Web.dest, Web.site
+| `drop_dm_object_name(Web)`
+| where hits>=10
+| sort - hits
+```
+
+### PLEASE_READ_ME MySQL backdoor user 'mysqlbackups' created after DB brute-force
+
+`UC_99_7` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, values(Processes.process) as cmdline, values(Processes.process_name) as proc, min(_time) as firstSeen, max(_time) as lastSeen from datamodel=Endpoint.Processes where Processes.process="*mysqlbackups*" by Processes.dest, Processes.user
+| `drop_dm_object_name(Processes)`
+| where count>0
+| sort - lastSeen
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(14d)
+| where ProcessCommandLine has "mysqlbackups"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### Internet-facing host vulnerable to MongoBleed (CVE-2025-14847) memory disclosure
+
+`UC_99_8` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, values(Vulnerabilities.signature) as signature, values(Vulnerabilities.severity) as severity, max(_time) as lastSeen from datamodel=Vulnerabilities where Vulnerabilities.cve="CVE-2025-14847" by Vulnerabilities.dest
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - lastSeen
+```
+
+**Defender KQL:**
+```kql
+let internetFacing = DeviceInfo
+| where Timestamp > ago(1d)
+| where IsInternetFacing == true
+| distinct DeviceId, PublicIP;
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp > ago(7d)
+| where CveId == "CVE-2025-14847"
+| join kind=inner internetFacing on DeviceId
+| project DeviceName, DeviceId, PublicIP, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by DeviceName asc
+```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
 
@@ -155,4 +252,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 5 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 9 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

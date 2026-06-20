@@ -25,9 +25,8 @@ When a developer starts `AgentOS`, a network attacker who can reach the service 
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1190** — Exploit Public-Facing Application
-- **T1133** — External Remote Services
-- **T1059** — Command and Scripting Interpreter
 - **T1213** — Data from Information Repositories
+- **T1133** — External Remote Services
 
 ## Kill chain phases observed
 
@@ -35,55 +34,34 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Vulnerable PraisonAI npm AgentOS server process running (GHSA-9752-mhqh-h34f, 1.6.0-1.7.1)
+### Unauthenticated PraisonAI AgentOS API access (GET /api/agents, POST /api/chat)
 
-`UC_53_1` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_54_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="node.exe" OR Processes.process_name="node") AND (Processes.process="*praisonai*" OR Processes.process="*agentos.js*" OR Processes.process="*dist/os/agentos*" OR Processes.process="*dist\\os\\agentos*") by Processes.dest Processes.user Processes.process Processes.parent_process Processes.process_id | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | eval ghsa="GHSA-9752-mhqh-h34f"
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url IN ("*/api/agents","*/api/agents?*","*/api/chat","*/api/chat?*")) (Web.http_method IN ("GET","POST")) (Web.status=200) by Web.src, Web.dest, Web.dest_port, Web.http_method, Web.url, Web.status, Web.http_user_agent | `drop_dm_object_name(Web)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
+```
+
+### PraisonAI AgentOS node listener exposed on 0.0.0.0:8000 to non-loopback
+
+`UC_54_2` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port=8000) (All_Traffic.direction="inbound" OR All_Traffic.transport="tcp") (All_Traffic.action="allowed") by All_Traffic.src, All_Traffic.dest, All_Traffic.dest_port, All_Traffic.app, All_Traffic.action | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)` | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("node.exe", "node")
-| where ProcessCommandLine has_any ("praisonai", "agentos.js", "dist/os/agentos", @"dist\os\agentos", "AgentOS")
-| summarize FirstSeen = min(Timestamp), LastSeen = max(Timestamp),
-            arg_max(Timestamp, ProcessCommandLine, FolderPath, InitiatingProcessFileName, AccountName)
-        by DeviceId, DeviceName
-| project DeviceName, AccountName, FirstSeen, LastSeen, ProcessCommandLine, FolderPath, InitiatingProcessFileName
-| order by LastSeen desc
-```
-
-### Unauthenticated request to PraisonAI AgentOS /api/agents or /api/chat from non-loopback source
-
-`UC_53_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_method) as methods values(Web.status) as statuses values(Web.http_user_agent) as user_agents from datamodel=Web.Web where (Web.url="*/api/agents*" OR Web.url="*/api/chat*") AND Web.dest_port IN (8000,3000,4000,80,443) AND NOT (Web.src IN ("127.0.0.1","::1")) by Web.src Web.dest Web.dest_port | `drop_dm_object_name(Web)` | search urls="*/api/agents*" OR urls="*/api/chat*" | eval ghsa="GHSA-9752-mhqh-h34f" | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let praisonHosts = DeviceProcessEvents
-    | where Timestamp > ago(30d)
-    | where FileName in~ ("node.exe", "node")
-    | where ProcessCommandLine has_any ("praisonai", "agentos.js", "dist/os/agentos")
-    | summarize by DeviceId, DeviceName;
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where ActionType == "InboundConnectionAccepted"
-| where InitiatingProcessFileName in~ ("node.exe", "node")
-| where InitiatingProcessCommandLine has_any ("praisonai", "agentos.js", "dist/os/agentos")
-| where LocalPort in (8000, 3000, 4000)
-| where RemoteIPType != "Loopback"
-| join kind=inner praisonHosts on DeviceId
-| project Timestamp, DeviceName, RemoteIP, RemoteIPType, RemotePort, LocalPort,
-          InitiatingProcessId, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
+| where ActionType in ("InboundConnectionAccepted", "ListeningConnectionCreated")
+| where LocalPort == 8000
+| where InitiatingProcessFileName =~ "node.exe"
+| where RemoteIPType == "Public" or ActionType == "ListeningConnectionCreated"
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), RemoteIPs=make_set(RemoteIP, 50), ConnCount=count() by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, LocalIP, LocalPort, ActionType
+| order by LastSeen desc
 ```
 
 ### OAuth consent / suspicious app grant
@@ -116,4 +94,4 @@ CloudAppEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 3 use case(s) fired, 6 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 3 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

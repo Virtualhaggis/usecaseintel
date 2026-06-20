@@ -29,123 +29,12 @@ The vulnerability, tracked as CVE-2026-20253 , is rated 9.8 on the CVSS scoring 
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
 - **T1204.002** — User Execution: Malicious File
-- **T1505.003** — Server Software Component: Web Shell
-- **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1595.002** — Active Scanning: Vulnerability Scanning
-- **T1046** — Network Service Discovery
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### Splunk CVE-2026-20253 — unauth hits on PostgreSQL sidecar recovery endpoints
-
-`UC_146_7` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.status) as status values(Web.http_user_agent) as ua from datamodel=Web.Web where Web.url IN ("*/v1/postgres/recovery/backup*","*/v1/postgres/recovery/restore*") by Web.src Web.dest Web.url Web.status | `drop_dm_object_name(Web)` | where status>=200 AND status<300 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let endpoints = dynamic(["/v1/postgres/recovery/backup","/v1/postgres/recovery/restore"]);
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("ConnectionSuccess","HttpConnectionInspected","InboundConnectionAccepted")
-| where LocalPort in (8089, 8000)
-| where RemoteUrl has_any (endpoints) or AdditionalFields has_any (endpoints)
-| project Timestamp, DeviceName, LocalIP, LocalPort, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, AdditionalFields
-| order by Timestamp desc
-```
-
-### Write to Splunk ssg_enable_modular_input.py — CVE-2026-20253 payload drop
-
-`UC_146_8` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Filesystem.process_name) as proc values(Filesystem.user) as user values(Filesystem.action) as action from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*/opt/splunk/etc/apps/splunk_secure_gateway/bin/ssg_enable_modular_input.py" OR Filesystem.file_path="*/opt/splunk/var/packages/data/postgres/.pgpass") by Filesystem.dest Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let targets = dynamic(["ssg_enable_modular_input.py",".pgpass"]);
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FileName in~ (targets)
-   or FolderPath has "/opt/splunk/etc/apps/splunk_secure_gateway/bin/"
-   or FolderPath has "/opt/splunk/var/packages/data/postgres/"
-| where InitiatingProcessFileName !in~ ("splunk","splunkd","dpkg","rpm","yum","apt","apt-get","tar")
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### splunkd spawning interactive shell — CVE-2026-20253 RCE outcome
-
-`UC_146_9` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmd values(Processes.process_name) as child from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("splunkd","splunkd.exe","splunk","splunk.exe") AND Processes.process_name IN ("sh","bash","zsh","dash","cmd.exe","powershell.exe","pwsh.exe","python","python3","perl","nc","ncat") by Processes.dest Processes.user Processes.parent_process_name Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | where NOT match(process,"(?i)splunk(d)?\s+(start|stop|restart|status|version|btool|cmd\s+python\s+\$SPLUNK_HOME)") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("splunkd","splunkd.exe","splunk","splunk.exe")
-| where FileName in~ ("sh","bash","zsh","dash","cmd.exe","powershell.exe","pwsh.exe","python","python3","perl","nc","ncat","socat")
-| where not (ProcessCommandLine matches regex @"(?i)(splunk(d)?\s+(start|stop|restart|status|version|btool)|\$SPLUNK_HOME/bin/python)")
-| project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, FileName, ProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc
-```
-
-### Splunk service outbound to attacker-controlled PostgreSQL (CVE-2026-20253 /backup phase)
-
-`UC_146_10` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest_ip) as dest values(All_Traffic.dest_port) as dport values(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic.All_Traffic where All_Traffic.app IN ("splunkd","postgres","postgresql","splunk") AND All_Traffic.dest_port=5432 AND NOT (All_Traffic.dest_ip IN (10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,127.0.0.0/8)) by All_Traffic.src All_Traffic.dest_ip All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("splunkd","splunkd.exe","postgres","postgres.exe","splunk","splunk.exe")
-| where RemotePort == 5432
-| where RemoteIPType == "Public"
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, LocalIP, LocalPort, RemoteIP, RemotePort, RemoteUrl
-| order by Timestamp desc
-```
-
-### Mass scanning for Splunk management interface / CVE-2026-20253 probing
-
-`UC_146_11` · phase: **recon** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count dc(All_Traffic.dest) as targets values(All_Traffic.dest) as targets_list min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_port IN (8089,8000) AND All_Traffic.src_category="external" by All_Traffic.src bin(_time,10m) | `drop_dm_object_name(All_Traffic)` | where targets >= 5 | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(24h)
-| where ActionType in ("InboundConnectionAccepted","ConnectionSuccess","HttpConnectionInspected")
-| where LocalPort in (8089, 8000)
-| where RemoteIPType == "Public"
-| summarize TargetsHit = dcount(DeviceId), HitCount = count(), Paths = make_set(RemoteUrl, 25) by RemoteIP, bin(Timestamp, 10m)
-| where TargetsHit >= 3 or HitCount >= 20
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -348,7 +237,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Critical Splunk Enterprise Flaw Lets Attackers Run Code Without Authentication
 
-`UC_146_6` · phase: **install** · confidence: **High**
+`UC_147_6` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -389,4 +278,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 12 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

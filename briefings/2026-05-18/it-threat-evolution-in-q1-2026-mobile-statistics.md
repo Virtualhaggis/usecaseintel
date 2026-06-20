@@ -40,28 +40,12 @@ TOP 10 countries and territories attacked by m…
 - **T1021.002** — SMB/Windows Admin Shares
 - **T1569.002** — Service Execution
 - **T1195.002** — Compromise Software Supply Chain
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1133** — External Remote Services
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### Cisco Secure FMC anomalous outbound HTTP PUT (Interlock CVE-2026-20131 callback)
-
-`UC_314_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.src_category="cisco_fmc" OR All_Traffic.src="*fmc*" OR All_Traffic.src_nt_host="*fmc*") All_Traffic.action="allowed" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.bytes_out
-| `drop_dm_object_name(All_Traffic)`
-| where dest_port IN (80,443,8080,8443,8000) AND NOT cidrmatch("10.0.0.0/8",dest) AND NOT cidrmatch("172.16.0.0/12",dest) AND NOT cidrmatch("192.168.0.0/16",dest) AND NOT cidrmatch("100.64.0.0/10",dest)
-| eval suspect_reason=case(bytes_out>100000,"large_egress", dest_port=443 AND app!="ssl","non_ssl_443", true(),"unexpected_outbound")
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-| sort - count
-```
 
 ### Crypto-wallet file/keystore access by non-wallet process
 
@@ -240,4 +224,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 8 use case(s) fired, 12 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 7 use case(s) fired, 10 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -48,10 +48,10 @@ We…
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
-- **T1059.006** — Command and Scripting Interpreter: Python
-- **T1078.004** — Valid Accounts: Cloud Accounts
 - **T1525** — Implant Internal Image
-- **T1530** — Data from Cloud Storage
+- **T1530** — Data from Cloud Storage Object
+- **T1565.001** — Data Manipulation: Stored Data Manipulation
+- **T1059.006** — Command and Scripting Interpreter: Python
 
 ## Kill chain phases observed
 
@@ -59,46 +59,42 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Vulnerable google-cloud-aiplatform SDK install (CVE-2026-2473 — pre-1.148.0)
+### Vertex AI model upload to default predictable staging bucket (bucket-squat exposure)
 
-`UC_117_8` · phase: **weapon** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("pip.exe","pip3.exe","python.exe","python3.exe","pip","pip3","python","python3") Processes.process="*google-cloud-aiplatform*" by Processes.dest Processes.user Processes.process Processes.parent_process_name
-| `drop_dm_object_name(Processes)`
-| rex field=process "google-cloud-aiplatform==(?<sdk_version>1\.(?:13[9]|14[0-7])\.\d+)"
-| where isnotnull(sdk_version)
-| `security_content_ctime(firstTime)`
-| `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where FileName in~ ("pip.exe","pip3.exe","python.exe","python3.exe","pip","pip3","python","python3")
-| where ProcessCommandLine has "google-cloud-aiplatform"
-| where ProcessCommandLine matches regex @"google-cloud-aiplatform==1\.(139|140|141|142|143|144|145|146|147)\."
-| extend VulnerableVersion = extract(@"google-cloud-aiplatform==(1\.\d+\.\d+)", 1, ProcessCommandLine)
-| project Timestamp, DeviceName, AccountName, AccountUpn, VulnerableVersion, ProcessCommandLine, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Vertex AI default staging bucket squatting — predictable bucket pattern access
-
-`UC_117_9` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_118_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-`gcp_audit_logs` data.protoPayload.serviceName="storage.googleapis.com"
-| rex field=data.protoPayload.resourceName "projects/_/buckets/(?<bucket_name>[^/]+)"
-| where match(bucket_name, "-vertex-staging-(us|europe|asia|australia|northamerica|southamerica)")
-| eval principal=data.protoPayload.authenticationInfo.principalEmail
-| where NOT match(principal, "gcp-sa-aiplatform\.iam\.gserviceaccount\.com$")
-| stats min(_time) as firstSeen max(_time) as lastSeen values(data.protoPayload.methodName) as methods values(principal) as principals count by bucket_name
-| `security_content_ctime(firstSeen)`
-| `security_content_ctime(lastSeen)`
+index=gcp sourcetype=google:gcp:pubsub:message "data.protoPayload.methodName"="google.cloud.aiplatform.v1.ModelService.UploadModel" "vertex-staging"
+| rename data.protoPayload.authenticationInfo.principalEmail as principal, data.resource.labels.project_id as project, data.protoPayload.requestMetadata.callerIp as src_ip, data.protoPayload.resourceName as resource
+| stats count min(_time) as firstSeen max(_time) as lastSeen values(resource) as resources by project, principal, src_ip
+| sort - lastSeen
+```
+
+### Foreign / non-Vertex principal accessing Vertex AI staging-bucket objects
+
+`UC_118_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=gcp sourcetype=google:gcp:pubsub:message ("data.protoPayload.methodName"="storage.objects.create" OR "data.protoPayload.methodName"="storage.objects.delete" OR "data.protoPayload.methodName"="storage.objects.get") "vertex-staging"
+| rename data.protoPayload.authenticationInfo.principalEmail as principal, data.protoPayload.resourceName as object, data.protoPayload.requestMetadata.callerIp as src_ip, data.protoPayload.methodName as method
+| search NOT principal="*gcp-sa-aiplatform.iam.gserviceaccount.com"
+| stats count min(_time) as firstSeen max(_time) as lastSeen values(method) as methods values(src_ip) as src_ips by principal, object
+| sort - lastSeen
+```
+
+### Vertex AI model deployment following default-staged upload (poisoned-model deploy)
+
+`UC_118_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+index=gcp sourcetype=google:gcp:pubsub:message ("data.protoPayload.methodName"="google.cloud.aiplatform.v1.ModelService.UploadModel" OR "data.protoPayload.methodName"="google.cloud.aiplatform.v1.EndpointService.DeployModel")
+| rename data.protoPayload.methodName as method, data.resource.labels.project_id as project, data.protoPayload.authenticationInfo.principalEmail as principal
+| transaction project maxspan=60m startswith=eval(method="google.cloud.aiplatform.v1.ModelService.UploadModel") endswith=eval(method="google.cloud.aiplatform.v1.EndpointService.DeployModel")
+| search "vertex-staging"
+| table _time project principal method eventcount duration
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -330,7 +326,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Pickle in the Middle – Hijacking Vertex AI Model Uploads for Cross-Tenant RCE
 
-`UC_117_7` · phase: **exploit** · confidence: **High**
+`UC_118_7` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -387,4 +383,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 10 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

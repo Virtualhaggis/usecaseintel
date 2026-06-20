@@ -44,15 +44,13 @@ Microsoft Threat Intelligence observed a large-scale npm supply chain attack aff
 - **T1195.002** — Compromise Software Supply Chain
 - **T1543.001** — Persistence (article-specific)
 - **T1547.001** — Persistence (article-specific)
-- **T1059.007** — JavaScript
-- **T1546.016** — Installer Packages
+- **T1195.002** — Compromise Software Supply Chain: Compromise Software Dependencies and Development Tools
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1105** — Ingress Tool Transfer
+- **T1071.001** — Application Layer Protocol: Web Protocols
 - **T1571** — Non-Standard Port
-- **T1547.001** — Registry Run Keys / Startup Folder
-- **T1036.005** — Match Legitimate Resource Name or Location
-- **T1217** — Browser Information Discovery
-- **T1518** — Software Discovery
-- **T1518.001** — Security Software Discovery
+- **T1547.001** — Boot or Logon Autostart Execution: Registry Run Keys / Startup Folder
+- **T1564.003** — Hide Artifacts: Hidden Window
 
 ## Kill chain phases observed
 
@@ -60,121 +58,110 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Mastra npm supply chain: easy-day-js postinstall dropper (node setup.cjs --no-warnings)
+### Sapphire Sleet npm postinstall dropper: node executing easy-day-js setup.cjs
 
-`UC_75_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_76_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("node.exe","node") AND Processes.process="*setup.cjs*" AND Processes.process="*--no-warnings*" by Processes.user Processes.dest Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("node.exe","node") AND (Processes.process="*setup.cjs*" OR Processes.process="*easy-day-js*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("node.exe","node")
-| where ProcessCommandLine has "setup.cjs" and ProcessCommandLine has "--no-warnings"
-| where InitiatingProcessFileName in~ ("npm.exe","node.exe","yarn.exe","pnpm.exe","npm-cli.js","npm","node","yarn","pnpm","cmd.exe","powershell.exe")
-   or ProcessCommandLine has_any (@"\easy-day-js\", "easy-day-js/setup.cjs")
-| project Timestamp, DeviceName, AccountName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| where Timestamp > ago(30d)
+| where FileName in~ ("node.exe", "node")
+| where ProcessCommandLine has_any ("setup.cjs", "easy-day-js")
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | sort by Timestamp desc
 ```
 
-### Mastra C2 beacon: node.exe to Hostwinds 23.254.164.92:8000 / .123:443
+### Mastra easy-day-js C2 beacon to 23.254.164.92 / 23.254.164.123
 
-`UC_75_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_76_10` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("23.254.164.92","23.254.164.123") OR All_Traffic.app IN ("node.exe","node") AND All_Traffic.dest IN ("23.254.164.92","23.254.164.123") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.user | `drop_dm_object_name(All_Traffic)` | append [| tstats `summariesonly` count from datamodel=Network_Resolution.DNS where DNS.query IN ("hwsrv-1327785.hostwindsdns.com","hwsrv-1327786.hostwindsdns.com") by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)`] | sort 0 - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("23.254.164.92","23.254.164.123")) by All_Traffic.src All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app
+| `drop_dm_object_name(All_Traffic)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-union
-(DeviceNetworkEvents
-  | where Timestamp > ago(14d)
-  | where RemoteIP in ("23.254.164.92","23.254.164.123")
-  | where RemotePort in (8000, 443)
-  | project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessSHA256),
-(DeviceEvents
-  | where Timestamp > ago(14d)
-  | where ActionType == "DnsQueryResponse"
-  | where AdditionalFields has_any ("hwsrv-1327785.hostwindsdns.com","hwsrv-1327786.hostwindsdns.com")
-  | project Timestamp, DeviceName, ActionType, AdditionalFields, InitiatingProcessFileName)
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in ("23.254.164.92", "23.254.164.123")
+| project Timestamp, DeviceName, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | sort by Timestamp desc
 ```
 
-### Mastra implant Windows persistence: NvmProtocal Run key + NodePackages drop
+### easy-day-js persistence: NvmProtocal Run key / ProgramData NodePackages autostart
 
-`UC_75_11` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_76_11` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_path="*\\CurrentVersion\\Run*" AND (Registry.registry_value_name="NvmProtocal" OR Registry.registry_value_data="*\\ProgramData\\NodePackages\\*" OR Registry.registry_value_data="*protocal.cjs*")) by Registry.dest Registry.user Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_name | `drop_dm_object_name(Registry)` | append [| tstats `summariesonly` count from datamodel=Endpoint.Filesystem where (Filesystem.file_name="protocal.cjs" OR Filesystem.file_path="*\\ProgramData\\NodePackages\\*") by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)`] | sort 0 - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Registry where (Registry.registry_value_name="NvmProtocal" OR Registry.registry_value_data="*NodePackages*") by Registry.dest Registry.registry_path Registry.registry_value_name Registry.registry_value_data Registry.process_guid
+| `drop_dm_object_name(Registry)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-union
-(DeviceRegistryEvents
-  | where Timestamp > ago(14d)
-  | where ActionType in ("RegistryValueSet","RegistryKeyCreated")
-  | where RegistryKey has @"\CurrentVersion\Run"
-  | where RegistryValueName =~ "NvmProtocal"
-        or RegistryValueData has_any (@"\ProgramData\NodePackages\", "protocal.cjs")
-  | project Timestamp, DeviceName, ActionType, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName),
-(DeviceFileEvents
-  | where Timestamp > ago(14d)
-  | where FileName =~ "protocal.cjs" or FolderPath has @"\ProgramData\NodePackages\"
-  | project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine)
+DeviceRegistryEvents
+| where Timestamp > ago(30d)
+| where ActionType in ("RegistryValueSet", "RegistryKeyCreated")
+| where RegistryValueName =~ "NvmProtocal" or RegistryValueData has "NodePackages"
+| project Timestamp, DeviceName, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
 | sort by Timestamp desc
 ```
 
-### Mastra implant credential access: node.exe reading crypto wallet extensions / browser History
+### easy-day-js install markers: .pkg_history / .pkg_logs dropped by Node.js
 
-`UC_75_12` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_76_12` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name IN ("node.exe","node") AND (Filesystem.file_path="*\\User Data\\*\\Local Extension Settings\\*" OR Filesystem.file_path="*\\User Data\\*\\Extensions\\*" OR Filesystem.file_path="*\\User Data\\*\\History*" OR Filesystem.file_path="*\\User Data\\*\\Login Data*" OR Filesystem.file_path="*\\User Data\\*\\Cookies*" OR Filesystem.file_name="browser-hist-*") by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name Filesystem.action | `drop_dm_object_name(Filesystem)` | sort 0 - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN (".pkg_history",".pkg_logs")) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_guid
+| `drop_dm_object_name(Filesystem)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("node.exe","node")
-| where (FolderPath has_any (@"\User Data\Default\Local Extension Settings\",
-                              @"\User Data\Default\Extensions\",
-                              @"\User Data\Default\History",
-                              @"\User Data\Default\Login Data",
-                              @"\User Data\Default\Cookies",
-                              @"\Brave-Browser\User Data\",
-                              @"\Microsoft\Edge\User Data\"))
-   or FileName startswith "browser-hist-"
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where Timestamp > ago(30d)
+| where FileName in~ (".pkg_history", ".pkg_logs")
+| where InitiatingProcessFileName in~ ("node.exe", "node")
+| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, SHA256
 | sort by Timestamp desc
 ```
 
-### Mastra implant discovery: PowerShell child of node.exe running Get-StartApps / Get-AppxPackage
+### easy-day-js second stage: detached Node.js executing .js from ProgramData NodePackages
 
-`UC_75_13` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_76_13` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("node.exe","node") AND Processes.process_name IN ("powershell.exe","pwsh.exe") AND (Processes.process="*Get-StartApps*" OR Processes.process="*Get-AppxPackage*" OR Processes.process="*\\Uninstall*") by Processes.user Processes.dest Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | sort 0 - lastTime
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("node.exe","node") AND Processes.parent_process_name IN ("node.exe","node") AND Processes.process="*NodePackages*" AND Processes.process="*.js*") by Processes.dest Processes.user Processes.process Processes.parent_process_name Processes.process_hash
+| `drop_dm_object_name(Processes)`
+| convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where InitiatingProcessFileName in~ ("node.exe","node")
-| where FileName in~ ("powershell.exe","pwsh.exe")
-| where ProcessCommandLine has_any ("Get-StartApps","Get-AppxPackage",@"\Microsoft\Windows\CurrentVersion\Uninstall")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| where Timestamp > ago(30d)
+| where FileName in~ ("node.exe", "node")
+| where InitiatingProcessFileName in~ ("node.exe", "node")
+| where ProcessCommandLine has "NodePackages" and ProcessCommandLine has ".js"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | sort by Timestamp desc
 ```
 
@@ -352,7 +339,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — From package to postinstall payload: Inside the Mastra npm supply chain compromi
 
-`UC_75_8` · phase: **exploit** · confidence: **High**
+`UC_76_8` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -412,4 +399,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 22 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 14 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -24,7 +24,6 @@ The current implementation registers `GET /{path}/list`, `POST /{path}`, and `PO
 
 - **T1204.002** — User Execution: Malicious File
 - **T1190** — Exploit Public-Facing Application
-- **T1059.006** — Command and Scripting Interpreter: Python
 - **T1133** — External Remote Services
 
 ## Kill chain phases observed
@@ -33,57 +32,48 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### PraisonAI AgentTeam.launch / Agents.launch bound to 0.0.0.0 (GHSA-x8cv-xmq7-p8xp)
+### Unauthenticated PraisonAI AgentTeam.launch agent invocation via /agents endpoints
 
-`UC_60_1` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_61_1` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process_name) as parent_process_name from datamodel=Endpoint.Processes where Processes.process_name IN ("python.exe","python3.exe","pythonw.exe") (Processes.process="*praisonaiagents*" OR Processes.process="*AgentTeam*" OR Processes.process="*Agents.launch*" OR Processes.process="*praisonai*") (Processes.process="*0.0.0.0*" OR Processes.process="*host=0*" OR Processes.process="*--host 0*") by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Web where (Web.http_method="GET" AND Web.url="*/agents/list") OR (Web.http_method="POST" AND Web.url="*/agents") OR (Web.http_method="POST" AND Web.url="*/agents/*") by Web.src, Web.dest, Web.http_user_agent, Web.url, Web.http_method, Web.status
+| `drop_dm_object_name(Web)`
+| where status=200
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - count
+```
+
+### Internet-facing Python host running PraisonAI Agents.launch bound to 0.0.0.0
+
+`UC_61_2` · phase: **delivery** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic where Network_Traffic.direction="inbound" AND Network_Traffic.app IN ("python*","uvicorn*") by Network_Traffic.dest, Network_Traffic.dest_port, Network_Traffic.src, Network_Traffic.app
+| `drop_dm_object_name(Network_Traffic)`
+| `security_content_ctime(firstTime)`
+| `security_content_ctime(lastTime)`
+| sort - count
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in~ ("python.exe","python3.exe","pythonw.exe","uvicorn.exe")
-| where ProcessCommandLine has_any ("praisonaiagents","AgentTeam","Agents.launch","praisonai")
-| where ProcessCommandLine has_any ("0.0.0.0","host=0","--host 0")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
-| order by Timestamp desc
-```
-
-### Unauthenticated GET /{path}/list and POST hits to PraisonAI agent route
-
-`UC_60_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.http_method) as method values(Web.src) as src from datamodel=Web.Web where (Web.url="*/list" OR Web.http_method="POST") Web.dest_port IN (8000,8080,5000,3000,7860,8001) by Web.dest Web.url Web.http_method Web.http_user_agent | `drop_dm_object_name(Web)` | where like(url,"%/list") OR method="POST" | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-let PraisonHosts = DeviceProcessEvents
-  | where Timestamp > ago(14d)
-  | where ProcessCommandLine has_any ("praisonaiagents","AgentTeam","Agents.launch","praisonai")
-  | distinct DeviceId, DeviceName;
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where ActionType in ("InboundConnectionAccepted","ListeningConnectionCreated","ConnectionSuccess")
+| where ActionType == "InboundConnectionAccepted"
+| where RemoteIPType == "Public"
 | where InitiatingProcessFileName in~ ("python.exe","python3.exe","pythonw.exe","uvicorn.exe")
-| where InitiatingProcessCommandLine has_any ("praisonaiagents","AgentTeam","Agents.launch","praisonai")
-| where LocalPort in (8000,8080,5000,3000,7860,8001) or LocalPort > 1024
-| where RemoteIPType in ("Public","Private") and RemoteIP !in ("127.0.0.1","::1")
-| join kind=inner PraisonHosts on DeviceId
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, LocalIP, LocalPort, RemoteIP, RemotePort, ActionType
-| order by Timestamp desc
+| where InitiatingProcessCommandLine has_any ("praisonai","AgentTeam",".launch","Agents") or InitiatingProcessFolderPath has "praisonai"
+| summarize Connections = count(), DistinctSources = dcount(RemoteIP), Ports = make_set(LocalPort), SampleCmd = any(InitiatingProcessCommandLine), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName, InitiatingProcessFileName, InitiatingProcessFolderPath
+| order by Connections desc
 ```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-x8cv-xmq7-p8xp: PraisonAI AgentTeam.launch exposes unauth
 
-`UC_60_0` · phase: **exploit** · confidence: **High**
+`UC_61_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -133,4 +123,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 3 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

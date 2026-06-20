@@ -31,103 +31,12 @@ Called Agentjacking by Tenet Security, the attack can be triggered by means of a
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1204.004** — User Execution: Malicious Copy and Paste
 - **T1195.002** — Compromise Software Supply Chain
-- **T1041** — Exfiltration Over C2 Channel
-- **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1567** — Exfiltration Over Web Service
-- **T1059.001** — Command and Scripting Interpreter: PowerShell
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1059.007** — Command and Scripting Interpreter: JavaScript
-- **T1105** — Ingress Tool Transfer
-- **T1204** — User Execution
-- **T1552.001** — Unsecured Credentials: Credentials In Files
-- **T1552.004** — Unsecured Credentials: Private Keys
-- **T1555** — Credentials from Password Stores
-- **T1083** — File and Directory Discovery
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### Agentjacking C2/exfiltration to advisory-tracker.com (Tenet Sentry-MCP attack)
-
-`UC_154_8` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip="52.206.47.180" OR All_Traffic.dest="advisory-tracker.com" OR All_Traffic.dest="*.advisory-tracker.com") by All_Traffic.src, All_Traffic.user, All_Traffic.app, All_Traffic.dest, All_Traffic.dest_ip, All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | append [| tstats summariesonly=t count from datamodel=Network_Resolution.DNS where (DNS.query="advisory-tracker.com" OR DNS.query="*.advisory-tracker.com") by DNS.src, DNS.query, DNS.answer | `drop_dm_object_name(DNS)`] | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteUrl has "advisory-tracker.com" or RemoteIP == "52.206.47.180"
-| project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessParentFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath, RemoteIP, RemoteUrl, RemotePort, Protocol
-| order by Timestamp desc
-```
-
-### AI coding agent (Claude Code / Cursor / Codex) spawning shell that fetch-and-executes remote payload
-
-`UC_154_9` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN ("claude.exe","Claude.exe","cursor.exe","Cursor.exe","code.exe","Code.exe","codex.exe","claude-code.exe") OR Processes.process_name IN ("node.exe","npm.cmd","npx.cmd") AND Processes.parent_process_name IN ("claude.exe","Claude.exe","cursor.exe","Cursor.exe","code.exe","Code.exe","codex.exe","claude-code.exe")) AND Processes.process_name IN ("cmd.exe","powershell.exe","pwsh.exe","bash.exe","sh.exe","node.exe","npm.cmd","npx.cmd","curl.exe","wget.exe") by _time, Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | where match(process, "(?i)(Invoke-Expression|IEX\s*\(|DownloadString|Net\.WebClient|curl\s+[^|]+\|\s*(sh|bash)|wget\s+-O\s*-|node\s+-e|base64\s+-d\s*\|\s*(sh|bash)|bash\s+-c\s+\$\(|powershell\s+-(e|enc|c)\s|advisory-tracker)") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where (InitiatingProcessFileName in~ ("claude.exe","cursor.exe","code.exe","codex.exe","claude-code.exe"))
-    or (InitiatingProcessParentFileName in~ ("claude.exe","cursor.exe","code.exe","codex.exe","claude-code.exe")
-        and InitiatingProcessFileName in~ ("node.exe","npm.cmd","npx.cmd"))
-| where FileName in~ ("cmd.exe","powershell.exe","pwsh.exe","bash.exe","sh.exe","node.exe","npm.cmd","npx.cmd","curl.exe","wget.exe")
-| where ProcessCommandLine has_any ("Invoke-Expression","IEX(","IEX (","DownloadString","Net.WebClient","| sh","| bash","|sh ","|bash ","node -e","base64 -d","bash -c","powershell -enc","powershell -e ","powershell -EncodedCommand","curl -s ","wget -qO","advisory-tracker.com")
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName,
-          GrandparentProcess = InitiatingProcessParentFileName,
-          ParentProcess = InitiatingProcessFileName,
-          ParentCmd = InitiatingProcessCommandLine,
-          ChildProcess = FileName,
-          ChildCmd = ProcessCommandLine,
-          SHA256
-| order by Timestamp desc
-```
-
-### AI coding agent descendant reading developer credentials / env (Agentjacking credential access)
-
-`UC_154_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.parent_process_name IN ("claude.exe","Claude.exe","cursor.exe","Cursor.exe","code.exe","Code.exe","codex.exe","claude-code.exe","node.exe","npm.cmd","npx.cmd") by _time, Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process | `drop_dm_object_name(Processes)` | where match(process, "(?i)(Get-ChildItem\s+Env:|ls\s+env:|printenv|\$env:[A-Za-z_]|\.git-credentials\b|git\s+config\s+--global\s+credential|\.aws[\\/]credentials|\.ssh[\\/]id_(rsa|ed25519|ecdsa)|git\s+remote\s+-v|\.npmrc\b|_authToken|cat\s+\.env\b|type\s+\.env\b|Get-Content\s+\.env)") | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("claude.exe","cursor.exe","code.exe","codex.exe","claude-code.exe","node.exe","npm.cmd","npx.cmd")
-    or InitiatingProcessParentFileName in~ ("claude.exe","cursor.exe","code.exe","codex.exe","claude-code.exe")
-| where ProcessCommandLine has_any (
-    "Get-ChildItem Env:","Get-ChildItem env:","ls env:","printenv","$env:",
-    "type .env","cat .env","Get-Content .env",
-    ".git-credentials","git config --global credential","git remote -v",
-    @".aws\credentials",".aws/credentials",
-    @".ssh\id_rsa",".ssh/id_rsa",@".ssh\id_ed25519",".ssh/id_ed25519",
-    ".npmrc","_authToken","SENTRY_DSN"
-  )
-| where AccountName !endswith "$"
-| project Timestamp, DeviceName, AccountName,
-          ParentProcess = InitiatingProcessFileName,
-          GrandparentProcess = InitiatingProcessParentFileName,
-          ChildProcess = FileName,
-          ChildCmd = ProcessCommandLine
-| order by Timestamp desc
-```
 
 ### Beaconing — periodic outbound to small set of destinations
 
@@ -401,4 +310,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 11 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

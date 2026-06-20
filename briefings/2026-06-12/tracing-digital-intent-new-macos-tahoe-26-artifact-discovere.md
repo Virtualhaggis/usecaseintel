@@ -38,63 +38,12 @@ Forensic examiners are constantly hunting for data that reveals not just what ha
 - **T1566** — Phishing
 - **T1219** — Remote Access Software
 - **T1195.002** — Compromise Software Supply Chain
-- **T1070.004** — Indicator Removal: File Deletion
-- **T1070.006** — Indicator Removal: Timestomp
-- **T1485** — Data Destruction
-- **T1083** — File and Directory Discovery
-- **T1005** — Data from Local System
-- **T1070** — Indicator Removal
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### macOS Tahoe 26 Biome App.MenuItem forensic artifact tampering
-
-`UC_149_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.action IN ("deleted","modified","renamed","created")) AND (Filesystem.file_path="*Library/Biome/streams/restricted/App.MenuItem*") AND NOT (Filesystem.process_name IN ("biomed","biomesyncd","backupd","tmutil","mds","mds_stores","Spotlight")) by host Filesystem.dest Filesystem.user Filesystem.action Filesystem.file_path Filesystem.process_name Filesystem.process_path Filesystem.process | `drop_dm_object_name(Filesystem)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(14d)
-| where FolderPath has "Library/Biome/streams/restricted/App.MenuItem"
-| where ActionType in ("FileDeleted","FileRenamed","FileModified","FileCreated")
-| where InitiatingProcessFileName !in~ ("biomed","biomesyncd","backupd","tmutil","mds","mds_stores","Spotlight","mdworker","mdworker_shared")
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, ActionType, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256
-| order by Timestamp desc
-```
-
-### Process command line references App.MenuItem Biome stream or ccl_segb parser
-
-`UC_149_8` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*Biome/streams/restricted/App.MenuItem*" OR Processes.process="*ccl_segb*" OR Processes.process="*ccl-segb*") AND NOT Processes.process_name IN ("biomed","biomesyncd") by host Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.parent_process | `drop_dm_object_name(Processes)` | sort - lastTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(14d)
-| where ProcessCommandLine has_any ("Biome/streams/restricted/App.MenuItem", "ccl_segb", "ccl-segb")
-| where AccountName !endswith "$"
-| where InitiatingProcessFileName !in~ ("biomed","biomesyncd")
-| extend Indicator = case(
-    ProcessCommandLine has "App.MenuItem", "direct path access",
-    ProcessCommandLine has_any ("ccl_segb","ccl-segb"), "SEGB parser invoked",
-    "other")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, Indicator, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, SHA256
-| order by Timestamp desc
-```
 
 ### Phishing-link click correlated to endpoint execution
 
@@ -323,7 +272,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Tracing Digital Intent: New MacOS Tahoe 26 Artifact Discovered
 
-`UC_149_6` · phase: **exploit** · confidence: **High**
+`UC_150_6` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -373,4 +322,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 9 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 7 use case(s) fired, 11 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

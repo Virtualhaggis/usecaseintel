@@ -26,14 +26,13 @@ The sweeping campaign, believed to be the work of Russian-speaking threat actors
 - **T1204.002** — User Execution: Malicious File
 - **T1059.005** — Visual Basic
 - **T1218** — System Binary Proxy Execution
-- **T1110.003** — Brute Force: Password Spraying
-- **T1110.004** — Brute Force: Credential Stuffing
+- **T1110.004** — Credential Stuffing
+- **T1110.003** — Password Spraying
 - **T1133** — External Remote Services
-- **T1078.001** — Valid Accounts: Default Accounts
-- **T1078.004** — Valid Accounts: Cloud Accounts
-- **T1556** — Modify Authentication Process
-- **T1098** — Account Manipulation
-- **T1040** — Network Sniffing
+- **T1078.001** — Default Accounts
+- **T1078** — Valid Accounts
+- **T1021.002** — SMB/Windows Admin Shares
+- **T1550.002** — Pass the Hash
 
 ## Kill chain phases observed
 
@@ -41,31 +40,31 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### FortiGate VPN/admin credential-stuffing burst from single source IP
+### FortiBleed distributed credential stuffing against FortiGate SSL VPN ending in successful auth
 
-`UC_18_4` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_19_4` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime dc(Authentication.user) as distinct_users values(Authentication.user) as users_tried values(Authentication.dest) as fortigates from datamodel=Authentication where Authentication.action="failure" Authentication.app IN ("fortigate","fortios","sslvpn","ssl-vpn","httpsd","fnbamd") Authentication.src_category!="internal" by Authentication.src _time span=5m | `drop_dm_object_name(Authentication)` | where count >= 20 OR distinct_users >= 10 | sort - count
+| tstats summariesonly=true allow_old_summaries=true count as failures, dc(Authentication.src) as failed_src_ips, min(_time) as firstTime, max(_time) as lastTime from datamodel=Authentication where (Authentication.vendor_product="Fortinet*" OR Authentication.app IN ("ssl-vpn","sslvpn")) Authentication.action=failure by Authentication.dest, Authentication.user | `drop_dm_object_name(Authentication)` | where failures>=30 AND failed_src_ips>=10 | join type=inner dest user [ | tstats summariesonly=true allow_old_summaries=true count as successes, values(Authentication.src) as success_src from datamodel=Authentication where (Authentication.vendor_product="Fortinet*" OR Authentication.app IN ("ssl-vpn","sslvpn")) Authentication.action=success by Authentication.dest, Authentication.user | `drop_dm_object_name(Authentication)` ] | where successes>=1 | convert ctime(firstTime) ctime(lastTime) | sort - failures
 ```
 
-### FortiGate successful login using default/built-in admin account from external IP
+### Successful FortiGate VPN/admin login to default or built-in Fortinet accounts from public IP
 
-`UC_18_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_19_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Authentication.dest) as fortigate values(Authentication.src) as src_ips values(Authentication.app) as app from datamodel=Authentication where Authentication.action="success" Authentication.app IN ("fortigate","fortios","sslvpn","ssl-vpn","httpsd") Authentication.user IN ("admin","administrator","fortinet","maintainer","diag","super_admin","prof_admin","guest") by Authentication.user Authentication.src _time span=5m | `drop_dm_object_name(Authentication)` | search NOT (src IN ("10.0.0.0/8","172.16.0.0/12","192.168.0.0/16")) | sort - lastTime
+| tstats summariesonly=true allow_old_summaries=true count, values(Authentication.src) as src, min(_time) as firstTime, max(_time) as lastTime from datamodel=Authentication where Authentication.action=success Authentication.vendor_product="Fortinet*" Authentication.user IN ("admin","administrator","administrador","fortinet","fortigate","maintainer","user","vpn","vpnuser","guest","report","operator","super_admin") by Authentication.dest, Authentication.user, Authentication.src | `drop_dm_object_name(Authentication)` | where NOT (cidrmatch("10.0.0.0/8",src) OR cidrmatch("172.16.0.0/12",src) OR cidrmatch("192.168.0.0/16",src)) | iplocation src | convert ctime(firstTime) ctime(lastTime) | table firstTime, lastTime, dest, user, src, Country, count | sort - count
 ```
 
-### FortiGate config change within 10 minutes of admin login from a new external IP
+### Post-VPN lateral movement: FortiGate-authenticated account fans out across internal Windows hosts
 
-`UC_18_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_19_6` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as login_time values(Authentication.src) as login_src from datamodel=Authentication where Authentication.action="success" Authentication.app IN ("fortigate","fortios") by Authentication.user Authentication.dest _time span=1s | `drop_dm_object_name(Authentication)` | join type=inner user dest [| tstats summariesonly=true count as cfg_changes min(_time) as cfg_time values(All_Changes.object) as objects values(All_Changes.command) as commands from datamodel=Change where All_Changes.change_type="configuration" All_Changes.dest_category="network_device" by All_Changes.user All_Changes.dest _time span=1s | `drop_dm_object_name(All_Changes)` | rename user as user dest as dest] | where cfg_time >= login_time AND cfg_time <= login_time + 600 | eval delay_sec=cfg_time-login_time | search login_src!="10.0.0.0/8" login_src!="172.16.0.0/12" login_src!="192.168.0.0/16" | table login_time, cfg_time, delay_sec, user, dest, login_src, commands, objects
+| tstats summariesonly=true allow_old_summaries=true min(_time) as vpnTime, values(Authentication.src) as vpn_src from datamodel=Authentication where Authentication.action=success Authentication.vendor_product="Fortinet*" Authentication.app IN ("ssl-vpn","sslvpn") by Authentication.user | `drop_dm_object_name(Authentication)` | rename user as account | join type=inner account [ | tstats summariesonly=true allow_old_summaries=true dc(Authentication.dest) as host_count, values(Authentication.dest) as hosts, min(_time) as firstLateral from datamodel=Authentication where Authentication.action=success Authentication.vendor_product="Microsoft*" by Authentication.user | `drop_dm_object_name(Authentication)` | rename user as account ] | where host_count>=5 AND firstLateral>=vpnTime | convert ctime(vpnTime) ctime(firstLateral) | table account, vpn_src, vpnTime, firstLateral, host_count, hosts | sort - host_count
 ```
 
 ### Infostealer — non-browser process accessing browser cookie/login DBs
@@ -248,4 +247,4 @@ DeviceProcessEvents
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 7 use case(s) fired, 17 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: 7 use case(s) fired, 16 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -26,9 +26,7 @@ with affected …
 ## MITRE ATT&CK Techniques
 
 - **T1190** — Exploit Public-Facing Application
-- **T1526** — Cloud Service Discovery
-- **T1059** — Command and Scripting Interpreter
-- **T1657** — Financial Theft
+- **T1213** — Data from Information Repositories
 - **T1133** — External Remote Services
 
 ## Kill chain phases observed
@@ -37,65 +35,53 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Unauthenticated GET /api/agents or /agents enumeration probe
+### PraisonAI AgentOS unauthenticated POST /api/chat remote agent invocation
 
-`UC_59_1` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_60_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.src) as src values(Web.user_agent) as user_agent values(Web.status) as status from datamodel=Web.Web where Web.url="*/api/agents*" Web.http_method="GET" Web.status=200 by Web.dest Web.src | `drop_dm_object_name(Web)` | search NOT (src IN ("10.0.0.0/8","172.16.0.0/12","192.168.0.0/16")) | where NOT match(user_agent,"(?i)praisonai|internal-monitor") | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats `summariesonly` count as request_count, values(Web.http_user_agent) as user_agent, values(Web.status) as status, min(_time) as firstTime, max(_time) as lastTime from datamodel=Web where (Web.uri_path="/api/chat" OR Web.uri_path="/api/agents") (Web.http_method="POST" OR Web.http_method="GET") by Web.src, Web.dest, Web.uri_path, Web.http_method
+| `drop_dm_object_name(Web)`
+| where status=200
+| sort - request_count
+```
+
+### PraisonAI AgentOS process bound to 0.0.0.0:8000 / external inbound connections
+
+`UC_60_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count, values(Processes.process) as process, min(_time) as firstTime, max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process="*praisonai*" OR Processes.process="*agentos*" OR Processes.process="*AgentApp*") (Processes.process="*0.0.0.0*" OR Processes.process="*8000*") by Processes.dest, Processes.user, Processes.process_name, Processes.parent_process_name
+| `drop_dm_object_name(Processes)`
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
 DeviceNetworkEvents
 | where Timestamp > ago(7d)
-| where RemoteUrl has_any ("/api/agents", "/agents")
-| where InitiatingProcessFileName in~ ("python.exe","python3.exe","uvicorn.exe","gunicorn","pwsh.exe","powershell.exe","curl.exe","wget.exe")
-| where RemotePort in (8000, 80, 443)
-| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, InitiatingProcessAccountName
-| order by Timestamp desc
+| where ActionType == "InboundConnectionAccepted"
+| where LocalPort == 8000
+| where RemoteIPType == "Public"
+| where InitiatingProcessFileName has_any ("python","python3","python.exe","python3.exe","uvicorn","gunicorn")
+| where InitiatingProcessCommandLine has_any ("praisonai","agentos","AgentApp","AgentOS")
+| summarize ConnCount=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp), RemoteIPs=make_set(RemoteIP, 100) by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, LocalPort
+| order by FirstSeen desc
 ```
 
-### Unauthenticated POST /api/chat triggering remote agent invocation
+### Vulnerable PraisonAI package inventory (CVE-2026-40151, >= 4.2.1 <= 4.6.57)
 
-`UC_59_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as url values(Web.user_agent) as user_agent values(Web.status) as status values(Web.http_user_agent) as ua from datamodel=Web.Web where Web.url="*/api/chat*" Web.http_method="POST" Web.status=200 by Web.dest Web.src Web.dest_port | `drop_dm_object_name(Web)` | where dest_port=8000 OR match(url,"(?i)/api/chat") | search NOT (src IN ("10.0.0.0/8","172.16.0.0/12","192.168.0.0/16")) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
+`UC_60_3` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Defender KQL:**
 ```kql
-DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteUrl has "/api/chat"
-| where InitiatingProcessFileName in~ ("python.exe","python3.exe","uvicorn.exe","gunicorn","curl.exe","wget.exe","pwsh.exe","powershell.exe")
-| where RemotePort in (8000, 80, 443)
-| extend IsHighRiskParent = InitiatingProcessParentFileName in~ ("cmd.exe","powershell.exe","pwsh.exe")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName, RemoteIP, RemotePort, RemoteUrl, IsHighRiskParent
-| order by Timestamp desc
-```
-
-### PraisonAI AgentOS process bound to 0.0.0.0 on default port 8000
-
-`UC_59_3` · phase: **weapon** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as process values(Processes.parent_process) as parent_process from datamodel=Endpoint.Processes where Processes.process_name IN ("python.exe","python3","python","uvicorn.exe","uvicorn","gunicorn") (Processes.process="*agentos*" OR Processes.process="*AgentApp*" OR Processes.process="*praisonai*") Processes.process="*0.0.0.0*" by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(30d)
-| where FileName in~ ("python.exe","python3.exe","uvicorn.exe","gunicorn")
-| where ProcessCommandLine has_any ("agentos", "AgentApp", "praisonai")
-| where ProcessCommandLine has "0.0.0.0" or ProcessCommandLine has "--host=0.0.0.0" or ProcessCommandLine has "host='0.0.0.0'"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath, SHA256
-| order by Timestamp desc
+DeviceTvmSoftwareInventory
+| where SoftwareName has "praisonai" or SoftwareName has "praisonaiagents"
+| extend Vuln = iff(SoftwareVersion matches regex @"^4\.([2-5]\.|6\.([0-9]|[0-5][0-9])$)", "in-vulnerable-range(>=4.2.1,<=4.6.57)", "verify-version")
+| project DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, Vuln, EndOfSupportStatus
+| sort by DeviceName asc
 ```
 
 ### IOC-driven hunts (use shared templates)
@@ -108,4 +94,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 4 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

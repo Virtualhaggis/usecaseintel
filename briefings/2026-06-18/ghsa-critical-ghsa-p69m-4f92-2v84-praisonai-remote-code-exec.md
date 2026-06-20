@@ -20,12 +20,11 @@ The `codeMode` tool in `src/praisonai-ts/src/tools/builtins/code-mode.ts` uses `
 
 - **T1219** — Remote Access Software
 - **T1204.002** — User Execution: Malicious File
+- **T1059.007** — Command and Scripting Interpreter: JavaScript
 - **T1059.004** — Command and Scripting Interpreter: Unix Shell
-- **T1059.003** — Command and Scripting Interpreter: Windows Command Shell
-- **T1082** — System Information Discovery
 - **T1033** — System Owner/User Discovery
-- **T1190** — Exploit Public-Facing Application
-- **T1195.002** — Supply Chain Compromise: Compromise Software Supply Chain
+- **T1041** — Exfiltration Over C2 Channel
+- **T1552.001** — Unsecured Credentials: Credentials In Files
 
 ## Kill chain phases observed
 
@@ -33,58 +32,69 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Node.js spawning shell with reconnaissance commands (PraisonAI codeMode sandbox escape)
+### PraisonAI codeMode sandbox-escape RCE: node process spawning OS shell / recon binaries
 
-`UC_54_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_55_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdlines from datamodel=Endpoint.Processes where (Processes.parent_process_name="node.exe" OR Processes.parent_process_name="node") AND (Processes.process_name IN ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh.exe")) AND (Processes.process="*whoami*" OR Processes.process="*uname*" OR Processes.process="*/etc/passwd*" OR Processes.process="*/etc/shadow*" OR Processes.process="*~/.ssh*" OR Processes.process="*ifconfig*" OR Processes.process="*ip addr*" OR Processes.process="*hostname*" OR Processes.process="*cat /root/*") by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name="node" OR Processes.parent_process_name="node.exe") (Processes.process_name IN ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh","id","whoami","uname","curl","wget","ncat")) by Processes.dest Processes.user Processes.parent_process_name Processes.parent_process Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | search (parent_process="*praisonai*" OR parent_process="*node_modules*praisonai*") AND parent_process!="*npm*" AND parent_process!="*node-gyp*" | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where InitiatingProcessFileName in~ ("node.exe", "node")
-| where FileName in~ ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh.exe")
-| where ProcessCommandLine matches regex @"(?i)\b(whoami|uname|hostname|ifconfig)\b"
-   or ProcessCommandLine has_any ("/etc/passwd", "/etc/shadow", "~/.ssh", "/root/.ssh", "ip addr", "cat /root/", "id;", "id |", "id&&")
-| where InitiatingProcessCommandLine has_any ("praisonai", "code-mode", "codeMode", "new Function", "Function('return this')") 
-   or AccountName !endswith "$"
+| where Timestamp > ago(14d)
+| where AccountName !endswith "$"
+| where InitiatingProcessFileName in~ ("node","node.exe")
+| where InitiatingProcessCommandLine has "praisonai" or InitiatingProcessFolderPath has "praisonai"
+| where not(InitiatingProcessCommandLine has_any ("npm","node-gyp","yarn","webpack","install"))
+| where FileName in~ ("sh","bash","dash","zsh","cmd.exe","powershell.exe","pwsh","id","whoami","uname","hostname","curl","wget","nc","ncat","python3")
 | project Timestamp, DeviceName, AccountName,
           ParentImage = InitiatingProcessFolderPath,
-          ParentCmd   = InitiatingProcessCommandLine,
-          ChildImage  = FolderPath,
-          ChildCmd    = ProcessCommandLine,
-          SHA256, ProcessId, InitiatingProcessId
+          ParentCmd = InitiatingProcessCommandLine,
+          ChildProcess = FileName, ChildCmd = ProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### Vulnerable PraisonAI-TS package (<=1.7.1) installed — GHSA-p69m-4f92-2v84
+### Vulnerable PraisonAI codeMode component present on host (code-mode.ts/js under praisonai)
 
-`UC_54_3` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_55_3` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count from datamodel=Endpoint.Filesystem where Filesystem.file_path="*node_modules*praisonai*package.json*" OR Filesystem.file_path="*node_modules*praisonai-ts*package.json*" by Filesystem.dest Filesystem.file_path Filesystem.user | `drop_dm_object_name(Filesystem)` | rex field=file_path "(?<package_dir>.+praisonai(?:-ts)?)[\\\\/]package\.json" | dedup dest, package_dir | table dest, user, package_dir, count
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.file_path="*praisonai*" (Filesystem.file_name="code-mode.ts" OR Filesystem.file_name="code-mode.js") by Filesystem.dest Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-// Inventory pass — vulnerable versions per Defender TVM
-let vuln = DeviceTvmSoftwareInventory
-  | where SoftwareName has "praisonai"
-  | where SoftwareVersion matches regex @"^(0\.|1\.[0-6]\.|1\.7\.[01](?:$|[^0-9]))"
-  | project Timestamp, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion;
-// Filesystem fallback — catches manual / non-managed installs TVM missed
-let fileEvidence = DeviceFileEvents
-  | where Timestamp > ago(30d)
-  | where FolderPath matches regex @"(?i)node_modules[\\/]praisonai(?:-ts)?[\\/]"
-  | where FileName =~ "package.json"
-  | summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), Paths=make_set(FolderPath, 25) by DeviceName, InitiatingProcessFileName, InitiatingProcessAccountName;
-union isfuzzy=true vuln, fileEvidence
-| order by DeviceName asc
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FolderPath has "praisonai"
+| where FileName in~ ("code-mode.ts","code-mode.js")
+| summarize FirstSeen=min(Timestamp), LastSeen=max(Timestamp), arg_max(Timestamp, InitiatingProcessFileName, InitiatingProcessAccountName) by DeviceName, FolderPath, FileName
+| order by LastSeen desc
+```
+
+### PraisonAI node process novel outbound egress (post-escape secret/API-key exfiltration or C2)
+
+`UC_55_4` · phase: **actions** · confidence: **Low** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.process_name="node" OR All_Traffic.process_name="node.exe") All_Traffic.dest_category!="internal" by All_Traffic.src All_Traffic.process_name All_Traffic.dest All_Traffic.dest_port | `drop_dm_object_name(All_Traffic)` | search dest!="*.openai.com" AND dest!="*.anthropic.com" AND dest!="*.googleapis.com" AND dest!="*.npmjs.org" AND dest!="*.huggingface.co" | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(14d)
+| where InitiatingProcessFileName in~ ("node","node.exe")
+| where InitiatingProcessCommandLine has "praisonai" or InitiatingProcessFolderPath has "praisonai"
+| where RemoteIPType == "Public"
+| where not(RemoteUrl has_any ("api.openai.com","api.anthropic.com","openai.azure.com","googleapis.com","api.cohere.ai","api.mistral.ai","huggingface.co","ollama.com","registry.npmjs.org"))
+| summarize FirstSeen=min(Timestamp), ConnCount=count(), Ports=make_set(RemotePort,10) by DeviceName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl
+| order by FirstSeen desc
 ```
 
 ### RMM tool installed by non-IT user — remote-access utility for hands-on-keyboard
@@ -116,7 +126,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-p69m-4f92-2v84: PraisonAI: Remote Code Execution via Sand
 
-`UC_54_1` · phase: **exploit** · confidence: **High**
+`UC_55_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -166,4 +176,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 4 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 5 use case(s) fired, 7 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

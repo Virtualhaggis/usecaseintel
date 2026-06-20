@@ -39,8 +39,9 @@ Cybersecurity researchers have disclosed details of fraudulent activity targetin
 - **T1218** — System Binary Proxy Execution
 - **T1071** — Application Layer Protocol
 - **T1566.002** — Phishing: Spearphishing Link
-- **T1583.001** — Acquire Infrastructure: Domains
+- **T1189** — Drive-by Compromise
 - **T1071.001** — Application Layer Protocol: Web Protocols
+- **T1102** — Web Service
 
 ## Kill chain phases observed
 
@@ -48,72 +49,48 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Sniper Dz PhaaS infrastructure delivered via inbound email URLs
+### Sniper Dz PhaaS scam/decoy domain contact (MENA Facebook-offer funnel)
 
-`UC_140_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Email.url) as url values(All_Email.subject) as subject values(All_Email.src_user) as src_user from datamodel=Email.All_Email where All_Email.url IN ("*sniperdz.com*","*raviral.com*","*win.feezossl.xyz*","*win.anababayala.com*","*aff.bnaosf1he.shop*","*automaticgiveaway.000webhostapp.com*","*facebookbusiness0078.blogspot.be*","*dev-cdn370.pantheonsite.io*") by All_Email.recipient All_Email.message_id | `drop_dm_object_name(All_Email)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
-```
-
-**Defender KQL:**
-```kql
-let SniperDzDomains = dynamic(["sniperdz.com","raviral.com","offer.raviral.com","win.feezossl.xyz","win.anababayala.com","aff.bnaosf1he.shop","automaticgiveaway.000webhostapp.com","facebookbusiness0078.blogspot.be","dev-cdn370.pantheonsite.io"]);
-EmailEvents
-| where Timestamp > ago(7d)
-| where EmailDirection == "Inbound"
-| join kind=inner (
-    EmailUrlInfo
-    | where Timestamp > ago(7d)
-    | extend HostLower = tolower(UrlDomain)
-    | where HostLower has_any (SniperDzDomains) or Url has_any (SniperDzDomains)
-    | project NetworkMessageId, Url, UrlDomain, ReportId
-  ) on NetworkMessageId
-| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress, RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation, Url, UrlDomain
-| order by Timestamp desc
-```
-
-### User click-through on Sniper Dz redirect URL (Safe Links)
-
-`UC_140_6` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Defender KQL:**
-```kql
-let SniperDzDomains = dynamic(["sniperdz.com","raviral.com","offer.raviral.com","win.feezossl.xyz","win.anababayala.com","aff.bnaosf1he.shop","automaticgiveaway.000webhostapp.com","facebookbusiness0078.blogspot.be","dev-cdn370.pantheonsite.io"]);
-UrlClickEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("ClickAllowed","ClickedThrough")
-| extend UrlLower = tolower(Url)
-| where UrlLower has_any (SniperDzDomains)
-| join kind=leftouter (
-    EmailEvents
-    | where Timestamp > ago(7d)
-    | project NetworkMessageId, SenderFromAddress, Subject, RecipientEmailAddress
-  ) on NetworkMessageId
-| project Timestamp, AccountUpn, IPAddress, Url, ActionType, IsClickedThrough, Workload, SenderFromAddress, Subject
-| order by Timestamp desc
-```
-
-### DNS or network egress to Sniper Dz infrastructure (IP and host indicators)
-
-`UC_140_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_141_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.dest) as dest values(All_Traffic.dest_ip) as dest_ip values(All_Traffic.src) as src values(All_Traffic.user) as user values(All_Traffic.app) as app from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_ip IN ("65.60.9.236","108.178.23.118","184.154.10.254") OR All_Traffic.dest IN ("sniperdz.com","raviral.com","offer.raviral.com","win.feezossl.xyz","win.anababayala.com","aff.bnaosf1he.shop","automaticgiveaway.000webhostapp.com","facebookbusiness0078.blogspot.be","dev-cdn370.pantheonsite.io")) by All_Traffic.src All_Traffic.user | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query IN ("win.feezossl.xyz","win.anababayala.com","aff.bnaosf1he.shop","offer.raviral.com","raviral.com","sniperdz.com","automaticgiveaway.000webhostapp.com","facebookbusiness0078.blogspot.be","dev-cdn370.pantheonsite.io") by DNS.src DNS.dest DNS.query
+| `drop_dm_object_name("DNS")`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-let SniperDzIPs = dynamic(["65.60.9.236","108.178.23.118","184.154.10.254"]);
-let SniperDzDomains = dynamic(["sniperdz.com","raviral.com","offer.raviral.com","win.feezossl.xyz","win.anababayala.com","aff.bnaosf1he.shop","automaticgiveaway.000webhostapp.com","facebookbusiness0078.blogspot.be","dev-cdn370.pantheonsite.io"]);
+let ScamDomains = dynamic(["win.feezossl.xyz","win.anababayala.com","aff.bnaosf1he.shop","offer.raviral.com","raviral.com","sniperdz.com","automaticgiveaway.000webhostapp.com","facebookbusiness0078.blogspot.be","dev-cdn370.pantheonsite.io"]);
 DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteIP in (SniperDzIPs)
-   or (isnotempty(RemoteUrl) and tolower(RemoteUrl) has_any (SniperDzDomains))
-| where InitiatingProcessAccountName !endswith "$"
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, ActionType
+| where Timestamp > ago(30d)
+| where isnotempty(RemoteUrl)
+| where RemoteUrl has_any (ScamDomains)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, RemoteUrl, RemoteIP, RemotePort
+| order by Timestamp desc
+```
+
+### Sniper Dz scam hosting-IP egress (push-notification / TDS infrastructure)
+
+`UC_141_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest IN ("65.60.9.236","108.178.23.118","184.154.10.254") by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app
+| `drop_dm_object_name("All_Traffic")`
+| convert ctime(firstTime) ctime(lastTime)
+| sort - lastTime
+```
+
+**Defender KQL:**
+```kql
+let ScamIPs = dynamic(["65.60.9.236","108.178.23.118","184.154.10.254"]);
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteIP in (ScamIPs)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
@@ -304,4 +281,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 7 use case(s) fired, 14 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

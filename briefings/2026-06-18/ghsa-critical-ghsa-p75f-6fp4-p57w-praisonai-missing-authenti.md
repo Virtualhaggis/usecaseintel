@@ -22,9 +22,8 @@ PraisonAI v4.6.48 exposes the PraisonAIUI MCP client management API through the 
 
 - **T1204.002** — User Execution: Malicious File
 - **T1190** — Exploit Public-Facing Application
-- **T1133** — External Remote Services
+- **T1059.004** — Command and Scripting Interpreter: Unix Shell
 - **T1059** — Command and Scripting Interpreter
-- **T1106** — Native API
 
 ## Kill chain phases observed
 
@@ -32,46 +31,56 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### PraisonAI UI / aiui server listening on 0.0.0.0 (vulnerable exposure)
+### PraisonAI UI (aiui) server spawns shell/LOLBin child via unauth MCP connect RCE
 
-`UC_58_1` · phase: **weapon** · confidence: **High** · AI-generated for this article
+`UC_59_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as cmdline values(Processes.parent_process_name) as parent from datamodel=Endpoint.Processes where (Processes.process="*praisonai ui*" OR Processes.process="*praisonai claw*" OR Processes.process="*aiui run*" OR Processes.process="*praisonaiui.server.create_app*" OR Processes.process="*create_host_app*" OR Processes.process="*build_host_app*") by Processes.dest Processes.user Processes.process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process="*aiui run*" OR Processes.parent_process="*praisonai ui*" OR Processes.parent_process="*praisonai claw*" OR Processes.parent_process="*create_host_app*") AND (Processes.process_name IN ("sh","bash","dash","zsh","ksh","fish","busybox","touch","curl","wget","nc","ncat","socat","chmod","base64","whoami","id","uname","cmd.exe","powershell.exe","pwsh.exe","certutil.exe","bitsadmin.exe")) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_id Processes.parent_process_id | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents | where Timestamp > ago(7d) | where ProcessCommandLine has_any ("praisonai ui", "praisonai claw", "aiui run", "praisonaiui.server.create_app", "create_host_app", "build_host_app") | where AccountName !endswith "$" | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine | order by Timestamp desc
+DeviceProcessEvents
+| where Timestamp > ago(7d)
+| where InitiatingProcessCommandLine has_any ("aiui run","praisonai ui","praisonai claw","create_host_app","build_host_app") or InitiatingProcessFileName =~ "aiui"
+| where FileName in~ ("sh","bash","dash","zsh","ksh","fish","busybox","touch","curl","wget","nc","ncat","socat","chmod","base64","whoami","id","uname","cmd.exe","powershell.exe","pwsh.exe","certutil.exe","bitsadmin.exe")
+| where not (FileName in~ ("curl","wget") and ProcessCommandLine has_any ("registry.npmjs.org","pypi.org","ghcr.io","objects.githubusercontent.com"))
+| project Timestamp, DeviceName, AccountName, ParentCmd = InitiatingProcessCommandLine, ParentImage = InitiatingProcessFolderPath, ChildImage = FolderPath, ChildCmd = ProcessCommandLine, SHA256
+| order by Timestamp desc
 ```
 
-### Unauthenticated POST /api/mcp/connect — exploit attempt at web tier
+### Unauthenticated POST to PraisonAI /api/mcp/connect MCP endpoint
 
-`UC_58_2` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_59_2` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.url) as urls values(Web.http_user_agent) as ua values(Web.dest) as dest from datamodel=Web.Web where Web.http_method="POST" Web.url="*/api/mcp/connect*" by Web.src Web.user | `drop_dm_object_name(Web)` | where NOT cidrmatch("127.0.0.0/8",src) AND NOT cidrmatch("::1/128",src) | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where (Web.url="*/api/mcp/connect*" OR Web.url="*/api/mcp/servers*") AND Web.http_method="POST" by Web.src Web.dest Web.dest_port Web.url Web.http_method Web.http_user_agent Web.status | `drop_dm_object_name(Web)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
-### Child process spawned by PraisonAI UI / aiui (post-exploitation RCE)
+### PraisonAI MCP RCE proof-of-concept marker file written to /tmp
 
-`UC_58_3` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_59_3` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Processes.process) as child_cmd values(Processes.process_name) as child_name from datamodel=Endpoint.Processes where (Processes.parent_process="*praisonai ui*" OR Processes.parent_process="*praisonai claw*" OR Processes.parent_process="*aiui run*" OR Processes.parent_process="*praisonaiui.server*" OR Processes.parent_process="*create_host_app*" OR Processes.parent_process="*build_host_app*") AND NOT (Processes.process_name IN ("python.exe","python3","python3.10","python3.11","python3.12","conhost.exe","uvicorn","uvicorn.exe","node","node.exe")) by Processes.dest Processes.user Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("praisonai_host_app_mcp_touch_marker.txt","pwned-by-ui-mcp") OR Filesystem.file_path IN ("/tmp/praisonai_host_app_mcp_touch_marker.txt","/tmp/pwned-by-ui-mcp")) by Filesystem.dest Filesystem.file_path Filesystem.file_name Filesystem.process_id | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime) | sort - lastTime
 ```
 
 **Defender KQL:**
 ```kql
-DeviceProcessEvents | where Timestamp > ago(7d) | where InitiatingProcessCommandLine has_any ("praisonai ui", "praisonai claw", "aiui run", "praisonaiui.server", "create_host_app", "build_host_app") | where FileName !in~ ("python.exe","python3","python3.exe","python3.10","python3.11","python3.12","conhost.exe","uvicorn","uvicorn.exe","node.exe") | project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine | order by Timestamp desc
+DeviceFileEvents
+| where Timestamp > ago(30d)
+| where FileName in~ ("praisonai_host_app_mcp_touch_marker.txt","pwned-by-ui-mcp") or FolderPath in~ ("/tmp/praisonai_host_app_mcp_touch_marker.txt","/tmp/pwned-by-ui-mcp")
+| project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
+| order by Timestamp desc
 ```
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-p75f-6fp4-p57w: PraisonAI: Missing Authentication for Cri
 
-`UC_58_0` · phase: **exploit** · confidence: **High**
+`UC_59_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,4 +130,4 @@ DeviceFileEvents
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: 4 use case(s) fired, 4 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

@@ -35,25 +35,17 @@ Before his command-and-control server went dark, he installed OpenSSH and Tailsc
 - **T1486** — Data Encrypted for Impact
 - **T1219** — Remote Access Software
 - **T1053.005** — Persistence (article-specific)
-- **T1133** — External Remote Services
-- **T1021.004** — Remote Services: SSH
-- **T1505** — Server Software Component
 - **T1572** — Protocol Tunneling
 - **T1090** — Proxy
-- **T1571** — Non-Standard Port
+- **T1021.004** — Remote Services: SSH
+- **T1543.003** — Create or Modify System Process: Windows Service
+- **T1098.004** — Account Manipulation: SSH Authorized Keys
 - **T1059.005** — Command and Scripting Interpreter: Visual Basic
 - **T1204.002** — User Execution: Malicious File
-- **T1497.003** — Time Based Evasion
-- **T1056.001** — Input Capture: Keylogging
-- **T1112** — Modify Registry
-- **T1562.001** — Impair Defenses: Disable or Modify Tools
 - **T1053.005** — Scheduled Task/Job: Scheduled Task
-- **T1547** — Boot or Logon Autostart Execution
-- **T1078.003** — Valid Accounts: Local Accounts
-- **T1098.004** — Account Manipulation: SSH Authorized Keys
-- **T1555.004** — Credentials from Password Stores: Windows Credential Manager
-- **T1552.004** — Unsecured Credentials: Private Keys
-- **T1087.001** — Account Discovery: Local Account
+- **T1653** — Power Settings
+- **T1568** — Dynamic Resolution
+- **T1071.001** — Application Layer Protocol: Web Protocols
 
 ## Kill chain phases observed
 
@@ -61,180 +53,184 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### OpenSSH Server install on Windows workstation (Poisson persistence pivot)
+### Tailscale mesh-VPN client install/exec on Windows endpoint (Operation Poisson parallel persistence)
 
-`UC_95_10` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_96_10` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=powershell.exe OR Processes.process_name=pwsh.exe) AND (Processes.process="*Add-WindowsCapability*OpenSSH.Server*" OR Processes.process="*Set-Service*sshd*Automatic*" OR Processes.process="*Start-Service*sshd*") OR Processes.process_name=sshd.exe OR (Processes.process_name=dism.exe AND Processes.process="*OpenSSH*") by host Processes.user Processes.process Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | where user!="*$" | sort - firstTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("tailscale.exe","tailscaled.exe") OR Processes.process="*tailscale up*" OR Processes.process="*login.tailscale.com*" OR Processes.process="*--authkey*") AND NOT Processes.user IN ("*$","SYSTEM","LOCAL SERVICE","NETWORK SERVICE") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(30d)
 | where AccountName !endswith "$"
-| where (InitiatingProcessFileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has_any ("Add-WindowsCapability","OpenSSH.Server","Start-Service sshd","Set-Service -Name sshd"))
-   or (FileName =~ "dism.exe" and ProcessCommandLine has "OpenSSH")
-   or FileName =~ "sshd.exe"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### Tailscale client install or tailnet connection (100.100.100.0/8 / login.tailscale.com)
-
-`UC_95_11` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count from datamodel=Endpoint.Processes where (Processes.process_name=tailscale.exe OR Processes.process_name=tailscaled.exe OR Processes.process="*tailscale*up*" OR Processes.process="*tailscale*login*") by host Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | append [| tstats summariesonly=t count from datamodel=Network_Traffic.All_Traffic where All_Traffic.dest_ip=100.64.0.0/10 OR All_Traffic.dest="login.tailscale.com" OR All_Traffic.dest="controlplane.tailscale.com" OR All_Traffic.dest_port=41641 by All_Traffic.src All_Traffic.dest All_Traffic.dest_ip All_Traffic.dest_port All_Traffic.app | `drop_dm_object_name(All_Traffic)`] | sort - count
-```
-
-**Defender KQL:**
-```kql
-let TS_Proc = DeviceProcessEvents
-| where Timestamp > ago(7d)
 | where FileName in~ ("tailscale.exe","tailscaled.exe")
-   or (ProcessCommandLine has_any (" up --authkey"," up --login-server","tailscale login","tailscale up") and ProcessCommandLine has "tailscale")
-   or FolderPath has @"\Tailscale\"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName;
-let TS_Net = DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteUrl has_any ("login.tailscale.com","controlplane.tailscale.com","derp.tailscale.com")
-   or RemoteIP startswith "100.100.100."
-   or (RemotePort == 41641 and RemoteIPType == "Public")
-| project Timestamp, DeviceName, RemoteIP, RemoteUrl, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine;
-union isfuzzy=true TS_Proc, TS_Net
+   or ProcessCommandLine has_any ("tailscale up","login.tailscale.com","--authkey","tailscale.exe up")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, SHA256
 | order by Timestamp desc
 ```
 
-### SSH reverse tunnel (ssh -R) outbound from Windows endpoint
+### Tailscale WireGuard egress (UDP 41641 / CGNAT 100.64.0.0/10 / *.ts.net) out-of-band C2 channel
 
-`UC_95_12` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_96_11` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=ssh.exe AND (Processes.process="* -R *" OR Processes.process="*-R *:*:*") by host Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where user!="*$" | rex field=process "-R\s+(?<reverse_spec>\S+)" | sort - firstTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.dest_port=41641 AND All_Traffic.transport="udp") OR All_Traffic.dest="100.64.0.0/10" by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.transport All_Traffic.app | `drop_dm_object_name(All_Traffic)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where (RemotePort == 41641 and Protocol =~ "Udp")
+   or RemoteUrl has_any ("login.tailscale.com","controlplane.tailscale.com",".ts.net")
+   or ipv4_is_in_any_range(RemoteIP, "100.64.0.0/10")
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, Protocol
+| order by Timestamp desc
+```
+
+### OpenSSH Server feature install / sshd service creation on Windows workstation
+
+`UC_96_12` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process IN ("*OpenSSH.Server*","*Add-WindowsCapability*OpenSSH*","*Set-Service*sshd*","*Start-Service sshd*","*sc*create*sshd*") OR Processes.process_name="sshd.exe") AND NOT Processes.user IN ("*$") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(30d)
 | where AccountName !endswith "$"
-| where FileName =~ "ssh.exe"
-| where ProcessCommandLine matches regex @"(?i)(^|\s)-R\s+(\S*:)?\d{1,5}(:[^\s]+:\d{1,5})?"
-| extend ReverseSpec = extract(@"(?i)(?:^|\s)-R\s+(\S+)", 1, ProcessCommandLine)
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, ReverseSpec, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| where ProcessCommandLine has_any ("OpenSSH.Server","Add-WindowsCapability","Start-Service sshd","Set-Service sshd","sc create sshd","sc.exe create sshd")
+   or FileName =~ "sshd.exe"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### wscript/cscript executing .vbs from user staging folder (Poisson VBScript stager)
+### SSH authorized_keys provisioning / ssh-keygen on Windows endpoint (key-based backdoor)
 
-`UC_95_13` · phase: **delivery** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=wscript.exe OR Processes.process_name=cscript.exe) AND Processes.process="*.vbs*" AND (Processes.process="*\\Downloads\\*" OR Processes.process="*\\AppData\\Local\\Temp\\*" OR Processes.process="*\\AppData\\Roaming\\*" OR Processes.process="*\\Users\\Public\\*" OR Processes.process="*\\ProgramData\\*") by host Processes.user Processes.process Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | where user!="*$" | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName in~ ("wscript.exe","cscript.exe")
-| where ProcessCommandLine has ".vbs"
-| where ProcessCommandLine has_any (@"\Downloads\", @"\AppData\Local\Temp\", @"\AppData\Roaming\", @"\Users\Public\", @"\ProgramData\", @"\Pictures\", @"\Music\")
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### powercfg disabling standby/hibernate to keep host harvest-ready
-
-`UC_95_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_96_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=powercfg.exe AND (Processes.process="*standby-timeout*" OR Processes.process="*hibernate-timeout*" OR Processes.process="*monitor-timeout*" OR Processes.process="*disk-timeout*" OR Processes.process="*-change*" OR Processes.process="*-setacvalueindex*" OR Processes.process="*-setdcvalueindex*" OR Processes.process="*-h off*") AND Processes.process="* 0*" by host Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where user!="*$" | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName =~ "powercfg.exe"
-| where ProcessCommandLine has_any ("standby-timeout","hibernate-timeout","monitor-timeout","disk-timeout","-change","/change","-setacvalueindex","-setdcvalueindex","-h off","/h off")
-| where ProcessCommandLine matches regex @"(?i)(\s|-)0(\b|$)" or ProcessCommandLine has " off"
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### Logon-trigger scheduled task at HIGHEST privileges launching script interpreter
-
-`UC_95_15` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name=schtasks.exe AND Processes.process="*/Create*" AND Processes.process="*/RL*HIGHEST*" AND Processes.process="*/SC*ONLOGON*" AND (Processes.process="*powershell*" OR Processes.process="*pwsh*" OR Processes.process="*wscript*" OR Processes.process="*cscript*" OR Processes.process="*mshta*" OR Processes.process="*rundll32*" OR Processes.process="*regsvr32*" OR Processes.process="*.vbs*" OR Processes.process="*.ps1*" OR Processes.process="*.js*") by host Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | where user!="*$" | sort - firstTime
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where AccountName !endswith "$"
-| where FileName =~ "schtasks.exe"
-| where ProcessCommandLine has_any ("/Create","/CREATE","-Create")
-| where ProcessCommandLine has_any ("/RL HIGHEST","/RL Highest","-RunLevel Highest")
-| where ProcessCommandLine has_any ("/SC ONLOGON","/SC OnLogon","ONLOGON","-Trigger")
-| where ProcessCommandLine has_any ("powershell","pwsh","wscript","cscript","mshta","rundll32","regsvr32",".vbs",".js",".ps1","cmd.exe /c","cmd /c")
-| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
-| order by Timestamp desc
-```
-
-### authorized_keys file write on Windows host (SSH key persistence)
-
-`UC_95_16` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="authorized_keys" OR Filesystem.file_path="*\\.ssh\\authorized_keys*" OR Filesystem.file_path="*\\ProgramData\\ssh\\*" OR Filesystem.file_path="*\\Windows\\System32\\config\\systemprofile\\.ssh\\*") AND Filesystem.action IN ("created","modified","renamed") by host Filesystem.user Filesystem.file_path Filesystem.file_name Filesystem.process_name | `drop_dm_object_name(Filesystem)` | sort - firstTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name IN ("authorized_keys","administrators_authorized_keys") OR Filesystem.file_path="*\\.ssh\\*" OR Filesystem.file_path="*\\ProgramData\\ssh\\*") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_name Filesystem.user | `drop_dm_object_name(Filesystem)` | `security_content_ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(30d)
 | where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where FileName =~ "authorized_keys"
-   or FolderPath endswith @"\.ssh\authorized_keys"
-   or FolderPath has @"\ProgramData\ssh\"
-   or FolderPath has @"\Windows\System32\config\systemprofile\.ssh\"
-| project Timestamp, DeviceName, FileName, FolderPath, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessAccountDomain
+| where FileName in~ ("authorized_keys","administrators_authorized_keys")
+   or (FolderPath has ".ssh" and FileName !endswith ".tmp")
+| where InitiatingProcessAccountName !endswith "$"
+| project Timestamp, DeviceName, InitiatingProcessAccountName, FileName, FolderPath, ActionType, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp desc
 ```
 
-### certutil smart-card / certificate store enumeration
+### OpenSSH reverse tunnel (ssh -R) to external host — out-of-band C2 fallback
 
-`UC_95_17` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_96_14` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name=certutil.exe AND (Processes.process="*-store*" OR Processes.process="*-scinfo*" OR Processes.process="*-csplist*" OR Processes.process="*-csptest*" OR Processes.process="*-key*" OR Processes.process="*-user*My*")) OR ((Processes.process_name=powershell.exe OR Processes.process_name=pwsh.exe) AND (Processes.process="*Get-ChildItem*Cert:*" OR Processes.process="*ls*Cert:\\CurrentUser\\My*" OR Processes.process="*Cert:\\CurrentUser\\My*")) by host Processes.user Processes.process Processes.parent_process_name Processes.process_name | `drop_dm_object_name(Processes)` | where user!="*$" | where NOT match(process, "(?i)-urlcache|-decode|-encode|-hashfile|-verify") | sort - firstTime
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="ssh.exe" AND Processes.process="*-R *" AND NOT Processes.user IN ("*$") by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(7d)
+| where Timestamp > ago(30d)
 | where AccountName !endswith "$"
-| where (FileName =~ "certutil.exe" and ProcessCommandLine has_any ("-store","-scinfo","-SCInfo","-csplist","-csptest","-key","-user My","-user Root"))
-   or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has_any ("Cert:\\CurrentUser\\My","Cert:\\LocalMachine\\My","Get-ChildItem Cert:","ls Cert:","dir Cert:"))
-| where ProcessCommandLine !has "-urlcache" and ProcessCommandLine !has "-decode" and ProcessCommandLine !has "-encode" and ProcessCommandLine !has "-hashfile"
-| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessParentFileName
+| where FileName =~ "ssh.exe"
+| where ProcessCommandLine matches regex @"(?i)\s-R\s+\S"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### wscript.exe executing .vbs from user staging folder (Poisson VBScript stager)
+
+`UC_96_15` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name IN ("wscript.exe","cscript.exe") AND Processes.process="*.vbs*" AND (Processes.process IN ("*\\AppData\\*","*\\Temp\\*","*\\Public\\*","*\\Downloads\\*")) AND NOT Processes.user IN ("*$") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where FileName in~ ("wscript.exe","cscript.exe")
+| where ProcessCommandLine has ".vbs"
+| where ProcessCommandLine has_any ("AppData","\\Temp\\","\\Public\\","Downloads","%TEMP%","%APPDATA%")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessParentFileName, SHA256
+| order by Timestamp desc
+```
+
+### Scheduled task at logon with highest privileges launching a script interpreter
+
+`UC_96_16` · phase: **install** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process_name="schtasks.exe" AND Processes.process="*create*" AND Processes.process="*highest*" AND Processes.process="*onlogon*") OR (Processes.process_name IN ("powershell.exe","pwsh.exe") AND Processes.process="*Register-ScheduledTask*" AND Processes.process="*Highest*")) AND (Processes.process IN ("*wscript*","*cscript*","*powershell*","*mshta*","*.vbs*","*.ps1*")) by Processes.dest Processes.user Processes.process_name Processes.process | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where (FileName =~ "schtasks.exe" and ProcessCommandLine has "create" and ProcessCommandLine has "highest" and ProcessCommandLine has "onlogon")
+     or (FileName in~ ("powershell.exe","pwsh.exe") and ProcessCommandLine has "Register-ScheduledTask" and ProcessCommandLine has "Highest")
+| where ProcessCommandLine has_any ("wscript","cscript","powershell","mshta",".vbs",".ps1")
+| project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### powercfg standby/monitor-timeout set to never (keep host awake for keylogger harvesting)
+
+`UC_96_17` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process_name="powercfg.exe" AND (Processes.process="*standby-timeout-ac 0*" OR Processes.process="*standby-timeout-dc 0*" OR Processes.process="*monitor-timeout-ac 0*" OR Processes.process="*monitor-timeout-dc 0*" OR Processes.process="*hibernate-timeout-ac 0*") AND NOT Processes.user IN ("*$") by Processes.dest Processes.user Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where FileName =~ "powercfg.exe"
+| where ProcessCommandLine matches regex @"(?i)(standby|monitor|hibernate)-timeout-(ac|dc)\s+0\b"
+| project Timestamp, DeviceName, AccountName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp desc
+```
+
+### DuckDNS dynamic-DNS resolution from endpoint (Havoc/Poisson C2 infrastructure)
+
+`UC_96_18` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Resolution.DNS where DNS.query="*duckdns.org" by DNS.src DNS.query DNS.answer | `drop_dm_object_name(DNS)` | `security_content_ctime(firstTime)`
+```
+
+**Defender KQL:**
+```kql
+DeviceNetworkEvents
+| where Timestamp > ago(30d)
+| where RemoteUrl has "duckdns.org"
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl
 | order by Timestamp desc
 ```
 
@@ -472,7 +468,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — Junior Hacker Used Tailscale and OpenSSH to Keep Access After His C2 Went Offlin
 
-`UC_95_9` · phase: **exploit** · confidence: **High**
+`UC_96_9` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -529,4 +525,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: IOCs present, 18 use case(s) fired, 34 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: IOCs present, 19 use case(s) fired, 26 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

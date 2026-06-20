@@ -43,11 +43,14 @@ Unit 42 is aware of a large-scale password spraying and credential theft campaig
 - **T1566.004** — Phishing: Spearphishing Voice
 - **T1566** — Phishing
 - **T1219** — Remote Access Software
-- **T1110.003** — Password Spraying
+- **T1110.003** — Brute Force: Password Spraying
+- **T1110.004** — Brute Force: Credential Stuffing
 - **T1133** — External Remote Services
-- **T1078.003** — Valid Accounts: Local Accounts
-- **T1602.002** — Data from Configuration Repository: Network Device Configuration Dump
-- **T1005** — Data from Local System
+- **T1078.001** — Valid Accounts: Default Accounts
+- **T1556** — Modify Authentication Process
+- **T1136** — Create Account
+- **T1098** — Account Manipulation
+- **T1078** — Valid Accounts
 
 ## Kill chain phases observed
 
@@ -55,145 +58,66 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### FortiBleed: Password spray against internet-exposed Fortinet/Sophos edge services
+### FortiBleed password-spray success burst against internet-facing Fortinet/edge auth
 
-`UC_2_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_4_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Authentication where Authentication.action=failure (Authentication.app IN ("fortinet","fortigate","fortios","sslvpn","ssl_vpn","sophos","sfos","xg_firewall") OR Authentication.vendor IN ("Fortinet","Sophos")) by _time span=10m Authentication.src Authentication.user Authentication.dest Authentication.app Authentication.vendor
+| tstats `summariesonly` count from datamodel=Authentication where Authentication.app IN ("fortios","fortigate","fortiproxy","ftnt-fortigate","sslvpn-plain","forticlient_ems") by Authentication.src, Authentication.dest, Authentication.user, Authentication.action, _time span=1h
 | `drop_dm_object_name(Authentication)`
-| stats dc(user) as distinct_users count as failures values(user) as user_sample values(dest) as appliance_sample by src, vendor, app, _time
-| where distinct_users >= 8
-| eval description="FortiBleed spray pattern: ".distinct_users." distinct users from ".src." against ".vendor." appliance(s) in 10m"
-| sort - _time
+| stats sum(eval(if(action="failure",count,0))) as failures, sum(eval(if(action="success",count,0))) as successes, dc(user) as targeted_users, values(eval(if(action="success",user,null()))) as compromised_user, values(dest) as dest by src, _time
+| where failures >= 30 and successes >= 1
+| sort - failures
 ```
 
-**Defender KQL:**
-```kql
-let SprayWindowMin = 10m;
-let SprayUserThreshold = 8;
-IdentityLogonEvents
-| where Timestamp > ago(1d)
-| where ActionType == "LogonFailed"
-| where Protocol in~ ("Ntlm","Kerberos","Radius","Ldap")
-| where isnotempty(IPAddress)
-| where AccountName !endswith "$" and AccountName !in~ ("system","local service","network service")
-| summarize FailureCount = count(),
-            DistinctUsers = dcount(AccountUpn),
-            UserSample = make_set(AccountName, 10),
-            FirstFailure = min(Timestamp),
-            LastFailure = max(Timestamp),
-            ImpactedDCs = make_set(DestinationDeviceName, 5)
-        by IPAddress, bin(Timestamp, SprayWindowMin)
-| where DistinctUsers >= SprayUserThreshold
-| order by FirstFailure desc
-```
+### FortiGate jsconsole / loopback admin login (CVE-2024-55591 auth-bypass exploitation)
 
-### FortiBleed: MSSQL credential spray from external source
-
-`UC_2_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_4_8` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Authentication where Authentication.action=failure (Authentication.app IN ("mssql","mssqlserver","sqlserver") OR Authentication.dest_category="database_server" OR Authentication.signature_id IN ("18456","4625") OR Authentication.process_name="sqlservr.exe") by _time span=10m Authentication.src Authentication.user Authentication.dest
+| tstats `summariesonly` count, min(_time) as firstTime, max(_time) as lastTime, values(Authentication.dest) as dest from datamodel=Authentication where Authentication.action=success Authentication.app IN ("fortios","fortigate","fortiproxy","ftnt-fortigate") (Authentication.src="127.0.0.1" OR Authentication.src="0.0.0.0" OR Authentication.src="::1") by Authentication.user, Authentication.src
 | `drop_dm_object_name(Authentication)`
-| stats dc(user) as distinct_users count as failures values(user) as users values(dest) as servers by src, _time
-| where distinct_users >= 8
-| eval description="MSSQL spray: ".distinct_users." distinct logins from ".src." in 10m"
-| sort - _time
+| `ctime(firstTime)` | `ctime(lastTime)`
+| sort - firstTime
 ```
 
-**Defender KQL:**
-```kql
-let SprayWindowMin = 10m;
-let SprayUserThreshold = 8;
-DeviceLogonEvents
-| where Timestamp > ago(1d)
-| where ActionType == "LogonFailed"
-| where InitiatingProcessFileName has_any ("sqlservr.exe","sqlbrowser.exe")
-      or AccountName has_any ("sa","sqlservice","mssql","sqluser","sqladmin","sql_svc","dbadmin")
-| where LogonType in~ ("Network","NetworkClearText","NetworkCleartext","Service")
-| where isnotempty(RemoteIP) and RemoteIPType == "Public"
-| where AccountName !endswith "$"
-| summarize FailureCount = count(),
-            DistinctUsers = dcount(AccountName),
-            UserSample = make_set(AccountName, 10),
-            FirstFailure = min(Timestamp),
-            LastFailure = max(Timestamp),
-            ImpactedHosts = make_set(DeviceName, 5)
-        by RemoteIP, bin(Timestamp, SprayWindowMin)
-| where DistinctUsers >= SprayUserThreshold
-| order by FirstFailure desc
-```
+### FortiGate rogue super_admin / SSL-VPN account creation following CVE-2024-55591 exploit
 
-### FortiBleed: Edge appliance successful login shortly after failed-login burst from same SourceIP
-
-`UC_2_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_4_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats `summariesonly` count from datamodel=Authentication where (Authentication.app IN ("fortinet","fortigate","fortios","sslvpn","sophos","sfos") OR Authentication.vendor IN ("Fortinet","Sophos")) Authentication.action=failure by _time span=10m Authentication.src Authentication.dest Authentication.user
-| `drop_dm_object_name(Authentication)`
-| stats dc(user) as burst_distinct_users count as burst_failures values(user) as burst_users min(_time) as burst_start max(_time) as burst_end by src, dest
-| where burst_failures >= 5
-| join type=inner src dest [
-    | tstats `summariesonly` count from datamodel=Authentication where (Authentication.app IN ("fortinet","fortigate","fortios","sslvpn","sophos","sfos") OR Authentication.vendor IN ("Fortinet","Sophos")) Authentication.action=success by _time span=10m Authentication.src Authentication.dest Authentication.user
-    | `drop_dm_object_name(Authentication)`
-    | rename _time as success_time, user as success_user
-  ]
-| where success_time >= burst_start AND success_time <= burst_end + 600
-| eval delay_sec = success_time - burst_end
-| table burst_start burst_end success_time delay_sec src dest success_user burst_failures burst_distinct_users
-| sort - success_time
-```
-
-**Defender KQL:**
-```kql
-let LookbackHours = 24h;
-let BurstFailureThreshold = 5;
-let BurstUserThreshold = 3;
-let AfterBurstWindow = 10m;
-let Failures = IdentityLogonEvents
-    | where Timestamp > ago(LookbackHours)
-    | where ActionType == "LogonFailed"
-    | where Protocol in~ ("Radius","Ntlm","Kerberos","Ldap")
-    | where AccountName !endswith "$";
-let Successes = IdentityLogonEvents
-    | where Timestamp > ago(LookbackHours)
-    | where ActionType == "LogonSuccess"
-    | where Protocol in~ ("Radius","Ntlm","Kerberos","Ldap");
-let Bursts = Failures
-    | summarize BurstFailures = count(),
-                BurstDistinctUsers = dcount(AccountUpn),
-                BurstStart = min(Timestamp),
-                BurstEnd = max(Timestamp)
-            by IPAddress, DestinationDeviceName
-    | where BurstFailures >= BurstFailureThreshold and BurstDistinctUsers >= BurstUserThreshold;
-Bursts
-| join kind=inner (
-    Successes
-    | project SuccessTime = Timestamp, SuccessIP = IPAddress, SuccessHost = DestinationDeviceName,
-              SuccessUser = AccountUpn, SuccessAccount = AccountName
-  ) on $left.IPAddress == $right.SuccessIP, $left.DestinationDeviceName == $right.SuccessHost
-| where SuccessTime between (BurstStart .. BurstEnd + AfterBurstWindow)
-| extend DelaySec = datetime_diff('second', SuccessTime, BurstEnd)
-| project BurstStart, BurstEnd, SuccessTime, DelaySec,
-          SourceIP = IPAddress, ApplianceOrDC = DestinationDeviceName,
-          BurstFailures, BurstDistinctUsers, SuccessUser, SuccessAccount
-| order by SuccessTime desc
-```
-
-### FortiOS device configuration export ('execute backup config') by non-baselined admin
-
-`UC_2_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats `summariesonly` count from datamodel=Change where (Change.vendor_product IN ("Fortinet*","FortiGate*","FortiOS*")) (Change.command IN ("execute backup config*","execute backup full-config*","execute backup config flash*","execute backup config tftp*","execute backup config ftp*","execute backup config scp*") OR Change.change_type IN ("config_backup","config_export")) by _time Change.user Change.src Change.dest Change.command Change.result
+| tstats `summariesonly` count, min(_time) as firstTime, values(All_Changes.user) as actor, values(All_Changes.command) as command from datamodel=Change where All_Changes.action=created All_Changes.object_category=user All_Changes.vendor_product IN ("Fortinet FortiGate","FortiGate","FortiOS","Fortinet FortiProxy") by All_Changes.dest, All_Changes.object
 | `drop_dm_object_name(Change)`
-| stats values(command) as commands, values(src) as source_ips, values(result) as results, count by _time, user, dest
-| sort - _time
+| `ctime(firstTime)`
+| sort - firstTime
+```
+
+### FortiBleed MSSQL login-failure burst then success (internet-exposed SQL spraying)
+
+`UC_4_10` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count from datamodel=Authentication where Authentication.app IN ("mssqlserver","mssql","sqlserver","microsoft sql server") Authentication.action=failure by Authentication.src, Authentication.user, _time span=30m
+| `drop_dm_object_name(Authentication)`
+| stats sum(count) as failures, dc(user) as targeted_logins, values(user) as logins by src, _time
+| where failures >= 30
+| sort - failures
+```
+
+**Defender KQL:**
+```kql
+DeviceLogonEvents
+| where Timestamp > ago(7d)
+| where ActionType == "LogonFailed"
+| where LogonType in ("Network","Batch")
+| where AccountName !endswith "$"
+| summarize Failures = count(), TargetedAccounts = dcount(AccountName), Accounts = make_set(AccountName, 30), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by RemoteIP, DeviceName, bin(Timestamp, 30m)
+| where Failures >= 30   // 30 failed network logons / 30 min from one source = spray
+| order by Failures desc
 ```
 
 ### Phishing-link click correlated to endpoint execution
@@ -432,4 +356,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: CVE present, 11 use case(s) fired, 18 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: CVE present, 11 use case(s) fired, 21 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

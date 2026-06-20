@@ -35,61 +35,12 @@ To the surprise of absolutely no one who has seen my face, I’m one of the yo
 - **T1219** — Remote Access Software
 - **T1027** — Obfuscated Files or Information
 - **T1204.002** — User Execution: Malicious File
-- **T1059** — Command and Scripting Interpreter
-- **T1496** — Resource Hijacking
-- **T1055** — Process Injection
-- **T1105** — Ingress Tool Transfer
-- **T1036.005** — Match Legitimate Name or Location
 
 ## Kill chain phases observed
 
 _(none detected from narrative keywords)_
 
 ## Recommended hunts
-
-### Execution of Talos top-prevalent malware (Coinminer VID001.exe / W32.Injector / Dropper.Miner) by hash
-
-`UC_156_6` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_hash in ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","9896a6fcb9bb5ac1ec5297b4a65be3f647589adf7c37b45","2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","7bdbd180c081fa63ca94f9c22c457376","38de5b216c33833af710e88f7f64fc98") OR Processes.process_name="VID001.exe") by Processes.dest Processes.user Processes.process_name Processes.process Processes.process_hash Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where SHA256 in ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91")
-  or MD5 in~ ("2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","7bdbd180c081fa63ca94f9c22c457376","38de5b216c33833af710e88f7f64fc98")
-  or FileName =~ "VID001.exe"
-  or FileName matches regex @"(?i)^[a-f0-9]{32}_\d+_Exe\.exe$"
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256, MD5, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### File write of Talos top-prevalent malware hash to disk (drop site)
-
-`UC_156_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_hash in ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91","2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","7bdbd180c081fa63ca94f9c22c457376") OR Filesystem.file_name="VID001.exe" OR Filesystem.file_name="d4aa3e7010220ad1b458fac17039c274_*_Exe.exe") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.file_hash Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileCreated","FileModified","FileRenamed")
-| where SHA256 in ("9f1f11a708d393e0a4109ae189bc64f1f3e312653dcf317a2bd406f18ffcc507","96fa6a7714670823c83099ea01d24d6d3ae8fef027f01a4ddac14f123b1c9974","a31f222fc283227f5e7988d1ad9c0aecd66d58bb7b4d8518ae23e110308dbf91")
-  or MD5 in~ ("2915b3f8b703eb744fc54c81f4a9c67f","aac3165ece2959f39ff98334618d10d9","7bdbd180c081fa63ca94f9c22c457376")
-  or FileName =~ "VID001.exe"
-  or FileName startswith "d4aa3e7010220ad1b458fac17039c274_"
-  or FileName matches regex @"(?i)^[a-f0-9]{32}_\d+_Exe\.exe$"
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, MD5, FileOriginUrl, FileOriginReferrerUrl, FileOriginIP, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
 
 ### Ransomware-style mass file rename / extension change
 
@@ -204,7 +155,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — A tale of two eras
 
-`UC_156_5` · phase: **exploit** · confidence: **High**
+`UC_157_5` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -261,4 +212,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 8 use case(s) fired, 13 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 6 use case(s) fired, 8 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

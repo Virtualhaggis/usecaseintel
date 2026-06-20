@@ -42,11 +42,12 @@ Cybersecurity researchers have charted the evolution of INC from an nascent rans
 - **T1195.002** — Compromise Software Supply Chain
 - **T1562.001** — Impair Defenses: Disable or Modify Tools
 - **T1068** — Exploitation for Privilege Escalation
-- **T1489** — Service Stop
+- **T1543.003** — Create or Modify System Process: Windows Service
+- **T1529** — System Shutdown/Reboot
 - **T1567.002** — Exfiltration to Cloud Storage
-- **T1048** — Exfiltration Over Alternative Protocol
+- **T1560.001** — Archive Collected Data: Archive via Utility
 - **T1555** — Credentials from Password Stores
-- **T1572** — Protocol Tunneling
+- **T1552.002** — Unsecured Credentials: Credentials in Registry
 
 ## Kill chain phases observed
 
@@ -54,109 +55,89 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### INC ransomware BYOVD vulnerable filter-driver load (filwfp.sys / filnk.sys / fildds.sys)
+### INC Ransomware BYOVD vulnerable driver drop (filwfp.sys / filnk.sys / fildds.sys)
 
-`UC_57_13` · phase: **install** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_name="filwfp.sys" OR Filesystem.file_name="filnk.sys" OR Filesystem.file_name="fildds.sys") by Filesystem.dest Filesystem.user Filesystem.file_name Filesystem.file_path Filesystem.process_name | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("DriverLoad", "AsrVulnerableSignedDriverAudited", "AsrVulnerableSignedDriverBlocked")
-| where FileName in~ ("filwfp.sys", "filnk.sys", "fildds.sys")
-| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessAccountName
-| order by Timestamp desc
-```
-
-### INC Rust encryptor invoked with --esxi VM-shutdown flag
-
-`UC_57_14` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_58_13` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*--esxi*" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name Processes.process_hash | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where ProcessCommandLine has "--esxi"
-| where not(AccountName endswith "$")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### Rclone exfiltration to cloud-storage remote (INC double-extortion staging)
-
-`UC_57_15` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="rclone.exe" OR match(Processes.process,"(?i)rclone")) (Processes.process="*copy*" OR Processes.process="*sync*" OR Processes.process="*move*") (Processes.process="*mega:*" OR Processes.process="*drive:*" OR Processes.process="*s3:*" OR Processes.process="*b2:*" OR Processes.process="*dropbox:*" OR Processes.process="*--remote*") by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where (FileName =~ "rclone.exe" or ProcessCommandLine has "rclone" or ProcessVersionInfoOriginalFileName =~ "rclone.exe")
-| where ProcessCommandLine has_any (" copy ", " sync ", " move ", " lsd ", " lsf ")
-| where ProcessCommandLine has_any ("mega:", "drive:", "s3:", "b2:", "dropbox:", "onedrive:", "box:", "--remote", "--config")
-| where not(AccountName endswith "$")
-| project Timestamp, DeviceName, AccountName, FileName, FolderPath, ProcessCommandLine, SHA256, InitiatingProcessFileName, InitiatingProcessFolderPath
-| order by Timestamp desc
-```
-
-### Non-Veeam process accessing Veeam Backup config / CryptoKeys (credential dumper)
-
-`UC_57_16` · phase: **actions** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.file_path="*\\Veeam\\Backup*" OR Filesystem.file_name="VeeamBackup.config" OR Filesystem.file_path="*\\CryptoKeys*") Filesystem.process_name!="Veeam.Backup.Service.exe" Filesystem.process_name!="Veeam.Backup.Manager.exe" Filesystem.process_name!="Veeam.Archiver.Service.exe" Filesystem.process_name!="sqlservr.exe" by Filesystem.dest Filesystem.user Filesystem.file_path Filesystem.process_name Filesystem.process | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.action=created (Filesystem.file_name="filwfp.sys" OR Filesystem.file_name="filnk.sys" OR Filesystem.file_name="fildds.sys") by Filesystem.dest Filesystem.file_name Filesystem.file_path Filesystem.process_id Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceFileEvents
-| where Timestamp > ago(7d)
-| where ActionType in ("FileCreated", "FileModified", "FileOpenedForRead")
-| where FolderPath has @"\Veeam\Backup" or FileName in~ ("VeeamBackup.config", "Config.xml") or FolderPath has "CryptoKeys"
-| where not(InitiatingProcessFileName startswith "Veeam.")
-| where not(InitiatingProcessFileName in~ ("sqlservr.exe", "MsMpEng.exe", "MsSense.exe", "explorer.exe", "backup.exe"))
-| where not(InitiatingProcessAccountName endswith "$")
-| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath, ActionType
-| order by Timestamp desc
+| where Timestamp > ago(30d)
+| where FileName in~ ("filwfp.sys", "filnk.sys", "fildds.sys")
+| project Timestamp, DeviceName, ActionType, FileName, FolderPath, SHA256,
+          InitiatingProcessAccountName, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, InitiatingProcessFolderPath
+| order by Timestamp asc
 ```
 
-### Multiple commercial RMM tools deployed on the same host within 24h (INC C2 fan-out)
+### INC Rust encryptor launched with --esxi hypervisor argument
 
-`UC_57_17` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_58_14` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=true dc(Processes.process_name) as DistinctRMM values(Processes.process_name) as RmmList min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name IN ("anydesk.exe","ScreenConnect.ClientService.exe","ScreenConnect.WindowsClient.exe","ConnectWiseControl.Client.exe","teamviewer.exe","TeamViewer_Service.exe","tv_w32.exe","tv_x64.exe")) by Processes.dest | where DistinctRMM >= 2 | convert ctime(firstTime) ctime(lastTime)
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where Processes.process="*--esxi*" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
 DeviceProcessEvents
-| where Timestamp > ago(24h)
-| where FileName in~ ("anydesk.exe", "screenconnect.clientservice.exe", "screenconnect.windowsclient.exe", "connectwisecontrol.client.exe", "teamviewer.exe", "teamviewer_service.exe", "tv_w32.exe", "tv_x64.exe")
-| extend RmmFamily = case(
-    FileName =~ "anydesk.exe", "AnyDesk",
-    FileName has "screenconnect" or FileName has "connectwisecontrol", "ScreenConnect",
-    FileName has "teamviewer" or FileName has "tv_", "TeamViewer",
-    "Other")
-| summarize DistinctFamilies = dcount(RmmFamily), Families = make_set(RmmFamily), Binaries = make_set(FileName), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by DeviceName
-| where DistinctFamilies >= 2
-| order by LastSeen desc
+| where Timestamp > ago(30d)
+| where ProcessCommandLine has "--esxi"
+| where AccountName !endswith "$"
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
+          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp asc
+```
+
+### INC Ransomware Rclone cloud exfiltration of staged archives
+
+`UC_58_15` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.process_name="rclone.exe") OR (Processes.process="*--config*" AND (Processes.process="*--transfers*" OR Processes.process="*--multi-thread-streams*" OR Processes.process="*--no-check-certificate*") AND (Processes.process="*copy*" OR Processes.process="*sync*" OR Processes.process="*move*")) by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where FileName =~ "rclone.exe"
+   or (ProcessCommandLine has "--config"
+       and ProcessCommandLine has_any ("--transfers", "--multi-thread-streams", "--no-check-certificate", "--ignore-existing")
+       and ProcessCommandLine has_any ("copy", "sync", "move"))
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath, SHA256,
+          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp asc
+```
+
+### INC Veeam backup credential dumping (salted DPAPI SQL secret access)
+
+`UC_58_16` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where ((Processes.process="*Veeam Backup and Replication*" AND (Processes.process="*SqlSecuredPassword*" OR Processes.process="*SqlLogin*")) OR (Processes.process="*VeeamBackup*" AND Processes.process="*Credentials*")) Processes.process_name!="Veeam.Backup.Manager.exe" Processes.process_name!="Veeam.Backup.Service.exe" by Processes.dest Processes.user Processes.process_name Processes.process Processes.parent_process_name | `drop_dm_object_name(Processes)` | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+DeviceProcessEvents
+| where Timestamp > ago(30d)
+| where AccountName !endswith "$"
+| where (ProcessCommandLine has "Veeam Backup and Replication" and ProcessCommandLine has_any ("SqlSecuredPassword", "SqlLogin"))
+     or (ProcessCommandLine has "VeeamBackup" and ProcessCommandLine has "Credentials")
+| where InitiatingProcessFileName !in~ ("Veeam.Backup.Manager.exe", "Veeam.Backup.Service.exe", "Veeam.Backup.PowerShell.exe")
+| project Timestamp, DeviceName, AccountName, FileName, FolderPath,
+          ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
+| order by Timestamp asc
 ```
 
 ### Beaconing — periodic outbound to small set of destinations
@@ -536,7 +517,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — INC Ransomware Emerges as Major RaaS Threat in 2026 with 830+ Victims Since 2023
 
-`UC_57_12` · phase: **exploit** · confidence: **High**
+`UC_58_12` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
@@ -593,4 +574,4 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, 18 use case(s) fired, 27 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 17 use case(s) fired, 28 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
