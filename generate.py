@@ -4561,6 +4561,32 @@ class UseCase:
         # broken variant is never shipped.
         if not (self.sentinel_kql or "").strip() and (self.defender_kql or "").strip():
             self.sentinel_kql = _derive_sentinel_kql(self.defender_kql)
+        # Drop any no-parser query field (Datadog / Falcon / CloudWatch) that is
+        # structurally broken — a leaked markdown fence or unbalanced quotes /
+        # parentheses means it can't run, so shipping it would have an analyst
+        # copy-paste a query that errors. Keep the other platforms (same "ship
+        # without the broken part" policy used for bad SPL). KQL/SPL/Sigma have
+        # real parsers + their own validators, so they're left untouched here.
+        for _qk in ("datadog_query", "falcon_logscale_query", "cloudwatch_query"):
+            if _query_structurally_broken(getattr(self, _qk, "") or ""):
+                setattr(self, _qk, "")
+
+
+def _query_structurally_broken(text: str) -> bool:
+    """True if a no-parser query is definitely unrunnable: a leaked markdown
+    fence, or unbalanced double quotes / parentheses (counted after blanking
+    quoted spans so a paren inside a quoted value doesn't false-trigger)."""
+    body = (text or "").strip()
+    if not body:
+        return False
+    if "```" in body:
+        return True
+    stripped = re.sub(r'"[^"]*"', '""', body)
+    if stripped.count('"') % 2:
+        return True
+    if stripped.count("(") != stripped.count(")"):
+        return True
+    return False
 
 
 def _classify_splunk_uc(uc) -> str:
