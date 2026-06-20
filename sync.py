@@ -343,16 +343,24 @@ def index_detections(detections):
             # Skip things like "story", "investigation" YAMLs
             continue
         tags = d.get("tags") or {}
-        techniques = tags.get("mitre_attack_id") or []
+        # Upstream schema migration (contentctl v5+): the `tags:` block was
+        # flattened — `mitre_attack_id` / `kill_chain_phases` now live at the
+        # YAML top level. Read both shapes; the tags fallback keeps any
+        # not-yet-migrated detections working. Without this, ~93% of ESCU
+        # detections synced with empty technique lists and were silently
+        # dropped from the ATT&CK matrix + Detection Library.
+        techniques = d.get("mitre_attack_id") or tags.get("mitre_attack_id") or []
         if isinstance(techniques, str):
             techniques = [techniques]
+        kc_phases = (d.get("kill_chain_phases")
+                     or tags.get("kill_chain_phases") or [])
         out.append({
             "id": d.get("id"),
             "name": d.get("name"),
             "type": d.get("type"),
             "description": (d.get("description") or "").strip()[:400],
             "techniques": [t for t in techniques if t],
-            "kill_chain_phases": tags.get("kill_chain_phases", []) or [],
+            "kill_chain_phases": kc_phases,
             "data_models": [
                 m.group(1) for m in DM_PATH_RE.finditer(d.get("search","") or "")
             ],
@@ -434,6 +442,31 @@ def main():
         "defender_action_types": defender_actions,
         "defender_table_popularity": defender_hints,
     }
+    # Sanity floor: if upstream restructures (renamed paths, schema drift) the
+    # parsers can succeed yet yield near-empty results. Writing that empty
+    # registry would clobber a good one and make validate.py flag the ENTIRE
+    # catalog as referencing unknown datasets/techniques. Refuse to overwrite
+    # on an implausible collapse; leave the existing registry untouched.
+    _prev_escu = len(prev.get("escu_detections", {}) or {})
+    _prev_attack = len(prev.get("attack_techniques", {}) or {})
+    floor_problems = []
+    if len(escu_index) == 0:
+        floor_problems.append("0 ESCU detections parsed")
+    if len(techniques) == 0:
+        floor_problems.append("0 ATT&CK techniques parsed")
+    if len(cim) == 0:
+        floor_problems.append("0 CIM datasets derived")
+    # Catastrophic drop vs the last good sync (>50%) is almost always upstream
+    # breakage, not a real change.
+    if _prev_escu and len(escu_index) < _prev_escu * 0.5:
+        floor_problems.append(f"ESCU collapsed {_prev_escu}->{len(escu_index)} (>50% drop)")
+    if _prev_attack and len(techniques) < _prev_attack * 0.5:
+        floor_problems.append(f"ATT&CK collapsed {_prev_attack}->{len(techniques)} (>50% drop)")
+    if floor_problems:
+        print("[!] SYNC ABORTED — registry NOT overwritten (likely upstream breakage):")
+        for p in floor_problems:
+            print(f"      - {p}")
+        sys.exit(1)
     REGISTRY_PATH.write_text(json.dumps(registry, indent=2), encoding="utf-8")
     log = {
         "last_sync": registry["synced_at"],

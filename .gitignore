@@ -19,11 +19,22 @@ __pycache__/
 # Article-body fetch cache (re-fetched on demand; never committed)
 intel/.article_cache/
 
+# Last-known-good per-source feed snapshots. Local fallback reused when a
+# source returns 0 entries (transient WAF/5xx/DNS blip) so one flaky feed
+# can't drop the run's totals. Holds full bodies => large; never committed.
+# (The cumulative stats live in intel/uc_archive.json, which IS committed.)
+intel/.feed_cache/
+
 # IOC enrichment cache (ThreatFox / URLhaus lookups, never committed)
 intel/.enrich_cache/
 
 # LLM-generated UC cache (per-article API responses, never committed)
 intel/.llm_uc_cache/
+
+# LLM-generated per-ACTOR UC cache. Same class as .llm_uc_cache — a
+# regenerable API-response cache, never committed. (Was inconsistently
+# tracked; untracked via `git rm --cached` so it stops bloating the repo.)
+intel/.llm_actor_uc_cache/
 
 # Push-failure sentinel written by the scheduler bat files; presence means
 # an automated git push failed and the operator hasn't resolved it yet.

@@ -969,6 +969,120 @@ def _load_kql_knowledge() -> str:
 _KQL_KNOWLEDGE_BLOCK = _load_kql_knowledge()
 
 
+def _parse_knowledge_sections(fname: str) -> dict:
+    """Split a knowledge/*.md file into {anchor_id: section_text} at its
+    `## <anchor-id>` headings. Used to cherry-pick the example queries and
+    table recipes relevant to a specific article without paying for the
+    whole file in every prompt (slim mode dropped kql_examples.md and
+    kql_tables.md wholesale, which silenced the targeted few-shots the
+    prompt-shape validator asserts)."""
+    p = KNOWLEDGE_DIR / fname
+    if not p.exists():
+        return {}
+    try:
+        text = p.read_text(encoding="utf-8")
+    except Exception:
+        return {}
+    sections: dict[str, str] = {}
+    cur_id, cur_lines = None, []
+    for line in text.splitlines():
+        m = re.match(r"^##\s+([A-Za-z0-9_-]+)\s*$", line)
+        if m:
+            if cur_id:
+                sections[cur_id] = "\n".join(cur_lines).rstrip()
+            cur_id, cur_lines = m.group(1), [line]
+        elif cur_id is not None:
+            cur_lines.append(line)
+    if cur_id:
+        sections[cur_id] = "\n".join(cur_lines).rstrip()
+    return sections
+
+
+_KQL_EXAMPLE_SECTIONS = _parse_knowledge_sections("kql_examples.md")
+_KQL_TABLE_SECTIONS = _parse_knowledge_sections("kql_tables.md")
+
+# Article-shape triggers — (keywords, example section ids, table section
+# ids). All-lowercase substring match against title+body. First-match
+# ordering matters only for the caps below; duplicates are de-duped.
+_KQL_KNOWLEDGE_TRIGGERS = [
+    # Phishing / email-borne delivery
+    (("phish", "malicious link", "malicious url", "email lure",
+      "click the link", "clicked", "credential harvest"),
+     ("example-phishing-link-to-process-execution",),
+     ("table-EmailEvents", "table-UrlClickEvents", "table-DeviceProcessEvents")),
+    # Ransomware / shadow-copy destruction
+    (("ransomware", "shadow cop", "vssadmin", "encrypt", "wiper"),
+     ("example-shadow-copy-deletion-prelude-to-ransomware",),
+     ("table-DeviceProcessEvents", "table-DeviceFileEvents")),
+    # Entra ID / AAD sign-in abuse
+    (("entra", "azure ad", "aad ", "sign-in", "signin", "impossible travel",
+      "mfa", "conditional access", "password spray"),
+     ("example-aad-impossible-travel",),
+     ("table-AADSignInEventsBeta", "table-IdentityLogonEvents")),
+    # OAuth / app-consent abuse
+    (("oauth", "consent", "app registration", "service principal"),
+     ("example-aad-app-consent-grant",),
+     ("table-CloudAppEvents",)),
+    # Lateral movement
+    (("psexec", "lateral movement", "paexec", "remcom", "wmiexec",
+      "smbexec", "admin$", "remote service"),
+     ("example-lateral-movement-via-psexec",),
+     ("table-DeviceLogonEvents", "table-DeviceProcessEvents")),
+    # C2 / beaconing / exfil
+    (("c2 ", "command-and-control", "command and control", "beacon",
+      "exfiltrat", "dns tunnel", "callback domain"),
+     (),
+     ("table-DeviceNetworkEvents",)),
+    # Persistence
+    (("registry", "run key", "scheduled task", "persistence",
+      "startup folder", "launch agent"),
+     (),
+     ("table-DeviceRegistryEvents", "table-DeviceProcessEvents")),
+    # Generic malware execution — broad on purpose; DeviceProcessEvents is
+    # the workhorse table and the anti-baseline example generalises well.
+    (("malware", "loader", "dropper", "backdoor", "trojan", "stealer",
+      "implant", "powershell", "rat "),
+     ("example-rare-process-via-process-tree-anti-baseline",),
+     ("table-DeviceProcessEvents",)),
+]
+
+
+def _kql_knowledge_for(article_text: str) -> str:
+    """The KQL knowledge block for ONE article: the slim base
+    (fundamentals + patterns + anti-patterns) plus only the annotated
+    examples and table recipes that match the article's shape. Caps at
+    2 examples + 4 tables (~6-10 KB extra) so the targeted few-shots are
+    back in the prompt without re-paying the full 130 KB corpus that
+    slim mode was introduced to avoid. Full (non-slim) mode already
+    contains every section, so the base is returned unchanged there."""
+    base = _KQL_KNOWLEDGE_BLOCK
+    if not _KNOWLEDGE_SLIM or not (_KQL_EXAMPLE_SECTIONS or _KQL_TABLE_SECTIONS):
+        return base
+    text_l = (article_text or "").lower()
+    ex_ids: list[str] = []
+    tb_ids: list[str] = []
+    for keywords, examples, tables in _KQL_KNOWLEDGE_TRIGGERS:
+        if any(k in text_l for k in keywords):
+            for e in examples:
+                if e not in ex_ids:
+                    ex_ids.append(e)
+            for t in tables:
+                if t not in tb_ids:
+                    tb_ids.append(t)
+    ex_ids = ex_ids[:2]
+    tb_ids = tb_ids[:4]
+    parts = [base]
+    ex_parts = [_KQL_EXAMPLE_SECTIONS[e] for e in ex_ids if e in _KQL_EXAMPLE_SECTIONS]
+    if ex_parts:
+        parts.append("# Annotated examples selected for this article's TTP shape")
+        parts.extend(ex_parts)
+    tb_parts = [_KQL_TABLE_SECTIONS[t] for t in tb_ids if t in _KQL_TABLE_SECTIONS]
+    if tb_parts:
+        parts.append("# Table recipes selected for this article's TTP shape")
+        parts.extend(tb_parts)
+    return "\n\n".join(parts)
+
+
 def _load_datadog_knowledge() -> str:
     """Load knowledge/datadog_fundamentals.md if present — Datadog
     Cloud SIEM log-source / @field.path / query-syntax reference. Same
@@ -1990,11 +2104,16 @@ def load_review_suggestions(max_age_days: int = 7) -> dict[str, list[dict]]:
     except Exception as e:
         print(f"[!] failed to read review suggestions log: {e}")
         return {}
-    # Rewrite the log with only fresh entries, so it self-prunes.
+    # Rewrite the log with only fresh entries, so it self-prunes. Atomic
+    # (temp + os.replace): this file IS committed (run_once stages intel/), so
+    # a crash mid-write would otherwise commit a truncated/corrupt feedback log
+    # and lose the reviewer→generator loop's pending suggestions.
     if kept_lines:
         try:
-            _REVIEW_SUGGESTIONS_PATH.write_text(
-                "\n".join(kept_lines) + "\n", encoding="utf-8")
+            _tmp = _REVIEW_SUGGESTIONS_PATH.with_name(
+                _REVIEW_SUGGESTIONS_PATH.name + ".tmp")
+            _tmp.write_text("\n".join(kept_lines) + "\n", encoding="utf-8")
+            os.replace(_tmp, _REVIEW_SUGGESTIONS_PATH)
         except Exception:
             pass
     else:
@@ -2003,6 +2122,123 @@ def load_review_suggestions(max_age_days: int = 7) -> dict[str, list[dict]]:
         except Exception:
             pass
     return suggestions_by_url
+
+
+# ---------------------------------------------------------------------------
+# Quality-review feedback consumption — closes the reviewer → generator loop.
+#
+# quality_review.py (the off-hour pass) appends UC suggestions to
+# intel/quality_suggestions.jsonl. main() loads them into
+# _REVIEW_SUGGESTIONS_BY_URL and _llm_generate_ucs folds an article's pending
+# suggestions into its prompt. For articles whose UCs are already cached, a
+# bounded number of suggestion-driven regenerations per run
+# (USECASEINTEL_SUGGESTION_REGEN_BUDGET, default 10) re-call the LLM with the
+# reviewer feedback included; the new cache entry is stamped with a digest of
+# the suggestions so identical feedback never triggers a second regen.
+# ---------------------------------------------------------------------------
+import threading as _sugg_threading
+
+_REVIEW_SUGGESTIONS_BY_URL: dict = {}  # article URL -> [suggestion dicts]
+_SUGGESTION_REGEN_BUDGET = max(0, int(os.environ.get(
+    "USECASEINTEL_SUGGESTION_REGEN_BUDGET", "10")))
+# Separate budget for quality-driven regens: cache entries whose stored UCs
+# carry unresolved validation issues (schema/syntax errors attached at
+# generation time after the retry loop ran out). A bounded number per run
+# regenerate with the current prompt + validation retries; each attempt is
+# stamped so an entry that STILL fails after its regen is never retried
+# again under the same cache key (no ping-pong).
+_QUALITY_REGEN_BUDGET = max(0, int(os.environ.get(
+    "USECASEINTEL_QUALITY_REGEN_BUDGET", "5")))
+_SUGGESTION_REGEN_STATE = {"used": 0, "quality_used": 0}
+_SUGGESTION_REGEN_LOCK = _sugg_threading.Lock()
+
+
+def _suggestions_digest(suggestions: list) -> str:
+    """Stable short digest of a suggestion list. Stored in the UC cache
+    entry so a suggestion-driven regen only fires when the reviewer
+    feedback actually changed since the entry was written."""
+    try:
+        blob = __import__("json").dumps(suggestions, sort_keys=True)
+    except Exception:
+        blob = repr(suggestions)
+    return hashlib.sha1(blob.encode("utf-8", "replace")).hexdigest()[:16]
+
+
+def _claim_suggestion_regen() -> bool:
+    """Take one slot from the per-run suggestion-regen budget. Thread-safe —
+    _llm_generate_ucs runs inside the UC ThreadPoolExecutor."""
+    with _SUGGESTION_REGEN_LOCK:
+        if _SUGGESTION_REGEN_STATE["used"] >= _SUGGESTION_REGEN_BUDGET:
+            return False
+        _SUGGESTION_REGEN_STATE["used"] += 1
+        return True
+
+
+def _claim_quality_regen() -> bool:
+    """Take one slot from the per-run quality-regen budget."""
+    with _SUGGESTION_REGEN_LOCK:
+        if _SUGGESTION_REGEN_STATE["quality_used"] >= _QUALITY_REGEN_BUDGET:
+            return False
+        _SUGGESTION_REGEN_STATE["quality_used"] += 1
+        return True
+
+
+_UC_ISSUE_KEYS = (
+    "_field_issues", "_sentinel_field_issues",
+    "_syntax_issues", "_sentinel_syntax_issues",
+    "_spl_issues", "_cwli_issues", "_datadog_issues", "_falcon_issues",
+)
+
+
+def _cache_has_validation_issues(cdata: dict) -> bool:
+    """True when any UC in a cached payload still carries validation
+    issues that were attached at generation time (i.e. the in-call retry
+    loop couldn't fully fix the queries before it ran out of retries)."""
+    for u in (cdata.get("ucs") or []):
+        if isinstance(u, dict) and any(u.get(k) for k in _UC_ISSUE_KEYS):
+            return True
+    return False
+
+
+def _format_review_suggestions_block(suggestions: list) -> str:
+    """Render pending reviewer suggestions as a prompt addendum for the UC
+    generation call. Capped at 5 suggestions to bound token cost."""
+    lines = [
+        "",
+        "",
+        "REVIEWER FEEDBACK — a senior SOC analyst reviewed the detections "
+        "previously generated for this article and suggested the additional "
+        "use cases below. Implement each one that is well-grounded in the "
+        "article body (same JSON schema as the rest of your output). "
+        "Silently skip any suggestion the article cannot support:",
+    ]
+    for n, s in enumerate(suggestions[:5], 1):
+        if not isinstance(s, dict):
+            continue
+        title = str(s.get("title") or "").strip()[:160]
+        if not title:
+            continue
+        lines.append(f"  {n}. {title}")
+        rationale = str(s.get("rationale") or "").strip()[:400]
+        if rationale:
+            lines.append(f"     Why: {rationale}")
+        hypothesis = str(s.get("detection_hypothesis") or "").strip()[:400]
+        if hypothesis:
+            lines.append(f"     Detection hypothesis: {hypothesis}")
+        phase = str(s.get("kill_chain_phase") or "").strip()[:40]
+        if phase:
+            lines.append(f"     Kill-chain phase: {phase}")
+        techs = s.get("techniques") or []
+        if isinstance(techs, list) and techs:
+            lines.append("     Techniques: "
+                         + ", ".join(str(t)[:12] for t in techs[:6]))
+        logs = s.get("log_sources") or []
+        if isinstance(logs, list) and logs:
+            lines.append("     Log sources: "
+                         + ", ".join(str(l)[:40] for l in logs[:6]))
+    if len(lines) <= 3:
+        return ""  # nothing usable survived the caps
+    return "\n".join(lines) + "\n"
 
 
 def write_last_run_articles(articles_meta: list) -> None:
@@ -2972,10 +3208,40 @@ def _llm_generate_ucs(article: dict, ind: dict):
     cache_key = hashlib.sha1(f"{UC_VERSION}|{LLM_UC_MODEL}|{url}".encode("utf-8", "replace")).hexdigest()
     cache_path = LLM_UC_CACHE_DIR / f"{cache_key[:2]}/{cache_key}.json"
     cache_path.parent.mkdir(parents=True, exist_ok=True)
+    # Pending quality-review suggestions for this article (set in main()).
+    # Folded into the prompt on any fresh generation; for an article whose
+    # UCs are already cached, NEW reviewer feedback triggers a regeneration
+    # (bounded per run by _SUGGESTION_REGEN_BUDGET). The cached UCs are kept
+    # as a fallback in case the regen call fails.
+    pending_suggestions = _REVIEW_SUGGESTIONS_BY_URL.get(url) or []
+    sugg_digest = _suggestions_digest(pending_suggestions) if pending_suggestions else ""
+    cached_fallback: list | None = None
+    quality_regen = False
     if cache_path.exists():
         try:
-            data = __import__("json").loads(cache_path.read_text(encoding="utf-8"))
-            return [_uc_from_llm_dict(d) for d in data.get("ucs", []) if d]
+            cdata = __import__("json").loads(cache_path.read_text(encoding="utf-8"))
+            cached_ucs = [_uc_from_llm_dict(d) for d in cdata.get("ucs", []) if d]
+            if (sugg_digest
+                    and cdata.get("_suggestions_digest") != sugg_digest
+                    and (use_oauth or api_key)
+                    and _claim_suggestion_regen()):
+                cached_fallback = cached_ucs
+                print(f"    [REVIEW] new reviewer feedback for this article — "
+                      f"regenerating UCs with {len(pending_suggestions)} suggestion(s)")
+            elif ((use_oauth or api_key)
+                    and not cdata.get("_quality_regen_attempted")
+                    and _cache_has_validation_issues(cdata)
+                    and _claim_quality_regen()):
+                # Cached queries still carry schema/syntax issues from when
+                # they were generated. One fresh pass with the current
+                # prompt + validation-retry loop; cached UCs kept as
+                # fallback if the call fails.
+                cached_fallback = cached_ucs
+                quality_regen = True
+                print("    [QUALITY] cached UCs carry validation issues — "
+                      "regenerating with current prompt")
+            else:
+                return cached_ucs
         except Exception:
             pass
     # ---- Legacy v2 fallback (pre-model-id key: UC_VERSION|url) ----
@@ -2984,7 +3250,7 @@ def _llm_generate_ucs(article: dict, ind: dict):
     # write under the new key only.
     legacy2_key = hashlib.sha1(f"{UC_VERSION}|{url}".encode("utf-8", "replace")).hexdigest()
     legacy2_path = LLM_UC_CACHE_DIR / f"{legacy2_key[:2]}/{legacy2_key}.json"
-    if legacy2_path.exists() and legacy2_path != cache_path:
+    if cached_fallback is None and legacy2_path.exists() and legacy2_path != cache_path:
         try:
             data = __import__("json").loads(legacy2_path.read_text(encoding="utf-8"))
             ucs = [_uc_from_llm_dict(d) for d in data.get("ucs", []) if d]
@@ -3005,7 +3271,7 @@ def _llm_generate_ucs(article: dict, ind: dict):
     # under EITHER key, so legacy UCs aren't redundantly re-generated.
     legacy_key = hashlib.sha1(url.encode("utf-8", "replace")).hexdigest()
     legacy_path = LLM_UC_CACHE_DIR / f"{legacy_key[:2]}/{legacy_key}.json"
-    if legacy_path.exists() and legacy_path != cache_path:
+    if cached_fallback is None and legacy_path.exists() and legacy_path != cache_path:
         try:
             data = __import__("json").loads(legacy_path.read_text(encoding="utf-8"))
             ucs = [_uc_from_llm_dict(d) for d in data.get("ucs", []) if d]
@@ -3021,16 +3287,25 @@ def _llm_generate_ucs(article: dict, ind: dict):
     # comprehensive corpus review; default-on filter saves tokens on
     # opinion / recap / webinar pieces.
     skip_filter = os.environ.get("USECASEINTEL_LLM_SKIP_FILTER", "").lower() in ("1", "true", "yes")
-    if not skip_filter and not _llm_should_process(article, ind):
+    # A suggestion-driven regen means the article already produced cached
+    # UCs once, so it has proven processable — don't re-apply the filter.
+    if not skip_filter and cached_fallback is None and not _llm_should_process(article, ind):
         return []
     body = (article.get("raw_body") or "")[:LLM_UC_MAX_BODY_CHARS]
     if len(body) < 200:
-        return []  # not enough content for the LLM to ground on
+        # Not enough content for the LLM to ground on. If this was a
+        # claimed regen (article previously produced cached UCs but its
+        # body re-fetched as a stub this run), keep serving the cache.
+        return cached_fallback or []
     ioc_summary = []
+    # 20 per type (was 8) — IOC-heavy advisories routinely name 10-20
+    # hashes/domains, and a truncated list directly thins the IOC-match
+    # queries the LLM emits. ~20 extra IOCs ≈ a few hundred tokens, noise
+    # next to the schema blocks already in the prompt.
     for k, label in [("cves","CVEs"),("ips","IPs"),("domains","Domains"),
                      ("sha256","SHA256"),("sha1","SHA1"),("md5","MD5")]:
         if ind.get(k):
-            ioc_summary.append(f"  {label}: {', '.join(ind[k][:8])}")
+            ioc_summary.append(f"  {label}: {', '.join(ind[k][:20])}")
     # In-article images — the LLM can WebFetch any that look like screenshots
     # or diagrams. Capped at 5 by the extractor; we list them numbered so
     # the model can reference them in `rationale`.
@@ -3088,10 +3363,15 @@ def _llm_generate_ucs(article: dict, ind: dict):
               .replace("<<DEFENDER_SCHEMA>>", _platform_block("defender", _DEFENDER_SCHEMA_BLOCK))
               .replace("<<SENTINEL_SCHEMA>>", _platform_block("sentinel", _SENTINEL_SCHEMA_BLOCK))
               .replace("<<KQL_KNOWLEDGE>>",
-                       _KQL_KNOWLEDGE_BLOCK if ({"sentinel","defender"} & _UC_PLATFORMS) else "")
+                       _kql_knowledge_for(f"{article.get('title', '')}\n{body}")
+                       if ({"sentinel","defender"} & _UC_PLATFORMS) else "")
               .replace("<<DATADOG_SCHEMA>>", _platform_block("datadog", _DATADOG_KNOWLEDGE_BLOCK))
               .replace("<<FALCON_SCHEMA>>", _platform_block("falcon", _FALCON_KNOWLEDGE_BLOCK))
               .replace("<<CLOUDWATCH_SCHEMA>>", _platform_block("cloudwatch", _CLOUDWATCH_KNOWLEDGE_BLOCK)))
+    # Fold any pending quality-review suggestions for this article into the
+    # prompt — closes the reviewer → generator feedback loop.
+    if pending_suggestions:
+        prompt += _format_review_suggestions_block(pending_suggestions)
     # Phase 3b: skip the WebSearch/WebFetch tool definitions when the article
     # already carries hard IOC signals — CVEs, IPs, domains, or file hashes.
     # In that case the body has enough grounding to generate UCs without a
@@ -3129,9 +3409,10 @@ def _llm_generate_ucs(article: dict, ind: dict):
             raw = _llm_call_via_api_key(prompt_to_send, api_key)
         if raw is None:
             # LLM unavailable. If we already have data from a prior attempt,
-            # ship that — better partial than nothing. Otherwise give up.
+            # ship that — better partial than nothing. A failed suggestion-
+            # driven regen falls back to the cached UCs it tried to improve.
             if data is None:
-                return []
+                return cached_fallback or []
             break
         raw = raw.strip()
         if raw.startswith("```"):
@@ -3160,7 +3441,7 @@ def _llm_generate_ucs(article: dict, ind: dict):
                         )
                         continue
                     print(f"    [!] LLM output JSON-parse failed: {str(e)[:80]}")
-                    return [] if data is None else [_uc_from_llm_dict(d) for d in (data.get("ucs") or []) if d]
+                    return (cached_fallback or []) if data is None else [_uc_from_llm_dict(d) for d in (data.get("ucs") or []) if d]
             else:
                 if attempt < _UC_MAX_VALIDATION_RETRIES and data is None:
                     print(f"    [!] LLM output had no JSON block (attempt {attempt+1}) — retrying")
@@ -3172,7 +3453,7 @@ def _llm_generate_ucs(article: dict, ind: dict):
                     )
                     continue
                 print(f"    [!] LLM output had no JSON block: {raw[:80]!r}")
-                return [] if data is None else [_uc_from_llm_dict(d) for d in (data.get("ucs") or []) if d]
+                return (cached_fallback or []) if data is None else [_uc_from_llm_dict(d) for d in (data.get("ucs") or []) if d]
         data = parsed
         ucs_list = data.get("ucs") if isinstance(data, dict) else None
         if not ucs_list:
@@ -3233,7 +3514,7 @@ def _llm_generate_ucs(article: dict, ind: dict):
         prompt_to_send = prompt + "\n\n" + error_text
 
     if data is None or not isinstance(data, dict):
-        return []
+        return cached_fallback or []
 
     # Final tally for the log line — uses the issue keys attached during the
     # last successful validation pass.
@@ -3290,6 +3571,13 @@ def _llm_generate_ucs(article: dict, ind: dict):
     data["_image_count"]   = len(image_urls)
     data["_analyzed_at"]   = dt.datetime.now(dt.timezone.utc).isoformat()
     data["_retries_used"]  = retries_used
+    # Digest of the reviewer suggestions folded into this generation — a
+    # suggestion-driven regen only re-fires when the feedback changes.
+    data["_suggestions_digest"] = sugg_digest
+    # A quality regen gets exactly one shot per cache key — if the fresh
+    # generation STILL has issues, don't burn budget on it again.
+    if quality_regen:
+        data["_quality_regen_attempted"] = True
     cache_path.write_text(json_lib.dumps(data, indent=2), encoding="utf-8")
     return [_uc_from_llm_dict(d) for d in (data.get("ucs") or []) if d]
 
@@ -3598,7 +3886,8 @@ def _llm_generate_actor_ucs(actor: dict):
               .replace("<<DEFENDER_SCHEMA>>", _platform_block("defender", _DEFENDER_SCHEMA_BLOCK))
               .replace("<<SENTINEL_SCHEMA>>", _platform_block("sentinel", _SENTINEL_SCHEMA_BLOCK))
               .replace("<<KQL_KNOWLEDGE>>",
-                       _KQL_KNOWLEDGE_BLOCK if ({"sentinel","defender"} & _UC_PLATFORMS) else "")
+                       _kql_knowledge_for(f"{name}\n{description or ''}")
+                       if ({"sentinel","defender"} & _UC_PLATFORMS) else "")
               .replace("<<DATADOG_SCHEMA>>", _platform_block("datadog", _DATADOG_KNOWLEDGE_BLOCK))
               .replace("<<FALCON_SCHEMA>>", _platform_block("falcon", _FALCON_KNOWLEDGE_BLOCK))
               .replace("<<CLOUDWATCH_SCHEMA>>", _platform_block("cloudwatch", _CLOUDWATCH_KNOWLEDGE_BLOCK)))
@@ -3999,6 +4288,64 @@ def _make_bespoke_uc(article_title: str, mechanics: dict, ind: dict):
 
 
 # =============================================================================
+# Defender KQL → Sentinel KQL mechanical derivation
+# =============================================================================
+
+# Defender XDR advanced-hunting tables that do NOT stream into Sentinel
+# through the Microsoft 365 Defender data connector. A query touching any
+# of these has no mechanical Sentinel equivalent — leave sentinel_kql empty
+# rather than ship a query that errors on every Sentinel workspace.
+_SENTINEL_NON_STREAMABLE_RE = re.compile(
+    r"\b(?:DeviceTvm\w*|AADSignInEventsBeta|AADSpnSignInEventsBeta|"
+    r"BehaviorEntities|BehaviorInfo|ExposureGraph\w*|"
+    r"DeviceBaselineCompliance\w*)\b"
+    # Defender-only enrichment functions — exist in advanced hunting but
+    # not in Sentinel/Log Analytics, so a query calling them can't be
+    # mechanically translated either.
+    r"|\b(?:FileProfile|DeviceFromIP|AssignedIPAddresses|SeenBy)\s*\(")
+
+# Tables the M365 Defender connector DOES stream into Sentinel (schema is
+# identical apart from Timestamp → TimeGenerated). Only derive when the
+# query clearly targets at least one of these — anything else (Sentinel-
+# native tables, custom tables, watchlists) is the LLM path's job.
+_SENTINEL_STREAMABLE_RE = re.compile(
+    r"\b(?:Device(?:Events|ProcessEvents|NetworkEvents|FileEvents|"
+    r"RegistryEvents|LogonEvents|ImageLoadEvents|Info|NetworkInfo|"
+    r"FileCertificateInfo)|Email(?:Events|AttachmentInfo|UrlInfo|"
+    r"PostDeliveryEvents)|Identity(?:LogonEvents|QueryEvents|"
+    r"DirectoryEvents)|CloudAppEvents|UrlClickEvents|AlertInfo|"
+    r"AlertEvidence)\b")
+
+
+def _derive_sentinel_kql(defender_kql: str) -> str:
+    """Mechanically translate a Defender XDR advanced-hunting query into
+    its Microsoft Sentinel equivalent. The M365 Defender connector
+    mirrors the advanced-hunting tables into Sentinel with the same
+    columns, except the event time column is TimeGenerated instead of
+    Timestamp. Returns "" when the query touches a table that doesn't
+    stream (so we never ship a broken Sentinel variant) or doesn't
+    reference a recognised streamable table at all.
+
+    Used by UseCase.__post_init__ to backfill sentinel_kql on template
+    and bespoke UCs (which historically only emitted SPL + Defender KQL)
+    and on LLM UCs whose sentinel_kql came back empty."""
+    q = (defender_kql or "").strip()
+    if not q:
+        return ""
+    if _SENTINEL_NON_STREAMABLE_RE.search(q):
+        return ""
+    if not _SENTINEL_STREAMABLE_RE.search(q):
+        return ""
+    derived = re.sub(r"\bTimestamp\b", "TimeGenerated", q)
+    return (
+        "// Microsoft Sentinel — auto-derived from the Defender XDR hunt.\n"
+        "// Requires the Microsoft 365 Defender data connector (streams the\n"
+        "// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).\n"
+        + derived
+    )
+
+
+# =============================================================================
 # Cyber Kill Chain (Lockheed Martin) phases
 # =============================================================================
 
@@ -4115,6 +4462,16 @@ class UseCase:
         # runs at instantiation time, not class-definition time.
         if (self.splunk_spl or "").strip() and not self.splunk_category:
             self.splunk_category = _classify_splunk_uc(self)
+        # Auto-derive a Sentinel variant for any UC that ships Defender
+        # KQL but no Sentinel KQL — template and bespoke UCs historically
+        # emitted SPL + Defender only, and LLM UCs sometimes leave
+        # sentinel_kql empty even when the detection runs unchanged on
+        # the M365 Defender connector tables. _derive_sentinel_kql
+        # returns "" (no Sentinel variant) when the query touches a
+        # table that doesn't stream to Sentinel (e.g. DeviceTvm*), so a
+        # broken variant is never shipped.
+        if not (self.sentinel_kql or "").strip() and (self.defender_kql or "").strip():
+            self.sentinel_kql = _derive_sentinel_kql(self.defender_kql)
 
 
 def _classify_splunk_uc(uc) -> str:
@@ -4242,7 +4599,10 @@ def _load_uc_from_yaml(path):
     doc = _yaml.safe_load(path.read_text(encoding="utf-8"))
     if not doc or not isinstance(doc, dict):
         return None
-    impls = doc.get("implementations") or []
+    # Set, not list — the back-compat branches below call impls.add(),
+    # which raised AttributeError for any YAML that carried a platform
+    # query without the matching `implementations` entry.
+    impls = set(doc.get("implementations") or [])
     dms = doc.get("data_models") or {}
     splunk_dms = dms.get("splunk") or []
     defender_tables = dms.get("defender") or []
@@ -4292,6 +4652,13 @@ def _load_uc_from_yaml(path):
     req_telemetry = doc.get("required_telemetry") or []
     if not isinstance(req_telemetry, list):
         req_telemetry = [str(req_telemetry)]
+    # Phase 1C analyst fields — optional in YAML (older files don't carry
+    # them); the weekly synthesis emits them so alert-grade UCs ship with
+    # runbooks and known-FP guidance like the per-article LLM UCs do.
+    kc_phase = (doc.get("kill_chain_phase") or "").strip().lower()
+    fp_scenarios = doc.get("expected_fp_scenarios") or []
+    if not isinstance(fp_scenarios, list):
+        fp_scenarios = [str(fp_scenarios)]
     return UseCase(
         title=doc.get("title", ""),
         description=(doc.get("description") or "").strip(),
@@ -4309,6 +4676,10 @@ def _load_uc_from_yaml(path):
         tier=tier,
         fp_rate_estimate=fp_rate,
         required_telemetry=[str(t) for t in req_telemetry],
+        kill_chain_phase=kc_phase,
+        expected_fp_scenarios=[str(s).strip()[:300] for s in fp_scenarios if s][:6],
+        response_runbook=str(doc.get("response_runbook") or "").strip()[:1000],
+        false_positive_filters=str(doc.get("false_positive_filters") or "").strip()[:1000],
     )
 
 
@@ -11805,7 +12176,7 @@ function _libPrepare() {
     if (!title) return;
     const queries = {};
     d.querySelectorAll('.tab-content').forEach(tc => {
-      const m = (tc.id || '').match(/-(kql|sentinel|sigma|datadog|falcon|spl)$/);
+      const m = (tc.id || '').match(/-(kql|sentinel|sigma|datadog|falcon|cloudwatch|spl)$/);
       if (!m) return;
       const codeEl = tc.querySelector('pre code');
       const txt = (codeEl ? codeEl.textContent : '').trim();
@@ -11829,12 +12200,13 @@ function _libPrepare() {
     // 1=Sentinel (s/-), 2=Sigma (g/-), 3=Splunk (p/-), 4=Datadog (D/-).
     const pl = uc.pl || '';
     const plats = {
-      def:     pl.charAt(0) === 'd',
-      sent:    pl.charAt(1) === 's',
-      sigma:   pl.charAt(2) === 'g',
-      spl:     pl.charAt(3) === 'p',
-      datadog: pl.charAt(4) === 'D',
-      falcon:  pl.charAt(5) === 'F',
+      def:        pl.charAt(0) === 'd',
+      sent:       pl.charAt(1) === 's',
+      sigma:      pl.charAt(2) === 'g',
+      spl:        pl.charAt(3) === 'p',
+      datadog:    pl.charAt(4) === 'D',
+      falcon:     pl.charAt(5) === 'F',
+      cloudwatch: pl.charAt(6) === 'c',
     };
     const queries = ucDom.get(uc.t)?.queries || {};
     const apps = _libExtractApps(uc.t + ' ' + (uc.n || ''));
@@ -11851,7 +12223,7 @@ function _libPrepare() {
 
     const probability   = Math.min(100, Math.round(Math.log2(1 + ucArts.length) * 22));
     const impact        = ({0:20, 1:35, 2:55, 3:80, 4:100})[maxSev] ?? 30;
-    const platformCount = ['def','sent','sigma','spl','datadog','falcon'].filter(k => plats[k]).length;
+    const platformCount = ['def','sent','sigma','spl','datadog','falcon','cloudwatch'].filter(k => plats[k]).length;
     const detectability = Math.round((platformCount / 6) * 100);
     const queryLines = Object.values(queries).reduce((s, q) => s + q.split('\\n').length, 0) || 18;
     const effort = Math.max(20, Math.min(100, 110 - Math.round(queryLines * 1.6)));
@@ -12154,11 +12526,52 @@ document.addEventListener('click', e => {
   if (p) openLibraryDrawer(p);
 });
 
+// Lazy query-store fetch — data/uc_queries-NNN.json shards written at
+// build time carry the query bodies for EVERY matrix UC (internal,
+// ESCU, article-bespoke), so the drawer no longer depends on the UC
+// having a rendered article card in the DOM.
+const __ucQueryShardP = {};
+function _libFetchQueries(p) {
+  const shards = (__MANIFEST__ && __MANIFEST__.ucQueryShards) || [];
+  const size = (__MANIFEST__ && __MANIFEST__.ucQueryShardSize) || 250;
+  const s = Math.floor((p.uc.i || 0) / size);
+  if (!shards[s]) return Promise.resolve(false);
+  if (!__ucQueryShardP[s]) {
+    __ucQueryShardP[s] = fetch(shards[s])
+      .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .catch(e => { console.error('[ucQueries] shard', s, e); __ucQueryShardP[s] = null; return null; });
+  }
+  return __ucQueryShardP[s].then(store => {
+    const q = store && store[String(p.uc.i)];
+    if (!q) return false;
+    // DOM-scraped queries win (they're IOC-parameterised per article);
+    // the store fills everything else.
+    p.queries = Object.assign({}, q, p.queries || {});
+    return true;
+  });
+}
+
 function openLibraryDrawer(p) {
   const drawer = document.getElementById('libDrawer');
   const content = document.getElementById('libDrawerContent');
   if (!drawer || !content) return;
   content.innerHTML = _libDetailHtml(p);
+  drawer.dataset.ucIdx = String(p._idx);
+  // No queries from the DOM scrape? Pull them from the build-time store
+  // and re-render in place (guarding against the user having moved on
+  // to a different UC while the shard was in flight).
+  if (!Object.keys(p.queries || {}).length) {
+    _libFetchQueries(p).then(found => {
+      if (drawer.dataset.ucIdx !== String(p._idx)) return;
+      if (found) {
+        content.innerHTML = _libDetailHtml(p);
+      } else {
+        const pending = content.querySelector('.lib-queries-pending');
+        if (pending) pending.textContent =
+          'No query bodies are available for this entry yet — open one of the sightings below to view them on the article card.';
+      }
+    });
+  }
   drawer.removeAttribute('hidden');
   requestAnimationFrame(() => drawer.classList.add('open'));
   drawer.scrollTop = 0;
@@ -12250,9 +12663,9 @@ function _libDetailHtml(p) {
   const sevTag = `<span class="lib-tag sev-${p.sevTag}">${p.sevTag.toUpperCase()}</span>`;
   const tierTag = p.uc.tier ? `<span class="lib-tag tier">${escapeHtml(p.uc.tier)}</span>` : '';
   const phaseTag = p.uc.ph ? `<span class="lib-tag">${escapeHtml(p.uc.ph)}</span>` : '';
-  const platTags = ['def','sent','sigma','spl','datadog','falcon'].filter(k => p.plats[k]).map(k => {
-    const cls = {def:'platform-d', sent:'platform-s', sigma:'platform-z', spl:'platform-p', datadog:'platform-dd', falcon:'platform-cs'}[k];
-    const lbl = {def:'Defender KQL', sent:'Sentinel KQL', sigma:'Sigma', spl:'Splunk SPL', datadog:'Datadog', falcon:'Falcon LogScale'}[k];
+  const platTags = ['def','sent','sigma','spl','datadog','falcon','cloudwatch'].filter(k => p.plats[k]).map(k => {
+    const cls = {def:'platform-d', sent:'platform-s', sigma:'platform-z', spl:'platform-p', datadog:'platform-dd', falcon:'platform-cs', cloudwatch:'platform-cw'}[k];
+    const lbl = {def:'Defender KQL', sent:'Sentinel KQL', sigma:'Sigma', spl:'Splunk SPL', datadog:'Datadog', falcon:'Falcon LogScale', cloudwatch:'CloudWatch'}[k];
     return `<span class="lib-tag ${cls}">${escapeHtml(lbl)}</span>`;
   }).join('');
 
@@ -12284,14 +12697,14 @@ function _libDetailHtml(p) {
     return `Detects activity matching ${escapeHtml(descLine)}. Maps to ${tCount} MITRE technique${tCount === 1 ? '' : 's'} across ${phaseLabel}; tuned for ${p.uc.tier === 'alerting' ? 'alert-grade fidelity' : 'analyst hunting'}.`;
   })();
 
-  const platOrder = ['def','sent','sigma','spl','datadog','falcon'];
+  const platOrder = ['def','sent','sigma','spl','datadog','falcon','cloudwatch'];
   const havePlats = platOrder.filter(k => p.queries[k]);
   const queryTabs = havePlats.length ? havePlats.map((k, i) => {
-    const lbl = {def:'Defender KQL', sent:'Sentinel KQL', sigma:'Sigma', spl:'Splunk SPL', datadog:'Datadog', falcon:'Falcon LogScale'}[k];
+    const lbl = {def:'Defender KQL', sent:'Sentinel KQL', sigma:'Sigma', spl:'Splunk SPL', datadog:'Datadog', falcon:'Falcon LogScale', cloudwatch:'CloudWatch'}[k];
     return `<button class="lib-query-tab ${i === 0 ? 'on' : ''}" data-platform="${k}">${lbl}</button>`;
   }).join('') : '';
   const queryPanes = havePlats.length ? havePlats.map((k, i) => {
-    const meta = ({def:'Microsoft Defender Advanced Hunting · KQL', sent:'Microsoft Sentinel · KQL', sigma:'Sigma rule (compiles to KQL/SPL/Lucene at build)', spl:'Splunk SPL', datadog:'Datadog Cloud SIEM · logs query', falcon:'CrowdStrike Falcon LogScale · NG-SIEM / Humio'}[k]);
+    const meta = ({def:'Microsoft Defender Advanced Hunting · KQL', sent:'Microsoft Sentinel · KQL', sigma:'Sigma rule (compiles to KQL/SPL/Lucene at build)', spl:'Splunk SPL', datadog:'Datadog Cloud SIEM · logs query', falcon:'CrowdStrike Falcon LogScale · NG-SIEM / Humio', cloudwatch:'AWS CloudWatch Logs Insights'}[k]);
     const body = p.queries[k] || '';
     // Splunk gets the same Summarised / Non-summarised toggle the article
     // cards have when the query has a tstats acceleration form. Computed
@@ -12321,7 +12734,7 @@ function _libDetailHtml(p) {
       </div>
       ${inner}
     </div>`;
-  }).join('') : `<div class="lib-section-body" style="color:var(--muted);">Queries for this UC live on the original article cards in the <b>Articles</b> tab — open one of the sightings below to see them inline. (We're working on extracting them into the library directly.)</div>`;
+  }).join('') : `<div class="lib-section-body lib-queries-pending" style="color:var(--muted);">Loading detection logic from the query store…</div>`;
 
   const tablesFound = new Set();
   const KQL_TABLES = /(\\b(?:Device(?:ProcessEvents|FileEvents|NetworkEvents|RegistryEvents|ImageLoadEvents|LogonEvents|EmailEvents|EmailUrlInfo|EmailAttachmentInfo)|SecurityEvent|SigninLogs|AuditLogs|OfficeActivity|CloudAppEvents|IdentityLogonEvents|ThreatIntelligenceIndicator)\\b)/g;
@@ -15563,6 +15976,33 @@ TARGET_DISPLAY: list[tuple] = [
 ]
 
 
+# Per-UC query bodies keyed by matrix UC index. Populated by
+# build_matrix_data alongside uc_records; written out as sharded
+# data/uc_queries-NNN.json files the Detection Library drawer lazy-fetches.
+# This is what guarantees EVERY library entry — internal template, ESCU
+# reference detection, article-bespoke LLM UC — can show its actual
+# detection logic, instead of relying on scraping whichever article cards
+# happen to be in the DOM (which left most of the library queryless).
+_MATRIX_QUERY_STORE: dict = {}
+_UC_QUERY_SHARD_SIZE = 250
+
+
+def _store_uc_queries(idx: int, uc) -> None:
+    """Record a UseCase's query bodies in the matrix query store, keyed the
+    same way the drawer's platform panes are (def/sent/sigma/spl/...)."""
+    q = {}
+    for key, attr in (("def", "defender_kql"), ("sent", "sentinel_kql"),
+                      ("sigma", "sigma_yaml"), ("spl", "splunk_spl"),
+                      ("datadog", "datadog_query"),
+                      ("falcon", "falcon_logscale_query"),
+                      ("cloudwatch", "cloudwatch_query")):
+        body = (getattr(uc, attr, "") or "").strip()
+        if body:
+            q[key] = body[:8000]
+    if q:
+        _MATRIX_QUERY_STORE[idx] = q
+
+
 def build_matrix_data(articles_meta):
     """
     Build the compact data structure embedded into the matrix view.
@@ -15657,10 +16097,12 @@ def build_matrix_data(articles_meta):
     tech_ucs = {}     # tid -> [uc_idx]
     tech_arts = {}    # tid -> [art_idx]
     seen_uc_ids = {}
+    _MATRIX_QUERY_STORE.clear()
 
     for name, uc in all_use_cases:
         idx = len(uc_records)
         seen_uc_ids[name] = idx
+        _store_uc_queries(idx, uc)
         uc_techs = [t for t, _ in uc.techniques]
         # Platform coverage — `pl` is a 5-char string flagging which
         # platform queries this UC ships. Position 0=Defender (d/-),
@@ -15733,6 +16175,12 @@ def build_matrix_data(articles_meta):
         # Run target inference on the ESCU search body so e.g. cloudtrail
         # ESCU detections light up the AWS pill instead of staying generic.
         escu_tg = _infer_uc_targets({"splunk_spl": det.get("search") or ""})
+        escu_search = (det.get("search") or "").strip()
+        if not escu_search:
+            # A library entry with no detection logic is worse than no
+            # entry — skip ESCU stubs that carry no search body.
+            continue
+        _MATRIX_QUERY_STORE[idx] = {"spl": escu_search[:8000]}
         uc_records.append({
             "i": idx,
             "n": det_id[:36],
@@ -15822,6 +16270,7 @@ def build_matrix_data(articles_meta):
             # Bespoke UC — fresh entry with the same shape as internal UCs.
             idx = len(uc_records)
             seen_uc_ids[uc_var] = idx
+            _store_uc_queries(idx, uc)
             uc_techs = [t for t, _ in uc.techniques]
             pl = "".join([
                 "d" if uc.defender_kql else "-",
@@ -15830,6 +16279,9 @@ def build_matrix_data(articles_meta):
                 "p" if uc.splunk_spl else "-",
                 "D" if getattr(uc, "datadog_query", "") else "-",
                 "F" if getattr(uc, "falcon_logscale_query", "") else "-",
+                # Position 6 = CloudWatch — was missing here, so bespoke
+                # records carried a 6-char pl while internal/ESCU carried 7.
+                "c" if getattr(uc, "cloudwatch_query", "") else "-",
             ])
             uc_records.append({
                 "i": idx,
@@ -16387,17 +16839,17 @@ def _write_rule_packs(generated_iso):
     splunk_dir = rp_dir / "splunk"; splunk_dir.mkdir(exist_ok=True)
     sentinel_dir = rp_dir / "sentinel"; sentinel_dir.mkdir(exist_ok=True)
     sigma_dir = rp_dir / "sigma"; sigma_dir.mkdir(exist_ok=True)
-    # Clean up the legacy Elastic stub rules (placeholder queries marked
-    # "translation TODO") — see the comment at the former emission site.
-    elastic_dir = rp_dir / "elastic"
-    if elastic_dir.exists():
-        try:
-            for _stale in elastic_dir.glob("*.json"):
-                _stale.unlink()
-            elastic_dir.rmdir()
-            print("[*] Removed legacy Elastic stub rules from rule_packs/")
-        except OSError:
-            pass
+    # Elastic rules are compiled from each UC's Sigma rule via pySigma's
+    # elasticsearch backend (real query logic, not the legacy "translation
+    # TODO" stubs that this exporter used to ship and then removed). If the
+    # backend isn't installed the export is skipped cleanly.
+    elastic_dir = rp_dir / "elastic"; elastic_dir.mkdir(exist_ok=True)
+    try:
+        from sigma_export import compile_sigma as _compile_sigma
+    except Exception:
+        _compile_sigma = None
+    elastic_ok = 0
+    elastic_fail = 0
 
     splunk_lines = [
         "# Splunk savedsearches.conf — auto-generated by usecaseintel",
@@ -16482,20 +16934,45 @@ def _write_rule_packs(generated_iso):
             (sentinel_dir / f"{uc_id}.json").write_text(
                 json_lib.dumps(sentinel_rule, indent=2), encoding="utf-8")
 
-        # ---- Elastic detection rule: intentionally NOT emitted ----
-        # The previous exporter wrote stub rules whose query was the
-        # placeholder `event.action:* AND _exists_:host.name` — a rule
-        # that matches EVERYTHING if someone enables it, marked
-        # "translation TODO". Shipping a broken artifact is worse for
-        # credibility than shipping none: Elastic users got nothing
-        # usable AND the repo looked careless. The export returns when
-        # the KQL->ECS/EQL port is real. (Sigma rules below compile to
-        # Elastic dialects via sigma-cli in the meantime.)
-
         # ---- Sigma rule (universal interchange) ----
         sigma_yaml = _emit_sigma(uc_id, uc, tier)
         if sigma_yaml:
             (sigma_dir / f"{uc_id}.yml").write_text(sigma_yaml, encoding="utf-8")
+
+        # ---- Elastic detection rule (compiled from the Sigma rule) ----
+        # Real translated query logic via pySigma's elasticsearch backend —
+        # same detection as the Sigma rule, rendered as a Lucene query in a
+        # Kibana Security detection-rule payload. Disabled by default like
+        # every other export; keyword-seeded hunting logic, tune first.
+        if sigma_yaml and _compile_sigma is not None:
+            elastic_query, _el_err = _compile_sigma(sigma_yaml, "elastic")
+            if elastic_query:
+                elastic_rule = {
+                    "rule_id": f"usecaseintel-{uc_id}",
+                    "name": uc.title,
+                    "description": (uc.description or uc.title).splitlines()[0],
+                    "type": "query",
+                    "language": "lucene",
+                    "query": elastic_query.strip(),
+                    "index": ["logs-*", "winlogbeat-*", "logs-endpoint.events.*"],
+                    "enabled": False,  # ALWAYS off until reviewed
+                    "risk_score": 73 if tier == "alerting" else 21,
+                    "severity": "high" if tier == "alerting" else "low",
+                    "interval": "1h" if tier == "alerting" else "24h",
+                    "from": "now-25h",
+                    "tags": ([f"usecaseintel.tier.{tier}",
+                              f"usecaseintel.kill_chain.{uc.kill_chain}"]
+                             + [f"attack.{t}" for t, _ in uc.techniques]),
+                    "references": [f"https://clankerusecase.com/use_cases/{uc.kill_chain}/{uc_id}.yml"],
+                    "note": ("Auto-compiled from this UC's Sigma rule via pySigma "
+                             "(elasticsearch backend). Keyword-seeded hunting logic — "
+                             "review and tune before enabling."),
+                }
+                (elastic_dir / f"{uc_id}.json").write_text(
+                    json_lib.dumps(elastic_rule, indent=2), encoding="utf-8")
+                elastic_ok += 1
+            else:
+                elastic_fail += 1
 
     (splunk_dir / "savedsearches.conf").write_text("\n".join(splunk_lines), encoding="utf-8")
 
@@ -16512,11 +16989,8 @@ default** — review each rule against your environment before enabling.
 |---|---|---|
 | `splunk/savedsearches.conf` | Splunk app config | Stanzas with full SPL embedded as comments. Enable per environment. |
 | `sentinel/<uc>.json` | ARM template | Microsoft Sentinel analytics rule. Deploy with `az deployment group create`. |
-| `sigma/<uc>.yml` | Sigma | Universal interchange — convert with sigma-cli to your SIEM dialect (incl. Elastic). |
-
-Elastic-native rules are not exported yet — a previous version shipped
-placeholder stubs, which was worse than nothing. Until the KQL->ECS/EQL
-port lands, compile the Sigma rules to your Elastic dialect via sigma-cli.
+| `sigma/<uc>.yml` | Sigma | Universal interchange — convert with sigma-cli to your SIEM dialect. |
+| `elastic/<uc>.json` | Kibana detection rule | Lucene query compiled from the Sigma rule via pySigma. Keyword-seeded hunting logic — tune before enabling. |
 
 Tier-aware defaults:
 - `alerting` UCs schedule hourly, severity High
@@ -16525,7 +16999,11 @@ Tier-aware defaults:
 All exports include `tier`, `fp_rate_estimate`, `mitre_attack` annotations.
 """
     (rp_dir / "README.md").write_text(readme, encoding="utf-8")
-    print(f"[*] Rule packs: {len(_LOADED_UCS)} UCs  ->  rule_packs/{{splunk,sentinel,sigma}}/")
+    elastic_note = (f", elastic {elastic_ok} compiled"
+                    + (f" / {elastic_fail} failed" if elastic_fail else "")
+                    if _compile_sigma is not None else ", elastic skipped (pysigma missing)")
+    print(f"[*] Rule packs: {len(_LOADED_UCS)} UCs  ->  "
+          f"rule_packs/{{splunk,sentinel,sigma,elastic}}/{elastic_note}")
 
 
 def _emit_sigma(uc_id, uc, tier):
@@ -16542,11 +17020,18 @@ def _emit_sigma(uc_id, uc, tier):
     tokens = list(dict.fromkeys(tokens))[:25]
     if not tokens:
         return ""
+    # Sigma spec: `id` MUST be a UUID — pysigma (and most downstream
+    # tooling) hard-fails on anything else, which made every exported rule
+    # uncompilable. uuid5 keeps the id deterministic per UC so re-runs
+    # don't churn git. The human-readable UC id stays in `references`.
+    _uuid = __import__("uuid")
+    rule_uuid = _uuid.uuid5(_uuid.NAMESPACE_URL, f"clankerusecase.com/{uc_id}")
+    _jq = __import__("json").dumps  # JSON string quoting is valid YAML
     yaml_lines = [
-        f"title: {uc.title}",
-        f"id: {uc_id}",
+        f"title: {_jq(uc.title)}",
+        f"id: {rule_uuid}",
         f"status: experimental",
-        f"description: {(uc.description or uc.title).splitlines()[0]}",
+        f"description: {_jq((uc.description or uc.title).splitlines()[0])}",
         f"references:",
         f"  - https://clankerusecase.com/use_cases/{uc.kill_chain}/{uc_id}.yml",
         f"author: usecaseintel auto-generator",
@@ -18220,6 +18705,220 @@ FETCH_USER_AGENT = (
     "+https://clankerusecase.com/) IOC-extractor"
 )
 
+# =====================================================================
+# Cumulative use-case archive  (front-page "never decreases" fix)
+# ---------------------------------------------------------------------
+# The headline stats (Articles / Detections Mapped / ATT&CK / CVEs /
+# Critical) were a STATELESS sum over whatever the live feeds happened
+# to return this run. A single feed hiccuping (one source returning a
+# few fewer items, or a transient 0) dropped every front-page number,
+# and because nothing was persisted the count could never grow past the
+# current feed snapshot — exactly the "over 4k one day, under it the
+# next, never increases" symptom.
+#
+# This archive persists per-article stats keyed by a URL hash and the
+# headline numbers are computed from the UNION of every article ever
+# seen. Per-article values are kept at their high-water mark (max UCs,
+# union of techniques/CVEs, highest severity), so the five front-page
+# totals are monotonic non-decreasing: a transient dip can no longer
+# lower them, and genuinely new articles push them up.
+#
+# The file is committed (intel/ is part of the public export), so the
+# high-water mark survives across scheduled runs and machines. Set
+# USECASEINTEL_CUMULATIVE_STATS=0 to fall back to the old per-run sum.
+UC_ARCHIVE_PATH = Path(__file__).parent / "intel" / "uc_archive.json"
+_CUMULATIVE_STATS = os.environ.get(
+    "USECASEINTEL_CUMULATIVE_STATS", "1") not in ("0", "false", "no", "")
+_SEV_RANK = {"low": 0, "med": 1, "high": 2, "crit": 3}
+
+
+def _archive_key(article: dict) -> str:
+    """Stable per-article identity. Link + title: some feeds (notably CISA
+    KEV) reuse ONE link across every entry, so keying on the link alone
+    would collapse all 500 KEV CVEs into a single archive row. Folding the
+    title in keeps each entry distinct while staying stable across runs."""
+    link = (article.get("link") or "").strip().lower()
+    title = (article.get("title") or "").strip().lower()
+    return hashlib.sha256(f"{link}\n{title}".encode("utf-8")).hexdigest()[:16]
+
+
+def _record_archive_entry(run_archive, article, uc_count, techs, cves, sev):
+    """Stash one article's stats for this run (merged into the persisted
+    archive after the article loop completes)."""
+    key = _archive_key(article)
+    e = run_archive.get(key)
+    techs = sorted({t for t in (techs or []) if t})
+    cves = sorted({c for c in (cves or []) if c})
+    if e is None:
+        run_archive[key] = {
+            "ucs": int(uc_count), "techs": techs, "cves": cves,
+            "sev": sev, "title": (article.get("title") or "")[:200],
+            "published": article.get("published", ""),
+        }
+    else:  # same article twice in one run — keep the richer record
+        e["ucs"] = max(e["ucs"], int(uc_count))
+        e["techs"] = sorted(set(e["techs"]) | set(techs))
+        e["cves"] = sorted(set(e["cves"]) | set(cves))
+        if _SEV_RANK.get(sev, 0) > _SEV_RANK.get(e["sev"], 0):
+            e["sev"] = sev
+
+
+def _load_uc_archive() -> dict:
+    if UC_ARCHIVE_PATH.exists():
+        try:
+            import json as _json
+            d = _json.loads(UC_ARCHIVE_PATH.read_text(encoding="utf-8"))
+            if isinstance(d, dict) and isinstance(d.get("articles"), dict):
+                return d
+        except Exception as _e:
+            print(f"    [!] uc_archive load failed ({_e}) — starting fresh")
+    return {"version": 1, "articles": {}}
+
+
+def _merge_uc_archive(run_archive: dict) -> dict:
+    """Fold this run's per-article stats into the persisted archive at the
+    high-water mark and write it back. Returns the merged archive."""
+    import json as _json
+    archive = _load_uc_archive()
+    arts = archive.setdefault("articles", {})
+    now = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    new_n = 0
+    changed = False   # only rewrite/commit the archive when something grows
+    for key, cur in run_archive.items():
+        old = arts.get(key)
+        if old is None:
+            arts[key] = {**cur, "first_seen": now, "last_seen": now}
+            new_n += 1
+            changed = True
+            continue
+        # High-water merge — only touch a field (and last_seen) when a value
+        # actually increases. A steady-state run where nothing grows leaves
+        # the file byte-identical, so it isn't re-committed every 2h (no git
+        # history bloat) while the totals stay monotonic.
+        entry_changed = False
+        nu = max(int(old.get("ucs", 0)), int(cur["ucs"]))
+        if nu != old.get("ucs"):
+            old["ucs"] = nu; entry_changed = True
+        nt = sorted(set(old.get("techs", [])) | set(cur["techs"]))
+        if nt != old.get("techs"):
+            old["techs"] = nt; entry_changed = True
+        nc = sorted(set(old.get("cves", [])) | set(cur["cves"]))
+        if nc != old.get("cves"):
+            old["cves"] = nc; entry_changed = True
+        if _SEV_RANK.get(cur["sev"], 0) > _SEV_RANK.get(old.get("sev", "low"), 0):
+            old["sev"] = cur["sev"]; entry_changed = True
+        if not old.get("title") and cur["title"]:
+            old["title"] = cur["title"]; entry_changed = True
+        if not old.get("published") and cur["published"]:
+            old["published"] = cur["published"]; entry_changed = True
+        if entry_changed:
+            old["last_seen"] = now
+            changed = True
+    if not changed:
+        print(f"[*] UC archive: {len(arts)} articles all-time — no change this run "
+              f"(front-page stats unchanged, file not rewritten)")
+        return archive
+    archive["version"] = 1
+    archive["updated"] = now
+    try:
+        UC_ARCHIVE_PATH.parent.mkdir(parents=True, exist_ok=True)
+        # Atomic write: a crash mid-write would otherwise leave a truncated
+        # JSON that _load_uc_archive can't parse, resetting the archive to
+        # empty and dropping the all-time count back to the current run — the
+        # very "number went down" failure this archive exists to prevent.
+        # Write to a temp file then os.replace (atomic on the same volume).
+        _tmp = UC_ARCHIVE_PATH.with_name(UC_ARCHIVE_PATH.name + ".tmp")
+        _tmp.write_text(_json.dumps(archive, separators=(",", ":")), encoding="utf-8")
+        os.replace(_tmp, UC_ARCHIVE_PATH)
+    except Exception as _e:
+        print(f"    [!] uc_archive save failed: {_e}")
+    print(f"[*] UC archive: {len(arts)} articles all-time "
+          f"(+{new_n} new this run) — front-page stats are cumulative")
+    return archive
+
+
+def _archive_totals(archive: dict) -> dict:
+    """Compute the five monotonic front-page numbers from the archive."""
+    techs, cves, ucs, crit_high = set(), set(), 0, 0
+    for e in archive.get("articles", {}).values():
+        ucs += int(e.get("ucs", 0))
+        techs.update(e.get("techs", []))
+        cves.update(e.get("cves", []))
+        if e.get("sev") in ("crit", "high"):
+            crit_high += 1
+    return {"articles": len(archive.get("articles", {})), "ucs": ucs,
+            "techs": len(techs), "cves": len(cves), "crit_high": crit_high}
+
+
+# =====================================================================
+# Last-known-good feed cache  (transient-feed-failure smoothing)
+# ---------------------------------------------------------------------
+# When a single source returns 0 entries (a WAF 202, a momentary 5xx, a
+# DNS blip, schema drift) the run used to drop ALL of that source's
+# articles, which immediately lowered the front-page totals until the
+# next healthy fetch. We now snapshot each source's last good fetch and
+# transparently reuse it when a fetch comes back empty — bounded by
+# _FEED_CACHE_MAX_AGE_DAYS so a genuinely retired feed isn't resurrected
+# forever. Local-only cache (gitignored); inert while feeds are healthy.
+_FEED_CACHE_DIR = Path(__file__).parent / "intel" / ".feed_cache"
+_FEED_CACHE_MAX_AGE_DAYS = float(os.environ.get("USECASEINTEL_FEED_CACHE_MAX_AGE_DAYS", "14"))
+_FEED_CACHE_ENABLED = os.environ.get(
+    "USECASEINTEL_FEED_CACHE", "1") not in ("0", "false", "no", "")
+
+
+def _feed_cache_path(source_name: str) -> Path:
+    slug = re.sub(r"[^a-z0-9]+", "-", source_name.lower()).strip("-") or "src"
+    return _FEED_CACHE_DIR / f"{slug}.json"
+
+
+def _save_feed_cache(source_name: str, items: list) -> None:
+    if not (_FEED_CACHE_ENABLED and items):
+        return
+    try:
+        import json as _json
+        _FEED_CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        ser = []
+        for a in items:
+            d = dict(a)
+            pdt = d.get("published_dt")
+            d["published_dt"] = pdt.isoformat() if hasattr(pdt, "isoformat") else None
+            d.pop("_tokens", None)  # set objects — not JSON-safe, re-derived later
+            d.pop("_ids", None)
+            ser.append(d)
+        _feed_cache_path(source_name).write_text(
+            _json.dumps(ser, separators=(",", ":")), encoding="utf-8")
+    except Exception as _e:
+        print(f"    [!] feed-cache save failed ({source_name}): {_e}")
+
+
+def _load_feed_cache(source_name: str):
+    """Return the last good snapshot for a source, or None if missing /
+    too stale / unreadable."""
+    if not _FEED_CACHE_ENABLED:
+        return None
+    p = _feed_cache_path(source_name)
+    if not p.exists():
+        return None
+    try:
+        import json as _json
+        age_days = (dt.datetime.now().timestamp() - p.stat().st_mtime) / 86400.0
+        if age_days > _FEED_CACHE_MAX_AGE_DAYS:
+            print(f"    [!] feed-cache for {source_name} is {age_days:.0f}d old "
+                  f"(> {_FEED_CACHE_MAX_AGE_DAYS:.0f}d) — not reusing")
+            return None
+        raw = _json.loads(p.read_text(encoding="utf-8"))
+        for d in raw:
+            iso = d.get("published_dt")
+            try:
+                d["published_dt"] = dt.datetime.fromisoformat(iso) if iso else None
+            except Exception:
+                d["published_dt"] = None
+        return raw or None
+    except Exception as _e:
+        print(f"    [!] feed-cache load failed ({source_name}): {_e}")
+        return None
+
+
 # Tags whose content is noise for IOC extraction. Stripped before regex matching.
 _NOISE_TAG_RE = re.compile(
     r"<(script|style|nav|header|footer|aside|form|button|svg|noscript)\b[^>]*>"
@@ -18641,7 +19340,11 @@ def _fetch_full_body(url: str, fallback: str = "") -> tuple:
 
 
 def _fetch_rss(source, since):
-    feed = feedparser.parse(source["url"])
+    # feedparser's built-in default User-Agent is a known-blocked string on
+    # many CDNs/WAFs, which silently degrades a feed to zero entries. Send
+    # the same bot UA the rest of the pipeline uses (body fetch, KEV, GHSA)
+    # so RSS ingestion isn't the one fetch path getting UA-filtered.
+    feed = feedparser.parse(source["url"], agent=FETCH_USER_AGENT)
     # feedparser never raises — malformed XML / error pages just come back
     # as an empty or partial entries list with bozo set. Unchecked, a feed
     # that drifts into bad XML silently drops ALL its articles forever.
@@ -18655,6 +19358,13 @@ def _fetch_rss(source, since):
     if not feed.entries:
         print(f"    [!] feed returned ZERO entries ({source['name']}, "
               f"status={_status}) — dead feed or schema drift?")
+    if len(feed.entries) > MAX_PER_SOURCE:
+        # Silent truncation hid coverage loss (e.g. Snyk serves ~1600 items,
+        # capped to 500). Surface it so a feed that outgrows the cap — and
+        # the articles never processed/archived as a result — is visible.
+        print(f"    [!] {source['name']} returned {len(feed.entries)} entries; "
+              f"capping to MAX_PER_SOURCE={MAX_PER_SOURCE} "
+              f"({len(feed.entries) - MAX_PER_SOURCE} dropped)")
     out = []
     fetched = 0
     undated = 0
@@ -19117,6 +19827,24 @@ _HARD_REJECT_PATTERNS = (
     re.compile(r"^looking back at\b", re.I),
     re.compile(r"\bthreatsday bulletin\b", re.I),
     re.compile(r"\bunlocked\s+403\b", re.I),
+    # Developer-education / vendor-marketing formats. The archive-wide
+    # lookback pulls whole blog histories from dev-security vendors
+    # (Snyk, Aikido, …) whose how-to / best-practices / listicle posts
+    # carry sample code with extractable "IOCs" (example domains, demo
+    # IPs) that trip the Tier-0 iocs-present keep. None of these formats
+    # are actionable threat intel — a 2026-06 audit found 75 of them
+    # rendering cards (e.g. "How to prevent NullPointerExceptions in
+    # Java" at sev=med). Genuine exceptions can be rescued via the
+    # _RELEVANCE_OVERRIDE_TITLES allowlist.
+    re.compile(r"^how to\b", re.I),
+    re.compile(r"\bbest practices?\b", re.I),
+    re.compile(r"^top \d+\b", re.I),
+    re.compile(r"^\d+ (?:tips|ways|steps|things|lessons|risks)\b", re.I),
+    re.compile(r"\b\d+ tips for\b", re.I),
+    re.compile(r"\bultimate guide\b", re.I),
+    re.compile(r"\b(?:beginner'?s|complete|comprehensive) guide\b", re.I),
+    re.compile(r"\bcheat sheet\b", re.I),
+    re.compile(r"\brecap\b:?", re.I),
 )
 
 
@@ -20616,6 +21344,17 @@ def fetch_articles(limit: int = None, days: int = LOOKBACK_DAYS):
             safe_err = str(e).encode('ascii','replace').decode('ascii')
             print(f"    [!] failed: {safe_err}")
             items = []
+        # Last-known-good fallback (#2): a healthy fetch refreshes this
+        # source's snapshot; an empty/failed fetch transparently reuses the
+        # most recent good one so one flaky feed can't tank the run's totals.
+        if items:
+            _save_feed_cache(src["name"], items)
+        else:
+            _cached = _load_feed_cache(src["name"])
+            if _cached:
+                print(f"    [!] {src['name']} returned 0 live — reusing "
+                      f"{len(_cached)} article(s) from last good fetch")
+                items = _cached
         # Drop vendor product-marketing posts at the fetch boundary so they
         # never get cached, rendered, or LLM-processed. Logged so noisy
         # feeds become visible.
@@ -21536,15 +22275,20 @@ def main():
 
     # Load any UC suggestions emitted by the most-recent quality-review
     # pass (off-hour task). Keyed by article URL. Self-prunes entries
-    # older than 7 days. Currently logged but not yet consumed by the
-    # per-article loop — that wiring is a follow-up commit once we've
-    # seen what the reviewer actually produces.
-    _review_suggestions = load_review_suggestions()
-    if _review_suggestions:
-        suggestion_count = sum(len(v) for v in _review_suggestions.values())
+    # older than 7 days. Consumed by _llm_generate_ucs: suggestions are
+    # folded into every fresh UC prompt, and articles whose UCs are
+    # already cached get a bounded number of suggestion-driven
+    # regenerations per run (see _SUGGESTION_REGEN_BUDGET).
+    _SUGGESTION_REGEN_STATE["used"] = 0
+    _SUGGESTION_REGEN_STATE["quality_used"] = 0
+    _REVIEW_SUGGESTIONS_BY_URL.clear()
+    _REVIEW_SUGGESTIONS_BY_URL.update(load_review_suggestions())
+    if _REVIEW_SUGGESTIONS_BY_URL:
+        suggestion_count = sum(len(v) for v in _REVIEW_SUGGESTIONS_BY_URL.values())
         print(f"[*] Quality-review feedback: {suggestion_count} pending UC "
-              f"suggestion(s) for {len(_review_suggestions)} article(s) "
-              f"(consumer wiring is a follow-up; logged only for now)")
+              f"suggestion(s) for {len(_REVIEW_SUGGESTIONS_BY_URL)} article(s) — "
+              f"folding into UC prompts (cached-article regen budget: "
+              f"{_SUGGESTION_REGEN_BUDGET}/run)")
 
     articles = fetch_articles()
     if not articles:
@@ -21566,6 +22310,7 @@ def main():
     total_ucs = 0
     total_techs = set()
     total_cves = set()
+    run_archive = {}   # per-article stats this run -> merged into uc_archive.json
     sev_counts = {"crit":0,"high":0,"med":0,"low":0}
     # Relevance gate accounting
     relevance_tier_counts = {"hard-reject": 0, "keep-0": 0, "drop-sev": 0,
@@ -21621,6 +22366,14 @@ def main():
                 "published": a.get("published", ""),
                 "link":   a.get("link", ""),
             })
+            # Count the dropped article toward the cumulative Articles total
+            # (it WAS ingested) but with zero detections/techniques/CVEs —
+            # this mirrors the legacy semantic where relevance-dropped
+            # articles bumped __ARTICLE_COUNT__ but not the detection totals,
+            # so switching to cumulative stats doesn't visibly lower any
+            # front-page number on first deploy.
+            if _CUMULATIVE_STATS:
+                _record_archive_entry(run_archive, a, 0, [], [], "low")
             # IOCs + canonical-IDs already merged earlier in fetch_articles;
             # we just stop processing this article from here on.
             continue
@@ -21705,6 +22458,11 @@ def main():
         total_ucs += len(ucs)
         for tid, _ in techniques: total_techs.add(tid)
         for c in ind["cves"]: total_cves.add(c)
+        # Record into the cumulative archive (#1) so the front-page totals
+        # never drop on a transient feed dip / cache invalidation.
+        if _CUMULATIVE_STATS:
+            _record_archive_entry(run_archive, a, len(ucs),
+                                  [t for t, _ in techniques], ind["cves"], sev)
         cards.append(render_card(i, a, ind, techniques, hit, inferred, ucs, sev))
         nav_meta.append({"id": f"art-{i:02d}", "title": a["title"], "sev": sev})
         # For the matrix view: combine narrative-inferred techniques with the
@@ -22254,14 +23012,36 @@ def main():
     else:
         write_actor_pages(actors_serialisable, {})
 
+    # ----- Front-page headline totals (#1) -----------------------------
+    # Default: cumulative, monotonic numbers from the persisted archive so
+    # a transient feed dip never lowers the count. Fall back to the legacy
+    # per-run sum when USECASEINTEL_CUMULATIVE_STATS=0.
+    if _CUMULATIVE_STATS:
+        _cum = _archive_totals(_merge_uc_archive(run_archive))
+        disp_article_count = _cum["articles"]
+        disp_total_ucs     = _cum["ucs"]
+        disp_tech_count    = _cum["techs"]
+        disp_cve_count     = _cum["cves"]
+        disp_crit_count    = _cum["crit_high"]
+        print(f"[*] Front-page (cumulative): {disp_article_count} articles, "
+              f"{disp_total_ucs} detections, {disp_tech_count} ATT&CK, "
+              f"{disp_cve_count} CVEs, {disp_crit_count} crit/high  "
+              f"(this run alone: {len(articles)} articles / {total_ucs} detections)")
+    else:
+        disp_article_count = len(articles)
+        disp_total_ucs     = total_ucs
+        disp_tech_count    = len(total_techs)
+        disp_cve_count     = len(total_cves)
+        disp_crit_count    = sev_counts["crit"] + sev_counts["high"]
+
     # Home (front-door) tab content. Built from the same data the
     # Articles / Matrix / Actors tabs consume — no separate cache.
     generated_human = dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
     home_html = render_home(
         articles_meta=articles_meta,
-        usecase_count=total_ucs,
-        tech_count=len(total_techs),
-        article_count=len(articles),
+        usecase_count=disp_total_ucs,
+        tech_count=disp_tech_count,
+        article_count=disp_article_count,
         generated_human=generated_human,
         ioc_count=len(iocs or []),
         actor_count=len(actors_serialisable),
@@ -22332,6 +23112,25 @@ def main():
         _write_chunk(f"cards-{idx+1:03d}.html", page_html)
         for idx, page_html in enumerate(card_pages_html)
     ]
+    # Per-UC query-store shards — lazy-fetched by the Detection Library
+    # drawer so every entry (internal template, ESCU reference detection,
+    # article-bespoke LLM UC) shows its actual detection logic. Sharded
+    # by matrix index so a drawer open costs one small fetch instead of
+    # the whole multi-MB store.
+    uc_query_shard_urls = []
+    if _MATRIX_QUERY_STORE:
+        _n_shards = max(_MATRIX_QUERY_STORE) // _UC_QUERY_SHARD_SIZE + 1
+        for _s in range(_n_shards):
+            _shard = {str(i): q for i, q in _MATRIX_QUERY_STORE.items()
+                      if i // _UC_QUERY_SHARD_SIZE == _s}
+            uc_query_shard_urls.append(_write_chunk(
+                f"uc_queries-{_s:03d}.json",
+                _json_mod.dumps(_shard, separators=(",", ":"))))
+        _store_bytes = sum(
+            (data_dir / f"uc_queries-{_s:03d}.json").stat().st_size
+            for _s in range(_n_shards))
+        print(f"[*] UC query store: {len(_MATRIX_QUERY_STORE)} entries, "
+              f"{_store_bytes//1024}KB across {_n_shards} shard(s)")
     manifest = {
         "matrix": _write_chunk("matrix.json", matrix_raw_json),
         "intel":  _write_chunk("intel.json",  intel_raw_json),
@@ -22341,6 +23140,9 @@ def main():
         # deep-link / search jump knows which page contains card #N.
         "cardPages":    card_page_urls,
         "cardPageById": card_page_by_id,
+        # Detection Library query store (see above).
+        "ucQueryShards":    uc_query_shard_urls,
+        "ucQueryShardSize": _UC_QUERY_SHARD_SIZE,
     }
     manifest_inline = _js_safe(_json_mod.dumps(manifest, separators=(",", ":")))
     _total_cards_bytes = sum((data_dir / f"cards-{i+1:03d}.html").stat().st_size for i in range(len(card_page_urls)))
@@ -22355,11 +23157,11 @@ def main():
         HTML_HEAD
         .replace("__HOME__", home_html)
         .replace("__GENERATED_AT__", generated_human)
-        .replace("__ARTICLE_COUNT__", str(len(articles)))
-        .replace("__USECASE_COUNT__", str(total_ucs))
-        .replace("__TECH_COUNT__", str(len(total_techs)))
-        .replace("__CVE_COUNT__", str(len(total_cves)))
-        .replace("__CRIT_COUNT__", str(sev_counts["crit"] + sev_counts["high"]))
+        .replace("__ARTICLE_COUNT__", str(disp_article_count))
+        .replace("__USECASE_COUNT__", str(disp_total_ucs))
+        .replace("__TECH_COUNT__", str(disp_tech_count))
+        .replace("__CVE_COUNT__", str(disp_cve_count))
+        .replace("__CRIT_COUNT__", str(disp_crit_count))
         .replace("__NAV__", nav)
         # Cards are now fetched lazily from data/cards.html on Articles
         # tab activation; the host div is where the SPA injects them.
@@ -22465,7 +23267,7 @@ def main():
     # About & methodology page — the public trust artifact (who runs this,
     # how detections are made, what is and is not validated).
     try:
-        write_about_page(generated_human, total_ucs)
+        write_about_page(generated_human, disp_total_ucs)
     except Exception as _e:
         print(f"[!] about.html write failed: {_e}")
 

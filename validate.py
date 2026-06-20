@@ -79,6 +79,21 @@ print(f"      Defender XDR tables: {len(DEFENDER_VALID)} "
       f"+{len(DEFENDER_SPEC) - len(set(DEFENDER_SPEC) & set(DEFENDER_OBSERVED))} from spec docs)")
 print(f"      ATT&CK techniques: {len(ATTACK)}\n")
 
+# Registry freshness gate. sync.py refreshes ESCU + ATT&CK; if the weekly
+# sync isn't running, validation silently checks against a stale upstream
+# snapshot (and generate ships detections referencing an outdated catalog).
+# Warn loudly — don't fail — so a broken/unscheduled sync is visible in logs.
+try:
+    import datetime as _dt
+    _synced = registry.get("synced_at", "")
+    _age = (_dt.datetime.now(_dt.timezone.utc)
+            - _dt.datetime.fromisoformat(_synced.replace("Z", "+00:00"))).days
+    if _age > 14:
+        print(f"[!] Registry is {_age} days old (synced_at={_synced}). Run `py sync.py` — "
+              f"ESCU/ATT&CK checks are against a stale snapshot.\n")
+except Exception:
+    pass
+
 # Regexes for extraction --------------------------------------------------------
 DM_RE = re.compile(r"from\s+datamodel\s*=\s*([\w.]+)", re.IGNORECASE)
 NODENAME_RE = re.compile(r'nodename\s*=\s*"([\w.]+)"', re.IGNORECASE)
@@ -106,36 +121,40 @@ errors, warnings, infos = [], [], []
 
 for var_name, uc in use_cases:
     spl = uc.splunk_spl or ""
-    if not spl.strip():
-        continue
-
-    # 1) Validate dataset paths
-    dm_paths = set(DM_RE.findall(spl)) | set(NODENAME_RE.findall(spl))
-    if not dm_paths:
-        infos.append(f"{var_name}: no datamodel reference (raw search — skipping CIM check)")
-    for full in dm_paths:
-        if full not in VALID_FIELDS:
-            errors.append(f"{var_name}: datamodel `{full}` is NOT in registry or spec allowlist. "
-                          f"Closest matches: {match_close(full, VALID_FIELDS.keys())}")
-        else:
-            short = full.split(".")[-1]
-            valid = VALID_FIELDS[full]
-            escu_only = set(CIM.get(full, []))
-            spec_only = SPEC_FIELDS.get(full, set()) - escu_only
-            for s, fld in SHORT_FIELD_RE.findall(spl):
-                if s != short:
-                    continue
-                if fld in RESERVED:
-                    continue
-                if fld not in valid:
-                    errors.append(
-                        f"{var_name}: `{short}.{fld}` not in CIM spec or any ESCU detection for {full}."
-                    )
-                elif fld in spec_only:
-                    infos.append(
-                        f"{var_name}: `{short}.{fld}` is CIM-spec-valid but unused in ESCU "
-                        f"(no production reference)."
-                    )
+    # SPL/CIM checks apply only when the UC ships a Splunk query. The ATT&CK
+    # and Defender-KQL checks below run for EVERY UC — including Defender- and
+    # Sentinel-only UCs that carry no SPL. Previously an empty-SPL UC hit a
+    # `continue` here and skipped ATT&CK + KQL validation entirely, so every
+    # Defender/Sentinel-only detection (a large, growing share of the catalog)
+    # shipped completely unvalidated (bad ATT&CK IDs / unknown tables uncaught).
+    if spl.strip():
+        # 1) Validate dataset paths
+        dm_paths = set(DM_RE.findall(spl)) | set(NODENAME_RE.findall(spl))
+        if not dm_paths:
+            infos.append(f"{var_name}: no datamodel reference (raw search — skipping CIM check)")
+        for full in dm_paths:
+            if full not in VALID_FIELDS:
+                errors.append(f"{var_name}: datamodel `{full}` is NOT in registry or spec allowlist. "
+                              f"Closest matches: {match_close(full, VALID_FIELDS.keys())}")
+            else:
+                short = full.split(".")[-1]
+                valid = VALID_FIELDS[full]
+                escu_only = set(CIM.get(full, []))
+                spec_only = SPEC_FIELDS.get(full, set()) - escu_only
+                for s, fld in SHORT_FIELD_RE.findall(spl):
+                    if s != short:
+                        continue
+                    if fld in RESERVED:
+                        continue
+                    if fld not in valid:
+                        errors.append(
+                            f"{var_name}: `{short}.{fld}` not in CIM spec or any ESCU detection for {full}."
+                        )
+                    elif fld in spec_only:
+                        infos.append(
+                            f"{var_name}: `{short}.{fld}` is CIM-spec-valid but unused in ESCU "
+                            f"(no production reference)."
+                        )
 
     # 2) Validate ATT&CK technique IDs
     for tid, tname in uc.techniques:
@@ -189,9 +208,22 @@ for var_name, uc in use_cases:
                                     f"referenced Defender table.")
 
         # Tables that look Defender-shaped but aren't in the schema = real error.
+        # A token is in a *table position* only if it is the query's first
+        # statement line (the source table, often alone on line 1 —
+        # `DeviceX\n| where …`) OR is immediately followed by a pipe (an
+        # inline source / union-join leg). A Device*/Email* COLUMN that wraps
+        # onto its own line inside a project/summarize list is NEITHER, so it
+        # is not mistaken for a bogus table (the old `\s`-only scan both
+        # missed alone-on-line-1 source tables AND, with `\b`, false-flagged
+        # wrapped columns — this position check fixes both).
+        first_stmt_seen = False
         for line in kql.splitlines():
             stripped = line.lstrip("| \t").rstrip()
-            m = re.match(r"^\s*([A-Z][A-Za-z0-9]+)\s", stripped)
+            if not stripped or stripped.startswith("//"):
+                continue
+            is_first = not first_stmt_seen
+            first_stmt_seen = True
+            m = re.match(r"^([A-Z][A-Za-z0-9]+)\b", stripped)
             if not m:
                 continue
             tok = m.group(1)
@@ -202,6 +234,9 @@ for var_name, uc in use_cases:
             if tok in aliased_names:
                 continue
             if tok in DEFENDER_VALID:
+                continue
+            in_table_position = is_first or stripped[m.end():].lstrip().startswith("|")
+            if not in_table_position:
                 continue
             # Looks like a Defender table name pattern? Then it's wrong.
             if re.match(r"(Device|Email|Identity|CloudApp|Url|Alert|AAD|Tvm|MDC)", tok):
