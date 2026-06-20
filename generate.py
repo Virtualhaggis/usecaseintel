@@ -1273,6 +1273,51 @@ def _attach_field_issues(uc_dict: dict, kql_key: str = "defender_kql",
     return len(issues)
 
 
+def _autofix_kql_verbatim_batch(ucs: list[dict]) -> int:
+    """Fix the single most common LLM KQL bug before it's validated/cached:
+    a backslash-escaped quote inside an `@"..."` verbatim string. KQL verbatim
+    strings have NO `\\"` escape — the `"` ends the string, so `@"...\\"..."`
+    parses as a short string + garbage and cascades 5+ errors per query. The
+    fix doubles the quote (`\\"` -> `""`).
+
+    Safe-by-construction: the candidate is applied ONLY where the real Kusto
+    parser reports strictly fewer errors than the original (one batched call
+    for all candidates). A query that was already clean, or whose `\\"` is a
+    legitimate regular-string escape, is left untouched. Mirrors the standalone
+    _auto_fix_kql_verbatim.py tool but runs inline so the bug never gets cached.
+    Returns the number of queries fixed."""
+    if _validate_kql_syntax_batch is None or not ucs:
+        return 0
+    _bsq = chr(92) + '"'   # backslash-quote
+    cands = []             # (idx, kql_key, candidate)
+    batch = []
+    for idx, uc in enumerate(ucs):
+        if not isinstance(uc, dict):
+            continue
+        for kql_key in ("defender_kql", "sentinel_kql"):
+            kql = uc.get(kql_key) or ""
+            if '@"' in kql and _bsq in kql:
+                cand = kql.replace(_bsq, '""')
+                i = len(cands)
+                cands.append((idx, kql_key, cand))
+                batch.append((f"o{i}", kql))
+                batch.append((f"c{i}", cand))
+    if not cands:
+        return 0
+    try:
+        errcount = {r.get("id"): len(r.get("errors") or [])
+                    for r in _validate_kql_syntax_batch(batch)}
+    except Exception:
+        return 0
+    fixed = 0
+    for i, (idx, kql_key, cand) in enumerate(cands):
+        if errcount.get(f"c{i}", 0) < errcount.get(f"o{i}", 0):
+            ucs[idx][kql_key] = cand
+            ucs[idx].setdefault("_verbatim_autofix", []).append(kql_key)
+            fixed += 1
+    return fixed
+
+
 def _attach_syntax_issues_batch(ucs: list[dict]) -> int:
     """Run the Kusto.Language parser across every UC's defender_kql and
     sentinel_kql in one subprocess call. Attaches issues per-platform to
@@ -1283,6 +1328,10 @@ def _attach_syntax_issues_batch(ucs: list[dict]) -> int:
     — pipeline degrades to schema-only validation rather than crashing."""
     if _validate_kql_syntax_batch is None or not ucs:
         return 0
+    # Mechanical verbatim-string repair before grammar validation, so the
+    # most common LLM KQL bug is fixed silently instead of burning a re-prompt
+    # (or shipping broken). Runs in both the per-article and biweekly paths.
+    _autofix_kql_verbatim_batch(ucs)
     # Build a flat batch of (id, kql) tuples; id encodes which uc and which
     # platform so we can dispatch results back to the right uc/key.
     batch: list[tuple[str, str]] = []
