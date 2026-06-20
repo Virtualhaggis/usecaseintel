@@ -1748,6 +1748,7 @@ Output STRICT JSON matching this schema (no markdown fences, no prose, just one 
 
 Hard rules:
 - Use ACTUAL binaries / paths / hashes / cmdline patterns / domains named in the article. Do not invent or hallucinate.
+- NO `<placeholder>` TOKENS in any query. If the article states a value (a fixed/patched version, package name, path, binary, CVE id, endpoint), put the CONCRETE value in the query — never `<version>`, `<patch>`, `<pkg>`, `<dir>`, `<host>`. If a value is only knowable at runtime (e.g. a specific PID to pivot on), do NOT leave `<pid>`: instead write the query to SURFACE that value (project/summarize it) or drop that clause. A query an analyst must hand-edit before it will run is a failed UC — every query you emit must execute as-is.
 - If the article describes the attack in narrative only (no specific strings), output {"ucs":[]} — silence beats a generic template.
 - Splunk SPL must be CIM-conformant (tstats from datamodel=...).
 - Defender KQL must be Advanced Hunting (real table + column names).
