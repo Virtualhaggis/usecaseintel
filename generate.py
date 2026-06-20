@@ -1318,6 +1318,39 @@ def _autofix_kql_verbatim_batch(ucs: list[dict]) -> int:
     return fixed
 
 
+# Columns on DeviceProcessEvents/DeviceFileEvents whose Windows values are
+# case-insensitive — a case-SENSITIVE `==` on a Windows binary silently misses
+# the mixed-case variants attackers use (PowerShell.EXE vs powershell.exe).
+_KQL_CI_COLS = ("FileName", "InitiatingProcessFileName",
+                "InitiatingProcessParentFileName",
+                "ProcessVersionInfoOriginalFileName")
+# Only Windows executables — Linux filenames ARE case-sensitive, so leave them.
+_KQL_CASE_FIX_RE = re.compile(
+    r'\b(' + '|'.join(_KQL_CI_COLS) +
+    r')(\s*)==(\s*)("[^"]*\.(?:exe|dll|ps1|bat|cmd|scr|vbs|js|hta|msi|sys|com)")')
+
+
+def _autofix_kql_case_batch(ucs: list[dict]) -> int:
+    """Convert case-sensitive `==` on a Windows-binary filename column to the
+    case-insensitive `=~`, so a detection isn't evaded by case. Regex-safe
+    (`=~` only broadens the match), so no parser round-trip is needed. Windows
+    extensions only — Linux paths stay case-sensitive."""
+    fixed = 0
+    for uc in ucs:
+        if not isinstance(uc, dict):
+            continue
+        for kql_key in ("defender_kql", "sentinel_kql"):
+            kql = uc.get(kql_key) or ""
+            if not kql:
+                continue
+            new = _KQL_CASE_FIX_RE.sub(r"\1\2=~\3\4", kql)
+            if new != kql:
+                uc[kql_key] = new
+                uc.setdefault("_case_autofix", []).append(kql_key)
+                fixed += 1
+    return fixed
+
+
 def _attach_syntax_issues_batch(ucs: list[dict]) -> int:
     """Run the Kusto.Language parser across every UC's defender_kql and
     sentinel_kql in one subprocess call. Attaches issues per-platform to
@@ -1328,10 +1361,11 @@ def _attach_syntax_issues_batch(ucs: list[dict]) -> int:
     — pipeline degrades to schema-only validation rather than crashing."""
     if _validate_kql_syntax_batch is None or not ucs:
         return 0
-    # Mechanical verbatim-string repair before grammar validation, so the
-    # most common LLM KQL bug is fixed silently instead of burning a re-prompt
-    # (or shipping broken). Runs in both the per-article and biweekly paths.
-    _autofix_kql_verbatim_batch(ucs)
+    # Mechanical repairs before grammar validation, so common LLM KQL bugs are
+    # fixed silently instead of burning a re-prompt (or shipping broken). Runs
+    # in both the per-article and biweekly paths.
+    _autofix_kql_verbatim_batch(ucs)   # \" inside @"..."  ->  ""
+    _autofix_kql_case_batch(ucs)       # == "x.exe"  ->  =~ "x.exe"
     # Build a flat batch of (id, kql) tuples; id encodes which uc and which
     # platform so we can dispatch results back to the right uc/key.
     batch: list[tuple[str, str]] = []
