@@ -474,6 +474,24 @@ def _suggest_replacement_for_wrong_table(field: str, table: str) -> str | None:
     return matches[0] if matches else None
 
 
+# Cross-schema semantic equivalents the difflib near-miss can't catch — the
+# Defender column name and its Sentinel-native / ASIM equivalent are spelled
+# nothing alike, so an LLM that mixes schemas (e.g. `DeviceName` on SecurityEvent
+# or an ASIM Im* table) produces a query that silently returns nothing. Keyed by
+# (field, table) -> the correct column on that table. The convergence check in
+# auto_fix_kql reverts any mapping that doesn't actually reduce errors, so a
+# wrong entry is self-correcting.
+_CROSS_SCHEMA_COLUMN_FIX = {
+    ("DeviceName", "SecurityEvent"): "Computer",
+    ("DeviceName", "ImProcessCreate"): "DvcHostname",
+    ("DeviceName", "ImNetworkSession"): "DvcHostname",
+    ("DeviceName", "ImDnsActivity"): "DvcHostname",
+    ("DeviceName", "ImFileEvent"): "DvcHostname",
+    ("AccountName", "SecurityEvent"): "Account",
+    ("AccountName", "ImProcessCreate"): "ActorUsername",
+}
+
+
 def auto_fix_kql(kql: str) -> tuple[str, list[str]]:
     """Apply safe automatic rewrites to a KQL query body for known
     schema violations the validator can identify with high confidence.
@@ -498,12 +516,21 @@ def auto_fix_kql(kql: str) -> tuple[str, list[str]]:
             continue
         kind = issue.get("kind")
         replacement: str | None = None
-        if kind == "wrong_table":
+        # Curated cross-schema semantic equivalents take PRIORITY for any issue
+        # kind. The generic heuristics below can otherwise pick a column that
+        # validates but is semantically wrong (e.g. DeviceName -> ServiceName on
+        # SecurityEvent, which parses but detects the wrong thing).
+        for _t in (issue.get("tables_in_scope") or []):
+            cand = _CROSS_SCHEMA_COLUMN_FIX.get((field, _t))
+            if cand:
+                replacement = cand
+                break
+        if not replacement and kind == "wrong_table":
             tables = issue.get("tables_in_scope") or []
             if not tables:
                 continue
             replacement = _suggest_replacement_for_wrong_table(field, tables[0])
-        elif kind == "unknown_field":
+        elif not replacement and kind == "unknown_field":
             sugg = issue.get("suggestion")
             if sugg and difflib.SequenceMatcher(None, field, sugg).ratio() >= 0.8:
                 replacement = sugg
