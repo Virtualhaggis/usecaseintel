@@ -5927,7 +5927,7 @@ HTML_HEAD = r"""<!doctype html>
 <link rel="icon" type="image/png" href="https://clankerusecase.com/logo.png">
 <link rel="apple-touch-icon" href="https://clankerusecase.com/logo.png">
 <link rel="canonical" href="https://clankerusecase.com/">
-<meta name="description" content="Threat-led detection library for SOC teams: 2,000+ use cases mapped to MITRE ATT&amp;CK, with Defender KQL, Sentinel KQL, Sigma, and Splunk SPL queries. Built from 11+ threat-intel feeds (BleepingComputer, The Hacker News, Microsoft, Talos, ESET, Unit 42, SentinelLabs, Securelist, Lab52, CISA KEV) and refreshed every 2 hours.">
+<meta name="description" content="Threat-led detection library for SOC teams: __USECASE_COUNT__ detections mapped to MITRE ATT&amp;CK in Defender KQL, Sentinel KQL, Sigma, Splunk SPL, Datadog, CrowdStrike Falcon &amp; AWS CloudWatch. Built from live threat-intel feeds (BleepingComputer, The Hacker News, Microsoft, Talos, ESET, Unit 42, CISA KEV) and refreshed every 2 hours. Validate before production.">
 <meta name="keywords" content="MITRE ATT&amp;CK, Defender KQL, Sentinel KQL, Sigma rules, Splunk SPL, threat hunting, SOC, threat intelligence, detection engineering, CTI, Microsoft Defender Advanced Hunting, Microsoft Sentinel, IOC, indicators of compromise, KQL queries, SPL queries, threat actors, APT, ransomware, phishing, BleepingComputer, Hacker News">
 <meta name="author" content="Virtualhaggis">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -5938,7 +5938,7 @@ HTML_HEAD = r"""<!doctype html>
 <meta property="og:site_name" content="Clankerusecase">
 <meta property="og:url" content="https://clankerusecase.com/">
 <meta property="og:title" content="Clankerusecase — Threat-led detection library for SOC teams">
-<meta property="og:description" content="MITRE-mapped detections in Defender KQL, Sentinel KQL, Sigma, and Splunk SPL — generated continuously from current threat-intel feeds, schema-validated, and ready to tune for your environment.">
+<meta property="og:description" content="__USECASE_COUNT__ MITRE-mapped detections in Defender KQL, Sentinel KQL, Sigma, Splunk SPL, Datadog, CrowdStrike Falcon &amp; AWS CloudWatch — generated continuously from current threat-intel feeds, schema-validated, and ready to tune for your environment.">
 <meta property="og:image" content="https://clankerusecase.com/logo.png">
 <meta property="og:image:alt" content="Clankerusecase — pre-validated SOC detections from daily threat-intel">
 <meta property="og:locale" content="en_GB">
@@ -5946,7 +5946,7 @@ HTML_HEAD = r"""<!doctype html>
 <!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Clankerusecase — Threat-led detection library">
-<meta name="twitter:description" content="2,000+ MITRE-mapped detections in Defender KQL, Sentinel KQL, Sigma, and Splunk SPL. Auto-generated from daily threat-intel.">
+<meta name="twitter:description" content="__USECASE_COUNT__ MITRE-mapped detections in Defender KQL, Sentinel KQL, Sigma, Splunk SPL, Datadog, Falcon &amp; CloudWatch. Auto-generated from live threat-intel.">
 <meta name="twitter:image" content="https://clankerusecase.com/logo.png">
 <meta name="twitter:image:alt" content="Clankerusecase — pre-validated SOC detections">
 
@@ -5962,7 +5962,7 @@ HTML_HEAD = r"""<!doctype html>
       "@id": "https://clankerusecase.com/#website",
       "url": "https://clankerusecase.com/",
       "name": "Clankerusecase",
-      "description": "Threat-led detection library: 2,000+ MITRE-mapped use cases in Defender KQL, Sentinel KQL, Sigma, and Splunk SPL.",
+      "description": "Threat-led detection library: __USECASE_COUNT__ MITRE-mapped detections in Defender KQL, Sentinel KQL, Sigma, Splunk SPL, Datadog, CrowdStrike Falcon, and AWS CloudWatch.",
       "publisher": {"@id": "https://clankerusecase.com/#org"},
       "potentialAction": {
         "@type": "SearchAction",
@@ -5981,7 +5981,7 @@ HTML_HEAD = r"""<!doctype html>
       "@type": "Dataset",
       "@id": "https://clankerusecase.com/#dataset",
       "name": "Clankerusecase Detection Library",
-      "description": "Daily-refreshed corpus of SOC detection use cases mapped to MITRE ATT&CK, expressed in Defender KQL, Microsoft Sentinel KQL, Sigma, and Splunk SPL. Each detection is tied to a public threat-intel article from BleepingComputer, The Hacker News, Microsoft, Talos, ESET, Unit 42, SentinelLabs, Securelist, Lab52, CISA KEV, or similar source.",
+      "description": "Daily-refreshed corpus of SOC detection use cases mapped to MITRE ATT&CK, expressed in Defender KQL, Microsoft Sentinel KQL, Sigma, Splunk SPL, Datadog, CrowdStrike Falcon LogScale, and AWS CloudWatch Logs Insights. Each detection is tied to a public threat-intel article from BleepingComputer, The Hacker News, Microsoft, Talos, ESET, Unit 42, SentinelLabs, Securelist, Lab52, CISA KEV, or similar source.",
       "creator": {"@id": "https://clankerusecase.com/#org"},
       "url": "https://clankerusecase.com/",
       "keywords": "MITRE ATT&CK, threat detection, Defender KQL, Sentinel KQL, Sigma, Splunk SPL, threat intelligence, SOC, threat hunting, IOC",
@@ -6018,7 +6018,7 @@ HTML_HEAD = r"""<!doctype html>
   --bg:#08090a; --bg-grad-1:#0d0e10; --bg-grad-2:#08090a;
   --panel:#16171b; --panel-elev:#1f2024; --panel2:#26272b;
   /* Text — high-contrast on dark; Linear keeps body text very legible */
-  --text:#f7f8f8; --muted:#8a8f98; --muted-2:#62656a;
+  --text:#f7f8f8; --muted:#8a8f98; --muted-2:#7c818b;
   /* Accent — Linear signature indigo, with a purple+green for variety */
   --accent:#7170ff; --accent-2:#9b8afb; --accent-3:#4cb782;
   /* Borders — hairlines, not frames */
@@ -6055,6 +6055,21 @@ body{
   letter-spacing:-0.005em;
 }
 ::selection{background:rgba(113,112,255,0.32);color:#fff;}
+
+/* Accessibility — a consistent, high-contrast keyboard focus ring on every
+   interactive element. :focus-visible is keyboard-only (no ring on mouse
+   click), so it guarantees AT/keyboard users can always see where focus is
+   without disturbing the pointer-driven visual design. Backs up the few
+   inputs/selects that suppress the native outline. */
+:focus-visible{ outline:2px solid #8f8dff; outline-offset:2px; border-radius:4px; }
+.lib-filter-group select:focus-visible{ outline:2px solid #8f8dff; outline-offset:1px; }
+/* Skip-to-content link (WCAG 2.4.1 Bypass Blocks) — off-screen until a
+   keyboard user tabs to it, then it slides into the top-left so they can
+   jump past the sticky header/nav straight to the content. */
+.skip-link{ position:fixed; left:8px; top:-48px; z-index:200; background:var(--accent);
+  color:#04111d; padding:9px 16px; border-radius:7px; font-weight:600; font-size:13px;
+  text-decoration:none; transition:top 0.15s ease; }
+.skip-link:focus{ top:8px; }
 
 /* ----- Header / Top bar ---------------------------------------------- */
 .topbar{
@@ -10195,6 +10210,7 @@ body.view-home-active .stats-articles{display:none !important;}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#view-home">Skip to main content</a>
 <!-- Logo lightbox — click logoButton to open, click backdrop or ESC to close. -->
 <div class="logo-lightbox" id="logoLightbox" role="dialog" aria-modal="true" aria-labelledby="lbCaption" hidden>
   <button class="logo-lightbox-close" id="logoLightboxClose" aria-label="Close">×</button>
@@ -10289,7 +10305,7 @@ window.__pendingView = null;
 <div class="first-visit-banner" id="firstVisitBanner" role="region" aria-label="Welcome">
   <span class="banner-quote">“A go-to resource SOC engineers actually use daily.”</span>
   <span class="banner-explainer"><b>New here?</b> We turn daily threat-intel articles into ready-to-tune SOC detections — every 2 hours.</span>
-  <span class="banner-stats">__ARTICLE_COUNT__ articles · __USECASE_COUNT__ detections · MITRE ATT&amp;CK + Sigma · Defender · Sentinel · Splunk</span>
+  <span class="banner-stats">__ARTICLE_COUNT__ articles · __USECASE_COUNT__ detections · MITRE ATT&amp;CK · Defender, Sentinel, Splunk, Sigma, Datadog, Falcon &amp; CloudWatch</span>
   <a href="#" class="banner-cta" id="firstVisitTour">Take the 30-second tour →</a>
 </div>
 
@@ -10349,7 +10365,7 @@ window.__pendingView = null;
      browse, credibility. Default landing view; non-technical visitors
      get orientation; technical visitors get one-click into search.
      ================================================================= -->
-<div id="view-home" class="view active">
+<div id="view-home" class="view active" tabindex="-1" style="scroll-margin-top:72px">
 __HOME__
 </div>
 
@@ -10813,7 +10829,7 @@ __HOME__
       <p>
         Threat actor names + country attribution are extracted from
         every article body via a curated alias lookup
-        (<a href="https://attack.mitre.org/groups/" target="_blank">MITRE ATT&amp;CK Groups</a>,
+        (<a href="https://attack.mitre.org/groups/" target="_blank" rel="noopener noreferrer">MITRE ATT&amp;CK Groups</a>,
         Mandiant, CrowdStrike Bears/Pandas/Cobras, Microsoft Threat
         Intel Typhoon naming, Unit 42 Sandstorm naming). Click any
         actor to drill into linked articles, use cases (with SPL/KQL
@@ -10835,11 +10851,11 @@ __HOME__
 
 
 <footer>
-  Splunk SPL conforms to the <a href="https://help.splunk.com/en/data-management/common-information-model/8.5/introduction/overview-of-the-splunk-common-information-model" style="color:var(--accent);" target="_blank">Splunk Common Information Model (CIM)</a> — uses
+  Splunk SPL conforms to the <a href="https://help.splunk.com/en/data-management/common-information-model/8.5/introduction/overview-of-the-splunk-common-information-model" style="color:var(--accent);" target="_blank" rel="noopener noreferrer">Splunk Common Information Model (CIM)</a> — uses
   <code>tstats</code> against accelerated data models with the canonical <code>Processes.dest</code>,
   <code>All_Email.recipient</code>, <code>All_Traffic.dest</code> field paths.
   Macros: <code>`summariesonly`</code> · <code>`drop_dm_object_name()`</code> · <code>`security_content_ctime()`</code> ship with Splunk ESCU.
-  <br>Defender KQL targets <a href="https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-schema-tables" style="color:var(--accent);" target="_blank">Advanced Hunting schema</a>.
+  <br>Defender KQL targets <a href="https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-schema-tables" style="color:var(--accent);" target="_blank" rel="noopener noreferrer">Advanced Hunting schema</a>.
   Kill chain follows the Lockheed Martin 7-phase model.
 </footer>
 
@@ -22087,7 +22103,7 @@ def render_home_hero(usecase_count: int, tech_count: int,
     <div class="home-hero-inner">
       <p class="home-eyebrow home-rise" style="--rise-delay:0ms"><span class="dot" aria-hidden="true"></span>Threat-led detection platform</p>
       <h1 class="home-headline home-rise" style="--rise-delay:60ms">Threat-led detections and hunts<br><span class="home-headline-2">built for modern SOC teams.</span></h1>
-      <p class="home-sub home-rise" style="--rise-delay:120ms">Continuously updated operational detections mapped to real attacker behaviour across Splunk, Sentinel, Defender, Sigma, Datadog, and CrowdStrike Falcon LogScale.</p>
+      <p class="home-sub home-rise" style="--rise-delay:120ms">Continuously updated operational detections mapped to real attacker behaviour across Splunk SPL, Microsoft Sentinel, Defender KQL, Sigma, Datadog, CrowdStrike Falcon LogScale, and AWS CloudWatch.</p>
       <form class="home-search home-rise" id="homeSearchForm" role="search" autocomplete="off" style="--rise-delay:180ms">
         <span class="home-search-glyph" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg>
@@ -23437,8 +23453,8 @@ def main():
         HTML_HEAD
         .replace("__HOME__", home_html)
         .replace("__GENERATED_AT__", generated_human)
-        .replace("__ARTICLE_COUNT__", str(disp_article_count))
-        .replace("__USECASE_COUNT__", str(disp_total_ucs))
+        .replace("__ARTICLE_COUNT__", f"{disp_article_count:,}")
+        .replace("__USECASE_COUNT__", f"{disp_total_ucs:,}")
         .replace("__TECH_COUNT__", str(disp_tech_count))
         .replace("__CVE_COUNT__", str(disp_cve_count))
         .replace("__CRIT_COUNT__", str(disp_crit_count))
