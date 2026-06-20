@@ -188,8 +188,8 @@ JSON_PROPERTY_PASS = True
 # escape character. Trying to honour `\"` escapes leads to backslashed
 # paths being misparsed as multi-string concatenations.
 _STRING_LITERAL_RE = re.compile(
-    r'@?h?"[^"]*"'              # double-quoted (verbatim/obfuscated prefix optional)
-    r"|@?h?'[^']*'",            # single-quoted
+    r'@?h?"(?:""|[^"])*"'       # double-quoted; "" is an escaped quote (KQL verbatim/regular)
+    r"|@?h?'(?:''|[^'])*'",     # single-quoted; '' is an escaped quote
 )
 _COMMENT_RE = re.compile(r"//[^\n]*")
 
