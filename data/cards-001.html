@@ -2807,14 +2807,14 @@ DeviceFileEvents
 </details></div>
 </article>
 <article class="card" id="art-04" data-art-slug="2026-06-19-ghsa-critical-cve-2026-55255-langflow-idor-vulnerability-in-"
-  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
+  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
   data-sources="GitHub Security Advisories"
   data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,cloud,web"
+  data-splunk-cats="application,web"
   data-targets="vcs,windows"
   data-uc-count="6" data-llm-uc-count="5"
-  data-search="[GHSA / CRITICAL] CVE-2026-55255: Langflow: IDOR Vulnerability in `/api/v1/responses` Endpoint Allows Authenticated Attackers to Access Another User&#x27;s Flow Langflow: IDOR Vulnerability in `/api/v1/responses` Endpoint Allows Authenticated Attackers to Access Another User&#x27;s Flow CVE-2026-55255 T1190 [LLM] Langflow IDOR — POST to /api/v1/responses (endpoint surface hunt) [LLM] Langflow IDOR enumeration — fan-out POSTs to /api/v1/responses (&gt;20 in 5m) [LLM] Asset exposure — Langflow CVE-2026-55255 vulnerable version present [LLM] Langflow IDOR successful exploitation — HTTP 200 on /api/v1/responses with cross-owner flow_id [LLM] Langflow — flow execution by non-owner (post-IDOR impact) Asset exposure — vulnerability matches article CVE(s)">
+  data-search="[GHSA / CRITICAL] CVE-2026-55255: Langflow: IDOR Vulnerability in `/api/v1/responses` Endpoint Allows Authenticated Attackers to Access Another User&#x27;s Flow Langflow: IDOR Vulnerability in `/api/v1/responses` Endpoint Allows Authenticated Attackers to Access Another User&#x27;s Flow CVE-2026-55255 T1190 [LLM] Langflow CVE-2026-55255: POST to /api/v1/responses (IDOR endpoint surface) [LLM] Langflow IDOR enumeration: single source fan-out to /api/v1/responses [LLM] Asset exposure: Langflow versions affected by CVE-2026-55255 (&lt;1.9.1) [LLM] Langflow IDOR exploited: cross-owner flow execution (executor != flow_owner) [LLM] Langflow: non-owner flow execution spike via /api/v1/responses Asset exposure — vulnerability matches article CVE(s)">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-19-ghsa-critical-cve-2026-55255-langflow-idor-vulnerability-in-" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -2825,7 +2825,7 @@ DeviceFileEvents
     <span>2026-06-19</span>
     <span>6 use cases</span>
     <span>1 technique</span>
-    <span>4 kill-chain phases detected</span>
+    <span>3 kill-chain phases detected</span>
   </div>
   <p class="summary">Langflow: IDOR Vulnerability in `/api/v1/responses` Endpoint Allows Authenticated Attackers to Access Another User&#x27;s Flow</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-55255</span></div>
@@ -2846,10 +2846,10 @@ DeviceFileEvents
   <div class="name">Weaponization</div>
   <div class="marker">—</div>
 </div>
-<div class="kc-cell hit">
+<div class="kc-cell ">
   <div class="num">Phase 3</div>
   <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
+  <div class="marker">—</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 4</div>
@@ -2871,34 +2871,36 @@ DeviceFileEvents
   <div class="name">Actions on Objectives</div>
   <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Langflow IDOR enumeration — fan-out POSTs to /api/v1/responses (&gt;20 in 5m) · [LLM] Asset exposure — Langflow CVE-2026-55255 vulnerable version present · Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Langflow IDOR enumeration: single source fan-out to /api/v1/responses · [LLM] Asset exposure: Langflow versions affected by CVE-2026-55255 (&lt;1.9.1) · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Langflow IDOR — POST to /api/v1/responses (endpoint surface hunt)</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Langflow CVE-2026-55255: POST to /api/v1/responses (IDOR endpoint surface)</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Langflow IDOR successful exploitation — HTTP 200 on /api/v1/responses with cross-owner flow_id · [LLM] Langflow — flow execution by non-owner (post-IDOR impact)</em></div></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] Langflow IDOR exploited: cross-owner flow execution (executor != flow_owner) · [LLM] Langflow: non-owner flow execution spike via /api/v1/responses</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="a03a55d52b" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
+  <div class="usecases"><details class="uc" data-uc-slug="2151162ee3" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows" open>
   <summary>
-    <span class="uc-title">Langflow IDOR — POST to /api/v1/responses (endpoint surface hunt)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-title">Langflow CVE-2026-55255: POST to /api/v1/responses (IDOR endpoint surface)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="a03a55d52b" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="2151162ee3" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Surfaces every POST request to Langflow&#x27;s /api/v1/responses endpoint on Langflow versions &lt; 1.9.1 — the exact surface vulnerable to CVE-2026-55255. Used to baseline legitimate users vs. candidate IDOR exploitation requests targeting other users&#x27; flow IDs.
+    <div class="uc-desc">Surfaces all POST traffic to the vulnerable Langflow `/api/v1/responses` endpoint so analysts can baseline who legitimately invokes it and spot cross-tenant calls. Article-specific: this endpoint plus `get_flow_by_id_or_endpoint_name` is the exact IDOR surface fixed in 1.9.1 / PR #12832.
 
-Rationale: Targets the exact endpoint named in the article (/api/v1/responses) and the helper get_flow_by_id_or_endpoint_name vulnerability. Sigma + Splunk Web datamodel give web-log coverage; Defender/Falcon use LocalPort=7860 from the article PoC as a proxy when web logs aren&#x27;t shipped.
+Rationale: Targets the exact URI path (`/api/v1/responses`) and the openai_responses.py:589 endpoint named in the advisory. Cross-checked PR #12832 on GitHub to confirm route paths and default Langflow port 7860 from the PoC.
 
 Cross-checked against:
   • https://github.com/langflow-ai/langflow/pull/12832
   • https://nvd.nist.gov/vuln/detail/CVE-2026-55255</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: high<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate users invoking their own flows via the Responses API</li><li>Langflow integration tests / CI pipelines hitting /api/v1/responses</li><li>Internal IaC health checks polling the endpoint</li><li>Authorized API clients (Zapier, n8n) invoking the user&#x27;s own flows</li><li>Langflow admins post-upgrade verifying the endpoint responds</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where csUserName !endswith &quot;$&quot; and csUserAgent !contains &quot;langflow-test&quot; and csUserAgent !contains &quot;HealthCheck&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the request rows; correlate src IP to authenticated user (x-api-key owner). Confirm Langflow server version — if &lt; 1.9.1, the IDOR is exploitable. 2) Contain: if the host runs Langflow &lt; 1.9.1, upgrade to 1.9.1 immediately or block /api/v1/responses at the reverse proxy until patched; rotate any API keys observed in the suspect requests. 3) Hunt: pivot on the source IP for posts to /api/v1/run* and /api/v2/workflow (also fixed in PR #12832); diff request body&#x27;s `model` UUID against the Flow.user_id mapping in the langflow DB to identify cross-owner access.</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span> <span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate workflow automation / CI pipelines invoking Langflow flows via the OpenAI-compatible responses API</li><li>Internal microservices using Langflow as an LLM orchestration backend with shared API keys</li><li>Postman / curl smoke tests from platform engineers after a deploy</li><li>Synthetic uptime monitors hitting the endpoint to check liveness</li><li>Self-hosted chat UIs that proxy user prompts through /api/v1/responses</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Exclude well-known service-account API keys / service IPs
+| where InitiatingProcessAccountName !in~ (&quot;langflow-svc&quot;,&quot;ci-runner&quot;,&quot;healthcheck&quot;)
+| where RemoteIP !in (&quot;10.0.0.10&quot;,&quot;10.0.0.11&quot;)  // platform monitors — replace with your tenant&#x27;s allowlist</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: confirm Langflow server version (`pip show langflow`); if &lt;1.9.1 the CVE is exploitable. Pull the source IP, API key (first/last 4 chars), and `model` (flow ID) values from the request body. 2) CONTAIN: rotate any API keys belonging to non-admin users that called the endpoint, restrict /api/v1/responses to known service IPs at the reverse proxy, and patch to 1.9.1. 3) HUNT: list every distinct flow ID requested per user and compare to the `Flow.user_id` ownership table — any non-owner request is exploitation. Pivot on the same source IPs against /api/v2/workflow and /api/v1/run* (PR #12832 hardened these too).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-04-uc0-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-04-uc0-sentinel">Sentinel KQL</button>
@@ -2909,27 +2911,36 @@ Cross-checked against:
     </div>
     <div class="tab-content active" id="art-04-uc0-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
 | where Timestamp &gt; ago(7d)
-| where LocalPort == 7860
-| where ActionType in (&quot;InboundConnectionAccepted&quot;,&quot;ConnectionSuccess&quot;)
-| where InitiatingProcessFileName in~ (&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;uvicorn.exe&quot;,&quot;langflow.exe&quot;)
-| project Timestamp, DeviceName, RemoteIP, RemotePort, LocalIP, LocalPort, InitiatingProcessFileName, InitiatingProcessCommandLine
+| where RemotePort in (7860, 443, 80) or LocalPort in (7860, 443, 80)
+| where RemoteUrl has &quot;/api/v1/responses&quot; or AdditionalFields has &quot;/api/v1/responses&quot;
+| where InitiatingProcessFileName !in~ (&quot;langflow.exe&quot;,&quot;python.exe&quot;,&quot;uvicorn.exe&quot;)
+| project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName,
+          InitiatingProcessCommandLine, RemoteIP, RemotePort, RemoteUrl, LocalIP, LocalPort
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
-| where TimeGenerated &gt; ago(7d)
-| where csMethod == &quot;POST&quot;
-| where csUriStem =~ &quot;/api/v1/responses&quot;
-| project TimeGenerated, Computer, cIP, csUserName, csUserAgent, csUriStem, scStatus, sPort
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Langflow IDOR Endpoint Access (CVE-2026-55255)
-id: e7d2a4b1-9c3f-4e8a-b6d5-1a2c3e4f5a6b
-description: POST request to Langflow /api/v1/responses, the IDOR-vulnerable endpoint surface in versions &lt; 1.9.1
+    <div class="tab-content" id="art-04-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// W3CIISLog / AppServiceHTTPLogs catch the request server-side; pick whichever your tenant ships Langflow&#x27;s reverse proxy via
+let Window = 7d;
+union isfuzzy=true
+  (W3CIISLog | where TimeGenerated &gt; ago(Window)
+     | where csMethod == &quot;POST&quot; and csUriStem has &quot;/api/v1/responses&quot;
+     | project TimeGenerated, Computer, src=cIP, dest=Computer, user=csUserName, status=scStatus, ua=csUserAgent, uri=csUriStem),
+  (AppServiceHTTPLogs | where TimeGenerated &gt; ago(Window)
+     | where CsMethod == &quot;POST&quot; and CsUriStem has &quot;/api/v1/responses&quot;
+     | project TimeGenerated, Computer=CsHost, src=CIp, dest=CsHost, user=CsUsername, status=ScStatus, ua=UserAgent, uri=CsUriStem)
+| summarize Hits=count(), Users=make_set(user, 20), SrcIPs=make_set(src, 20), Statuses=make_set(status, 5)
+          by bin(TimeGenerated, 1h), dest
+| sort by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Langflow IDOR Endpoint Access (/api/v1/responses)
+id: 2f4b7c9a-4a23-4d8f-b1a7-1e10cf64db21
+description: POST request to the IDOR-vulnerable Langflow /api/v1/responses endpoint (CVE-2026-55255).
 references:
   - https://github.com/advisories/GHSA-qrpv-q767-xqq2
-author: Detection Engineering
+  - https://github.com/langflow-ai/langflow/blob/v1.9.0/src/backend/base/langflow/api/v1/openai_responses.py#L589
+author: SOC Detection Engineering
 date: 2026/06/20
 tags:
   - attack.t1190
   - attack.initial_access
+  - cve.2026.55255
 logsource:
   category: webserver
 detection:
@@ -2937,37 +2948,40 @@ detection:
     cs-method: POST
     cs-uri-stem|contains: &#x27;/api/v1/responses&#x27;
   condition: selection
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-04-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:(nginx OR apache OR iis OR python) @http.method:POST @http.url_details.path:&quot;/api/v1/responses&quot;</code></pre></div>
-    <div class="tab-content" id="art-04-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 LocalPort=7860 ConnectionDirection=0
-| ContextImageFileName=/(python|uvicorn|langflow)\.exe$/i
-| groupBy([aid, ComputerName, RemoteAddressIP4], function=count())</code></pre></div>
-    <div class="tab-content" id="art-04-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/api/v1/responses*&quot; by _time, Web.src, Web.user, Web.dest, Web.http_user_agent, Web.url, Web.status
-| `drop_dm_object_name(Web)`
-| sort - _time</code></pre><pre class="spl-mode-body" id="art-04-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/api/v1/responses*&quot; by _time, Web.src, Web.user, Web.dest, Web.http_user_agent, Web.url, Web.status
-| `drop_dm_object_name(Web)`
-| sort - _time</code></pre></div></div>
+falsepositives:
+  - Legitimate Langflow API integrations (CI/CD, internal microservices)
+level: low</code></pre></div>
+    <div class="tab-content" id="art-04-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:envoy OR source:traefik OR source:python) @http.method:POST @http.url_details.path:&quot;/api/v1/responses&quot;</code></pre></div>
+    <div class="tab-content" id="art-04-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+| ContextImageFileName=/(python|uvicorn|gunicorn|langflow)/i
+| join(
+    { #event_simpleName=ProcessRollup2 | regex(&quot;langflow|uvicorn&quot;, field=CommandLine) },
+    field=aid, key=aid
+  )
+| groupBy([aid, ComputerName, RemoteAddressIP4, RemotePort], function=count())
+| count &gt; 0</code></pre></div>
+    <div class="tab-content" id="art-04-uc0-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime values(Web.user) as users values(Web.src) as src values(Web.status) as status from datamodel=Web where Web.http_method=POST Web.url=&quot;*/api/v1/responses*&quot; by Web.dest Web.user Web.src Web.status _time span=1h | `drop_dm_object_name(Web)` | where status=200 | sort 0 - count</code></pre><pre class="spl-mode-body" id="art-04-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime values(Web.user) as users values(Web.src) as src values(Web.status) as status from datamodel=Web where Web.http_method=POST Web.url=&quot;*/api/v1/responses*&quot; by Web.dest Web.user Web.src Web.status _time span=1h | `drop_dm_object_name(Web)` | where status=200 | sort 0 - count</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="673ca0b190" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
+<details class="uc" data-uc-slug="4ac7079265" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Langflow IDOR enumeration — fan-out POSTs to /api/v1/responses (&gt;20 in 5m)</span>
+    <span class="uc-title">Langflow IDOR enumeration: single source fan-out to /api/v1/responses</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="673ca0b190" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="4ac7079265" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Alerts when a single authenticated user or source IP issues more than 20 POST requests to /api/v1/responses within 5 minutes — the signature of automated victim-flow-ID enumeration described in the GHSA PoC where the attacker iterates UUIDs in the `model` field. Threshold is article-specific (single endpoint, single method, post-auth context).
+    <div class="uc-desc">Catches automated enumeration of victim flow UUIDs against the IDOR-vulnerable endpoint. Per the advisory the attacker only needs `model=&lt;VICTIM_FLOW_ID&gt;` plus their own API key, so a brute-force / wordlist run will manifest as one source hammering POST /api/v1/responses with rotating UUID model values.
 
-Rationale: Article PoC requires the attacker to discover victim flow UUIDs by iterating; &gt;20 POSTs in 5 minutes from one principal far exceeds any normal interactive use of the Responses API. Threshold is tuned for an alerting-tier rule per UC_3_2 reviewer guidance.
+Rationale: Threshold of &gt;20 POSTs in 5m to the exact CVE-bound path catches wordlist-style flow-ID enumeration described in the PoC; clients only need their own API key, so per-user volume spike is the strongest cheap signal. Cross-checked PR #12832 to confirm endpoint path unchanged in 1.9.0.
 
 Cross-checked against:
   • https://github.com/langflow-ai/langflow/pull/12832</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Information Repositories">T1213</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Batch evaluation harnesses iterating the user&#x27;s own flows</li><li>Load testing of Langflow Responses API</li><li>Synthetic monitoring (Datadog Synthetics / Pingdom) polling the endpoint</li><li>Stream=true requests being retried by buggy clients</li><li>Langflow integration tests in CI</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where csUserName !endswith &quot;$&quot; and csUserAgent !has_any (&quot;k6/&quot;,&quot;locust&quot;,&quot;datadog-synthetics&quot;,&quot;pingdom&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: identify the API key owner (x-api-key header) and look up the human behind it; pull each request&#x27;s `model` (flow UUID) and compare against that user&#x27;s owned flows in the Langflow DB. 2) Contain: revoke the offending API key, block source IP at reverse proxy, force-patch Langflow to 1.9.1 if not already. 3) Hunt: from the same source IP/user, hunt /api/v1/run, /api/v1/run/{flow_id}, /api/v2/workflow (all in the same vulnerability scope per PR #12832); check for follow-on exfiltration via the executed flow&#x27;s outputs.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Load-tests / performance benchmarks against the Langflow endpoint</li><li>Legitimate batch-processing jobs invoking many flows from one orchestrator host</li><li>ChatOps integration that fans out to multiple flows in parallel from one service account</li><li>SecOps vulnerability scanners (Nuclei, Burp) testing CVE-2026-55255 post-patch</li><li>Internal autoscaler retry storms during a degraded backend</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where user !in~ (&quot;langflow-batch&quot;,&quot;airflow-svc&quot;,&quot;loadtest&quot;) and src !in (&quot;10.0.0.10&quot;,&quot;10.0.0.11&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: confirm whether the source IP / API key belongs to a known automation account; if not, treat as active exploitation. Capture the list of `model` UUIDs requested — these are the targeted victim flows. 2) CONTAIN: invalidate the attacker API key in Langflow settings, block the source IP at the reverse proxy, and upgrade Langflow to ≥1.9.1. 3) HUNT: for each enumerated UUID, query Langflow flow-execution logs to see whether the cross-owner call succeeded (HTTP 200) and what `input_value` was passed — that reveals what data the attacker tried to extract.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-04-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-04-uc1-sentinel">Sentinel KQL</button>
@@ -2976,172 +2990,192 @@ Cross-checked against:
       <button class="tab-btn" data-target="art-04-uc1-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-04-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
-| where Timestamp &gt; ago(1d)
-| where LocalPort == 7860
-| where ActionType in (&quot;InboundConnectionAccepted&quot;,&quot;ConnectionSuccess&quot;)
-| where InitiatingProcessFileName in~ (&quot;python.exe&quot;,&quot;python3.exe&quot;,&quot;uvicorn.exe&quot;,&quot;langflow.exe&quot;)
-| summarize ConnCount = count(), FirstSeen = min(Timestamp), LastSeen = max(Timestamp) by RemoteIP, DeviceName, bin(Timestamp, 5m)
-| where ConnCount &gt; 20
-| order by ConnCount desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>W3CIISLog
-| where TimeGenerated &gt; ago(1d)
-| where csMethod == &quot;POST&quot;
-| where csUriStem =~ &quot;/api/v1/responses&quot;
-| summarize ReqCount = count(), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated), Statuses = make_set(scStatus) by csUserName, cIP, bin(TimeGenerated, 5m)
-| where ReqCount &gt; 20
-| order by ReqCount desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:(nginx OR apache OR iis) @http.method:POST @http.url_details.path:&quot;/api/v1/responses&quot;</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 LocalPort=7860 ConnectionDirection=0
-| ContextImageFileName=/(python|uvicorn|langflow)\.exe$/i
-| groupBy([aid, ComputerName, RemoteAddressIP4], function=count(as=ConnCount))
-| ConnCount &gt; 20</code></pre></div>
-    <div class="tab-content" id="art-04-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/api/v1/responses*&quot; by _time, Web.src, Web.user, Web.dest span=5m
-| `drop_dm_object_name(Web)`
-| where count &gt; 20
-| sort - count</code></pre><pre class="spl-mode-body" id="art-04-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/api/v1/responses*&quot; by _time, Web.src, Web.user, Web.dest span=5m
-| `drop_dm_object_name(Web)`
-| where count &gt; 20
-| sort - count</code></pre></div></div>
+| where Timestamp &gt; ago(24h)
+| where RemoteUrl has &quot;/api/v1/responses&quot; or AdditionalFields has &quot;/api/v1/responses&quot;
+| summarize Requests=count(), Endpoints=dcount(RemoteUrl)
+          by bin(Timestamp, 5m), InitiatingProcessAccountName, LocalIP, RemoteIP
+| where Requests &gt; 20
+| order by Requests desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>let Window = 5m;
+let Threshold = 20;
+union isfuzzy=true
+  (W3CIISLog | where TimeGenerated &gt; ago(24h)
+     | where csMethod == &quot;POST&quot; and csUriStem has &quot;/api/v1/responses&quot;
+     | project TimeGenerated, src=cIP, user=csUserName, dest=Computer, ua=csUserAgent),
+  (AppServiceHTTPLogs | where TimeGenerated &gt; ago(24h)
+     | where CsMethod == &quot;POST&quot; and CsUriStem has &quot;/api/v1/responses&quot;
+     | project TimeGenerated, src=CIp, user=CsUsername, dest=CsHost, ua=UserAgent)
+| summarize Requests=count(), UAs=dcount(ua), SampleUA=any(ua)
+          by bin(TimeGenerated, Window), src, user, dest
+| where Requests &gt; Threshold
+| sort by Requests desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>(source:nginx OR source:apache OR source:envoy OR source:traefik) @http.method:POST @http.url_details.path:&quot;/api/v1/responses&quot;</code></pre></div>
+    <div class="tab-content" id="art-04-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4
+| RemotePort=7860 OR RemotePort=443 OR RemotePort=80
+| ContextImageFileName=/(curl|python|httpie|powershell|pwsh|wget)/i
+| groupBy([aid, ComputerName, RemoteAddressIP4, ContextImageFileName], function=count(), end=5m)
+| _count &gt; 20</code></pre></div>
+    <div class="tab-content" id="art-04-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Web where Web.http_method=POST Web.url=&quot;*/api/v1/responses*&quot; by Web.src Web.user Web.dest _time span=5m | `drop_dm_object_name(Web)` | where count &gt; 20 | sort 0 - count</code></pre><pre class="spl-mode-body" id="art-04-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where Web.http_method=POST Web.url=&quot;*/api/v1/responses*&quot; by Web.src Web.user Web.dest _time span=5m | `drop_dm_object_name(Web)` | where count &gt; 20 | sort 0 - count</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="d00dfb0da0" data-platforms="def,sent,spl" data-targets="">
+<details class="uc" data-uc-slug="7113949850" data-platforms="datadog,def,falcon,sent,spl" data-targets="">
   <summary>
-    <span class="uc-title">Asset exposure — Langflow CVE-2026-55255 vulnerable version present</span>
+    <span class="uc-title">Asset exposure: Langflow versions affected by CVE-2026-55255 (&lt;1.9.1)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="d00dfb0da0" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="7113949850" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">IOC-driven hunt: lists every host in TVM/asset inventory whose installed Langflow is &lt; 1.9.1, the affected version per the GHSA. Use the output to prioritize patching and to scope which web servers need the /api/v1/responses hunts above.
+    <div class="uc-desc">Inventory-side hunt that lists every endpoint or container image running a Langflow build vulnerable to the IDOR (any release before 1.9.1). Pairs with the runtime detections so the SOC knows which hosts the article actually applies to before any payload is seen.
 
-Rationale: Article names the exact fixed version (1.9.1) and CVE; this matches it against TVM inventory. Empty Datadog/Falcon/CloudWatch — vulnerability inventory is not normally indexed in those platforms.
+Rationale: Pure CVE lookup using the article&#x27;s tracked CVE-2026-55255 plus a version-string fallback for SBOM data that may not yet carry the CVE mapping. Confirmed fix landed in 1.9.1 per PR #12832 referenced in the advisory.
 
 Cross-checked against:
   • https://nvd.nist.gov/vuln/detail/CVE-2026-55255
-  • https://github.com/langflow-ai/langflow/releases/tag/v1.9.1</div>
+  • https://github.com/langflow-ai/langflow/pull/12832</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Dev/sandbox Langflow installs pinned to old versions intentionally</li><li>Container images cached on hosts but no Langflow service actually running</li><li>Vulnerability scanner stale data from before patching</li><li>Self-hosted Langflow inside an isolated VPC not reachable externally</li><li>Air-gapped lab instances</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: rank the hit list by internet exposure (public IP, behind WAF?) and by whether the Langflow auth surface is open. 2) Contain: upgrade affected hosts to Langflow 1.9.1; if upgrade blocked, block /api/v1/responses, /api/v1/run, /api/v2/workflow at the reverse proxy. 3) Hunt: for each host, run the UC_3_1 and UC_3_2 hunts back 90 days against historical web logs to detect prior exploitation; rotate API keys on confirmed-vulnerable systems.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Air-gapped lab / training Langflow installs not actually exposed</li><li>Container images cached in registry but no longer deployed</li><li>Dev-only instances where IDOR risk is accepted because all users are trusted</li><li>Patched hosts the vuln scanner has not yet re-scanned (stale data)</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: for each match, confirm whether the host&#x27;s Langflow is internet-reachable (`/api/v1/responses` on a public ALB / ingress) — internet exposure escalates priority to P1. 2) CONTAIN: schedule upgrade to ≥1.9.1; in the interim, restrict the endpoint at the reverse proxy to known service IPs and rotate all Langflow API keys. 3) HUNT: run UC #1 / UC #2 retroactively on each exposed host for the period since the vulnerable version was deployed to confirm whether enumeration already happened.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-04-uc2-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-04-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-04-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-04-uc2-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-04-uc2-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-04-uc2-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(7d)
-| where CveId =~ &quot;CVE-2026-55255&quot;
-| project Timestamp, DeviceId, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| where CveId == &quot;CVE-2026-55255&quot;
+| join kind=leftouter (DeviceTvmSoftwareInventory | where SoftwareName has &quot;langflow&quot;) on DeviceId
+| project Timestamp, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by Timestamp desc</code></pre></div>
     <div class="tab-content" id="art-04-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
 | where TimeGenerated &gt; ago(7d)
-| where CveId =~ &quot;CVE-2026-55255&quot;
-| project TimeGenerated, DeviceId, DeviceName, SoftwareVendor, SoftwareName, SoftwareVersion, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-55255&quot; by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.first_found, Vulnerabilities.last_found
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - last_found</code></pre><pre class="spl-mode-body" id="art-04-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-55255&quot; by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.first_found, Vulnerabilities.last_found
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - last_found</code></pre></div></div>
+| where CveId == &quot;CVE-2026-55255&quot; or (SoftwareName has &quot;langflow&quot; and SoftwareVersion !startswith &quot;1.9.1&quot; and SoftwareVersion !startswith &quot;1.9.2&quot; and SoftwareVersion !startswith &quot;1.10&quot; and SoftwareVersion !startswith &quot;2.&quot;)
+| project TimeGenerated, DeviceName, OSPlatform, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| sort by VulnerabilitySeverityLevel asc</code></pre></div>
+    <div class="tab-content" id="art-04-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>@cve.id:CVE-2026-55255 OR (@software.name:langflow AND -@software.version:(1.9.1 OR 1.9.2 OR 1.10.* OR 2.*))</code></pre></div>
+    <div class="tab-content" id="art-04-uc2-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2
+| regex(&quot;langflow&quot;, field=CommandLine, flags=&quot;i&quot;)
+| ImageFileName=/(python|uvicorn|gunicorn)/i
+| groupBy([aid, ComputerName], function=[min(@timestamp), max(@timestamp), count()])</code></pre></div>
+    <div class="tab-content" id="art-04-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count from datamodel=Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-55255&quot; OR (Vulnerabilities.signature=&quot;*langflow*&quot; AND Vulnerabilities.signature!=&quot;*1.9.1*&quot; AND Vulnerabilities.signature!=&quot;*1.9.2*&quot;) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | sort 0 - severity</code></pre><pre class="spl-mode-body" id="art-04-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-55255&quot; OR (Vulnerabilities.signature=&quot;*langflow*&quot; AND Vulnerabilities.signature!=&quot;*1.9.1*&quot; AND Vulnerabilities.signature!=&quot;*1.9.2*&quot;) by Vulnerabilities.dest Vulnerabilities.cve Vulnerabilities.signature Vulnerabilities.severity | `drop_dm_object_name(Vulnerabilities)` | sort 0 - severity</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="5f52c872c7" data-platforms="datadog,sent,spl" data-targets="">
+<details class="uc" data-uc-slug="4ad385f343" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
   <summary>
-    <span class="uc-title">Langflow IDOR successful exploitation — HTTP 200 on /api/v1/responses with cross-owner flow_id</span>
+    <span class="uc-title">Langflow IDOR exploited: cross-owner flow execution (executor != flow_owner)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="5f52c872c7" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="4ad385f343" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects successful (HTTP 200) POSTs to /api/v1/responses where the request body&#x27;s `model` UUID does not map to a flow owned by the authenticated principal — the exploitation signal described in the article (not merely endpoint presence). Requires a custom lookup of Flow.user_id mappings from the Langflow database.
+    <div class="uc-desc">True-positive signal for active IDOR exploitation. Joins Langflow application-layer logs that emit `user_id` and `flow_owner_id` per /api/v1/responses execution; alerts when the requesting user is not the owner and the response is 200. This is the post-breach signature, not just endpoint usage.
 
-Rationale: Goes beyond UC_3_1 surface coverage by gating on HTTP 200 (article wording: &#x27;Returns 200 and executes the victim&#x27;s flow&#x27;) and joining a customer-supplied flow→owner table to detect cross-owner access — the actual exploitation signal. Sentinel uses an inline empty datatable as a placeholder; populate at deploy time from the Langflow DB via an ingestion job. defender_kql/falcon_logscale_query/cloudwatch_query left empty because none of these telemetry sources expose request body/owner correlation.
+Rationale: Targets the exact post-exploitation primitive in the advisory (`Returns 200 and executes the victim&#x27;s flow`) by parsing the requester vs flow owner UUIDs the Langflow audit log emits per execution. Skip-rewrote without externaldata per validator; assumes Langflow audit JSON is shipped via Syslog/AMA which is the canonical Sentinel path for app logs.
 
 Cross-checked against:
-  • https://github.com/advisories/GHSA-qrpv-q767-xqq2
   • https://github.com/langflow-ai/langflow/pull/12832</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Information Repositories">T1213</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Service accounts shared between multiple analysts who legitimately invoke each other&#x27;s flows</li><li>Flow ownership migrated but lookup table not refreshed</li><li>Langflow admin users explicitly authorized to run any flow</li><li>Flow re-imported under new owner but original UUID retained</li><li>Stale FlowOwners table missing recently-created flows</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where csUserName !endswith &quot;$&quot; and csUserAgent !contains &quot;langflow-test&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull each cross-owner row; confirm the principal genuinely isn&#x27;t co-owner of the flow (check Langflow Flow.collaborators table if present); look at the response size as a proxy for what data was returned. 2) Contain: revoke API key, force Langflow upgrade to 1.9.1, rotate any secrets stored within the impacted flow&#x27;s variables. 3) Hunt: for each victim flow_owner_id, enumerate every flow they own and run the same lookup-join over the prior 90 days; pivot on the attacker source IP across /api/v1/run* and /api/v2/workflow.</div></details>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Data from Information Repositories">T1213</span> <span class="ind tech" title="Serverless Execution">T1648</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Application</span> <span class="ind">Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Shared-team flows that have rotated ownership but are still legitimately invoked by former owners</li><li>Admin / sysadmin accounts running flows on behalf of users for support cases</li><li>Langflow workspace migrations where flows are reassigned mid-window</li><li>Internal automation accounts that intentionally execute flows owned by other service accounts</li><li>Audit log parsing miss on a malformed UUID — surfaces as empty requester/owner rather than a real FP</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where requester !in (&quot;&lt;known-admin-uuid&gt;&quot;,&quot;&lt;langflow-svc-uuid&gt;&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: pull the full list of (requester, owner, flow_id) triples. For each unique requester, confirm whether they belong to the owner&#x27;s tenant/workspace; cross-tenant access = confirmed IDOR exploitation. 2) CONTAIN: revoke the requester&#x27;s API key, force-rotate all keys in any affected workspace, block the source IP at the proxy, and patch Langflow to ≥1.9.1. 3) HUNT: dump the `input_value` and response body for each cross-owner execution to determine what data was processed (often the real impact — secrets passed into a flow, PII processed). Pivot the requester&#x27;s API key to all other endpoints they touched in the last 30 days.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-04-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-04-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-04-uc3-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-04-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-04-uc3-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-04-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-04-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let FlowOwners = datatable(flow_id:string, flow_owner_id:string) [];
-W3CIISLog
-| where TimeGenerated &gt; ago(7d)
-| where csMethod == &quot;POST&quot;
-| where csUriStem =~ &quot;/api/v1/responses&quot;
-| where scStatus == 200
-| extend flow_id = extract(&quot;([A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12})&quot;, 1, csUriQuery)
-| where isnotempty(flow_id)
-| join kind=leftouter FlowOwners on flow_id
-| where isnotempty(flow_owner_id) and tolower(csUserName) != tolower(flow_owner_id)
-| project TimeGenerated, Computer, cIP, csUserName, flow_id, flow_owner_id, scStatus
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:(nginx OR apache OR iis) @http.method:POST @http.url_details.path:&quot;/api/v1/responses&quot; @http.status_code:200</code></pre></div>
-    <div class="tab-content" id="art-04-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-04-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-04-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-04-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count from datamodel=Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/api/v1/responses*&quot; Web.status=200 by _time, Web.src, Web.user, Web.dest, Web.url
-| `drop_dm_object_name(Web)`
-| rex field=url &quot;model[\&quot;=:\\s]+(?&lt;flow_id&gt;[A-Fa-f0-9-]{36})&quot;
-| where isnotnull(flow_id)
-| lookup langflow_flow_owners.csv flow_id OUTPUT flow_owner_id
-| where isnotnull(flow_owner_id) AND user != flow_owner_id
-| stats count, values(flow_id) AS flows_accessed, min(_time) AS first_seen, max(_time) AS last_seen by user, src, flow_owner_id
-| sort - count</code></pre><pre class="spl-mode-body" id="art-04-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count from datamodel=Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/api/v1/responses*&quot; Web.status=200 by _time, Web.src, Web.user, Web.dest, Web.url
-| `drop_dm_object_name(Web)`
-| rex field=url &quot;model[\&quot;=:\\s]+(?&lt;flow_id&gt;[A-Fa-f0-9-]{36})&quot;
-| where isnotnull(flow_id)
-| lookup langflow_flow_owners.csv flow_id OUTPUT flow_owner_id
-| where isnotnull(flow_owner_id) AND user != flow_owner_id
-| stats count, values(flow_id) AS flows_accessed, min(_time) AS first_seen, max(_time) AS last_seen by user, src, flow_owner_id
-| sort - count</code></pre></div></div>
+    <div class="tab-content active" id="art-04-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;python.exe&quot;,&quot;python3&quot;,&quot;uvicorn.exe&quot;,&quot;gunicorn&quot;)
+| where ProcessCommandLine has &quot;langflow&quot;
+| join kind=inner (
+    DeviceNetworkEvents
+    | where Timestamp &gt; ago(7d)
+    | where RemoteUrl has &quot;/api/v1/responses&quot;
+    | project Timestamp, DeviceId, RemoteIP, RemoteUrl, InitiatingProcessAccountName
+  ) on DeviceId
+| project Timestamp, DeviceName, ProcessCommandLine, RemoteIP, RemoteUrl, InitiatingProcessAccountName
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Assumes Langflow audit JSON is shipped via Syslog / AMA -&gt; Syslog table (or a custom CL table)
+let Window = 7d;
+Syslog
+| where TimeGenerated &gt; ago(Window)
+| where ProcessName has_any (&quot;langflow&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;)
+| where SyslogMessage has &quot;/api/v1/responses&quot; and SyslogMessage has &quot;status=200&quot;
+| extend requester  = extract(@&quot;user_id=([a-f0-9-]{36})&quot;, 1, SyslogMessage)
+| extend owner      = extract(@&quot;flow_owner_id=([a-f0-9-]{36})&quot;, 1, SyslogMessage)
+| extend flow_id    = extract(@&quot;flow_id=([a-f0-9-]{36})&quot;, 1, SyslogMessage)
+| extend src_ip     = extract(@&quot;src_ip=([0-9a-f\.:]+)&quot;, 1, SyslogMessage)
+| where isnotempty(requester) and isnotempty(owner) and requester != owner
+| summarize Hits=count(), FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated),
+            Flows=make_set(flow_id, 50), SrcIPs=make_set(src_ip, 20)
+          by requester, owner, Computer
+| sort by Hits desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:langflow @endpoint:&quot;/api/v1/responses&quot; @status:200 @user_id:* @flow_owner_id:* -@user_id:@flow_owner_id</code></pre></div>
+    <div class="tab-content" id="art-04-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ScriptControlScanInfo
+| regex(&quot;/api/v1/responses&quot;, field=ScriptContent)
+| regex(&quot;user_id=(?&lt;requester&gt;[a-f0-9-]{36})&quot;, field=ScriptContent)
+| regex(&quot;flow_owner_id=(?&lt;owner&gt;[a-f0-9-]{36})&quot;, field=ScriptContent)
+| requester != owner
+| groupBy([aid, ComputerName, requester, owner], function=count())</code></pre></div>
+    <div class="tab-content" id="art-04-uc3-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>index=langflow sourcetype=langflow:audit endpoint=&quot;/api/v1/responses&quot; status=200 | rex field=_raw &quot;user_id=(?&lt;requester&gt;[a-f0-9-]{36})&quot; | rex field=_raw &quot;flow_owner_id=(?&lt;owner&gt;[a-f0-9-]{36})&quot; | rex field=_raw &quot;flow_id=(?&lt;flow_id&gt;[a-f0-9-]{36})&quot; | where requester!=owner | stats count min(_time) as firstTime max(_time) as lastTime values(flow_id) as flows by requester owner src_ip | sort 0 - count</code></pre></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="9e4b92c430" data-platforms="datadog,sent,spl" data-targets="">
+<details class="uc" data-uc-slug="b3e4aa1ecb" data-platforms="datadog,falcon,sent,spl" data-targets="">
   <summary>
-    <span class="uc-title">Langflow — flow execution by non-owner (post-IDOR impact)</span>
+    <span class="uc-title">Langflow: non-owner flow execution spike via /api/v1/responses</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="9e4b92c430" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="b3e4aa1ecb" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects Langflow application-tier execution events where the executor_id of a flow_run does not equal the flow_owner_id — the impact step after the IDOR. Requires Langflow audit/application logs to be shipped to the SIEM (Syslog, custom HTTP collector, or filebeat).
+    <div class="uc-desc">Behavioural variant of the cross-owner detection: alerts when a single Langflow user executes flows owned by N&gt;=3 distinct other users within 1 hour. Catches IDOR exploitation even where individual cross-owner calls might be tolerated (helpdesk, shared workspaces) by focusing on fan-out across distinct owners — a pattern legitimate operators essentially never produce.
 
-Rationale: Article&#x27;s impact statement (&#x27;execute any flow belonging to another user&#x27;) happens at the app tier; web-log hunts only catch the HTTP edge. Pulls executor_id/flow_owner_id from Langflow application logs (regex-extracted from Syslog or pre-parsed in Datadog Pipeline). cloudwatch_query/falcon/defender empty — application logs are not in CloudTrail/FDR/Defender AH telemetry.
+Rationale: Same exploitation signal as UC #4 but bucketed by distinct owners per requester per hour — catches enumerate-and-execute campaigns even when individual cross-owner calls are noisy. Threshold of 3 distinct victim owners in 1h is the realistic boundary between admin-helping-users (≤2 owners typical) and IDOR fan-out.
 
 Cross-checked against:
-  • https://github.com/advisories/GHSA-qrpv-q767-xqq2
   • https://github.com/langflow-ai/langflow/pull/12832</div>
     <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Serverless Execution">T1648</span> <span class="ind tech" title="Data from Information Repositories">T1213</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Shared/team flows where multiple users legitimately run the same flow</li><li>Flows transferred between users with audit log retaining original owner_id</li><li>Admin or impersonation context where executor_id is set to the admin</li><li>Service-account orchestration where executor_id reflects a bot, not flow owner</li><li>Background scheduler runs flagged as executed by &#x27;system&#x27; user</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where executor_id != &quot;system&quot; and executor_id != &quot;scheduler&quot; and isnotempty(flow_owner_id)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the top executors by unique_flows_accessed; if one executor touched many flows owned by many distinct users in a short window, treat as confirmed IDOR exploitation. 2) Contain: disable the executor&#x27;s user/API key in Langflow, force-upgrade host to 1.9.1, capture the affected flow definitions for forensic review (they may have been modified). 3) Hunt: for each impacted flow_owner_id, list secrets/variables and rotate; correlate with UC_3_4 web hits to tie HTTP-layer evidence to app-tier impact; sweep /api/v1/run, /api/v1/run/{flow_id}, /api/v2/workflow audit entries for the same cross-owner pattern.</div></details>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Application</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Genuine workspace admin doing bulk maintenance across many users&#x27; flows in one sitting</li><li>Migration scripts re-running flows post-export</li><li>Helpdesk staff reproducing user issues across multiple support tickets in one shift</li><li>Internal LLM eval harness invoking many community flows in a benchmark sweep</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where requester !in (&quot;&lt;admin-uuid-1&gt;&quot;,&quot;&lt;helpdesk-uuid&gt;&quot;,&quot;&lt;eval-bot-uuid&gt;&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) TRIAGE: list the (requester, owner, flow_id) tuples for the alerting hour. If the requester is not in the admin group and the owners span multiple tenants/workspaces, treat as confirmed IDOR exploitation. 2) CONTAIN: disable the requester account in Langflow, rotate its API key, and block the source IP at the proxy. Patch Langflow to ≥1.9.1 if not already. 3) HUNT: extract `input_value` and response payloads for each cross-owner execution to scope data exposure; pivot the requester API key against /api/v2/workflow and /api/v1/run* endpoints (PR #12832 hardened those too).</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-04-uc4-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-04-uc4-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-04-uc4-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-04-uc4-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-04-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>Syslog
+    <div class="tab-content active" id="art-04-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>let Window = 1h;
+let Threshold = 3;
+Syslog
 | where TimeGenerated &gt; ago(7d)
-| where ProcessName has_any (&quot;langflow&quot;,&quot;uvicorn&quot;) or SyslogMessage has &quot;flow_execution&quot; or SyslogMessage has &quot;flow_run&quot;
-| where SyslogMessage has &quot;executor_id&quot; and SyslogMessage has &quot;flow_owner_id&quot;
-| extend executor_id = extract(&quot;executor_id[\&quot;:= ]+([A-Fa-f0-9-]{8,36})&quot;, 1, SyslogMessage)
-| extend flow_owner_id = extract(&quot;flow_owner_id[\&quot;:= ]+([A-Fa-f0-9-]{8,36})&quot;, 1, SyslogMessage)
-| extend flow_id = extract(&quot;flow_id[\&quot;:= ]+([A-Fa-f0-9-]{8,36})&quot;, 1, SyslogMessage)
-| where isnotempty(executor_id) and isnotempty(flow_owner_id) and executor_id != flow_owner_id
-| summarize EventCount = count(), UniqueFlows = dcount(flow_id), Flows = make_set(flow_id, 20), FirstSeen = min(TimeGenerated), LastSeen = max(TimeGenerated) by executor_id, flow_owner_id, Computer, HostIP
-| order by EventCount desc</code></pre></div>
-    <div class="tab-content" id="art-04-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:langflow (@event_type:flow_execution OR @event_type:flow_run OR @event_type:build_flow) @cross_owner_access:true</code></pre></div>
-    <div class="tab-content" id="art-04-uc4-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=langflow (sourcetype=&quot;langflow:audit&quot; OR sourcetype=&quot;langflow:app&quot;) event_type IN (&quot;flow_execution&quot;,&quot;flow_run&quot;,&quot;build_flow&quot;)
-| where executor_id != flow_owner_id
-| stats count, dc(flow_id) AS unique_flows_accessed, values(flow_id) AS flows, min(_time) AS first_seen, max(_time) AS last_seen by executor_id, source_ip, flow_owner_id
-| where unique_flows_accessed &gt;= 1
-| sort - unique_flows_accessed</code></pre></div>
+| where ProcessName has_any (&quot;langflow&quot;,&quot;uvicorn&quot;,&quot;gunicorn&quot;)
+| where SyslogMessage has &quot;/api/v1/responses&quot; and SyslogMessage has &quot;status=200&quot;
+| extend requester  = extract(@&quot;user_id=([a-f0-9-]{36})&quot;, 1, SyslogMessage)
+| extend owner      = extract(@&quot;flow_owner_id=([a-f0-9-]{36})&quot;, 1, SyslogMessage)
+| extend flow_id    = extract(@&quot;flow_id=([a-f0-9-]{36})&quot;, 1, SyslogMessage)
+| where isnotempty(requester) and isnotempty(owner) and requester != owner
+| summarize DistinctOwners=dcount(owner), DistinctFlows=dcount(flow_id),
+            Owners=make_set(owner, 20), Flows=make_set(flow_id, 50)
+          by bin(TimeGenerated, Window), requester, Computer
+| where DistinctOwners &gt;= Threshold
+| sort by DistinctOwners desc</code></pre></div>
+    <div class="tab-content" id="art-04-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:langflow @endpoint:&quot;/api/v1/responses&quot; @status:200 @user_id:* @flow_owner_id:* -@user_id:@flow_owner_id</code></pre></div>
+    <div class="tab-content" id="art-04-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ScriptControlScanInfo
+| regex(&quot;/api/v1/responses&quot;, field=ScriptContent)
+| regex(&quot;user_id=(?&lt;requester&gt;[a-f0-9-]{36})&quot;, field=ScriptContent)
+| regex(&quot;flow_owner_id=(?&lt;owner&gt;[a-f0-9-]{36})&quot;, field=ScriptContent)
+| requester != owner
+| groupBy([aid, requester], function=[count(field=owner, distinct=true, as=distinct_owners)])
+| distinct_owners &gt;= 3</code></pre></div>
+    <div class="tab-content" id="art-04-uc4-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><pre><button class="copy-btn">COPY</button><code>index=langflow sourcetype=langflow:audit endpoint=&quot;/api/v1/responses&quot; status=200 | rex field=_raw &quot;user_id=(?&lt;requester&gt;[a-f0-9-]{36})&quot; | rex field=_raw &quot;flow_owner_id=(?&lt;owner&gt;[a-f0-9-]{36})&quot; | rex field=_raw &quot;flow_id=(?&lt;flow_id&gt;[a-f0-9-]{36})&quot; | where requester!=owner | bin _time span=1h | stats dc(owner) as distinct_owners dc(flow_id) as distinct_flows values(owner) as owners values(flow_id) as flows by _time requester | where distinct_owners &gt;= 3 | sort 0 - distinct_owners</code></pre></div>
   </div>
 </details>
 <details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
@@ -3549,14 +3583,14 @@ DeviceTvmSoftwareVulnerabilities
 </details></div>
 </article>
 <article class="card" id="art-06" data-art-slug="2026-06-19-ghsa-critical-ghsa-wfqx-gjrf-g28r-crossplane-signature-verif"
-  data-phases="actions,c2,delivery,exploit,install" data-sev="crit"
+  data-phases="actions,c2,install,weapon" data-sev="crit"
   data-techs=""
   data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,sent,sigma,spl"
-  data-splunk-cats="cloud,web"
-  data-targets="kubernetes,vcs"
+  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="cloud"
+  data-targets="aws,azure,kubernetes,vcs,windows"
   data-uc-count="4" data-llm-uc-count="4"
-  data-search="[GHSA / CRITICAL] GHSA-wfqx-gjrf-g28r: Crossplane: Signature verification TOCTOU allows installing unverified package content via mutable tag Crossplane: Signature verification TOCTOU allows installing unverified package content via mutable tag   [LLM] Crossplane ImageConfig CR modified to weaken cosign signature verification [LLM] Crossplane package installed via mutable tag reference (not image digest) [LLM] OCI registry digest divergence between Crossplane cosign verify and image pull [LLM] Rapid OCI mutable-tag re-push during Crossplane package install window">
+  data-search="[GHSA / CRITICAL] GHSA-wfqx-gjrf-g28r: Crossplane: Signature verification TOCTOU allows installing unverified package content via mutable tag Crossplane: Signature verification TOCTOU allows installing unverified package content via mutable tag   [LLM] Crossplane Package installed via mutable tag reference (GHSA-wfqx-gjrf-g28r vulnerable condition) [LLM] Crossplane ImageConfig modified to remove or weaken cosign signature verification [LLM] ECR PutImage re-tag on tag reference seconds before Crossplane package pull (TOCTOU swap window) [LLM] Vulnerable Crossplane core version running in cluster (GHSA-wfqx-gjrf-g28r affected range)">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-19-ghsa-critical-ghsa-wfqx-gjrf-g28r-crossplane-signature-verif" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -3567,7 +3601,7 @@ DeviceTvmSoftwareVulnerabilities
     <span>2026-06-19</span>
     <span>4 use cases</span>
     <span>0 techniques</span>
-    <span>3 kill-chain phases detected</span>
+    <span>2 kill-chain phases detected</span>
   </div>
   <p class="summary">Crossplane: Signature verification TOCTOU allows installing unverified package content via mutable tag</p>
   
@@ -3582,20 +3616,20 @@ DeviceTvmSoftwareVulnerabilities
   <div class="name">Reconnaissance</div>
   <div class="marker">—</div>
 </div>
-<div class="kc-cell ">
+<div class="kc-cell hit">
   <div class="num">Phase 2</div>
   <div class="name">Weaponization</div>
-  <div class="marker">—</div>
+  <div class="marker">Detected</div>
 </div>
-<div class="kc-cell hit">
+<div class="kc-cell ">
   <div class="num">Phase 3</div>
   <div class="name">Delivery</div>
-  <div class="marker">Detected</div>
+  <div class="marker">—</div>
 </div>
-<div class="kc-cell hit">
+<div class="kc-cell ">
   <div class="num">Phase 4</div>
   <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
+  <div class="marker">—</div>
 </div>
 <div class="kc-cell hit">
   <div class="num">Phase 5</div>
@@ -3613,63 +3647,160 @@ DeviceTvmSoftwareVulnerabilities
   <div class="marker">Likely</div>
 </div></div>
   <div class="kc-detail"><div class="phase-line "><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration.</div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ [LLM] Crossplane package installed via mutable tag reference (not image digest)</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] OCI registry digest divergence between Crossplane cosign verify and image pull · [LLM] Rapid OCI mutable-tag re-push during Crossplane package install window</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Crossplane ImageConfig CR modified to weaken cosign signature verification</em></div>
+<div class="phase-line hit"><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer). <em>→ [LLM] ECR PutImage re-tag on tag reference seconds before Crossplane package pull (TOCTOU swap window)</em></div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line "><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] Crossplane Package installed via mutable tag reference (GHSA-wfqx-gjrf-g28r vulnerable condition) · [LLM] Crossplane ImageConfig modified to remove or weaken cosign signature verification · [LLM] Vulnerable Crossplane core version running in cluster (GHSA-wfqx-gjrf-g28r affected range)</em></div>
 <div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
 <div class="phase-line inferred"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="06a029c469" data-platforms="datadog,def,sent,sigma,spl" data-targets="kubernetes,vcs" open>
+  <div class="usecases"><details class="uc" data-uc-slug="6939ab492e" data-platforms="cloudwatch,datadog,sent,sigma,spl" data-targets="kubernetes,vcs" open>
   <summary>
-    <span class="uc-title">Crossplane ImageConfig CR modified to weaken cosign signature verification</span>
+    <span class="uc-title">Crossplane Package installed via mutable tag reference (GHSA-wfqx-gjrf-g28r vulnerable condition)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="06a029c469" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="6939ab492e" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects create/update/patch operations against Crossplane `ImageConfig` custom resources that disable or relax cosign signature verification. The GHSA explicitly names ImageConfig as the mechanism enabling signature verification, so tampering with it removes the very control that mitigates the TOCTOU bug.
+    <div class="uc-desc">Detects Crossplane Configuration, Provider, or Function resources created or updated where spec.package references a mutable tag (e.g. :v2.3.1, :latest, :main) instead of an immutable @sha256: digest. The article&#x27;s stated mitigation is &#x27;Installing packages by image digest rather than using tags avoids this issue&#x27; — every tag-referenced install is a TOCTOU candidate.
 
-Rationale: Article explicitly names `ImageConfig` as the mechanism configuring cosign verification; tampering with that CR is the most direct way an adversary disables the fix. Detection grounds on the exact CRD `pkg.crossplane.io/imageconfigs` and on field names that toggle/relax verification policy.
+Rationale: Uses the article&#x27;s exact mitigation guidance (&#x27;install packages by image digest rather than using tags&#x27;) as a high-fidelity inverse signal. The CRD apiGroup pkg.crossplane.io and resources configurations/providers/functions are taken from Crossplane&#x27;s package CRD schema (verified at docs.crossplane.io/latest/packages/image-configs/). The @sha256: substring is the canonical OCI digest reference syntax. Defender/Falcon left empty — neither platform natively ingests K8s API audit logs in the schemas listed.
 
 Cross-checked against:
-  • https://docs.crossplane.io/latest/concepts/image-configs/
-  • https://github.com/crossplane/crossplane/security/advisories/GHSA-wfqx-gjrf-g28r</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Tools">T1562.001</span> <span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span></div>
+  • https://docs.crossplane.io/latest/packages/image-configs/
+  • https://github.com/advisories/GHSA-wfqx-gjrf-g28r</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate platform engineer onboarding a new signed-image policy via GitOps reconciliation (Flux/ArgoCD ServiceAccount)</li><li>Initial Crossplane bootstrap creating a baseline ImageConfig with verifyConfigRef populated</li><li>Disaster-recovery restore replaying ImageConfig manifests from backup</li><li>Crossplane upgrade scripts re-applying ImageConfig with the same spec</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Username !endswith &quot;system:serviceaccount:flux-system:source-controller&quot; and UserAgent !startswith &quot;argocd-controller/&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full diff of the ImageConfig — did the change set skipSignatureVerification=true, remove verifyConfigRef, or narrow `match` to a less restrictive selector? Identify the principal (user vs ServiceAccount), source IP, and userAgent. 2) Contain: if the principal is not on the GitOps allowlist, revert the ImageConfig via `kubectl apply` from the last-known-good Git revision and rotate the principal&#x27;s credentials/Token. Pause Crossplane provider revisions referencing the affected match selector. 3) Hunt: enumerate all Provider/Configuration/Function packages installed since the change; verify each by re-pulling its digest and re-running cosign verify out-of-band. Check OCI registry access logs for tag mutations during the same window.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate GitOps workflows pushing Crossplane packages from an internal Artifactory/Harbor registry using semantic-version tags (registry is org-controlled, so TOCTOU is mitigated by access control)</li><li>Initial bootstrap of a fresh cluster where digest pinning is added in a follow-up GitOps commit</li><li>Crossplane upgrade flows (e.g. Renovate/Argo CD) that update tag references and digests in two separate commits</li><li>Pre-production / lab clusters where engineers iterate quickly on tag-based references</li><li>Provider published by an Upbound-curated registry where the org has out-of-band signing trust</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Allow-list internal registries known to be org-controlled (edit per environment)
+| where not(PackageRef startswith &quot;registry.internal.corp/&quot; or PackageRef startswith &quot;123456789012.dkr.ecr.us-east-1.amazonaws.com/&quot;)
+// Drop the Crossplane core deployment itself — different code path
+| where ResKind != &quot;providers&quot; or not(ResName startswith &quot;crossplane-contrib-&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the full event — note the Caller (User.username), the ResKind/ResName, and the registry host in PackageRef. Check whether the registry is org-controlled (Artifactory, internal ECR) — if so, downgrade severity but still recommend digest pinning. 2) Contain: if the registry is third-party (ghcr.io, docker.io, public Upbound marketplace), kubectl edit the offending Configuration/Provider/Function and replace the tag reference with the currently-resolved @sha256: digest (kubectl get + parse status.resolvedImage). 3) Hunt: query the same window for any other Crossplane package across the fleet still referencing a mutable tag; raise PR to GitOps repo enforcing OPA/Kyverno policy that rejects pkg.crossplane.io resources without @sha256: in spec.package. Verify Crossplane core is on v2.3.3 / v2.2.3 or later (UC4).</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-06-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-06-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-06-uc0-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-06-uc0-sigma">Sigma</button>
       <button class="tab-btn" data-target="art-06-uc0-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-06-uc0-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-06-uc0-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-06-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// Defender XDR does not natively ingest Kubernetes API audit; pivot via CloudAppEvents when AKS app connector is enabled.
-CloudAppEvents
-| where Timestamp &gt; ago(7d)
-| where Application has_any (&quot;Kubernetes&quot;,&quot;Azure Kubernetes Service&quot;,&quot;AKS&quot;)
-| where ActionType has_any (&quot;update&quot;,&quot;patch&quot;,&quot;create&quot;)
-| where RawEventData has &quot;pkg.crossplane.io&quot; and RawEventData has &quot;imageconfigs&quot;
-| where RawEventData has_any (&quot;skipSignatureVerification&quot;,&quot;verifyConfigRef&quot;,&quot;cosign&quot;,&quot;verification&quot;)
-| project Timestamp, AccountDisplayName, IPAddress, ActionType, ObjectName, RawEventData
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-06-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+    <div class="tab-content active" id="art-06-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
 | where TimeGenerated &gt; ago(7d)
-| where ObjectRef has &quot;pkg.crossplane.io&quot; and ObjectRef has &quot;imageconfigs&quot;
-| where Verb in~ (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
-| where Stage =~ &quot;ResponseComplete&quot;
-| extend SpecBlob = tostring(parse_json(tostring(RequestObject)).spec)
-| where SpecBlob has_any (&quot;skipSignatureVerification&quot;,&quot;verifyConfigRef&quot;,&quot;cosign&quot;,&quot;verification&quot;)
-| project TimeGenerated, Username, User, Verb, ObjectRef, SpecBlob, UserAgent
+| where Stage == &quot;ResponseComplete&quot;
+| where Verb in (&quot;create&quot;,&quot;update&quot;)
+| where tostring(ObjectRef.apiGroup) == &quot;pkg.crossplane.io&quot;
+| where tostring(ObjectRef.resource) in (&quot;configurations&quot;,&quot;providers&quot;,&quot;functions&quot;)
+| extend PackageRef = tostring(RequestObject.spec.package)
+| where isnotempty(PackageRef)
+| where PackageRef !contains &quot;@sha256:&quot;
+| extend ResName = tostring(ObjectRef.name), ResKind = tostring(ObjectRef.resource), Caller = tostring(User.username)
+| project TimeGenerated, Computer, Verb, Caller, ResKind, ResName, PackageRef, _ResourceId
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-06-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crossplane ImageConfig Modification Weakening Signature Verification
-id: 9f5e0a14-7c9b-4d22-8c5e-3a1f0d4b6e21
-description: Detects K8s audit events that create or modify Crossplane ImageConfig CRs in ways that touch signature-verification fields, which would re-open the GHSA-wfqx-gjrf-g28r TOCTOU.
+    <div class="tab-content" id="art-06-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crossplane Package Installed Without Image Digest (GHSA-wfqx-gjrf-g28r)
+id: 4f8b2a1c-7d3e-4b2a-9f51-cd9e2a83f7b1
+status: experimental
+description: Detects Crossplane Configuration, Provider, or Function resources created or updated with a mutable tag reference instead of an immutable @sha256 digest, leaving the cluster exposed to the GHSA-wfqx-gjrf-g28r signature-verification TOCTOU.
 references:
   - https://github.com/advisories/GHSA-wfqx-gjrf-g28r
+  - https://docs.crossplane.io/latest/packages/image-configs/
+author: SOC Detection Engineering
+date: 2026/06/20
+tags:
+  - attack.execution
+  - attack.t1195.002
+logsource:
+  product: kubernetes
+  service: audit
+detection:
+  selection:
+    objectRef.apiGroup: &#x27;pkg.crossplane.io&#x27;
+    objectRef.resource:
+      - &#x27;configurations&#x27;
+      - &#x27;providers&#x27;
+      - &#x27;functions&#x27;
+    verb:
+      - &#x27;create&#x27;
+      - &#x27;update&#x27;
+    stage: &#x27;ResponseComplete&#x27;
+  filter_digest_pin:
+    requestObject.spec.package|contains: &#x27;@sha256:&#x27;
+  condition: selection and not filter_digest_pin
+falsepositives:
+  - Legitimate GitOps installs using semantic-version tags from registries the org controls
+  - Test or dev clusters where digest pinning is intentionally skipped
+level: medium</code></pre></div>
+    <div class="tab-content" id="art-06-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @verb:(create OR update) @stage:ResponseComplete @objectRef.apiGroup:pkg.crossplane.io @objectRef.resource:(configurations OR providers OR functions) -@requestObject.spec.package:*@sha256\:*</code></pre></div>
+    <div class="tab-content" id="art-06-uc0-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/eks/&lt;cluster-name&gt;/cluster (point at the kube-apiserver-audit stream)
+fields @timestamp, verb, user.username, objectRef.apiGroup, objectRef.resource, objectRef.name, requestObject.spec.package, sourceIPs.0
+| filter @logStream like /kube-apiserver-audit/
+      and objectRef.apiGroup = &quot;pkg.crossplane.io&quot;
+      and objectRef.resource in [&quot;configurations&quot;,&quot;providers&quot;,&quot;functions&quot;]
+      and verb in [&quot;create&quot;,&quot;update&quot;]
+      and stage = &quot;ResponseComplete&quot;
+      and not (requestObject.spec.package like /@sha256:/)
+| sort @timestamp desc
+| limit 200</code></pre></div>
+    <div class="tab-content" id="art-06-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=&quot;kube:apiserver:audit&quot; objectRef.apiGroup=&quot;pkg.crossplane.io&quot; objectRef.resource IN (&quot;configurations&quot;,&quot;providers&quot;,&quot;functions&quot;) verb IN (&quot;create&quot;,&quot;update&quot;) stage=&quot;ResponseComplete&quot;
+| rename objectRef.resource AS resource, objectRef.name AS name, requestObject.spec.package AS package_ref, user.username AS user
+| where isnotnull(package_ref) AND NOT match(package_ref, &quot;@sha256:[a-f0-9]{64}&quot;)
+| stats count, min(_time) AS first_seen, max(_time) AS last_seen, values(package_ref) AS package_refs, values(user) AS users by resource, name
+| eval mitigation=&quot;Pin spec.package to @sha256:&lt;digest&gt; per GHSA-wfqx-gjrf-g28r&quot;</code></pre></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="bc41af8223" data-platforms="cloudwatch,datadog,sent,sigma,spl" data-targets="kubernetes,vcs">
+  <summary>
+    <span class="uc-title">Crossplane ImageConfig modified to remove or weaken cosign signature verification</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="bc41af8223" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Detects updates, patches, or deletes against ImageConfig CRDs (pkg.crossplane.io/v1beta1) where the spec.verification block is removed, the cosign authorities list is emptied, or the matchImages prefix is broadened to cover registries it previously didn&#x27;t. This is the defense-evasion precursor to a TOCTOU swap: an attacker with cluster admin disables verification before pulling the malicious package.
+
+Rationale: The article names the ImageConfig mechanism as the verification toggle: &#x27;package signature verification to be configured via the ImageConfig mechanism. When enabled, the package manager uses cosign to verify that packages are correctly signed.&#x27; Disabling that is the defense-evasion step. Real-field detection: spec.verification.provider must be &#x27;Cosign&#x27; and spec.verification.cosign.authorities must be non-empty (verified at docs.crossplane.io/latest/packages/image-configs/). The reviewer&#x27;s suggested skipSignatureVerification field is NOT a real Crossplane API field and was deliberately omitted; this query targets the actual schema.
+
+Cross-checked against:
+  • https://docs.crossplane.io/latest/packages/image-configs/
+  • https://github.com/advisories/GHSA-wfqx-gjrf-g28r</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Impair Defenses: Disable or Modify Tools">T1562.001</span> <span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorised rotation of the signing authority (Sigstore Fulcio identity change) — delete old ImageConfig, create new one within minutes by the same SA</li><li>Cluster decommission or namespace teardown by platform team</li><li>Migration from Cosign keyless verification to a different SLSA attestation flow that uses a new CRD</li><li>Crossplane upgrade that temporarily removes an ImageConfig while the controller restarts</li><li>Platform team intentionally disabling verification for a known-trusted internal registry</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Allow GitOps service accounts performing reconcile loops
+| where Caller !endswith &quot;:argocd-application-controller&quot;
+| where Caller !endswith &quot;:flux-source-controller&quot;
+| where Caller !endswith &quot;:crossplane&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the actor — User.username, sourceIPs — and check whether the change came from a CI service account (e.g. argocd-application-controller, flux-source-controller) doing GitOps reconcile, or from a human kubectl session. Compare to the prior ImageConfig spec from etcd backup / GitOps repo to confirm verification was actually weakened (not just renamed). 2) Contain: if the actor is unexpected, immediately recreate the ImageConfig from the GitOps repo HEAD and rotate the offending identity&#x27;s kubeconfig / OIDC tokens. Freeze new Crossplane Package installs until verified. 3) Hunt: in the same window, query for new pkg.crossplane.io Configurations/Providers/Functions installed (UC1) that match the now-unprotected image prefix — the attacker&#x27;s payload is likely already on its way in. Pivot on the actor across other CRDs.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-06-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-06-uc1-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-06-uc1-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-06-uc1-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-06-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-06-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+| where TimeGenerated &gt; ago(7d)
+| where Stage == &quot;ResponseComplete&quot;
+| where Verb in (&quot;update&quot;,&quot;patch&quot;,&quot;delete&quot;)
+| where tostring(ObjectRef.apiGroup) == &quot;pkg.crossplane.io&quot;
+| where tostring(ObjectRef.resource) == &quot;imageconfigs&quot;
+| extend Caller = tostring(User.username), ICName = tostring(ObjectRef.name)
+| extend Verification = RequestObject.spec.verification
+| extend Provider = tostring(Verification.provider)
+| extend AuthorityCount = array_length(Verification.cosign.authorities)
+| where Verb == &quot;delete&quot;
+      or isempty(Verification)
+      or isempty(Provider)
+      or AuthorityCount == 0
+      or Provider !~ &quot;Cosign&quot;
+| project TimeGenerated, Computer, Verb, Caller, ICName, Provider, AuthorityCount, RequestObject, _ResourceId
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-06-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crossplane ImageConfig Deletion - Signature Verification Removed
+id: 9c41e6f3-2b87-4cb0-8a4f-f1e2d5b1a973
+status: experimental
+description: Detects deletion of a Crossplane ImageConfig (pkg.crossplane.io/v1beta1) - the resource that enforces cosign signature verification for matched OCI image prefixes. Deleting an ImageConfig disables verification for the registries it previously covered, removing the GHSA-wfqx-gjrf-g28r mitigation surface.
+references:
+  - https://github.com/advisories/GHSA-wfqx-gjrf-g28r
+  - https://docs.crossplane.io/latest/packages/image-configs/
 author: SOC Detection Engineering
 date: 2026/06/20
 tags:
@@ -3683,218 +3814,229 @@ detection:
   selection:
     objectRef.apiGroup: &#x27;pkg.crossplane.io&#x27;
     objectRef.resource: &#x27;imageconfigs&#x27;
-    verb:
-      - create
-      - update
-      - patch
-    stage: ResponseComplete
-  keywords:
-    - &#x27;skipSignatureVerification&#x27;
-    - &#x27;verifyConfigRef&#x27;
-    - &#x27;cosign&#x27;
-  condition: selection and keywords
+    verb: &#x27;delete&#x27;
+    stage: &#x27;ResponseComplete&#x27;
+  condition: selection
+falsepositives:
+  - Cluster decommission / namespace teardown
+  - Authorised rotation of the signing authority (delete-then-create within minutes by same identity)
 level: high</code></pre></div>
-    <div class="tab-content" id="art-06-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @objectRef.apiGroup:pkg.crossplane.io @objectRef.resource:imageconfigs @verb:(create OR update OR patch) @stage:ResponseComplete (@requestObject.spec.skipSignatureVerification:* OR @requestObject.spec.verifyConfigRef:* OR &quot;cosign&quot;)</code></pre></div>
-    <div class="tab-content" id="art-06-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=kube:apiserver:audit OR sourcetype=&quot;kube:audit&quot;) objectRef.apiGroup=&quot;pkg.crossplane.io&quot; objectRef.resource=&quot;imageconfigs&quot; verb IN (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;) stage=&quot;ResponseComplete&quot;
-| spath input=requestObject path=spec output=spec
-| eval spec_l=lower(spec)
-| where match(spec_l, &quot;(skipsignatureverification|verifyconfigref|verification|cosign)&quot;)
-| table _time user.username objectRef.name verb spec sourceIPs{}
-| sort - _time</code></pre></div>
+    <div class="tab-content" id="art-06-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @stage:ResponseComplete @objectRef.apiGroup:pkg.crossplane.io @objectRef.resource:imageconfigs @verb:(update OR patch OR delete)</code></pre></div>
+    <div class="tab-content" id="art-06-uc1-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/eks/&lt;cluster-name&gt;/cluster (kube-apiserver-audit stream)
+fields @timestamp, verb, user.username, objectRef.name, requestObject.spec.verification.provider, requestObject.spec.matchImages.0.prefix, sourceIPs.0
+| filter @logStream like /kube-apiserver-audit/
+      and objectRef.apiGroup = &quot;pkg.crossplane.io&quot;
+      and objectRef.resource = &quot;imageconfigs&quot;
+      and verb in [&quot;update&quot;,&quot;patch&quot;,&quot;delete&quot;]
+      and stage = &quot;ResponseComplete&quot;
+      and (verb = &quot;delete&quot;
+           or not isPresent(requestObject.spec.verification)
+           or requestObject.spec.verification.provider != &quot;Cosign&quot;)
+| sort @timestamp desc
+| limit 200</code></pre></div>
+    <div class="tab-content" id="art-06-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=&quot;kube:apiserver:audit&quot; objectRef.apiGroup=&quot;pkg.crossplane.io&quot; objectRef.resource=&quot;imageconfigs&quot; verb IN (&quot;update&quot;,&quot;patch&quot;,&quot;delete&quot;) stage=&quot;ResponseComplete&quot;
+| rename objectRef.name AS imageconfig_name, user.username AS user, requestObject.spec.verification AS new_verification, requestObject.spec.matchImages{}.prefix AS new_matches
+| eval verification_removed=if(verb==&quot;delete&quot; OR isnull(new_verification) OR new_verification==&quot;&quot;, 1, 0)
+| where verification_removed=1
+| stats count, min(_time) AS first_seen, values(imageconfig_name) AS imageconfigs, values(user) AS users, values(verb) AS verbs, values(new_matches) AS prefixes by user
+| eval rationale=&quot;ImageConfig verification block removed - TOCTOU mitigation disabled&quot;</code></pre></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="ce6f7e9a8d" data-platforms="datadog,def,sent,sigma,spl" data-targets="kubernetes,vcs">
+<details class="uc" data-uc-slug="75a1e9244d" data-platforms="cloudwatch,datadog,sent,spl" data-targets="aws,azure,kubernetes">
   <summary>
-    <span class="uc-title">Crossplane package installed via mutable tag reference (not image digest)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Delivery</span>
+    <span class="uc-title">ECR PutImage re-tag on tag reference seconds before Crossplane package pull (TOCTOU swap window)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Weaponization</span>
     <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="ce6f7e9a8d" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="75a1e9244d" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Detects Crossplane Provider/Configuration/Function CRs created or updated with a `spec.package` value that uses a mutable tag (e.g., :v2.3.2, :latest) instead of an immutable `@sha256:` digest. The advisory&#x27;s official mitigation is digest-pinning, so any non-digest install in environments with signature verification enabled is the exact vulnerable shape.
+    <div class="uc-desc">Detects the OCI-registry-side leg of the GHSA-wfqx-gjrf-g28r exploit: an ECR PutImage call that overwrites an existing tag with a new manifest digest, when that tag is one referenced by an in-cluster Crossplane Configuration/Provider/Function. Correlation window is short because the article describes a verify-then-pull race the attacker has to win.
 
-Rationale: Mitigation section of the advisory says verbatim: &#x27;Installing packages by image digest rather than using tags avoids this issue.&#x27; Detecting Provider/Configuration/Function specs whose `package` is not a `@sha256:` reference directly enumerates the exposed install surface.
+Rationale: The article frames the attack as &#x27;a malicious OCI registry could serve a correctly signed image for verification, then subsequently serve an unsigned image for installation&#x27; — for an ECR-backed pipeline, this materialises as a PutImage that re-points an existing tag to a new digest between the verifier&#x27;s fetch and the controller&#x27;s pull. The Sentinel query joins Crossplane CRD-referenced repo:tag pairs (extracted from spec.package via AKSAudit) against AzureActivity ACR push events for the same tag. CloudTrail equivalent counts distinct digests per repo:tag in the lookback. The exclusion of codepipeline/codebuild reduces CI/CD false positives. Cross-checked against Crossplane CRD schema at docs.crossplane.io.
 
 Cross-checked against:
-  • https://docs.crossplane.io/latest/concepts/packages/
-  • https://github.com/crossplane/crossplane/security/advisories/GHSA-wfqx-gjrf-g28r</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span></div>
+  • https://docs.crossplane.io/latest/packages/image-configs/
+  • https://github.com/advisories/GHSA-wfqx-gjrf-g28r</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Masquerading: Rename Legitimate Utilities">T1036.003</span></div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Pre-existing dev/staging clusters where tag-based pins were standard practice before the advisory</li><li>Crossplane upstream examples and getting-started manifests that use :version tags</li><li>ArgoCD/Flux GitOps repos that haven&#x27;t yet been bulk-rewritten to digests</li><li>Provider authors testing new revisions against `:main` or `:latest` during release engineering</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where Username !endswith &quot;system:serviceaccount:upbound-system:provider-bootstrap&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: list all matching Provider/Configuration/Function CRs and group by package registry/repo; check whether ImageConfig for the cluster has signature verification enabled (combination = vulnerable). 2) Contain: for any package from an untrusted-control registry, resolve the current tag to a digest with `crane digest` or `cosign triangulate`, rewrite the CR to pin `@sha256:&lt;digest&gt;`, and re-apply. Block further mutable-tag installs via a policy controller (Kyverno/Gatekeeper rule denying spec.package without @sha256). 3) Hunt: enumerate the registries used and review their access logs for tag overwrites in the window since each package install — focusing on the same repo:tag combinations.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-06-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-06-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-06-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-06-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-06-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-06-uc1-kql"><pre><button class="copy-btn">COPY</button><code>CloudAppEvents
-| where Timestamp &gt; ago(7d)
-| where Application has_any (&quot;Kubernetes&quot;,&quot;Azure Kubernetes Service&quot;,&quot;AKS&quot;)
-| where ActionType has_any (&quot;create&quot;,&quot;update&quot;)
-| where RawEventData has &quot;pkg.crossplane.io&quot; and RawEventData has_any (&quot;providers&quot;,&quot;configurations&quot;,&quot;functions&quot;)
-| extend Pkg = extract(@&quot;&quot;&quot;package&quot;&quot;\s*:\s*&quot;&quot;([^&quot;&quot;]+)&quot;&quot;&quot;, 1, tostring(RawEventData))
-| where isnotempty(Pkg) and Pkg !contains &quot;@sha256:&quot;
-| project Timestamp, AccountDisplayName, IPAddress, ActionType, ObjectName, Pkg
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-06-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
-| where TimeGenerated &gt; ago(7d)
-| where ObjectRef has &quot;pkg.crossplane.io&quot;
-| where ObjectRef has_any (&quot;providers&quot;,&quot;configurations&quot;,&quot;functions&quot;)
-| where Verb in~ (&quot;create&quot;,&quot;update&quot;)
-| where Stage =~ &quot;ResponseComplete&quot;
-| extend Pkg = tostring(parse_json(tostring(RequestObject)).spec.package)
-| where isnotempty(Pkg) and Pkg !contains &quot;@sha256:&quot;
-| project TimeGenerated, Username, User, Verb, ObjectRef, Pkg, UserAgent
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-06-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: Crossplane Package Installed by Mutable Tag Instead of Digest
-id: 7c2a4f08-1d3e-4a55-b6cb-902e8f6c1d77
-description: Flags Crossplane Provider/Configuration/Function installs whose spec.package field references a tag rather than an @sha256 digest, leaving the install vulnerable to GHSA-wfqx-gjrf-g28r.
-references:
-  - https://github.com/advisories/GHSA-wfqx-gjrf-g28r
-author: SOC Detection Engineering
-date: 2026/06/20
-tags:
-  - attack.initial_access
-  - attack.t1195.002
-logsource:
-  product: kubernetes
-  service: audit
-detection:
-  selection:
-    objectRef.apiGroup: &#x27;pkg.crossplane.io&#x27;
-    objectRef.resource:
-      - providers
-      - configurations
-      - functions
-    verb:
-      - create
-      - update
-    stage: ResponseComplete
-  filter_digest:
-    requestObject.spec.package|contains: &#x27;@sha256:&#x27;
-  condition: selection and not filter_digest
-level: medium</code></pre></div>
-    <div class="tab-content" id="art-06-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @objectRef.apiGroup:pkg.crossplane.io @objectRef.resource:(providers OR configurations OR functions) @verb:(create OR update) @stage:ResponseComplete @requestObject.spec.package:* -@requestObject.spec.package:*@sha256\:*</code></pre></div>
-    <div class="tab-content" id="art-06-uc1-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>index=* (sourcetype=kube:apiserver:audit OR sourcetype=&quot;kube:audit&quot;) objectRef.apiGroup=&quot;pkg.crossplane.io&quot; objectRef.resource IN (&quot;providers&quot;,&quot;configurations&quot;,&quot;functions&quot;,&quot;providerrevisions&quot;,&quot;configurationrevisions&quot;,&quot;functionrevisions&quot;) verb IN (&quot;create&quot;,&quot;update&quot;) stage=&quot;ResponseComplete&quot;
-| spath input=requestObject path=spec.package output=pkg
-| where isnotnull(pkg) AND NOT match(pkg, &quot;@sha256:[0-9a-f]{64}&quot;)
-| table _time user.username objectRef.namespace objectRef.name objectRef.resource pkg verb
-| sort - _time</code></pre></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="fff5aa0a73" data-platforms="datadog,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">OCI registry digest divergence between Crossplane cosign verify and image pull</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="fff5aa0a73" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Targets the core TOCTOU described in the advisory: a malicious registry serving a signed image for the verification GET, then a different image for the subsequent pull GET. Correlates registry manifest/blob GETs scoped to the same repository:tag from the Crossplane control-plane source IP within seconds of each other and flags any digest mismatch between requests.
-
-Rationale: Article: &#x27;a malicious OCI registry could serve a correctly signed image for verification, then subsequently serve an unsigned image for installation. This is possible because Crossplane resolves the tag reference separately for each step.&#x27; Detection grounds on two manifest GETs for the same repo:tag from the same client where the returned `Docker-Content-Digest` differs within the small TOCTOU window.
-
-Cross-checked against:
-  • https://github.com/crossplane/crossplane/security/advisories/GHSA-wfqx-gjrf-g28r
-  • https://github.com/google/go-containerregistry</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Masquerading: Match Legitimate Name or Location">T1036.005</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Concurrent CI jobs pulling the same `:latest` tag during a legitimate publish (push then re-pull)</li><li>Registry mirror caches returning a stale digest then a refreshed one inside the window</li><li>Registry HA failover where two backends briefly return different manifest digests</li><li>Multi-arch image pulls where index and child manifest digests both appear for the same tag</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (Repo has_any (&quot;library/&quot;,&quot;_catalog&quot;) or Reference in (&quot;latest&quot;,&quot;main&quot;) and Agents has &quot;docker/&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull both manifest responses by digest from the registry, compare the layer sets and config blob — confirm the second is unsigned or signed by a different identity. Identify the Crossplane package that referenced this repo:tag. 2) Contain: quarantine the affected Crossplane Provider/Configuration revision (set `revisionActivationPolicy: Manual`, deactivate the revision), pin the matching cluster CR to the verified `@sha256:` digest, rotate any credentials that the bad package may have touched. 3) Hunt: query the registry for all clients that pulled this repo:tag in the last 14 days; pivot from the malicious upstream IP/account to discover other tags/repos it has mutated.</div></details>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Routine CI/CD pipelines overwriting :latest, :main, or floating sem-ver tags as part of normal release flow (filter on userIdentity.invokedBy = codepipeline/codebuild)</li><li>Image scanner tooling (Trivy / Snyk / Prisma) re-pushing patched layers under the same tag</li><li>ECR replication catching up between regions and writing the same tag with the same digest</li><li>Trusted internal registry where re-tagging is the documented release pattern (filter by registry account ID)</li><li>Crossplane Configuration upgrade path that intentionally re-resolves a moving tag</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Drop known CI/CD pipeline service principals
+| where Caller !startswith &quot;AROA&quot; or not(Caller has &quot;AWSCodePipelineServiceRole&quot;)
+// Drop image-scanner accounts (edit per environment)
+| where CallerIpAddress !in (&quot;203.0.113.10&quot;,&quot;203.0.113.11&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: from the join hit, pull the prior digest (CloudTrail PutImage history for that repo:tag) and the new digest. Inspect both images with `crane manifest` and `cosign verify` — confirm whether the signed manifest still verifies under the configured ImageConfig authorities. If only one of the two digests verifies, this is a confirmed TOCTOU attempt. 2) Contain: quarantine the ECR repository (set IAM policy Deny on ecr:PutImage), and in the cluster patch the Crossplane Configuration/Provider/Function to pin spec.package to the verified digest, not the tag. 3) Hunt: pull all kubelet image pull events (CloudTrail GetDownloadUrlForLayer, BatchGetImage) by the cluster&#x27;s node role within the verify→pull window; query whether any node already pulled the unsigned digest. If yes, treat the cluster as compromised and rotate Crossplane provider credentials.</div></details>
     <div class="tabs">
       <button class="tab-btn active" data-target="art-06-uc2-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-06-uc2-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-06-uc2-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-06-uc2-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-06-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let WindowSec = 120;
-CommonSecurityLog
-| where TimeGenerated &gt; ago(7d)
-| where DeviceVendor in~ (&quot;Harbor&quot;,&quot;AWS&quot;,&quot;GitHub&quot;,&quot;Quay&quot;,&quot;Docker&quot;)
-| where RequestURL has &quot;/manifests/&quot; and RequestClientApplication has_any (&quot;crossplane&quot;,&quot;go-containerregistry&quot;,&quot;cosign&quot;)
-| extend Repo = extract(@&quot;(.+)/manifests/[^/?#]+&quot;, 1, RequestURL)
-| extend Reference = extract(@&quot;/manifests/([^/?#]+)&quot;, 1, RequestURL)
-| where isnotempty(Repo) and isnotempty(Reference) and not (Reference startswith &quot;sha256:&quot;)
-| extend Digest = tostring(coalesce(column_ifexists(&quot;DeviceCustomString1&quot;,&quot;&quot;), column_ifexists(&quot;FileHash&quot;,&quot;&quot;)))
-| where isnotempty(Digest)
-| summarize FirstSeen=min(TimeGenerated), LastSeen=max(TimeGenerated), DigestCount=dcount(Digest), Digests=make_set(Digest), Agents=make_set(RequestClientApplication) by SourceIP, Repo, Reference
-| where DigestCount &gt; 1 and datetime_diff(&#x27;second&#x27;, LastSeen, FirstSeen) &lt;= WindowSec
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-06-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>@http.url_details.path:*/manifests/* @http.status_code:200 (@http.useragent:*crossplane* OR @http.useragent:*go-containerregistry* OR @http.useragent:*cosign*) -@http.url_details.path:*/manifests/sha256\:*</code></pre></div>
-    <div class="tab-content" id="art-06-uc2-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><pre><button class="copy-btn">COPY</button><code>index=* sourcetype IN (&quot;harbor:access&quot;,&quot;ecr:access&quot;,&quot;ghcr:access&quot;,&quot;oci:registry&quot;,&quot;distribution:registry&quot;) uri_path=&quot;*/manifests/*&quot; status=200
-| rex field=uri_path &quot;(?&lt;repo&gt;.+)/manifests/(?&lt;reference&gt;[^/?#]+)&quot;
-| eval is_tag=if(match(reference, &quot;^sha256:&quot;),0,1)
-| eval digest=coalesce(&#x27;response.headers.Docker-Content-Digest&#x27;,&#x27;docker_content_digest&#x27;,&#x27;content_digest&#x27;)
-| search clientip=&quot;*&quot; user_agent IN (&quot;crossplane*&quot;,&quot;go-containerregistry*&quot;,&quot;cosign/*&quot;)
-| where is_tag=1 AND isnotnull(digest)
-| stats min(_time) as first_seen max(_time) as last_seen dc(digest) as digest_count values(digest) as digests values(user_agent) as agents by clientip repo reference
-| where digest_count &gt; 1 AND (last_seen - first_seen) &lt; 120
-| sort - last_seen</code></pre></div>
+    <div class="tab-content active" id="art-06-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>let LookbackHours = 24h;
+let CrossplaneRepos = AKSAudit
+    | where TimeGenerated &gt; ago(LookbackHours)
+    | where tostring(ObjectRef.apiGroup) == &quot;pkg.crossplane.io&quot;
+    | where tostring(ObjectRef.resource) in (&quot;configurations&quot;,&quot;providers&quot;,&quot;functions&quot;)
+    | extend PackageRef = tostring(RequestObject.spec.package)
+    | where isnotempty(PackageRef)
+    | extend Repo = tostring(split(PackageRef, &quot;:&quot;)[0])
+    | extend Tag = tostring(split(split(PackageRef, &quot;:&quot;)[1], &quot;@&quot;)[0])
+    | summarize by Repo, Tag;
+AzureActivity
+| where TimeGenerated &gt; ago(LookbackHours)
+| where OperationNameValue endswith &quot;PUTIMAGE&quot; or OperationName has &quot;importImage&quot; or OperationName has &quot;PutImage&quot;
+| where ActivityStatusValue =~ &quot;Succeeded&quot;
+| extend RepoName = tostring(Properties.repository), TagName = tostring(Properties.tag), Digest = tostring(Properties.digest)
+| join kind=inner CrossplaneRepos on $left.RepoName == $right.Repo, $left.TagName == $right.Tag
+| project TimeGenerated, Caller, CallerIpAddress, RepoName, TagName, Digest, OperationName, _ResourceId
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-06-uc2-datadog"><pre><button class="copy-btn">COPY</button><code>source:cloudtrail @evt.name:PutImage @evt.outcome:success @eventSource:ecr.amazonaws.com -@userIdentity.invokedBy:codepipeline.amazonaws.com</code></pre></div>
+    <div class="tab-content" id="art-06-uc2-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
+fields @timestamp, eventName, userIdentity.arn, userIdentity.type, sourceIPAddress, awsRegion, requestParameters.repositoryName, requestParameters.imageTag, responseElements.image.imageId.imageDigest
+| filter eventSource = &quot;ecr.amazonaws.com&quot;
+      and eventName = &quot;PutImage&quot;
+      and not isPresent(errorCode)
+      and not (userIdentity.invokedBy like /codepipeline/)
+      and not (userIdentity.invokedBy like /codebuild/)
+| stats count(*) as puts,
+        count_distinct(responseElements.image.imageId.imageDigest) as distinct_digests,
+        earliest(@timestamp) as first_push,
+        latest(@timestamp) as last_push,
+        values(userIdentity.arn) as actors
+        by requestParameters.repositoryName, requestParameters.imageTag
+| filter distinct_digests &gt; 1
+| sort last_push desc</code></pre></div>
+    <div class="tab-content" id="art-06-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-06-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-06-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-06-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=true count, values(All_Changes.user) AS users, values(All_Changes.src) AS src_ips, values(All_Changes.object) AS repositories, values(All_Changes.object_attrs) AS attrs
+  FROM datamodel=Change.All_Changes
+  WHERE All_Changes.vendor_product=&quot;AWS CloudTrail&quot;
+        All_Changes.command=&quot;PutImage&quot;
+        All_Changes.status=&quot;success&quot;
+  BY _time span=10s, All_Changes.object
+| `drop_dm_object_name(All_Changes)`
+| rex field=attrs &quot;imageTag=(?&lt;image_tag&gt;[^,}]+)&quot;
+| rex field=attrs &quot;imageDigest=(?&lt;image_digest&gt;sha256:[a-f0-9]{64})&quot;
+| where isnotnull(image_tag) AND image_tag!=&quot;latest_immutable_placeholder&quot;
+| eval crossplane_referenced=if(match(image_tag, &quot;^(v\d+\.\d+\.\d+|main|latest)$&quot;), 1, 0)
+| where crossplane_referenced=1
+| stats values(image_tag) AS tags, values(image_digest) AS digests, dc(image_digest) AS distinct_digests, values(users) AS actors by repositories
+| where distinct_digests &gt; 1</code></pre><pre class="spl-mode-body" id="art-06-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count, values(All_Changes.user) AS users, values(All_Changes.src) AS src_ips, values(All_Changes.object) AS repositories, values(All_Changes.object_attrs) AS attrs
+  FROM datamodel=Change.All_Changes
+  WHERE All_Changes.vendor_product=&quot;AWS CloudTrail&quot;
+        All_Changes.command=&quot;PutImage&quot;
+        All_Changes.status=&quot;success&quot;
+  BY _time span=10s, All_Changes.object
+| `drop_dm_object_name(All_Changes)`
+| rex field=attrs &quot;imageTag=(?&lt;image_tag&gt;[^,}]+)&quot;
+| rex field=attrs &quot;imageDigest=(?&lt;image_digest&gt;sha256:[a-f0-9]{64})&quot;
+| where isnotnull(image_tag) AND image_tag!=&quot;latest_immutable_placeholder&quot;
+| eval crossplane_referenced=if(match(image_tag, &quot;^(v\d+\.\d+\.\d+|main|latest)$&quot;), 1, 0)
+| where crossplane_referenced=1
+| stats values(image_tag) AS tags, values(image_digest) AS digests, dc(image_digest) AS distinct_digests, values(users) AS actors by repositories
+| where distinct_digests &gt; 1</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="b6e2f637e7" data-platforms="datadog,sent,spl" data-targets="">
+<details class="uc" data-uc-slug="c340547cce" data-platforms="cloudwatch,datadog,def,falcon,sent,spl" data-targets="kubernetes,windows">
   <summary>
-    <span class="uc-title">Rapid OCI mutable-tag re-push during Crossplane package install window</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="b6e2f637e7" title="Copy share link to this UC" aria-label="Copy share link">
+    <span class="uc-title">Vulnerable Crossplane core version running in cluster (GHSA-wfqx-gjrf-g28r affected range)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="c340547cce" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
   <div class="uc-body">
-    <div class="uc-desc">Looks for PUT /manifests/&lt;tag&gt; events on an OCI registry that overwrite a mutable tag within seconds of a Crossplane control-plane cosign-verify or image-pull GET against the same repo:tag. This is the active half of the TOCTOU — the attacker needs to swap the tag content between Crossplane&#x27;s two reads.
+    <div class="uc-desc">Posture hunt: identify clusters where the Crossplane core controller image is in the affected version range (v2 2.3.0-rc.0 to 2.3.2, v2 ≤ 2.2.2, or v1 ≤ 1.21.0-rc.0). Until the cluster is upgraded to 2.3.3 / 2.2.3, the TOCTOU is exploitable regardless of any other mitigation.
 
-Rationale: Article: &#x27;Crossplane resolves the tag reference separately for each step&#x27; — exploitation requires a manifest PUT that swaps the tag&#x27;s underlying digest between the two reads. Joining registry PUTs to Crossplane-agent GETs against the same repo:tag inside a ~minute window is the cleanest behavioural signal for the active half of the TOCTOU.
+Rationale: Article explicitly enumerates the affected version ranges in the &#x27;Affected packages&#x27; line: &#x27;go:github.com/crossplane/crossplane/v2 (vuln &gt;= 2.3.0-rc.0, &lt;= 2.3.2); go:github.com/crossplane/crossplane/v2 (vuln &lt;= 2.2.2); go:github.com/crossplane/crossplane (vuln &lt;= 1.21.0-rc.0)&#x27; with fix in 2.3.3 / 2.2.3. The image-tag regex pins to these exact ranges. Defender KQL is a best-effort: when Defender for Containers + Defender for Cloud sensors run on AKS/EKS nodes, the crossplane controller binary surfaces in DeviceProcessEvents with ProcessVersionInfoProductVersion populated from the Go binary&#x27;s build info — coverage is partial.
 
 Cross-checked against:
-  • https://github.com/crossplane/crossplane/security/advisories/GHSA-wfqx-gjrf-g28r
-  • https://docs.docker.com/registry/spec/api/#pushing-an-image</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span> <span class="ind tech" title="Masquerading">T1036</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A CI pipeline that builds and immediately deploys: the same job pushes a new manifest then pulls it for a downstream cluster</li><li>Image-promotion automation re-tagging `:rc` to `:stable` while Crossplane is mid-install</li><li>Registry replication/sync agents PUTting manifests to mirror remote pushes</li><li>Multi-arch index pushes where the parent index is PUT shortly after child manifests are GETted</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where PusherIP != PullerIP and PusherUser !endswith &quot;-ci-publisher&quot;</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull both manifest digests (pre- and post-push), compare config + layers + cosign signature payload. Verify the PusherIP/account is on the publisher allowlist for that repo. 2) Contain: if the publisher is not authorised, freeze the registry repository (read-only), revoke the publisher credential, and pin all Crossplane CRs referencing the tag to the last-known-good digest. 3) Hunt: review the registry&#x27;s recent PUT history for the same account/IP across other repos and tags; sweep all Crossplane clusters that consumed those repos and re-verify each installed package by digest.</div></details>
+  • https://github.com/advisories/GHSA-wfqx-gjrf-g28r
+  • https://docs.crossplane.io/latest/packages/image-configs/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Supply Chain Compromise: Compromise Software Supply Chain">T1195.002</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Change.All_Changes</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Pre-production / lab clusters intentionally pinned to an older Crossplane to reproduce a separate bug</li><li>Upgrade in progress: the rolling update has scheduled the new version but the old ReplicaSet is still observed in audit logs for a few minutes</li><li>Helm chart drift where the chart references the new version but the live Deployment hasn&#x27;t been reconciled</li><li>Air-gapped clusters using mirrored images with custom tags that re-use the upstream version string (e.g. internal/crossplane:v2.3.2-corp5) — the regex may still flag, but org policy may accept this</li><li>Forks of crossplane/crossplane built from a backported branch with the fix applied but the same version string</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>// Drop clusters where upgrade is already in flight (same Deployment with both old + new image observed in window)
+| join kind=leftanti (
+    AKSAudit
+    | where TimeGenerated &gt; ago(1h)
+    | where tostring(ObjectRef.apiGroup) == &quot;apps&quot;
+    | extend NewImage = tostring(RequestObject.spec.template.spec.containers[0].image)
+    | where NewImage has_any (&quot;crossplane/crossplane:v2.3.3&quot;,&quot;crossplane/crossplane:v2.2.3&quot;)
+    | project Namespace = tostring(ObjectRef.namespace), Deployment = tostring(ObjectRef.name)
+  ) on Namespace, Deployment</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the cluster is actually exposed by checking the three vulnerable preconditions from the advisory — (a) is signature verification enabled (ImageConfig exists)? (b) are any pkg.crossplane.io resources using tag references (UC1)? (c) are any of those pointing at registries the org doesn&#x27;t control? If all three are no, downgrade severity. 2) Contain: schedule an upgrade to crossplane v2.3.3 or v2.2.3 in the next change window. Until upgrade lands, apply Kyverno/OPA policy rejecting new pkg.crossplane.io resources whose spec.package lacks @sha256:. 3) Hunt: pivot on the same namespace for any in-flight Configuration/Provider/Function installs in the last 7 days where the source registry is external. Confirm those packages&#x27; current digests against the digest at install time using `kubectl get configuration &lt;name&gt; -o jsonpath=&#x27;{.status}&#x27;`.</div></details>
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-06-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn active" data-target="art-06-uc3-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-06-uc3-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-06-uc3-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-06-uc3-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-06-uc3-cloudwatch">CloudWatch Logs Insights</button>
       <button class="tab-btn" data-target="art-06-uc3-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-06-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>let WindowSec = 120;
-let Pulls = CommonSecurityLog
-  | where TimeGenerated &gt; ago(7d)
-  | where RequestMethod =~ &quot;GET&quot; and RequestURL has &quot;/manifests/&quot;
-  | where RequestClientApplication has_any (&quot;crossplane&quot;,&quot;go-containerregistry&quot;,&quot;cosign&quot;)
-  | extend Repo=extract(@&quot;(.+)/manifests/[^/?#]+&quot;, 1, RequestURL), Tag=extract(@&quot;/manifests/([^/?#]+)&quot;, 1, RequestURL)
-  | where isnotempty(Tag) and not (Tag startswith &quot;sha256:&quot;)
-  | project PullTime=TimeGenerated, Repo, Tag, PullerIP=SourceIP, Agent=RequestClientApplication;
-let Pushes = CommonSecurityLog
-  | where TimeGenerated &gt; ago(7d)
-  | where RequestMethod =~ &quot;PUT&quot; and RequestURL has &quot;/manifests/&quot;
-  | extend Repo=extract(@&quot;(.+)/manifests/[^/?#]+&quot;, 1, RequestURL), Tag=extract(@&quot;/manifests/([^/?#]+)&quot;, 1, RequestURL)
-  | where isnotempty(Tag) and not (Tag startswith &quot;sha256:&quot;)
-  | project PushTime=TimeGenerated, Repo, Tag, PusherIP=SourceIP, PusherUser=SourceUserName;
-Pushes
-| join kind=inner Pulls on Repo, Tag
-| where abs(datetime_diff(&#x27;second&#x27;, PushTime, PullTime)) &lt;= WindowSec
-| project PushTime, PullTime, DeltaSec=datetime_diff(&#x27;second&#x27;, PushTime, PullTime), Repo, Tag, PusherIP, PusherUser, PullerIP, Agent
-| order by PushTime desc</code></pre></div>
-    <div class="tab-content" id="art-06-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>@http.method:PUT @http.url_details.path:*/manifests/* @http.status_code:(200 OR 201) -@http.url_details.path:*/manifests/sha256\:*</code></pre></div>
-    <div class="tab-content" id="art-06-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><pre><button class="copy-btn">COPY</button><code>index=* sourcetype IN (&quot;harbor:access&quot;,&quot;ecr:access&quot;,&quot;ghcr:access&quot;,&quot;oci:registry&quot;,&quot;distribution:registry&quot;) uri_path=&quot;*/manifests/*&quot; (method=PUT OR http_method=PUT) status IN (200,201)
-| rex field=uri_path &quot;(?&lt;repo&gt;.+)/manifests/(?&lt;tag&gt;[^/?#]+)&quot;
-| where NOT match(tag, &quot;^sha256:&quot;)
-| eval push_time=_time
-| join type=inner repo tag [
-    search index=* sourcetype IN (&quot;harbor:access&quot;,&quot;ecr:access&quot;,&quot;ghcr:access&quot;,&quot;oci:registry&quot;,&quot;distribution:registry&quot;) uri_path=&quot;*/manifests/*&quot; (method=GET OR http_method=GET) status=200 user_agent IN (&quot;crossplane*&quot;,&quot;go-containerregistry*&quot;,&quot;cosign/*&quot;)
-    | rex field=uri_path &quot;(?&lt;repo&gt;.+)/manifests/(?&lt;tag&gt;[^/?#]+)&quot;
-    | where NOT match(tag, &quot;^sha256:&quot;)
-    | eval get_time=_time
-    | table get_time repo tag clientip user_agent
-  ]
-| eval delta=abs(push_time - get_time)
-| where delta &lt;= 120
-| table push_time get_time delta repo tag clientip user_agent
-| sort - push_time</code></pre></div>
+    <div class="tab-content active" id="art-06-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName =~ &quot;crossplane&quot; or FileName =~ &quot;crossplane&quot;
+| where ProcessVersionInfoProductName has_cs &quot;crossplane&quot; or InitiatingProcessVersionInfoProductName has_cs &quot;crossplane&quot;
+| extend Version = coalesce(ProcessVersionInfoProductVersion, InitiatingProcessVersionInfoProductVersion)
+| where isnotempty(Version)
+| extend Parts = split(Version, &quot;.&quot;)
+| extend Major = toint(Parts[0]), Minor = toint(Parts[1]), Patch = toint(Parts[2])
+| where (Major == 1 and Minor &lt;= 21)
+     or (Major == 2 and Minor == 2 and Patch &lt;= 2)
+     or (Major == 2 and Minor == 3 and Patch &lt;= 2)
+| project Timestamp, DeviceName, Version, FolderPath, InitiatingProcessCommandLine
+| summarize arg_max(Timestamp, *) by DeviceName, Version</code></pre></div>
+    <div class="tab-content" id="art-06-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>AKSAudit
+| where TimeGenerated &gt; ago(7d)
+| where Stage == &quot;ResponseComplete&quot;
+| where Verb in (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;)
+| where tostring(ObjectRef.apiGroup) == &quot;apps&quot;
+| where tostring(ObjectRef.resource) in (&quot;deployments&quot;,&quot;statefulsets&quot;)
+| mv-expand Container = RequestObject.spec.template.spec.containers
+| extend Image = tostring(Container.image)
+| where Image has &quot;crossplane/crossplane&quot;
+| extend VersionRaw = extract(@&quot;crossplane/crossplane:v?(\d+\.\d+\.\d+[-\w\.]*)&quot;, 1, Image)
+| where isnotempty(VersionRaw)
+| extend Parts = split(VersionRaw, &quot;.&quot;)
+| extend Major = toint(Parts[0]), Minor = toint(Parts[1])
+| extend PatchRaw = tostring(Parts[2])
+| extend Patch = toint(extract(@&quot;^(\d+)&quot;, 1, PatchRaw))
+| extend Suffix = extract(@&quot;^\d+(.*)$&quot;, 1, PatchRaw)
+| where (Major == 1 and Minor &lt;= 21)
+     or (Major == 2 and Minor == 2 and Patch &lt;= 2)
+     or (Major == 2 and Minor == 3 and Patch &lt;= 2)
+| extend Namespace = tostring(ObjectRef.namespace), Deployment = tostring(ObjectRef.name)
+| summarize arg_max(TimeGenerated, *) by Namespace, Deployment, Image
+| project TimeGenerated, Namespace, Deployment, Image, VersionRaw, FixVersion = &quot;Upgrade to 2.3.3 or 2.2.3&quot;, _ResourceId</code></pre></div>
+    <div class="tab-content" id="art-06-uc3-datadog"><pre><button class="copy-btn">COPY</button><code>source:kubernetes.audit @stage:ResponseComplete @objectRef.apiGroup:apps @objectRef.resource:(deployments OR statefulsets) @requestObject.spec.template.spec.containers.image:(*crossplane\/crossplane\:v1.* OR *crossplane\/crossplane\:v2.2.* OR *crossplane\/crossplane\:v2.3.0* OR *crossplane\/crossplane\:v2.3.1* OR *crossplane\/crossplane\:v2.3.2*)</code></pre></div>
+    <div class="tab-content" id="art-06-uc3-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=ProcessRollup2 ImageFileName=/crossplane$/i
+| regex(&quot;crossplane:v?(?&lt;ver_major&gt;\\d+)\\.(?&lt;ver_minor&gt;\\d+)\\.(?&lt;ver_patch&gt;\\d+)&quot;, field=CommandLine)
+| ver_major := parseInt(ver_major)
+| ver_minor := parseInt(ver_minor)
+| ver_patch := parseInt(ver_patch)
+| (ver_major=1 AND ver_minor&lt;=21) OR (ver_major=2 AND ver_minor=2 AND ver_patch&lt;=2) OR (ver_major=2 AND ver_minor=3 AND ver_patch&lt;=2)
+| groupBy([aid, ComputerName, ImageFileName], function=[count(), max(_time)])</code></pre></div>
+    <div class="tab-content" id="art-06-uc3-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/eks/&lt;cluster-name&gt;/cluster (kube-apiserver-audit stream)
+fields @timestamp, verb, objectRef.namespace, objectRef.name, requestObject.spec.template.spec.containers.0.image
+| filter @logStream like /kube-apiserver-audit/
+      and objectRef.apiGroup = &quot;apps&quot;
+      and objectRef.resource in [&quot;deployments&quot;,&quot;statefulsets&quot;]
+      and verb in [&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;]
+      and stage = &quot;ResponseComplete&quot;
+      and requestObject.spec.template.spec.containers.0.image like /crossplane\/crossplane:v?(1\.([0-9]|1[0-9]|20|21)\.|2\.2\.[0-2]($|[^0-9])|2\.3\.[0-2]($|[^0-9]))/
+| sort @timestamp desc
+| limit 50</code></pre></div>
+    <div class="tab-content" id="art-06-uc3-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><pre><button class="copy-btn">COPY</button><code>sourcetype=&quot;kube:apiserver:audit&quot; objectRef.apiGroup=&quot;apps&quot; objectRef.resource=&quot;deployments&quot; verb IN (&quot;create&quot;,&quot;update&quot;,&quot;patch&quot;) stage=&quot;ResponseComplete&quot;
+| spath input=requestObject path=spec.template.spec.containers{}.image output=images
+| mvexpand images
+| where match(images, &quot;crossplane\/crossplane&quot;)
+| rex field=images &quot;crossplane\/crossplane:v?(?&lt;major&gt;\d+)\.(?&lt;minor&gt;\d+)\.(?&lt;patch&gt;\d+)(?&lt;suffix&gt;[-\w\.]*)?&quot;
+| eval vulnerable=case(
+    major=1 AND (minor&lt;21 OR (minor=21 AND patch=0 AND like(suffix, &quot;-rc%&quot;))), 1,
+    major=2 AND minor=2 AND patch&lt;=2, 1,
+    major=2 AND minor=3 AND patch&lt;=2, 1,
+    1==1, 0)
+| where vulnerable=1
+| rename objectRef.name AS deployment, objectRef.namespace AS namespace
+| stats values(images) AS observed_images, max(_time) AS last_seen by namespace, deployment
+| eval fix_versions=&quot;Upgrade to crossplane 2.3.3 or 2.2.3 (or v1 fixed branch)&quot;</code></pre></div>
   </div>
 </details></div>
 </article>
