@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2231 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2232 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -2238,6 +2238,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2023-03-15
 - [cisa kev cve 2023 26360 adobe coldfusion deserialization of ](./2023-03-15/cisa-kev-cve-2023-26360-adobe-coldfusion-deserialization-of-.md)
+- [new language specific snyk top 10 for open source vulnerabil](./2023-03-15/new-language-specific-snyk-top-10-for-open-source-vulnerabil.md)
 
 ## 2023-03-14
 - [cisa kev cve 2022 41328 fortinet fortios path traversal vuln](./2023-03-14/cisa-kev-cve-2022-41328-fortinet-fortios-path-traversal-vuln.md)

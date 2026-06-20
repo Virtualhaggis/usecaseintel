@@ -15,13 +15,11 @@ April 26, 2023
 
 - **CVE:** `CVE-2022-3602`
 - **CVE:** `CVE-2022-3786`
-- **SHA256:** `ba96f963bbfd429a0839c40603fdd7829eaca58f20adfa0d15e6beae8244bc08`
 
 ## MITRE ATT&CK Techniques
 
 - **T1190** — Exploit Public-Facing Application
 - **T1195.002** — Compromise Software Supply Chain
-- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
@@ -60,10 +58,7 @@ These are standard IOC-substitution hunts — the canonical SPL and KQL live onc
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
   - CVE(s): `CVE-2022-3602`, `CVE-2022-3786`
 
-- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
-  - file hash IOC(s): `ba96f963bbfd429a0839c40603fdd7829eaca58f20adfa0d15e6beae8244bc08`
-
 
 ## Why this matters
 
-Severity classified as **CRIT** based on: CVE present, IOCs present, 3 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **CRIT** based on: CVE present, 2 use case(s) fired, 2 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

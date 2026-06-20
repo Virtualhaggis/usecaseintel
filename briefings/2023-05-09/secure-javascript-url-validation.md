@@ -14,7 +14,7 @@ When developers need to handle URLs in different forms for different purposes �
 
 ## Indicators of Compromise (high-fidelity only)
 
-- **CVE:** `CVE-2023-2237`
+- **CVE:** `CVE-2022-2237`
 
 ## MITRE ATT&CK Techniques
 
@@ -81,7 +81,7 @@ DeviceFileEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Asset exposure — vulnerability matches article CVE(s)** ([template](../_TEMPLATES.md#asset-exposure)) — phase: **recon**, confidence: **High**
-  - CVE(s): `CVE-2023-2237`
+  - CVE(s): `CVE-2022-2237`
 
 
 ## Why this matters
