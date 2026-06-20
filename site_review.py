@@ -27,6 +27,7 @@ from __future__ import annotations
 import argparse
 import datetime as _dt
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -50,6 +51,10 @@ WIP_GUARD = {
 
 LENSES = ["trust", "detection-usability", "search-filter", "copy", "mobile",
           "a11y", "perf", "seo", "links", "security", "data-quality"]
+
+# The review lens pass + prompt-proposal drafting are judgment tasks → strongest
+# model (Opus 4.8), NOT the pipeline's cheap Haiku relevance gate. Overridable.
+REVIEW_MODEL = os.environ.get("USECASEINTEL_REVIEW_MODEL", "claude-opus-4-8")
 
 
 def _today():
@@ -198,8 +203,8 @@ def llm_lens_review(lens, findings, prior_summary):
         f"Do not repeat the lint findings. No prose, no code fences."
     )
     try:
-        raw = g._call_claude_cli(prompt, model=getattr(g, "LLM_RELEVANCE_MODEL", None),
-                                 allowed_tools=None, timeout=60, kind="review")
+        raw = g._call_claude_cli(prompt, model=REVIEW_MODEL,
+                                 allowed_tools=None, timeout=90, kind="review")
         raw = (raw or "").strip()
         if raw.startswith("```"):
             raw = raw.strip("`").split("\n", 1)[-1]

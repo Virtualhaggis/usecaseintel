@@ -881,16 +881,16 @@ LLM_IOC_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_ioc_cache"
 # Kill-chain reconstruction cache. One entry per (url, body_sha, KC_VERSION)
 # carrying the ordered phase list — see `_llm_kill_chain`.
 LLM_KC_CACHE_DIR = Path(__file__).parent / "intel" / ".llm_kc_cache"
-LLM_UC_MODEL = os.environ.get("USECASEINTEL_LLM_MODEL", "claude-opus-4-7")
+LLM_UC_MODEL = os.environ.get("USECASEINTEL_LLM_MODEL", "claude-opus-4-8")
 # Lighter model for the binary relevance gate — Haiku is plenty for "is this
 # article SOC-actionable y/n". Falls back to LLM_UC_MODEL if Haiku is missing.
 LLM_RELEVANCE_MODEL = os.environ.get("USECASEINTEL_RELEVANCE_MODEL", "claude-haiku-4-5-20251001")
-# IOC-extraction model. Phase 1 upgrade: Opus 4.7 with WebSearch for the
-# corroboration pass + Opus for the gap-fill pass. The earlier single-
-# Haiku design produced a "trust the article author" extraction; this
-# one lets the model cross-check against vendor advisories, GHSA, and
-# abuse.ch before emitting IOCs (and flag confidence by source count).
-LLM_IOC_MODEL = os.environ.get("USECASEINTEL_IOC_MODEL", "claude-opus-4-7")
+# IOC-extraction model. Opus 4.8 with WebSearch for the corroboration pass +
+# Opus for the gap-fill pass. The earlier single-Haiku design produced a
+# "trust the article author" extraction; this one lets the model cross-check
+# against vendor advisories, GHSA, and abuse.ch before emitting IOCs (and flag
+# confidence by source count).
+LLM_IOC_MODEL = os.environ.get("USECASEINTEL_IOC_MODEL", "claude-opus-4-8")
 LLM_UC_MAX_BODY_CHARS = 8000  # cap body length sent to UC LLM. Lowered from
                               # 15000 (May 2026 token-reduction Phase 3a) —
                               # lede + IOC paragraphs land in the first 3-5 KB
