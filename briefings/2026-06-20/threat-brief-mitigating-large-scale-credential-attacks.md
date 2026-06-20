@@ -57,7 +57,7 @@ _(none detected from narrative keywords)_
 
 ### FortiBleed: Password spray against internet-exposed Fortinet/Sophos edge services
 
-`UC_1_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_2_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ IdentityLogonEvents
 
 ### FortiBleed: MSSQL credential spray from external source
 
-`UC_1_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_2_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -129,7 +129,7 @@ DeviceLogonEvents
 
 ### FortiBleed: Edge appliance successful login shortly after failed-login burst from same SourceIP
 
-`UC_1_9` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_2_9` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -186,7 +186,7 @@ Bursts
 
 ### FortiOS device configuration export ('execute backup config') by non-baselined admin
 
-`UC_1_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_2_10` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

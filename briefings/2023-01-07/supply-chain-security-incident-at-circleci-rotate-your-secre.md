@@ -15,13 +15,24 @@ Context around the CircleCI Incident On December 27, security engineer Daniel H�
 
 ## Indicators of Compromise (high-fidelity only)
 
-- _No high-fidelity IOCs in the RSS summary._ If the source publishes a technical write-up with defanged IOCs in the body, those would be picked up automatically on the next pipeline run.
+- **IPv4 (defanged):** `178.249.214.10`
+- **IPv4 (defanged):** `89.36.78.75`
+- **IPv4 (defanged):** `89.36.78.109`
+- **IPv4 (defanged):** `89.36.78.135`
+- **IPv4 (defanged):** `178.249.214.25`
+- **IPv4 (defanged):** `72.18.132.58`
+- **IPv4 (defanged):** `188.68.229.52`
+- **IPv4 (defanged):** `111.90.149.55`
+- **Domain (defanged):** `potrax.com`
+- **SHA256:** `8913e38592228adc067d82f66c150d87004ec946e579d4a00c53b61444ff35bf`
 
 ## MITRE ATT&CK Techniques
 
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1195.002** — Compromise Software Supply Chain
+- **T1071** — Application Layer Protocol
+- **T1027** — Obfuscated Files or Information
 
 ## Kill chain phases observed
 
@@ -80,7 +91,17 @@ DeviceProcessEvents
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine
 ```
 
+### IOC-driven hunts (use shared templates)
+
+These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
+
+- **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
+  - IP / domain IOC(s): `178.249.214.10`, `89.36.78.75`, `89.36.78.109`, `89.36.78.135`, `178.249.214.25`, `72.18.132.58`, `188.68.229.52`, `111.90.149.55` _(+1 more)_
+
+- **File hash IOCs — endpoint file/process match** ([template](../_TEMPLATES.md#hash-ioc)) — phase: **install**, confidence: **High**
+  - file hash IOC(s): `8913e38592228adc067d82f66c150d87004ec946e579d4a00c53b61444ff35bf`
+
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: 2 use case(s) fired, 3 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 4 use case(s) fired, 5 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.

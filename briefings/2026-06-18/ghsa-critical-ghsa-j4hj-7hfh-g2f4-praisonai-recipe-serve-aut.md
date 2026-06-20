@@ -40,7 +40,7 @@ _(none detected from narrative keywords)_
 
 ### Unauthenticated POST to PraisonAI /runs endpoint (recipe-serve auth bypass exploitation)
 
-`UC_61_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_62_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -67,7 +67,7 @@ DeviceNetworkEvents
 
 ### PraisonAI recipe-serve Python process spawning shell/code-exec child (post-bypass RCE)
 
-`UC_61_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_62_3` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -96,7 +96,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-j4hj-7hfh-g2f4: praisonai: recipe serve auth middleware s
 
-`UC_61_1` · phase: **exploit** · confidence: **High**
+`UC_62_1` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

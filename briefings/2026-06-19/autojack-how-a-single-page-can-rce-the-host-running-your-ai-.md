@@ -39,7 +39,7 @@ _(none detected from narrative keywords)_
 
 ### Headless browser / Playwright child of autogenstudio connecting to localhost:8081
 
-`UC_30_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_31_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ DeviceNetworkEvents
 
 ### AutoGen Studio Python parent spawning shell / LOLBin child (StdioServerParams RCE)
 
-`UC_30_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_31_6` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -98,7 +98,7 @@ DeviceProcessEvents
 
 ### HTTP request to /api/mcp/ws/ endpoint with server_params query parameter (AutoJack payload)
 
-`UC_30_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_31_7` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -120,7 +120,7 @@ DeviceNetworkEvents
 
 ### AutoGen agent external web fetch followed by localhost MCP port connection (time-correlation)
 
-`UC_30_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_31_8` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -261,7 +261,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — AutoJack: How a single page can RCE the host running your AI agent
 
-`UC_30_4` · phase: **exploit** · confidence: **High**
+`UC_31_4` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl

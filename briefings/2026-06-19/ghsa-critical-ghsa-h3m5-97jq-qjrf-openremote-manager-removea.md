@@ -35,7 +35,7 @@ _(none detected from narrative keywords)_
 
 ### OpenRemote Manager bulk alarm DELETE endpoint hit (GHSA-h3m5-97jq-qjrf)
 
-`UC_3_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_4_0` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -44,7 +44,7 @@ _(none detected from narrative keywords)_
 
 ### Bulk alarm DELETE volume anomaly — non-admin OpenRemote user
 
-`UC_3_1` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_4_1` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -53,7 +53,7 @@ _(none detected from narrative keywords)_
 
 ### OpenRemote alarm DELETE 401/403 probe burst followed by 200/204 success
 
-`UC_3_2` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_4_2` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -62,7 +62,7 @@ _(none detected from narrative keywords)_
 
 ### OpenRemote alarm endpoint enumeration with realm-switching
 
-`UC_3_3` · phase: **recon** · confidence: **High** · AI-generated for this article
+`UC_4_3` · phase: **recon** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

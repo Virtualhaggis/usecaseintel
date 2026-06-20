@@ -1,6 +1,6 @@
 # Briefings — full archive
 
-_2232 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2237 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
@@ -10,6 +10,7 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2026-06-20
 - [hackers exploit gravity smtp wordpress plugin bug to expose ](./2026-06-20/hackers-exploit-gravity-smtp-wordpress-plugin-bug-to-expose-.md)
+- [microsoft links mastra ai supply chain attack to north korea](./2026-06-20/microsoft-links-mastra-ai-supply-chain-attack-to-north-korea.md)
 - [threat brief mitigating large scale credential attacks](./2026-06-20/threat-brief-mitigating-large-scale-credential-attacks.md)
 
 ## 2026-06-19
@@ -70,7 +71,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [miasma and hades are spreading now detect them on developer ](./2026-06-18/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)
 - [microsoft details windows clipper malware campaign using usb](./2026-06-18/microsoft-details-windows-clipper-malware-campaign-using-usb.md)
 - [nintendo confirms data stolen in webmd subsidiary cyberattac](./2026-06-18/nintendo-confirms-data-stolen-in-webmd-subsidiary-cyberattac.md)
-- [police cleans nearly 15 000 socgholish infected sites tied t](./2026-06-18/police-cleans-nearly-15-000-socgholish-infected-sites-tied-t.md)
 - [prevent npm and python supply chain attacks on developer mac](./2026-06-18/prevent-npm-and-python-supply-chain-attacks-on-developer-mac.md)
 - [the full snyk ai security platform free for open source main](./2026-06-18/the-full-snyk-ai-security-platform-free-for-open-source-main.md)
 - [usb worm spreads crypto stealing malware via windows shortcu](./2026-06-18/usb-worm-spreads-crypto-stealing-malware-via-windows-shortcu.md)
@@ -2274,6 +2274,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2022 36537 zk framework auuploader unspecified ](./2023-02-27/cisa-kev-cve-2022-36537-zk-framework-auuploader-unspecified-.md)
 - [node js multithreading with worker threads pros and cons](./2023-02-27/node-js-multithreading-with-worker-threads-pros-and-cons.md)
 
+## 2023-02-23
+- [finding yaml deserialization with snyk code](./2023-02-23/finding-yaml-deserialization-with-snyk-code.md)
+
 ## 2023-02-22
 - [the security concerns of a javascript sandbox with the node ](./2023-02-22/the-security-concerns-of-a-javascript-sandbox-with-the-node-.md)
 
@@ -2354,6 +2357,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2022-12-16
 - [exploring the spring security authorization bypass cve 2022 ](./2022-12-16/exploring-the-spring-security-authorization-bypass-cve-2022-.md)
 
+## 2022-12-15
+- [snyk in 30 open source security for atlassian bitbucket clou](./2022-12-15/snyk-in-30-open-source-security-for-atlassian-bitbucket-clou.md)
+
 ## 2022-12-14
 - [cisa kev cve 2022 42856 apple ios type confusion vulnerabili](./2022-12-14/cisa-kev-cve-2022-42856-apple-ios-type-confusion-vulnerabili.md)
 - [top takeaways from re invent 2022](./2022-12-14/top-takeaways-from-re-invent-2022.md)
@@ -2365,6 +2371,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [cisa kev cve 2022 27518 citrix application delivery controll](./2022-12-13/cisa-kev-cve-2022-27518-citrix-application-delivery-controll.md)
 - [cisa kev cve 2022 42475 fortinet fortios heap based buffer o](./2022-12-13/cisa-kev-cve-2022-42475-fortinet-fortios-heap-based-buffer-o.md)
 - [cisa kev cve 2022 44698 microsoft defender smartscreen secur](./2022-12-13/cisa-kev-cve-2022-44698-microsoft-defender-smartscreen-secur.md)
+
+## 2022-12-09
+- [using snyk reporting for data driven security](./2022-12-09/using-snyk-reporting-for-data-driven-security.md)
 
 ## 2022-12-06
 - [why tool consolidation matters for developer security](./2022-12-06/why-tool-consolidation-matters-for-developer-security.md)
@@ -2383,14 +2392,16 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [dependency injection in javascript](./2022-11-17/dependency-injection-in-javascript.md)
 - [setting up ssl tls for kubernetes ingress](./2022-11-17/setting-up-ssl-tls-for-kubernetes-ingress.md)
 
+## 2022-11-16
+- [how atlassian used snyk to solve log4shell](./2022-11-16/how-atlassian-used-snyk-to-solve-log4shell.md)
+
 ## 2022-11-14
 - [cisa kev cve 2022 41049 microsoft windows mark of the web mo](./2022-11-14/cisa-kev-cve-2022-41049-microsoft-windows-mark-of-the-web-mo.md)
 
-## 2022-11-12
-- [fetch the flag ctf 2022 writeup potty training](./2022-11-12/fetch-the-flag-ctf-2022-writeup-potty-training.md)
-
 ## 2022-11-10
+- [fetch the flag ctf 2022 writeup disposable message](./2022-11-10/fetch-the-flag-ctf-2022-writeup-disposable-message.md)
 - [fetch the flag ctf 2022 writeup moongoose](./2022-11-10/fetch-the-flag-ctf-2022-writeup-moongoose.md)
+- [fetch the flag ctf 2022 writeup not so smart fridge](./2022-11-10/fetch-the-flag-ctf-2022-writeup-not-so-smart-fridge.md)
 - [fetch the flag ctf 2022 writeup treasure trove](./2022-11-10/fetch-the-flag-ctf-2022-writeup-treasure-trove.md)
 
 ## 2022-11-09

@@ -69,7 +69,7 @@ _(none detected from narrative keywords)_
 
 ### GentleKiller / HexKiller / ThrottleBlood / HavocKiller binary hash hit
 
-`UC_31_5` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_32_5` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -92,7 +92,7 @@ ProcHits | union FileHits | order by Timestamp desc
 
 ### BYOVD vulnerable-driver service install impersonating Kaspersky/Valorant/Javelin/WatchDog
 
-`UC_31_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_32_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -115,7 +115,7 @@ DeviceRegistryEvents
 
 ### Themida/Enigma packed binary with security-vendor masquerade name from user-writable path
 
-`UC_31_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_32_7` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -143,7 +143,7 @@ DeviceProcessEvents
 
 ### Mass termination of 48-vendor EDR/AV process set within short window
 
-`UC_31_8` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_32_8` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

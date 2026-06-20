@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### FortiGate SSL VPN credential-stuffing burst from single source IP (FortiBleed abuse)
 
-`UC_28_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_29_8` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -63,7 +63,7 @@ _(none detected from narrative keywords)_
 
 ### FortiGate admin / management interface login from public internet
 
-`UC_28_9` · phase: **recon** · confidence: **Medium** · AI-generated for this article
+`UC_29_9` · phase: **recon** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -72,7 +72,7 @@ _(none detected from narrative keywords)_
 
 ### FortiGate SSL VPN successful login after credential-stuffing burst (FortiBleed confirmed compromise)
 
-`UC_28_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_29_10` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -34,7 +34,7 @@ _(none detected from narrative keywords)_
 
 ### Node.js spawned shell/utility from praisonai codeMode context (sandbox escape post-exploitation)
 
-`UC_54_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
+`UC_55_1` · phase: **exploit** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -55,7 +55,7 @@ DeviceProcessEvents
 
 ### PraisonAI codeMode prototype-chain escape payload (constructor.constructor / mainModule.require strings)
 
-`UC_54_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_55_2` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ union
 
 ### Article-specific behavioural hunt — [GHSA / CRITICAL] GHSA-vmmj-pfw7-fjwp: npm PraisonAI codeMode sandbox escape via
 
-`UC_54_0` · phase: **exploit** · confidence: **High**
+`UC_55_0` · phase: **exploit** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
