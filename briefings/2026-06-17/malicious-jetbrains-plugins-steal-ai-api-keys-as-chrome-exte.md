@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### JetBrains IDE plaintext HTTP egress to public IP (LLMjacking exfil pattern)
 
-`UC_96_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_97_4` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -58,7 +58,7 @@ DeviceNetworkEvents
 
 ### Malicious JetBrains Marketplace plugin package-ID dropped under user plugins dir
 
-`UC_96_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_97_5` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -78,7 +78,7 @@ DeviceFileEvents
 
 ### Malicious Chrome ad-blocker extension installed (Smart Adblocker / Adblock for Browser)
 
-`UC_96_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_97_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -99,7 +99,7 @@ DeviceFileEvents
 
 ### JetBrains IDE process initiates plaintext HTTP POST to external IP
 
-`UC_96_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_97_7` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -121,7 +121,7 @@ DeviceNetworkEvents
 
 ### JetBrains plugin manifest dropped under user-writable plugins directory by non-IDE process
 
-`UC_96_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_97_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

@@ -54,7 +54,7 @@ _(none detected from narrative keywords)_
 
 ### Velvet Ant: PAM Module or /etc/pam.d Config Tampering Outside Package Manager
 
-`UC_152_6` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_153_6` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ DeviceFileEvents
 
 ### Velvet Ant: OpenSSH Daemon Binary or sshd_config Modified Outside Package Manager
 
-`UC_152_7` · phase: **install** · confidence: **High** · AI-generated for this article
+`UC_153_7` · phase: **install** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ DeviceFileEvents
 
 ### Velvet Ant: sshd or login Process Initiating Outbound Network Connections
 
-`UC_152_8` · phase: **c2** · confidence: **High** · AI-generated for this article
+`UC_153_8` · phase: **c2** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -131,7 +131,7 @@ DeviceNetworkEvents
 
 ### Velvet Ant: Unexpected Child Process Spawned by sshd or login (Non-Shell, Non-Session)
 
-`UC_152_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_153_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -153,7 +153,7 @@ DeviceProcessEvents
 
 ### Velvet Ant: Web Server Process Spawning Reverse Shell or Long-Running ssh/nc Pipe
 
-`UC_152_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
+`UC_153_10` · phase: **delivery** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -176,7 +176,7 @@ DeviceProcessEvents
 
 ### Cisco NX-OS CVE-2024-20399 Exploitation Indicators on Nexus Switch Syslog
 
-`UC_152_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_153_11` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -185,7 +185,7 @@ DeviceProcessEvents
 
 ### Velvet Ant: PAM/sshd Memory Read of /etc/shadow or libc Credential Functions
 
-`UC_152_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_153_12` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

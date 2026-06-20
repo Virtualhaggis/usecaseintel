@@ -1,391 +1,3 @@
-<article class="card" id="art-199" data-art-slug="2026-06-05-ghsa-critical-cve-2026-47669-dbgate-zip-slip-in-archive-unzi"
-  data-phases="actions,c2,exploit,install,recon" data-sev="crit"
-  data-techs="T1190"
-  data-sources="GitHub Security Advisories"
-  data-platforms="datadog,def,falcon,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="linux,vcs,windows"
-  data-uc-count="4" data-llm-uc-count="2"
-  data-search="[GHSA / CRITICAL] CVE-2026-47669: DbGate: Zip Slip in archive/unzip allows arbitrary file write leading to RCE DbGate: Zip Slip in archive/unzip allows arbitrary file write leading to RCE CVE-2026-47669 T1190 [LLM] DbGate Zip Slip (CVE-2026-47669): node process writes outside archive dir to OS-sensitive paths [LLM] DbGate exploit chain: anonymous /auth/login + /api/archive/unzip POSTs from same source (CVE-2026-47669) Asset exposure — vulnerability matches article CVE(s) Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47669: DbGate: Zip Slip in archive/unzip allows arbit">
-  <div class="sev-ribbon crit">Critical</div>
-  <button class="share-btn card-share" data-share-art="2026-06-05-ghsa-critical-cve-2026-47669-dbgate-zip-slip-in-archive-unzi" title="Copy share link to this article" aria-label="Copy share link">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-  </button>
-  <h2><a href="https://github.com/advisories/GHSA-h535-j5hr-mv56" target="_blank" rel="noopener">[GHSA / CRITICAL] CVE-2026-47669: DbGate: Zip Slip in archive/unzip allows arbitrary file write leading to RCE</a></h2>
-  <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
-  <div class="pubmeta">
-    <span>2026-06-05</span>
-    <span>4 use cases</span>
-    <span>1 technique</span>
-    <span>4 kill-chain phases detected</span>
-  </div>
-  <p class="summary">DbGate: Zip Slip in archive/unzip allows arbitrary file write leading to RCE</p>
-  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-47669</span></div>
-<div class="ind-group"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-  <div class="action-row">
-    <button class="btn btn-kc" data-target="art-199-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
-    <button class="btn btn-hunt" data-hunt-art="art-199"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
-    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
-  </div>
-  <div class="killchain" id="art-199-kc">
-  <div class="kc3d"><div class="kc-cell hit">
-  <div class="num">Phase 1</div>
-  <div class="name">Reconnaissance</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 2</div>
-  <div class="name">Weaponization</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell ">
-  <div class="num">Phase 3</div>
-  <div class="name">Delivery</div>
-  <div class="marker">—</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 4</div>
-  <div class="name">Exploitation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 5</div>
-  <div class="name">Installation</div>
-  <div class="marker">Detected</div>
-</div>
-<div class="kc-cell inferred">
-  <div class="num">Phase 6</div>
-  <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
-</div>
-<div class="kc-cell hit">
-  <div class="num">Phase 7</div>
-  <div class="name">Actions on Objectives</div>
-  <div class="marker">Detected</div>
-</div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
-<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
-<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] DbGate exploit chain: anonymous /auth/login + /api/archive/unzip POSTs from same source (CVE-2026-47669)</em></div>
-<div class="phase-line hit"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key. <em>→ [LLM] DbGate Zip Slip (CVE-2026-47669): node process writes outside archive dir to OS-sensitive paths · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47669: DbGate: Zip Slip in archive/unzip allows arbit</em></div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
-</div>
-  <div class="usecases"><details class="uc" data-uc-slug="4ce33588ac" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="linux,vcs,windows" open>
-  <summary>
-    <span class="uc-title">DbGate Zip Slip (CVE-2026-47669): node process writes outside archive dir to OS-sensitive paths</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="4ce33588ac" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the Zip Slip exploitation outcome of CVE-2026-47669 where the DbGate node process — invoked via /api/archive/unzip — writes files to OS-sensitive Linux paths (cron, sudoers, SSH authorized_keys, ld.so.preload, systemd units, /usr/local/bin) via `../` entries in a malicious ZIP. In a clean DbGate deployment the node process should only write inside its archive directory, so any write under /etc, /root/.ssh, or /usr/local/bin from node is high-fidelity for this CVE.
-
-Rationale: Pivots on the EXACT Zip Slip exploit outcome described in the GHSA PoC: `path.join(outputDirectory, entry.fileName)` allows `../` traversal, and the PoC writes to `/etc/cron.d/dbgate-pwn`. The dbgate node process has no legitimate reason to touch /etc/cron.*, /etc/sudoers.d, /root/.ssh, /etc/ld.so.preload, or /usr/local/bin — these are the canonical persistence/privesc paths attackers traverse to. Corroborated against Snyk&#x27;s prior DbGate Zip Slip advisory which confirms the same vulnerable archive-extraction code path.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-h535-j5hr-mv56
-  • https://security.snyk.io/vuln/SNYK-JS-DBGATEAPI-11023274</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Scheduled Task/Job: Cron">T1053.003</span> <span class="ind tech" title="Server Software Component: Web Shell">T1505.003</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Filesystem</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>DbGate developer/maintainer testing archive restore in a lab where the archivedir is symlinked to a system path</li><li>Container-rebuild scripts that re-deploy DbGate config under /etc/profile.d/ from a packaged archive</li><li>Custom DbGate fork using a non-default archivedir that happens to overlap /usr/local</li><li>Disaster-recovery tooling restoring a full system backup through the DbGate archive interface</li><li>Sysadmin manually invoking the dbgate-cli with elevated permissions during migration</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (DeviceName has_any (&quot;dbgate-dev&quot;,&quot;dbgate-lab&quot;,&quot;dbgate-test&quot;) and InitiatingProcessAccountName in (&quot;dbgate-dev&quot;,&quot;buildkite&quot;,&quot;jenkins&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull TargetFilePath, SHA256 of the dropped file, and the ActingProcessCommandLine. Compare the file&#x27;s content to the PoC payload (`* * * * * root id &gt; /tmp/pwned`). Confirm DbGate version with `docker exec &lt;ctr&gt; cat /app/package.json | jq .version` — affected ≤ 7.1.8. 2) Contain: stop the dbgate container (`docker stop` / `kubectl delete pod`), block ingress to its port at the LB/WAF, snapshot the container FS for forensics, remove the dropped persistence file, and rotate any creds the host had access to (cloud IAM, DB creds in DbGate&#x27;s config). 3) Hunt: pivot to web/proxy logs for POSTs to /api/archive/unzip, /api/archive/save-uploaded-zip, /api/uploads/upload from the source IP; check `/tmp/pwned` (PoC marker); review crontab spool and other Run-key-equivalent locations on the host; look for outbound from node post-event indicating second-stage payload fetch.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-199-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-199-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-199-uc0-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-199-uc0-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-199-uc0-falcon">Falcon LogScale</button>
-      <button class="tab-btn" data-target="art-199-uc0-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-199-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// CVE-2026-47669 DbGate Zip Slip - node process writes outside archive dir
-DeviceFileEvents
-| where Timestamp &gt; ago(7d)
-| where InitiatingProcessFileName =~ &quot;node&quot;
-| where InitiatingProcessCommandLine has_any (&quot;dbgate&quot;, &quot;packages/api&quot;, &quot;/app/packages&quot;)
-| where FolderPath startswith &quot;/etc/cron.&quot; 
-    or FolderPath startswith &quot;/var/spool/cron/&quot;
-    or FolderPath startswith &quot;/etc/sudoers.d/&quot;
-    or FolderPath startswith &quot;/root/.ssh/&quot;
-    or FolderPath startswith &quot;/etc/init.d/&quot;
-    or FolderPath startswith &quot;/etc/profile.d/&quot;
-    or FolderPath startswith &quot;/etc/systemd/system/&quot;
-    or FolderPath startswith &quot;/usr/local/bin/&quot;
-    or FolderPath startswith &quot;/usr/local/sbin/&quot;
-    or FolderPath == &quot;/etc/ld.so.preload&quot;
-    or FolderPath == &quot;/etc/passwd&quot;
-    or FolderPath == &quot;/etc/shadow&quot;
-| project Timestamp, DeviceName, ActionType, FolderPath, FileName, SHA256,
-          InitiatingProcessFileName, InitiatingProcessCommandLine,
-          InitiatingProcessFolderPath, InitiatingProcessAccountName,
-          InitiatingProcessParentFileName
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-199-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// CVE-2026-47669 DbGate Zip Slip - ASIM ImFileEvent (covers MDE for Linux + Sysmon for Linux + auditd)
-ImFileEvent
-| where TimeGenerated &gt; ago(7d)
-| where ActingProcessName endswith &quot;/node&quot; or ActingProcessName =~ &quot;node&quot;
-| where ActingProcessCommandLine has_any (&quot;dbgate&quot;, &quot;packages/api&quot;, &quot;/app/packages&quot;)
-| where TargetFilePath startswith &quot;/etc/cron.&quot;
-    or TargetFilePath startswith &quot;/var/spool/cron/&quot;
-    or TargetFilePath startswith &quot;/etc/sudoers.d/&quot;
-    or TargetFilePath startswith &quot;/root/.ssh/&quot;
-    or TargetFilePath startswith &quot;/etc/init.d/&quot;
-    or TargetFilePath startswith &quot;/etc/profile.d/&quot;
-    or TargetFilePath startswith &quot;/etc/systemd/system/&quot;
-    or TargetFilePath startswith &quot;/usr/local/bin/&quot;
-    or TargetFilePath startswith &quot;/usr/local/sbin/&quot;
-    or TargetFilePath in (&quot;/etc/ld.so.preload&quot;,&quot;/etc/passwd&quot;,&quot;/etc/shadow&quot;)
-| project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName,
-          ActingProcessCommandLine, TargetFilePath, TargetFileName,
-          TargetFileSHA256, EventType
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-199-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: DbGate Zip Slip (CVE-2026-47669) - Node Writes to OS-Sensitive Linux Paths
-id: 7c9a4a16-2c4f-4c2c-9b1a-2026476690a1
-description: Detects the DbGate node process writing files to OS-sensitive Linux paths (cron, sudoers.d, /root/.ssh, ld.so.preload, systemd units, /usr/local/bin) via the Zip Slip vulnerability in unzipDirectory.js. In a normal DbGate deployment node should only write under its archive directory.
-references:
-  - https://github.com/advisories/GHSA-h535-j5hr-mv56
-  - https://security.snyk.io/vuln/SNYK-JS-DBGATEAPI-11023274
-author: SOC Detection Engineering
-date: 2026/06/05
-tags:
-  - attack.t1190
-  - attack.t1053.003
-  - attack.t1505.003
-  - attack.initial_access
-  - attack.persistence
-logsource:
-  category: file_event
-  product: linux
-detection:
-  proc:
-    Image|endswith: &#x27;/node&#x27;
-  cmdline_dbgate:
-    CommandLine|contains:
-      - &#x27;dbgate&#x27;
-      - &#x27;packages/api&#x27;
-  target_paths_prefix:
-    TargetFilename|startswith:
-      - &#x27;/etc/cron.d/&#x27;
-      - &#x27;/etc/cron.daily/&#x27;
-      - &#x27;/etc/cron.hourly/&#x27;
-      - &#x27;/etc/cron.weekly/&#x27;
-      - &#x27;/etc/cron.monthly/&#x27;
-      - &#x27;/var/spool/cron/&#x27;
-      - &#x27;/etc/sudoers.d/&#x27;
-      - &#x27;/root/.ssh/&#x27;
-      - &#x27;/etc/init.d/&#x27;
-      - &#x27;/etc/profile.d/&#x27;
-      - &#x27;/etc/systemd/system/&#x27;
-      - &#x27;/usr/local/bin/&#x27;
-      - &#x27;/usr/local/sbin/&#x27;
-  target_paths_exact:
-    TargetFilename:
-      - &#x27;/etc/ld.so.preload&#x27;
-      - &#x27;/etc/passwd&#x27;
-      - &#x27;/etc/shadow&#x27;
-  condition: proc and cmdline_dbgate and (target_paths_prefix or target_paths_exact)
-level: critical</code></pre></div>
-    <div class="tab-content" id="art-199-uc0-datadog"><pre><button class="copy-btn">COPY</button><code>(source:linux.auditd OR source:windows.sysmon) @process.name:node @process.command_line:(*dbgate* OR *packages\/api*) @file.path:(&quot;/etc/cron.d/*&quot; OR &quot;/etc/cron.daily/*&quot; OR &quot;/etc/cron.hourly/*&quot; OR &quot;/var/spool/cron/*&quot; OR &quot;/etc/sudoers.d/*&quot; OR &quot;/root/.ssh/*&quot; OR &quot;/etc/init.d/*&quot; OR &quot;/etc/profile.d/*&quot; OR &quot;/etc/systemd/system/*&quot; OR &quot;/usr/local/bin/*&quot; OR &quot;/usr/local/sbin/*&quot; OR &quot;/etc/ld.so.preload&quot; OR &quot;/etc/passwd&quot; OR &quot;/etc/shadow&quot;)</code></pre></div>
-    <div class="tab-content" id="art-199-uc0-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten ContextImageFileName=/\/node$/i
-| regex(&quot;(dbgate|packages\\/api)&quot;, field=ContextCommandLine, strict=false)
-| regex(&quot;^(\\/etc\\/cron\\.(d|daily|hourly|weekly|monthly)\\/|\\/var\\/spool\\/cron\\/|\\/etc\\/sudoers\\.d\\/|\\/root\\/\\.ssh\\/|\\/etc\\/init\\.d\\/|\\/etc\\/profile\\.d\\/|\\/etc\\/systemd\\/system\\/|\\/usr\\/local\\/(bin|sbin)\\/|\\/etc\\/ld\\.so\\.preload$|\\/etc\\/passwd$|\\/etc\\/shadow$)&quot;, field=TargetFileName)
-| groupBy([aid, ComputerName, ContextImageFileName, TargetFileName, UserName], function=count())</code></pre></div>
-    <div class="tab-content" id="art-199-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-199-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-199-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-199-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name=&quot;node&quot; AND (Filesystem.file_path=&quot;/etc/cron.d/*&quot; OR Filesystem.file_path=&quot;/etc/cron.daily/*&quot; OR Filesystem.file_path=&quot;/etc/cron.hourly/*&quot; OR Filesystem.file_path=&quot;/etc/cron.weekly/*&quot; OR Filesystem.file_path=&quot;/etc/cron.monthly/*&quot; OR Filesystem.file_path=&quot;/var/spool/cron/*&quot; OR Filesystem.file_path=&quot;/etc/sudoers.d/*&quot; OR Filesystem.file_path=&quot;/root/.ssh/*&quot; OR Filesystem.file_path=&quot;/etc/ld.so.preload&quot; OR Filesystem.file_path=&quot;/etc/init.d/*&quot; OR Filesystem.file_path=&quot;/etc/profile.d/*&quot; OR Filesystem.file_path=&quot;/usr/local/bin/*&quot; OR Filesystem.file_path=&quot;/usr/local/sbin/*&quot; OR Filesystem.file_path=&quot;/etc/systemd/system/*&quot;) by Filesystem.dest Filesystem.process_name Filesystem.process_path Filesystem.file_path Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre><pre class="spl-mode-body" id="art-199-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where Filesystem.process_name=&quot;node&quot; AND (Filesystem.file_path=&quot;/etc/cron.d/*&quot; OR Filesystem.file_path=&quot;/etc/cron.daily/*&quot; OR Filesystem.file_path=&quot;/etc/cron.hourly/*&quot; OR Filesystem.file_path=&quot;/etc/cron.weekly/*&quot; OR Filesystem.file_path=&quot;/etc/cron.monthly/*&quot; OR Filesystem.file_path=&quot;/var/spool/cron/*&quot; OR Filesystem.file_path=&quot;/etc/sudoers.d/*&quot; OR Filesystem.file_path=&quot;/root/.ssh/*&quot; OR Filesystem.file_path=&quot;/etc/ld.so.preload&quot; OR Filesystem.file_path=&quot;/etc/init.d/*&quot; OR Filesystem.file_path=&quot;/etc/profile.d/*&quot; OR Filesystem.file_path=&quot;/usr/local/bin/*&quot; OR Filesystem.file_path=&quot;/usr/local/sbin/*&quot; OR Filesystem.file_path=&quot;/etc/systemd/system/*&quot;) by Filesystem.dest Filesystem.process_name Filesystem.process_path Filesystem.file_path Filesystem.user | `drop_dm_object_name(Filesystem)` | convert ctime(firstTime) ctime(lastTime)</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="5f4f84ed19" data-platforms="datadog,sent,sigma,spl" data-targets="vcs">
-  <summary>
-    <span class="uc-title">DbGate exploit chain: anonymous /auth/login + /api/archive/unzip POSTs from same source (CVE-2026-47669)</span>
-    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
-    <span class="uc-conf medium">Medium</span>
-    <button class="share-btn" data-share-uc="5f4f84ed19" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Detects the multi-step exploit sequence against DbGate&#x27;s vulnerable archive endpoints: POST /api/auth/login (no creds via amoid=none), POST /api/uploads/upload, POST /api/archive/save-uploaded-zip, POST /api/archive/unzip — all hit by the same source IP within a short window. This is the network-edge view of CVE-2026-47669 exploitation, complementary to host-side file-write detection.
-
-Rationale: Targets the EXACT URL set in the PoC (POST /api/auth/login with amoid=none, /api/uploads/upload, /api/archive/save-uploaded-zip, /api/archive/unzip). The chain of &gt;=2 distinct endpoints including unzip or save-uploaded-zip from one source IP is the network-shape of the exploit. Defender/Falcon left empty because neither has inbound HTTP request-URL visibility for DbGate&#x27;s port. Corroborated via Snyk advisory for the prior dbgate-api Zip Slip variant.
-
-Cross-checked against:
-  • https://github.com/advisories/GHSA-h535-j5hr-mv56
-  • https://security.snyk.io/vuln/SNYK-JS-DBGATEAPI-11023274</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Valid Accounts">T1078</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web</span></div>
-    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Authorised DbGate admin restoring a legitimate archive backup from their workstation IP</li><li>Internal CI smoke-tests that exercise the archive round-trip after each DbGate upgrade</li><li>Pen-test or red-team engagement explicitly running the GHSA PoC against a staging instance</li><li>Health-monitoring probe that does a no-op login then GET to confirm API liveness (single endpoint only — chain filter suppresses)</li><li>Customer-support troubleshooting where the SE uploads a sample archive to reproduce a bug</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where SourceIP !in (dynamic([&quot;10.0.0.0/8&quot;,&quot;172.16.0.0/12&quot;,&quot;192.168.0.0/16&quot;])) or not (UASet has_any (&quot;dbgate-admin-cli&quot;,&quot;DbGate-CI-Smoke&quot;))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm DbGate version on the destination host (affected ≤ 7.1.8) and check whether SourceIP belongs to an admin allowlist. Pull request bodies if the WAF captures them — look for `&quot;amoid&quot;:&quot;none&quot;` on /api/auth/login, which signals the credentials-less path. 2) Contain: if SourceIP is external and the host is unpatched, block at WAF/edge, rotate any JWT signing key, and force-restart DbGate to invalidate active sessions; if patching is blocked, restrict the /api/archive/* and /api/uploads/upload routes at the reverse proxy. 3) Hunt: pivot to host-side file events on the DbGate container (use UC1 query) to confirm whether the exploit actually wrote out-of-bounds files; check egress from the DbGate host for second-stage payload fetches; review historic CommonSecurityLog for the same SourceIP touching other internal apps.</div></details>
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-199-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-199-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-199-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-199-uc1-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-199-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// CVE-2026-47669 DbGate exploit chain via WAF/proxy logs in CommonSecurityLog
-let ExploitEndpoints = dynamic([&quot;/api/archive/unzip&quot;,&quot;/api/archive/save-uploaded-zip&quot;,&quot;/api/uploads/upload&quot;,&quot;/api/auth/login&quot;]);
-CommonSecurityLog
-| where TimeGenerated &gt; ago(7d)
-| where RequestMethod =~ &quot;POST&quot;
-| where RequestURL has_any (ExploitEndpoints)
-| extend Endpoint = case(
-    RequestURL has &quot;/api/archive/unzip&quot;, &quot;unzip&quot;,
-    RequestURL has &quot;/api/archive/save-uploaded-zip&quot;, &quot;save-uploaded-zip&quot;,
-    RequestURL has &quot;/api/uploads/upload&quot;, &quot;upload&quot;,
-    RequestURL has &quot;/api/auth/login&quot;, &quot;login&quot;,
-    &quot;other&quot;)
-| summarize EndpointsHit = make_set(Endpoint),
-            UrlSamples = make_set(RequestURL, 10),
-            UASet = make_set(RequestClientApplication),
-            ReqCount = count(),
-            FirstSeen = min(TimeGenerated),
-            LastSeen = max(TimeGenerated)
-            by SourceIP, DestinationHostName, DestinationIP
-| where array_length(EndpointsHit) &gt;= 2
-    and (set_has_element(EndpointsHit, &quot;unzip&quot;) or set_has_element(EndpointsHit, &quot;save-uploaded-zip&quot;))
-| order by LastSeen desc</code></pre></div>
-    <div class="tab-content" id="art-199-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: DbGate Vulnerable Archive Endpoint Accessed (CVE-2026-47669)
-id: 7c9a4a16-2c4f-4c2c-9b1a-2026476690b2
-description: Detects a POST to the DbGate /api/archive/unzip or /api/archive/save-uploaded-zip endpoints — the vulnerable code paths exploited by CVE-2026-47669 Zip Slip. Any external traffic to these endpoints on a non-patched DbGate (&lt;=7.1.8) should be triaged.
-references:
-  - https://github.com/advisories/GHSA-h535-j5hr-mv56
-  - https://security.snyk.io/vuln/SNYK-JS-DBGATEAPI-11023274
-author: SOC Detection Engineering
-date: 2026/06/05
-tags:
-  - attack.t1190
-  - attack.initial_access
-logsource:
-  category: webserver
-detection:
-  selection:
-    cs-method: &#x27;POST&#x27;
-    cs-uri-stem|contains:
-      - &#x27;/api/archive/unzip&#x27;
-      - &#x27;/api/archive/save-uploaded-zip&#x27;
-  condition: selection
-level: high</code></pre></div>
-    <div class="tab-content" id="art-199-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>@http.method:POST @http.url_details.path:(*\/api\/archive\/unzip OR *\/api\/archive\/save-uploaded-zip OR *\/api\/uploads\/upload OR *\/api\/auth\/login)</code></pre></div>
-    <div class="tab-content" id="art-199-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-199-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-199-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-199-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats summariesonly=t count min(_time) as firstSeen max(_time) as lastSeen values(Web.url) as urlsHit values(Web.http_user_agent) as user_agents dc(Web.url) as distinct_endpoints from datamodel=Web where Web.http_method=POST AND (Web.url=&quot;*/api/archive/unzip&quot; OR Web.url=&quot;*/api/archive/save-uploaded-zip&quot; OR Web.url=&quot;*/api/uploads/upload&quot; OR Web.url=&quot;*/api/auth/login&quot;) by Web.src Web.dest | `drop_dm_object_name(Web)` | where distinct_endpoints &gt;= 2 AND (mvfind(urlsHit,&quot;/api/archive/unzip&quot;)&gt;=0 OR mvfind(urlsHit,&quot;/api/archive/save-uploaded-zip&quot;)&gt;=0) | convert ctime(firstSeen) ctime(lastSeen) | sort - count</code></pre><pre class="spl-mode-body" id="art-199-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstSeen max(_time) as lastSeen values(Web.url) as urlsHit values(Web.http_user_agent) as user_agents dc(Web.url) as distinct_endpoints from datamodel=Web where Web.http_method=POST AND (Web.url=&quot;*/api/archive/unzip&quot; OR Web.url=&quot;*/api/archive/save-uploaded-zip&quot; OR Web.url=&quot;*/api/uploads/upload&quot; OR Web.url=&quot;*/api/auth/login&quot;) by Web.src Web.dest | `drop_dm_object_name(Web)` | where distinct_endpoints &gt;= 2 AND (mvfind(urlsHit,&quot;/api/archive/unzip&quot;)&gt;=0 OR mvfind(urlsHit,&quot;/api/archive/save-uploaded-zip&quot;)&gt;=0) | convert ctime(firstSeen) ctime(lastSeen) | sort - count</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
-  <summary>
-    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
-    <span class="uc-phase">Reconnaissance</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-199-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-199-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-199-uc2-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-199-uc2-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
-// partitions on Timestamp instead of scanning the full retention.
-DeviceTvmSoftwareVulnerabilities
-| where Timestamp &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-47669&quot;)
-| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-199-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
-// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
-// no Sentinel translation — track via Update / Heartbeat OS-version
-// gaps as a coarse approximation.
-DeviceTvmSoftwareVulnerabilities
-| where TimeGenerated &gt; ago(1d)
-| where CveId in~ (&quot;CVE-2026-47669&quot;)
-| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
-| project DeviceName, OSPlatform, CveId,
-          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
-| order by VulnerabilitySeverityLevel asc, DeviceName asc
-</code></pre></div>
-    <div class="tab-content" id="art-199-uc2-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-199-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-199-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-199-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-47669&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-199-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
-    from datamodel=Vulnerabilities
-    where Vulnerabilities.signature IN (&quot;CVE-2026-47669&quot;)
-    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
-| `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre></div></div>
-  </div>
-</details>
-<details class="uc" data-uc-slug="09618b1d7b" data-platforms="def,sent,spl" data-targets="linux,windows">
-  <summary>
-    <span class="uc-title">Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-47669: DbGate: Zip Slip in archive/unzip allows arbit</span>
-    <span class="uc-phase">Installation</span>
-    <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="09618b1d7b" title="Copy share link to this UC" aria-label="Copy share link">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-    </button>
-  </summary>
-  <div class="uc-body">
-    <div class="uc-desc">Auto-generated hunt targeting the specific binaries, paths, registry locations and command-line fragments named in this article. Hunting tier — needs analyst review and environment tuning before promotion to alerting.</div>
-    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="User Execution: Malicious File">T1204.002</span></div>
-    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
-    
-    <div class="tabs">
-      <button class="tab-btn active" data-target="art-199-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-199-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-199-uc3-spl">Splunk SPL (CIM)</button>
-    </div>
-    <div class="tab-content active" id="art-199-uc3-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47669: DbGate: Zip Slip in archive/unzip allows arbit
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where Timestamp &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/etc/cron.d/dbgate-pwn&quot;, &quot;/tmp/pwned&quot;, &quot;/etc/cron.d/&quot;))
-| project Timestamp, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-199-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
-// Requires the Microsoft 365 Defender data connector (streams the
-// advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
-// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47669: DbGate: Zip Slip in archive/unzip allows arbit
-// Hunts the actual binaries / paths / commandline fragments named
-// in the article instead of a generic technique-class template.
-
-// File-creation events for the named binaries / paths
-DeviceFileEvents
-| where TimeGenerated &gt; ago(30d)
-| where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
-| where (FolderPath has_any (&quot;/etc/cron.d/dbgate-pwn&quot;, &quot;/tmp/pwned&quot;, &quot;/etc/cron.d/&quot;))
-| project TimeGenerated, DeviceName, AccountName, FolderPath,
-          FileName, ActionType, InitiatingProcessFileName,
-          InitiatingProcessCommandLine
-| order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-199-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-199-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-199-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-199-uc3-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47669: DbGate: Zip Slip in archive/unzip allows arbit ```
-| tstats `summariesonly` count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/etc/cron.d/dbgate-pwn*&quot; OR Filesystem.file_path=&quot;*/tmp/pwned*&quot; OR Filesystem.file_path=&quot;*/etc/cron.d/*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre><pre class="spl-mode-body" id="art-199-uc3-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-47669: DbGate: Zip Slip in archive/unzip allows arbit ```
-| tstats summariesonly=false count
-    from datamodel=Endpoint.Filesystem
-    where Filesystem.action IN (&quot;created&quot;,&quot;modified&quot;)
-      AND (Filesystem.file_path=&quot;*/etc/cron.d/dbgate-pwn*&quot; OR Filesystem.file_path=&quot;*/tmp/pwned*&quot; OR Filesystem.file_path=&quot;*/etc/cron.d/*&quot;)
-    by Filesystem.dest, Filesystem.user, Filesystem.process_name,
-       Filesystem.file_path, Filesystem.file_name
-| `drop_dm_object_name(Filesystem)`</code></pre></div></div>
-  </div>
-</details></div>
-</article>
 <article class="card" id="art-200" data-art-slug="2026-06-05-ghsa-critical-cve-2026-47668-dbgate-unauthenticated-remote-c"
   data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190"
@@ -504,7 +116,7 @@ Rationale: Pins to the exact post-exploit footprint described in the advisory: t
 | project TimeGenerated, DvcHostname, ActorUsername, ParentProcessName, ParentProcessCommandLine, ActingProcessName, ActingProcessCommandLine, Hash
 | order by TimeGenerated desc</code></pre></div>
     <div class="tab-content" id="art-200-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: DbGate JSON Runner RCE — Node.js Forked Runner Spawns Shell/LOLBin (CVE-2026-47668)
-id: 9a3c1c8d-4f2a-4b6e-9e2a-cve202647668uc1
+id: 51b09db9-2bee-5a02-8cf9-dbd922a08513
 description: Detects child process execution from a DbGate forked runner Node.js process where the parent cmdline references the dbgate runtime artifacts (bundle.js, .dbgate/run/) and the child is a shell or download utility — the post-injection footprint of CVE-2026-47668.
 references:
   - https://github.com/advisories/GHSA-8v3q-9vmx-36vc
@@ -609,7 +221,7 @@ let iis =
 union waf, iis
 | order by TimeGenerated desc</code></pre></div>
     <div class="tab-content" id="art-200-uc1-sigma"><pre><button class="copy-btn">COPY</button><code>title: DbGate JSON Runner Exploit Request — POST /runners/start (CVE-2026-47668)
-id: 9a3c1c8d-4f2a-4b6e-9e2a-cve202647668uc2
+id: 189ca214-2f79-5a2f-9e65-7a2aede1c828
 description: Detects HTTP POSTs to DbGate runner endpoints abused by CVE-2026-47668. Pair with body inspection when the proxy logs it; URL+method alone is high-signal because runner endpoints are not user-browser surfaces.
 references:
   - https://github.com/advisories/GHSA-8v3q-9vmx-36vc
@@ -675,7 +287,7 @@ auth
 | project AuthTime, RunTime, SourceIP, DestinationHostName, RequestURL_Runner, RequestClientApplication
 | order by AuthTime desc</code></pre></div>
     <div class="tab-content" id="art-200-uc2-sigma"><pre><button class="copy-btn">COPY</button><code>title: DbGate Anonymous Auth Token Mint — POST /auth/login (CVE-2026-47668 precursor)
-id: 9a3c1c8d-4f2a-4b6e-9e2a-cve202647668uc3
+id: f16dd2d4-1ec1-52aa-8a35-068190855ef3
 description: Detects POST to DbGate `/auth/login`, the endpoint used to mint a bearer token under the default `authProvider:&quot;Anonymous&quot;` configuration. High-signal when correlated with subsequent runner endpoint hits from the same source.
 references:
   - https://github.com/advisories/GHSA-8v3q-9vmx-36vc
@@ -1141,12 +753,12 @@ level: high</code></pre></div>
     <div class="tab-content" id="art-202-uc0-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-202-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-202-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-202-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;stata.exe&quot;,&quot;stata-mp.exe&quot;,&quot;stata-se.exe&quot;,&quot;stata-be.exe&quot;,&quot;xstata.exe&quot;,&quot;xstata-mp.exe&quot;,&quot;xstata-se.exe&quot;,&quot;stata&quot;,&quot;stata-mp&quot;,&quot;stata-se&quot;,&quot;stata-be&quot;)) AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;,&quot;zsh&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;python.exe&quot;,&quot;python&quot;,&quot;python3&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_id Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-202-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Processes where (Processes.parent_process_name IN (&quot;stata.exe&quot;,&quot;stata-mp.exe&quot;,&quot;stata-se.exe&quot;,&quot;stata-be.exe&quot;,&quot;xstata.exe&quot;,&quot;xstata-mp.exe&quot;,&quot;xstata-se.exe&quot;,&quot;stata&quot;,&quot;stata-mp&quot;,&quot;stata-se&quot;,&quot;stata-be&quot;)) AND (Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;bash.exe&quot;,&quot;sh.exe&quot;,&quot;zsh&quot;,&quot;bash&quot;,&quot;sh&quot;,&quot;python.exe&quot;,&quot;python&quot;,&quot;python3&quot;)) by Processes.dest Processes.user Processes.parent_process Processes.process_name Processes.process Processes.process_id Processes.process_hash | `drop_dm_object_name(Processes)` | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
   </div>
 </details>
-<details class="uc" data-uc-slug="963f2dba8c" data-platforms="datadog,def,falcon,sent,sigma,spl" data-targets="vcs,windows">
+<details class="uc" data-uc-slug="8506e1d9d6" data-platforms="def,sent,sigma,spl" data-targets="vcs,windows">
   <summary>
     <span class="uc-title">Stata-authored log file written with shell metacharacters or path traversal in filename (CVE-2026-47708)</span>
     <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
     <span class="uc-conf high">High</span>
-    <button class="share-btn" data-share-uc="963f2dba8c" title="Copy share link to this UC" aria-label="Copy share link">
+    <button class="share-btn" data-share-uc="8506e1d9d6" title="Copy share link to this UC" aria-label="Copy share link">
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
     </button>
   </summary>
@@ -1165,8 +777,6 @@ Cross-checked against:
       <button class="tab-btn active" data-target="art-202-uc1-kql">Defender KQL</button>
       <button class="tab-btn" data-target="art-202-uc1-sentinel">Sentinel KQL</button>
       <button class="tab-btn" data-target="art-202-uc1-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-202-uc1-datadog">Datadog</button>
-      <button class="tab-btn" data-target="art-202-uc1-falcon">Falcon LogScale</button>
       <button class="tab-btn" data-target="art-202-uc1-spl">Splunk SPL (CIM)</button>
     </div>
     <div class="tab-content active" id="art-202-uc1-kql"><pre><button class="copy-btn">COPY</button><code>DeviceFileEvents
@@ -1174,7 +784,7 @@ Cross-checked against:
 | where ActionType in (&quot;FileCreated&quot;,&quot;FileModified&quot;)
 | where InitiatingProcessFileName has_any (&quot;stata.exe&quot;,&quot;stata-mp.exe&quot;,&quot;stata-se.exe&quot;,&quot;stata-be.exe&quot;,&quot;xstata.exe&quot;,&quot;xstata-mp.exe&quot;,&quot;xstata-se.exe&quot;,&quot;python.exe&quot;,&quot;python&quot;,&quot;python3&quot;)
 | where FileName endswith &quot;.log&quot;
-| where FileName matches regex @&quot;[;|&amp;`&#x27;\&quot;]|\.\.&quot;
+| where FileName matches regex @&quot;[;|&amp;`&#x27;&quot;&quot;]|\.\.&quot;
      or InitiatingProcessCommandLine has_any (&quot;stata_mcp&quot;,&quot;stata-mcp&quot;,&quot;log_file_name&quot;)
 | project Timestamp, DeviceName, InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine, FileName, FolderPath
 | order by Timestamp desc</code></pre></div>
@@ -1183,7 +793,7 @@ Cross-checked against:
 | where EventType == &quot;FileCreated&quot; or EventType == &quot;FileModified&quot;
 | where ActingProcessName has_any (&quot;stata.exe&quot;,&quot;stata-mp.exe&quot;,&quot;stata-se.exe&quot;,&quot;stata-be.exe&quot;,&quot;xstata.exe&quot;,&quot;xstata-mp.exe&quot;,&quot;xstata-se.exe&quot;,&quot;python.exe&quot;,&quot;python&quot;,&quot;python3&quot;)
 | where TargetFileName endswith &quot;.log&quot;
-| where TargetFileName matches regex @&quot;[;|&amp;`&#x27;\&quot;]|\.\.&quot;
+| where TargetFileName matches regex @&quot;[;|&amp;`&#x27;&quot;&quot;]|\.\.&quot;
      or ActingProcessCommandLine has_any (&quot;stata_mcp&quot;,&quot;stata-mcp&quot;,&quot;log_file_name&quot;)
 | project TimeGenerated, DvcHostname, ActorUsername, ActingProcessName, ActingProcessCommandLine, TargetFileName, TargetFilePath
 | order by TimeGenerated desc</code></pre></div>
@@ -1229,12 +839,6 @@ detection:
 falsepositives:
   - Researchers using single-quote characters in legitimate Stata log filenames (rare)
 level: high</code></pre></div>
-    <div class="tab-content" id="art-202-uc1-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:11 @Image:(*\\stata.exe OR *\\STATA.exe OR *\\stata-mp.exe OR *\\stata-se.exe OR *\\stata-be.exe OR *\\xstata.exe OR *\\python.exe) @TargetFilename:(*.log) @TargetFilename:(*\;* OR *\|* OR *\&amp;* OR *..* OR *\`* OR *\&#x27;* OR *\&quot;*)</code></pre></div>
-    <div class="tab-content" id="art-202-uc1-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=FileWritten
-| ContextImageFileName=/(stata|stata-mp|stata-se|stata-be|xstata|xstata-mp|xstata-se|python3?)(\.exe)?$/i
-| TargetFileName=/\.log$/i
-| regex(&quot;[;|&amp;`&#x27;\&quot;]|\\.\\.&quot;, field=TargetFileName)
-| groupBy([aid, ComputerName, UserName, ContextImageFileName, TargetFileName], function=count())</code></pre></div>
     <div class="tab-content" id="art-202-uc1-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-202-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-202-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-202-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN (&quot;stata.exe&quot;,&quot;stata-mp.exe&quot;,&quot;stata-se.exe&quot;,&quot;stata-be.exe&quot;,&quot;xstata.exe&quot;,&quot;xstata-mp.exe&quot;,&quot;xstata-se.exe&quot;,&quot;stata&quot;,&quot;stata-mp&quot;,&quot;stata-se&quot;,&quot;stata-be&quot;,&quot;python.exe&quot;,&quot;python&quot;,&quot;python3&quot;)) AND (Filesystem.file_name=&quot;*.log&quot;) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | where match(file_name,&quot;[;|&amp;`&#x27;\&quot;]|\\.\\.&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-202-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Endpoint.Filesystem where (Filesystem.process_name IN (&quot;stata.exe&quot;,&quot;stata-mp.exe&quot;,&quot;stata-se.exe&quot;,&quot;stata-be.exe&quot;,&quot;xstata.exe&quot;,&quot;xstata-mp.exe&quot;,&quot;xstata-se.exe&quot;,&quot;stata&quot;,&quot;stata-mp&quot;,&quot;stata-se&quot;,&quot;stata-be&quot;,&quot;python.exe&quot;,&quot;python&quot;,&quot;python3&quot;)) AND (Filesystem.file_name=&quot;*.log&quot;) by Filesystem.dest Filesystem.user Filesystem.process_name Filesystem.file_path Filesystem.file_name | `drop_dm_object_name(Filesystem)` | where match(file_name,&quot;[;|&amp;`&#x27;\&quot;]|\\.\\.&quot;) | `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre></div></div>
   </div>
 </details>
@@ -15468,6 +15072,132 @@ level: critical
         where Processes.process_hash IN (&quot;970ba1a06bfabaf7a7f17df75f12a19e48ad4667c938bc7949a6a0502f6160b6&quot;)
         by Processes.dest, Processes.user, Processes.process_name, Processes.process_hash
      | `drop_dm_object_name(Processes)`]</code></pre></div></div>
+  </div>
+</details></div>
+</article>
+<article class="card" id="art-229" data-art-slug="2026-06-02-cisa-kev-cve-2022-0492-linux-kernel-improper-authentication-"
+  data-phases="c2,exploit,install,recon" data-sev="crit"
+  data-techs=""
+  data-sources="CISA KEV"
+  data-platforms="def,sent,spl"
+  data-splunk-cats="application"
+  data-targets=""
+  data-uc-count="1" data-llm-uc-count="0"
+  data-search="CISA KEV: CVE-2022-0492 — Linux Kernel Improper Authentication Vulnerability Linux Kernel contains an improper authentication vulnerability which could allow for privilege escalation via the cgroups v1 release_agent feature. Vendor: Linux, Product: Kernel. Federal patch due: 2026-06-05. CVE-2022-0492  Asset exposure — vulnerability matches article CVE(s)">
+  <div class="sev-ribbon crit">Critical</div>
+  <button class="share-btn card-share" data-share-art="2026-06-02-cisa-kev-cve-2022-0492-linux-kernel-improper-authentication-" title="Copy share link to this article" aria-label="Copy share link">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+  </button>
+  <h2><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener">CISA KEV: CVE-2022-0492 — Linux Kernel Improper Authentication Vulnerability</a></h2>
+  <div class="source-badges"><span class="source-badge kev">CISA KEV</span></div>
+  <div class="pubmeta">
+    <span>2026-06-02</span>
+    <span>1 use case</span>
+    <span>0 techniques</span>
+    <span>2 kill-chain phases detected</span>
+  </div>
+  <p class="summary">Linux Kernel contains an improper authentication vulnerability which could allow for privilege escalation via the cgroups v1 release_agent feature. Vendor: Linux, Product: Kernel. Federal patch due: 2026-06-05.</p>
+  <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2022-0492</span></div>
+  <div class="action-row">
+    <button class="btn btn-kc" data-target="art-229-kc"><svg class="kc-chev" width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="3 4.5 6 7.5 9 4.5"/></svg><span class="kc-label">Show kill chain</span></button>
+    <button class="btn btn-hunt" data-hunt-art="art-229"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21 L16.65 16.65"/></svg><span>Hunt IOCs</span></button>
+    <span class="btn-meta">Click any ATT&amp;CK pill below to open it on the Matrix</span>
+  </div>
+  <div class="killchain" id="art-229-kc">
+  <div class="kc3d"><div class="kc-cell hit">
+  <div class="num">Phase 1</div>
+  <div class="name">Reconnaissance</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 2</div>
+  <div class="name">Weaponization</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 3</div>
+  <div class="name">Delivery</div>
+  <div class="marker">—</div>
+</div>
+<div class="kc-cell hit">
+  <div class="num">Phase 4</div>
+  <div class="name">Exploitation</div>
+  <div class="marker">Detected</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 5</div>
+  <div class="name">Installation</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell inferred">
+  <div class="num">Phase 6</div>
+  <div class="name">Command &amp; Control</div>
+  <div class="marker">Likely</div>
+</div>
+<div class="kc-cell ">
+  <div class="num">Phase 7</div>
+  <div class="name">Actions on Objectives</div>
+  <div class="marker">—</div>
+</div></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+<div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
+<div class="phase-line "><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad).</div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code.</div>
+<div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
+<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
+<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+</div>
+  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <summary>
+    <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
+    <span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="222a505c20" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Match vulnerability scanner output to the CVE(s) named in the article.</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
+    
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-229-uc0-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-229-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-229-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-229-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+// partitions on Timestamp instead of scanning the full retention.
+DeviceTvmSoftwareVulnerabilities
+| where Timestamp &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2022-0492&quot;)
+| join kind=inner (DeviceInfo | where Timestamp &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-229-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+// `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
+// no Sentinel translation — track via Update / Heartbeat OS-version
+// gaps as a coarse approximation.
+DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId in~ (&quot;CVE-2022-0492&quot;)
+| join kind=inner (DeviceInfo | where TimeGenerated &gt; ago(1d)) on DeviceId
+| project DeviceName, OSPlatform, CveId,
+          VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by VulnerabilitySeverityLevel asc, DeviceName asc
+</code></pre></div>
+    <div class="tab-content" id="art-229-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-229-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-229-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-229-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2022-0492&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-229-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+    from datamodel=Vulnerabilities
+    where Vulnerabilities.signature IN (&quot;CVE-2022-0492&quot;)
+    by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - severity</code></pre></div></div>
   </div>
 </details></div>
 </article>

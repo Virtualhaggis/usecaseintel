@@ -80,7 +80,7 @@ union isfuzzy=true
     | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, FolderPath),
   (DeviceFileEvents
     | where Timestamp > ago(60d)
-    | where FolderPath has "codexui-android" or FileName == "chunk-PUR7OUAG.js"
+    | where FolderPath has "codexui-android" or FileName =~ "chunk-PUR7OUAG.js"
     | project Timestamp, DeviceName, AccountName=InitiatingProcessAccountName, FileName, ProcessCommandLine=InitiatingProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine=InitiatingProcessCommandLine, FolderPath)
 | order by Timestamp desc
 ```

@@ -38,7 +38,7 @@ _(none detected from narrative keywords)_
 
 ### JetBrains IDE outbound connection to malicious plugin C2 (39.107.60.51)
 
-`UC_8_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_9_6` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -61,7 +61,7 @@ DeviceNetworkEvents
 
 ### HTTP exfil signature: POST to /api/software/ on 39.107.60.51
 
-`UC_8_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
+`UC_9_7` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -83,7 +83,7 @@ DeviceNetworkEvents
 
 ### Malicious JetBrains plugin folder or JAR present in plugins directory
 
-`UC_8_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
+`UC_9_8` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -112,7 +112,7 @@ DeviceFileEvents
 
 ### JetBrains IDE plaintext HTTP (port 80) egress to external host
 
-`UC_8_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
+`UC_9_9` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -251,7 +251,7 @@ DeviceProcessEvents
 
 ### Article-specific behavioural hunt — 15 Malicious JetBrains Plugins Stole AI API Keys from 70,000 Developers
 
-`UC_8_5` · phase: **install** · confidence: **High**
+`UC_9_5` · phase: **install** · confidence: **High**
 
 **Splunk SPL (CIM):**
 ```spl
