@@ -47,6 +47,19 @@ LOOKBACK_DAYS = 36500     # ~100 years — effectively no rolling window.
 # are cache-warm.
 MAX_PER_SOURCE = int(os.environ.get("USECASEINTEL_MAX_PER_SOURCE", "0"))
 
+# Curated high-signal threat-research / news sources. The zero-detection-value
+# guard never drops an article from these — a thin RSS-stub APT report (no full
+# body fetched yet → 0 UCs / 0 IOCs) from Lab52 or Securelist is still worth a
+# card, and gets richer detections once the body lands on a later run. The
+# guard's job is to strip dev-tooling-vendor marketing (Snyk "A Day in the
+# Life…" posts), which come from sources NOT on this list.
+_NODROP_SOURCES = frozenset({
+    "The Hacker News", "BleepingComputer", "Microsoft Security Blog",
+    "CISA KEV", "Cisco Talos", "Securelist (Kaspersky)", "SentinelLabs",
+    "Unit 42", "ESET WeLiveSecurity", "Lab52", "The DFIR Report",
+    "Google TAG", "Mandiant", "Volexity", "Cyber Security News",
+})
+
 SOURCES = [
     # News-style sources — broad coverage, light on IOC tables.
     {"name": "The Hacker News",        "kind": "rss",
@@ -22681,6 +22694,39 @@ def main():
         inferred -= hit
         sev = compute_severity(text, ind, ucs, techniques,
                                title_hint=a.get("title", ""))
+        # Zero-detection-value guard. A detection library shouldn't render a
+        # card/briefing for an article that produced NO use cases AND carries
+        # NO IOCs (no CVE / IP / domain / hash). These are almost always vendor
+        # marketing, recruiting, or culture posts (e.g. "A Day in the Life…",
+        # "<Vendor> Opens a New Office", "Welcoming <Name> as CRO") that slip
+        # the relevance gate when its LLM classifier is unavailable and defaults
+        # to keep — exactly what flooded the corpus after the per-source cap was
+        # lifted. crit/high articles are exempt: a serious threat with no
+        # generated detection is still worth surfacing. Mirrors the existing
+        # relevance-drop semantic — still counts toward the cumulative Articles
+        # total (it WAS ingested) but renders no card/briefing and contributes
+        # zero detections.
+        _ioc_n = (len(ind.get("cves") or []) + len(ind.get("ips") or [])
+                  + len(ind.get("domains") or []) + len(ind.get("sha256") or [])
+                  + len(ind.get("sha1") or []) + len(ind.get("md5") or []))
+        _src0 = (a.get("sources") or [a.get("source", "")])[0]
+        if (len(ucs) == 0 and _ioc_n == 0 and sev in ("low", "med")
+                and _src0 not in _NODROP_SOURCES):
+            relevance_tier_counts["drop-novalue"] = relevance_tier_counts.get("drop-novalue", 0) + 1
+            relevance_drop_log.append({
+                "id": f"art-{i:02d}",
+                "source": (a.get("sources") or [a.get("source", "?")])[0],
+                "title": a.get("title", ""),
+                "tier": "drop-novalue",
+                "reason": "no use cases, no IOCs (zero detection value)",
+                "published": a.get("published", ""),
+                "link": a.get("link", ""),
+            })
+            if _CUMULATIVE_STATS:
+                _record_archive_entry(run_archive, a, 0, [], [], "low")
+            _safe = a['title'][:55].encode('ascii', 'replace').decode('ascii')
+            print(f"  [{i+1:02d}] {_safe:55s} | DROP no-value (0 UC, 0 IOC, {sev})")
+            continue
         sev_counts[sev] += 1
         total_ucs += len(ucs)
         for tid, _ in techniques: total_techs.add(tid)
@@ -22807,7 +22853,8 @@ def main():
     rel_dropped = (relevance_tier_counts.get("hard-reject", 0)
                    + relevance_tier_counts.get("drop-sev", 0)
                    + relevance_tier_counts.get("drop-1", 0)
-                   + relevance_tier_counts.get("llm-2-drop", 0))
+                   + relevance_tier_counts.get("llm-2-drop", 0)
+                   + relevance_tier_counts.get("drop-novalue", 0))
     if rel_kept or rel_dropped:
         top_sources = {}
         for d in relevance_drop_log:
@@ -22823,6 +22870,7 @@ def main():
             f"tier-1 regex: {relevance_tier_counts.get('drop-1',0)}, "
             f"tier-2 LLM: {relevance_tier_counts.get('llm-2-alert',0)} alert / "
             f"{relevance_tier_counts.get('llm-2-drop',0)} drop, "
+            f"no-value (0 UC/0 IOC): {relevance_tier_counts.get('drop-novalue',0)}, "
             f"default-keep: {relevance_tier_counts.get('default-keep',0)})"
         )
         if top_str:
