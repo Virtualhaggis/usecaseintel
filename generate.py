@@ -1274,17 +1274,19 @@ def _attach_field_issues(uc_dict: dict, kql_key: str = "defender_kql",
 
 
 def _autofix_kql_verbatim_batch(ucs: list[dict]) -> int:
-    """Fix the single most common LLM KQL bug before it's validated/cached:
-    a backslash-escaped quote inside an `@"..."` verbatim string. KQL verbatim
-    strings have NO `\\"` escape — the `"` ends the string, so `@"...\\"..."`
-    parses as a short string + garbage and cascades 5+ errors per query. The
-    fix doubles the quote (`\\"` -> `""`).
+    """Fix the two most common LLM KQL string bugs before validate/cache:
+      (a) `matches regex "...\\s..."` missing the `@` verbatim prefix, so the
+          regex backslashes (`\\s`, `\\d`, `\\.`) are invalid string escapes;
+      (b) a backslash-escaped quote `\\"` inside an `@"..."` verbatim string —
+          KQL has no `\\"` escape there, so the `"` ends the string early.
+    Both cascade 5+ parser errors per query. The candidate adds the `@` prefix
+    to regex strings and doubles `\\"` -> `""`.
 
     Safe-by-construction: the candidate is applied ONLY where the real Kusto
     parser reports strictly fewer errors than the original (one batched call
     for all candidates). A query that was already clean, or whose `\\"` is a
-    legitimate regular-string escape, is left untouched. Mirrors the standalone
-    _auto_fix_kql_verbatim.py tool but runs inline so the bug never gets cached.
+    legitimate regular-string escape, is left untouched (its error count won't
+    improve). Runs inline so the bug never gets cached.
     Returns the number of queries fixed."""
     if _validate_kql_syntax_batch is None or not ucs:
         return 0
@@ -1296,8 +1298,14 @@ def _autofix_kql_verbatim_batch(ucs: list[dict]) -> int:
             continue
         for kql_key in ("defender_kql", "sentinel_kql"):
             kql = uc.get(kql_key) or ""
-            if '@"' in kql and _bsq in kql:
-                cand = kql.replace(_bsq, '""')
+            if not kql:
+                continue
+            # (a) add @ to a non-verbatim `matches regex "..."`; (b) then fix
+            # `\"` -> `""`. Order matters: prefixing first lets (b) repair a
+            # `\"` that's now inside the newly-verbatim regex string too.
+            cand = re.sub(r'\bmatches\s+regex\s+"', 'matches regex @"', kql)
+            cand = cand.replace(_bsq, '""')
+            if cand != kql:
                 i = len(cands)
                 cands.append((idx, kql_key, cand))
                 batch.append((f"o{i}", kql))
