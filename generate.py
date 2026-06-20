@@ -10256,6 +10256,22 @@ body.view-home-active .stats-articles{display:none !important;}
     </div>
   </div>
 </header>
+<script>
+// Early tab-click capture. The tab bar paints well before the main inline
+// script (thousands of lines below) wires its click handlers, so a tab
+// clicked in that window would otherwise do nothing — the page stayed on
+// Home. Record the intended view here; the router applies window.__pendingView
+// the moment it initialises.
+window.__pendingView = null;
+(function(){
+  var bar = document.querySelector('.view-tabs');
+  if (!bar) return;
+  bar.addEventListener('click', function(e){
+    var b = e.target.closest('.view-tab');
+    if (b && b.dataset.view) window.__pendingView = b.dataset.view;
+  });
+})();
+</script>
 
 <div class="first-visit-banner" id="firstVisitBanner" role="region" aria-label="Welcome">
   <span class="banner-quote">“A go-to resource SOC engineers actually use daily.”</span>
@@ -13112,6 +13128,13 @@ function afterCardsReady() {
 // Apply default state on page load — Home tab is the front door.
 document.body.classList.add('view-home-active');
 viewTabs.forEach(b => b.addEventListener('click', () => showView(b.dataset.view)));
+// Apply any tab click that landed BEFORE this script ran — captured by the
+// early inline listener near the tab bar (window.__pendingView). Without
+// this, clicking a tab in the brief window before handlers wired did
+// nothing and the page stayed on Home.
+if (window.__pendingView && window.__pendingView !== 'home') {
+  showView(window.__pendingView);
+}
 
 // =================================================================
 // Tab deeplinking — accept #tab-<view> on initial load and on hash
@@ -15189,16 +15212,32 @@ function renderIntel() {
       <td><a class="article-link" href="#${a0.id}" data-jump="${a0.id}">view article</a></td>
     </tr>`;
   });
-  tbody.innerHTML = rows.join('');
-  applyIntelFilter();
-  // Wire jump-to-article links
-  tbody.querySelectorAll('a[data-jump]').forEach(a => {
-    a.addEventListener('click', e => {
+  // Stream the rows in over animation frames instead of one giant
+  // synchronous innerHTML assignment. A 3k+ row table blocked the main
+  // thread for several seconds and froze the Threat Intel tab on open;
+  // chunking paints the first rows immediately and fills the rest in
+  // without janking scroll/interaction.
+  tbody.innerHTML = '';
+  const _CHUNK = 250;
+  let _i = 0;
+  (function paintChunk(){
+    if (_i >= rows.length) { applyIntelFilter(); return; }
+    tbody.insertAdjacentHTML('beforeend', rows.slice(_i, _i + _CHUNK).join(''));
+    _i += _CHUNK;
+    requestAnimationFrame(paintChunk);
+  })();
+  // Jump-to-article via event delegation — one listener on the tbody
+  // instead of one per row (3k+ listeners was itself a load-time cost).
+  if (!tbody._jumpWired) {
+    tbody._jumpWired = true;
+    tbody.addEventListener('click', e => {
+      const a = e.target.closest('a[data-jump]');
+      if (!a) return;
       e.preventDefault();
       showView('articles');
       setTimeout(() => document.getElementById(a.dataset.jump)?.scrollIntoView({behavior:'smooth'}), 100);
     });
-  });
+  }
 }
 
 function applyIntelFilter() {
