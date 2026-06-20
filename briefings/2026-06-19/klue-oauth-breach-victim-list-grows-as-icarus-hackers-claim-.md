@@ -11,12 +11,8 @@ By Lawrence Abrams
 June 19, 2026
 06:31 PM
 0 
-
-
 Market intelligence platform Klue has publicly confirmed a recent security incident that allowed threat actors to steal OAuth tokens used to connect to customers' Salesforce environments, as the new "Icarus" extortion group publicly claims the attack.
-
-
-The disclosure comes after cybersecurity firms Huntress and ReliaQuest detailed how attackers abused compromised Klue Battleca…
+The disclosure comes after cybersecurity firms Huntress and ReliaQuest detailed how attackers abused compromised Klue Battlecards inte…
 
 ## Indicators of Compromise (high-fidelity only)
 
@@ -24,9 +20,7 @@ The disclosure comes after cybersecurity firms Huntress and ReliaQuest detailed 
 - **IPv4 (defanged):** `212.86.125.24`
 - **IPv4 (defanged):** `213.111.148.90`
 - **IPv4 (defanged):** `94.154.32.160`
-- **Domain (defanged):** `house.com.au`
-- **Domain (defanged):** `robinskitchen.com.au`
-- **Domain (defanged):** `baccarat.com.au`
+- **Domain (defanged):** `klue.com`
 
 ## MITRE ATT&CK Techniques
 
@@ -40,20 +34,16 @@ The disclosure comes after cybersecurity firms Huntress and ReliaQuest detailed 
 - **T1528** — Steal Application Access Token
 - **T1098.001** — Account Manipulation: Additional Cloud Credentials
 - **T1071** — Application Layer Protocol
-- **T1550.001** — Application Access Token
 - **T1078.004** — Valid Accounts: Cloud Accounts
 - **T1199** — Trusted Relationship
+- **T1550.001** — Use Alternate Authentication Material: Application Access Token
 - **T1059.006** — Command and Scripting Interpreter: Python
+- **T1213.003** — Data from Information Repositories: Code Repositories
 - **T1119** — Automated Collection
-- **T1213.003** — Code Repositories / SaaS Data
 - **T1071.001** — Application Layer Protocol: Web Protocols
-- **T1567** — Exfiltration Over Web Service
-- **T1090** — Proxy
-- **T1071.004** — Application Layer Protocol: DNS
-- **T1568** — Dynamic Resolution
+- **T1102** — Web Service
 - **T1657** — Financial Theft
-- **T1566.001** — Phishing: Spearphishing Attachment
-- **T1566.002** — Phishing: Spearphishing Link
+- **T1071.003** — Application Layer Protocol: Mail Protocols
 
 ## Kill chain phases observed
 
@@ -61,105 +51,102 @@ _(none detected from narrative keywords)_
 
 ## Recommended hunts
 
-### Klue Battlecards Connected App authentication to Salesforce from Icarus IOC IPs
+### Auth from Icarus Klue-breach operator IPs (138.226.246.94 / 212.86.125.24 / 213.111.148.90 / 94.154.32.160)
 
-`UC_0_5` · phase: **delivery** · confidence: **Medium** · AI-generated for this article
+`UC_0_5` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(Authentication.user) as user values(Authentication.dest) as dest values(Authentication.signature) as signature from datamodel=Authentication where Authentication.app="salesforce" Authentication.src IN ("138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160") by Authentication.src,Authentication.app | `drop_dm_object_name(Authentication)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Authentication.app) as app values(Authentication.action) as action values(Authentication.user_agent) as user_agent from datamodel=Authentication where Authentication.src in ("138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160") by Authentication.user Authentication.src Authentication.dest | `drop_dm_object_name("Authentication")` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-CloudAppEvents
+let IcarusIPs = dynamic(["138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160"]);
+AADSignInEventsBeta
 | where Timestamp > ago(30d)
-| where Application has "Salesforce"
-| where IPAddress in ("138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160")
-| project Timestamp, AccountDisplayName, AccountObjectId, IPAddress, CountryCode, ISP, UserAgent, ActionType, ActivityType, ObjectName, ObjectType, Application, ApplicationId, RawEventData
+| where IPAddress in (IcarusIPs)
+| project Timestamp, AccountUpn, AccountDisplayName, Application, ApplicationId, ResourceDisplayName, IPAddress, Country, UserAgent, ClientAppUsed, ErrorCode, ConditionalAccessStatus, IsInteractive, TokenIssuerType
 | order by Timestamp desc
 ```
 
-### Python-requests / aiohttp User-Agent against Salesforce REST/Bulk API
+### Klue Battlecards Salesforce connected-app activity from non-Klue source IPs
 
-`UC_0_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_0_6` · phase: **install** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count values(Web.http_user_agent) as user_agents values(Web.src) as sources dc(Web.uri_path) as distinct_endpoints sum(Web.bytes_out) as bytes_out from datamodel=Web where Web.dest_host="*.salesforce.com" OR Web.dest_host="*.force.com" OR Web.dest_host="*.my.salesforce.com" Web.http_user_agent IN ("*python-requests*","*aiohttp*","*Python-urllib*","*Python/3*","*simple_salesforce*") by Web.src,Web.user,Web.dest_host | `drop_dm_object_name(Web)` | where count > 50
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(Authentication.user_agent) as ua values(Authentication.action) as action from datamodel=Authentication where Authentication.app="salesforce" AND (Authentication.signature_id IN ("Klue","Klue Battlecards") OR Authentication.dest_user_agent IN ("Klue","Klue Battlecards")) by Authentication.user Authentication.src Authentication.dest | `drop_dm_object_name("Authentication")` | search src IN ("138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160") OR NOT cidrmatch("34.192.0.0/12", src) | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
+let IcarusIPs = dynamic(["138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160"]);
+CloudAppEvents
+| where Timestamp > ago(30d)
+| where Application has "Salesforce"
+| where IPAddress in (IcarusIPs)
+   or (tostring(RawEventData) has_any ("Klue Battlecards","Klue") and AccountDisplayName has_any ("klue","battlecards"))
+| project Timestamp, AccountDisplayName, AccountObjectId, Application, ActionType, ActivityType, ObjectName, ObjectType, IPAddress, CountryCode, ISP, UserAgent, IsAdminOperation, RawEventData
+| order by Timestamp desc
+```
+
+### Python automation user-agent (python-requests / simple-salesforce) hitting Salesforce API at scale
+
+`UC_0_7` · phase: **actions** · confidence: **High** · AI-generated for this article
+
+**Splunk SPL (CIM):**
+```spl
+| tstats summariesonly=true count from datamodel=Web where Web.url="*my.salesforce.com*" OR Web.url="*.force.com*" OR Web.dest_category="salesforce" by Web.src Web.user Web.http_user_agent _time span=1h | `drop_dm_object_name("Web")` | search http_user_agent IN ("python-requests*","*simple-salesforce*","*python-urllib*","Python/*","*aiohttp*") | stats sum(count) as api_calls dc(http_user_agent) as ua_variants values(http_user_agent) as user_agents min(_time) as firstTime max(_time) as lastTime by src user | where api_calls > 500 | convert ctime(firstTime) ctime(lastTime)
+```
+
+**Defender KQL:**
+```kql
+let IcarusIPs = dynamic(["138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160"]);
 CloudAppEvents
 | where Timestamp > ago(7d)
 | where Application has "Salesforce"
-| where UserAgent has_any ("python-requests","aiohttp","Python-urllib","Python/3","simple_salesforce")
-| summarize EventCount = count(),
+| where UserAgent has_any ("python-requests","simple-salesforce","python-urllib","Python/","aiohttp","httpx/")
+| summarize ApiCalls = count(),
             DistinctObjects = dcount(ObjectName),
-            ObjectsTouched = make_set(ObjectName, 30),
-            DistinctIPs = dcount(IPAddress),
-            IPs = make_set(IPAddress, 20),
-            UserAgents = make_set(UserAgent, 10),
+            DistinctActions = dcount(ActionType),
             FirstSeen = min(Timestamp),
-            LastSeen = max(Timestamp)
-            by AccountDisplayName, ApplicationId, bin(Timestamp, 1h)
-| where EventCount > 100 or DistinctObjects > 10
-| order by EventCount desc
+            LastSeen  = max(Timestamp),
+            UserAgents = make_set(UserAgent, 5),
+            IPs = make_set(IPAddress, 10)
+            by AccountDisplayName, AccountObjectId
+| where ApiCalls > 500 or IPs has_any (IcarusIPs)
+| extend SessionDurationHrs = datetime_diff('minute', LastSeen, FirstSeen) / 60.0
+| order by ApiCalls desc
 ```
 
-### Outbound endpoint connection to Icarus Klue/Salesforce IOC IPs
-
-`UC_0_7` · phase: **c2** · confidence: **High** · AI-generated for this article
-
-**Splunk SPL (CIM):**
-```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.src) as src values(All_Traffic.dest_port) as dest_port sum(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic where All_Traffic.dest IN ("138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160") by All_Traffic.dest,All_Traffic.app | `drop_dm_object_name(All_Traffic)` | convert ctime(firstTime) ctime(lastTime)
-```
-
-**Defender KQL:**
-```kql
-DeviceNetworkEvents
-| where Timestamp > ago(30d)
-| where RemoteIP in ("138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160")
-| project Timestamp, DeviceName, DeviceId, ActionType,
-          InitiatingProcessAccountName, InitiatingProcessAccountUpn,
-          InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName,
-          RemoteIP, RemotePort, RemoteUrl, Protocol
-| order by Timestamp desc
-```
-
-### DNS / proxy resolution for Icarus Klue exfiltration domains
+### Endpoint or network egress to Icarus operator IPs (Klue Salesforce breach C2)
 
 `UC_0_8` · phase: **c2** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(DNS.src) as src values(DNS.answer) as answer from datamodel=Network_Resolution where DNS.query IN ("*house.com.au","*robinskitchen.com.au","*baccarat.com.au") by DNS.query | `drop_dm_object_name(DNS)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Traffic.app) as app values(All_Traffic.dest_port) as ports sum(All_Traffic.bytes_in) as bytes_in sum(All_Traffic.bytes_out) as bytes_out from datamodel=Network_Traffic where (All_Traffic.dest IN ("138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160") OR All_Traffic.src IN ("138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160")) by All_Traffic.src All_Traffic.dest All_Traffic.user | `drop_dm_object_name("All_Traffic")` | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
 ```kql
-let IocDomains = dynamic(["house.com.au","robinskitchen.com.au","baccarat.com.au"]);
+let IcarusIPs = dynamic(["138.226.246.94","212.86.125.24","213.111.148.90","94.154.32.160"]);
 DeviceNetworkEvents
 | where Timestamp > ago(30d)
-| where RemoteUrl has_any (IocDomains)
-| where InitiatingProcessFileName !in~ ("chrome.exe","msedge.exe","firefox.exe","brave.exe","iexplore.exe","opera.exe","safari.exe","arc.exe")
-| project Timestamp, DeviceName,
-          InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessFolderPath, InitiatingProcessCommandLine,
-          InitiatingProcessParentFileName,
-          RemoteUrl, RemoteIP, RemotePort
+| where RemoteIP in (IcarusIPs)
+| project Timestamp, DeviceName, DeviceId, ActionType, LocalIP, LocalPort, RemoteIP, RemotePort, RemoteUrl, Protocol,
+          InitiatingProcessAccountName, InitiatingProcessFileName, InitiatingProcessCommandLine, InitiatingProcessFolderPath
 | order by Timestamp desc
 ```
 
-### Inbound extortion email referencing Klue / Icarus / Session messenger
+### Inbound Icarus extortion email referencing Klue breach + Session messenger contact
 
 `UC_0_9` · phase: **actions** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
-| tstats summariesonly=t count min(_time) as firstTime max(_time) as lastTime values(All_Email.recipient) as recipient values(All_Email.subject) as subject values(All_Email.src_user) as src_user from datamodel=Email where All_Email.direction="inbound" (All_Email.subject IN ("*Klue*","*Icarus*","*Battlecards*","*Mr Brean*","*Session messenger*","*Session ID*") OR All_Email.body IN ("*getsession.org*","*Session ID*","*Mr Brean*")) by All_Email.src_user | `drop_dm_object_name(All_Email)` | convert ctime(firstTime) ctime(lastTime)
+| tstats summariesonly=true count min(_time) as firstTime max(_time) as lastTime values(All_Email.subject) as subjects values(All_Email.body) as body_sample from datamodel=Email where All_Email.direction=inbound by All_Email.src_user All_Email.recipient | `drop_dm_object_name("All_Email")` | search (subjects="*Icarus*" OR subjects="*Klue*" OR body_sample="*Icarus*" OR body_sample="*Session*") AND (body_sample="*Session*" OR body_sample="*sessionid*" OR body_sample="*onion*") | convert ctime(firstTime) ctime(lastTime)
 ```
 
 **Defender KQL:**
@@ -167,12 +154,16 @@ DeviceNetworkEvents
 EmailEvents
 | where Timestamp > ago(30d)
 | where EmailDirection == "Inbound"
-| where DeliveryAction in ("Delivered","DeliveredAsSpam")
-| where Subject has_any ("Klue","Icarus","Battlecards","Mr Brean","Session messenger","Session ID","Salesforce instance","Salesforce breach")
-| join kind=leftouter (EmailUrlInfo | project NetworkMessageId, Url, UrlDomain) on NetworkMessageId
-| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress, SenderIPv4, SenderFromDomain,
-          RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation,
-          AuthenticationDetails, Url, UrlDomain
+| where Subject has_any ("Icarus","Klue breach","Klue.com","Salesforce data","data leak") 
+    or AdditionalFields has_any ("Icarus","Session Messenger","sessionid")
+| join kind=leftouter (
+    EmailUrlInfo
+    | where Timestamp > ago(30d)
+    | summarize Urls = make_set(Url, 10), Domains = make_set(UrlDomain, 10) by NetworkMessageId
+  ) on NetworkMessageId
+| extend MentionsSession = tostring(AdditionalFields) has "Session" or tostring(Urls) has "getsession.org"
+| where MentionsSession or Subject has "Icarus"
+| project Timestamp, NetworkMessageId, SenderFromAddress, SenderMailFromAddress, SenderFromDomain, RecipientEmailAddress, Subject, DeliveryAction, DeliveryLocation, AuthenticationDetails, Urls, Domains
 | order by Timestamp desc
 ```
 
@@ -356,9 +347,9 @@ CloudAppEvents
 These are standard IOC-substitution hunts — the canonical SPL and KQL live once in [`_TEMPLATES.md`](../_TEMPLATES.md), so we don't repeat the same boilerplate on every CVE / hash / network-IOC briefing.
 
 - **Network connections to article IPs / domains** ([template](../_TEMPLATES.md#network-ioc)) — phase: **c2**, confidence: **High**
-  - IP / domain IOC(s): `138.226.246.94`, `212.86.125.24`, `213.111.148.90`, `94.154.32.160`, `house.com.au`, `robinskitchen.com.au`, `baccarat.com.au`
+  - IP / domain IOC(s): `138.226.246.94`, `212.86.125.24`, `213.111.148.90`, `94.154.32.160`, `klue.com`
 
 
 ## Why this matters
 
-Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 24 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
+Severity classified as **HIGH** based on: IOCs present, 10 use case(s) fired, 20 technique(s) inferred. Read the full article for actor attribution, tooling details, and any defanged IOCs in the body that aren't visible in the RSS summary.
