@@ -39,7 +39,13 @@ LOOKBACK_DAYS = 36500     # ~100 years — effectively no rolling window.
                           # ranking issue, switch to lazy-loading older
                           # articles into a separate "Archive" view rather
                           # than dropping them.
-MAX_PER_SOURCE = 500      # safety cap per source per run
+# Per-source per-run fetch cap. Raised from 500 so deep-history feeds (Snyk
+# serves ~1600 items) aren't silently truncated — every fetched article gets
+# stored in the cumulative archive. Still bounded so a malformed feed that
+# returns tens of thousands of entries can't flood a run. Override via env.
+# NB: the first run after raising this is slower (cold body-fetch of the
+# newly-admitted articles, ~1.2s each); subsequent runs are cache-warm.
+MAX_PER_SOURCE = int(os.environ.get("USECASEINTEL_MAX_PER_SOURCE", "3000"))
 
 SOURCES = [
     # News-style sources — broad coverage, light on IOC tables.
