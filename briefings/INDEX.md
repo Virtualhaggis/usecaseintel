@@ -1,12 +1,15 @@
 # Briefings — full archive
 
-_2245 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
+_2247 per-article briefings — auto-generated from every article we've pulled. Articles never age off; the corpus only grows._
 
 
 **Shared detection templates:** generic IOC-substitution hunts 
 (asset exposure, network IOC, hash IOC) live once in [`_TEMPLATES.md`](./_TEMPLATES.md) 
 instead of being repeated on every briefing. Each briefing links to the relevant template.
 
+
+## 2026-06-21
+- [arystinger botnet infected thousands of d link routers world](./2026-06-21/arystinger-botnet-infected-thousands-of-d-link-routers-world.md)
 
 ## 2026-06-20
 - [15 malicious jetbrains plugins stole ai api keys from 70 000](./2026-06-20/15-malicious-jetbrains-plugins-stole-ai-api-keys-from-70-000.md)
@@ -67,7 +70,6 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 - [ghsa critical ghsa x8cv xmq7 p8xp praisonai agentteam launch](./2026-06-18/ghsa-critical-ghsa-x8cv-xmq7-p8xp-praisonai-agentteam-launch.md)
 - [inc ransomware emerges as major raas threat in 2026 with 830](./2026-06-18/inc-ransomware-emerges-as-major-raas-threat-in-2026-with-830.md)
 - [killing me gently inside gentlemen s edr killer framework](./2026-06-18/killing-me-gently-inside-gentlemen-s-edr-killer-framework.md)
-- [klue oauth breach linked to icarus salesforce data theft att](./2026-06-18/klue-oauth-breach-linked-to-icarus-salesforce-data-theft-att.md)
 - [mastra npm supply chain attack 140 packages backdoored via e](./2026-06-18/mastra-npm-supply-chain-attack-140-packages-backdoored-via-e.md)
 - [miasma and hades are spreading now detect them on developer ](./2026-06-18/miasma-and-hades-are-spreading-now-detect-them-on-developer-.md)
 - [microsoft details windows clipper malware campaign using usb](./2026-06-18/microsoft-details-windows-clipper-malware-campaign-using-usb.md)
@@ -3083,6 +3085,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 ## 2022-02-09
 - [using pulumi to automate the snyk kubernetes integration for](./2022-02-09/using-pulumi-to-automate-the-snyk-kubernetes-integration-for.md)
 
+## 2022-02-05
+- [log4shell remediation with snyk by the numbers](./2022-02-05/log4shell-remediation-with-snyk-by-the-numbers.md)
+
 ## 2022-02-04
 - [cisa kev cve 2022 21882 microsoft win32k privilege escalatio](./2022-02-04/cisa-kev-cve-2022-21882-microsoft-win32k-privilege-escalatio.md)
 
@@ -3100,6 +3105,9 @@ instead of being repeated on every briefing. Each briefing links to the relevant
 
 ## 2022-01-27
 - [getting started at a new organization](./2022-01-27/getting-started-at-a-new-organization.md)
+
+## 2022-01-25
+- [stranger danger live hack of how a log4shell exploit works](./2022-01-25/stranger-danger-live-hack-of-how-a-log4shell-exploit-works.md)
 
 ## 2022-01-21
 - [cisa kev cve 2006 1547 apache struts 1 actionform denial of ](./2022-01-21/cisa-kev-cve-2006-1547-apache-struts-1-actionform-denial-of-.md)

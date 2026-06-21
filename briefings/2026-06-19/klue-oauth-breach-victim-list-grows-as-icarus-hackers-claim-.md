@@ -48,7 +48,7 @@ _(none detected from narrative keywords)_
 
 ### Bulk Salesforce REST API exfiltration via compromised Klue OAuth token (high-volume query bursts)
 
-`UC_5_5` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_6_5` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -80,7 +80,7 @@ CloudAppEvents
 
 ### Salesforce API access using Python-urllib automation agent (Icarus scripted CRM theft)
 
-`UC_5_6` · phase: **actions** · confidence: **High** · AI-generated for this article
+`UC_6_6` · phase: **actions** · confidence: **High** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl
@@ -106,7 +106,7 @@ CloudAppEvents
 
 ### Salesforce access from known Icarus exfiltration IP addresses
 
-`UC_5_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
+`UC_6_7` · phase: **exploit** · confidence: **Medium** · AI-generated for this article
 
 **Splunk SPL (CIM):**
 ```spl

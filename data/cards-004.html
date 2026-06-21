@@ -1645,14 +1645,14 @@ DeviceFileEvents
 </details></div>
 </article>
 <article class="card" id="art-108" data-art-slug="2026-06-16-ghsa-critical-cve-2026-54157-lobehub-unauthenticated-ssrf-in"
-  data-phases="c2,delivery,exploit,install,recon" data-sev="crit"
+  data-phases="actions,c2,delivery,exploit,install,recon" data-sev="crit"
   data-techs="T1190,T1566"
   data-sources="GitHub Security Advisories"
-  data-platforms="def,sent,sigma,spl"
-  data-splunk-cats="application,endpoint,web"
-  data-targets="azure,m365,web-app,windows"
-  data-uc-count="5" data-llm-uc-count="0"
-  data-search="[GHSA / CRITICAL] CVE-2026-54157: LobeHub: Unauthenticated SSRF in `/webapi/proxy` LobeHub: Unauthenticated SSRF in `/webapi/proxy` CVE-2026-54157 T1190 T1566 Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-54157: LobeHub: Unauthenticated SSRF in `/webapi/prox">
+  data-platforms="cloudwatch,datadog,def,falcon,sent,sigma,spl"
+  data-splunk-cats="application,cloud,endpoint,network,web"
+  data-targets="azure,m365,vcs,web-app,windows"
+  data-uc-count="11" data-llm-uc-count="6"
+  data-search="[GHSA / CRITICAL] CVE-2026-54157: LobeHub: Unauthenticated SSRF in `/webapi/proxy` LobeHub: Unauthenticated SSRF in `/webapi/proxy` CVE-2026-54157 T1190 T1566 [LLM] Unauthenticated POST to LobeHub /webapi/proxy from scripted/CLI User-Agent (CVE-2026-54157 SSRF) [LLM] LobeHub /webapi/proxy SSRF targeting internal/loopback IP ranges in POST body [LLM] LobeHub /webapi/proxy SSRF targeting cloud metadata or internal service ports [LLM] LobeHub /webapi/proxy reflected Set-Cookie injection of Clerk session cookies [LLM] LobeHub server process outbound connections to metadata/internal IPs (SSRF egress confirmation) [LLM] Exposed vulnerable LobeHub instance &lt;=2.1.56 (CVE-2026-54157) Asset exposure — vulnerability matches article CVE(s) Phishing-link click correlated to endpoint execution Email attachment opened from external sender Office app spawning script/LOLBin child process Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-54157: LobeHub: Unauthenticated SSRF in `/webapi/prox">
   <div class="sev-ribbon crit">Critical</div>
   <button class="share-btn card-share" data-share-art="2026-06-16-ghsa-critical-cve-2026-54157-lobehub-unauthenticated-ssrf-in" title="Copy share link to this article" aria-label="Copy share link">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
@@ -1661,9 +1661,9 @@ DeviceFileEvents
   <div class="source-badges"><span class="source-badge ">GitHub Security Advisories</span></div>
   <div class="pubmeta">
     <span>2026-06-16</span>
-    <span>5 use cases</span>
+    <span>11 use cases</span>
     <span>2 techniques</span>
-    <span>3 kill-chain phases detected</span>
+    <span>5 kill-chain phases detected</span>
   </div>
   <p class="summary">LobeHub: Unauthenticated SSRF in `/webapi/proxy`</p>
   <div class="ind-group"><span class="ind-label">CVEs</span><span class="ind cve">CVE-2026-54157</span></div>
@@ -1699,25 +1699,333 @@ DeviceFileEvents
   <div class="name">Installation</div>
   <div class="marker">Likely</div>
 </div>
-<div class="kc-cell inferred">
+<div class="kc-cell hit">
   <div class="num">Phase 6</div>
   <div class="name">Command &amp; Control</div>
-  <div class="marker">Likely</div>
+  <div class="marker">Detected</div>
 </div>
-<div class="kc-cell ">
+<div class="kc-cell hit">
   <div class="num">Phase 7</div>
   <div class="name">Actions on Objectives</div>
-  <div class="marker">—</div>
+  <div class="marker">Detected</div>
 </div></div>
-  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ Asset exposure — vulnerability matches article CVE(s)</em></div>
+  <div class="kc-detail"><div class="phase-line hit"><strong>Reconnaissance.</strong> Attacker researches the target — OSINT, scanning, enumeration. <em>→ [LLM] Exposed vulnerable LobeHub instance &lt;=2.1.56 (CVE-2026-54157) · Asset exposure — vulnerability matches article CVE(s)</em></div>
 <div class="phase-line "><strong>Weaponization.</strong> Coupling exploit code with deliverable payload (e.g. weaponized PDF/Office doc, trojanized installer).</div>
 <div class="phase-line hit"><strong>Delivery.</strong> Transmitting the weapon (phishing email, USB, watering hole, drive-by, malicious ad). <em>→ Phishing-link click correlated to endpoint execution · Email attachment opened from external sender</em></div>
-<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ Office app spawning script/LOLBin child process · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-54157: LobeHub: Unauthenticated SSRF in `/webapi/prox</em></div>
+<div class="phase-line hit"><strong>Exploitation.</strong> Triggering the exploit — vulnerability/macro/trust abuse to execute code. <em>→ [LLM] Unauthenticated POST to LobeHub /webapi/proxy from scripted/CLI User-Agent (CVE-2026-54157 SSRF) · [LLM] LobeHub /webapi/proxy reflected Set-Cookie injection of Clerk session cookies · Office app spawning script/LOLBin child process · Article-specific behavioural hunt — [GHSA / CRITICAL] CVE-2026-54157: LobeHub: Unauthenticated SSRF in `/webapi/prox</em></div>
 <div class="phase-line inferred"><strong>Installation.</strong> Establishing persistence on the host — backdoor, service, scheduled task, registry key.</div>
-<div class="phase-line inferred"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking.</div>
-<div class="phase-line "><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage.</div></div>
+<div class="phase-line hit"><strong>Command &amp; Control.</strong> Beacon to attacker infrastructure for control and tasking. <em>→ [LLM] LobeHub server process outbound connections to metadata/internal IPs (SSRF egress confirmation)</em></div>
+<div class="phase-line hit"><strong>Actions on Objectives.</strong> Lateral movement, credential dumping, data theft, ransomware, sabotage. <em>→ [LLM] LobeHub /webapi/proxy SSRF targeting internal/loopback IP ranges in POST body · [LLM] LobeHub /webapi/proxy SSRF targeting cloud metadata or internal service ports</em></div></div>
 </div>
-  <div class="usecases"><details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="" open>
+  <div class="usecases"><details class="uc" data-uc-slug="d543c396a7" data-platforms="sent,sigma,spl" data-targets="vcs,web-app" open>
+  <summary>
+    <span class="uc-title">Unauthenticated POST to LobeHub /webapi/proxy from scripted/CLI User-Agent (CVE-2026-54157 SSRF)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="d543c396a7" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts direct exploitation of the unauthenticated SSRF in LobeHub&#x27;s /webapi/proxy endpoint. The article&#x27;s PoC is a raw curl POST with a text/plain body; legitimate proxy traffic only originates from the LobeHub browser UI, so a POST to this exact path from curl/wget/python-requests/PowerShell is high-fidelity exploitation against a self-hosted LobeHub (&lt;=2.1.56).
+
+Rationale: Uses the article&#x27;s exact endpoint (/webapi/proxy), method (POST), and the curl-based PoC, plus the fact that every other webapi route requires checkAuth() so legit proxy traffic is browser-only. Cross-checked vs lobehub/lobe-chat#9643 which independently names the same unauthenticated endpoint.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xmwj-c75x-6346
+  • https://github.com/lobehub/lobe-chat/issues/9643
+  • https://nvd.nist.gov/vuln/detail/CVE-2024-32964</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Internal monitoring/synthetic checks (Datadog, UptimeRobot) probing the endpoint after the advisory</li><li>Authorized vulnerability scanners (Nuclei/Nessus) running the CVE-2026-54157 template</li><li>Security team reproducing the PoC with curl during validation</li><li>A custom internal integration that legitimately calls the proxy via a server-side HTTP client</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where UserAgent !has_any (&quot;UptimeRobot&quot;,&quot;Pingdom&quot;,&quot;StatusCake&quot;,&quot;GoogleHC&quot;,&quot;kube-probe&quot;,&quot;ELB-HealthChecker&quot;,&quot;Datadog/Synthetics&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: pull the source IP and the full request; confirm the path is exactly /webapi/proxy and method POST. Check whether the LobeHub instance version is &lt;=2.1.56 and internet-exposed. 2) Contain: if unsanctioned, block the source IP at the WAF/edge and apply the fix (wrap the route in checkAuth() or remove the endpoint). Rotate Clerk session secrets if cookie reflection is suspected. 3) Hunt: review all POSTs to /webapi/proxy for the same source over 30 days, look for internal-IP/metadata targets (see related UCs) and any reflected Set-Cookie responses.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-108-uc0-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-108-uc0-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-108-uc0-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-108-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>let scriptedUA = dynamic([&quot;curl&quot;,&quot;Wget&quot;,&quot;python-requests&quot;,&quot;python-urllib&quot;,&quot;Go-http-client&quot;,&quot;PowerShell&quot;,&quot;libwww-perl&quot;,&quot;okhttp&quot;,&quot;Java/&quot;,&quot;axios&quot;,&quot;node-fetch&quot;,&quot;HTTPie&quot;,&quot;Nuclei&quot;,&quot;Nmap&quot;]);
+AppServiceHTTPLogs
+| where TimeGenerated &gt; ago(7d)
+| where CsMethod == &quot;POST&quot;
+| where CsUriStem =~ &quot;/webapi/proxy&quot;
+| where UserAgent has_any (scriptedUA)
+| project TimeGenerated, CsHost, CIp, CsMethod, CsUriStem, UserAgent, ScStatus, CsBytes, ScBytes
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-108-uc0-sigma"><pre><button class="copy-btn">COPY</button><code>title: Unauthenticated Scripted POST to LobeHub /webapi/proxy SSRF Endpoint
+id: 6f1a2c84-9d2b-4e77-bf01-3a5c9d12ab44
+description: Detects exploitation of CVE-2026-54157 - an unauthenticated POST to LobeHub /webapi/proxy from a non-browser/CLI User-Agent.
+references:
+  - https://github.com/advisories/GHSA-xmwj-c75x-6346
+  - https://github.com/lobehub/lobe-chat/issues/9643
+author: SOC Detection Engineering
+date: 2026/06/21
+tags:
+  - attack.t1190
+logsource:
+  category: webserver
+detection:
+  selection:
+    cs-method: &#x27;POST&#x27;
+    cs-uri-stem: &#x27;/webapi/proxy&#x27;
+  ua:
+    c-useragent|contains:
+      - &#x27;curl&#x27;
+      - &#x27;Wget&#x27;
+      - &#x27;python-requests&#x27;
+      - &#x27;python-urllib&#x27;
+      - &#x27;Go-http-client&#x27;
+      - &#x27;PowerShell&#x27;
+      - &#x27;libwww-perl&#x27;
+      - &#x27;okhttp&#x27;
+      - &#x27;Java/&#x27;
+      - &#x27;axios&#x27;
+      - &#x27;node-fetch&#x27;
+      - &#x27;Nuclei&#x27;
+  condition: selection and ua
+level: high</code></pre></div>
+    <div class="tab-content" id="art-108-uc0-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/webapi/proxy*&quot; (Web.http_user_agent=&quot;*curl*&quot; OR Web.http_user_agent=&quot;*Wget*&quot; OR Web.http_user_agent=&quot;*python-requests*&quot; OR Web.http_user_agent=&quot;*python-urllib*&quot; OR Web.http_user_agent=&quot;*Go-http-client*&quot; OR Web.http_user_agent=&quot;*PowerShell*&quot; OR Web.http_user_agent=&quot;*libwww*&quot; OR Web.http_user_agent=&quot;*okhttp*&quot; OR Web.http_user_agent=&quot;*Java/*&quot; OR Web.http_user_agent=&quot;*axios*&quot; OR Web.http_user_agent=&quot;*node-fetch*&quot; OR Web.http_user_agent=&quot;*Nuclei*&quot;) by Web.src Web.dest Web.url Web.http_user_agent Web.status
+| `drop_dm_object_name(Web)`
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-108-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/webapi/proxy*&quot; (Web.http_user_agent=&quot;*curl*&quot; OR Web.http_user_agent=&quot;*Wget*&quot; OR Web.http_user_agent=&quot;*python-requests*&quot; OR Web.http_user_agent=&quot;*python-urllib*&quot; OR Web.http_user_agent=&quot;*Go-http-client*&quot; OR Web.http_user_agent=&quot;*PowerShell*&quot; OR Web.http_user_agent=&quot;*libwww*&quot; OR Web.http_user_agent=&quot;*okhttp*&quot; OR Web.http_user_agent=&quot;*Java/*&quot; OR Web.http_user_agent=&quot;*axios*&quot; OR Web.http_user_agent=&quot;*node-fetch*&quot; OR Web.http_user_agent=&quot;*Nuclei*&quot;) by Web.src Web.dest Web.url Web.http_user_agent Web.status
+| `drop_dm_object_name(Web)`
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="af4fd37ceb" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">LobeHub /webapi/proxy SSRF targeting internal/loopback IP ranges in POST body</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="af4fd37ceb" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts SSRF probing of internal networks through the unauthenticated /webapi/proxy. The endpoint fetches any URL supplied in the POST body server-side, so a body referencing loopback (127.0.0.1), RFC1918 ranges, or file://-style schemes indicates an attacker using LobeHub&#x27;s infra to reach internal services. Requires a WAF/reverse-proxy that logs request bodies.
+
+Rationale: Builds on the article&#x27;s statement that the proxy &#x27;accepts a URL in the POST body and fetches it server-side without any authentication&#x27; (CVE-2024-32964 redirect-bypass history shows internal-network reach was the original impact). The internal-IP regex on the logged target URL is the article-specific SSRF signature; FP-prone because it depends on WAF body logging and benign internal previews.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xmwj-c75x-6346
+  • https://nvd.nist.gov/vuln/detail/CVE-2024-32964
+  • https://github.com/advisories/GHSA-mxhq-xw3g-rphc</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Network Service Discovery">T1046</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Legitimate URL-preview of an internal wiki/Confluence link a user pasted into LobeHub</li><li>WAF inspecting a body that merely mentions an RFC1918 IP in unrelated text</li><li>Internal pen-test / red-team validating the SSRF</li><li>Developer testing the proxy against localhost during deployment</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not(RequestClientApplication has_any (&quot;Mozilla&quot;,&quot;Chrome&quot;,&quot;Safari&quot;,&quot;Edg/&quot;) and Message has &quot;intranet-preview&quot;)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: decode the POST body, confirm the fetched URL resolves to an internal/loopback target and that the response was returned (ScStatus 200). 2) Contain: block the source at the WAF, patch LobeHub (checkAuth on /webapi/proxy) and restrict egress from the LobeHub host to internal ranges. 3) Hunt: enumerate every distinct internal target the source attempted, correlate to network-layer egress from the LobeHub node process (see network-egress UC) to confirm which internal services were actually reached.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-108-uc1-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-108-uc1-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-108-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where RequestMethod == &quot;POST&quot;
+| where RequestURL has &quot;/webapi/proxy&quot;
+| where Message matches regex @&quot;(?i)(127\.0\.0\.\d{1,3}|localhost|0\.0\.0\.0|\bfile://|\bgopher://|\bdict://|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})&quot;
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, RequestMethod, RequestURL, RequestClientApplication, Message
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-108-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc1-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/webapi/proxy*&quot; by Web.src Web.dest Web.url Web.http_user_agent Web.status
+| `drop_dm_object_name(Web)`
+| regex url=&quot;(?i)(127\.0\.0\.\d{1,3}|localhost|0\.0\.0\.0|file://|gopher://|dict://|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})&quot;
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-108-uc1-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/webapi/proxy*&quot; by Web.src Web.dest Web.url Web.http_user_agent Web.status
+| `drop_dm_object_name(Web)`
+| regex url=&quot;(?i)(127\.0\.0\.\d{1,3}|localhost|0\.0\.0\.0|file://|gopher://|dict://|10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})&quot;
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="7f776ede97" data-platforms="cloudwatch,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">LobeHub /webapi/proxy SSRF targeting cloud metadata or internal service ports</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Actions on Objectives</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="7f776ede97" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the credential-theft escalation of CVE-2026-54157: a /webapi/proxy POST body pointing at the cloud instance metadata service (169.254.169.254, metadata.google.internal) or internal datastore ports (Redis 6379, etcd 2379, Mongo 27017, Postgres 5432). On a self-hosted LobeHub running on a cloud VM with IMDSv1, this returns instance-role credentials. Includes a CloudTrail escalation query for stolen-credential reuse.
+
+Rationale: Maps the article&#x27;s stated impact (&#x27;use LobeHub&#x27;s infrastructure ... abusing IP-based trust&#x27;) to the canonical SSRF-to-IMDS escalation. 169.254.169.254/metadata.google.internal in a proxy body is never legitimate for a chat app. The CloudWatch query surfaces EC2 instance-role credentials (session name = instance-id i-...) used from a non-internal IP, the hallmark of IMDS credential theft if LobeHub runs on EC2.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xmwj-c75x-6346
+  • https://nvd.nist.gov/vuln/detail/CVE-2024-32964</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Cloud Instance Metadata API">T1552.005</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>A red-team validating IMDS reachability through the SSRF</li><li>Legitimate AssumedRole sessions from a corporate NAT egress IP not in RFC1918 (refine with your known egress CIDRs)</li><li>SSM/Session-Manager workflows assuming an instance role from an allow-listed bastion</li><li>WAF flagging a body that references a metadata IP in a non-fetch context</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not isPresent(errorCode)</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the proxy body targeted 169.254.169.254/metadata and the response body (returned by the proxy) contained credential material or IAM role JSON. 2) Contain: immediately revoke/rotate the instance role&#x27;s session credentials, enforce IMDSv2 (hop-limit 1, token required), block the attacker IP, and patch /webapi/proxy. 3) Hunt: run the CloudTrail query for the instance-role session name (i-...) used from any external IP in the last 30 days; review S3/STS/IAM actions performed by that session for data access.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-108-uc2-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-108-uc2-cloudwatch">CloudWatch Logs Insights</button>
+      <button class="tab-btn" data-target="art-108-uc2-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-108-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where RequestMethod == &quot;POST&quot;
+| where RequestURL has &quot;/webapi/proxy&quot;
+| where Message has_any (&quot;169.254.169.254&quot;,&quot;metadata.google.internal&quot;,&quot;100.100.100.200&quot;,&quot;:6379&quot;,&quot;:2379&quot;,&quot;:27017&quot;,&quot;:5432&quot;,&quot;:9200&quot;,&quot;:8500&quot;,&quot;:2375&quot;)
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, RequestMethod, RequestURL, RequestClientApplication, Message
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-108-uc2-cloudwatch"><pre><button class="copy-btn">COPY</button><code># log group: /aws/cloudtrail
+fields @timestamp, eventName, eventSource, sourceIPAddress, userIdentity.arn, userIdentity.sessionContext.sessionIssuer.userName
+| filter userIdentity.type = &quot;AssumedRole&quot;
+  and userIdentity.arn like /:assumed-role\/.+\/i-[0-9a-f]+$/
+  and sourceIPAddress not like /^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.)/
+  and sourceIPAddress != &quot;AWS Internal&quot;
+| sort @timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-108-uc2-spl"><span class="splunk-cat-pill splunk-cat-cloud" title="Splunk-research detection category">CLOUD</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/webapi/proxy*&quot; by Web.src Web.dest Web.url Web.http_user_agent Web.status
+| `drop_dm_object_name(Web)`
+| regex url=&quot;(?i)(169\.254\.169\.254|metadata\.google\.internal|100\.100\.100\.200|:6379|:2379|:27017|:5432|:9200|:8500|:2375)&quot;
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-108-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/webapi/proxy*&quot; by Web.src Web.dest Web.url Web.http_user_agent Web.status
+| `drop_dm_object_name(Web)`
+| regex url=&quot;(?i)(169\.254\.169\.254|metadata\.google\.internal|100\.100\.100\.200|:6379|:2379|:27017|:5432|:9200|:8500|:2375)&quot;
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="bf3e8fe94b" data-platforms="sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">LobeHub /webapi/proxy reflected Set-Cookie injection of Clerk session cookies</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Exploitation</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="bf3e8fe94b" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Hunts the session-fixation primitive in CVE-2026-54157: the proxy passes upstream Set-Cookie headers straight through, so a POST body whose target reflects a Set-Cookie for Clerk&#x27;s __session/__clerk_db_jwt/__client_uat cookies scoped to Domain=lobehub.com plants a known session value on victims. The cookie-injection payload appears verbatim in the request body.
+
+Rationale: Directly encodes the article&#x27;s cookie-injection PoC: the body contains Set-Cookie + the Clerk cookie names (__session/__clerk_db_jwt/__client_uat, confirmed via Clerk docs) + Domain=lobehub.com. That triad in a /webapi/proxy body is unambiguous exploitation; no benign request reflects auth cookies through the proxy.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xmwj-c75x-6346
+  • https://clerk.com/docs/guides/how-clerk-works/cookies</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Steal Web Session Cookie">T1539</span> <span class="ind tech" title="Exploit Public-Facing Application">T1190</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Web.Web</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>Security researcher reproducing the session-fixation PoC</li><li>A legitimate upstream that genuinely sets a __session cookie being previewed (rare; still worth investigating)</li><li>WAF body inspection matching the cookie name inside unrelated documentation text</li><li>Internal QA testing Clerk cookie behaviour through the proxy</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: extract the full Set-Cookie value from the body, note the planted __session value and victim scope (Domain=lobehub.com). 2) Contain: invalidate all Clerk sessions / rotate session signing keys so the fixed value is unusable, patch /webapi/proxy (checkAuth), and add a WAF rule stripping reflected Set-Cookie from proxy responses. 3) Hunt: identify any user who authenticated shortly after this request (session fixation completes at victim login) and force re-auth; review for CSRF auto-submit referers in the access logs.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-108-uc3-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-108-uc3-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-108-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>CommonSecurityLog
+| where TimeGenerated &gt; ago(7d)
+| where RequestMethod == &quot;POST&quot;
+| where RequestURL has &quot;/webapi/proxy&quot;
+| where Message has &quot;Set-Cookie&quot;
+| where Message has_any (&quot;__session&quot;,&quot;__clerk_db_jwt&quot;,&quot;__client_uat&quot;)
+| where Message has &quot;lobehub.com&quot;
+| project TimeGenerated, DeviceVendor, DeviceProduct, SourceIP, RequestMethod, RequestURL, RequestClientApplication, Message
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-108-uc3-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/webapi/proxy*&quot; by Web.src Web.dest Web.url Web.http_user_agent Web.status
+| `drop_dm_object_name(Web)`
+| regex url=&quot;(?i)set-cookie.*(__session|__clerk_db_jwt|__client_uat)&quot;
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-108-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Web.Web where Web.http_method=&quot;POST&quot; Web.url=&quot;*/webapi/proxy*&quot; by Web.src Web.dest Web.url Web.http_user_agent Web.status
+| `drop_dm_object_name(Web)`
+| regex url=&quot;(?i)set-cookie.*(__session|__clerk_db_jwt|__client_uat)&quot;
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="4600e0bf51" data-platforms="datadog,def,falcon,sent,spl" data-targets="windows">
+  <summary>
+    <span class="uc-title">LobeHub server process outbound connections to metadata/internal IPs (SSRF egress confirmation)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Command &amp; Control</span>
+    <span class="uc-conf medium">Medium</span>
+    <button class="share-btn" data-share-uc="4600e0bf51" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Network-layer confirmation that CVE-2026-54157 SSRF reached internal infrastructure: the LobeHub Node server process initiating connections to the cloud metadata IP (169.254.169.254) or internal RFC1918 hosts it would never normally contact. Excludes LobeHub&#x27;s legitimate local-LLM (Ollama) and database ports to keep signal high.
+
+Rationale: Corroborates SSRF success at the network layer: a LobeHub Node process reaching 169.254.169.254 or internal hosts is anomalous for a chat app. Port exclusions (11434 Ollama, 5432 Postgres, 6379 Redis, etc.) remove LobeHub&#x27;s own legitimate backend traffic so internal-probing/metadata hits stand out. Scoped via the node process + &#x27;lobe&#x27; command-line/path hint.
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xmwj-c75x-6346
+  • https://nvd.nist.gov/vuln/detail/CVE-2024-32964</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Network Service Discovery">T1046</span> <span class="ind tech" title="Cloud Instance Metadata API">T1552.005</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Network_Traffic.All_Traffic</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: medium<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>LobeHub legitimately calling a self-hosted Ollama/vLLM/LM Studio on a non-excluded internal port</li><li>LobeHub server contacting an internal Postgres/Redis on a non-standard port</li><li>Container health-checks or service-mesh sidecars from the Node process</li><li>A self-hosted internal LLM gateway on RFC1918 that the deployment legitimately uses</li></ul><div class="uc-fp-filter"><span class="ind-label">Suppression filter</span><pre><code>| where not (RemoteIPType in (&quot;Private&quot;,&quot;Loopback&quot;) and RemotePort in (11434,1234,8000,5432,6379))</code></pre></div></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the Node process is the LobeHub server and the internal/metadata destination is not a sanctioned backend (LLM/DB). For 169.254.169.254, treat as credential-theft attempt immediately. 2) Contain: restrict egress from the LobeHub host (deny RFC1918 + link-local except sanctioned backends), enforce IMDSv2, patch /webapi/proxy. 3) Hunt: pivot to inbound /webapi/proxy POSTs on the same host/time to recover the exact attacker-supplied target URL; rotate any credentials reachable at the contacted internal service.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-108-uc4-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-108-uc4-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-108-uc4-datadog">Datadog</button>
+      <button class="tab-btn" data-target="art-108-uc4-falcon">Falcon LogScale</button>
+      <button class="tab-btn" data-target="art-108-uc4-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-108-uc4-kql"><pre><button class="copy-btn">COPY</button><code>DeviceNetworkEvents
+| where Timestamp &gt; ago(7d)
+| where InitiatingProcessFileName in~ (&quot;node.exe&quot;,&quot;node&quot;,&quot;next-server&quot;,&quot;bun.exe&quot;,&quot;bun&quot;,&quot;deno.exe&quot;,&quot;deno&quot;)
+| where RemoteIP == &quot;169.254.169.254&quot;
+    or RemoteUrl has_any (&quot;metadata.google.internal&quot;,&quot;metadata.goog&quot;)
+    or (RemoteIPType in (&quot;Private&quot;,&quot;Loopback&quot;,&quot;LinkLocal&quot;)
+        and RemotePort !in (11434,1234,8000,5000,3000,8080,11435,5432,6379,6333,27017)
+        and (InitiatingProcessCommandLine has &quot;lobe&quot; or InitiatingProcessFolderPath has &quot;lobe&quot;))
+| project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine, RemoteIP, RemoteUrl, RemotePort, RemoteIPType
+| order by Timestamp desc</code></pre></div>
+    <div class="tab-content" id="art-108-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>ImNetworkSession
+| where TimeGenerated &gt; ago(7d)
+| where DstIpAddr == &quot;169.254.169.254&quot;
+    or DstHostname has &quot;metadata.google.internal&quot;
+    or (ipv4_is_private(DstIpAddr) and DstPortNumber !in (11434,1234,8000,5000,3000,8080,5432,6379,6333,27017))
+| project TimeGenerated, DvcHostname, SrcIpAddr, DstIpAddr, DstPortNumber, DstHostname, NetworkApplicationProtocol, Url, DvcAction
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-108-uc4-datadog"><pre><button class="copy-btn">COPY</button><code>source:windows.sysmon @EventID:3 @Image:(*\node.exe OR *\Node.exe OR *\NODE.EXE) (@DestinationIp:169.254.169.254 OR CIDR(@DestinationIp, 10.0.0.0/8, 192.168.0.0/16, 172.16.0.0/12))</code></pre></div>
+    <div class="tab-content" id="art-108-uc4-falcon"><pre><button class="copy-btn">COPY</button><code>#event_simpleName=NetworkConnectIP4 ContextImageFileName=/\\node(\.exe)?$/i
+| RemoteAddressIP4=/^(169\.254\.169\.254|10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[01])\.)/
+| RemotePort!=11434
+| RemotePort!=5432
+| RemotePort!=6379
+| groupBy([aid, ComputerName, ContextImageFileName, RemoteAddressIP4, RemotePort], function=count())</code></pre></div>
+    <div class="tab-content" id="art-108-uc4-spl"><span class="splunk-cat-pill splunk-cat-network" title="Splunk-research detection category">NETWORK</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc4-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app=&quot;node&quot; OR All_Traffic.process_name=&quot;node*&quot;) (All_Traffic.dest=&quot;169.254.169.254&quot; OR All_Traffic.dest=&quot;10.*&quot; OR All_Traffic.dest=&quot;192.168.*&quot; OR All_Traffic.dest=&quot;172.16.*&quot; OR All_Traffic.dest=&quot;172.17.*&quot; OR All_Traffic.dest=&quot;172.18.*&quot; OR All_Traffic.dest=&quot;172.19.*&quot; OR All_Traffic.dest=&quot;172.2*&quot; OR All_Traffic.dest=&quot;172.30.*&quot; OR All_Traffic.dest=&quot;172.31.*&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name
+| `drop_dm_object_name(All_Traffic)`
+| where dest=&quot;169.254.169.254&quot; OR NOT (dest_port IN (11434,1234,8000,5000,3000,8080,5432,6379,6333,27017))
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-108-uc4-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Network_Traffic.All_Traffic where (All_Traffic.app=&quot;node&quot; OR All_Traffic.process_name=&quot;node*&quot;) (All_Traffic.dest=&quot;169.254.169.254&quot; OR All_Traffic.dest=&quot;10.*&quot; OR All_Traffic.dest=&quot;192.168.*&quot; OR All_Traffic.dest=&quot;172.16.*&quot; OR All_Traffic.dest=&quot;172.17.*&quot; OR All_Traffic.dest=&quot;172.18.*&quot; OR All_Traffic.dest=&quot;172.19.*&quot; OR All_Traffic.dest=&quot;172.2*&quot; OR All_Traffic.dest=&quot;172.30.*&quot; OR All_Traffic.dest=&quot;172.31.*&quot;) by All_Traffic.src All_Traffic.dest All_Traffic.dest_port All_Traffic.app All_Traffic.process_name
+| `drop_dm_object_name(All_Traffic)`
+| where dest=&quot;169.254.169.254&quot; OR NOT (dest_port IN (11434,1234,8000,5000,3000,8080,5432,6379,6333,27017))
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="87cd285c39" data-platforms="def,sent,spl" data-targets="">
+  <summary>
+    <span class="uc-title">Exposed vulnerable LobeHub instance &lt;=2.1.56 (CVE-2026-54157)</span>
+    <span class="uc-kind" title="AI-generated for this specific article — drafted from the article text and cross-checked against vendor advisories">AI</span><span class="uc-phase">Reconnaissance</span>
+    <span class="uc-conf high">High</span>
+    <button class="share-btn" data-share-uc="87cd285c39" title="Copy share link to this UC" aria-label="Copy share link">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
+    </button>
+  </summary>
+  <div class="uc-body">
+    <div class="uc-desc">Asset-exposure detection for self-hosted LobeHub running an affected version (npm:@lobehub/lobehub &lt;=2.1.56) carrying the unauthenticated /webapi/proxy SSRF. Surfaces vulnerable, potentially internet-facing instances from the vulnerability inventory so they can be patched before exploitation.
+
+Rationale: Uses the article&#x27;s concrete affected-package facts: CVE-2026-54157 and npm:@lobehub/lobehub &lt;=2.1.56. The Defender query joins DeviceInfo.IsInternetFacing to prioritise exposed instances (the SSRF is unauthenticated, so internet-facing is critical).
+
+Cross-checked against:
+  • https://github.com/advisories/GHSA-xmwj-c75x-6346
+  • https://advisories.gitlab.com/npm/@lobehub/lobehub/CVE-2026-54157/</div>
+    <div class="uc-meta"><span class="ind-label">ATT&amp;CK</span><span class="ind tech" title="Exploit Public-Facing Application">T1190</span> <span class="ind tech" title="Gather Victim Host Information">T1592</span></div>
+    <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities.Vulnerabilities</span></div>
+    <details class="uc-fp"><summary>Expected false positives · estimated rate: low<span class="uc-fp-note"> — model-assessed, tune to your environment</span></summary><ul><li>TVM lagging on a host already patched to &gt;2.1.56 (stale inventory)</li><li>Air-gapped/internal-only LobeHub instances flagged as critical despite no internet exposure</li><li>A pinned fork that backported the checkAuth fix while reporting an old version string</li><li>Dev/test LobeHub container images not in production</li></ul></details><details class="uc-fp"><summary>Response runbook</summary><div class="uc-runbook">1) Triage: confirm the running LobeHub version and whether the instance is internet-facing (IsInternetFacing/PublicIP). 2) Contain: patch to a fixed release (&gt;2.1.56) or apply the checkAuth() wrapper / remove /webapi/proxy; place behind authenticated reverse-proxy if patch is delayed. 3) Hunt: for any instance confirmed exposed, retro-hunt its web logs for /webapi/proxy POSTs (see exploitation UCs) to determine if it was already abused before patching.</div></details>
+    <div class="tabs">
+      <button class="tab-btn active" data-target="art-108-uc5-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-108-uc5-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-108-uc5-spl">Splunk SPL (CIM)</button>
+    </div>
+    <div class="tab-content active" id="art-108-uc5-kql"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where CveId == &quot;CVE-2026-54157&quot;
+    or (SoftwareVendor has &quot;lobehub&quot; and SoftwareName has_any (&quot;lobehub&quot;,&quot;lobe-chat&quot;,&quot;lobe chat&quot;))
+| join kind=leftouter (DeviceInfo | where Timestamp &gt; ago(1d) | summarize arg_max(Timestamp, IsInternetFacing, PublicIP) by DeviceId) on DeviceId
+| project Timestamp, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, IsInternetFacing, PublicIP, RecommendedSecurityUpdate
+| order by IsInternetFacing desc</code></pre></div>
+    <div class="tab-content" id="art-108-uc5-sentinel"><pre><button class="copy-btn">COPY</button><code>DeviceTvmSoftwareVulnerabilities
+| where TimeGenerated &gt; ago(1d)
+| where CveId == &quot;CVE-2026-54157&quot;
+    or (SoftwareVendor has &quot;lobehub&quot; and SoftwareName has_any (&quot;lobehub&quot;,&quot;lobe-chat&quot;,&quot;lobe chat&quot;))
+| project TimeGenerated, DeviceName, DeviceId, SoftwareVendor, SoftwareName, SoftwareVersion, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
+| order by TimeGenerated desc</code></pre></div>
+    <div class="tab-content" id="art-108-uc5-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc5-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc5-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc5-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-54157&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - lastTime</code></pre><pre class="spl-mode-body" id="art-108-uc5-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime from datamodel=Vulnerabilities.Vulnerabilities where Vulnerabilities.cve=&quot;CVE-2026-54157&quot; by Vulnerabilities.dest Vulnerabilities.signature Vulnerabilities.severity Vulnerabilities.cve
+| `drop_dm_object_name(Vulnerabilities)`
+| sort - lastTime</code></pre></div></div>
+  </div>
+</details>
+<details class="uc" data-uc-slug="222a505c20" data-platforms="def,sent,spl" data-targets="">
   <summary>
     <span class="uc-title">Asset exposure — vulnerability matches article CVE(s)</span>
     <span class="uc-phase">Reconnaissance</span>
@@ -1732,11 +2040,11 @@ DeviceFileEvents
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Vulnerabilities</span> <span class="ind">DeviceInfo</span> <span class="ind">DeviceTvmSoftwareVulnerabilities</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-108-uc0-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-108-uc0-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-108-uc0-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-108-uc6-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-108-uc6-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-108-uc6-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-108-uc0-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
+    <div class="tab-content active" id="art-108-uc6-kql"><pre><button class="copy-btn">COPY</button><code>// TVM tables are daily snapshots — pin a 1-day window so the engine
 // partitions on Timestamp instead of scanning the full retention.
 DeviceTvmSoftwareVulnerabilities
 | where Timestamp &gt; ago(1d)
@@ -1745,7 +2053,7 @@ DeviceTvmSoftwareVulnerabilities
 | project DeviceName, OSPlatform, CveId, VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-108-uc0-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
+    <div class="tab-content" id="art-108-uc6-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel has no native TVM table. If MDE→Sentinel streaming is enabled,
 // `DeviceTvmSoftwareVulnerabilities` is available. Otherwise this UC has
 // no Sentinel translation — track via Update / Heartbeat OS-version
 // gaps as a coarse approximation.
@@ -1757,12 +2065,12 @@ DeviceTvmSoftwareVulnerabilities
           VulnerabilitySeverityLevel, RecommendedSecurityUpdate
 | order by VulnerabilitySeverityLevel asc, DeviceName asc
 </code></pre></div>
-    <div class="tab-content" id="art-108-uc0-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc0-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc0-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc0-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-108-uc6-spl"><span class="splunk-cat-pill splunk-cat-application" title="Splunk-research detection category">APPLICATION</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc6-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc6-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc6-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-54157&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
 | `drop_dm_object_name(Vulnerabilities)`
-| sort - severity</code></pre><pre class="spl-mode-body" id="art-108-uc0-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| sort - severity</code></pre><pre class="spl-mode-body" id="art-108-uc6-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Vulnerabilities
     where Vulnerabilities.signature IN (&quot;CVE-2026-54157&quot;)
     by Vulnerabilities.dest, Vulnerabilities.signature, Vulnerabilities.severity, Vulnerabilities.cve
@@ -1794,11 +2102,11 @@ for orthogonal high-fidelity variants.</div>
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Web</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailEvents</span> <span class="ind">EmailUrlInfo</span> <span class="ind">UrlClickEvents</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-108-uc1-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-108-uc1-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-108-uc1-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-108-uc7-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-108-uc7-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-108-uc7-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-108-uc1-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
+    <div class="tab-content active" id="art-108-uc7-kql"><pre><button class="copy-btn">COPY</button><code>// Phishing-link click that drives endpoint execution within 60s.
 // Far higher fidelity than &quot;every clicked URL&quot; — most legitimate clicks
 // never spawn a non-browser child process, so the join eliminates the
 // 99% of noise that makes a raw click query unactionable.
@@ -1838,7 +2146,7 @@ DeviceProcessEvents
           Subject, Url, UrlDomain, ActionType,
           FileName, ProcessCommandLine, InitiatingProcessFileName
 | order by ClickTime desc</code></pre></div>
-    <div class="tab-content" id="art-108-uc1-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
+    <div class="tab-content" id="art-108-uc7-sentinel"><pre><button class="copy-btn">COPY</button><code>// UrlClickEvents has no clean Sentinel-native equivalent. The detection
 // pivots to: Office Send→Receive proximity to SecurityEvent 4688 of a
 // non-browser child process. Lower fidelity than the Defender version.
 let LookbackDays = 7d;
@@ -1863,7 +2171,7 @@ SecurityEvent
           NewProcessName, CommandLine, Sender, Subject
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-108-uc1-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc1-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc1-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc1-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+    <div class="tab-content" id="art-108-uc7-spl"><span class="splunk-cat-pill splunk-cat-web" title="Splunk-research detection category">WEB</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc7-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc7-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc7-spl-acc"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats `summariesonly` earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -1895,7 +2203,7 @@ SecurityEvent
 | where delta_sec &gt;= 0 AND delta_sec &lt;= 60
 | table click_time, exec_time, delta_sec, recipient, src, src_user, subject,
         clicked_domain, clicked_url, exec_proc, exec_cmd
-| sort - click_time</code></pre><pre class="spl-mode-body" id="art-108-uc1-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
+| sort - click_time</code></pre><pre class="spl-mode-body" id="art-108-uc7-spl-raw"><button class="copy-btn">COPY</button><code>``` Phishing-link click that drives endpoint execution within 60s ```
 | tstats summariesonly=false earliest(_time) AS click_time
     from datamodel=Web
     where Web.action=&quot;allowed&quot;
@@ -1945,11 +2253,11 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Email.All_Email</span> <span class="ind">Endpoint.Processes</span> <span class="ind">EmailAttachmentInfo</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-108-uc2-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-108-uc2-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-108-uc2-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-108-uc8-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-108-uc8-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-108-uc8-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-108-uc2-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
+    <div class="tab-content active" id="art-108-uc8-kql"><pre><button class="copy-btn">COPY</button><code>let LookbackDays = 7d;
 let MalAttachments = EmailAttachmentInfo
     | where Timestamp &gt; ago(LookbackDays)
     | where AccountName !endswith &quot;$&quot;
@@ -1963,7 +2271,7 @@ DeviceProcessEvents
 | join kind=inner MalAttachments on $left.AccountUpn == $right.RecipientEmailAddress
 | project Timestamp, DeviceName, AccountName, FileName, ProcessCommandLine,
           InitiatingProcessFileName, AttachmentFileName, AttachmentSHA256</code></pre></div>
-    <div class="tab-content" id="art-108-uc2-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
+    <div class="tab-content" id="art-108-uc8-sentinel"><pre><button class="copy-btn">COPY</button><code>// Sentinel doesn&#x27;t have an attachment-hash table. Best approximation:
 // OfficeActivity Send/Receive activity + correlate to host process spawn.
 let LookbackDays = 7d;
 let MailWithAttach = OfficeActivity
@@ -1986,7 +2294,7 @@ SecurityEvent
           ParentProcessName
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-108-uc2-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc2-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc2-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc2-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
+    <div class="tab-content" id="art-108-uc8-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc8-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc8-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc8-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -1997,7 +2305,7 @@ SecurityEvent
         where Processes.parent_process_name IN (&quot;OUTLOOK.EXE&quot;,&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;)
           AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;)
         by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
-     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-108-uc2-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
+     | rename Processes.user as user]</code></pre><pre class="spl-mode-body" id="art-108-uc8-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count
     from datamodel=Email.All_Email
     where All_Email.file_name!=&quot;-&quot;
     by All_Email.src_user, All_Email.recipient, All_Email.file_name, All_Email.subject
@@ -2026,18 +2334,18 @@ SecurityEvent
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">DeviceProcessEvents</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-108-uc3-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-108-uc3-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-108-uc3-sigma">Sigma</button>
-      <button class="tab-btn" data-target="art-108-uc3-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-108-uc9-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-108-uc9-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-108-uc9-sigma">Sigma</button>
+      <button class="tab-btn" data-target="art-108-uc9-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-108-uc3-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
+    <div class="tab-content active" id="art-108-uc9-kql"><pre><button class="copy-btn">COPY</button><code>DeviceProcessEvents
 | where Timestamp &gt; ago(7d)
 | where AccountName !endswith &quot;$&quot;
 | where InitiatingProcessFileName in~ (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
 | where FileName in~ (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
 | project Timestamp, DeviceName, AccountName, InitiatingProcessFileName, FileName, ProcessCommandLine</code></pre></div>
-    <div class="tab-content" id="art-108-uc3-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
+    <div class="tab-content" id="art-108-uc9-sentinel"><pre><button class="copy-btn">COPY</button><code>SecurityEvent
 | where TimeGenerated &gt; ago(7d)
 | where EventID == 4688
 | where Account !endswith &quot;$&quot;
@@ -2060,7 +2368,7 @@ SecurityEvent
           NewProcessName, CommandLine
 | order by TimeGenerated desc
 </code></pre></div>
-    <div class="tab-content" id="art-108-uc3-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
+    <div class="tab-content" id="art-108-uc9-sigma"><pre><button class="copy-btn">COPY</button><code>title: Office Application Spawning Script Host
 id: 7c8b2e10-4d4f-4a8c-9c1f-bf6e2c4a8d07
 status: experimental
 description: |
@@ -2104,13 +2412,13 @@ falsepositives:
     - Legitimate automation macros in trusted internal documents
 level: high
 </code></pre></div>
-    <div class="tab-content" id="art-108-uc3-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc3-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc3-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc3-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
+    <div class="tab-content" id="art-108-uc9-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc9-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc9-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc9-spl-acc"><button class="copy-btn">COPY</button><code>| tstats `summariesonly` count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
     by Processes.dest, Processes.user, Processes.parent_process_name, Processes.process_name, Processes.process
 | `drop_dm_object_name(Processes)`
-| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-108-uc3-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
+| `security_content_ctime(firstTime)` | `security_content_ctime(lastTime)`</code></pre><pre class="spl-mode-body" id="art-108-uc9-spl-raw"><button class="copy-btn">COPY</button><code>| tstats summariesonly=false count min(_time) as firstTime max(_time) as lastTime
     from datamodel=Endpoint.Processes
     where Processes.parent_process_name IN (&quot;winword.exe&quot;,&quot;excel.exe&quot;,&quot;powerpnt.exe&quot;,&quot;outlook.exe&quot;,&quot;onenote.exe&quot;,&quot;mspub.exe&quot;,&quot;visio.exe&quot;)
       AND Processes.process_name IN (&quot;cmd.exe&quot;,&quot;powershell.exe&quot;,&quot;pwsh.exe&quot;,&quot;wscript.exe&quot;,&quot;cscript.exe&quot;,&quot;mshta.exe&quot;,&quot;rundll32.exe&quot;,&quot;regsvr32.exe&quot;,&quot;wmic.exe&quot;,&quot;bitsadmin.exe&quot;,&quot;certutil.exe&quot;)
@@ -2134,11 +2442,11 @@ level: high
     <div class="uc-meta"><span class="ind-label">Data sources</span><span class="ind">Endpoint.Processes</span> <span class="ind">Endpoint.Filesystem</span> <span class="ind">Endpoint.Registry</span></div>
     
     <div class="tabs">
-      <button class="tab-btn active" data-target="art-108-uc4-kql">Defender KQL</button>
-      <button class="tab-btn" data-target="art-108-uc4-sentinel">Sentinel KQL</button>
-      <button class="tab-btn" data-target="art-108-uc4-spl">Splunk SPL (CIM)</button>
+      <button class="tab-btn active" data-target="art-108-uc10-kql">Defender KQL</button>
+      <button class="tab-btn" data-target="art-108-uc10-sentinel">Sentinel KQL</button>
+      <button class="tab-btn" data-target="art-108-uc10-spl">Splunk SPL (CIM)</button>
     </div>
-    <div class="tab-content active" id="art-108-uc4-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-54157: LobeHub: Unauthenticated SSRF in `/webapi/prox
+    <div class="tab-content active" id="art-108-uc10-kql"><pre><button class="copy-btn">COPY</button><code>// Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-54157: LobeHub: Unauthenticated SSRF in `/webapi/prox
 // Hunts the actual binaries / paths / commandline fragments named
 // in the article instead of a generic technique-class template.
 DeviceProcessEvents
@@ -2158,7 +2466,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by Timestamp desc</code></pre></div>
-    <div class="tab-content" id="art-108-uc4-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
+    <div class="tab-content" id="art-108-uc10-sentinel"><pre><button class="copy-btn">COPY</button><code>// Microsoft Sentinel — auto-derived from the Defender XDR hunt.
 // Requires the Microsoft 365 Defender data connector (streams the
 // advanced-hunting tables into Sentinel; Timestamp → TimeGenerated).
 // Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-54157: LobeHub: Unauthenticated SSRF in `/webapi/prox
@@ -2181,7 +2489,7 @@ DeviceFileEvents
           FileName, ActionType, InitiatingProcessFileName,
           InitiatingProcessCommandLine
 | order by TimeGenerated desc</code></pre></div>
-    <div class="tab-content" id="art-108-uc4-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc4-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc4-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc4-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-54157: LobeHub: Unauthenticated SSRF in `/webapi/prox ```
+    <div class="tab-content" id="art-108-uc10-spl"><span class="splunk-cat-pill splunk-cat-endpoint" title="Splunk-research detection category">ENDPOINT</span><div class="spl-toggle-group"><div class="spl-mode-toggle">  <button class="spl-mode-btn active" data-spl-mode="acc" data-target="art-108-uc10-spl-acc">Summarised</button>  <button class="spl-mode-btn" data-spl-mode="raw" data-target="art-108-uc10-spl-raw">Non-summarised</button>  <span class="spl-mode-hint">Toggle if your env has no CIM data-model acceleration.</span></div><pre class="spl-mode-body active" id="art-108-uc10-spl-acc"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-54157: LobeHub: Unauthenticated SSRF in `/webapi/prox ```
 | tstats `summariesonly` count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;next.js&quot;))
@@ -2197,7 +2505,7 @@ DeviceFileEvents
     by Filesystem.dest, Filesystem.user, Filesystem.process_name,
        Filesystem.file_path, Filesystem.file_name
 | `drop_dm_object_name(Filesystem)`
-]</code></pre><pre class="spl-mode-body" id="art-108-uc4-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-54157: LobeHub: Unauthenticated SSRF in `/webapi/prox ```
+]</code></pre><pre class="spl-mode-body" id="art-108-uc10-spl-raw"><button class="copy-btn">COPY</button><code>``` Article-specific bespoke detection — [GHSA / CRITICAL] CVE-2026-54157: LobeHub: Unauthenticated SSRF in `/webapi/prox ```
 | tstats summariesonly=false count earliest(_time) AS firstTime latest(_time) AS lastTime
     from datamodel=Endpoint.Processes
     where (Processes.process_name IN (&quot;next.js&quot;))
